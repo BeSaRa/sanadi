@@ -26,10 +26,14 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "extractCss": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "*",
+                "input": "node_modules/bootstrap-icons/font/fonts",
+                "output": "fonts"
+              }
             ],
             "styles": [
               {
@@ -41,6 +45,10 @@
                 "bundleName": "bootstrap-rtl",
                 "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
                 "inject": false
+              },
+              {
+                "bundleName": "bootstrap-icons",
+                "input": "node_modules/bootstrap-icons/font/bootstrap-icons.css"
               },
               "src/styles.scss"
             ],
