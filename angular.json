@@ -31,6 +31,16 @@
               "src/assets"
             ],
             "styles": [
+              {
+                "bundleName": "bootstrap",
+                "input": "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                "inject": false
+              },
+              {
+                "bundleName": "bootstrap-rtl",
+                "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
+                "inject": false
+              },
               "src/styles.scss"
             ],
             "scripts": []
