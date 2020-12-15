@@ -28,27 +28,28 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets",
               {
                 "glob": "*",
-                "input": "node_modules/bootstrap-icons/font/fonts",
+                "input": "node_modules/@mid/font/fonts",
                 "output": "fonts"
-              }
+              },
+              "src/assets"
             ],
             "styles": [
               {
-                "bundleName": "bootstrap-css",
-                "input": "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                "bundleName": "material-icons",
+                "input": "node_modules/@mdi/font/css/materialdesignicons.min.css",
                 "inject": true
               },
               {
-                "bundleName": "bootstrap-css-rtl",
-                "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
-                "inject": false
+                "bundleName": "bootstrap",
+                "input": "src/assets/style/bootstrap.css",
+                "inject": true
               },
               {
-                "bundleName": "bootstrap-icons",
-                "input": "node_modules/bootstrap-icons/font/bootstrap-icons.css"
+                "bundleName": "bootstrap-rtl",
+                "input": "src/assets/style/bootstrap-rtl.css",
+                "inject": false
               },
               "src/styles.scss"
             ],
