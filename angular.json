@@ -39,7 +39,7 @@
               {
                 "bundleName": "bootstrap-css",
                 "input": "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                "inject": false
+                "inject": true
               },
               {
                 "bundleName": "bootstrap-css-rtl",
