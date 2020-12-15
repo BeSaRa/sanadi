@@ -37,12 +37,12 @@
             ],
             "styles": [
               {
-                "bundleName": "bootstrap",
+                "bundleName": "bootstrap-css",
                 "input": "node_modules/bootstrap/dist/css/bootstrap.min.css",
                 "inject": false
               },
               {
-                "bundleName": "bootstrap-rtl",
+                "bundleName": "bootstrap-css-rtl",
                 "input": "node_modules/bootstrap/dist/css/bootstrap.rtl.min.css",
                 "inject": false
               },
@@ -52,7 +52,12 @@
               },
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              {
+                "bundleName": "bootstrap-js",
+                "input": "node_modules/bootstrap/dist/js/bootstrap.min.js"
+              }
+            ]
           },
           "configurations": {
             "production": {
