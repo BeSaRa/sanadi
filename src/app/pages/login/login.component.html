@@ -4,21 +4,23 @@
       <div class="card shadow-sm p-2">
         <div class="d-flex flex-column align-items-center justify-content-center">
           <div class="row">
-            <img id="logo-image" class="mx-auto d-block img-fluid" src="../../../assets/images/logo.png">
+            <img id="logo-image" class="mx-auto d-block img-fluid"
+                 src="../../../assets/images/logo.png">
           </div>
           <h3 class="text-center text-primary">SANADI</h3>
           <form autocomplete="off" action="#">
             <div class="d-flex flex-column">
               <div class="mb-3">
                 <label class="form-label" for="username">Username</label>
-                <div class="input-group">
+                <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-account"></i>
-                  <input tabindex="1" id="username" placeholder="email / phone number" class="form-control" type="text">
+                  <input autofocus tabindex="1" id="username" placeholder="phone / email" class="form-control"
+                         type="text">
                 </div>
               </div>
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <div class="input-group">
+                <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-lock"></i>
                   <input tabindex="2" class="form-control" placeholder="enter your password" id="password"
                          [type]="passwordFieldType">
@@ -28,7 +30,7 @@
                 </div>
               </div>
               <div class="d-flex flex-row mt-3 mb-3">
-                <button tabindex="3" class="btn d-block btn-primary flex-fill">Login</button>
+                <button tabindex="3" class="shadow-sm btn d-block btn-primary flex-fill">Login</button>
               </div>
             </div>
           </form><!-- login form -->
