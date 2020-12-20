@@ -1,0 +1,28 @@
+@import "src/scss/custom_variables";
+
+:host {
+  display: block;
+}
+
+#main-navbar-links {
+  li a.active {
+    border-bottom: .4rem solid $gold;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  #main-logo {
+    max-width: none;
+  }
+}
+
+#main-navbar.sticky {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  //img#main-logo {
+  //  height: 50px;
+  //}
+}
+
