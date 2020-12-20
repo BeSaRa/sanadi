@@ -7,7 +7,7 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
 })
 export class HeaderComponent implements OnInit {
   // main navbar to use it later to attach/detach
-  @ViewChild('mainNavbar') element: ElementRef | undefined;
+  @ViewChild('header') element: ElementRef | undefined;
 
   constructor() {
 
