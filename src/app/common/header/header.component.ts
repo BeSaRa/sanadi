@@ -6,7 +6,9 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  // main navbar to use it later to attach/detach
+  /**
+   * @description header element to use it later to attach/detach
+   */
   @ViewChild('header') element: ElementRef | undefined;
 
   constructor() {
