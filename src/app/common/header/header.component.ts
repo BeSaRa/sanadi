@@ -12,7 +12,6 @@ export class HeaderComponent implements OnInit {
   @ViewChild('header') element: ElementRef | undefined;
 
   constructor() {
-
   }
 
   ngOnInit(): void {
