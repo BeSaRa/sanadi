@@ -16,17 +16,23 @@
   }
 }
 
-header.sticky {
+#main-navbar {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+header {
   padding-bottom: 92px;
 
-  #main-navbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    //img#main-logo {
-    //  height: 50px;
-    //}
+  &.sticky {
+    #main-navbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+
+    }
   }
 }
 
