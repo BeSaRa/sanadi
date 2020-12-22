@@ -5,24 +5,22 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
-import {FooterComponent} from './common/footer/footer.component';
-import {HeaderComponent} from './common/header/header.component';
-import { ErrorPageComponent } from './pages/error-page/error-page.component';
+import {SharedModule} from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent,
-    FooterComponent,
-    HeaderComponent,
-    ErrorPageComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [],
+  exports: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
