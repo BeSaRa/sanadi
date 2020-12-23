@@ -7,6 +7,18 @@
   max-width: 250px;
 }
 
-.bi {
-  font-size: 24px !important;
+#view-password-btn {
+  background-color: transparent;
+  position: absolute;
+  border: none;
+  bottom: 2px;
+  right: 2px;
+  z-index: 4;
+}
+
+:host-context(html[dir="rtl"]) {
+  #view-password-btn {
+    right: auto;
+    left: 2px;
+  }
 }
