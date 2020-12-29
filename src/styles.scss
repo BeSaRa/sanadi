@@ -28,3 +28,7 @@ html[dir="rtl"] .table-responsive {
 .text-ltr {
   direction: ltr !important;
 }
+
+.column-style > table > tbody > tr > th {
+  background-color: #F2F2F2 !important;
+}

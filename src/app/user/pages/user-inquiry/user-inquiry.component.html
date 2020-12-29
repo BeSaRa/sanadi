@@ -1,6 +1,6 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <fieldset class="mb-3">
-    <legend>Inquiry Service</legend>
+    <legend><h6>Inquiry Service</h6></legend>
     <form autocomplete="off" action="#">
       <!--  Inquiry Types  -->
       <div class="row">
@@ -57,6 +57,7 @@
           </div>
         </div>
       </div>
+      <!-- Form Button -->
       <div class="row">
         <div class="col d-flex flex-row justify-content-start">
           <button class="btn shadow-sm btn-primary">Search</button>
@@ -66,51 +67,198 @@
     </form>
   </fieldset>
   <div class="row">
-    <div class="col">
-      <div class="table-responsive">
-        <table class="table table-striped table-bordered caption-top">
-          <thead>
-          <tr>
-            <th scope="col">Request Number</th>
-            <th scope="col">Request Date</th>
-            <th scope="col">Foundation / Charity</th>
-            <th scope="col">Type of Aid</th>
-            <th scope="col">Request Status</th>
-            <th scope="col">Aid Value</th>
-            <th scope="col">Approved Value</th>
-          </tr>
-          </thead>
+    <div class="col-12">
+      <div><h6>Personal Information</h6></div>
+      <div class="table-responsive column-style">
+        <table class="table table-bordered caption-top">
           <tbody>
           <tr>
-            <th scope="row"><span class="text-ltr d-inline-block">2020-AID-1265</span></th>
-            <td>20-12-2021</td>
-            <td>Qatar Charity</td>
-            <td>Medical Aid</td>
-            <td>Approved</td>
-            <td>150,000 QR</td>
-            <td>100,000 QR</td>
+            <th>Name</th>
+            <td>Mohamed Ali Marwan</td>
+            <th>Employer</th>
+            <td>EBLA COMPUTER CONSULTANCY</td>
           </tr>
           <tr>
-            <th scope="row"><span class="text-ltr d-inline-block">2020-AID-1265</span></th>
-            <td>20-12-2021</td>
-            <td>Eid Charity</td>
-            <td>Medical Aid</td>
-            <td>Approved</td>
-            <td>150,000 QR</td>
-            <td>100,000 QR</td>
+            <th>Nationality</th>
+            <td>Indian</td>
+            <th>Gender</th>
+            <td>Male</td>
           </tr>
           <tr>
-            <th scope="row"><span class="text-ltr d-inline-block">2020-AID-1265</span></th>
-            <td>20-12-2021</td>
-            <td>Qatar Foundation</td>
-            <td>Medical Aid</td>
-            <td>Approved</td>
-            <td>150,000 QR</td>
-            <td>100,000 QR</td>
+            <th>Birth Date</th>
+            <td>20-10-2021</td>
+            <th>No. of Sponsors</th>
+            <td class="position-relative">
+              <div class="d-flex align-items-center flex-row h-100 w-100">
+                <span>1</span><span class="flex-grow-1"></span>
+                <button class="btn btn-sm btn-primary shadow-sm">Show Details</button>
+              </div>
+            </td>
           </tr>
           </tbody>
         </table><!-- table -->
       </div><!-- table container-->
+    </div>
+  </div><!-- -->
+  <div class="row">
+    <div class="col-12">
+      <div><h6>Family Information</h6></div>
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered caption-top">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Relation</th>
+            <th scope="col">ID Number</th>
+            <th scope="col">ID type</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Ahmed Mohamed Mostafa Ismail</td>
+            <td>Son</td>
+            <td>30697114</td>
+            <td>Passport</td>
+          </tr>
+          <tr>
+            <td>Ahmed Mohamed Mostafa Ismail</td>
+            <td>Son</td>
+            <td>30697114</td>
+            <td>Passport</td>
+          </tr>
+          <tr>
+            <td>Ahmed Mohamed Mostafa Ismail</td>
+            <td>Son</td>
+            <td>30697114</td>
+            <td>Passport</td>
+          </tr>
+          <tr>
+            <td>Ahmed Mohamed Mostafa Ismail</td>
+            <td>Son</td>
+            <td>30697114</td>
+            <td>Passport</td>
+          </tr>
+          </tbody>
+        </table><!-- table -->
+      </div><!-- table container-->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="personal-aids-tab" data-bs-toggle="tab" href="#personal-aids" role="tab"
+             aria-controls="personal-aids" aria-selected="true">Personal Aids</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="family-aids-tab" data-bs-toggle="tab" href="#family-aids" role="tab"
+             aria-controls="family-aids"
+             aria-selected="false">Family Aids</a>
+        </li>
+      </ul>
+      <div class="tab-content py-3">
+        <div class="tab-pane fade show active" id="personal-aids" role="tabpanel" aria-labelledby="personal-aids">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered caption-top">
+              <thead>
+              <tr>
+                <th scope="col">Request Number</th>
+                <th scope="col">Request Date</th>
+                <th scope="col">Foundation / Charity</th>
+                <th scope="col">Type of Aid</th>
+                <th scope="col">Request Status</th>
+                <th scope="col">Aid Value</th>
+                <th scope="col">Approved Value</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Qatar Charity</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Eid Charity</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Qatar Foundation</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              </tbody>
+            </table><!-- table -->
+          </div><!-- table container-->
+        </div>
+        <div class="tab-pane fade show" id="family-aids" role="tabpanel" aria-labelledby="personal-aids">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered caption-top">
+              <thead>
+              <tr>
+                <th scope="col">Request Number</th>
+                <th scope="col">Request Date</th>
+                <th scope="col">Foundation / Charity</th>
+                <th scope="col">Type of Aid</th>
+                <th scope="col">Request Status</th>
+                <th scope="col">Aid Value</th>
+                <th scope="col">Approved Value</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Qatar Charity</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Eid Charity</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Qatar Foundation</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              <tr>
+                <td><span class="text-ltr d-inline-block">2020-AID-1265</span></td>
+                <td>20-12-2021</td>
+                <td>Qatar Foundation</td>
+                <td>Medical Aid</td>
+                <td>Approved</td>
+                <td>150,000 QR</td>
+                <td>100,000 QR</td>
+              </tr>
+              </tbody>
+            </table><!-- table -->
+          </div><!-- table container-->
+        </div>
+      </div>
     </div>
   </div>
 </div>
