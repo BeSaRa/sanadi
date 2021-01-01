@@ -4,6 +4,7 @@ import {MouseEnterLeaveDirective} from './directives/mouse-enter-leave.directive
 import {FooterComponent} from './components/footer/footer.component';
 import {HeaderComponent} from './components/header/header.component';
 import {ErrorPageComponent} from './components/error-page/error-page.component';
+import {ToastComponent} from './components/toast/toast.component';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import {ErrorPageComponent} from './components/error-page/error-page.component';
     FooterComponent,
     HeaderComponent,
     ErrorPageComponent,
-    MouseEnterLeaveDirective
+    MouseEnterLeaveDirective,
+    ToastComponent
   ],
   imports: [
     CommonModule
@@ -20,7 +22,8 @@ import {ErrorPageComponent} from './components/error-page/error-page.component';
     FooterComponent,
     HeaderComponent,
     ErrorPageComponent,
-    MouseEnterLeaveDirective
+    MouseEnterLeaveDirective,
+    ToastComponent
   ]
 })
 export class SharedModule {

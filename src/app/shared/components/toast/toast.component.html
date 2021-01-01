@@ -1,0 +1,6 @@
+<div @slideInOut
+     (@slideInOut.done)="animationChanges.emit($event)"
+     (@slideInOut.start)="animationChanges.emit($event)"
+     *ngIf="show" [class]="alertClass"
+     class="alert m-2 d-inline-block shadow"
+     role="alert">{{data}}</div>

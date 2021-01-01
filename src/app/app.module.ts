@@ -6,6 +6,9 @@ import {AppComponent} from './app.component';
 import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
 import {SharedModule} from './shared/shared.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CommonModule} from '@angular/common';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -14,9 +17,12 @@ import {SharedModule} from './shared/shared.module';
     HomeComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
+    OverlayModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   exports: [],
