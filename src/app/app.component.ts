@@ -16,18 +16,18 @@ export class AppComponent implements AfterViewInit {
 
   private static setEnglishLang(): void {
     const html = document.querySelector('html') as HTMLElement;
-    const style: HTMLLinkElement = document.querySelector('link[href="bootstrap-rtl.css"]') as HTMLLinkElement;
+    const elementStyle: HTMLLinkElement = document.querySelector('link[href="bootstrap-rtl.css"]') as HTMLLinkElement;
     html.dir = 'ltr';
     html.lang = 'en';
-    style.href = 'bootstrap.css';
+    elementStyle.href = 'bootstrap.css';
   }
 
   private static setArabicLang(): void {
     const html = document.querySelector('html') as HTMLElement;
-    const style: HTMLLinkElement = document.querySelector('link[href="bootstrap.css"]') as HTMLLinkElement;
+    const elementStyle: HTMLLinkElement = document.querySelector('link[href="bootstrap.css"]') as HTMLLinkElement;
     html.dir = 'rtl';
     html.lang = 'ar';
-    style.href = 'bootstrap-rtl.css';
+    elementStyle.href = 'bootstrap-rtl.css';
   }
 
 
@@ -42,6 +42,4 @@ export class AppComponent implements AfterViewInit {
       AppComponent.setLanguage(lang === 'en' ? 'ar' : 'en');
     }
   }
-
-
 }
