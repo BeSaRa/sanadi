@@ -1,0 +1,13 @@
+{
+  "ENVIRONMENTS_URLS": [
+    "http://localhost:9080/sanadi"
+  ],
+  "BASE_ENVIRONMENT_INDEX": 0,
+  "BASE_URL": "",
+  "TOKEN_HEADER_KEY": "auth-token",
+  "TOKEN_STORE_KEY": "e-tender_token",
+  "EXTERNAL_PROTOCOLS": [
+    "http",
+    "https"
+  ]
+}
