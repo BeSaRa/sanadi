@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, HostListener} from '@angular/core';
-import {ToastService} from './shared/services/toast.service';
 
 @Component({
   selector: 'app-root',
