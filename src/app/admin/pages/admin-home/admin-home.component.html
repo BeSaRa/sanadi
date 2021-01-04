@@ -1,3 +1,7 @@
-<div class="container h-100 shadow-sm bg-white">
-  <h1>Main Admin</h1>
+<div class="container shadow-sm h-100 bg-white d-flex align-items-center justify-content-center">
+  <div class="row pt-2">
+    <div class="col d-flex flex-column">
+      <app-service-list [list]="serviceList"></app-service-list>
+    </div>
+  </div>
 </div>
