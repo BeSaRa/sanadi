@@ -1,20 +1,7 @@
 <div class="container shadow-sm h-100 bg-white d-flex align-items-center justify-content-center">
   <div class="row pt-2">
     <div class="col d-flex flex-column">
-      <ul class="services-list d-flex flex-row align-self-center">
-        <li mouseEnterLeave="shadow-lg" class="service-item shadow-sm p-3 m-3 border border-1">
-          <a routerLink="./inquiry" class="d-flex flex-column align-items-center">
-            <span class="mdi mdi-database-search"></span>
-            <span class="service-title">Inquiry</span>
-          </a>
-        </li>
-        <li mouseEnterLeave="shadow-lg" class="service-item shadow-sm p-3 m-3 border border-1">
-          <a routerLink="./request" class="d-flex flex-column align-items-center">
-            <span class="mdi mdi-database-plus"></span>
-            <span class="service-title">Request</span>
-          </a>
-        </li>
-      </ul>
+      <app-service-list [list]="serviceList"></app-service-list>
     </div>
   </div>
 </div>
