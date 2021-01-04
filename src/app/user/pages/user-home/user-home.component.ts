@@ -17,9 +17,6 @@ export class UserHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      console.log('this.serviceList[0].arName', this.serviceList[0].arName);
-    }, 5000);
   }
 
 }
