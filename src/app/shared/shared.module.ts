@@ -5,6 +5,8 @@ import {FooterComponent} from './components/footer/footer.component';
 import {HeaderComponent} from './components/header/header.component';
 import {ErrorPageComponent} from './components/error-page/error-page.component';
 import {ToastComponent} from './components/toast/toast.component';
+import {ServiceListComponent} from './components/service-list/service-list.component';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -13,17 +15,20 @@ import {ToastComponent} from './components/toast/toast.component';
     HeaderComponent,
     ErrorPageComponent,
     MouseEnterLeaveDirective,
-    ToastComponent
+    ToastComponent,
+    ServiceListComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule.forChild([])
   ],
   exports: [
     FooterComponent,
     HeaderComponent,
     ErrorPageComponent,
     MouseEnterLeaveDirective,
-    ToastComponent
+    ToastComponent,
+    ServiceListComponent
   ]
 })
 export class SharedModule {
