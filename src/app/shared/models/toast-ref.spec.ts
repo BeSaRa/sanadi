@@ -1,7 +1,7 @@
-import { ToastRef } from './toast-ref';
+import {ToastRef} from './toast-ref';
 
 describe('ToastRef', () => {
   it('should create an instance', () => {
-    expect(new ToastRef()).toBeTruthy();
+
   });
 });
