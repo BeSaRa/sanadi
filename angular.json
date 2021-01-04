@@ -23,6 +23,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "outputPath": "dist/sanadi",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -36,7 +39,9 @@
                 "input": "node_modules/@mid/font/fonts",
                 "output": "fonts"
               },
-              "src/assets"
+              "src/assets",
+              "src/CONFIGURATION.json",
+              "src/URLS.json"
             ],
             "styles": [
               {
