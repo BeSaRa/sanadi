@@ -10,7 +10,7 @@ import {OverlayRef} from '@angular/cdk/overlay/overlay-ref';
   providedIn: 'root'
 })
 export class ToastService {
-  private overlayRefStack: OverlayRef[] = [];
+  private overlayRefStack: ToastRef[] = [];
 
   constructor(private overlay: Overlay, private injector: Injector) {
 
@@ -23,24 +23,30 @@ export class ToastService {
    * @private
    */
   private createToast(message: string, alertClass: string): ToastRef {
-    this.overlayRefStack.push(this.overlay.create({
+
+    if (this.overlayRefStack.length && this.overlayRefStack.length === 5) {
+      this.overlayRefStack.shift()?.close();
+    }
+    const toastOverlay = this.overlay.create({
       panelClass: 'panel-class'
-    }));
+    });
 
-    const toastRef = new ToastRef(this.overlayRefStack[this.overlayRefStack.length - 1]);
+
+    const toastRef = new ToastRef(toastOverlay);
+    this.overlayRefStack.push(toastRef);
+
     const injector = this.createInjector(message, toastRef);
-
     const timer = setTimeout(() => {
       toastRef.close();
       clearTimeout(timer);
     }, 5000);
 
     const componentPortal = new ComponentPortal(ToastComponent, null, injector);
-    const componentRef = this.overlayRefStack[this.overlayRefStack.length - 1].attach(componentPortal);
+    const componentRef = toastOverlay.attach(componentPortal);
     componentRef.instance.alertClass = alertClass ? alertClass : 'alert-success';
     toastRef.component = componentRef.instance;
 
-    this.overlayRefStack[this.overlayRefStack.length - 1].hostElement.classList.add('main-toast-wrapper');
+    toastOverlay.hostElement.classList.add('main-toast-wrapper');
     return toastRef;
   }
 

@@ -1,4 +1,5 @@
 import {AfterViewInit, Component, HostListener} from '@angular/core';
+import {ToastService} from './shared/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,7 @@ export class AppComponent implements AfterViewInit {
   title = 'sanadi';
   availableLanguages = ['ar', 'en'];
   directions = ['rtl', 'ltr'];
+
 
   private static setLanguage(lang: string): void {
     lang === 'en' ? AppComponent.setEnglishLang() : AppComponent.setArabicLang();
