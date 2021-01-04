@@ -34,6 +34,7 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
               {
                 "glob": "*",
                 "input": "node_modules/@mid/font/fonts",
