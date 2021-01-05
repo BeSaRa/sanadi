@@ -11,7 +11,7 @@ const routes: Routes = [
     path: 'home', component: HomeComponent,
     children: [
       {path: '', redirectTo: 'user', pathMatch: 'full'},
-      {path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)},
+      {path: 'administration', loadChildren: () => import('./admin/administration.module').then(m => m.AdministrationModule)},
       {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       {path: 'error', component: ErrorPageComponent},
       {path: '**', component: ErrorPageComponent},
