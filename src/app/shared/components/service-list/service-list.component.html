@@ -1,4 +1,5 @@
-<ul class="services-list d-flex flex-row justify-content-center align-self-center flex-wrap">
+<ul [@homeRouterAnimation]="list.length"
+    class="services-list d-flex flex-row justify-content-center align-self-center flex-wrap">
   <li *ngFor="let item of list" mouseEnterLeave="shadow-lg" class="service-item shadow-sm p-3 m-3 border border-1">
     <a [routerLink]="item.route" class="d-flex flex-column align-items-center">
       <span [class]="item.icon" class="mdi"></span>
