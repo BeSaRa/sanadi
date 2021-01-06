@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, HostListener} from '@angular/core';
+import {LangService} from './services/lang.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
   title = 'sanadi';
   availableLanguages = ['ar', 'en'];
   directions = ['rtl', 'ltr'];
@@ -29,11 +30,6 @@ export class AppComponent implements AfterViewInit {
     html.dir = 'rtl';
     html.lang = 'ar';
     elementStyle.href = 'bootstrap-rtl.css';
-  }
-
-
-  ngAfterViewInit(): void {
-
   }
 
   @HostListener('window:keydown', ['$event'])
