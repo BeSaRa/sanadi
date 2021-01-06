@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {FactoryService} from './factory.service';
 import {ConfigurationService} from './configuration.service';
 import {IAppUrls} from '../interfaces/i-app-urls';
-import {forEach as _forEach} from 'lodash';
+import {forEach as _forEach, some as _some} from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +39,10 @@ export class UrlService {
   }
 
   private addBaseUrl(url: string): string {
-    const index = this.config.CONFIG.EXTERNAL_PROTOCOLS.indexOf(('' + url).toLowerCase());
-    return index !== -1 ? url : this.URLS.BASE_URL + '/' + UrlService.removePrefixSlash(url);
+    const external = _some(this.config.CONFIG.EXTERNAL_PROTOCOLS, (protocol) => {
+      return url.toLowerCase().indexOf(protocol) === 0;
+    });
+    return external ? url : this.URLS.BASE_URL + '/' + UrlService.removePrefixSlash(url);
   }
 
 }
