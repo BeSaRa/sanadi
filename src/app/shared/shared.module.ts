@@ -7,6 +7,10 @@ import {ErrorPageComponent} from './components/error-page/error-page.component';
 import {ToastComponent} from './components/toast/toast.component';
 import {ServiceListComponent} from './components/service-list/service-list.component';
 import {RouterModule} from '@angular/router';
+import {TestDialogComponent} from './components/test-dialog/test-dialog.component';
+import {DialogContainerComponent} from './components/dialog-container/dialog-container.component';
+import {PortalModule} from '@angular/cdk/portal';
+import {OverlayModule} from '@angular/cdk/overlay';
 
 
 @NgModule({
@@ -16,11 +20,15 @@ import {RouterModule} from '@angular/router';
     ErrorPageComponent,
     MouseEnterLeaveDirective,
     ToastComponent,
-    ServiceListComponent
+    ServiceListComponent,
+    TestDialogComponent,
+    DialogContainerComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild([])
+    RouterModule.forChild([]),
+    OverlayModule,
+    PortalModule,
   ],
   exports: [
     FooterComponent,

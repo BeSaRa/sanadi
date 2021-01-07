@@ -64,7 +64,7 @@ html[dir="rtl"] .table-responsive {
 }
 
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-  background: #000;
+  background: rgba(0, 0, 0, .32);
   opacity: 0.85 !important;
 }
 
@@ -73,11 +73,12 @@ html[dir="rtl"] .table-responsive {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
   pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
   transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 .main-toast-wrapper {
@@ -89,5 +90,38 @@ html[dir="rtl"] .table-responsive {
   position: relative;
   pointer-events: none;
   display: inline-block;
+}
+
+app-dialog-container {
+  & > * {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dialog-toolbar, .dialog-content, .dialog-actions {
+    margin: 0 -15px;
+    padding: 15px;
+  }
+
+  .dialog-toolbar {
+    & > * {
+      margin: 0;
+    }
+  }
+
+  .dialog-content {
+    max-height: 65vh;
+    overflow: auto;
+  }
+
+  .dialog-actions {
+    border-top: 1px solid tint-color($primary, 80);
+    display: flex;
+    justify-content: flex-end;
+
+    & > *:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
 }
 
