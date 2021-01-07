@@ -6,7 +6,6 @@ import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
 import {SharedModule} from './shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {OverlayModule} from '@angular/cdk/overlay';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {forkJoin, Observable} from 'rxjs';
 import {IAppConfig} from './interfaces/i-app-config';
@@ -23,7 +22,6 @@ import {httpInterceptors} from './http-interceptors/http-interceptors';
   ],
   imports: [
     BrowserModule,
-    OverlayModule,
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
