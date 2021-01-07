@@ -30,11 +30,21 @@ export class LangService {
     this.firstTime = false;
   }
 
+  /**
+   * @description change the HTML element Direction
+   * @param direction
+   * @private
+   */
   private changeHTMLDirection(direction: string): void {
     const html = this.document.querySelector('html') as HTMLHtmlElement;
     html.dir = direction;
   }
 
+  /**
+   * @description change href for bootstrap style.
+   * @param style
+   * @private
+   */
   private changeStyleHref(style: Styles): void {
     let searchHref = style === Styles.BOOTSTRAP ? Styles.BOOTSTRAP_RTL : Styles.BOOTSTRAP;
     if (this.firstTime) {
@@ -44,6 +54,11 @@ export class LangService {
     link.href = style;
   }
 
+  /**
+   * @description change current language for application
+   * @param language
+   * @param silent
+   */
   changeLanguage(language: Language, silent: boolean = false): void {
     this.changeHTMLDirection(language.direction);
     this.changeStyleHref(language.style);
@@ -52,6 +67,9 @@ export class LangService {
     }
   }
 
+  /**
+   * @description toggle the current language for the application [ar| en]
+   */
   toggleLanguage(): void {
     const code = this.languageToggler[this.languageChange.value.code];
     this.changeLanguage(this.languages[code]);
