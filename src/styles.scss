@@ -14,7 +14,7 @@ router-outlet {
 
 .mdi {
   font-size: 24px;
-  line-height: 1px;
+  line-height: 1;
 }
 
 #password {
@@ -97,31 +97,31 @@ app-dialog-container {
     display: flex;
     flex-direction: column;
   }
+}
 
-  .dialog-toolbar, .dialog-content, .dialog-actions {
-    margin: 0 -15px;
-    padding: 15px;
-  }
+.dialog-toolbar, .dialog-content, .dialog-actions {
+  margin: 0 -15px;
+  padding: 15px;
+}
 
-  .dialog-toolbar {
-    & > * {
-      margin: 0;
-    }
-  }
-
-  .dialog-content {
-    max-height: 65vh;
-    overflow: auto;
-  }
-
-  .dialog-actions {
-    border-top: 1px solid tint-color($primary, 80);
-    display: flex;
-    justify-content: flex-end;
-
-    & > *:not(:first-child) {
-      margin-left: 10px;
-    }
+.dialog-toolbar {
+  & > * {
+    margin: 0;
   }
 }
 
+.dialog-content {
+  max-height: 65vh;
+  overflow: auto;
+  min-width: 250px;
+}
+
+.dialog-actions {
+  border-top: 1px solid tint-color($primary, 80);
+  display: flex;
+  justify-content: flex-end;
+
+  & > *:not(:first-child) {
+    margin-left: 10px;
+  }
+}

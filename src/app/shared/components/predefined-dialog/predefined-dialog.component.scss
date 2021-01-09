@@ -1,0 +1,15 @@
+.predefined-dialog-icon {
+  & > i {
+    font-size: 55px;
+  }
+}
+
+.predefined-dialog-content {
+  text-align: center;
+}
+
+.dialog-actions {
+  & > * {
+    margin: 0 5px;
+  }
+}

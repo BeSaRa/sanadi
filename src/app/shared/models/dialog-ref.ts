@@ -8,12 +8,14 @@ import {DIALOG_DATA_TOKEN} from '../tokens/tokens';
 import {ComponentType} from '@angular/cdk/overlay';
 import {IDialogConfig} from '../../interfaces/i-dialog-config';
 import {pluck} from 'rxjs/operators';
+import {ITypeDialogList} from '../../interfaces/i-type-dialog-list';
+import {PredefinedDialogComponent} from '../components/predefined-dialog/predefined-dialog.component';
 
 export class DialogRef {
   langChangeSubscription: Subscription | undefined = undefined;
   containerRef: ComponentRef<DialogContainerComponent> | null = null;
   injector: Injector | undefined;
-  backDropCloseSub: Subscription | undefined;
+  closeSubscription: Subscription | undefined;
   private afterCloseSub: Subject<any> = new Subject<any>();
   onAfterClose: Observable<any> = this.afterCloseSub.asObservable();
 
@@ -22,7 +24,7 @@ export class DialogRef {
               private parentInjector: Injector,
               private component: ComponentType<any>,
               private data?: any,
-              private dialogConfig?: IDialogConfig) {
+              private dialogConfig?: IDialogConfig, private predefinedDialogType?: keyof ITypeDialogList) {
     this.watchLanguage();
     this.startShowDialog();
   }
@@ -37,7 +39,14 @@ export class DialogRef {
   }
 
   attacheComponentToContainer(): void {
-    this.containerRef?.instance.portalOutlet?.attachComponentPortal(new ComponentPortal(this.component, null, this.injector));
+    const compPortal = new ComponentPortal(this.component, null, this.injector);
+    const compRef = this.containerRef?.instance.portalOutlet?.attachComponentPortal(compPortal);
+
+    if (this.predefinedDialogType) {
+      const component: ComponentRef<PredefinedDialogComponent> = compRef as ComponentRef<PredefinedDialogComponent>;
+      component.instance.type = this.predefinedDialogType;
+    }
+
   }
 
   watchLanguage(): void {
@@ -63,14 +72,16 @@ export class DialogRef {
     }
 
     if (this.dialogConfig.backDropToClose) {
-      this.overLayRef.backdropClick().subscribe(() => {
+      this.closeSubscription = this.overLayRef.backdropClick().subscribe(() => {
         this.close();
+        this.closeSubscription?.unsubscribe();
       });
     }
     if (this.dialogConfig.escToClose) {
-      this.overLayRef.keydownEvents().pipe(pluck('code')).subscribe((value) => {
+      this.closeSubscription = this.overLayRef.keydownEvents().pipe(pluck('code')).subscribe((value) => {
         if (value === 'Escape') {
           this.close();
+          this.closeSubscription?.unsubscribe();
         }
       });
     }

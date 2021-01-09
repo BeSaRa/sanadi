@@ -12,7 +12,8 @@ import {DialogContainerComponent} from './components/dialog-container/dialog-con
 import {PortalModule} from '@angular/cdk/portal';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {A11yModule} from '@angular/cdk/a11y';
-import { DialogCloseDirective } from './directives/dialog-close.directive';
+import {DialogCloseDirective} from './directives/dialog-close.directive';
+import {PredefinedDialogComponent} from './components/predefined-dialog/predefined-dialog.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     ServiceListComponent,
     TestDialogComponent,
     DialogContainerComponent,
-    DialogCloseDirective
+    DialogCloseDirective,
+    PredefinedDialogComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +43,8 @@ import { DialogCloseDirective } from './directives/dialog-close.directive';
     MouseEnterLeaveDirective,
     ToastComponent,
     ServiceListComponent,
-    DialogCloseDirective
+    DialogCloseDirective,
+    PredefinedDialogComponent
   ]
 })
 export class SharedModule {

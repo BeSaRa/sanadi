@@ -16,9 +16,7 @@ export class LocalizationComponent implements OnInit {
   }
 
   showDialog(): void {
-    this.dialog
-      .show(TestDialogComponent, {welcome: true}, {escToClose: true})
-      .onAfterClose.subscribe(value => console.log('value : ', value));
+    this.dialog.confirm('WELCOME <br />!!').onAfterClose.subscribe(value => console.log(value));
   }
 
 }
