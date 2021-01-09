@@ -1,6 +1,9 @@
-import {Component, HostBinding, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {ConfigurableFocusTrapFactory} from '@angular/cdk/a11y';
+import {DOCUMENT} from '@angular/common';
+import {ConfigurableFocusTrap} from '@angular/cdk/a11y/focus-trap/configurable-focus-trap';
 
 @Component({
   selector: 'app-dialog-container',
@@ -17,15 +20,63 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     ])
   ]
 })
-export class DialogContainerComponent implements OnInit {
+export class DialogContainerComponent implements OnInit, OnDestroy {
   @ViewChild(CdkPortalOutlet, {static: true}) portalOutlet: CdkPortalOutlet | undefined;
   @HostBinding('class') classList = 'rounded shadow';
   @HostBinding('@dialogContainer') animationState: 'void' | 'exit' | 'enter' = 'enter';
+  @HostBinding('cdkTrapFocus') trap = 'true';
+  @Output() animationExitDone: EventEmitter<boolean> = new EventEmitter<boolean>();
+  private elementFocusedBeforeDialogWasOpened: HTMLElement | undefined;
+  private focusTrap: ConfigurableFocusTrap | undefined;
 
-  constructor() {
+  constructor(private element: ElementRef,
+              private focusTrapFactory: ConfigurableFocusTrapFactory,
+              @Inject(DOCUMENT) private document: HTMLDocument) {
   }
+
+
+  private _capturePreviousFocusedElement(): void {
+    this.elementFocusedBeforeDialogWasOpened = this.document.activeElement as HTMLElement;
+  }
+
+  private _focusOnDialogContainer(): void {
+    this.element.nativeElement.focus();
+  }
+
+  startExitAnimation(): void {
+    this.animationState = 'exit';
+  }
+
+  @HostListener('@dialogContainer.done', ['$event'])
+  _onAnimationDone({toState}: AnimationEvent): void {
+    if (toState === 'enter') {
+      this.focusInsideContainer();
+    } else if (toState === 'exit' || toState === 'void') {
+      this.focusOnPreviousElement();
+      this.animationExitDone.emit(true);
+    }
+  }
+
+  focusOnPreviousElement(): void {
+    this.elementFocusedBeforeDialogWasOpened?.focus();
+  }
+
+  focusInsideContainer(): void {
+    this.focusTrap?.focusInitialElementWhenReady();
+  }
+
+  createFocusTrap(): void {
+    this.focusTrap = this.focusTrapFactory.create(this.element.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.focusTrap?.destroy();
+  }
+
 
   ngOnInit(): void {
+    this._capturePreviousFocusedElement();
+    this.createFocusTrap();
+    this._focusOnDialogContainer();
   }
-
 }

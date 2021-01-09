@@ -1,9 +1,11 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
+import {LocalizationComponent} from './pages/localization/localization.component';
 
 const routes: Routes = [
-  {path: '', component: AdminHomeComponent}
+  {path: '', component: AdminHomeComponent},
+  {path: 'localization', component: LocalizationComponent},
 ];
 
 @NgModule({

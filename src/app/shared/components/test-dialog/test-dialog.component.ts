@@ -1,7 +1,6 @@
-import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DialogRef} from '../../models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {LangService} from '../../../services/lang.service';
 
 @Component({
   selector: 'app-test-dialog',
@@ -11,7 +10,6 @@ import {LangService} from '../../../services/lang.service';
 export class TestDialogComponent implements OnInit, OnDestroy {
 
   constructor(public dialogRef: DialogRef, @Inject(DIALOG_DATA_TOKEN) public data: any) {
-    setTimeout(() => this.closeDialog(), 5000);
   }
 
   ngOnDestroy(): void {
@@ -22,6 +20,6 @@ export class TestDialogComponent implements OnInit, OnDestroy {
   }
 
   closeDialog(): void {
-    this.dialogRef.close();
+    this.dialogRef.close('!! HELLO DEAR IM AFTER CLOSE !!');
   }
 }

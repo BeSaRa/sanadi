@@ -11,6 +11,8 @@ import {TestDialogComponent} from './components/test-dialog/test-dialog.componen
 import {DialogContainerComponent} from './components/dialog-container/dialog-container.component';
 import {PortalModule} from '@angular/cdk/portal';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {A11yModule} from '@angular/cdk/a11y';
+import { DialogCloseDirective } from './directives/dialog-close.directive';
 
 
 @NgModule({
@@ -22,13 +24,15 @@ import {OverlayModule} from '@angular/cdk/overlay';
     ToastComponent,
     ServiceListComponent,
     TestDialogComponent,
-    DialogContainerComponent
+    DialogContainerComponent,
+    DialogCloseDirective
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([]),
     OverlayModule,
     PortalModule,
+    A11yModule
   ],
   exports: [
     FooterComponent,
@@ -36,7 +40,8 @@ import {OverlayModule} from '@angular/cdk/overlay';
     ErrorPageComponent,
     MouseEnterLeaveDirective,
     ToastComponent,
-    ServiceListComponent
+    ServiceListComponent,
+    DialogCloseDirective
   ]
 })
 export class SharedModule {
