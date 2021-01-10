@@ -14,7 +14,8 @@ export class PredefinedDialogComponent implements OnInit {
     error: {icon: 'mdi-close-circle', textClass: 'text-danger'},
     success: {icon: 'mdi-check-circle', textClass: 'text-success'},
     info: {icon: 'mdi-information', textClass: 'text-info'},
-    confirm: {icon: 'mdi-help-rhombus', textClass: 'text-primary'}
+    confirm: {icon: 'mdi-help-rhombus', textClass: 'text-primary'},
+    confirmWithThree: {icon: 'mdi-help-rhombus', textClass: 'text-primary'}
   };
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any) {

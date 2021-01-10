@@ -5,5 +5,8 @@
 </div>
 <div class="dialog-actions justify-content-center">
   <button class="btn btn-primary shadow" dialogClose="OK">Close</button>
-  <button *ngIf="type === 'confirm'" class="btn btn-secondary shadow" dialogClose="NO">Close</button>
+  <button *ngIf="type === 'confirm' || type === 'confirmWithThree'" class="btn btn-secondary shadow" dialogClose="NO">
+    Send
+  </button>
+  <button *ngIf="type === 'confirmWithThree'" class="btn btn-secondary shadow" dialogClose="Three">Last</button>
 </div>
