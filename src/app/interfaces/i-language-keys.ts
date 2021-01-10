@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  actions: string;
+  english_name: string;
+  arabic_name: string;
+  localization_key: string;
+  identifier: string;
+  localization: string;
   hide_password: string;
   show_password: string;
   login: string;

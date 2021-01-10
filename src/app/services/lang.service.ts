@@ -25,7 +25,7 @@ export class LangService {
   };
   private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.en);
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable();
-  private localization: Localization[] = [];
+  public localization: Localization[] = [];
   protected firstTime = true;
   public lang: ILanguageKeys = {} as ILanguageKeys;
 
