@@ -11,26 +11,29 @@
           <form autocomplete="off" action="#">
             <div class="d-flex flex-column">
               <div class="mb-3">
-                <label class="form-label" for="username">Username</label>
+                <label class="form-label" for="username">{{lang.lang.username}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-account"></i>
-                  <input autofocus tabindex="1" id="username" placeholder="phone / email" class="form-control"
+                  <input autofocus tabindex="1" id="username" [placeholder]="lang.lang.enter_mobile_or_email"
+                         class="form-control"
                          type="text">
                 </div>
               </div>
               <div class="mb-3 position-relative">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">{{lang.lang.password}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-lock"></i>
-                  <input tabindex="2" class="form-control p-right" placeholder="enter your password" id="password"
+                  <input tabindex="2" class="form-control p-right" [placeholder]="lang.lang.enter_your_password_here"
+                         id="password"
                          [type]="passwordFieldType">
                 </div>
-                <button id="view-password-btn" tabindex="-1" (click)="togglePasswordView($event)">
+                <button id="view-password-btn" class="app-tooltip" data-bs-toggle="tooltip"
+                        title="{{passwordFieldType === 'password' ? lang.lang.show_password : lang.lang.hide_password}}" tabindex="-1" (click)="togglePasswordView($event)">
                   <i class="mdi {{icon}}"></i>
                 </button>
               </div>
               <div class="d-flex flex-row mt-3 mb-3">
-                <button tabindex="3" class="shadow-sm btn d-block btn-primary flex-fill">Login</button>
+                <button tabindex="3" class="shadow-sm btn d-block btn-primary flex-fill">{{lang.lang.login}}</button>
               </div>
             </div>
           </form><!-- login form -->

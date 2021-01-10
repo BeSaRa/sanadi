@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {LangService} from '../../services/lang.service';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ export class LoginComponent implements OnInit {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
 
-  constructor() {
+  constructor(public lang: LangService) {
   }
 
   ngOnInit(): void {

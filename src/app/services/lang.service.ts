@@ -8,6 +8,8 @@ import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
+import {map, tap} from 'rxjs/operators';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,9 @@ export class LangService {
   };
   private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.en);
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable();
+  private localization: Localization[] = [];
   protected firstTime = true;
+  public lang: ILanguageKeys = {} as ILanguageKeys;
 
   constructor(@Inject(DOCUMENT) private document: Document, private http: HttpClient, private urlService: UrlService) {
     this.changeLanguage(this.languageChange.value);
@@ -46,12 +50,30 @@ export class LangService {
    * @private
    */
   private changeStyleHref(style: Styles): void {
-    let searchHref = style === Styles.BOOTSTRAP ? Styles.BOOTSTRAP_RTL : Styles.BOOTSTRAP;
-    if (this.firstTime) {
-      searchHref = Styles.BOOTSTRAP;
-    }
-    const link = this.document.querySelector(`link[href="${searchHref}"]`) as HTMLLinkElement;
-    link.href = style;
+    (this.document.querySelector(`link[href^="bootstrap"]`) as HTMLLinkElement).href = style;
+  }
+
+  @Generator(Localization, true)
+  private _loadLocalization(): Observable<Localization[]> {
+    return this.http.get<Localization[]>(this.urlService.URLS.LANGUAGE);
+  }
+
+  private prepareCurrentLang(): ILanguageKeys {
+    this.lang = this.localization.reduce<ILanguageKeys>((acc: ILanguageKeys, current: Localization) => {
+      const key = current.localizationKey as keyof ILanguageKeys;
+      const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
+      return {...acc, [key]: current[currentLang]} as ILanguageKeys;
+    }, {lang: this.languageChange.value.code} as ILanguageKeys);
+    return this.lang;
+  }
+
+
+  loadLocalization(prepare: boolean = false): Observable<Localization[]> {
+    return this._loadLocalization()
+      .pipe(
+        tap(result => this.localization = result),
+        tap(_ => prepare ? this.prepareCurrentLang() : null)
+      );
   }
 
   /**
@@ -65,6 +87,7 @@ export class LangService {
     if (!silent) {
       this.languageChange.next(language);
     }
+    this.prepareCurrentLang();
   }
 
   /**
@@ -75,13 +98,8 @@ export class LangService {
     this.changeLanguage(this.languages[code]);
   }
 
-  @Generator(Localization, true)
-  loadLocalization(): Observable<Localization[]> {
-    return this.http.get<Localization[]>(this.urlService.URLS.LANGUAGE);
-  }
-
-  addLocal(local: Localization): Observable<any> {
-    return this.http.post(this.urlService.URLS.LANGUAGE, local);
+  addLocal(local: Localization): Observable<Localization> {
+    return this.http.post<Localization>(this.urlService.URLS.LANGUAGE, local);
   }
 
   updateLocal(local: Localization): Observable<any> {
