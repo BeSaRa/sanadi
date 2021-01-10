@@ -1,6 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {DialogService} from '../../../services/dialog.service';
-import {TestDialogComponent} from '../../../shared/components/test-dialog/test-dialog.component';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-localization',
@@ -9,14 +7,13 @@ import {TestDialogComponent} from '../../../shared/components/test-dialog/test-d
 })
 export class LocalizationComponent implements OnInit {
 
-  constructor(private dialog: DialogService) {
+  constructor() {
   }
 
   ngOnInit(): void {
   }
 
   showDialog(): void {
-    this.dialog.confirm('WELCOME <br />!!').onAfterClose.subscribe(value => console.log(value));
   }
 
 }
