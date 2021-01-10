@@ -14,6 +14,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {A11yModule} from '@angular/cdk/a11y';
 import {DialogCloseDirective} from './directives/dialog-close.directive';
 import {PredefinedDialogComponent} from './components/predefined-dialog/predefined-dialog.component';
+import {CdkTableModule} from '@angular/cdk/table';
 
 
 @NgModule({
@@ -34,9 +35,15 @@ import {PredefinedDialogComponent} from './components/predefined-dialog/predefin
     RouterModule.forChild([]),
     OverlayModule,
     PortalModule,
-    A11yModule
+    A11yModule,
+    CdkTableModule
   ],
   exports: [
+    CommonModule,
+    OverlayModule,
+    PortalModule,
+    A11yModule,
+    CdkTableModule,
     FooterComponent,
     HeaderComponent,
     ErrorPageComponent,
