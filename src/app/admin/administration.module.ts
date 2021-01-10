@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { AdminRoutingModule } from './admin-routing.module';
-import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
+import {AdminRoutingModule} from './admin-routing.module';
+import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
 import {SharedModule} from '../shared/shared.module';
-import { LocalizationComponent } from './pages/localization/localization.component';
+import {LocalizationComponent} from './pages/localization/localization.component';
 
 
 @NgModule({
@@ -15,4 +15,5 @@ import { LocalizationComponent } from './pages/localization/localization.compone
         SharedModule
     ]
 })
-export class AdministrationModule { }
+export class AdministrationModule {
+}
