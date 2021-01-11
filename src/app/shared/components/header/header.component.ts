@@ -1,28 +1,30 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {AppRootScrollService} from '../../../services/app-root-scroll.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   /**
    * @description header element to use it later to attach/detach
    */
   @ViewChild('header') element: ElementRef | undefined;
+  scrollSubscription: Subscription | undefined;
 
-  constructor() {
+  constructor(private scrollService: AppRootScrollService) {
   }
 
   ngOnInit(): void {
+    this.scrollService.onScroll$.subscribe((scroll) => this.onScroll(scroll));
   }
 
   /**
    * @description eventListener callback to listen to scroll event on the window.
    */
-  @HostListener('window:scroll')
-  onScroll(): void {
-    const {pageYOffset: scroll} = window;
+  onScroll(scroll: number): void {
     if (scroll >= 40) {
       this._attachSticky();
     } else {
@@ -48,6 +50,10 @@ export class HeaderComponent implements OnInit {
     if (this.element?.nativeElement.classList.contains('sticky')) {
       this.element?.nativeElement.classList.remove('sticky');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.scrollSubscription?.unsubscribe();
   }
 
 }
