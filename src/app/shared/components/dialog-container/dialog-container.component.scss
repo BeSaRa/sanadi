@@ -1,8 +1,13 @@
 :host {
   background-color: white;
-  display: inline-flex;
-  max-width: 85vw;
-  max-height: 85vh;
+  min-height: inherit;
+  max-height: inherit;
   overflow: hidden;
   padding: 0 15px;
+  display: block;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: 0;
+  width: 100%;
+  height: 100%;
 }

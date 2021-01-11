@@ -21,6 +21,7 @@ export class DialogService {
                       predefinedDialog?: keyof ITypeDialogList): DialogRef {
     const overlay = this.overlay.create({
       hasBackdrop: true,
+      panelClass: 'dialog-pan-class',
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
     });
     return new DialogRef(overlay, this.langService, this.injector, component, data, config, predefinedDialog);
