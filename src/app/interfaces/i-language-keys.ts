@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  confirm_delete_x: string;
+  no: string;
+  yes: string;
+  create_x_success: string;
   update_x_success: string;
   specific_min_length: string;
   too_short: string;

@@ -7,6 +7,7 @@ import {FormManager} from '../../../models/form-manager';
 import {cloneDeep as _clone} from 'lodash';
 import {FactoryService} from '../../../services/factory.service';
 import {ToastService} from '../../../services/toast.service';
+import {OperationTypes} from '../../../enums/operation-types.enum';
 
 @Component({
   selector: 'app-localization-popup',
@@ -16,43 +17,47 @@ import {ToastService} from '../../../services/toast.service';
 export class LocalizationPopupComponent implements OnInit, OnDestroy {
   localForm: FormGroup = {} as FormGroup;
   localization: Localization;
-  editMode: boolean;
+  operation: OperationTypes;
   fm: FormManager = {} as FormManager;
-  lang: LangService = {} as LangService;
+  langService: LangService = {} as LangService;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: { localization: Localization, editMode: boolean },
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: { localization: Localization, operation: OperationTypes },
               private toast: ToastService,
               private fb: FormBuilder) {
     this.localization = data.localization;
-    this.editMode = data.editMode;
-    this.lang = FactoryService.getService('LangService');
+    this.operation = data.operation;
+    this.langService = FactoryService.getService('LangService');
   }
 
   ngOnInit(): void {
     this.localForm = this.fb.group({
       localizationKey: [{
         value: this.localization.localizationKey,
-        disabled: this.editMode
-      }, [Validators.required, Validators.minLength(3)]],
-      arName: [this.localization.arName, [Validators.required, Validators.minLength(3)]],
-      enName: [this.localization.enName, [Validators.required, Validators.minLength(3)]]
+        disabled: this.operation
+      }, [Validators.required, Validators.minLength(2)]],
+      arName: [this.localization.arName, [Validators.required, Validators.minLength(2)]],
+      enName: [this.localization.enName, [Validators.required, Validators.minLength(2)]]
     });
     this.fm = new FormManager(this.localForm);
     // will check it later
-    if (this.editMode) {
+    if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
     }
   }
 
-  ngOnDestroy(): void {
-
-  }
-
   saveLocalization(): void {
     let localization = _clone(Object.assign(new Localization(), {...this.localization, ...this.localForm.value})) as Localization;
+    const message = this.operation === OperationTypes.CREATE ? this.langService.lang.create_x_success : this.langService.lang.update_x_success;
     const sub = localization.save().subscribe(local => {
-      this.toast.success(this.lang.lang.update_x_success.change({x: local.localizationKey}));
+      this.toast.success(message.change({x: local.localizationKey}));
+      this.localization = local;
+      this.operation = OperationTypes.UPDATE;
+      this.localForm.get('localizationKey')?.disable();
       sub.unsubscribe();
     });
+  }
+
+  ngOnDestroy(): void {
+
   }
 }

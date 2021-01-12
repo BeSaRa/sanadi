@@ -16,6 +16,7 @@ import {LocalizationPopupComponent} from '../admin/popups/localization-popup/loc
 import {DialogRef} from '../shared/models/dialog-ref';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {interceptLocalization} from '../model-interceptors/localization-interceptor';
+import {OperationTypes} from '../enums/operation-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -127,12 +128,15 @@ export class LangService {
     return this.http.get<Localization>(this.urlService.URLS.LANGUAGE + '/' + localId);
   }
 
-  editLocal(localId: number): Observable<DialogRef> {
+  openUpdateDialog(localId: number): Observable<DialogRef> {
     return this.getById(localId).pipe(
       switchMap((localization: Localization) => {
-        return of(this.dialog.show(LocalizationPopupComponent, {localization: localization, editMode: true}));
+        return of(this.dialog.show(LocalizationPopupComponent, {localization: localization, operation: OperationTypes.UPDATE}));
       })
     );
+  }
 
+  openCreateDialog(): DialogRef {
+    return this.dialog.show(LocalizationPopupComponent, {localization: new Localization(), operation: OperationTypes.CREATE});
   }
 }

@@ -4,6 +4,7 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {ToastComponent} from '../shared/components/toast/toast.component';
 import {ToastRef} from '../shared/models/toast-ref';
 import {TOAST_DATA_TOKEN} from '../shared/tokens/tokens';
+import {LangService} from './lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import {TOAST_DATA_TOKEN} from '../shared/tokens/tokens';
 export class ToastService {
   private overlayRefStack: ToastRef[] = [];
 
-  constructor(private overlay: Overlay, private injector: Injector) {
+  constructor(private overlay: Overlay, private injector: Injector, private langService: LangService) {
 
   }
 
@@ -31,7 +32,7 @@ export class ToastService {
     });
 
 
-    const toastRef = new ToastRef(toastOverlay);
+    const toastRef = new ToastRef(toastOverlay , this.langService);
     this.overlayRefStack.push(toastRef);
 
     const injector = this.createInjector(message, toastRef);

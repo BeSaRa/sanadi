@@ -1,6 +1,8 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ITypeDialogList} from '../../../interfaces/i-type-dialog-list';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
+import {LangService} from '../../../services/lang.service';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
 
 @Component({
   selector: 'app-predefined-dialog',
@@ -14,11 +16,11 @@ export class PredefinedDialogComponent implements OnInit {
     error: {icon: 'mdi-close-circle', textClass: 'text-danger'},
     success: {icon: 'mdi-check-circle', textClass: 'text-success'},
     info: {icon: 'mdi-information', textClass: 'text-info'},
-    confirm: {icon: 'mdi-help-rhombus', textClass: 'text-primary'},
-    confirmWithThree: {icon: 'mdi-help-rhombus', textClass: 'text-primary'}
+    confirm: {icon: 'mdi-help-rhombus', textClass: 'text-primary'}
   };
+  userClickOn = UserClickOn;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: any) {
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: any, public langService: LangService) {
   }
 
   ngOnInit(): void {

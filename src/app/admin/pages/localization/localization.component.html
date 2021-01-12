@@ -1,8 +1,8 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <div class="row">
     <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary m-0 d-inline-block">{{lang.lang.localization}}</h1>
-      <button class="btn btn-link outline-none" (click)="addNewLocalization()"><i class="mdi mdi-plus-box"></i>
+      <h1 class="h6 text-primary m-0 d-inline-block">{{langService.lang.localization}}</h1>
+      <button class="btn btn-link outline-none" (click)="addLocalization()"><i class="mdi mdi-plus-box"></i>
       </button>
       <button class="btn btn-link" (click)="reload$.next($event)"><i class="mdi mdi-reload"></i></button>
     </div>
@@ -12,27 +12,28 @@
       <div class="table-responsive">
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="localization">
           <ng-container cdkColumnDef="id">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.lang.identifier}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.identifier}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.id}} </td>
           </ng-container>
           <ng-container cdkColumnDef="arName">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.lang.arabic_name}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.arabic_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
           </ng-container>
           <ng-container cdkColumnDef="enName">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.lang.english_name}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
           </ng-container>
           <ng-container cdkColumnDef="localizationKey">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.lang.localization_key}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.localization_key}}</th>
             <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">{{row.localizationKey}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.lang.actions}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.actions}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <div class="d-flex flex-row">
-                <a href="#" class="icon-btn"><i class="mdi mdi-close-box"></i></a>
-                <a href="#" (click)="editLocalization(row.id , $event)" class="icon-btn"><i class="mdi mdi-pen"></i></a>
+                <a href="#" (click)="deleteLocalization(row , $event)" class="icon-btn"><i
+                  class="mdi mdi-close-box"></i></a>
+                <a href="#" (click)="editLocalization(row , $event)" class="icon-btn"><i class="mdi mdi-pen"></i></a>
               </div>
             </td>
           </ng-container>
