@@ -5,10 +5,11 @@ import {AdminRoutingModule} from './admin-routing.module';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
 import {SharedModule} from '../shared/shared.module';
 import {LocalizationComponent} from './pages/localization/localization.component';
+import { LocalizationPopupComponent } from './popups/localization-popup/localization-popup.component';
 
 
 @NgModule({
-  declarations: [AdminHomeComponent, LocalizationComponent],
+  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent],
     imports: [
         CommonModule,
         AdminRoutingModule,

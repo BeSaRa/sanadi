@@ -11,4 +11,16 @@ export class OrgBranch extends BaseModel {
   unitName: string | undefined;
   address: string | undefined;
   statusDateModified: number | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

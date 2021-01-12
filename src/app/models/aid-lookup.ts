@@ -6,4 +6,16 @@ export class AidLookup extends BaseModel {
   statusDateModified: number | undefined;
   aidType: number | undefined;
   parent: number | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

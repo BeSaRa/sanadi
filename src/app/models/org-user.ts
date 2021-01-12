@@ -13,4 +13,16 @@ export class OrgUser extends BaseModel {
   officialPhoneNumber: string | undefined;
   phoneExtension: string | undefined;
   jobTitle: number | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

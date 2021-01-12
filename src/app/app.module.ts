@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, forwardRef, NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './pages/login/login.component';
@@ -14,6 +14,7 @@ import {UrlService} from './services/url.service';
 import {IAppUrls} from './interfaces/i-app-urls';
 import {httpInterceptors} from './http-interceptors/http-interceptors';
 import {LangService} from './services/lang.service';
+import './helpers/protoypes/string-prototypes';
 
 @NgModule({
   declarations: [

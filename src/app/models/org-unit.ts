@@ -16,4 +16,16 @@ export class OrgUnit extends BaseModel {
   registryDate: number | undefined;
   orgNationality: number | undefined;
   poBoxNum: number | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

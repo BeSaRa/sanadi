@@ -115,7 +115,7 @@ app-dialog-container {
   display: block;
   max-height: 65vh;
   overflow: auto;
-  width: 300px;
+  width: 400px;
   max-width: 100%;
   box-sizing: content-box;
 }
@@ -127,6 +127,22 @@ app-dialog-container {
 
   & > *:not(:first-child) {
     margin-left: 10px;
+  }
+}
+
+html[dir="rtl"] {
+  .dialog-actions {
+    border-top: 1px solid tint-color($primary, 80);
+    display: flex;
+    justify-content: flex-end;
+
+    & > * {
+      margin: 0;
+    }
+
+    & > *:not(:last-child) {
+      margin-left: 10px;
+    }
   }
 }
 

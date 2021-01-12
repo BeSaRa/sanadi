@@ -15,6 +15,7 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {DialogCloseDirective} from './directives/dialog-close.directive';
 import {PredefinedDialogComponent} from './components/predefined-dialog/predefined-dialog.component';
 import {CdkTableModule} from '@angular/cdk/table';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import {CdkTableModule} from '@angular/cdk/table';
     OverlayModule,
     PortalModule,
     A11yModule,
-    CdkTableModule
+    CdkTableModule,
+    ReactiveFormsModule
   ],
   exports: [
     CommonModule,
@@ -44,6 +46,7 @@ import {CdkTableModule} from '@angular/cdk/table';
     PortalModule,
     A11yModule,
     CdkTableModule,
+    ReactiveFormsModule,
     FooterComponent,
     HeaderComponent,
     ErrorPageComponent,

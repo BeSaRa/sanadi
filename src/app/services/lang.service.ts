@@ -1,15 +1,21 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Localization} from '../models/localization';
 import {Generator} from '../decorators/generator';
 import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
-import {map, tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {DialogService} from './dialog.service';
+import {FactoryService} from './factory.service';
+import {LocalizationPopupComponent} from '../admin/popups/localization-popup/localization-popup.component';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import {interceptLocalization} from '../model-interceptors/localization-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +35,11 @@ export class LangService {
   protected firstTime = true;
   public lang: ILanguageKeys = {} as ILanguageKeys;
 
-  constructor(@Inject(DOCUMENT) private document: Document, private http: HttpClient, private urlService: UrlService) {
+  constructor(@Inject(DOCUMENT) private document: Document,
+              private http: HttpClient,
+              private dialog: DialogService,
+              private urlService: UrlService) {
+    FactoryService.registerService('LangService', this);
     this.changeLanguage(this.languageChange.value);
     this.firstTime = false;
   }
@@ -98,15 +108,31 @@ export class LangService {
     this.changeLanguage(this.languages[code]);
   }
 
-  addLocal(local: Localization): Observable<Localization> {
+  @SendInterceptor(interceptLocalization)
+  create(@InterceptParam() local: Localization): Observable<Localization> {
     return this.http.post<Localization>(this.urlService.URLS.LANGUAGE, local);
   }
 
-  updateLocal(local: Localization): Observable<any> {
-    return this.http.put(this.urlService.URLS.LANGUAGE, local);
+  @SendInterceptor(interceptLocalization)
+  update(@InterceptParam() local: Localization): Observable<any> {
+    return this.http.put(this.urlService.URLS.LANGUAGE + '/' + local.id, local);
   }
 
-  deleteLocal(local: Localization | number): Observable<any> {
-    return this.http.delete(this.urlService.URLS.LANGUAGE);
+  delete(localId: number): Observable<boolean> {
+    return this.http.delete<boolean>(this.urlService.URLS.LANGUAGE + '/' + localId);
+  }
+
+  @Generator(Localization)
+  getById(localId: number): Observable<Localization> {
+    return this.http.get<Localization>(this.urlService.URLS.LANGUAGE + '/' + localId);
+  }
+
+  editLocal(localId: number): Observable<DialogRef> {
+    return this.getById(localId).pipe(
+      switchMap((localization: Localization) => {
+        return of(this.dialog.show(LocalizationPopupComponent, {localization: localization, editMode: true}));
+      })
+    );
+
   }
 }

@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LangService} from '../../services/lang.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,11 +11,17 @@ import {LangService} from '../../services/lang.service';
 export class LoginComponent implements OnInit {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
+  loginForm: FormGroup = {} as FormGroup;
 
-  constructor(public lang: LangService) {
+  constructor(public lang: LangService, private router: Router, private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+
   }
 
   togglePasswordView(event: Event): void {
@@ -22,4 +30,7 @@ export class LoginComponent implements OnInit {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
+  processLogin(): Promise<any> {
+    return this.router.navigate(['home']);
+  }
 }

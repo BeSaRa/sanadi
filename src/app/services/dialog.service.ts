@@ -5,14 +5,20 @@ import {LangService} from './lang.service';
 import {IDialogConfig} from '../interfaces/i-dialog-config';
 import {PredefinedDialogComponent} from '../shared/components/predefined-dialog/predefined-dialog.component';
 import {ITypeDialogList} from '../interfaces/i-type-dialog-list';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
+  langService!: LangService;
 
-  constructor(private overlay: Overlay, private injector: Injector, private langService: LangService) {
-
+  constructor(private overlay: Overlay, private injector: Injector) {
+    FactoryService.registerService('DialogService', this);
+    const timeoutId = setTimeout(() => {
+      this.langService = FactoryService.getService<LangService>('LangService');
+      clearTimeout(timeoutId);
+    });
   }
 
   private _showDialog(component: ComponentType<any>,

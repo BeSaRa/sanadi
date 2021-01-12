@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  update_x_success: string;
+  specific_min_length: string;
+  too_short: string;
+  required_field: string;
+  add_localization: string;
   actions: string;
   english_name: string;
   arabic_name: string;

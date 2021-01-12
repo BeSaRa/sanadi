@@ -38,7 +38,7 @@ export class ToastService {
     const timer = setTimeout(() => {
       toastRef.close();
       clearTimeout(timer);
-    }, 5000);
+    }, 3000);
 
     const componentPortal = new ComponentPortal(ToastComponent, null, injector);
     const componentRef = toastOverlay.attach(componentPortal);

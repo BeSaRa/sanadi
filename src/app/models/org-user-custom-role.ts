@@ -5,4 +5,16 @@ export class OrgUserCustomRole extends BaseModel {
   status: boolean | undefined;
   description: string | undefined;
   permissionSet: OrgUserCustomRolePermission[] | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

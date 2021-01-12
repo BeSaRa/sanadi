@@ -7,4 +7,16 @@ export class Lookup extends BaseModel {
   status: number | undefined;
   itemOrder: number | undefined;
   parent: number | undefined;
+
+  create(): void {
+  }
+
+  delete(): void {
+  }
+
+  save(): void {
+  }
+
+  update(): void {
+  }
 }

@@ -1,0 +1,53 @@
+<div class="dialog-toolbar bg-primary">
+  <h1 class="h6 text-white">{{lang.lang.add_localization}}</h1>
+</div>
+<div class="dialog-content">
+  <form novalidate autocomplete="off"
+        [formGroup]="localForm">
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <label for="localizationKey" class="form-label">{{lang.lang.localization_key}}</label>
+        <input id="localizationKey"
+               [ngClass]="fm.getStatusClass('localizationKey')"
+               formControlName="localizationKey" class="form-control">
+        <span class="invalid-feedback position-absolute">
+          <span *ngIf="fm.getFieldErrors('localizationKey')?.required">{{lang.lang.required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('localizationKey')?.minlength">{{lang.lang.specific_min_length.change({
+            length: 3,
+            field: lang.lang.localization_key
+          })}}</span>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <label for="arName" class="form-label">{{lang.lang.arabic_name}}</label>
+        <textarea id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
+                  class="form-control"></textarea>
+        <span class="invalid-feedback position-absolute">
+          <span *ngIf="fm.getFieldErrors('arName')?.required">{{lang.lang.required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('arName')?.minlength">{{lang.lang.too_short}}</span>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <label for="enName" class="form-label">{{lang.lang.english_name}}</label>
+        <textarea id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
+                  class="form-control"></textarea>
+        <span class="invalid-feedback position-absolute">
+          <span *ngIf="fm.getFieldErrors('enName')?.required">{{lang.lang.required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('enName')?.minlength">{{lang.lang.too_short}}</span>
+        </span>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="fm.displayFormValidity()" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="localForm.invalid" (click)="saveLocalization()" class="btn btn-primary">save</button>
+  <button dialogClose="welcome" class="btn btn-secondary">cancel</button>
+</div>
