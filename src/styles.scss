@@ -24,8 +24,11 @@ html[dir="rtl"] .table-responsive {
   padding-right: 1px;
 }
 
-.text-ltr {
+.dir-ltr {
   direction: ltr !important;
+}
+.dir-rtl {
+  direction: rtl !important;
 }
 
 .column-style > table > tbody > tr > th {

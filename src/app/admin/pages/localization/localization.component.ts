@@ -64,7 +64,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           localization.delete().subscribe(() => {
-            this.toast.success('DELETE SUCCESS');
+            this.toast.success(this.langService.lang.delete_x_success);
             this.reload$.next(null);
           });
         }

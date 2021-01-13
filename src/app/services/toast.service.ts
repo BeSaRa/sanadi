@@ -5,14 +5,21 @@ import {ToastComponent} from '../shared/components/toast/toast.component';
 import {ToastRef} from '../shared/models/toast-ref';
 import {TOAST_DATA_TOKEN} from '../shared/tokens/tokens';
 import {LangService} from './lang.service';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
   private overlayRefStack: ToastRef[] = [];
+  private langService: LangService = {} as LangService;
 
-  constructor(private overlay: Overlay, private injector: Injector, private langService: LangService) {
+  constructor(private overlay: Overlay, private injector: Injector) {
+    FactoryService.registerService('ToastService', this);
+    const timerId = setTimeout(() => {
+      this.langService = FactoryService.getService('LangService');
+      clearTimeout(timerId);
+    });
 
   }
 
@@ -32,7 +39,7 @@ export class ToastService {
     });
 
 
-    const toastRef = new ToastRef(toastOverlay , this.langService);
+    const toastRef = new ToastRef(toastOverlay, this.langService);
     this.overlayRefStack.push(toastRef);
 
     const injector = this.createInjector(message, toastRef);

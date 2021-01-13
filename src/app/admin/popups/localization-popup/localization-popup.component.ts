@@ -26,10 +26,10 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) {
     this.localization = data.localization;
     this.operation = data.operation;
-    this.langService = FactoryService.getService('LangService');
   }
 
   ngOnInit(): void {
+    this.langService = FactoryService.getService('LangService');
     this.localForm = this.fb.group({
       localizationKey: [{
         value: this.localization.localizationKey,

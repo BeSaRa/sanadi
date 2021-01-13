@@ -11,12 +11,12 @@ import {FactoryService} from './factory.service';
   providedIn: 'root'
 })
 export class DialogService {
-  langService!: LangService;
+  langService: LangService = {} as LangService;
 
   constructor(private overlay: Overlay, private injector: Injector) {
     FactoryService.registerService('DialogService', this);
     const timeoutId = setTimeout(() => {
-      this.langService = FactoryService.getService<LangService>('LangService');
+      this.langService = FactoryService.getService('LangService');
       clearTimeout(timeoutId);
     });
   }

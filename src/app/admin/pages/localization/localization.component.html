@@ -17,11 +17,11 @@
           </ng-container>
           <ng-container cdkColumnDef="arName">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.arabic_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.arName}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="enName">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.english_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block">{{row.enName}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="localizationKey">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.lang.localization_key}}</th>

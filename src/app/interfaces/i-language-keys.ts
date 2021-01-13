@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  delete_x_success: string;
   confirm_delete_x: string;
   no: string;
   yes: string;
