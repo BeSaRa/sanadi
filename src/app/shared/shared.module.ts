@@ -16,6 +16,7 @@ import {DialogCloseDirective} from './directives/dialog-close.directive';
 import {PredefinedDialogComponent} from './components/predefined-dialog/predefined-dialog.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {ReactiveFormsModule} from '@angular/forms';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     TestDialogComponent,
     DialogContainerComponent,
     DialogCloseDirective,
-    PredefinedDialogComponent
+    PredefinedDialogComponent,
+    PageHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -40,22 +42,23 @@ import {ReactiveFormsModule} from '@angular/forms';
     CdkTableModule,
     ReactiveFormsModule
   ],
-  exports: [
-    CommonModule,
-    OverlayModule,
-    PortalModule,
-    A11yModule,
-    CdkTableModule,
-    ReactiveFormsModule,
-    FooterComponent,
-    HeaderComponent,
-    ErrorPageComponent,
-    MouseEnterLeaveDirective,
-    ToastComponent,
-    ServiceListComponent,
-    DialogCloseDirective,
-    PredefinedDialogComponent
-  ]
+    exports: [
+        CommonModule,
+        OverlayModule,
+        PortalModule,
+        A11yModule,
+        CdkTableModule,
+        ReactiveFormsModule,
+        FooterComponent,
+        HeaderComponent,
+        ErrorPageComponent,
+        MouseEnterLeaveDirective,
+        ToastComponent,
+        ServiceListComponent,
+        DialogCloseDirective,
+        PredefinedDialogComponent,
+        PageHeaderComponent
+    ]
 })
 export class SharedModule {
 }
