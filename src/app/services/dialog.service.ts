@@ -57,9 +57,5 @@ export class DialogService {
     return this._showDialog(PredefinedDialogComponent, data, config, 'confirm');
   }
 
-  confirmWithThree(data?: string, config?: IDialogConfig): DialogRef {
-    return this._showDialog(PredefinedDialogComponent, data, config, 'confirmWithThree');
-  }
-
 
 }
