@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {Localization} from '../../../models/localization';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {switchMap, tap} from 'rxjs/operators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {DialogService} from '../../../services/dialog.service';
@@ -17,9 +17,22 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   localization: Localization[] = [];
   displayedColumns: string[] = ['id', 'localizationKey', 'arName', 'enName', 'actions'];
   private reloadSubscription: Subscription | undefined;
+  private addNewSubscription: Subscription | undefined;
   public reload$ = new BehaviorSubject<any>(null);
+  public addNew$ = new Subject<any>();
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
+  }
+
+  ngOnInit(): void {
+    this.localization = this.langService.localization;
+    this.listenToReload();
+    this.listenToAdd();
+  }
+
+  ngOnDestroy(): void {
+    this.reloadSubscription?.unsubscribe();
+    this.addNewSubscription?.unsubscribe();
   }
 
   private listenToReload(): void {
@@ -32,19 +45,22 @@ export class LocalizationComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    this.localization = this.langService.localization;
-    this.listenToReload();
+  private listenToAdd() {
+    this.addNewSubscription = this.addNew$.pipe(
+      tap(() => {
+        this.add();
+      })
+    ).subscribe();
   }
 
-  addLocalization(): void {
+  add(): void {
     const sub = this.langService.openCreateDialog().onAfterClose.subscribe(() => {
       this.reload$.next(null);
       sub.unsubscribe();
     });
   }
 
-  editLocalization(localization: Localization, $event: MouseEvent): void {
+  edit(localization: Localization, $event: MouseEvent): void {
     $event.preventDefault();
     const sub = this.langService.openUpdateDialog(localization.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose.subscribe((_) => {
@@ -55,7 +71,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
 
   }
 
-  deleteLocalization(localization: Localization, $event: MouseEvent) {
+  delete(localization: Localization, $event: MouseEvent): void {
     $event.preventDefault();
     // @ts-ignore
     const sub = this.dialogService.confirm(this.langService.lang.confirm_delete_x.change({x: localization.localizationKey}))
@@ -69,9 +85,5 @@ export class LocalizationComponent implements OnInit, OnDestroy {
           });
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
   }
 }
