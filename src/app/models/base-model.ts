@@ -1,8 +1,8 @@
 export abstract class BaseModel {
   // @ts-ignore
   id: number;
-  arName: string | undefined;
-  enName: string | undefined;
+  arName: string = '';
+  enName: string = '';
   updatedBy?: number | undefined;
   updatedOn?: number | undefined;
   clientData?: string | undefined;

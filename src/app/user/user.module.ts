@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 
 import {UserRoutingModule} from './user-routing.module';
 import {UserHomeComponent} from './pages/user-home/user-home.component';
@@ -11,7 +10,6 @@ import {UserInquiryComponent} from './pages/user-inquiry/user-inquiry.component'
 @NgModule({
   declarations: [UserHomeComponent, UserRequestComponent, UserInquiryComponent],
   imports: [
-    CommonModule,
     SharedModule,
     UserRoutingModule
   ]

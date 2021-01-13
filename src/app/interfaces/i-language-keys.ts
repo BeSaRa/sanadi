@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+  provide_request: string;
+  administration : string;
+  inquiries : string;
+  custom_role : string;
+  users: string;
+  organizations: string;
+  aid: string;
   delete_x_success: string;
   confirm_delete_x: string;
   no: string;

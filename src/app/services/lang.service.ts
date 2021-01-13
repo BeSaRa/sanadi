@@ -34,7 +34,8 @@ export class LangService {
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable();
   public localization: Localization[] = [];
   protected firstTime = true;
-  public lang: ILanguageKeys = {} as ILanguageKeys;
+  public lang: Record<keyof ILanguageKeys, string> = {} as Record<keyof ILanguageKeys, string>;
+  private localizationMap: Record<keyof ILanguageKeys, Localization> = {} as Record<keyof ILanguageKeys, Localization>;
 
   constructor(@Inject(DOCUMENT) private document: Document,
               private http: HttpClient,
@@ -70,21 +71,28 @@ export class LangService {
   }
 
   private prepareCurrentLang(): ILanguageKeys {
-    this.lang = this.localization.reduce<ILanguageKeys>((acc: ILanguageKeys, current: Localization) => {
+    this.lang = this.localization.reduce<Record<keyof ILanguageKeys, string>>((acc: ILanguageKeys, current: Localization) => {
       const key = current.localizationKey as keyof ILanguageKeys;
       const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
       return {...acc, [key]: current[currentLang]} as ILanguageKeys;
-    }, {lang: this.languageChange.value.code} as ILanguageKeys);
+    }, {lang: this.languageChange.value.code} as Record<keyof ILanguageKeys, string>);
     return this.lang;
   }
-
 
   loadLocalization(prepare: boolean = false): Observable<Localization[]> {
     return this._loadLocalization()
       .pipe(
         tap(result => this.localization = result),
-        tap(_ => prepare ? this.prepareCurrentLang() : null)
+        tap(_ => prepare ? this.prepareCurrentLang() : null),
+        tap(_ => this.prepareLocalizationMap())
       );
+  }
+
+  prepareLocalizationMap(): void {
+    this.localizationMap = this.localization.reduce<Record<keyof ILanguageKeys, Localization>>((acc, current) => {
+      const localKey = current.localizationKey as keyof ILanguageKeys;
+      return {...acc, [localKey]: current};
+    }, {} as Record<keyof ILanguageKeys, Localization>);
   }
 
   /**
@@ -107,6 +115,23 @@ export class LangService {
   toggleLanguage(): void {
     const code = this.languageToggler[this.languageChange.value.code];
     this.changeLanguage(this.languages[code]);
+  }
+
+  private getLocalByKey(key: keyof ILanguageKeys): Localization {
+    return this.localizationMap[key] || {};
+  }
+
+  private getLocalForSpecificLang(key: keyof ILanguageKeys, lang: 'ar' | 'en'): string {
+    const langKey = lang + 'Name' as keyof { arName: string, enName: string };
+    return this.getLocalByKey(key)[langKey] || key;
+  }
+
+  getArabicLocalByKey(key: keyof ILanguageKeys): string {
+    return this.getLocalForSpecificLang(key, 'ar');
+  }
+
+  getEnglishLocalByKey(key: keyof ILanguageKeys): string {
+    return this.getLocalForSpecificLang(key, 'en');
   }
 
   @SendInterceptor(interceptLocalization)

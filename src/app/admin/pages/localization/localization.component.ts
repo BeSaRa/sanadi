@@ -15,7 +15,7 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 })
 export class LocalizationComponent implements OnInit, OnDestroy {
   localization: Localization[] = [];
-  displayedColumns: string[] = ['id', 'arName', 'enName', 'localizationKey', 'actions'];
+  displayedColumns: string[] = ['id', 'localizationKey', 'arName', 'enName', 'actions'];
   private reloadSubscription: Subscription | undefined;
   public reload$ = new BehaviorSubject<any>(null);
 

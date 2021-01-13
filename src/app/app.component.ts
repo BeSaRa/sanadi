@@ -1,4 +1,4 @@
-import {Component, Host, HostListener} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {LangService} from './services/lang.service';
 import {AppRootScrollService} from './services/app-root-scroll.service';
 
@@ -18,6 +18,13 @@ export class AppComponent {
     if ((keyCode === 76 || which === 76) && ctrlKey && altKey) {
       this.langService.toggleLanguage();
     }
+    if ((keyCode === 65 || which === 65) && ctrlKey && altKey) {
+      const sub = this.langService.openCreateDialog().onAfterClose.subscribe(_ => {
+        this.langService.loadLocalization(true);
+        sub.unsubscribe();
+      });
+    }
+
   }
 
   @HostListener('scroll', ['$event'])
