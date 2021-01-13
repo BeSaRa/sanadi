@@ -12,7 +12,7 @@ import {switchMap, tap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
-import {LocalizationPopupComponent} from '../admin/popups/localization-popup/localization-popup.component';
+import {LocalizationPopupComponent} from '../administration/popups/localization-popup/localization-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {interceptLocalization} from '../model-interceptors/localization-interceptor';
