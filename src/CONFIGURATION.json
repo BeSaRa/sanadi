@@ -1,6 +1,6 @@
 {
   "ENVIRONMENTS_URLS": [
-    "http://localhost:9080/sanadi"
+    "http://localhost:3000"
   ],
   "BASE_ENVIRONMENT_INDEX": 0,
   "BASE_URL": "",
