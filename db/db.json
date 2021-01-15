@@ -1,1 +1,114 @@
-{}
+{
+  "customRoles": [
+    {
+      "arName": "Role 1",
+      "enName": "Role 1",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 1,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "arName": "Role 2",
+      "enName": "Role 2",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 2,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "arName": "Role 3",
+      "enName": "Role 3",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 3,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "arName": "Role 4",
+      "enName": "Role 4",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 4,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "arName": "Role 5",
+      "enName": "Role 5",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 5,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "arName": "Role 6",
+      "enName": "Role 6",
+      "status": true,
+      "permissions": [],
+      "description": "description",
+      "id": 6,
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ],
+  "permissions": [
+    {
+      "id": 1,
+      "arName": "أضافة معاملة",
+      "enName": "Add Transaction",
+      "permissionKey": "ADD_TRANSACTION",
+      "groupId": 1
+    },
+    {
+      "id": 2,
+      "arName": "حذف معاملة",
+      "enName": "Delete Transaction",
+      "permissionKey": "DELETE_TRANSACTION",
+      "groupId": 1
+    },
+    {
+      "id": 3,
+      "arName": "تعديل معاملة",
+      "enName": "Edit Transaction",
+      "permissionKey": "EDIT_TRANSACTION",
+      "groupId": 1
+    }
+  ],
+  "customRolePermission": [
+    {
+      "id": 1,
+      "permissionId": 1,
+      "customRoleId": 1
+    },
+    {
+      "id": 2,
+      "permissionId": 2,
+      "customRoleId": 2
+    }
+  ],
+  "lookups": [
+    {
+      "id": 1,
+      "arName": "أضافة معاملة",
+      "enName": "Add Transaction",
+      "category": null,
+      "lookupKey": null,
+      "lookupStrKey": null,
+      "status": null,
+      "itemOrder": null,
+      "parents": null,
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ]
+}
