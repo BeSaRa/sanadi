@@ -4,9 +4,9 @@ import {map as _map} from 'lodash';
 function _generateModel(data: any, model: any, property?: string, receiveCallback?: any): any {
   let finalData;
   if (!property) {
-    finalData = Object.assign(new model(), data);
+    finalData = model ? Object.assign(new model(), data) : data;
   } else {
-    finalData = Object.assign(new model(), data[property]);
+    finalData = model ? Object.assign(new model(), data[property]) : data[property];
   }
   return receiveCallback ? receiveCallback(finalData) : finalData;
 }
@@ -22,13 +22,17 @@ function _generateCollection(collection: any, model: any, property?: string, rec
 }
 
 // @ts-ignore
-export function Generator(model, isCollection = false, options?: { property?: string, interceptReceive?: any }): any {
+export function Generator(model?, isCollection = false, options?: { property?: string, interceptReceive?: any }): any {
   // @ts-ignore
   return (target, property, descriptor: PropertyDescriptor) => {
     const original = descriptor.value;
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
     descriptor.value = function(...args): any {
+      if (!model) {
+        // @ts-ignore
+        model = this._getModel();
+      }
       return original.apply(this, args).pipe(
         map(data => isCollection
           ? _generateCollection(data, model, options?.property, options?.interceptReceive)

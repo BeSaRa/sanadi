@@ -1,4 +1,5 @@
 import {findIndex as _findIndex, cloneDeep as deepClone} from 'lodash';
+import {identity} from 'rxjs';
 
 // tslint:disable-next-line:typedef
 export function InitClassInterceptor(callback?: any) {
@@ -36,6 +37,11 @@ export function SendInterceptor(interceptorCallback?) {
     // tslint:disable-next-line:typedef
     descriptor.value = function(...args) {
       const newArgs = deepClone(args);
+      if (!interceptorCallback) {
+        // @ts-ignore
+        interceptorCallback = this._getSendInterceptor() || identity;
+      }
+
       if (target.hasOwnProperty(metadataProperty)) {
         const params = target[metadataProperty] as any[];
         // tslint:disable-next-line:prefer-for-of
