@@ -1,6 +1,8 @@
 import {BaseModel} from './base-model';
+import {Lookup} from './lookup';
+import {Observable} from 'rxjs';
 
-export class OrgBranch extends BaseModel {
+export class OrgBranch extends BaseModel<Lookup> {
   orgId: number | undefined;
   phoneNumber1: string | undefined;
   phoneNumber2: string | undefined;
@@ -12,15 +14,19 @@ export class OrgBranch extends BaseModel {
   address: string | undefined;
   statusDateModified: number | undefined;
 
-  create(): void {
+  create(): Observable<Lookup> {
+    throw new Error('No Impl');
   }
 
-  delete(): void {
+  delete(): Observable<boolean> {
+    throw new Error('No Impl');
   }
 
-  save(): void {
+  save(): Observable<Lookup> {
+    throw new Error('No Impl');
   }
 
-  update(): void {
+  update(): Observable<Lookup> {
+    throw new Error('No Impl');
   }
 }

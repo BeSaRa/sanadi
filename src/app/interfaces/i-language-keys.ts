@@ -1,8 +1,19 @@
 export interface ILanguageKeys {
+  inactive: string;
+  active: string;
+  description: string;
+  permissions: string;
+  basic_info: string;
+  edit_custom_role: string;
+  edit_localization: string;
+  add_custom_role: string;
+  status_x_updated_fail: string;
+  status_x_updated_success: string;
+  status: string;
   provide_request: string;
-  administration : string;
-  inquiries : string;
-  custom_role : string;
+  administration: string;
+  inquiries: string;
+  custom_role: string;
   users: string;
   organizations: string;
   aid: string;

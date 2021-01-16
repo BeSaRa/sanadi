@@ -3,7 +3,7 @@
     {
       "arName": "Role 1",
       "enName": "Role 1",
-      "status": true,
+      "status": false,
       "permissions": [],
       "description": "description",
       "id": 1,
@@ -84,7 +84,7 @@
       "groupId": 1
     }
   ],
-  "customRolePermission": [
+  "customRolePermissions": [
     {
       "id": 1,
       "permissionId": 1,
@@ -109,6 +109,41 @@
       "parents": null,
       "updatedBy": null,
       "updatedOn": null
+    },
+    {
+      "id": 2,
+      "arName": "أضافة معاملة",
+      "enName": "Add Transaction",
+      "category": null,
+      "lookupKey": null,
+      "lookupStrKey": null,
+      "status": null,
+      "itemOrder": null,
+      "parents": null,
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ],
+  "tickets": [
+    {
+      "status": false,
+      "id": 1,
+      "name": "AHMED MOSTAFA"
+    },
+    {
+      "id": 2,
+      "status": false,
+      "name": "Rawnaq"
+    },
+    {
+      "id": 3,
+      "status": false,
+      "name": "BeSaRa"
+    },
+    {
+      "id": 4,
+      "status": false,
+      "name": "Khaled"
     }
   ]
 }

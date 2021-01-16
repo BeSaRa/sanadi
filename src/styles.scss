@@ -27,6 +27,7 @@ html[dir="rtl"] .table-responsive {
 .dir-ltr {
   direction: ltr !important;
 }
+
 .dir-rtl {
   direction: rtl !important;
 }
@@ -120,6 +121,7 @@ app-dialog-container {
   overflow: auto;
   max-width: 100%;
   box-sizing: content-box;
+  min-width: 200px;
 }
 
 .dialog-actions {
@@ -150,4 +152,13 @@ html[dir="rtl"] {
 
 .icon-btn {
   margin: 0 10px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.min-w400px {
+  width: 400px;
+  max-width: 100%;
 }

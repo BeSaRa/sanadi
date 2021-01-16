@@ -1,20 +1,25 @@
 import {BaseModel} from './base-model';
+import {Observable} from 'rxjs';
 
-export class Permission extends BaseModel {
+export class Permission extends BaseModel<Permission> {
   permissionKey: string | undefined;
   description: string | undefined;
   groupId: number | undefined;
   status: boolean | undefined;
 
-  create(): void {
+  create(): Observable<Permission> {
+    throw new Error('No Impl');
   }
 
-  delete(): void {
+  delete(): Observable<boolean> {
+    throw new Error('No Impl');
   }
 
-  save(): void {
+  save(): Observable<Permission> {
+    throw new Error('No Impl');
   }
 
-  update(): void {
+  update(): Observable<Permission> {
+    throw new Error('No Impl');
   }
 }

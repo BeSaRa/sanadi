@@ -3,7 +3,7 @@ import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
 
-export class Localization extends BaseModel {
+export class Localization extends BaseModel<Localization> {
   localizationKey: string | undefined;
   module: number = 0;
   private service: LangService;

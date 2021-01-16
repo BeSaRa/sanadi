@@ -59,7 +59,7 @@ export class AppModule {
         .toPromise().then((latest) => {
           configurationService.setConfigurations(latest.config);
           urlService.prepareUrls(latest.urls);
-          return lang.loadLocalization(true).toPromise();
+          return lang.load(true).toPromise();
         });
     };
   }

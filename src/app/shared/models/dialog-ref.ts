@@ -17,7 +17,7 @@ export class DialogRef {
   injector: Injector | undefined;
   closeSubscription: Subscription | undefined;
   private afterCloseSub: Subject<any> = new Subject<any>();
-  onAfterClose: Observable<any> = this.afterCloseSub.asObservable();
+  onAfterClose$: Observable<any> = this.afterCloseSub.asObservable();
 
   constructor(private overLayRef: OverlayRef,
               private langService: LangService,

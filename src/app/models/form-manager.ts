@@ -1,7 +1,8 @@
 import {AbstractControl, FormGroup} from '@angular/forms';
+import {LangService} from '../services/lang.service';
 
 export class FormManager {
-  constructor(private form: FormGroup) {
+  constructor(private form: FormGroup, private langService: LangService) {
   }
 
   setForm(form: FormGroup): FormManager {
@@ -41,5 +42,12 @@ export class FormManager {
   displayFormValidity(): void {
     this.form.markAllAsTouched();
   }
+
+  getStatusFieldTranslate(field: string): any {
+    let {active, inactive, status} = this.langService.map;
+    status = status + ' : ';
+    return this.getFormField(field)?.value ? status + active : status + inactive;
+  }
+
 
 }

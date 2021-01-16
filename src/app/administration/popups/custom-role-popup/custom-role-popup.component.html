@@ -1,0 +1,90 @@
+<div class="dialog-toolbar bg-primary">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+</div>
+<div class="dialog-content">
+  <form class="min-w400px" novalidate autocomplete="off"
+        [formGroup]="form">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
+           class="nav-link active position-relative">{{langService.map.basic_info}}
+          <span *ngIf="fm.getFieldInvalidStatus('basic')"
+                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
+        </a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a id="permissions-tab" href="#permissions-tab-content" data-bs-toggle="tab" role="tab"
+           class="nav-link">{{langService.map.permissions}}</a>
+      </li>
+    </ul>
+    <div formGroupName="basic" class="tab-content pt-2">
+      <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
+        <div class="row">
+          <div class="col-sm-12 mb-4">
+            <label for="arName" class="form-label">{{langService.map.arabic_name}}</label>
+            <input id="arName"
+                   [ngClass]="fm.getStatusClass('basic.arName')"
+                   formControlName="arName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+          <span *ngIf="fm.getFieldErrors('basic.arName')?.required">{{langService.map.required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('basic.arName')?.minlength">
+            {{langService.map.specific_min_length.change({length: 3, field: langService.map.arabic_name})}}
+          </span>
+        </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4">
+            <label for="enName" class="form-label">{{langService.map.english_name}}</label>
+            <input id="enName"
+                   [ngClass]="fm.getStatusClass('basic.enName')"
+                   formControlName="enName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+          <span *ngIf="fm.getFieldErrors('basic.enName')?.required">{{langService.map.required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('basic.enName')?.minlength">
+            {{langService.map.specific_min_length.change({length: 3, field: langService.map.english_name})}}
+          </span>
+        </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4">
+            <label for="description" class="form-label">{{langService.map.description}}</label>
+            <textarea id="description" [ngClass]="fm.getStatusClass('basic.description')"
+                      formControlName="description"
+                      class="form-control"></textarea>
+            <span class="invalid-feedback position-absolute">
+              <span *ngIf="fm.getFieldErrors('basic.description')?.required">
+                {{langService.map.required_field}}
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4">
+            <div class="form-check form-switch">
+              <input type="checkbox" id="status" formControlName="status" class="form-check-input cursor-pointer">
+              <label for="status" class="cursor-pointer">{{fm.getStatusFieldTranslate('basic.status')}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" role="tabpanel" aria-labelledby="permissions-tab"
+           id="permissions-tab-content">
+        <div class="row">
+          <div class="col-sm-12 mb-4">
+            permissions
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="fm.displayFormValidity()" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">save</button>
+  <button dialogClose="welcome" class="btn btn-secondary">cancel</button>
+</div>

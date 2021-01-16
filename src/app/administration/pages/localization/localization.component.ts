@@ -7,46 +7,47 @@ import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 
 @Component({
   selector: 'app-localization',
   templateUrl: './localization.component.html',
   styleUrls: ['./localization.component.scss']
 })
-export class LocalizationComponent implements OnInit, OnDestroy {
+export class LocalizationComponent implements OnInit, OnDestroy, PageComponentInterface<Localization> {
   localization: Localization[] = [];
   displayedColumns: string[] = ['id', 'localizationKey', 'arName', 'enName', 'actions'];
-  private reloadSubscription: Subscription | undefined;
-  private addNewSubscription: Subscription | undefined;
-  public reload$ = new BehaviorSubject<any>(null);
-  public addNew$ = new Subject<any>();
+  reloadSubscription!: Subscription;
+  addSubscription!: Subscription;
+  reload$ = new BehaviorSubject<any>(null);
+  add$ = new Subject<any>();
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
+
   }
 
   ngOnInit(): void {
-    this.localization = this.langService.localization;
     this.listenToReload();
     this.listenToAdd();
   }
 
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
-    this.addNewSubscription?.unsubscribe();
+    this.addSubscription?.unsubscribe();
   }
 
-  private listenToReload(): void {
+  listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.langService.loadLocalization();
+        return this.langService.load();
       })
     ).subscribe((locals) => {
       this.localization = locals;
     });
   }
 
-  private listenToAdd() {
-    this.addNewSubscription = this.addNew$.pipe(
+  listenToAdd(): void {
+    this.addSubscription = this.add$.pipe(
       tap(() => {
         this.add();
       })
@@ -54,7 +55,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   }
 
   add(): void {
-    const sub = this.langService.openCreateDialog().onAfterClose.subscribe(() => {
+    const sub = this.langService.openCreateDialog().onAfterClose$.subscribe(() => {
       this.reload$.next(null);
       sub.unsubscribe();
     });
@@ -63,7 +64,7 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   edit(localization: Localization, $event: MouseEvent): void {
     $event.preventDefault();
     const sub = this.langService.openUpdateDialog(localization.id).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose.subscribe((_) => {
+      dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
       });
@@ -74,13 +75,13 @@ export class LocalizationComponent implements OnInit, OnDestroy {
   delete(localization: Localization, $event: MouseEvent): void {
     $event.preventDefault();
     // @ts-ignore
-    const sub = this.dialogService.confirm(this.langService.lang.confirm_delete_x.change({x: localization.localizationKey}))
-      .onAfterClose
+    const sub = this.dialogService.confirm(this.langService.map.confirm_delete_x.change({x: localization.localizationKey}))
+      .onAfterClose$
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           localization.delete().subscribe(() => {
-            this.toast.success(this.langService.lang.delete_x_success);
+            this.toast.success(this.langService.map.delete_x_success);
             this.reload$.next(null);
           });
         }

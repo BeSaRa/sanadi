@@ -1,11 +1,11 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
-import {Observable, Subject} from 'rxjs';
+import {generate, Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 
-export abstract class BackendGenericService<T, D> implements BackendServiceInterface<T, D> {
+export abstract class BackendGenericService<T> implements BackendServiceInterface<T> {
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
@@ -43,11 +43,6 @@ export abstract class BackendGenericService<T, D> implements BackendServiceInter
     // @ts-ignore
     return this.http.put<T>(this._getServiceURL() + '/' + model.id, model);
   }
-
-
-  abstract openCreateDialog(): D
-
-  abstract openUpdateDialog(modelId: number): Observable<D>
 
   abstract _getModel(): any;
 

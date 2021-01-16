@@ -1,6 +1,6 @@
 import {Observable} from 'rxjs';
 
-export interface BackendServiceInterface<T, D> {
+export interface BackendServiceInterface<T> {
   list: T[];
 
   load(prepare: boolean): Observable<T[]>
@@ -12,8 +12,4 @@ export interface BackendServiceInterface<T, D> {
   delete(modelId: number): Observable<boolean>
 
   getById(modelId: number): Observable<T>
-
-  openUpdateDialog(modelId: number): Observable<D>
-
-  openCreateDialog(): D
 }

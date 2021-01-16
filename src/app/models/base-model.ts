@@ -1,4 +1,8 @@
-export abstract class BaseModel {
+import {INames} from '../interfaces/i-names';
+import {ModelCrudInterface} from '../interfaces/model-crud-interface';
+import {Observable} from 'rxjs';
+
+export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
   // @ts-ignore
   id: number;
   arName: string = '';
@@ -7,11 +11,11 @@ export abstract class BaseModel {
   updatedOn?: number | undefined;
   clientData?: string | undefined;
 
-  abstract save(): void
+  abstract create(): Observable<D>;
 
-  abstract update(): void
+  abstract delete(): Observable<boolean>;
 
-  abstract create(): void
+  abstract save(): Observable<D>;
 
-  abstract delete(): void
+  abstract update(): Observable<D>;
 }

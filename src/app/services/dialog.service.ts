@@ -33,7 +33,7 @@ export class DialogService {
     return new DialogRef(overlay, this.langService, this.injector, component, data, config, predefinedDialog);
   }
 
-  show(component: ComponentType<any>, data?: any, config?: IDialogConfig): DialogRef {
+  show<D>(component: ComponentType<any>, data?: D, config?: IDialogConfig): DialogRef {
     return this._showDialog(component, data, config);
   }
 

@@ -1,63 +1,70 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {Localization} from '../../../models/localization';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {cloneDeep as _clone} from 'lodash';
 import {FactoryService} from '../../../services/factory.service';
 import {ToastService} from '../../../services/toast.service';
 import {OperationTypes} from '../../../enums/operation-types.enum';
+import {IDialogData} from '../../../interfaces/i-dialog-data';
+import {extender} from '../../../helpers/extender';
 
 @Component({
   selector: 'app-localization-popup',
   templateUrl: './localization-popup.component.html',
   styleUrls: ['./localization-popup.component.scss']
 })
-export class LocalizationPopupComponent implements OnInit, OnDestroy {
-  localForm: FormGroup = {} as FormGroup;
-  localization: Localization;
+export class LocalizationPopupComponent implements OnInit {
+  form!: FormGroup;
+  model: Localization;
   operation: OperationTypes;
-  fm: FormManager = {} as FormManager;
-  langService: LangService = {} as LangService;
+  fm!: FormManager;
+  langService!: LangService;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: { localization: Localization, operation: OperationTypes },
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Localization>,
               private toast: ToastService,
               private fb: FormBuilder) {
-    this.localization = data.localization;
+    this.model = data.model;
+    console.log('this.model', this.model);
     this.operation = data.operation;
   }
 
   ngOnInit(): void {
+    this.buildForm();
+  }
+
+  buildForm(): void {
     this.langService = FactoryService.getService('LangService');
-    this.localForm = this.fb.group({
+    this.form = this.fb.group({
       localizationKey: [{
-        value: this.localization.localizationKey,
+        value: this.model.localizationKey,
         disabled: this.operation
       }, [Validators.required, Validators.minLength(2)]],
-      arName: [this.localization.arName, [Validators.required, Validators.minLength(2)]],
-      enName: [this.localization.enName, [Validators.required, Validators.minLength(2)]]
+      arName: [this.model.arName, [Validators.required, Validators.minLength(2)]],
+      enName: [this.model.enName, [Validators.required, Validators.minLength(2)]]
     });
-    this.fm = new FormManager(this.localForm);
+    this.fm = new FormManager(this.form, this.langService);
     // will check it later
     if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
     }
   }
 
-  saveLocalization(): void {
-    let localization = _clone(Object.assign(new Localization(), {...this.localization, ...this.localForm.value})) as Localization;
-    const message = this.operation === OperationTypes.CREATE ? this.langService.lang.create_x_success : this.langService.lang.update_x_success;
+  saveModel(): void {
+    let localization = extender<Localization>(Localization, {...this.model, ...this.form.value});
+    const message = this.operation === OperationTypes.CREATE ? this.langService.map.create_x_success : this.langService.map.update_x_success;
     const sub = localization.save().subscribe(local => {
+      //@ts-ignore
       this.toast.success(message.change({x: local.localizationKey}));
-      this.localization = local;
+      this.model = local;
       this.operation = OperationTypes.UPDATE;
-      this.localForm.get('localizationKey')?.disable();
+      this.form.get('localizationKey')?.disable();
       sub.unsubscribe();
     });
   }
 
-  ngOnDestroy(): void {
-
+  get popupTitle(): string {
+    return this.operation === OperationTypes.CREATE ? this.langService.map.add_localization : this.langService.map.edit_localization;
   }
 }

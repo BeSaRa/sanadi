@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12 d-flex align-items-center">
-    <h1 class="h6 text-primary m-0 d-inline-block">{{langService.lang[pageTitle]}}</h1>
+    <h1 class="h6 text-primary m-0 d-inline-block">{{langService.map[pageTitle]}}</h1>
     <button class="btn btn-link outline-none" *ngIf="clickOnNew$" (click)="clickOnNew$.next(null)"><i
       class="mdi mdi-plus-box"></i></button>
     <button class="btn btn-link" *ngIf="clickOnReload$" (click)="clickOnReload$.next(null)"><i

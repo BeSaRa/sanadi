@@ -1,6 +1,7 @@
 import {BaseModel} from './base-model';
+import {Observable} from 'rxjs';
 
-export class OrgUnit extends BaseModel {
+export class OrgUnit extends BaseModel<OrgUnit> {
   phoneNumber1: string | undefined;
   phoneNumber2: string | undefined;
   email: string | undefined;
@@ -17,15 +18,20 @@ export class OrgUnit extends BaseModel {
   orgNationality: number | undefined;
   poBoxNum: number | undefined;
 
-  create(): void {
+  create(): Observable<OrgUnit> {
+    throw new Error("No Impl");
   }
 
-  delete(): void {
+  delete(): Observable<boolean> {
+    throw new Error("No Impl");
   }
 
-  save(): void {
+  save(): Observable<OrgUnit> {
+    throw new Error("No Impl");
   }
 
-  update(): void {
+  update(): Observable<OrgUnit> {
+    throw new Error("No Impl");
   }
+
 }

@@ -13,7 +13,7 @@ export class ToastRef {
   langSubscription?: Subscription;
 
   constructor(private overlay: OverlayRef, langService: LangService) {
-    this.langSubscription = langService.onLanguageChange$.subscribe((lang: Language) => {
+    this.langSubscription = langService.onLanguageChange$?.subscribe((lang: Language) => {
       this.overlay.setDirection(lang.direction);
     });
   }

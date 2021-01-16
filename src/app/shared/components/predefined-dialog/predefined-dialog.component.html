@@ -4,6 +4,7 @@
   <div [innerHTML]="data" class="predefined-dialog-content d-flex align-items-center justify-content-center"></div>
 </div>
 <div class="dialog-actions justify-content-center">
-  <button class="btn btn-primary shadow" [dialogClose]="userClickOn.YES">{{langService.lang.yes}}</button>
-  <button class="btn btn-secondary shadow" [dialogClose]="userClickOn.NO">{{langService.lang.no}}</button>
+  <button class="btn btn-primary shadow" [dialogClose]="userClickOn.YES">{{langService.map.yes}}</button>
+  <button class="btn btn-secondary shadow" *ngIf="type === 'confirm'"
+          [dialogClose]="userClickOn.NO">{{langService.map.no}}</button>
 </div>
