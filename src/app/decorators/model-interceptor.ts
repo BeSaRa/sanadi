@@ -37,7 +37,8 @@ export function SendInterceptor(interceptorCallback?) {
     // tslint:disable-next-line:typedef
     descriptor.value = function(...args) {
       const newArgs = deepClone(args);
-      if (!interceptorCallback) {
+      // @ts-ignore
+      if (typeof this._getSendInterceptor !== 'undefined') {
         // @ts-ignore
         interceptorCallback = this._getSendInterceptor() || identity;
       }

@@ -29,7 +29,8 @@ export function Generator(model?, isCollection = false, options?: { property?: s
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
     descriptor.value = function(...args): any {
-      if (!model) {
+      // @ts-ignore
+      if (typeof this._getModel !== 'undefined') {
         // @ts-ignore
         model = this._getModel();
       }
