@@ -95,8 +95,6 @@ export class CustomRolePopupComponent implements OnInit {
     const checkBox = $event.target as HTMLInputElement;
     checkBox.checked ? group.addToSelection(Number(checkBox.value)) : group.removeFromSelection(Number(checkBox.value));
     checkBox.checked ? this.addToSelection(Number(checkBox.value)) : this.removeFromSelection(Number(checkBox.value));
-
-    console.log(this.form);
   }
 
   static buildPermissionsByGroupId(permissions: Permission[]) {

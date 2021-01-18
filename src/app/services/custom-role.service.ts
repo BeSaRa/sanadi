@@ -28,10 +28,6 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
     super();
     FactoryService.registerService('CustomRoleService', this);
 
-    this._loadDone$.subscribe((result) => {
-      console.log(result);
-    });
-
   }
 
 
