@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {IAppConfig} from '../interfaces/i-app-config';
 import {FactoryService} from './factory.service';
 
@@ -35,6 +35,13 @@ export class ConfigurationService {
       throw Error('the provided BASE_ENVIRONMENT_INDEX not exists inside ENVIRONMENTS_URLS array in app-configuration.json file');
     }
     this.BASE_URL = this.CONFIG.ENVIRONMENTS_URLS[this.CONFIG.BASE_ENVIRONMENT_INDEX];
+
+    if (this.CONFIG.hasOwnProperty('API_VERSION') && this.CONFIG.API_VERSION) {
+      if (this.BASE_URL.lastIndexOf('/') !== (this.BASE_URL.length - 1)) {
+        this.BASE_URL += '/';
+      }
+      this.BASE_URL += this.CONFIG.API_VERSION;
+    }
     return this.BASE_URL;
   }
 }
