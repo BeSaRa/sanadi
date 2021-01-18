@@ -1,5 +1,5 @@
 {
-  "LANGUAGE": "http://127.0.0.1:8000/api/localization",
+  "LANGUAGE": "admin/localization",
   "CUSTOM_ROLE": "custom-roles",
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
   "LOOKUPS": "lookups",

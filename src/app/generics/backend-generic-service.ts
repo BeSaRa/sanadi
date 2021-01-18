@@ -10,7 +10,7 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
 
-  @Generator(undefined, true)
+  @Generator(undefined, true, {property: 'rs'})
   private _load(): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL());
   }
