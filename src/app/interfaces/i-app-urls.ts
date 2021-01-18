@@ -5,4 +5,6 @@ export interface IAppUrls {
   CUSTOM_ROLE: string;
   CUSTOM_ROLE_PERMISSIONS: string;
   LOOKUPS: string;
+
+  [index: string]: string
 }

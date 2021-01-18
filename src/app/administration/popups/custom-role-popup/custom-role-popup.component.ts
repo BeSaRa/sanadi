@@ -12,10 +12,13 @@ import {LookupCategories} from '../../../enums/lookup-categories';
 import {Lookup} from '../../../models/lookup';
 import {combineLatest} from 'rxjs';
 import {PermissionService} from '../../../services/permission.service';
-import {take} from 'rxjs/operators';
+import {concatMap, mapTo, take} from 'rxjs/operators';
 import {Permission} from '../../../models/permission';
 import {CheckGroup} from '../../../models/check-group';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
+import {extender} from '../../../helpers/extender';
+import {ToastService} from '../../../services/toast.service';
+import {CustomRolePermissionService} from '../../../services/custom-role-permission.service';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -34,8 +37,11 @@ export class CustomRolePopupComponent implements OnInit {
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<CustomRole>,
               private lookupService: LookupService,
               private fb: FormBuilder,
+              private toast: ToastService,
+              private customRolePermissionService: CustomRolePermissionService,
               private permissionService: PermissionService,
               public langService: LangService) {
+
     this.operation = data.operation;
     this.model = data.model;
     this.selectedPermissions = data.customRolePermissions.map((item: CustomRolePermission) => {
@@ -82,7 +88,25 @@ export class CustomRolePopupComponent implements OnInit {
 
 
   saveModel(): void {
+    const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
 
+    customRole.save()
+      .pipe(
+        concatMap((role) => {
+          customRole.id = role.id;
+          return this.customRolePermissionService.deleteByCustomRoleId(role.id);
+        }),
+        concatMap(() => {
+          return this.customRolePermissionService.createBulkByCustomRoleId(this.selectedPermissions, customRole.id);
+        })
+      )
+      .subscribe(() => {
+        let message = this.operation === OperationTypes.CREATE ? this.langService.map.create_x_success : this.langService.map.update_x_success;
+        // @ts-ignore
+        this.toast.success(message.change({x: customRole.getName()}));
+        this.model = customRole;
+        this.operation = OperationTypes.UPDATE;
+      });
   }
 
   onGroupClicked(group: CheckGroup<Permission>): void {
@@ -95,6 +119,7 @@ export class CustomRolePopupComponent implements OnInit {
     const checkBox = $event.target as HTMLInputElement;
     checkBox.checked ? group.addToSelection(Number(checkBox.value)) : group.removeFromSelection(Number(checkBox.value));
     checkBox.checked ? this.addToSelection(Number(checkBox.value)) : this.removeFromSelection(Number(checkBox.value));
+    this.updatePermissionFormField();
   }
 
   static buildPermissionsByGroupId(permissions: Permission[]) {

@@ -34,7 +34,8 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   openCreateDialog(): DialogRef {
     return this.dialogService.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
       model: new CustomRole(),
-      operation: OperationTypes.CREATE
+      operation: OperationTypes.CREATE,
+      customRolePermissions: []
     });
   }
 

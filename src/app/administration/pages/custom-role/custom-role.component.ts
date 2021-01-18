@@ -8,6 +8,7 @@ import {switchMap, tap} from 'rxjs/operators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
 
 
 @Component({
@@ -41,11 +42,25 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   }
 
   add(): void {
-
+    const sub = this.customRoleService.openCreateDialog().onAfterClose$.subscribe(() => {
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
   }
 
   delete(model: CustomRole, event: MouseEvent): void {
     event.preventDefault();
+    // @ts-ignore
+    this.dialogService.confirm(this.langService.map.confirm_delete_x.change({x: model.getName()})).onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.langService.map.delete_x_success.change({x: model.getName()}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   edit(model: CustomRole, event: MouseEvent): void {

@@ -1,9 +1,9 @@
 {
   "customRoles": [
     {
-      "arName": "Role 1",
+      "arName": "اول دور وظيفي",
       "enName": "Role 1",
-      "status": false,
+      "status": true,
       "permissions": [],
       "description": "description",
       "id": 1,
@@ -51,14 +51,52 @@
       "updatedOn": null
     },
     {
-      "arName": "Role 6",
-      "enName": "Role 6",
+      "arName": "rw",
+      "enName": "erwerwer",
       "status": true,
       "permissions": [],
-      "description": "description",
-      "id": 6,
-      "updatedBy": null,
-      "updatedOn": null
+      "description": "wer",
+      "id": 6
+    },
+    {
+      "arName": "sdfsfs",
+      "enName": "sdfsf",
+      "status": true,
+      "permissions": [],
+      "description": "sdf",
+      "id": 7
+    },
+    {
+      "arName": "sdfasd",
+      "enName": "asdasdasd",
+      "status": true,
+      "permissions": [],
+      "description": "asdad",
+      "id": 8
+    },
+    {
+      "arName": "asdasd",
+      "enName": "asdasd",
+      "status": true,
+      "permissions": [],
+      "description": "asdasda",
+      "id": 9
+    },
+    {
+      "arName": "dasdasd",
+      "enName": "asda",
+      "status": true,
+      "permissions": [],
+      "description": "sdasd",
+      "id": 10
+    },
+    {
+      "arName": "asdasd",
+      "enName": "asdasd",
+      "status": true,
+      "permissions": [],
+      "description": "",
+      "id": 11
     }
   ],
   "permissions": [
@@ -90,7 +128,6 @@
       "permissionKey": "ADD_REPORTS",
       "groupId": 2
     },
-
     {
       "id": 5,
       "arName": "تعديل تقرير",
@@ -116,6 +153,220 @@
       "id": 2,
       "permissionId": 2,
       "customRoleId": 1
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 1,
+      "id": 3
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 2,
+      "id": 4
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 5,
+      "id": 5
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 4,
+      "id": 6
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 3,
+      "id": 7
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 6,
+      "id": 8
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 1,
+      "id": 9
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 2,
+      "id": 10
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 1,
+      "id": 11
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 2,
+      "id": 12
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 5,
+      "id": 13
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 4,
+      "id": 14
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 3,
+      "id": 15
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 6,
+      "id": 16
+    },
+    {
+      "customRoleId": 1,
+      "permissionId": 6,
+      "id": 17
+    },
+    {
+      "permissionId": 5,
+      "id": 18
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 4,
+      "id": 19
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 3,
+      "id": 20
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 6,
+      "id": 21
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 5,
+      "id": 22
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 4,
+      "id": 23
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 3,
+      "id": 24
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 6,
+      "id": 25
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 5,
+      "id": 26
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 1,
+      "id": 27
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 2,
+      "id": 28
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 6,
+      "id": 29
+    },
+    {
+      "customRoleId": 7,
+      "permissionId": 5,
+      "id": 30
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 2,
+      "id": 31
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 3,
+      "id": 32
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 4,
+      "id": 33
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 5,
+      "id": 34
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 6,
+      "id": 35
+    },
+    {
+      "customRoleId": 8,
+      "permissionId": 1,
+      "id": 36
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 1,
+      "id": 37
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 1,
+      "id": 38
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 2,
+      "id": 39
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 5,
+      "id": 40
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 4,
+      "id": 41
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 3,
+      "id": 42
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 6,
+      "id": 43
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 5,
+      "id": 44
+    },
+    {
+      "customRoleId": 10,
+      "permissionId": 4,
+      "id": 45
     }
   ],
   "lookups": [

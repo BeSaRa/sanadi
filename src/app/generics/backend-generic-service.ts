@@ -1,11 +1,11 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
+import {map, mapTo, tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 
-export abstract class BackendGenericService<T> implements BackendServiceInterface<T> {
+export abstract class BackendGenericService<T extends { id?: number }> implements BackendServiceInterface<T> {
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
@@ -26,7 +26,10 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
 
   @SendInterceptor()
   create(@InterceptParam() model: T): Observable<T> {
-    return this.http.post<T>(this._getServiceURL(), model);
+    return this.http.post<T>(this._getServiceURL(), model).pipe(map(item => {
+      model.id = item.id;
+      return model;
+    }));
   }
 
   delete(modelId: number): Observable<boolean> {
@@ -41,7 +44,10 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
   @SendInterceptor()
   update(@InterceptParam() model: T): Observable<T> {
     // @ts-ignore
-    return this.http.put<T>(this._getServiceURL() + '/' + model.id, model);
+    return this.http.put<T>(this._getServiceURL() + '/' + model.id, model).pipe(map(item => {
+      model.id = item.id;
+      return model;
+    }));
   }
 
   abstract _getModel(): any;
