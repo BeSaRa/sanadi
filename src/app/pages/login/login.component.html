@@ -11,33 +11,33 @@
           <form autocomplete="off" [formGroup]="loginForm" action="#">
             <div class="d-flex flex-column">
               <div class="mb-3">
-                <label class="form-label" for="username">{{lang.map.username}}</label>
+                <label class="form-label" for="username">{{lang.map.lbl_username}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-account"></i>
                   <input formControlName="username" autofocus tabindex="1" id="username"
-                         [placeholder]="lang.map.enter_mobile_or_email"
+                         [placeholder]="lang.map.lbl_enter_mobile_or_email"
                          class="form-control"
                          type="text">
                 </div>
               </div>
               <div class="mb-3 position-relative">
-                <label for="password" class="form-label">{{lang.map.password}}</label>
+                <label for="password" class="form-label">{{lang.map.lbl_password}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-lock"></i>
                   <input formControlName="password" tabindex="2" class="form-control p-right"
-                         [placeholder]="lang.map.enter_your_password_here"
+                         [placeholder]="lang.map.lbl_enter_your_password_here"
                          id="password"
                          [type]="passwordFieldType">
                 </div>
                 <button id="view-password-btn"
-                        title="{{passwordFieldType === 'password' ? lang.map.show_password : lang.map.hide_password}}"
+                        title="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
                         tabindex="-1" (click)="togglePasswordView($event)">
                   <i class="mdi {{icon}}"></i>
                 </button>
               </div>
               <div class="d-flex flex-row mt-3 mb-3">
                 <button tabindex="3" (click)="processLogin()" [disabled]="loginForm.invalid"
-                        class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.login}}</button>
+                        class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
               </div>
             </div>
           </form><!-- login form -->

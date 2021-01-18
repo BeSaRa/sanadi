@@ -75,13 +75,13 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   delete(localization: Localization, $event: MouseEvent): void {
     $event.preventDefault();
     // @ts-ignore
-    const sub = this.dialogService.confirm(this.langService.map.confirm_delete_x.change({x: localization.localizationKey}))
+    const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: localization.localizationKey}))
       .onAfterClose$
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           localization.delete().subscribe(() => {
-            this.toast.success(this.langService.map.delete_x_success);
+            this.toast.success(this.langService.map.msg_delete_x_success);
             this.reload$.next(null);
           });
         }

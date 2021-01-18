@@ -44,9 +44,9 @@ export class FormManager {
   }
 
   getStatusFieldTranslate(field: string): any {
-    let {active, inactive, status} = this.langService.map;
-    status = status + ' : ';
-    return this.getFormField(field)?.value ? status + active : status + inactive;
+    let {lbl_active, lbl_inactive, lbl_status} = this.langService.map;
+    lbl_status = lbl_status + ' : ';
+    return this.getFormField(field)?.value ? lbl_status + lbl_active : lbl_status + lbl_inactive;
   }
 
 

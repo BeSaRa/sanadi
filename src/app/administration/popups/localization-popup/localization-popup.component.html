@@ -6,38 +6,38 @@
         [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 mb-4">
-        <label for="localizationKey" class="form-label">{{langService.map.localization_key}}</label>
+        <label for="localizationKey" class="form-label">{{langService.map.lbl_localization_key}}</label>
         <input id="localizationKey"
                [ngClass]="fm.getStatusClass('localizationKey')"
                formControlName="localizationKey" class="form-control">
         <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('localizationKey')?.required">{{langService.map.required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('localizationKey')?.minlength">{{langService.map.specific_min_length.change({
+          <span *ngIf="fm.getFieldErrors('localizationKey')?.required">{{langService.map.err_required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('localizationKey')?.minlength">{{langService.map.err_specific_min_length.change({
             length: 3,
-            field: langService.map.localization_key
+            field: langService.map.lbl_localization_key
           })}}</span>
         </span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
-        <label for="arName" class="form-label">{{langService.map.arabic_name}}</label>
+        <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
         <textarea id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                   class="form-control"></textarea>
         <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('arName')?.minlength">{{langService.map.too_short}}</span>
+          <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.err_required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('arName')?.minlength">{{langService.map.err_too_short}}</span>
         </span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
-        <label for="enName" class="form-label">{{langService.map.english_name}}</label>
+        <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
         <textarea id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                   class="form-control"></textarea>
         <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('enName')?.minlength">{{langService.map.too_short}}</span>
+          <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.err_required_field}}</span>
+          <span *ngIf="fm.getFieldErrors('enName')?.minlength">{{langService.map.err_too_short}}</span>
         </span>
       </div>
     </div>

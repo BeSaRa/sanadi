@@ -15,9 +15,9 @@ export class UserHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.serviceList = [
-      new ServiceItem(1, this.langService.getArabicLocalByKey('provide_request'), this.langService.getEnglishLocalByKey('provide_request'), './request', 'mdi-database-plus'),
-      new ServiceItem(2, this.langService.getArabicLocalByKey('inquiries'), this.langService.getEnglishLocalByKey('inquiries'), './inquiry', 'mdi-database-search'),
-      new ServiceItem(3, this.langService.getArabicLocalByKey('administration'), this.langService.getEnglishLocalByKey('administration'), '../administration', 'mdi-application-cog')
+      new ServiceItem(1, this.langService.getArabicLocalByKey('menu_provide_request'), this.langService.getEnglishLocalByKey('menu_provide_request'), './request', 'mdi-database-plus'),
+      new ServiceItem(2, this.langService.getArabicLocalByKey('menu_inquiries'), this.langService.getEnglishLocalByKey('menu_inquiries'), './inquiry', 'mdi-database-search'),
+      new ServiceItem(3, this.langService.getArabicLocalByKey('menu_administration'), this.langService.getEnglishLocalByKey('menu_administration'), '../administration', 'mdi-application-cog')
     ];
   }
 

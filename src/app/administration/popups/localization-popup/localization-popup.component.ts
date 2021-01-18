@@ -53,7 +53,7 @@ export class LocalizationPopupComponent implements OnInit {
 
   saveModel(): void {
     let localization = extender<Localization>(Localization, {...this.model, ...this.form.value});
-    const message = this.operation === OperationTypes.CREATE ? this.langService.map.create_x_success : this.langService.map.update_x_success;
+    const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
     const sub = localization.save().subscribe(local => {
       //@ts-ignore
       this.toast.success(message.change({x: local.localizationKey}));
@@ -65,6 +65,6 @@ export class LocalizationPopupComponent implements OnInit {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.add_localization : this.langService.map.edit_localization;
+    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_localization : this.langService.map.lbl_edit_localization;
   }
 }

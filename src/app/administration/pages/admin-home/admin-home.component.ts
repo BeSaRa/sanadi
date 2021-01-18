@@ -16,28 +16,28 @@ export class AdminHomeComponent implements OnInit {
   ngOnInit(): void {
     this.serviceList = [
       new ServiceItem(1,
-        this.langService.getArabicLocalByKey('aid'),
-        this.langService.getEnglishLocalByKey('aid'),
+        this.langService.getArabicLocalByKey('menu_aid'),
+        this.langService.getEnglishLocalByKey('menu_aid'),
         './aid', 'mdi-hand-heart'
       ),
       new ServiceItem(2,
-        this.langService.getArabicLocalByKey('organizations'),
-        this.langService.getEnglishLocalByKey('organizations'),
+        this.langService.getArabicLocalByKey('menu_organizations'),
+        this.langService.getEnglishLocalByKey('menu_organizations'),
         './organizations', 'mdi-office-building'
       ),
       new ServiceItem(3,
-        this.langService.getArabicLocalByKey('users'),
-        this.langService.getEnglishLocalByKey('users'),
+        this.langService.getArabicLocalByKey('menu_users'),
+        this.langService.getEnglishLocalByKey('menu_users'),
         './users', 'mdi-account-group'
       ),
       new ServiceItem(4,
-        this.langService.getArabicLocalByKey('localization'),
-        this.langService.getEnglishLocalByKey('localization'),
+        this.langService.getArabicLocalByKey('menu_localization'),
+        this.langService.getEnglishLocalByKey('menu_localization'),
         './localization', 'mdi-google-translate'
       ),
       new ServiceItem(4,
-        this.langService.getArabicLocalByKey('custom_role'),
-        this.langService.getEnglishLocalByKey('custom_role'),
+        this.langService.getArabicLocalByKey('menu_custom_role'),
+        this.langService.getEnglishLocalByKey('menu_custom_role'),
         './custom-role', 'mdi-card-account-details-star-outline'
       )
     ];
