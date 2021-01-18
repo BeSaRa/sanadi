@@ -1,11 +1,13 @@
 {
   "ENVIRONMENTS_URLS": [
+    "http://100.100.3.220:9080/sanadi-services/api/",
     "http://localhost:3000"
   ],
   "BASE_ENVIRONMENT_INDEX": 0,
   "BASE_URL": "",
+  "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "auth-token",
-  "TOKEN_STORE_KEY": "e-tender_token",
+  "TOKEN_STORE_KEY": "sanadi-token",
   "EXTERNAL_PROTOCOLS": [
     "http",
     "https"
