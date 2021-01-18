@@ -10,11 +10,12 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   buildingName: string | undefined;
   unitName: string | undefined;
   address: string | undefined;
+  status: number | undefined;
   statusDateModified: number | undefined;
   orgCode: string | undefined;
   orgUnitType: number | undefined;
   registryCreator: number | undefined;
-  registryDate: number | undefined;
+  registryDate: string | undefined;
   orgNationality: number | undefined;
   poBoxNum: number | undefined;
 

@@ -1,14 +1,14 @@
 import {BaseModel} from './base-model';
-import {Permission} from './permission';
 import {CustomRoleService} from '../services/custom-role.service';
 import {Observable} from 'rxjs';
 import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
+import {CustomRolePermission} from './custom-role-permission';
 
 export class CustomRole extends BaseModel<CustomRole> {
   status: boolean = true;
-  permissions: Permission[] = [];
+  permissionSet: CustomRolePermission[] = [];
   description: string = '';
   service: CustomRoleService;
   langService: LangService;

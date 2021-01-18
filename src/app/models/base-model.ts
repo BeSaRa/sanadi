@@ -8,7 +8,7 @@ export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
   arName: string = '';
   enName: string = '';
   updatedBy?: number | undefined;
-  updatedOn?: number | undefined;
+  updatedOn?: string | undefined;
   clientData?: string | undefined;
 
   abstract create(): Observable<D>;
