@@ -83,7 +83,7 @@ export class CustomRolePopupComponent implements OnInit {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.add_custom_role : this.langService.map.edit_custom_role;
+    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_custom_role : this.langService.map.lbl_edit_custom_role;
   };
 
 
@@ -101,7 +101,7 @@ export class CustomRolePopupComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        let message = this.operation === OperationTypes.CREATE ? this.langService.map.create_x_success : this.langService.map.update_x_success;
+        let message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
         // @ts-ignore
         this.toast.success(message.change({x: customRole.getName()}));
         this.model = customRole;
