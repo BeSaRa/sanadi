@@ -2,7 +2,7 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
 </div>
 <div class="dialog-content">
-  <form class="min-w400px" novalidate autocomplete="off"
+  <form style="width: 500px" novalidate autocomplete="off"
         [formGroup]="form">
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation">
@@ -14,7 +14,10 @@
       </li>
       <li class="nav-item" role="presentation">
         <a id="permissions-tab" href="#permissions-tab-content" data-bs-toggle="tab" role="tab"
-           class="nav-link">{{langService.map.permissions}}</a>
+           class="nav-link position-relative">{{langService.map.permissions}}
+          <span *ngIf="fm.getFieldInvalidStatus('permissions')"
+                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
+        </a>
       </li>
     </ul>
     <div formGroupName="basic" class="tab-content pt-2">
@@ -72,10 +75,32 @@
       <div class="tab-pane fade" role="tabpanel" aria-labelledby="permissions-tab"
            id="permissions-tab-content">
         <div class="row">
-          <div class="col-sm-12 mb-4">
-            permissions
-          </div>
-        </div>
+          <ng-container>
+            <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
+              <div class="p-2 border border-1">
+                <div class="form-check mb-2 pb-2 border-bottom">
+                  <input [indeterminate]="checkBoxGroup.isIndeterminate()" [checked]="checkBoxGroup.isFull()"
+                         type="checkbox"
+                         id="group-id-{{checkBoxGroup.group.id}}" (change)="onGroupClicked(checkBoxGroup)"
+                         class="form-check-input cursor-pointer">
+                  <label for="group-id-{{checkBoxGroup.group.id}}"
+                         class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
+                </div>
+                <div *ngFor="let row of checkBoxGroup.rows" class="d-flex flex-row">
+                  <div *ngFor="let permission of row" class="form-check flex-grow-1">
+                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
+                           id="group-permission-id-{{permission.id}}"
+                           (change)="onPermissionClicked($event , permission , checkBoxGroup)"
+                           class="form-check-input cursor-pointer">
+                    <label for="group-permission-id-{{permission.id}}"
+                           class="cursor-pointer">{{permission.getName()}}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </ng-container>
+        </div><!-- group -->
       </div>
     </div>
   </form>

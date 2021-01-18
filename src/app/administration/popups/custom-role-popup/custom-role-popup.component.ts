@@ -7,7 +7,15 @@ import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {CustomRole} from '../../../models/custom-role';
 import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {CustomValidators} from '../../../validators/custom-validators';
-
+import {LookupService} from '../../../services/lookup.service';
+import {LookupCategories} from '../../../enums/lookup-categories';
+import {Lookup} from '../../../models/lookup';
+import {combineLatest} from 'rxjs';
+import {PermissionService} from '../../../services/permission.service';
+import {take} from 'rxjs/operators';
+import {Permission} from '../../../models/permission';
+import {CheckGroup} from '../../../models/check-group';
+import {CustomRolePermission} from '../../../models/custom-role-permission';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -19,21 +27,39 @@ export class CustomRolePopupComponent implements OnInit {
   fm!: FormManager;
   operation: OperationTypes;
   model: CustomRole;
-
+  permissions!: Record<number, Permission[][]>;
+  selectedPermissions: number[] = [];
+  groups: CheckGroup<Permission>[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<CustomRole>,
+              private lookupService: LookupService,
               private fb: FormBuilder,
+              private permissionService: PermissionService,
               public langService: LangService) {
     this.operation = data.operation;
     this.model = data.model;
-    console.log(data.customRolePermissions);
+    this.selectedPermissions = data.customRolePermissions.map((item: CustomRolePermission) => {
+      return item.permissionId;
+    });
   }
 
   ngOnInit(): void {
+    this.buildGroups();
     this.buildForm();
   }
 
-  buildForm(): void {
+  private buildGroups() {
+    combineLatest([this.permissionService.load(), this.lookupService.loadByCategory(LookupCategories.PERMISSION_GROUP)])
+      .pipe(take(1))
+      .subscribe((result) => {
+        const permissionByGroupId = CustomRolePopupComponent.buildPermissionsByGroupId(result[0]);
+        result[1].forEach((group: Lookup) => {
+          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.id], this.selectedPermissions, 3));
+        });
+      });
+  }
+
+  private buildForm(): void {
     this.form = this.fb.group({
       basic: this.fb.group({
         status: [this.model.status],
@@ -41,7 +67,7 @@ export class CustomRolePopupComponent implements OnInit {
         enName: [this.model.enName, Validators.required],
         description: [this.model.description],
       }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName'])}),
-      permissions: this.fb.array([], Validators.required)
+      permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
     });
     this.fm = new FormManager(this.form, this.langService);
 
@@ -57,5 +83,43 @@ export class CustomRolePopupComponent implements OnInit {
 
   saveModel(): void {
 
+  }
+
+  onGroupClicked(group: CheckGroup<Permission>): void {
+    group.toggleSelection();
+    this.updatePermissionFormField();
+  }
+
+
+  onPermissionClicked($event: Event, permission: Permission, group: CheckGroup<Permission>) {
+    const checkBox = $event.target as HTMLInputElement;
+    checkBox.checked ? group.addToSelection(Number(checkBox.value)) : group.removeFromSelection(Number(checkBox.value));
+    checkBox.checked ? this.addToSelection(Number(checkBox.value)) : this.removeFromSelection(Number(checkBox.value));
+
+    console.log(this.form);
+  }
+
+  static buildPermissionsByGroupId(permissions: Permission[]) {
+    return permissions.reduce((acc, current) => {
+      if (!acc.hasOwnProperty(current.groupId)) {
+        acc[current.groupId] = [];
+      }
+      acc[current.groupId].push(current);
+      return acc;
+    }, {} as any);
+  }
+
+  private addToSelection(number: number) {
+    this.selectedPermissions.push(number);
+  }
+
+  private removeFromSelection(number: number) {
+    this.selectedPermissions.splice(this.selectedPermissions.indexOf(number), 1);
+  }
+
+  private updatePermissionFormField() {
+    this.fm.getFormField('permissions')?.setValue(this.groups.some((group) => {
+      return group.hasSelectedValue();
+    }));
   }
 }

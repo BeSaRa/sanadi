@@ -1,6 +1,9 @@
 import {BaseModel} from './base-model';
 import {LookupCategories} from '../enums/lookup-categories';
 import {Observable} from 'rxjs';
+import {FactoryService} from '../services/factory.service';
+import {LangService} from '../services/lang.service';
+import {INames} from '../interfaces/i-names';
 
 export class Lookup extends BaseModel<Lookup> {
   category!: LookupCategories;
@@ -9,6 +12,12 @@ export class Lookup extends BaseModel<Lookup> {
   status: number | undefined;
   itemOrder: number | undefined;
   parent: number | undefined;
+  langService: LangService;
+
+  constructor() {
+    super();
+    this.langService = FactoryService.getService('LangService');
+  }
 
   create(): Observable<Lookup> {
     throw new Error('No Impl');
@@ -24,5 +33,9 @@ export class Lookup extends BaseModel<Lookup> {
 
   update(): Observable<Lookup> {
     throw new Error('No Impl');
+  }
+
+  getName(): string {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 }

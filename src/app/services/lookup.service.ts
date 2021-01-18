@@ -1,42 +1,37 @@
 import {Injectable} from '@angular/core';
 import {Lookup} from '../models/lookup';
-import {DialogRef} from '../shared/models/dialog-ref';
 import {Observable} from 'rxjs';
 import {LookupCategories} from '../enums/lookup-categories';
+import {BackendGenericService} from '../generics/backend-generic-service';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {Generator} from '../decorators/generator';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LookupService {
+export class LookupService extends BackendGenericService<Lookup> {
+  list!: Lookup[];
 
-  constructor() {
+  constructor(public http: HttpClient, private urlService: UrlService) {
+    super();
   }
 
-  create(model: Lookup): Observable<Lookup> {
-    throw Error('there is no implementation');
+  _getModel(): any {
+    return Lookup;
   }
 
-  delete(modelId: number): Observable<boolean> {
-    throw Error('there is no implementation');
+  _getSendInterceptor(): any {
   }
 
-  getById(modelId: number): Observable<Lookup> {
-    throw Error('there is no implementation');
+  _getServiceURL(): string {
+    return this.urlService.URLS.LOOKUPS;
   }
 
-  load(prepare: boolean): Observable<Lookup[]> {
-    throw Error('there is no implementation');
-  }
-
-  openCreateDialog(lookupCategory: LookupCategories): DialogRef {
-    throw Error('there is no implementation');
-  }
-
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    throw Error('there is no implementation');
-  }
-
-  update(model: Lookup): Observable<Lookup> {
-    throw Error('there is no implementation');
+  @Generator(undefined, true)
+  loadByCategory(category: any | LookupCategories): Observable<Lookup[]> {
+    return this.http.get<Lookup[]>(this.urlService.URLS.LOOKUPS, {
+      params: new HttpParams({fromObject: {category}})
+    });
   }
 }

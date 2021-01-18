@@ -1,5 +1,5 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
-import {generate, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';

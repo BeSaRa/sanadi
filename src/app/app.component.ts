@@ -1,8 +1,6 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {LangService} from './services/lang.service';
 import {AppRootScrollService} from './services/app-root-scroll.service';
-import {TicketService} from './services/ticket.service';
-import {ToastService} from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +11,6 @@ export class AppComponent {
   title = 'sanadi';
 
   constructor(private langService: LangService,
-              private ticketService: TicketService,
               private appScrollService: AppRootScrollService) {
   }
 

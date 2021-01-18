@@ -1,7 +1,6 @@
 import {Observable} from 'rxjs';
 
 export interface BackendServiceInterface<T> {
-  list: T[];
 
   load(prepare: boolean): Observable<T[]>
 

@@ -2,5 +2,6 @@
   "LANGUAGE": "http://127.0.0.1:8000/api/localization",
   "CUSTOM_ROLE": "custom-roles",
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
-  "TICKETS": "tickets"
+  "LOOKUPS": "lookups",
+  "PERMISSIONS": "permissions"
 }
