@@ -1,7 +1,8 @@
 {
   "LANGUAGE": "admin/localization",
-  "CUSTOM_ROLE": "custom-roles",
+  "LOGIN_INFO": "auth/login/info",
+  "CUSTOM_ROLE": "admin/org-user-custom-role",
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
   "LOOKUPS": "lookups",
-  "PERMISSIONS": "permissions"
+  "PERMISSIONS": "admin/permission"
 }

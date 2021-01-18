@@ -15,6 +15,8 @@ import {IAppUrls} from './interfaces/i-app-urls';
 import {httpInterceptors} from './http-interceptors/http-interceptors';
 import {LangService} from './services/lang.service';
 import './helpers/protoypes/string-prototypes';
+import {InfoService} from './services/info.service';
+import {ILoginInfo} from './interfaces/i-login-info';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,7 @@ import './helpers/protoypes/string-prototypes';
       provide: APP_INITIALIZER,
       useFactory: AppModule.AppInit,
       multi: true,
-      deps: [HttpClient, ConfigurationService, UrlService, LangService]
+      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService]
     },
     httpInterceptors
   ],
@@ -49,17 +51,22 @@ export class AppModule {
   static AppInit(http: HttpClient,
                  configurationService: ConfigurationService,
                  urlService: UrlService,
-                 lang: LangService): () => Promise<unknown> {
+                 langService: LangService,
+                 infoService: InfoService): () => Promise<unknown> {
     AppModule.http = http;
     return () => {
       return forkJoin({
         urls: AppModule.loadResource<IAppUrls>(AppModule.URLS_FILE),
-        config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE),
+        config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE)
       })
         .toPromise().then((latest) => {
           configurationService.setConfigurations(latest.config);
           urlService.prepareUrls(latest.urls);
-          return lang.load(true).toPromise();
+          return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
+            langService.list = infoResult.localizationSet;
+            langService._loadDone$.next(langService.list);
+            return infoResult;
+          });
         });
     };
   }

@@ -22,13 +22,13 @@ function _generateCollection(collection: any, model: any, property?: string, rec
 }
 
 // @ts-ignore
-export function Generator(model?, isCollection = false, options?: { property?: string, interceptReceive?: any }): any {
+export function Generator(model?, isCollection = false, options?: { property?: string, interceptReceive?: any } = {property: 'rs'}): any {
   // @ts-ignore
   return (target, property, descriptor: PropertyDescriptor) => {
     const original = descriptor.value;
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
-    descriptor.value = function(...args): any {
+    descriptor.value = function (...args): any {
       // @ts-ignore
       if (typeof this._getModel !== 'undefined') {
         // @ts-ignore
