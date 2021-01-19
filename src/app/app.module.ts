@@ -17,6 +17,7 @@ import {LangService} from './services/lang.service';
 import './helpers/protoypes/string-prototypes';
 import {InfoService} from './services/info.service';
 import {ILoginInfo} from './interfaces/i-login-info';
+import {LookupService} from './services/lookup.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import {ILoginInfo} from './interfaces/i-login-info';
       provide: APP_INITIALIZER,
       useFactory: AppModule.AppInit,
       multi: true,
-      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService]
+      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService, LookupService]
     },
     httpInterceptors
   ],
@@ -52,7 +53,8 @@ export class AppModule {
                  configurationService: ConfigurationService,
                  urlService: UrlService,
                  langService: LangService,
-                 infoService: InfoService): () => Promise<unknown> {
+                 infoService: InfoService,
+                 lookupService: LookupService): () => Promise<unknown> {
     AppModule.http = http;
     return () => {
       return forkJoin({
@@ -65,6 +67,7 @@ export class AppModule {
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
             langService.list = infoResult.localizationSet;
             langService._loadDone$.next(langService.list);
+            lookupService.setLookupsMap(infoResult.lookupMap);
             return infoResult;
           });
         });
