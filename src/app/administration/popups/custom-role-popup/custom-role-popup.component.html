@@ -23,7 +23,7 @@
     <div formGroupName="basic" class="tab-content pt-2">
       <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
         <div class="row">
-          <div class="col-sm-12 mb-4">
+          <div class="col-sm-12 mb-4 position-relative">
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName"
                    [ngClass]="fm.getStatusClass('basic.arName')"
@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 mb-4">
+          <div class="col-sm-12 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName"
                    [ngClass]="fm.getStatusClass('basic.enName')"
@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 mb-4">
+          <div class="col-sm-12 mb-4 position-relative">
             <label for="description" class="form-label">{{langService.map.lbl_description}}</label>
             <textarea id="description" [ngClass]="fm.getStatusClass('basic.description')"
                       formControlName="description"

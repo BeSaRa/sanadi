@@ -94,11 +94,11 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   updateStatus(model: CustomRole) {
     const sub = model.toggleStatus().update().subscribe(() => {
       // @ts-ignore
-      this.toast.success(this.langService.map.status_x_updated_success.change({x: model.getName()}));
+      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
       sub.unsubscribe();
     }, () => {
       // @ts-ignore
-      this.toast.error(this.langService.map.status_x_updated_fail.change({x: model.getName()}));
+      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
       model.toggleStatus();
       sub.unsubscribe();
     });
