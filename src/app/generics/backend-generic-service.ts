@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {map, mapTo, tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import {IKeyValue} from '../interfaces/i-key-value';
+import {isValidValue} from '../helpers/utils';
 
 export abstract class BackendGenericService<T extends { id?: number }> implements BackendServiceInterface<T> {
   abstract list: T[];
@@ -55,5 +57,15 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
   abstract _getSendInterceptor(): any;
 
   abstract _getServiceURL(): string;
+
+  _generateQueryString(queryStringOptions: IKeyValue): string {
+    let queryString = '?';
+    for (const key of Object.keys(queryStringOptions)) {
+      if (isValidValue(queryStringOptions[key])) {
+        queryString += key + '=' + queryStringOptions[key] + '&';
+      }
+    }
+    return queryString.substring(0, queryString.length - 1);
+  }
 }
 
