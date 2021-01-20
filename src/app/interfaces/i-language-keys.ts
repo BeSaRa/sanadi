@@ -68,4 +68,14 @@ export interface ILanguageKeys {
   lbl_main: string;
   lbl_yes: string;
   lbl_no: string;
+  lbl_aid_code: string;
+  lbl_add_aid_class: string;
+  lbl_edit_aid_class: string;
+  menu_aid_class: string;
+  lbl_add_aid_main_category: string;
+  lbl_edit_aid_main_category: string;
+  menu_aid_main_category: string;
+  lbl_add_aid_sub_category: string;
+  lbl_edit_aid_sub_category: string;
+  menu_aid_sub_category: string;
 }

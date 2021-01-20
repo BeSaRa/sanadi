@@ -8,6 +8,8 @@ export interface IAppUrls {
   LOOKUPS: string;
   ORGANIZATION_UNIT: string;
   ORGANIZATION_BRANCH: string;
+  AID_LOOKUPS: string;
+  AID_LOOKUPS_CRITERIA: string;
 
   [index: string]: string;
 }

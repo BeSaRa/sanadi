@@ -11,7 +11,7 @@ export function interceptLoginInfo(model: { rs: ILoginInfo }): ILoginInfo {
   for (const lookupMapKey in model.rs.lookupMap) {
     if (model.rs.lookupMap.hasOwnProperty(lookupMapKey)) {
       const key = lookupMapKey as keyof ILookupMap;
-      model.rs.lookupMap[key] = model.rs.lookupMap[key].map(item => {
+      model.rs.lookupMap[key] = model.rs.lookupMap[key].map((item: any) => {
         return Object.assign(new Lookup(), item);
       });
     }

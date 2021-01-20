@@ -2,13 +2,13 @@ import {Observable} from 'rxjs';
 
 export interface BackendServiceInterface<T> {
 
-  load(prepare: boolean): Observable<T[]>
+  load(prepare: boolean): Observable<T[]>;
 
-  create(model: T): Observable<T>
+  create(model: T): Observable<T>;
 
-  update(model: T): Observable<T>
+  update(model: T): Observable<T>;
 
-  delete(modelId: number): Observable<boolean>
+  delete(modelId: number): Observable<boolean>;
 
-  getById(modelId: number): Observable<T>
+  getById(modelId: number): Observable<T>;
 }

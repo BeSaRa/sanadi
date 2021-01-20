@@ -4,7 +4,9 @@
   "CUSTOM_ROLE": "admin/org-user-custom-role",
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
   "LOOKUPS": "lookups",
-  "PERMISSIONS": "admin/permission",
   "ORGANIZATION_UNIT": "admin/ou",
   "ORGANIZATION_BRANCH": "admin/ou/branch"
+  "PERMISSIONS": "admin/permission",
+  "AID_LOOKUPS": "admin/aid-lookup",
+  "AID_LOOKUPS_CRITERIA": "admin/aid-lookup/criteria"
 }

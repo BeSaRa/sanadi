@@ -102,4 +102,8 @@ export class LookupService extends BackendGenericService<Lookup> {
     }
     return lookups.find(x => x.lookupKey === lookupKey) || null;
   }
+
+  getLookupByCategoryAndId(category: any | LookupCategories, value: any) {
+    return this.listByCategory[category][value];
+  }
 }
