@@ -14,7 +14,7 @@ import {UrlService} from './services/url.service';
 import {IAppUrls} from './interfaces/i-app-urls';
 import {httpInterceptors} from './http-interceptors/http-interceptors';
 import {LangService} from './services/lang.service';
-import './helpers/protoypes/string-prototypes';
+import './helpers/protoypes/custom-prototypes';
 import {InfoService} from './services/info.service';
 import {ILoginInfo} from './interfaces/i-login-info';
 import {LookupService} from './services/lookup.service';

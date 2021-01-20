@@ -1,5 +1,4 @@
-// @ts-ignore
-String.prototype.change = function() {
+String.prototype.change = function(): string {
   if (!arguments.length) {
     return String(this);
   }
