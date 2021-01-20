@@ -6,7 +6,9 @@ import {BackendGenericService} from '../generics/backend-generic-service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Generator} from '../decorators/generator';
-import {ILookupMap} from "../interfaces/i-lookup-map";
+import {ILookupMap} from '../interfaces/i-lookup-map';
+import {isValidValue} from '../helpers/utils';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,7 @@ export class LookupService extends BackendGenericService<Lookup> {
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
+    FactoryService.registerService('LookupService', this);
   }
 
   setLookupsMap(lookupMap: ILookupMap): ILookupMap {
@@ -45,16 +48,39 @@ export class LookupService extends BackendGenericService<Lookup> {
     return this.listByCategory[category as keyof ILookupMap];
   }
 
-  getByCategoryId(categoryId: any | LookupCategories): Lookup[] {
+  getByCategoryId(categoryId: number | string): Lookup[] {
     let category = null;
     for (const lookup in LookupCategories) {
-      if (LookupCategories.hasOwnProperty(lookup) && LookupCategories[lookup] === categoryId) {
-        category = lookup.substr(0, lookup.indexOf('_CAT_ID'));
+      if (LookupCategories.hasOwnProperty(lookup) && LookupCategories[lookup as keyof typeof LookupCategories] === categoryId) {
+        const categoryName =  lookup.substr(0, lookup.indexOf('_CAT_ID'));
+        category = LookupCategories[categoryName as keyof typeof LookupCategories];
       }
     }
     if (!category) {
       return [];
     }
-    return this.listByCategory[LookupCategories[category] as keyof ILookupMap];
+    return this.getByCategory(category);
+  }
+
+  getByLookupKeyAndCategory(lookupKey: number, category: LookupCategories): Lookup | null {
+    if (!isValidValue(lookupKey) || !isValidValue(category)){
+      return null;
+    }
+    const lookups = this.getByCategory(category);
+    if (!lookups || lookups.length === 0) {
+      return null;
+    }
+    return lookups.find(x => x.lookupKey === lookupKey) || null;
+  }
+
+  getByLookupKeyAndCategoryId(lookupKey: number, categoryId: string | number): Lookup | null {
+    if (!isValidValue(lookupKey) || !isValidValue(categoryId)){
+      return null;
+    }
+    const lookups = this.getByCategoryId(categoryId);
+    if (!lookups || lookups.length === 0) {
+      return null;
+    }
+    return lookups.find(x => x.lookupKey === lookupKey) || null;
   }
 }
