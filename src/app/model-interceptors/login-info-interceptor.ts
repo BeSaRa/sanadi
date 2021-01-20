@@ -1,6 +1,7 @@
-import {ILoginInfo, ILookupMap} from '../interfaces/i-login-info';
+import {ILoginInfo} from '../interfaces/i-login-info';
 import {Localization} from '../models/localization';
 import {Lookup} from '../models/lookup';
+import {ILookupMap} from '../interfaces/i-lookup-map';
 
 export function interceptLoginInfo(model: { rs: ILoginInfo }): ILoginInfo {
   model.rs.localizationSet = model.rs.localizationSet.map(item => {
