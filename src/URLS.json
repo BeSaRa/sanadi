@@ -4,5 +4,6 @@
   "CUSTOM_ROLE": "admin/org-user-custom-role",
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
   "LOOKUPS": "lookups",
-  "PERMISSIONS": "admin/permission"
+  "PERMISSIONS": "admin/permission",
+  "ORGANIZATION": "admin/ou"
 }

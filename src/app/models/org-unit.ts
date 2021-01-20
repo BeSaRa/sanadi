@@ -1,5 +1,12 @@
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
+import {FactoryService} from '../services/factory.service';
+import {LangService} from '../services/lang.service';
+import {INames} from '../interfaces/i-names';
+import {OrganizationUnitService} from '../services/organization-unit.service';
+import {Lookup} from './lookup';
+import {LookupService} from '../services/lookup.service';
+import {LookupCategories} from '../enums/lookup-categories';
 
 export class OrgUnit extends BaseModel<OrgUnit> {
   phoneNumber1: string | undefined;
@@ -19,20 +26,40 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   orgNationality: number | undefined;
   poBoxNum: number | undefined;
 
+  service: OrganizationUnitService;
+  langService: LangService;
+  lookupService: LookupService;
+
+  constructor() {
+    super();
+    this.service = FactoryService.getService('OrganizationUnitService');
+    this.langService = FactoryService.getService('LangService');
+    this.lookupService = FactoryService.getService('LookupService');
+  }
+
   create(): Observable<OrgUnit> {
-    throw new Error("No Impl");
+    return this.service.create(this);
   }
 
   delete(): Observable<boolean> {
-    throw new Error("No Impl");
+    return this.service.delete(this.id);
   }
 
   save(): Observable<OrgUnit> {
-    throw new Error("No Impl");
+    return this.id ? this.update() : this.create();
   }
 
   update(): Observable<OrgUnit> {
-    throw new Error("No Impl");
+    return this.service.update(this);
+  }
+
+  getName(): string {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  getOrgUnitTypeLookup(): Lookup | null {
+    // @ts-ignore
+    return this.lookupService.getByLookupKeyAndCategory(this.orgUnitType, LookupCategories.ORG_UNIT_TYPE);
   }
 
 }

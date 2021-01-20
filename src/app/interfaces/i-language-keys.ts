@@ -42,4 +42,22 @@ export interface ILanguageKeys {
   lbl_username: string;
   lbl_enter_mobile_or_email: string;
   lbl_enter_your_password_here: string;
+  lbl_add_org_unit: string;
+  lbl_edit_org_unit: string;
+  lbl_org_unit_code: string;
+  lbl_org_unit_type: string;
+  lbl_none: string;
+  err_specific_max_length: string;
+  lbl_email: string;
+  err_invalid_email: string;
+  lbl_phone_1: string;
+  lbl_phone_2: string;
+  lbl_address: string;
+  lbl_building_name: string;
+  lbl_unit_name: string;
+  lbl_street: string;
+  lbl_zone: string;
+  lbl_nationality: string;
+  lbl_po_box_num: string;
+  lbl_org_branches: string;
 }

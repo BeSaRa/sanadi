@@ -7,10 +7,12 @@ import {LocalizationComponent} from './pages/localization/localization.component
 import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
 import { CustomRolePopupComponent } from './popups/custom-role-popup/custom-role-popup.component';
+import { OrganizationUnitComponent } from './pages/organization-unit/organization-unit.component';
+import { OrganizationUnitPopupComponent } from './popups/organization-unit-popup/organization-unit-popup.component';
 
 
 @NgModule({
-  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent, CustomRoleComponent, CustomRolePopupComponent],
+  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent, CustomRoleComponent, CustomRolePopupComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

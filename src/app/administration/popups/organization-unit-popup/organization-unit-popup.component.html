@@ -1,0 +1,277 @@
+<div class="dialog-toolbar bg-primary">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+</div>
+<div class="dialog-content">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
+         class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
+        <!--<span *ngIf="fm.getFieldInvalidStatus('basic')"
+              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>-->
+      </a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a id="permissions-tab" href="#branches-tab-content" data-bs-toggle="tab" role="tab"
+         class="nav-link position-relative">{{langService.map.lbl_org_branches}}
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content pt-2">
+    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
+      <form style="width: 500px" novalidate autocomplete="off"
+            [formGroup]="form">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <input id="arName"
+                   [ngClass]="fm.getStatusClass('arName')"
+                   formControlName="arName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('arName')?.minlength">
+                  {{langService.map.err_specific_min_length.change({
+                  length: 3,
+                  field: langService.map.lbl_arabic_name
+                })}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('arName')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({
+                  length: 200,
+                  field: langService.map.lbl_arabic_name
+                })}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <input id="enName"
+                   [ngClass]="fm.getStatusClass('enName')"
+                   formControlName="enName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('enName')?.minlength">
+                  {{langService.map.err_specific_min_length.change({
+                  length: 3,
+                  field: langService.map.lbl_english_name
+                })}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('enName')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({
+                  length: 200,
+                  field: langService.map.lbl_english_name
+                })}}
+                </span>
+          </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="orgUnitType" class="form-label">{{langService.map.lbl_org_unit_type}}</label>
+            <select id="orgUnitType" formControlName="orgUnitType"
+                    class="custom-select"
+                    [ngClass]="fm.getStatusClass('orgUnitType')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUnitTypesList" [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('orgUnitType')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="orgCode" class="form-label">{{langService.map.lbl_org_unit_code}}</label>
+            <input id="orgCode"
+                   [ngClass]="fm.getStatusClass('orgCode')"
+                   formControlName="orgCode" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('orgCode')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('orgCode')?.maxlength">
+              {{langService.map.err_specific_max_length.change({length: 10, field: langService.map.lbl_org_unit_code})}}
+            </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="custom-select"
+                    [ngClass]="fm.getStatusClass('status')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUnitStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('status')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
+            <input id="email"
+                   [ngClass]="fm.getStatusClass('email')"
+                   formControlName="email" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('email')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('email')?.email">{{langService.map.err_invalid_email}}</span>
+                <span *ngIf="fm.getFieldErrors('email')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 50, field: langService.map.lbl_email})}}
+                </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
+            <input id="phoneNumber1"
+                   [ngClass]="fm.getStatusClass('phoneNumber1')"
+                   formControlName="phoneNumber1" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('phoneNumber1')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('phoneNumber1')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 50, field: langService.map.lbl_phone_1})}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
+            <input id="phoneNumber2"
+                   [ngClass]="fm.getStatusClass('phoneNumber2')"
+                   formControlName="phoneNumber2" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('phoneNumber2')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('phoneNumber2')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 50, field: langService.map.lbl_phone_2})}}
+                </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
+            <textarea id="address"
+                      [ngClass]="fm.getStatusClass('address')"
+                      formControlName="address" class="form-control">
+            </textarea>
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('address')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('address')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 1000, field: langService.map.lbl_address})}}
+                </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
+            <input id="buildingName"
+                   [ngClass]="fm.getStatusClass('buildingName')"
+                   formControlName="buildingName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('buildingName')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('buildingName')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({
+                  length: 200,
+                  field: langService.map.lbl_building_name
+                })}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
+            <input id="unitName"
+                   [ngClass]="fm.getStatusClass('unitName')"
+                   formControlName="unitName" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('unitName')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('unitName')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({
+                  length: 200,
+                  field: langService.map.lbl_unit_name
+                })}}
+                </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="street" class="form-label">{{langService.map.lbl_street}}</label>
+            <input id="street"
+                   [ngClass]="fm.getStatusClass('street')"
+                   formControlName="street" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('street')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+                <span *ngIf="fm.getFieldErrors('street')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 200, field: langService.map.lbl_street})}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
+            <input id="zone"
+                   [ngClass]="fm.getStatusClass('zone')"
+                   formControlName="zone" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('zone')?.required">{{langService.map.err_required_field}}</span>
+                <span *ngIf="fm.getFieldErrors('zone')?.maxlength">
+                  {{langService.map.err_specific_max_length.change({length: 200, field: langService.map.lbl_zone})}}
+                </span>
+              </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="orgNationality" class="form-label">{{langService.map.lbl_nationality}}</label>
+            <select id="orgNationality" formControlName="orgNationality"
+                    class="custom-select"
+                    [ngClass]="fm.getStatusClass('orgNationality')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgNationalityList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('orgNationality')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+              </span>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="poBoxNum" class="form-label">{{langService.map.lbl_po_box_num}}</label>
+            <input id="poBoxNum"
+                   [ngClass]="fm.getStatusClass('poBoxNum')"
+                   formControlName="poBoxNum" class="form-control">
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('poBoxNum')?.required">{{langService.map.err_required_field}}</span>
+              </span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="tab-pane fade" role="tabpanel" aria-labelledby="branches-tab"
+         id="branches-tab-content">
+      <div class="row">
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="fm.displayFormValidity()" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">save</button>
+  <button dialogClose="welcome" class="btn btn-secondary">cancel</button>
+</div>
