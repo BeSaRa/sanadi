@@ -44,7 +44,7 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
   @SendInterceptor()
   update(@InterceptParam() model: T): Observable<T> {
     // @ts-ignore
-    return this.http.put<T>(this._getServiceURL() + '/' + model.id, model).pipe(map(item => {
+    return this.http.put<T>(this._getServiceURL(), model).pipe(map(item => {
       model.id = item.id;
       return model;
     }));
