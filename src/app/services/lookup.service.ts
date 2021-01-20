@@ -44,15 +44,23 @@ export class LookupService extends BackendGenericService<Lookup> {
     });
   }
 
-  getByCategory(category: any | LookupCategories): Lookup[] {
-    return this.listByCategory[category as keyof ILookupMap];
+  /**
+   * @description Get the lookup list by category  name
+   * @param categoryName: LookupCategories|string
+   */
+  getByCategory(categoryName: LookupCategories | string): Lookup[] {
+    return this.listByCategory[categoryName as keyof ILookupMap];
   }
 
+  /**
+   * @description Get the lookup list by category id
+   * @param categoryId: number|string
+   */
   getByCategoryId(categoryId: number | string): Lookup[] {
     let category = null;
     for (const lookup in LookupCategories) {
       if (LookupCategories.hasOwnProperty(lookup) && LookupCategories[lookup as keyof typeof LookupCategories] === categoryId) {
-        const categoryName =  lookup.substr(0, lookup.indexOf('_CAT_ID'));
+        const categoryName = lookup.substr(0, lookup.indexOf('_CAT_ID'));
         category = LookupCategories[categoryName as keyof typeof LookupCategories];
       }
     }
@@ -62,19 +70,30 @@ export class LookupService extends BackendGenericService<Lookup> {
     return this.getByCategory(category);
   }
 
-  getByLookupKeyAndCategory(lookupKey: number, category: LookupCategories): Lookup | null {
-    if (!isValidValue(lookupKey) || !isValidValue(category)){
+  /**
+   * @description Get the lookup by lookupKey and category name
+   * @param lookupKey: number
+   * @param categoryName: LookupCategories|string
+   */
+  getByLookupKeyAndCategory(lookupKey: number, categoryName: LookupCategories | string): Lookup | null {
+    if (!isValidValue(lookupKey) || !isValidValue(categoryName)) {
       return null;
     }
-    const lookups = this.getByCategory(category);
+    const lookups = this.getByCategory(categoryName);
     if (!lookups || lookups.length === 0) {
       return null;
     }
     return lookups.find(x => x.lookupKey === lookupKey) || null;
   }
 
+
+  /**
+   * @description Get the lookup by lookupKey and category id
+   * @param lookupKey: number
+   * @param categoryId: number|string
+   */
   getByLookupKeyAndCategoryId(lookupKey: number, categoryId: string | number): Lookup | null {
-    if (!isValidValue(lookupKey) || !isValidValue(categoryId)){
+    if (!isValidValue(lookupKey) || !isValidValue(categoryId)) {
       return null;
     }
     const lookups = this.getByCategoryId(categoryId);
