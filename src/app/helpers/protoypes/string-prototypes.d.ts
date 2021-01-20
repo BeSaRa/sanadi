@@ -1,7 +1,5 @@
-interface String {
-  change(model: IChangeParams): string;
-}
+import {IKeyValue} from '../../interfaces/i-key-value';
 
-interface IChangeParams {
-  [index: string]: any;
+interface String {
+  change(model: IKeyValue): string;
 }
