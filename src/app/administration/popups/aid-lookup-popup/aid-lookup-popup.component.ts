@@ -40,6 +40,7 @@ export class AidLookupPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    console.log('');
   }
 
   buildForm(): void {

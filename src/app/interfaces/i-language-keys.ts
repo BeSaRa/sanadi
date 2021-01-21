@@ -78,4 +78,11 @@ export interface ILanguageKeys {
   lbl_add_aid_sub_category: string;
   lbl_edit_aid_sub_category: string;
   menu_aid_sub_category: string;
+  lbl_add_org_user: string;
+  lbl_edit_org_user: string;
+  menu_organization_user: string;
+  lbl_employee_number: string;
+  lbl_qid: string;
+  lbl_phone: string;
+  lbl_official_phone_number: string;
 }

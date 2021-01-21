@@ -10,6 +10,8 @@ export interface IAppUrls {
   ORGANIZATION_BRANCH: string;
   AID_LOOKUPS: string;
   AID_LOOKUPS_CRITERIA: string;
+  ORGANIZATION: string;
+  ORG_USER: string;
 
   [index: string]: string;
 }

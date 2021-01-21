@@ -41,8 +41,8 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <textarea id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
-                      class="form-control"></textarea>
+            <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
+                   class="form-control"/>
             <span class="invalid-feedback position-absolute">
           <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.err_required_field}}</span>
           <span *ngIf="fm.getFieldErrors('arName')?.minlength">{{langService.map.err_specific_min_length.change({
@@ -55,8 +55,8 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
-            <textarea id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
-                      class="form-control"></textarea>
+            <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
+                   class="form-control"/>
             <span class="invalid-feedback position-absolute">
           <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.err_required_field}}</span>
           <span *ngIf="fm.getFieldErrors('enName')?.minlength">{{langService.map.err_specific_min_length.change({
