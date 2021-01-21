@@ -11,6 +11,7 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {AidTypes} from '../../../enums/aid-types.enum';
 import {IAidLookupCriteria} from '../../../interfaces/i-aid-lookup-criteria';
+import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
 @Component({
   selector: 'app-aid-lookup',
@@ -108,8 +109,8 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     });
   }
 
-  getTitleText(): string {
-    let title!: string;
+  getTitleText(): (keyof ILanguageKeys) {
+    let title: keyof ILanguageKeys;
     switch (this.aidType) {
       case AidTypes.CLASSIFICATIONS:
         title = 'menu_aid_class';
@@ -121,7 +122,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
         title = 'menu_aid_sub_category';
         break;
     }
-
+    // @ts-ignore
     return title;
   }
 
