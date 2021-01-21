@@ -1,0 +1,82 @@
+import {Injectable} from '@angular/core';
+import {BackendGenericService} from '../generics/backend-generic-service';
+import {OrgBranch} from '../models/org-branch';
+import {FactoryService} from './factory.service';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {interceptOrganizationBranch} from '../model-interceptors/organization-branch-interceptor';
+import {forkJoin, Observable, of} from 'rxjs';
+import {Generator} from '../decorators/generator';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {IDialogData} from '../interfaces/i-dialog-data';
+import {OperationTypes} from '../enums/operation-types.enum';
+import {concatMap, map, mergeMap, switchMap} from 'rxjs/operators';
+import {DialogService} from './dialog.service';
+import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
+import {OrgUnit} from '../models/org-unit';
+import {OrganizationUnitService} from './organization-unit.service';
+import {Localization} from '../models/localization';
+import {LocalizationPopupComponent} from '../administration/popups/localization-popup/localization-popup.component';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OrganizationBranchService extends BackendGenericService<OrgBranch> {
+  list!: OrgBranch[];
+
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              private  dialogService: DialogService) {
+    super();
+    FactoryService.registerService('OrganizationBranchService', this);
+  }
+
+  _getModel(): any {
+    return OrgBranch;
+  }
+
+  _getSendInterceptor(): any {
+    return interceptOrganizationBranch;
+  }
+
+  _getServiceURL(): string {
+    return this.urlService.URLS.ORGANIZATION_BRANCH;
+  }
+
+  @Generator(undefined, true)
+  private _loadByCriteria(criteria: { orgId?: number, status?: number }): Observable<OrgBranch[]> {
+    if (!criteria) {
+      return of([]);
+    }
+    const queryString = this._generateQueryString(criteria);
+    return this.http.get<OrgBranch[]>(this._getServiceURL() + '/criteria' + queryString);
+  }
+
+  loadByCriteria(criteria: { orgId?: number, status?: number }): Observable<OrgBranch[]> {
+    return this._loadByCriteria(criteria);
+  }
+
+  openCreateDialog(orgUnit: OrgUnit): DialogRef {
+    return this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
+      model: new OrgBranch(),
+      orgUnit,
+      operation: OperationTypes.CREATE
+    });
+  }
+
+  openUpdateDialog(modelId: number): Observable<DialogRef> {
+    return this.getById(modelId).pipe(
+      mergeMap((branch: OrgBranch) => {
+        return branch.getOrgUnit().pipe(
+          switchMap((orgUnit: OrgUnit) => {
+            return of(this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
+              model: branch,
+              orgUnit,
+              operation: OperationTypes.UPDATE
+            }));
+          })
+        );
+      })
+    );
+  }
+}

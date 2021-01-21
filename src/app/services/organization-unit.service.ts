@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {combineLatest, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {OrgUnit} from '../models/org-unit';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -43,6 +43,18 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
         }));
       })
     );
+
+    /*return forkJoin({
+      record: this.getById(modelId),
+      branches: this.orgBranchService.loadByCriteria({orgId: modelId})
+    }).pipe(switchMap((result: IKeyValue) => {
+        return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
+          model: result.record,
+          branches: result.branches,
+          operation: OperationTypes.UPDATE
+        }));
+      })
+    );*/
   }
 
   _getModel(): any {
@@ -54,6 +66,6 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   _getServiceURL(): string {
-    return this.urlService.URLS.ORGANIZATION;
+    return this.urlService.URLS.ORGANIZATION_UNIT;
   }
 }

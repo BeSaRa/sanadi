@@ -1,40 +1,39 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {OrgBranch} from '../../../models/org-branch';
 import {LangService} from '../../../services/lang.service';
 import {DialogService} from '../../../services/dialog.service';
+import {LookupService} from '../../../services/lookup.service';
 import {ToastService} from '../../../services/toast.service';
+import {OrganizationBranchService} from '../../../services/organization-branch.service';
+
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {switchMap, tap} from 'rxjs/operators';
+import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 import {OrgUnit} from '../../../models/org-unit';
-import {OrganizationUnitService} from '../../../services/organization-unit.service';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
 
 @Component({
-  selector: 'app-organization-unit',
-  templateUrl: './organization-unit.component.html',
-  styleUrls: ['./organization-unit.component.scss']
+  selector: 'app-organization-branch',
+  templateUrl: './organization-branch.component.html',
+  styleUrls: ['./organization-branch.component.scss']
 })
-export class OrganizationUnitComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUnit> {
+export class OrganizationBranchComponent implements OnInit, OnDestroy, PageComponentInterface<OrgBranch> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  organizations: OrgUnit[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'actions'];
+  branches: OrgBranch[] = [];
+
+  @Input() organization!: OrgUnit;
+  displayedColumns: string[] = ['arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
-  orgUnitTypesList: Lookup[];
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
-              private organizationUnitService: OrganizationUnitService,
+              private organizationBranchService: OrganizationBranchService,
               public lookupService: LookupService,
               private toast: ToastService) {
-    this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
   }
-
 
   ngOnDestroy(): void {
     this.reloadSubscription.unsubscribe();
@@ -47,13 +46,13 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   }
 
   add(): void {
-    const sub = this.organizationUnitService.openCreateDialog().onAfterClose$.subscribe(() => {
+    const sub = this.organizationBranchService.openCreateDialog(this.organization).onAfterClose$.subscribe(() => {
       this.reload$.next(null);
       sub.unsubscribe();
     });
   }
 
-  delete(model: OrgUnit, event: MouseEvent): void {
+  delete(model: OrgBranch, event: MouseEvent): void {
     event.preventDefault();
     // @ts-ignore
     this.dialogService.confirm(this.langService.map.confirm_delete_x.change({x: model.getName()})).onAfterClose$
@@ -69,9 +68,9 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       });
   }
 
-  edit(model: OrgUnit, event: MouseEvent): void {
+  edit(model: OrgBranch, event: MouseEvent): void {
     event.preventDefault();
-    const sub = this.organizationUnitService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
+    const sub = this.organizationBranchService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -90,10 +89,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.organizationUnitService.load();
+        if (!this.organization || !this.organization.id) {
+          return of([]);
+        }
+        return this.organizationBranchService.loadByCriteria({orgId: this.organization?.id});
       })
-    ).subscribe((orgUnits) => {
-      this.organizations = orgUnits;
+    ).subscribe((branches) => {
+      this.branches = branches;
     });
   }
+
 }

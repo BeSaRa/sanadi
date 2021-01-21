@@ -1,9 +1,9 @@
 <div class="container bg-white shadow-sm p-4 h-100">
-  <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$" pageTitle="menu_organizations"></app-page-header>
+  <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$" pageTitle="lbl_org_branches"></app-page-header>
   <div class="row pt-3">
     <div class="col-12">
       <div class="table-responsive">
-        <table class="table table-striped table-bordered caption-top" [dataSource]="organizations" cdk-table>
+        <table class="table table-striped table-bordered caption-top" [dataSource]="branches" cdk-table>
           <ng-container cdkColumnDef="arName">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_arabic_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
@@ -11,10 +11,6 @@
           <ng-container cdkColumnDef="enName">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="orgNationality">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_nationality}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.getOrgNationalityLookup()?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="phoneNumber1">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_phone_1}}</th>

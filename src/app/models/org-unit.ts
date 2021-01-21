@@ -57,9 +57,14 @@ export class OrgUnit extends BaseModel<OrgUnit> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  getOrgUnitTypeLookup(): Lookup | null {
+  getOrgNationalityLookup(): Lookup | null {
     // @ts-ignore
-    return this.lookupService.getByLookupKeyAndCategory(this.orgUnitType, LookupCategories.ORG_UNIT_TYPE);
+    return this.lookupService.getByLookupKeyAndCategory(this.orgNationality, LookupCategories.NATIONALITY);
+  }
+
+  getOrgStatusLookup(): Lookup | null {
+    // @ts-ignore
+    return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
   }
 
 }

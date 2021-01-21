@@ -6,7 +6,8 @@ export interface IAppUrls {
   CUSTOM_ROLE: string;
   CUSTOM_ROLE_PERMISSIONS: string;
   LOOKUPS: string;
-  ORGANIZATION: string;
+  ORGANIZATION_UNIT: string;
+  ORGANIZATION_BRANCH: string;
 
-  [index: string]: string
+  [index: string]: string;
 }

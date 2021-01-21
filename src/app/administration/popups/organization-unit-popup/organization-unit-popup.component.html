@@ -3,22 +3,21 @@
 </div>
 <div class="dialog-content">
   <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
+    <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.basic)">
+      <a id="org-unit-basic-tab" href="#org-unit-basic-tab-content" data-bs-toggle="tab" role="tab"
          class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
-        <!--<span *ngIf="fm.getFieldInvalidStatus('basic')"
-              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>-->
       </a>
     </li>
-    <li class="nav-item" role="presentation">
-      <a id="permissions-tab" href="#branches-tab-content" data-bs-toggle="tab" role="tab"
+    <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.branches)">
+      <a id="branches-tab" href="#branches-tab-content" data-bs-toggle="tab" role="tab"
          class="nav-link position-relative">{{langService.map.lbl_org_branches}}
       </a>
     </li>
   </ul>
   <div class="tab-content pt-2">
-    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
-      <form style="width: 500px" novalidate autocomplete="off"
+    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="org-unit-basic-tab"
+         id="org-unit-basic-tab-content" *ngIf="canShowTab(tabsData.basic)">
+      <form novalidate autocomplete="off"
             [formGroup]="form">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
@@ -68,10 +67,11 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="orgUnitType" class="form-label">{{langService.map.lbl_org_unit_type}}</label>
             <select id="orgUnitType" formControlName="orgUnitType"
-                    class="custom-select"
+                    class="form-select"
                     [ngClass]="fm.getStatusClass('orgUnitType')">
               <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of orgUnitTypesList" [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              <option *ngFor="let option of orgUnitTypesList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
             <span class="invalid-feedback position-absolute">
                 <span *ngIf="fm.getFieldErrors('orgUnitType')?.required">
@@ -98,7 +98,7 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
             <select id="status" formControlName="status"
-                    class="custom-select"
+                    class="form-select"
                     [ngClass]="fm.getStatusClass('status')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of orgUnitStatusList"
@@ -235,7 +235,7 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="orgNationality" class="form-label">{{langService.map.lbl_nationality}}</label>
             <select id="orgNationality" formControlName="orgNationality"
-                    class="custom-select"
+                    class="form-select"
                     [ngClass]="fm.getStatusClass('orgNationality')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of orgNationalityList"
@@ -260,10 +260,8 @@
       </form>
     </div>
     <div class="tab-pane fade" role="tabpanel" aria-labelledby="branches-tab"
-         id="branches-tab-content">
-      <div class="row">
-
-      </div>
+         id="branches-tab-content" *ngIf="canShowTab(tabsData.branches)">
+      <app-organization-branch [organization]="model"></app-organization-branch>
     </div>
   </div>
 </div>
@@ -272,6 +270,6 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">save</button>
-  <button dialogClose="welcome" class="btn btn-secondary">cancel</button>
+  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button dialogClose="welcome" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

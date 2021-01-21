@@ -60,4 +60,12 @@ export interface ILanguageKeys {
   lbl_nationality: string;
   lbl_po_box_num: string;
   lbl_org_branches: string;
+  lbl_org_users: string;
+  btn_save: string;
+  btn_cancel: string;
+  lbl_add_org_branch: string;
+  lbl_edit_org_branch: string;
+  lbl_main: string;
+  lbl_yes: string;
+  lbl_no: string;
 }

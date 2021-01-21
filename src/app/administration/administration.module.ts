@@ -9,10 +9,12 @@ import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
 import { CustomRolePopupComponent } from './popups/custom-role-popup/custom-role-popup.component';
 import { OrganizationUnitComponent } from './pages/organization-unit/organization-unit.component';
 import { OrganizationUnitPopupComponent } from './popups/organization-unit-popup/organization-unit-popup.component';
+import { OrganizationBranchPopupComponent } from './popups/organization-branch-popup/organization-branch-popup.component';
+import { OrganizationBranchComponent } from './pages/organization-branch/organization-branch.component';
 
 
 @NgModule({
-  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent, CustomRoleComponent, CustomRolePopupComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent],
+  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent, CustomRoleComponent, CustomRolePopupComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent, OrganizationBranchPopupComponent, OrganizationBranchComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,
