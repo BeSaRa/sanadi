@@ -9,7 +9,6 @@ import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {ToastService} from '../../../services/toast.service';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {AidLookupService} from '../../../services/aid-lookup.service';
 import {AidTypes} from '../../../enums/aid-types.enum';
 
 @Component({
@@ -29,7 +28,6 @@ export class AidLookupPopupComponent implements OnInit {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
               private toast: ToastService,
-              public aidLookupService: AidLookupService,
               public langService: LangService,
               private fb: FormBuilder) {
     this.model = data.model;
