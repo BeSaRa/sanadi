@@ -1,5 +1,6 @@
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {LangService} from '../services/lang.service';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
 
 export class FormManager {
   constructor(private form: FormGroup, private langService: LangService) {
@@ -47,6 +48,13 @@ export class FormManager {
     let {lbl_active, lbl_inactive, lbl_status} = this.langService.map;
     lbl_status = lbl_status + ' : ';
     return this.getFormField(field)?.value ? lbl_status + lbl_active : lbl_status + lbl_inactive;
+  }
+
+  getBooleanDisplayText(field: string, fieldLabel: string, activeLabel: string, inactiveLabel: string): any {
+    const label = this.langService.map[fieldLabel as keyof ILanguageKeys];
+    const active = this.langService.map[activeLabel as keyof ILanguageKeys];
+    const inactive = this.langService.map[inactiveLabel as keyof ILanguageKeys];
+    return label + ' : ' + (this.getFormField(field)?.value ? active : inactive);
   }
 
 
