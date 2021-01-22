@@ -62,6 +62,11 @@ export class CustomRole extends BaseModel<CustomRole> {
     });
   }
 
+  /**
+   * @description test desc
+   * @param permissions
+   * @private
+   */
   private setPermissionSetByPermissions(permissions: Permission[]): void {
     this.permissionSet = permissions.map(item => {
       return {
