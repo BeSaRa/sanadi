@@ -51,11 +51,11 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   delete(model: CustomRole, event: MouseEvent): void {
     event.preventDefault();
     // @ts-ignore
-    this.dialogService.confirm(this.langService.map.confirm_delete_x.change({x: model.getName()})).onAfterClose$.subscribe((click: UserClickOn) => {
+    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.langService.map.delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
           this.reload$.next(null);
           sub.unsubscribe();
         });

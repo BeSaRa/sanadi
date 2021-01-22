@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {combineLatest, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {CustomRole} from '../models/custom-role';
 import {interceptCustomRole} from '../model-interceptors/custom-role-interceptor';
 import {FactoryService} from './factory.service';
@@ -40,12 +40,12 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   }
 
   openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return combineLatest([this.getById(modelId), this.customRolePermissionService.getByCustomRoleId(modelId)])
+    return this.getById(modelId)
       .pipe(switchMap((role) => {
         return of(this.dialogService.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
-          model: role[0],
+          model: role,
           operation: OperationTypes.UPDATE,
-          customRolePermissions: role[1]
+          customRolePermissions: role.permissionSet
         }));
       }));
   }

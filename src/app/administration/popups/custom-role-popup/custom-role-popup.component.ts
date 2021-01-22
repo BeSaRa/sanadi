@@ -9,16 +9,16 @@ import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {LookupService} from '../../../services/lookup.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
-import {Lookup} from '../../../models/lookup';
-import {combineLatest} from 'rxjs';
+import {combineLatest, of} from 'rxjs';
 import {PermissionService} from '../../../services/permission.service';
-import {concatMap, mapTo, take} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 import {Permission} from '../../../models/permission';
 import {CheckGroup} from '../../../models/check-group';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
 import {extender} from '../../../helpers/extender';
 import {ToastService} from '../../../services/toast.service';
 import {CustomRolePermissionService} from '../../../services/custom-role-permission.service';
+import {Lookup} from '../../../models/lookup';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -55,12 +55,12 @@ export class CustomRolePopupComponent implements OnInit {
   }
 
   private buildGroups() {
-    combineLatest([this.permissionService.load(), this.lookupService.loadByCategory(LookupCategories.PERMISSION_GROUP)])
+    combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.PERMISSION_GROUP))])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = CustomRolePopupComponent.buildPermissionsByGroupId(result[0]);
         result[1].forEach((group: Lookup) => {
-          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.id], this.selectedPermissions, 3));
+          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions, 3));
         });
       });
   }
@@ -89,17 +89,9 @@ export class CustomRolePopupComponent implements OnInit {
 
   saveModel(): void {
     const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
-
+    customRole.setPermissionSet(this.selectedPermissions);
     customRole.save()
-      .pipe(
-        concatMap((role) => {
-          customRole.id = role.id;
-          return this.customRolePermissionService.deleteByCustomRoleId(role.id);
-        }),
-        concatMap(() => {
-          return this.customRolePermissionService.createBulkByCustomRoleId(this.selectedPermissions, customRole.id);
-        })
-      )
+      .pipe()
       .subscribe(() => {
         let message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
         // @ts-ignore
@@ -141,8 +133,15 @@ export class CustomRolePopupComponent implements OnInit {
   }
 
   private updatePermissionFormField() {
+    this.setSelectedPermissions();
     this.fm.getFormField('permissions')?.setValue(this.groups.some((group) => {
       return group.hasSelectedValue();
     }));
+  }
+
+  private setSelectedPermissions(): void {
+    this.selectedPermissions = this.groups.reduce((acc, current) => {
+      return acc.concat(current.getSelectedValue());
+    }, [] as number[]);
   }
 }

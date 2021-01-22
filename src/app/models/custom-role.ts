@@ -5,6 +5,7 @@ import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
 import {CustomRolePermission} from './custom-role-permission';
+import {Permission} from './permission';
 
 export class CustomRole extends BaseModel<CustomRole> {
   status: boolean = true;
@@ -43,4 +44,31 @@ export class CustomRole extends BaseModel<CustomRole> {
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
+
+  setPermissionSet(permissions: Permission[] | number[]): void {
+    if (typeof permissions[0] === 'number') {
+      this.setPermissionSetByIds(permissions as number[]);
+    } else {
+      this.setPermissionSetByPermissions(permissions as Permission[]);
+    }
+  }
+
+  private setPermissionSetByIds(permissionIds: number[]): void {
+    this.permissionSet = permissionIds.map(item => {
+      return {
+        permissionId: item,
+        customRoleId: this.id
+      } as CustomRolePermission;
+    });
+  }
+
+  private setPermissionSetByPermissions(permissions: Permission[]): void {
+    this.permissionSet = permissions.map(item => {
+      return {
+        permissionId: item.id,
+        customRoleId: this.id
+      } as CustomRolePermission;
+    });
+  }
+
 }

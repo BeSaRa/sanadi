@@ -73,7 +73,7 @@ export class CheckGroup<T extends { id: number }> {
 
   toggleSelection() {
     if (this.isEmpty() || this.isIndeterminate()) {
-      this.selected = this.idList;
+      this.selected = this.idList.slice();
     } else {
       this.selected = [];
     }
@@ -81,5 +81,9 @@ export class CheckGroup<T extends { id: number }> {
 
   hasSelectedValue(): boolean {
     return !!this.selected.length;
+  }
+
+  getSelectedValue(): number[] {
+    return this.selected.slice();
   }
 }

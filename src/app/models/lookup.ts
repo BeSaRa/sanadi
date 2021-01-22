@@ -7,7 +7,7 @@ import {INames} from '../interfaces/i-names';
 
 export class Lookup extends BaseModel<Lookup> {
   category!: LookupCategories;
-  lookupKey: number | undefined;
+  lookupKey!: number;
   lookupStrKey: string | undefined;
   status: number | undefined;
   itemOrder: number | undefined;
