@@ -10,8 +10,5 @@
   "AID_LOOKUPS": "admin/aid-lookup",
   "AID_LOOKUPS_CRITERIA": "admin/aid-lookup/criteria",
   "ORGANIZATION": "admin/ou",
-  "ORG_USER": "admin/user",
-  "TEST_URL": "TEST",
-  "HI_ALL" : true,
-  "WELCOME" : true
+  "ORG_USER": "admin/user"
 }
