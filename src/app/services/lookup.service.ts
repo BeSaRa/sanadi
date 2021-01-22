@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Lookup} from '../models/lookup';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {LookupCategories} from '../enums/lookup-categories';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -103,7 +103,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     return lookups.find(x => x.lookupKey === lookupKey) || null;
   }
 
-  getLookupByCategoryAndId(category: any | LookupCategories, value: any) {
+  getLookupByCategoryAndId(category: keyof ILookupMap, value: any) {
     return this.listByCategory[category][value];
   }
 }
