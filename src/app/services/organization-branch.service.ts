@@ -5,18 +5,15 @@ import {FactoryService} from './factory.service';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {interceptOrganizationBranch} from '../model-interceptors/organization-branch-interceptor';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
-import {concatMap, map, mergeMap, switchMap} from 'rxjs/operators';
+import {mergeMap, switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
 import {OrgUnit} from '../models/org-unit';
-import {OrganizationUnitService} from './organization-unit.service';
-import {Localization} from '../models/localization';
-import {LocalizationPopupComponent} from '../administration/popups/localization-popup/localization-popup.component';
 
 @Injectable({
   providedIn: 'root'
