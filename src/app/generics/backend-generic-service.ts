@@ -57,7 +57,7 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
 
   abstract _getServiceURL(): string;
 
-  abstract _getReceiveInterceptor(): any
+  abstract _getReceiveInterceptor(): any;
 
   _generateQueryString(queryStringOptions: IKeyValue): string {
     let queryString = '?';
