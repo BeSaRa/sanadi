@@ -15,7 +15,7 @@ import {LangService} from '../../../services/lang.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
-  displayedColumns: string[] = ['id', 'empNum', 'arName', 'enName', 'actions'];
+  displayedColumns: string[] = ['empNum', 'arName', 'enName', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);

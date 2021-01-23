@@ -23,7 +23,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   @Input() parentId!: number;
 
   aidLookups: AidLookup[] = [];
-  displayedColumns: string[] = ['id', 'aidCode', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['aidCode', 'arName', 'enName', 'status', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
