@@ -10,7 +10,7 @@ import {Generator} from '../decorators/generator';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
-import {mergeMap, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
 import {OrgUnit} from '../models/org-unit';

@@ -15,9 +15,10 @@ import {OrganizationBranchPopupComponent} from './popups/organization-branch-pop
 import {OrganizationBranchComponent} from './pages/organization-branch/organization-branch.component';
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
 import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
+import {OrganizationBranchUserComponent} from './pages/organization-branch-user/organization-branch-user.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent, AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent, OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent, OrganizationUserPopupComponent],
+  declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent, AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent, OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent, OrganizationUserPopupComponent, OrganizationBranchUserComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

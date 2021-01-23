@@ -1,0 +1,37 @@
+<div class="container bg-white shadow-sm p-4 h-100">
+  <app-page-header pageTitle="lbl_org_users" [clickOnReload$]="reload$" [clickOnNew$]="null"></app-page-header>
+  <div class="row pt-3">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="users">
+          <ng-container cdkColumnDef="id">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_identifier}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="empNum">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_employee_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">{{row.empNum}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.arName}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block">{{row.enName}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <div class="d-flex flex-row">
+                <a href="#" (click)="edit(row , $event)" class="icon-btn"><i class="mdi mdi-pen"></i></a>
+              </div>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

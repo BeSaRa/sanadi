@@ -232,7 +232,7 @@
       </div>
       <div class="tab-pane fade" role="tabpanel" aria-labelledby="users-tab"
            id="users-tab-content" *ngIf="canShowTab(tabsData.users)">
-
+            <app-organization-branch-user [organization]="orgUnit" [orgBranch]="model"></app-organization-branch-user>
       </div>
     </div>
   </div>

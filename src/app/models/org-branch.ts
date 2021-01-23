@@ -7,8 +7,6 @@ import {FactoryService} from '../services/factory.service';
 import {OrganizationBranchService} from '../services/organization-branch.service';
 import {Lookup} from './lookup';
 import {LookupCategories} from '../enums/lookup-categories';
-import {OrganizationUnitService} from '../services/organization-unit.service';
-import {OrgUnit} from './org-unit';
 
 export class OrgBranch extends BaseModel<OrgBranch> {
   orgId: number | undefined;
@@ -27,14 +25,12 @@ export class OrgBranch extends BaseModel<OrgBranch> {
   service: OrganizationBranchService;
   langService: LangService;
   lookupService: LookupService;
-  organizationUnitService: OrganizationUnitService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('OrganizationBranchService');
     this.langService = FactoryService.getService('LangService');
     this.lookupService = FactoryService.getService('LookupService');
-    this.organizationUnitService = FactoryService.getService('OrganizationUnitService');
   }
 
   create(): Observable<OrgBranch> {
@@ -60,10 +56,5 @@ export class OrgBranch extends BaseModel<OrgBranch> {
   getOrgStatusLookup(): Lookup | null {
     // @ts-ignore
     return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
-  }
-
-  getOrgUnit(): Observable<OrgUnit> {
-    // @ts-ignore
-    return this.organizationUnitService.getById(this.orgId);
   }
 }
