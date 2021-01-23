@@ -106,4 +106,7 @@ export class LookupService extends BackendGenericService<Lookup> {
   getLookupByCategoryAndId(category: keyof ILookupMap, value: any) {
     return this.listByCategory[category][value];
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

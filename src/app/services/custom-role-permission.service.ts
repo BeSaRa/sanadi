@@ -77,4 +77,7 @@ export class CustomRolePermissionService extends BackendGenericService<CustomRol
       }));
     });
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

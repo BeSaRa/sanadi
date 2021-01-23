@@ -61,4 +61,7 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   _getServiceURL(): string {
     return this.urlService.URLS.CUSTOM_ROLE;
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

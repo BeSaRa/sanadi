@@ -53,4 +53,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   _getServiceURL(): string {
     return this.urlService.URLS.ORG_USER;
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

@@ -91,4 +91,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     }
     return queryParams;
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

@@ -79,4 +79,7 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
       })
     );
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

@@ -24,4 +24,7 @@ export class PermissionService extends BackendGenericService<Permission> {
   _getServiceURL(): string {
     return this.urlService.URLS.PERMISSIONS;
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

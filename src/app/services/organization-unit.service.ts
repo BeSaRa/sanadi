@@ -68,4 +68,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   _getServiceURL(): string {
     return this.urlService.URLS.ORGANIZATION_UNIT;
   }
+
+  _getReceiveInterceptor(): any {
+  }
 }

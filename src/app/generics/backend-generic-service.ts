@@ -17,6 +17,12 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
     return this.http.get<T[]>(this._getServiceURL());
   }
 
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  private _update(@InterceptParam() model: T): Observable<T> {
+    return this.http.put<T>(this._getServiceURL() + '/full', model);
+  }
+
 
   load(prepare?: boolean): Observable<T[]> {
     return this._load()
@@ -27,11 +33,9 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
   }
 
   @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
   create(@InterceptParam() model: T): Observable<T> {
-    return this.http.post<T>(this._getServiceURL(), model).pipe(map(item => {
-      model.id = item.id;
-      return model;
-    }));
+    return this.http.post<T>(this._getServiceURL() + '/full', model);
   }
 
   delete(modelId: number): Observable<boolean> {
@@ -45,11 +49,7 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
 
   @SendInterceptor()
   update(@InterceptParam() model: T): Observable<T> {
-    // @ts-ignore
-    return this.http.put<T>(this._getServiceURL(), model).pipe(map(item => {
-      model.id = item.id;
-      return model;
-    }));
+    return this._update(model);
   }
 
   abstract _getModel(): any;
@@ -57,6 +57,8 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
   abstract _getSendInterceptor(): any;
 
   abstract _getServiceURL(): string;
+
+  abstract _getReceiveInterceptor(): any
 
   _generateQueryString(queryStringOptions: IKeyValue): string {
     let queryString = '?';

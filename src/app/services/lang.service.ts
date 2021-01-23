@@ -11,7 +11,7 @@ import {switchMap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
-import {LocalizationPopupComponent} from '../administration/popups/localization-popup/localization-popup.component';
+import {LocalizationPopupComponent} from '../shared/popups/localization-popup/localization-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {interceptLocalization} from '../model-interceptors/localization-interceptor';
 import {OperationTypes} from '../enums/operation-types.enum';
@@ -157,5 +157,8 @@ export class LangService extends BackendGenericService<Localization> {
 
   _getServiceURL(): string {
     return this.urlService.URLS.LANGUAGE;
+  }
+
+  _getReceiveInterceptor(): any {
   }
 }
