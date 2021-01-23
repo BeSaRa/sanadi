@@ -1,7 +1,7 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {map, mapTo, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {IKeyValue} from '../interfaces/i-key-value';
