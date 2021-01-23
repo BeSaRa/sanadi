@@ -13,10 +13,11 @@ import {PortalModule} from '@angular/cdk/portal';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {A11yModule} from '@angular/cdk/a11y';
 import {DialogCloseDirective} from './directives/dialog-close.directive';
-import {PredefinedDialogComponent} from './components/predefined-dialog/predefined-dialog.component';
+import {PredefinedDialogComponent} from './popups/predefined-dialog/predefined-dialog.component';
 import {CdkTableModule} from '@angular/cdk/table';
 import {ReactiveFormsModule} from '@angular/forms';
-import { PageHeaderComponent } from './components/page-header/page-header.component';
+import {PageHeaderComponent} from './components/page-header/page-header.component';
+import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     DialogContainerComponent,
     DialogCloseDirective,
     PredefinedDialogComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    LocalizationPopupComponent
   ],
   imports: [
     CommonModule,
@@ -42,23 +44,24 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
     CdkTableModule,
     ReactiveFormsModule
   ],
-    exports: [
-        CommonModule,
-        OverlayModule,
-        PortalModule,
-        A11yModule,
-        CdkTableModule,
-        ReactiveFormsModule,
-        FooterComponent,
-        HeaderComponent,
-        ErrorPageComponent,
-        MouseEnterLeaveDirective,
-        ToastComponent,
-        ServiceListComponent,
-        DialogCloseDirective,
-        PredefinedDialogComponent,
-        PageHeaderComponent
-    ]
+  exports: [
+    CommonModule,
+    OverlayModule,
+    PortalModule,
+    A11yModule,
+    CdkTableModule,
+    ReactiveFormsModule,
+    FooterComponent,
+    HeaderComponent,
+    ErrorPageComponent,
+    MouseEnterLeaveDirective,
+    ToastComponent,
+    ServiceListComponent,
+    DialogCloseDirective,
+    PredefinedDialogComponent,
+    PageHeaderComponent,
+    LocalizationPopupComponent
+  ]
 })
 export class SharedModule {
 }

@@ -4,7 +4,6 @@ import {AdminRoutingModule} from './admin-routing.module';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
 import {SharedModule} from '../shared/shared.module';
 import {LocalizationComponent} from './pages/localization/localization.component';
-import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
 import {CustomRolePopupComponent} from './popups/custom-role-popup/custom-role-popup.component';
 import {AidLookupComponent} from './pages/aid-lookup/aid-lookup.component';
@@ -18,7 +17,7 @@ import {OrganizationUserComponent} from './pages/organization-user/organization-
 import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, LocalizationComponent, LocalizationPopupComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent, AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent, OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent, OrganizationUserPopupComponent],
+  declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent, AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent, OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent, OrganizationUserPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

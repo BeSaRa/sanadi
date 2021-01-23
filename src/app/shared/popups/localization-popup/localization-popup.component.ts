@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
+import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {Localization} from '../../../models/localization';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';

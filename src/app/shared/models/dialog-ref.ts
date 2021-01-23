@@ -9,7 +9,7 @@ import {ComponentType} from '@angular/cdk/overlay';
 import {IDialogConfig} from '../../interfaces/i-dialog-config';
 import {pluck} from 'rxjs/operators';
 import {ITypeDialogList} from '../../interfaces/i-type-dialog-list';
-import {PredefinedDialogComponent} from '../components/predefined-dialog/predefined-dialog.component';
+import {PredefinedDialogComponent} from '../popups/predefined-dialog/predefined-dialog.component';
 
 export class DialogRef {
   langChangeSubscription: Subscription | undefined = undefined;
