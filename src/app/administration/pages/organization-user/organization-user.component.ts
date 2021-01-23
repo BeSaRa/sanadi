@@ -30,9 +30,11 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   }
 
   add(): void {
-    const sub = this.orgUserService.openCreateDialog().onAfterClose$.subscribe(() => {
-      this.reload$.next(null);
-      sub.unsubscribe();
+    const sub = this.orgUserService.openCreateDialog().subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe(() => {
+        this.reload$.next(null);
+        sub.unsubscribe();
+      });
     });
   }
 
@@ -49,7 +51,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     });
   }
 
-  listenToAdd(): void {
+  listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
         return this.orgUserService.load();
@@ -59,7 +61,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     });
   }
 
-  listenToReload(): void {
+  listenToAdd(): void {
     this.addSubscription = this.add$.pipe(
       tap(() => {
         this.add();

@@ -87,4 +87,9 @@ export interface ILanguageKeys {
   lbl_qid: string;
   lbl_phone: string;
   lbl_official_phone_number: string;
+  lbl_phone_extension: string;
+  lbl_user_type: string;
+  lbl_job_title: string;
+  lbl_org_unit: string;
+  lbl_branch: string;
 }

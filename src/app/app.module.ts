@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './pages/login/login.component';
@@ -18,7 +18,11 @@ import './helpers/protoypes/custom-prototypes';
 import {InfoService} from './services/info.service';
 import {ILoginInfo} from './interfaces/i-login-info';
 import {LookupService} from './services/lookup.service';
-import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handler';
+import {CustomRoleService} from './services/custom-role.service';
+import {OrganizationBranchService} from './services/organization-branch.service';
+import {OrganizationUserService} from './services/organization-user.service';
+import {AidLookupService} from './services/aid-lookup.service';
+import {OrganizationUnitService} from "./services/organization-unit.service";
 
 @NgModule({
   declarations: [
@@ -34,12 +38,11 @@ import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handle
     HttpClientModule
   ],
   providers: [
-    {provide: ErrorHandler, useClass: GeneralErrorHandler},
     {
       provide: APP_INITIALIZER,
       useFactory: AppModule.AppInit,
       multi: true,
-      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService, LookupService]
+      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService, LookupService, CustomRoleService, OrganizationBranchService, OrganizationUserService, AidLookupService, OrganizationUnitService]
     },
     httpInterceptors
   ],
