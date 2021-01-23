@@ -54,12 +54,21 @@ export class CustomRole extends BaseModel<CustomRole> {
   }
 
   private setPermissionSetByIds(permissionIds: number[]): void {
+    const oldPermissionSet = this.prepareCustomRolePermissionByPermissionId();
     this.permissionSet = permissionIds.map(item => {
       return {
+        id: oldPermissionSet[item]?.id,
         permissionId: item,
         customRoleId: this.id
       } as CustomRolePermission;
     });
+  }
+
+  private prepareCustomRolePermissionByPermissionId(): Record<number, CustomRolePermission> {
+    return this.permissionSet
+      .reduce<Record<number, CustomRolePermission>>((acc, current) => {
+        return {...acc, [current.permissionId]: current};
+      }, {});
   }
 
   /**
@@ -68,8 +77,10 @@ export class CustomRole extends BaseModel<CustomRole> {
    * @private
    */
   private setPermissionSetByPermissions(permissions: Permission[]): void {
+    const oldPermissionSet = this.prepareCustomRolePermissionByPermissionId();
     this.permissionSet = permissions.map(item => {
       return {
+        id: oldPermissionSet[item.id]?.id,
         permissionId: item.id,
         customRoleId: this.id
       } as CustomRolePermission;

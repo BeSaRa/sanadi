@@ -91,8 +91,7 @@ export class CustomRolePopupComponent implements OnInit {
     const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
     customRole.setPermissionSet(this.selectedPermissions);
     customRole.save()
-      .pipe()
-      .subscribe(() => {
+      .subscribe((customRole) => {
         let message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
         // @ts-ignore
         this.toast.success(message.change({x: customRole.getName()}));

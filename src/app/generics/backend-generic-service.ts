@@ -17,9 +17,8 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
     return this.http.get<T[]>(this._getServiceURL());
   }
 
-  @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
-  private _update(@InterceptParam() model: T): Observable<T> {
+  private _update(model: T): Observable<T> {
     return this.http.put<T>(this._getServiceURL() + '/full', model);
   }
 
