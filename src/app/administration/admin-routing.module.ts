@@ -13,7 +13,6 @@ const routes: Routes = [
   {path: 'custom-role', component: CustomRoleComponent},
   {path: 'organizations', component: OrganizationUnitComponent},
   {path: 'aid', component: AidLookupContainerComponent},
-  {path: 'organizations', component: OrganizationUnitComponent},
   {path: 'users', component: OrganizationUserComponent}
 ];
 
