@@ -3,7 +3,7 @@ import {ComponentType, Overlay} from '@angular/cdk/overlay';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {LangService} from './lang.service';
 import {IDialogConfig} from '../interfaces/i-dialog-config';
-import {PredefinedDialogComponent} from '../shared/components/predefined-dialog/predefined-dialog.component';
+import {PredefinedDialogComponent} from '../shared/popups/predefined-dialog/predefined-dialog.component';
 import {ITypeDialogList} from '../interfaces/i-type-dialog-list';
 import {FactoryService} from './factory.service';
 
