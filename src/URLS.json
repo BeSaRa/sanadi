@@ -10,5 +10,6 @@
   "AID_LOOKUPS": "admin/aid-lookup",
   "AID_LOOKUPS_CRITERIA": "admin/aid-lookup/criteria",
   "ORGANIZATION": "admin/ou",
-  "ORG_USER": "admin/user"
+  "ORG_USER": "admin/user",
+  "CACHE_SERVICE":"admin/config/refresh-cache"
 }

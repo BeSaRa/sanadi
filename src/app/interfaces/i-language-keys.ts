@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  msg_update_cache_success: string;
   lbl_inactive: string;
   lbl_active: string;
   lbl_description: string;

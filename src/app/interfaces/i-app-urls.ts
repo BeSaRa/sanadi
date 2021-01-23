@@ -12,6 +12,7 @@ export interface IAppUrls {
   AID_LOOKUPS_CRITERIA: string;
   ORGANIZATION: string;
   ORG_USER: string;
+  CACHE_SERVICE: string;
 
   [index: string]: string;
 }
