@@ -4,7 +4,7 @@ import {OrgUser} from '../models/org-user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
-import {interceptOrganizationUser} from '../model-interceptors/org-user-interceptor';
+import {interceptOrganizationUser, interceptReceiveOrganizationUser} from '../model-interceptors/org-user-interceptor';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
@@ -76,6 +76,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   }
 
   _getReceiveInterceptor(): any {
+    return interceptReceiveOrganizationUser;
   }
 
   private _loadCustomRolesAndOrgUnits(): Observable<[CustomRole[], OrgUnit[]]> {
@@ -102,6 +103,18 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
     return queryParams;
   }
 
+  /**
+   * @description Loads the organization users list with composite(Info) properties
+   */
+  @Generator(OrgUser, true, {property: 'rs', interceptReceive: interceptReceiveOrganizationUser})
+  loadComposite(): Observable<OrgUser[]> {
+    return this.http.get<OrgUser[]>(this.urlService.URLS.ORG_USER + '/composite');
+  }
+
+  /**
+   * @description Loads the organization users list by criteria
+   * @param criteria: IOrgUserCriteria
+   */
   @Generator(OrgUser, true)
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);

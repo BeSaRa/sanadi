@@ -22,7 +22,7 @@ import {CustomRoleService} from './services/custom-role.service';
 import {OrganizationBranchService} from './services/organization-branch.service';
 import {OrganizationUserService} from './services/organization-user.service';
 import {AidLookupService} from './services/aid-lookup.service';
-import {OrganizationUnitService} from "./services/organization-unit.service";
+import {OrganizationUnitService} from './services/organization-unit.service';
 
 @NgModule({
   declarations: [

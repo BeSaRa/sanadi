@@ -6,6 +6,7 @@ import {OrganizationUserService} from '../../../services/organization-user.servi
 import {LangService} from '../../../services/lang.service';
 import {switchMap, tap} from 'rxjs/operators';
 import {OrgBranch} from '../../../models/org-branch';
+import {OrgUnit} from '../../../models/org-unit';
 
 @Component({
   selector: 'app-organization-branch-user',
@@ -13,7 +14,7 @@ import {OrgBranch} from '../../../models/org-branch';
   styleUrls: ['./organization-branch-user.component.scss']
 })
 export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
-  @Input() organization!: OrgUser;
+  @Input() organization!: OrgUnit;
   @Input() orgBranch!: OrgBranch;
 
   users: OrgUser[] = [];

@@ -17,7 +17,7 @@ import {DialogService} from '../../../services/dialog.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
-  displayedColumns: string[] = ['empNum', 'arName', 'enName', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
@@ -70,7 +70,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.orgUserService.load();
+        return this.orgUserService.loadComposite();
       })
     ).subscribe((orgUsers) => {
       this.orgUsers = orgUsers;
