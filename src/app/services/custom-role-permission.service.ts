@@ -5,7 +5,7 @@ import {CustomRolePermission} from '../models/custom-role-permission';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {combineLatest, Observable, of} from 'rxjs';
-import {catchError, concatMap, map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {concatMap, map, mapTo, switchMap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 
 @Injectable({
