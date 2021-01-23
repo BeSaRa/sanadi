@@ -18,8 +18,14 @@
     <div class="tab-content pt-2">
       <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="org-branch-basic-tab"
            id="org-branch-basic-tab-content" *ngIf="canShowTab(tabsData.basic)">
-        <form novalidate autocomplete="off"
-              [formGroup]="form">
+        <form novalidate autocomplete="off" [formGroup]="form">
+          <div class="row">
+            <!--Org Name-->
+            <div class="col-sm-12 mb-4 position-relative">
+              <label for="orgName" class="form-label">{{langService.map.lbl_organization}}</label>
+              <label id="orgName" class="form-control" >{{orgUnit?.getName()}}</label>
+            </div>
+          </div>
           <div class="row">
             <!--Arabic Name-->
             <div class="col-sm-6 mb-4 position-relative">

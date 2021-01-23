@@ -61,18 +61,14 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     });
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
+  openUpdateDialog(modelId: number, orgUnit: OrgUnit): Observable<DialogRef> {
     return this.getById(modelId).pipe(
-      mergeMap((branch: OrgBranch) => {
-        return branch.getOrgUnit().pipe(
-          switchMap((orgUnit: OrgUnit) => {
-            return of(this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
-              model: branch,
-              orgUnit,
-              operation: OperationTypes.UPDATE
-            }));
-          })
-        );
+      switchMap((branch: OrgBranch) => {
+        return of(this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
+          model: branch,
+          orgUnit,
+          operation: OperationTypes.UPDATE
+        }));
       })
     );
   }

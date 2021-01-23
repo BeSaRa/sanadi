@@ -70,7 +70,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
 
   edit(model: OrgBranch, event: MouseEvent): void {
     event.preventDefault();
-    const sub = this.organizationBranchService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
+    const sub = this.organizationBranchService.openUpdateDialog(model.id, this.organization).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
