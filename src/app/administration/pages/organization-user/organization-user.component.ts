@@ -6,6 +6,8 @@ import {switchMap, tap} from 'rxjs/operators';
 import {OrganizationUserService} from '../../../services/organization-user.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {LangService} from '../../../services/lang.service';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {DialogService} from '../../../services/dialog.service';
 
 @Component({
   selector: 'app-organization-user',
@@ -21,7 +23,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
 
-  constructor(private orgUserService: OrganizationUserService, public langService: LangService) {
+  constructor(private orgUserService: OrganizationUserService, public langService: LangService,
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +42,19 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   }
 
   delete(model: OrgUser, event: MouseEvent): void {
+    event.preventDefault();
+    // @ts-ignore
+    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()}))
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   edit(orgUser: OrgUser, $event: MouseEvent): void {

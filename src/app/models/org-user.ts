@@ -6,6 +6,7 @@ import {CustomRole} from './custom-role';
 import {FactoryService} from '../services/factory.service';
 import {OrganizationUserService} from '../services/organization-user.service';
 import {LangService} from '../services/lang.service';
+import {INames} from '../interfaces/i-names';
 
 export class OrgUser extends BaseModel<OrgUser> {
   email: string | undefined;
@@ -51,5 +52,9 @@ export class OrgUser extends BaseModel<OrgUser> {
 
   update(): Observable<OrgUser> {
     return this.service.update(this);
+  }
+
+  getName(): string {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 }
