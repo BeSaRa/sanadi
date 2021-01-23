@@ -18,7 +18,7 @@ export class FactoryService {
 
   static getService<T>(serviceName: string): T {
     if (!FactoryService.services.hasOwnProperty(serviceName)) {
-      throw Error('Service not register yet yet ');
+      throw Error('Service not register yet: ' + serviceName);
     }
     return FactoryService.services[serviceName];
   }
