@@ -213,13 +213,20 @@
                 </span>
               </span>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <div class="form-check form-switch">
-              <input type="checkbox" id="status" formControlName="status" class="form-check-input cursor-pointer">
-              <label for="status" class="cursor-pointer">{{fm.getStatusFieldTranslate('status')}}</label>
-            </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="form-select"
+                    [ngClass]="fm.getStatusClass('customRoleId')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUserStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <span class="invalid-feedback position-absolute">
+                <span *ngIf="fm.getFieldErrors('customRoleId')?.required">
+                  {{langService.map.err_required_field}}
+                </span>
+              </span>
           </div>
         </div>
       </form>

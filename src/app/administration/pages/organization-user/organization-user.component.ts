@@ -18,7 +18,7 @@ import {ToastService} from '../../../services/toast.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);

@@ -31,6 +31,7 @@ export class OrganizationUserPopupComponent implements OnInit {
   customRoleList: CustomRole[];
   orgUnitList: OrgUnit[];
   orgBranchList!: OrgBranch[];
+  orgUserStatusList!: Lookup[];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUser>,
               private toast: ToastService, public langService: LangService,
@@ -42,6 +43,7 @@ export class OrganizationUserPopupComponent implements OnInit {
     this.orgUnitList = data.orgUnitList;
     this.userTypeList = lookupService.getByCategory(LookupCategories.ORG_USER_TYPE);
     this.jobTitleList = lookupService.getByCategory(LookupCategories.ORG_USER_JOB_TITLE);
+    this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
   }
 
   ngOnInit(): void {
