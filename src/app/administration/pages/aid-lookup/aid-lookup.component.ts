@@ -47,13 +47,9 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
 
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(switchMap(() => {
-      if (this.aidType === AidTypes.CLASSIFICATIONS) {
-        return this.aidLookupService.load();
-      } else {
-        // TODO if status empty the BE default status true
-        const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId, status: true};
-        return this.aidLookupService.getByCriteria(criteria);
-      }
+      // TODO if status empty the BE default status true
+      const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId};
+      return this.aidLookupService.getByCriteria(criteria);
     })).subscribe(aidLookups => {
       this.aidLookups = aidLookups;
     });
@@ -99,11 +95,11 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   updateStatus(aidLookup: AidLookup) {
     const sub = aidLookup.toggleStatus().update().subscribe(() => {
       // @ts-ignore
-      this.toast.success(this.langService.map.status_x_updated_success.change({x: aidLookup.getName()}));
+      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: aidLookup.getName()}));
       sub.unsubscribe();
     }, () => {
       // @ts-ignore
-      this.toast.error(this.langService.map.status_x_updated_fail.change({x: aidLookup.getName()}));
+      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: aidLookup.getName()}));
       aidLookup.toggleStatus();
       sub.unsubscribe();
     });
