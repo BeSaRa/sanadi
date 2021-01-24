@@ -5,6 +5,7 @@ import {AdminResult} from '../models/admin-result';
 export function interceptOrganizationUser(model: OrgUser | any): (OrgUser | any) {
   delete model.service;
   delete model.langService;
+  delete model.lookupService;
 
   return model;
 }

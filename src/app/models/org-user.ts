@@ -7,6 +7,10 @@ import {FactoryService} from '../services/factory.service';
 import {OrganizationUserService} from '../services/organization-user.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
+import {AdminResult} from './admin-result';
+import {Lookup} from './lookup';
+import {LookupCategories} from '../enums/lookup-categories';
+import {LookupService} from '../services/lookup.service';
 
 export class OrgUser extends BaseModel<OrgUser> {
   email: string | undefined;
@@ -21,21 +25,23 @@ export class OrgUser extends BaseModel<OrgUser> {
   officialPhoneNumber: string | undefined;
   phoneExtension: string | undefined;
   jobTitle: number | undefined;
-  status: boolean | undefined;
-  orgUnitInfo: OrgUnit | undefined;
-  orgBranchInfo: OrgBranch | undefined;
-  statusInfo: any | undefined; // need to bind to model
-  userTypeInfo: any | undefined; // need to bind to model
-  jobTitleInfo: any | undefined; // need to bind to model
-  customRoleInfo: CustomRole | undefined;
+  status: number | undefined;
+  orgUnitInfo: AdminResult | undefined;
+  orgBranchInfo: AdminResult | undefined;
+  statusInfo: AdminResult | undefined; // need to bind to model
+  userTypeInfo: AdminResult | undefined; // need to bind to model
+  jobTitleInfo: AdminResult | undefined; // need to bind to model
+  customRoleInfo: AdminResult | undefined;
 
   private service: OrganizationUserService;
   private langService: LangService;
+  lookupService: LookupService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('OrganizationUserService');
     this.langService = FactoryService.getService('LangService');
+    this.lookupService = FactoryService.getService('LookupService');
   }
 
   create(): Observable<OrgUser> {
@@ -56,5 +62,10 @@ export class OrgUser extends BaseModel<OrgUser> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  getOrgUserStatusLookup(): Lookup | null {
+    // @ts-ignore
+    return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_USER_STATUS);
   }
 }
