@@ -26,8 +26,8 @@ import {BackendGenericService} from '../generics/backend-generic-service';
 export class LangService extends BackendGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
-    en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP),
-    ar: new Language(1, 'Arabic', 'ar', 'rtl', Styles.BOOTSTRAP_RTL)
+    en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
+    ar: new Language(1, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
   };
   private languageToggler: { [index: string]: string } = {
     ar: 'en',
@@ -48,7 +48,7 @@ export class LangService extends BackendGenericService<Localization> {
     this.changeLanguage(this.languageChange.value);
     this.firstTime = false;
 
-    this._loadDone$.subscribe((locals) => {
+    this._loadDone$.subscribe(() => {
       this.prepareCurrentLang();
       this.prepareLocalizationMap();
     });
@@ -145,6 +145,10 @@ export class LangService extends BackendGenericService<Localization> {
       model: new Localization(),
       operation: OperationTypes.CREATE
     });
+  }
+
+  getCurrentLanguage(): Language {
+    return this.languages[this.map.lang];
   }
 
   _getModel(): any {

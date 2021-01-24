@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {AppRootScrollService} from '../../../services/app-root-scroll.service';
+import {LangService} from '../../../services/lang.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('header') element: ElementRef | undefined;
   scrollSubscription: Subscription | undefined;
 
-  constructor(private scrollService: AppRootScrollService) {
+  constructor(private scrollService: AppRootScrollService, public langService: LangService) {
   }
 
   ngOnInit(): void {
@@ -56,4 +57,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.scrollSubscription?.unsubscribe();
   }
 
+  toggleLanguage(event: MouseEvent) {
+    event.preventDefault();
+    this.langService.toggleLanguage();
+  }
 }

@@ -10,7 +10,8 @@
         </ul>
         <div class="flex-grow-1"></div>
         <ul class="navbar-nav align-self-center">
-          <li class="nav-item"><a href="#" class="nav-link">Arabic</a></li>
+          <li class="nav-item"><a href="#" (click)="toggleLanguage($event)"
+                                  class="nav-link">{{langService.getCurrentLanguage().toggleTo}}</a></li>
         </ul>
       </div>
     </div>
