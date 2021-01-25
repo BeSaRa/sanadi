@@ -37,7 +37,7 @@
               "src/favicon.svg",
               {
                 "glob": "*",
-                "input": "node_modules/@mid/font/fonts",
+                "input": "node_modules/@mdi/font/fonts",
                 "output": "fonts"
               },
               "src/assets",
