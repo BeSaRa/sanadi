@@ -1,4 +1,4 @@
-import {ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
   return (formGroup): ValidationErrors | null => {
@@ -8,3 +8,11 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
     return isInvalid ? {required: true} : null;
   };
 }
+
+export function numberValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
+    return !isValid ? {number: true} : null;
+  };
+}
+

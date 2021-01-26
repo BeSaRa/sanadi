@@ -1,5 +1,71 @@
-import {validateFieldsStatus} from './validate-fields-status';
+import {validateFieldsStatus, numberValidator} from './validate-fields-status';
+import {AbstractControl} from '@angular/forms';
+import {IKeyValue} from '../interfaces/i-key-value';
 
 export const CustomValidators = {
-  validateFieldsStatus
+  validateFieldsStatus,
+  numberValidator,
+  getValidationData
 };
+
+interface IValidationInfo {
+  fieldName: string | null;
+  errorName: string | null;
+  errorValue: IKeyValue | null;
+  message: { key: string, replaceValues: any };
+}
+
+const errorKeys: IKeyValue = {
+  required: {key: 'err_required_field', replaceValues: null},
+  email: {key: 'err_invalid_email', replaceValues: null},
+  number: {key: 'err_number_only', replaceValues: null},
+  minlength: {
+    key: 'err_specific_min_length',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({field: fieldLabelKey, length: errorValue.requiredLength});
+    }
+  },
+  maxlength: {
+    key: 'err_specific_max_length',
+    replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
+      return message.change({field: fieldLabelText, length: errorValue.requiredLength});
+    }
+  },
+  min: {
+    key: 'err_min_number',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({min: errorValue.min});
+    }
+  },
+  max: {
+    key: 'err_max_number',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({max: errorValue.max});
+    }
+  }
+};
+
+function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
+  return {
+    fieldName: _getControlName(control),
+    errorName,
+    errorValue: _getErrorValue(control, errorName),
+    message: errorKeys[errorName]
+  };
+}
+
+function _getErrorValue(control: AbstractControl, errorName: any): any {
+  return control.errors ? control.errors[errorName] : null;
+}
+
+function _getControlName(control: AbstractControl): string | null {
+  if (!control || !control.parent) {
+    return null;
+  }
+  const formGroup = control.parent.controls;
+  if (!formGroup) {
+    return null;
+  }
+  // @ts-ignore
+  return Object.keys(formGroup).find(name => control === formGroup[name]) || null;
+}

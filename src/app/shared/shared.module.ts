@@ -18,6 +18,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {ReactiveFormsModule} from '@angular/forms';
 import {PageHeaderComponent} from './components/page-header/page-header.component';
 import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
+import {FieldErrorMessageComponent} from './components/field-error-message/field-error-message.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import {LocalizationPopupComponent} from './popups/localization-popup/localizati
     DialogCloseDirective,
     PredefinedDialogComponent,
     PageHeaderComponent,
-    LocalizationPopupComponent
+    LocalizationPopupComponent,
+    FieldErrorMessageComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +62,8 @@ import {LocalizationPopupComponent} from './popups/localization-popup/localizati
     DialogCloseDirective,
     PredefinedDialogComponent,
     PageHeaderComponent,
-    LocalizationPopupComponent
+    LocalizationPopupComponent,
+    FieldErrorMessageComponent
   ]
 })
 export class SharedModule {
