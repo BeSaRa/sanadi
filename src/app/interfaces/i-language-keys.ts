@@ -93,9 +93,9 @@ export interface ILanguageKeys {
   lbl_job_title: string;
   lbl_org_unit: string;
   lbl_branch: string;
-  lbl_status_date_modified: string;
   err_number_only: string;
   err_min_number: string;
   err_max_number: string;
+  lbl_status_date_modified: string;
   lbl_copyright: string;
 }
