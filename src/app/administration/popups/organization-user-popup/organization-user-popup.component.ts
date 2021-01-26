@@ -15,6 +15,7 @@ import {OrgUnit} from '../../../models/org-unit';
 import {CustomRole} from '../../../models/custom-role';
 import {OrgBranch} from '../../../models/org-branch';
 import {OrganizationBranchService} from '../../../services/organization-branch.service';
+import {CustomValidators} from '../../../validators/custom-validators';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -56,14 +57,14 @@ export class OrganizationUserPopupComponent implements OnInit {
       orgBranchId: [this.model.orgBranchId, [Validators.required]],
       customRoleId: [this.model.customRoleId, Validators.required],
       userType: [this.model.userType, Validators.required],
-      arName: [this.model.arName, [Validators.required, Validators.minLength(3)]],
-      enName: [this.model.enName, [Validators.required, Validators.minLength(3)]],
-      qid: [this.model.qid, [Validators.required, Validators.minLength(3)]],
-      empNum: [this.model.empNum, [Validators.required]],
-      phoneNumber: [this.model.phoneNumber, [Validators.required, Validators.maxLength(50)]],
-      phoneExtension: [this.model.phoneExtension, [Validators.required, Validators.maxLength(10)]],
-      officialPhoneNumber: [this.model.officialPhoneNumber, [Validators.required, Validators.maxLength(50)]],
-      email: [this.model.email, [Validators.required, Validators.email, Validators.maxLength(50)]],
+      arName: [this.model.arName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      enName: [this.model.enName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      qid: [this.model.qid, [Validators.required, CustomValidators.numberValidator(), Validators.minLength(7), Validators.maxLength(10)]],
+      empNum: [this.model.empNum, [Validators.required, Validators.maxLength(10)]],
+      phoneNumber: [this.model.phoneNumber, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(50)]],
+      phoneExtension: [this.model.phoneExtension, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(50)]],
+      officialPhoneNumber: [this.model.officialPhoneNumber, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(50)]],
+      email: [this.model.email, [Validators.required, Validators.email, Validators.maxLength(200)]],
       jobTitle: [this.model.jobTitle, [Validators.required]],
       status: [this.model.status, Validators.required]
     });

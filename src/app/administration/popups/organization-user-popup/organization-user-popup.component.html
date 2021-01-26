@@ -21,35 +21,21 @@
   <div class="tab-content pt-2">
     <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab"
          id="basic-tab-content">
-      <form class="min-w400px" novalidate autocomplete="off" [formGroup]="form">
+      <form class="min-w400px" style="width: 600px" novalidate autocomplete="off" [formGroup]="form">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.err_required_field}}</span>
-              <span *ngIf="fm.getFieldErrors('arName')?.minlength">
-                  {{langService.map.err_specific_min_length.change({
-                length: 3,
-                field: langService.map.lbl_arabic_name
-              })}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('arName')"
+                                     [labelKey]="'lbl_arabic_name'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.err_required_field}}</span>
-              <span *ngIf="fm.getFieldErrors('enName')?.minlength">
-                  {{langService.map.err_specific_min_length.change({
-                length: 3,
-                field: langService.map.lbl_english_name
-              })}}
-                </span>
-            </span>
+            <app-field-error-message [control]="form.get('enName')"
+                                     [labelKey]="'lbl_english_name'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -57,23 +43,15 @@
             <label for="empNum" class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" [ngClass]="fm.getStatusClass('empNum')" formControlName="empNum"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('empNum')?.required">{{langService.map.err_required_field}}</span>
-        </span>
+            <app-field-error-message [control]="form.get('empNum')"
+                                     [labelKey]="'lbl_employee_number'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="qid" class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" [ngClass]="fm.getStatusClass('qid')" formControlName="qid"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('qid')?.required">{{langService.map.err_required_field}}</span>
-              <span *ngIf="fm.getFieldErrors('qid')?.minlength">
-                  {{langService.map.err_specific_min_length.change({
-                length: 3,
-                field: langService.map.lbl_qid
-              })}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('qid')"
+                                     [labelKey]="'lbl_qid'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -82,26 +60,15 @@
             <input id="phoneExtension" [ngClass]="fm.getStatusClass('phoneExtension')"
                    formControlName="phoneExtension"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('phoneExtension')?.required">{{langService.map.err_required_field}}</span>
-                <span *ngIf="fm.getFieldErrors('phoneExtension')?.maxlength">
-                  {{langService.map.err_specific_max_length.change({
-                  length: 10,
-                  field: langService.map.lbl_phone_extension
-                })}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('phoneExtension')"
+                                     [labelKey]="'lbl_phone_extension'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber" class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" [ngClass]="fm.getStatusClass('phoneNumber')" formControlName="phoneNumber"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('phoneNumber')?.required">{{langService.map.err_required_field}}</span>
-                <span *ngIf="fm.getFieldErrors('phoneNumber')?.maxlength">
-                  {{langService.map.err_specific_max_length.change({length: 50, field: langService.map.lbl_phone})}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('phoneNumber')"
+                                     [labelKey]="'lbl_phone'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -110,27 +77,15 @@
             <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('officialPhoneNumber')"
                    formControlName="officialPhoneNumber"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('officialPhoneNumber')?.required">{{langService.map.err_required_field}}</span>
-                <span *ngIf="fm.getFieldErrors('officialPhoneNumber')?.maxlength">
-                  {{langService.map.err_specific_max_length.change({
-                  length: 50,
-                  field: langService.map.lbl_official_phone_number
-                })}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('officialPhoneNumber')"
+                                     [labelKey]="'lbl_official_phone_number'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
             <input id="email" [ngClass]="fm.getStatusClass('email')" formControlName="email"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('email')?.required">{{langService.map.err_required_field}}</span>
-               <span *ngIf="fm.getFieldErrors('email')?.email">{{langService.map.err_invalid_email}}</span>
-                <span *ngIf="fm.getFieldErrors('email')?.maxlength">
-                  {{langService.map.err_specific_max_length.change({length: 50, field: langService.map.lbl_email})}}
-                </span>
-        </span>
+            <app-field-error-message [control]="form.get('email')"
+                                     [labelKey]="'lbl_email'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -143,11 +98,8 @@
               <option *ngFor="let option of userTypeList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('userType')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('userType')"
+                                     [labelKey]="'lbl_user_type'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="jobTitle" class="form-label">{{langService.map.lbl_job_title}}</label>
@@ -158,11 +110,8 @@
               <option *ngFor="let option of jobTitleList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('jobTitle')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('jobTitle')"
+                                     [labelKey]="'lbl_job_title'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -175,11 +124,8 @@
               <option *ngFor="let ou of orgUnitList"
                       [ngValue]="ou.id">{{ou.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('orgId')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('orgId')"
+                                     [labelKey]="'lbl_org_unit'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="orgBranchId" class="form-label">{{langService.map.lbl_branch}}</label>
@@ -190,11 +136,8 @@
               <option *ngFor="let branch of orgBranchList"
                       [ngValue]="branch.id">{{branch.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('orgBranchId')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('orgBranchId')"
+                                     [labelKey]="'lbl_branch'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -207,26 +150,20 @@
               <option *ngFor="let role of customRoleList"
                       [ngValue]="role.id">{{role.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('customRoleId')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('customRoleId')"
+                                     [labelKey]="'lbl_custom_role'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
             <select id="status" formControlName="status"
                     class="form-select"
-                    [ngClass]="fm.getStatusClass('customRoleId')">
+                    [ngClass]="fm.getStatusClass('status')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of orgUserStatusList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <span class="invalid-feedback position-absolute">
-                <span *ngIf="fm.getFieldErrors('customRoleId')?.required">
-                  {{langService.map.err_required_field}}
-                </span>
-              </span>
+            <app-field-error-message [control]="form.get('status')"
+                                     [labelKey]="'lbl_status'"></app-field-error-message>
           </div>
         </div>
       </form>
