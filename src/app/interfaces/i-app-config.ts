@@ -6,4 +6,5 @@ export interface IAppConfig {
   TOKEN_HEADER_KEY: string;
   TOKEN_STORE_KEY: string;
   EXTERNAL_PROTOCOLS: string[];
+  DEFAULT_DATE_FORMAT: string;
 }

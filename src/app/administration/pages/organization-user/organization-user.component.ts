@@ -9,6 +9,7 @@ import {LangService} from '../../../services/lang.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-organization-user',
@@ -18,7 +19,7 @@ import {ToastService} from '../../../services/toast.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
@@ -27,6 +28,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   constructor(private orgUserService: OrganizationUserService,
               public langService: LangService,
               private toast: ToastService,
+              public configService: ConfigurationService,
               private dialogService: DialogService) {
   }
 

@@ -11,5 +11,6 @@
   "EXTERNAL_PROTOCOLS": [
     "http",
     "https"
-  ]
+  ],
+  "DEFAULT_DATE_FORMAT": "medium"
 }
