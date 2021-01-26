@@ -9,7 +9,7 @@ import {LangService} from '../../../services/lang.service';
   styleUrls: ['./field-error-message.component.scss']
 })
 export class FieldErrorMessageComponent {
-  @Input() control: (AbstractControl | null | undefined);
+  @Input() control!: AbstractControl;
   @Input() labelKey?: string;
   @Input() labelText?: string;
 
@@ -19,9 +19,6 @@ export class FieldErrorMessageComponent {
   }
 
   get errorMessage(): (string | null) {
-    if (!this.control) {
-      return null;
-    }
     let objValidationData;
     for (const errorName in this.control.errors) {
       if (this.control.errors.hasOwnProperty(errorName)) {
@@ -38,7 +35,7 @@ export class FieldErrorMessageComponent {
       return messageText;
     }
     // @ts-ignore
-    const fieldLabel = this.labelText || (this.labelKey ? this.langService.map[this.labelKey] : '');
+    const fieldLabel = this.labelText || this.langService.map[this.labelKey];
     return objValidationData.message.replaceValues(messageText, objValidationData.errorValue, fieldLabel);
   }
 
