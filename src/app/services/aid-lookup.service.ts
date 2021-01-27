@@ -14,6 +14,7 @@ import {AidLookupPopupComponent} from '../administration/popups/aid-lookup-popup
 import {interceptSendAidLookup, interceptReceiveAidLookup} from '../model-interceptors/aid-lookup-interceptor';
 import {Generator} from '../decorators/generator';
 import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
+import {AidTypes} from '../enums/aid-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
       switchMap((aidLookup: AidLookup) => {
         return of(this.dialogService.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
           model: aidLookup,
-          parentId: modelId,
+          parentId: aidLookup.aidType === AidTypes.CLASSIFICATIONS ? aidLookup.id : aidLookup.id,
           operation: OperationTypes.UPDATE,
           aidType
         }));
