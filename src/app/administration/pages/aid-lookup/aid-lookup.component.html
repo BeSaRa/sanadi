@@ -25,6 +25,11 @@
                        id="custom-role-status-{{rowIndex}}">
               </div>
             </td>
+            <ng-container cdkColumnDef="statusDateModified">
+              <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_status_date_modified}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.statusDateModified | date: configService.CONFIG.DEFAULT_DATE_FORMAT }}</span></td>
+            </ng-container>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>

@@ -12,6 +12,7 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 import {AidTypes} from '../../../enums/aid-types.enum';
 import {IAidLookupCriteria} from '../../../interfaces/i-aid-lookup-criteria';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-aid-lookup',
@@ -23,13 +24,14 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   @Input() parentId!: number;
 
   aidLookups: AidLookup[] = [];
-  displayedColumns: string[] = ['aidCode', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['aidCode', 'arName', 'enName', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
 
   constructor(public langService: LangService, private dialogService: DialogService,
+              public configService: ConfigurationService,
               public toast: ToastService, public aidLookupService: AidLookupService) {
   }
 
