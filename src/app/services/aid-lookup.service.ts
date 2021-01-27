@@ -46,7 +46,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
       switchMap((aidLookup: AidLookup) => {
         return of(this.dialogService.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
           model: aidLookup,
-          parentId: aidLookup.aidType === AidTypes.CLASSIFICATIONS ? aidLookup.id : aidLookup.id,
+          parentId: aidLookup.id,
           operation: OperationTypes.UPDATE,
           aidType
         }));
