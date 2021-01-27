@@ -2,162 +2,151 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
 </div>
 <div class="dialog-content">
-    <ul class="nav nav-tabs" role="tablist">
-      <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.basic)">
-        <a id="org-branch-basic-tab" href="#org-branch-basic-tab-content" data-bs-toggle="tab" role="tab"
-           class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
-        </a>
-      </li>
-      <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.users)">
-        <a id="users-tab" href="#users-tab-content" data-bs-toggle="tab" role="tab"
-           class="nav-link position-relative">{{langService.map.lbl_org_users}}
-        </a>
-      </li>
-    </ul>
-    <div class="tab-content pt-2">
-      <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="org-branch-basic-tab"
-           id="org-branch-basic-tab-content" *ngIf="canShowTab(tabsData.basic)">
-        <form style="width: 600px" novalidate autocomplete="off" [formGroup]="form">
-          <div class="row">
-            <!--Org Name-->
-            <div class="col-sm-12 mb-4 position-relative">
-              <label for="orgName" class="form-label">{{langService.map.lbl_organization}}</label>
-              <label id="orgName" class="form-control" >{{orgUnit?.getName()}}</label>
-            </div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.basic)">
+      <a id="org-branch-basic-tab" href="#org-branch-basic-tab-content" data-bs-toggle="tab" role="tab"
+         class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
+      </a>
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="canShowTab(tabsData.users)">
+      <a id="users-tab" href="#users-tab-content" data-bs-toggle="tab" role="tab"
+         class="nav-link position-relative">{{langService.map.lbl_org_users}}
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content pt-2">
+    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="org-branch-basic-tab"
+         id="org-branch-basic-tab-content" *ngIf="canShowTab(tabsData.basic)">
+      <form style="width: 600px" novalidate autocomplete="off" [formGroup]="form">
+        <div class="row">
+          <!--Org Name-->
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="orgName" class="form-label">{{langService.map.lbl_organization}}</label>
+            <label id="orgName" class="form-control">{{orgUnit?.getName()}}</label>
           </div>
-          <div class="row">
-            <!--Arabic Name-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
-              <input id="arName"
-                     [ngClass]="fm.getStatusClass('arName')"
-                     formControlName="arName" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('arName')"
-                                       [labelKey]="'lbl_arabic_name'"></app-field-error-message>
-            </div>
-            <!--English Name-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
-              <input id="enName"
-                     [ngClass]="fm.getStatusClass('enName')"
-                     formControlName="enName" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('enName')"
-                                       [labelKey]="'lbl_english_name'"></app-field-error-message>
-            </div>
+        </div>
+        <div class="row">
+          <!--Arabic Name-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <input id="arName"
+                   [ngClass]="fm.getStatusClass('arName')"
+                   formControlName="arName" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
           </div>
-          <div class="row">
-            <!--Status-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
-              <select id="status" formControlName="status"
-                      class="form-select"
-                      [ngClass]="fm.getStatusClass('status')">
-                <option value="">{{langService.map.lbl_none}}</option>
-                <option *ngFor="let option of orgUnitStatusList"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
-              <app-field-error-message [control]="fm.getFormField('status')"
-                                       [labelKey]="'lbl_status'"></app-field-error-message>
-            </div>
-            <!--Email-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
-              <input id="email"
-                     [ngClass]="fm.getStatusClass('email')"
-                     formControlName="email" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('email')"
-                                       [labelKey]="'lbl_email'"></app-field-error-message>
-            </div>
+          <!--English Name-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <input id="enName"
+                   [ngClass]="fm.getStatusClass('enName')"
+                   formControlName="enName" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>
           </div>
-          <div class="row">
-            <!--Phone Number 1-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
-              <input id="phoneNumber1"
-                     [ngClass]="fm.getStatusClass('phoneNumber1')"
-                     formControlName="phoneNumber1" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('phoneNumber1')"
-                                       [labelKey]="'lbl_phone_1'"></app-field-error-message>
-            </div>
-            <!--Phone Number 2-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
-              <input id="phoneNumber2"
-                     [ngClass]="fm.getStatusClass('phoneNumber2')"
-                     formControlName="phoneNumber2" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('phoneNumber2')"
-                                       [labelKey]="'lbl_phone_2'"></app-field-error-message>
-            </div>
+        </div>
+        <div class="row">
+          <!--Status-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="form-select"
+                    [ngClass]="fm.getStatusClass('status')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUnitStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
           </div>
-          <div class="row">
-            <!--Address-->
-            <div class="col-sm-12 mb-4 position-relative">
-              <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
-              <textarea id="address"
-                        [ngClass]="fm.getStatusClass('address')"
-                        formControlName="address" class="form-control">
+          <!--Email-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
+            <input id="email"
+                   [ngClass]="fm.getStatusClass('email')"
+                   formControlName="email" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('email')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!--Phone Number 1-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
+            <input id="phoneNumber1"
+                   [ngClass]="fm.getStatusClass('phoneNumber1')"
+                   formControlName="phoneNumber1" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('phoneNumber1')"></app-field-error-message>
+          </div>
+          <!--Phone Number 2-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
+            <input id="phoneNumber2"
+                   [ngClass]="fm.getStatusClass('phoneNumber2')"
+                   formControlName="phoneNumber2" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('phoneNumber2')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!--Address-->
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
+            <textarea id="address"
+                      [ngClass]="fm.getStatusClass('address')"
+                      formControlName="address" class="form-control">
             </textarea>
-              <app-field-error-message [control]="fm.getFormField('address')"
-                                       [labelKey]="'lbl_address'"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('address')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!--Building Name-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
+            <input id="buildingName"
+                   [ngClass]="fm.getStatusClass('buildingName')"
+                   formControlName="buildingName" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('buildingName')"></app-field-error-message>
+          </div>
+          <!--Unit Name-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
+            <input id="unitName"
+                   [ngClass]="fm.getStatusClass('unitName')"
+                   formControlName="unitName" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('unitName')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!--Street-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="street" class="form-label">{{langService.map.lbl_street}}</label>
+            <input id="street"
+                   [ngClass]="fm.getStatusClass('street')"
+                   formControlName="street" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('street')"></app-field-error-message>
+          </div>
+          <!--Zone-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
+            <input id="zone"
+                   [ngClass]="fm.getStatusClass('zone')"
+                   formControlName="zone" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('zone')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!--isMain-->
+          <div class="col-sm-6 mb-4">
+            <div class="form-check form-switch">
+              <input type="checkbox" id="isMain" formControlName="isMain" class="form-check-input cursor-pointer">
+              <label for="status"
+                     class="cursor-pointer">{{fm.getBooleanFieldTranslate('isMain', 'lbl_main', 'lbl_yes', 'lbl_no')}}</label>
             </div>
           </div>
-          <div class="row">
-            <!--Building Name-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
-              <input id="buildingName"
-                     [ngClass]="fm.getStatusClass('buildingName')"
-                     formControlName="buildingName" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('buildingName')"
-                                       [labelKey]="'lbl_building_name'"></app-field-error-message>
-            </div>
-            <!--Unit Name-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
-              <input id="unitName"
-                     [ngClass]="fm.getStatusClass('unitName')"
-                     formControlName="unitName" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('unitName')"
-                                       [labelKey]="'lbl_unit_name'"></app-field-error-message>
-            </div>
-          </div>
-          <div class="row">
-            <!--Street-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="street" class="form-label">{{langService.map.lbl_street}}</label>
-              <input id="street"
-                     [ngClass]="fm.getStatusClass('street')"
-                     formControlName="street" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('street')"
-                                       [labelKey]="'lbl_street'"></app-field-error-message>
-            </div>
-            <!--Zone-->
-            <div class="col-sm-6 mb-4 position-relative">
-              <label for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
-              <input id="zone"
-                     [ngClass]="fm.getStatusClass('zone')"
-                     formControlName="zone" class="form-control">
-              <app-field-error-message [control]="fm.getFormField('zone')"
-                                       [labelKey]="'lbl_zone'"></app-field-error-message>
-            </div>
-          </div>
-          <div class="row">
-            <!--isMain-->
-            <div class="col-sm-6 mb-4">
-              <div class="form-check form-switch">
-                <input type="checkbox" id="isMain" formControlName="isMain" class="form-check-input cursor-pointer">
-                <label for="status"
-                       class="cursor-pointer">{{fm.getBooleanFieldTranslate('isMain', 'lbl_main', 'lbl_yes', 'lbl_no')}}</label>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="tab-pane fade" role="tabpanel" aria-labelledby="users-tab"
-           id="users-tab-content" *ngIf="canShowTab(tabsData.users)">
-            <app-organization-branch-user [organization]="orgUnit" [orgBranch]="model"></app-organization-branch-user>
-      </div>
+        </div>
+      </form>
     </div>
+    <div class="tab-pane fade" role="tabpanel" aria-labelledby="users-tab"
+         id="users-tab-content" *ngIf="canShowTab(tabsData.users)">
+      <app-organization-branch-user [organization]="orgUnit" [orgBranch]="model"></app-organization-branch-user>
+    </div>
+  </div>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" (click)="fm.displayFormValidity()" class="btn btn-link">
