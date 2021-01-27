@@ -97,4 +97,5 @@ export interface ILanguageKeys {
   err_number_only: string;
   err_min_number: string;
   err_max_number: string;
+  lbl_copyright: string;
 }
