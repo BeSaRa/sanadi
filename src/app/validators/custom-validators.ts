@@ -4,8 +4,8 @@ import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 
 const defaultLengths = {
-  ARABIC_NAME_MAX: 50,
-  ENGLISH_NAME_MAX: 50,
+  ARABIC_NAME_MAX: 300,
+  ENGLISH_NAME_MAX: 300,
   EMAIL_MAX: 200,
   PHONE_NUMBER_MAX: 50,
   ADDRESS_MAX: 1000
