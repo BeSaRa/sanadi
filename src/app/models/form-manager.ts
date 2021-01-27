@@ -45,12 +45,11 @@ export class FormManager {
   }
 
   getStatusFieldTranslate(field: string): any {
-    let {lbl_active, lbl_inactive, lbl_status} = this.langService.map;
-    lbl_status = lbl_status + ' : ';
-    return this.getFormField(field)?.value ? lbl_status + lbl_active : lbl_status + lbl_inactive;
+    const {lbl_active, lbl_inactive, lbl_status} = this.langService.map;
+    return lbl_status + ' : ' + (this.getFormField(field)?.value ? lbl_active : lbl_inactive);
   }
 
-  getBooleanDisplayText(field: string, fieldLabel: string, activeLabel: string, inactiveLabel: string): any {
+  getBooleanFieldTranslate(field: string, fieldLabel: string, activeLabel: string, inactiveLabel: string): any {
     const label = this.langService.map[fieldLabel as keyof ILanguageKeys];
     const active = this.langService.map[activeLabel as keyof ILanguageKeys];
     const inactive = this.langService.map[inactiveLabel as keyof ILanguageKeys];
