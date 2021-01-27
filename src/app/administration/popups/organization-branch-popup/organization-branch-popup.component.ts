@@ -67,6 +67,7 @@ export class OrganizationBranchPopupComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.fb.group({
+      orgId: [this.orgUnit.id],
       arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
       enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       status: [this.model.status, Validators.required],

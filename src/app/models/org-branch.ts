@@ -19,7 +19,7 @@ export class OrgBranch extends BaseModel<OrgBranch> {
   unitName: string | undefined;
   address: string | undefined;
   status: string | undefined;
-  isMain: boolean | undefined;
+  isMain: boolean = false;
   statusDateModified: string | undefined;
 
   service: OrganizationBranchService;
