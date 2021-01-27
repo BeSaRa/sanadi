@@ -27,14 +27,14 @@
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('arName')"
+            <app-field-error-message [control]="fm.getFormField('arName')"
                                      [labelKey]="'lbl_arabic_name'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('enName')"
+            <app-field-error-message [control]="fm.getFormField('enName')"
                                      [labelKey]="'lbl_english_name'"></app-field-error-message>
           </div>
         </div>
@@ -43,14 +43,14 @@
             <label for="empNum" class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" [ngClass]="fm.getStatusClass('empNum')" formControlName="empNum"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('empNum')"
+            <app-field-error-message [control]="fm.getFormField('empNum')"
                                      [labelKey]="'lbl_employee_number'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="qid" class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" [ngClass]="fm.getStatusClass('qid')" formControlName="qid"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('qid')"
+            <app-field-error-message [control]="fm.getFormField('qid')"
                                      [labelKey]="'lbl_qid'"></app-field-error-message>
           </div>
         </div>
@@ -60,14 +60,14 @@
             <input id="phoneExtension" [ngClass]="fm.getStatusClass('phoneExtension')"
                    formControlName="phoneExtension"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('phoneExtension')"
+            <app-field-error-message [control]="fm.getFormField('phoneExtension')"
                                      [labelKey]="'lbl_phone_extension'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber" class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" [ngClass]="fm.getStatusClass('phoneNumber')" formControlName="phoneNumber"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('phoneNumber')"
+            <app-field-error-message [control]="fm.getFormField('phoneNumber')"
                                      [labelKey]="'lbl_phone'"></app-field-error-message>
           </div>
         </div>
@@ -77,14 +77,14 @@
             <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('officialPhoneNumber')"
                    formControlName="officialPhoneNumber"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('officialPhoneNumber')"
+            <app-field-error-message [control]="fm.getFormField('officialPhoneNumber')"
                                      [labelKey]="'lbl_official_phone_number'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
             <input id="email" [ngClass]="fm.getStatusClass('email')" formControlName="email"
                    class="form-control"/>
-            <app-field-error-message [control]="form.get('email')"
+            <app-field-error-message [control]="fm.getFormField('email')"
                                      [labelKey]="'lbl_email'"></app-field-error-message>
           </div>
         </div>
@@ -98,7 +98,7 @@
               <option *ngFor="let option of userTypeList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('userType')"
+            <app-field-error-message [control]="fm.getFormField('userType')"
                                      [labelKey]="'lbl_user_type'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -110,7 +110,7 @@
               <option *ngFor="let option of jobTitleList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('jobTitle')"
+            <app-field-error-message [control]="fm.getFormField('jobTitle')"
                                      [labelKey]="'lbl_job_title'"></app-field-error-message>
           </div>
         </div>
@@ -124,7 +124,7 @@
               <option *ngFor="let ou of orgUnitList"
                       [ngValue]="ou.id">{{ou.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('orgId')"
+            <app-field-error-message [control]="fm.getFormField('orgId')"
                                      [labelKey]="'lbl_org_unit'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -136,7 +136,7 @@
               <option *ngFor="let branch of orgBranchList"
                       [ngValue]="branch.id">{{branch.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('orgBranchId')"
+            <app-field-error-message [control]="fm.getFormField('orgBranchId')"
                                      [labelKey]="'lbl_branch'"></app-field-error-message>
           </div>
         </div>
@@ -150,7 +150,7 @@
               <option *ngFor="let role of customRoleList"
                       [ngValue]="role.id">{{role.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('customRoleId')"
+            <app-field-error-message [control]="fm.getFormField('customRoleId')"
                                      [labelKey]="'lbl_custom_role'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -162,7 +162,7 @@
               <option *ngFor="let option of orgUserStatusList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('status')"
+            <app-field-error-message [control]="fm.getFormField('status')"
                                      [labelKey]="'lbl_status'"></app-field-error-message>
           </div>
         </div>

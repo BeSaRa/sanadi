@@ -25,7 +25,7 @@
             <input id="arName"
                    [ngClass]="fm.getStatusClass('arName')"
                    formControlName="arName" class="form-control">
-            <app-field-error-message [control]="form.get('arName')"
+            <app-field-error-message [control]="fm.getFormField('arName')"
                                      [labelKey]="'lbl_arabic_name'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -33,7 +33,7 @@
             <input id="enName"
                    [ngClass]="fm.getStatusClass('enName')"
                    formControlName="enName" class="form-control">
-            <app-field-error-message [control]="form.get('enName')"
+            <app-field-error-message [control]="fm.getFormField('enName')"
                                      [labelKey]="'lbl_english_name'"></app-field-error-message>
           </div>
         </div>
@@ -47,7 +47,7 @@
               <option *ngFor="let option of orgUnitTypesList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('orgUnitType')"
+            <app-field-error-message [control]="fm.getFormField('orgUnitType')"
                                      [labelKey]="'lbl_org_unit_type'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -55,7 +55,7 @@
             <input id="orgCode"
                    [ngClass]="fm.getStatusClass('orgCode')"
                    formControlName="orgCode" class="form-control">
-            <app-field-error-message [control]="form.get('orgCode')"
+            <app-field-error-message [control]="fm.getFormField('orgCode')"
                                      [labelKey]="'lbl_org_unit_code'"></app-field-error-message>
           </div>
         </div>
@@ -69,7 +69,7 @@
               <option *ngFor="let option of orgUnitStatusList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('status')"
+            <app-field-error-message [control]="fm.getFormField('status')"
                                      [labelKey]="'lbl_status'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -77,7 +77,7 @@
             <input id="email"
                    [ngClass]="fm.getStatusClass('email')"
                    formControlName="email" class="form-control">
-            <app-field-error-message [control]="form.get('email')"
+            <app-field-error-message [control]="fm.getFormField('email')"
                                      [labelKey]="'lbl_email'"></app-field-error-message>
           </div>
         </div>
@@ -87,7 +87,7 @@
             <input id="phoneNumber1"
                    [ngClass]="fm.getStatusClass('phoneNumber1')"
                    formControlName="phoneNumber1" class="form-control">
-            <app-field-error-message [control]="form.get('phoneNumber1')"
+            <app-field-error-message [control]="fm.getFormField('phoneNumber1')"
                                      [labelKey]="'lbl_phone_1'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -95,7 +95,7 @@
             <input id="phoneNumber2"
                    [ngClass]="fm.getStatusClass('phoneNumber2')"
                    formControlName="phoneNumber2" class="form-control">
-            <app-field-error-message [control]="form.get('phoneNumber2')"
+            <app-field-error-message [control]="fm.getFormField('phoneNumber2')"
                                      [labelKey]="'lbl_phone_2'"></app-field-error-message>
           </div>
         </div>
@@ -106,7 +106,7 @@
                       [ngClass]="fm.getStatusClass('address')"
                       formControlName="address" class="form-control">
             </textarea>
-            <app-field-error-message [control]="form.get('address')"
+            <app-field-error-message [control]="fm.getFormField('address')"
                                      [labelKey]="'lbl_address'"></app-field-error-message>
           </div>
         </div>
@@ -116,7 +116,7 @@
             <input id="buildingName"
                    [ngClass]="fm.getStatusClass('buildingName')"
                    formControlName="buildingName" class="form-control">
-            <app-field-error-message [control]="form.get('buildingName')"
+            <app-field-error-message [control]="fm.getFormField('buildingName')"
                                      [labelKey]="'lbl_building_name'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -124,7 +124,7 @@
             <input id="unitName"
                    [ngClass]="fm.getStatusClass('unitName')"
                    formControlName="unitName" class="form-control">
-            <app-field-error-message [control]="form.get('unitName')"
+            <app-field-error-message [control]="fm.getFormField('unitName')"
                                      [labelKey]="'lbl_unit_name'"></app-field-error-message>
           </div>
         </div>
@@ -134,7 +134,7 @@
             <input id="street"
                    [ngClass]="fm.getStatusClass('street')"
                    formControlName="street" class="form-control">
-            <app-field-error-message [control]="form.get('street')"
+            <app-field-error-message [control]="fm.getFormField('street')"
                                      [labelKey]="'lbl_street'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -142,7 +142,7 @@
             <input id="zone"
                    [ngClass]="fm.getStatusClass('zone')"
                    formControlName="zone" class="form-control">
-            <app-field-error-message [control]="form.get('zone')"
+            <app-field-error-message [control]="fm.getFormField('zone')"
                                      [labelKey]="'lbl_zone'"></app-field-error-message>
           </div>
         </div>
@@ -156,7 +156,7 @@
               <option *ngFor="let option of orgNationalityList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="form.get('orgNationality')"
+            <app-field-error-message [control]="fm.getFormField('orgNationality')"
                                      [labelKey]="'lbl_nationality'"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -164,7 +164,7 @@
             <input id="poBoxNum"
                    [ngClass]="fm.getStatusClass('poBoxNum')"
                    formControlName="poBoxNum" class="form-control">
-            <app-field-error-message [control]="form.get('poBoxNum')"
+            <app-field-error-message [control]="fm.getFormField('poBoxNum')"
                                      [labelKey]="'lbl_po_box_num'"></app-field-error-message>
           </div>
         </div>
