@@ -28,12 +28,8 @@
             <input id="arName"
                    [ngClass]="fm.getStatusClass('basic.arName')"
                    formControlName="arName" class="form-control">
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('basic.arName')?.required">{{langService.map.err_required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('basic.arName')?.minlength">
-            {{langService.map.err_specific_min_length.change({length: 3, field: langService.map.lbl_arabic_name})}}
-          </span>
-        </span>
+            <app-field-error-message [control]="fm.getFormField('basic.arName')"
+                                     [labelKey]="'lbl_arabic_name'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -42,12 +38,8 @@
             <input id="enName"
                    [ngClass]="fm.getStatusClass('basic.enName')"
                    formControlName="enName" class="form-control">
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('basic.enName')?.required">{{langService.map.err_required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('basic.enName')?.minlength">
-            {{langService.map.err_specific_min_length.change({length: 3, field: langService.map.lbl_english_name})}}
-          </span>
-        </span>
+            <app-field-error-message [control]="fm.getFormField('basic.enName')"
+                                     [labelKey]="'lbl_english_name'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -56,11 +48,8 @@
             <textarea id="description" [ngClass]="fm.getStatusClass('basic.description')"
                       formControlName="description"
                       class="form-control"></textarea>
-            <span class="invalid-feedback position-absolute">
-              <span *ngIf="fm.getFieldErrors('basic.description')?.required">
-                {{langService.map.err_required_field}}
-              </span>
-            </span>
+            <app-field-error-message [control]="fm.getFormField('basic.description')"
+                                     [labelKey]="'lbl_description'"></app-field-error-message>
           </div>
         </div>
         <div class="row">

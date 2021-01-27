@@ -40,9 +40,9 @@ export class LocalizationPopupComponent implements OnInit {
       localizationKey: [{
         value: this.model.localizationKey,
         disabled: this.operation
-      }, [Validators.required, Validators.minLength(2)]],
-      arName: [this.model.arName, [Validators.required, Validators.minLength(2)]],
-      enName: [this.model.enName, [Validators.required, Validators.minLength(2)]]
+      }, [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
+      arName: [this.model.arName, [Validators.required, Validators.maxLength(1000)]],
+      enName: [this.model.enName, [Validators.required, Validators.maxLength(1000)]]
     });
     this.fm = new FormManager(this.form, this.langService);
     // will check it later

@@ -13,6 +13,7 @@ import {ToastService} from '../../../services/toast.service';
 import {LangService} from '../../../services/lang.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {extender} from '../../../helpers/extender';
+import {CustomValidators} from '../../../validators/custom-validators';
 
 @Component({
   selector: 'app-organization-branch-popup',
@@ -66,15 +67,15 @@ export class OrganizationBranchPopupComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      arName: [this.model.arName, [Validators.required, Validators.minLength(3), Validators.maxLength(200)]],
-      enName: [this.model.enName, [Validators.required, Validators.minLength(3), Validators.maxLength(200)]],
+      arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       status: [this.model.status, Validators.required],
       email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
-      phoneNumber1: [this.model.phoneNumber1, [Validators.maxLength(50)]],
-      phoneNumber2: [this.model.phoneNumber2, [Validators.maxLength(50)]],
-      address: [this.model.address, [Validators.maxLength(1000)]],
+      phoneNumber1: [this.model.phoneNumber1, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneNumber2: [this.model.phoneNumber2, [CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
       buildingName: [this.model.buildingName, [Validators.required, Validators.maxLength(200)]],
-      unitName: [this.model.unitName, Validators.maxLength(200)],
+      unitName: [this.model.unitName, [Validators.required, Validators.maxLength(200)]],
       street: [this.model.street, [Validators.required, Validators.maxLength(200)]],
       zone: [this.model.zone, [Validators.required, Validators.maxLength(100)]],
       isMain: [this.model.isMain, [Validators.required]]

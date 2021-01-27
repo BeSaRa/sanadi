@@ -1,19 +1,15 @@
 import {validateFieldsStatus, numberValidator} from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
+import {IValidationInfo} from '../interfaces/i-validation-info';
 
-export const CustomValidators = {
-  validateFieldsStatus,
-  numberValidator,
-  getValidationData
+const defaultLengths = {
+  ARABIC_NAME_MAX: 50,
+  ENGLISH_NAME_MAX: 50,
+  EMAIL_MAX: 200,
+  PHONE_NUMBER_MAX: 50,
+  ADDRESS_MAX: 1000
 };
-
-interface IValidationInfo {
-  fieldName: string | null;
-  errorName: string | null;
-  errorValue: IKeyValue | null;
-  message: { key: string, replaceValues: any };
-}
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},
@@ -69,3 +65,10 @@ function _getControlName(control: AbstractControl): string | null {
   // @ts-ignore
   return Object.keys(formGroup).find(name => control === formGroup[name]) || null;
 }
+
+export const CustomValidators = {
+  validateFieldsStatus,
+  numberValidator,
+  getValidationData,
+  defaultLengths
+};

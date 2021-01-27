@@ -29,13 +29,8 @@
             <input id="aidCode"
                    [ngClass]="fm.getStatusClass('aidCode')"
                    formControlName="aidCode" class="form-control">
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('aidCode')?.required">{{langService.map.err_required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('aidCode')?.minlength">{{langService.map.err_specific_min_length.change({
-            length: 3,
-            field: langService.map.lbl_aid_code
-          })}}</span>
-        </span>
+            <app-field-error-message [control]="form.get('aidCode')"
+                                     [labelKey]="'lbl_aid_code'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -43,13 +38,8 @@
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('arName')?.required">{{langService.map.err_required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('arName')?.minlength">{{langService.map.err_specific_min_length.change({
-            length: 3,
-            field: langService.map.lbl_arabic_name
-          })}}</span>
-        </span>
+            <app-field-error-message [control]="form.get('arName')"
+                                     [labelKey]="'lbl_arabic_name'"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -57,13 +47,8 @@
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                    class="form-control"/>
-            <span class="invalid-feedback position-absolute">
-          <span *ngIf="fm.getFieldErrors('enName')?.required">{{langService.map.err_required_field}}</span>
-          <span *ngIf="fm.getFieldErrors('enName')?.minlength">{{langService.map.err_specific_min_length.change({
-            length: 3,
-            field: langService.map.lbl_english_name
-          })}}</span>
-        </span>
+            <app-field-error-message [control]="form.get('enName')"
+                                     [labelKey]="'lbl_english_name'"></app-field-error-message>
           </div>
         </div>
         <div class="row">

@@ -9,7 +9,7 @@ import {LangService} from '../../../services/lang.service';
   styleUrls: ['./field-error-message.component.scss']
 })
 export class FieldErrorMessageComponent {
-  @Input() control!: AbstractControl;
+  @Input() control: (AbstractControl | null | undefined);
   @Input() labelKey?: string;
   @Input() labelText?: string;
 
@@ -19,6 +19,9 @@ export class FieldErrorMessageComponent {
   }
 
   get errorMessage(): (string | null) {
+    if (!this.control){
+      return null;
+    }
     let objValidationData;
     for (const errorName in this.control.errors) {
       if (this.control.errors.hasOwnProperty(errorName)) {
