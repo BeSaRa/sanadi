@@ -1,4 +1,5 @@
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {isValidValue} from '../helpers/utils';
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
   return (formGroup): ValidationErrors | null => {
@@ -20,15 +21,6 @@ export function numberValidator(): ValidatorFn {
 }
 
 export function requiredValidator(control: AbstractControl): ValidationErrors | null {
-  let isValid: boolean;
-  if (typeof control.value === 'undefined' || control.value === null) {
-    isValid = false;
-  } else if (typeof control.value === 'string') {
-    isValid = (control.value.trim().length > 0);
-  } else {
-    // for arrays or objects
-    isValid = (control.value.length > 0);
-  }
-  return !isValid ? {required: true} : null;
+  return !isValidValue(control.value) ? {required: true} : null;
 }
 

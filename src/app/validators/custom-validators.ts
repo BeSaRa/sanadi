@@ -1,4 +1,4 @@
-import {validateFieldsStatus, requiredValidator, numberValidator} from './validate-fields-status';
+import {validateFieldsStatus, requiredValidator as required, numberValidator} from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
@@ -68,7 +68,7 @@ function _getControlName(control: AbstractControl): string | null {
 
 export const CustomValidators = {
   validateFieldsStatus,
-  requiredValidator,
+  required,
   numberValidator,
   getValidationData,
   defaultLengths
