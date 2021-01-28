@@ -19,15 +19,16 @@ export function numberValidator(): ValidatorFn {
   };
 }
 
-export function requiredValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    if (typeof control.value === 'undefined' || control.value === null) {
-      return {required: true};
-    }
-    if (typeof control.value === 'string') {
-      return (control.value.trim().length === 0 ? {required: true} : null);
-    }
-    return control.value.length === 0 ? {required: true} : null;
-  };
+export function requiredValidator(control: AbstractControl): ValidationErrors | null {
+  let isValid: boolean;
+  if (typeof control.value === 'undefined' || control.value === null) {
+    isValid = false;
+  } else if (typeof control.value === 'string') {
+    isValid = (control.value.trim().length > 0);
+  } else {
+    // for arrays or objects
+    isValid = (control.value.length > 0);
+  }
+  return !isValid ? {required: true} : null;
 }
 
