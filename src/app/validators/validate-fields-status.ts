@@ -11,8 +11,11 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
 
 export function numberValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
     const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
-    return (control.value && !isValid)  ? {number: true} : null;
+    return !isValid ? {number: true} : null;
   };
 }
 
