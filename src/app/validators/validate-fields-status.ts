@@ -19,3 +19,15 @@ export function numberValidator(): ValidatorFn {
   };
 }
 
+export function requiredValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (typeof control.value === 'undefined' || control.value === null) {
+      return {customRequired: true};
+    }
+    if (typeof control.value === 'string') {
+      return (control.value.trim().length === 0 ? {customRequired: true} : null);
+    }
+    return control.value.length === 0 ? {customRequired: true} : null;
+  };
+}
+
