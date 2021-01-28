@@ -94,13 +94,12 @@ export class OrganizationUnitPopupComponent implements OnInit {
   saveModel(): void {
     const orgUnit = extender<OrgUnit>(OrgUnit, {...this.model, ...this.fm.getForm()?.value});
     orgUnit.save()
-      .subscribe(() => {
+      .subscribe((local) => {
         const message = (this.operation === OperationTypes.CREATE)
           ? this.langService.map.msg_create_x_success
           : this.langService.map.msg_update_x_success;
-
         this.toast.success(message.change({x: orgUnit.getName()}));
-        this.model = orgUnit;
+        this.model = local;
         this.operation = OperationTypes.UPDATE;
       });
   }
