@@ -82,7 +82,7 @@ export class OrganizationUnitPopupComponent implements OnInit {
       street: [this.model.street, [Validators.required, Validators.maxLength(200)]],
       zone: [this.model.zone, [Validators.required, Validators.maxLength(100)]],
       orgNationality: [this.model.orgNationality, Validators.required],
-      poBoxNum: [this.model.poBoxNum, [CustomValidators.numberValidator()]]
+      poBoxNum: [this.model.poBoxNum, [CustomValidators.numberValidator(), Validators.maxLength(10)]]
     });
     this.fm = new FormManager(this.form, this.langService);
 
