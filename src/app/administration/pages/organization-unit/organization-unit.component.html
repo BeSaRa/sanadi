@@ -28,6 +28,11 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_address}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.address}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="statusDateModified">
+            <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_status_date_modified}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <span>{{row.statusDateModified | date: configService.CONFIG.DEFAULT_DATE_FORMAT }}</span></td>
+          </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.getOrgStatusLookup()?.getName()}} </td>

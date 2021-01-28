@@ -12,6 +12,7 @@ import {OrganizationUnitService} from '../../../services/organization-unit.servi
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-organization-unit',
@@ -22,7 +23,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   organizations: OrgUnit[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
@@ -30,8 +31,8 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private organizationUnitService: OrganizationUnitService,
-              public lookupService: LookupService,
-              private toast: ToastService) {
+              public lookupService: LookupService, private toast: ToastService,
+              public configService: ConfigurationService) {
     this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
   }
 
