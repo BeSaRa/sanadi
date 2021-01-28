@@ -12,6 +12,7 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 import {switchMap, tap} from 'rxjs/operators';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 import {OrgUnit} from '../../../models/org-unit';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-organization-branch',
@@ -24,14 +25,14 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   branches: OrgBranch[] = [];
 
   @Input() organization!: OrgUnit;
-  displayedColumns: string[] = ['arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'phoneNumber1', 'address', 'status', 'statusDateModified', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private organizationBranchService: OrganizationBranchService,
-              public lookupService: LookupService,
+              public lookupService: LookupService, public configService: ConfigurationService,
               private toast: ToastService) {
   }
 

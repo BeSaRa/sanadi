@@ -44,28 +44,6 @@
           </div>
         </div>
         <div class="row">
-          <!--Status-->
-          <div class="col-sm-6 mb-4 position-relative">
-            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
-            <select id="status" formControlName="status"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('status')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of orgUnitStatusList"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
-          </div>
-          <!--Email-->
-          <div class="col-sm-6 mb-4 position-relative">
-            <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
-            <input id="email"
-                   [ngClass]="fm.getStatusClass('email')"
-                   formControlName="email" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('email')"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
           <!--Phone Number 1-->
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
@@ -84,6 +62,28 @@
           </div>
         </div>
         <div class="row">
+          <!--Status-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="form-select"
+                    [ngClass]="fm.getStatusClass('status')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUnitStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
+          </div>
+          <!--Email-->
+         <!-- <div class="col-sm-6 mb-4 position-relative">
+            <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
+            <input id="email"
+                   [ngClass]="fm.getStatusClass('email')"
+                   formControlName="email" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('email')"></app-field-error-message>
+          </div>-->
+        </div>
+        <div class="row">
           <!--Address-->
           <div class="col-sm-12 mb-4 position-relative">
             <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
@@ -94,8 +94,8 @@
             <app-field-error-message [control]="fm.getFormField('address')"></app-field-error-message>
           </div>
         </div>
-        <div class="row">
-          <!--Building Name-->
+     <!--   <div class="row">
+          &lt;!&ndash;Building Name&ndash;&gt;
           <div class="col-sm-6 mb-4 position-relative">
             <label for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
             <input id="buildingName"
@@ -103,7 +103,7 @@
                    formControlName="buildingName" class="form-control">
             <app-field-error-message [control]="fm.getFormField('buildingName')"></app-field-error-message>
           </div>
-          <!--Unit Name-->
+          &lt;!&ndash;Unit Name&ndash;&gt;
           <div class="col-sm-6 mb-4 position-relative">
             <label for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
             <input id="unitName"
@@ -113,7 +113,7 @@
           </div>
         </div>
         <div class="row">
-          <!--Street-->
+          &lt;!&ndash;Street&ndash;&gt;
           <div class="col-sm-6 mb-4 position-relative">
             <label for="street" class="form-label">{{langService.map.lbl_street}}</label>
             <input id="street"
@@ -121,7 +121,7 @@
                    formControlName="street" class="form-control">
             <app-field-error-message [control]="fm.getFormField('street')"></app-field-error-message>
           </div>
-          <!--Zone-->
+          &lt;!&ndash;Zone&ndash;&gt;
           <div class="col-sm-6 mb-4 position-relative">
             <label for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
             <input id="zone"
@@ -129,7 +129,7 @@
                    formControlName="zone" class="form-control">
             <app-field-error-message [control]="fm.getFormField('zone')"></app-field-error-message>
           </div>
-        </div>
+        </div>-->
         <div class="row">
           <!--isMain-->
           <div class="col-sm-6 mb-4">
