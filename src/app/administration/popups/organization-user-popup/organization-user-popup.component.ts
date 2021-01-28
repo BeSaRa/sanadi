@@ -60,7 +60,7 @@ export class OrganizationUserPopupComponent implements OnInit {
       arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
       enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       qid: [this.model.qid, [Validators.required, CustomValidators.numberValidator(), Validators.minLength(7), Validators.maxLength(10)]],
-      empNum: [this.model.empNum, [Validators.required, Validators.maxLength(10)]],
+      empNum: [this.model.empNum, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(10)]],
       phoneNumber: [this.model.phoneNumber, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       phoneExtension: [this.model.phoneExtension, [CustomValidators.numberValidator(), Validators.maxLength(10)]],
       officialPhoneNumber: [this.model.officialPhoneNumber, [CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
