@@ -81,7 +81,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           localization.delete().subscribe(() => {
-            this.toast.success(this.langService.map.msg_delete_x_success);
+            this.toast.success(this.langService.map.msg_delete_x_success.change({x: localization.localizationKey}));
             this.reload$.next(null);
           });
         }
