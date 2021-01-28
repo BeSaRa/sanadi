@@ -1,6 +1,7 @@
 {
   "ENVIRONMENTS_URLS": [
     "http://100.100.3.220:9080/sanadi-services/api/",
+    "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "http://localhost:3000"
   ],
   "BASE_ENVIRONMENT_INDEX": 0,
