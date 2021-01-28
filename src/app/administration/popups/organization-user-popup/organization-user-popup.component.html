@@ -136,6 +136,7 @@
                     [ngClass]="fm.getStatusClass('customRoleId')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let role of customRoleList"
+                      [disabled]="!role.status"
                       [ngValue]="role.id">{{role.getName()}}</option>
             </select>
             <app-field-error-message [control]="fm.getFormField('customRoleId')"></app-field-error-message>
