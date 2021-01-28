@@ -62,8 +62,8 @@ export class OrganizationUserPopupComponent implements OnInit {
       qid: [this.model.qid, [Validators.required, CustomValidators.numberValidator(), Validators.minLength(7), Validators.maxLength(10)]],
       empNum: [this.model.empNum, [Validators.required, Validators.maxLength(10)]],
       phoneNumber: [this.model.phoneNumber, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      phoneExtension: [this.model.phoneExtension, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(10)]],
-      officialPhoneNumber: [this.model.officialPhoneNumber, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneExtension: [this.model.phoneExtension, [CustomValidators.numberValidator(), Validators.maxLength(10)]],
+      officialPhoneNumber: [this.model.officialPhoneNumber, [CustomValidators.numberValidator(), Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       email: [this.model.email, [Validators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
       jobTitle: [this.model.jobTitle, [Validators.required]],
       status: [this.model.status, Validators.required]
