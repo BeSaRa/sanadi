@@ -86,7 +86,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           aidLookup.delete().subscribe(() => {
-            this.toast.success(this.langService.map.msg_delete_x_success);
+            this.toast.success(this.langService.map.msg_delete_x_success.change({x: aidLookup.aidCode}));
             this.reload$.next(null);
           });
         }
