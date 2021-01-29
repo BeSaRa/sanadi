@@ -1,6 +1,7 @@
 import {INames} from '../interfaces/i-names';
 import {ModelCrudInterface} from '../interfaces/model-crud-interface';
 import {Observable} from 'rxjs';
+import {extender} from '../helpers/extender';
 
 export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
   // @ts-ignore
@@ -18,4 +19,8 @@ export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
   abstract save(): Observable<D>;
 
   abstract update(): Observable<D>;
+
+  clone(): D {
+    return extender<D>(this, this);
+  }
 }
