@@ -29,7 +29,7 @@ export function InitClassInterceptor(callback?: any) {
 
 
 // tslint:disable-next-line:typedef
-export function SendInterceptor(interceptorCallback?: any) {
+export function SendInterceptor(interceptorCallback?: any): any {
   return <T extends SendInterceptorInterface>(target: any, propertyKey: string, descriptor: T) => {
     const originalMethod = descriptor.value;
     const metadataProperty = 'metadata_' + propertyKey + '_params';
