@@ -20,7 +20,7 @@ export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
 
   abstract update(): Observable<D>;
 
-  clone(): D {
-    return extender<D>(this, this);
+  clone(overrideProperties?: Partial<D>): D {
+    return extender<D>(this, {...this, ...overrideProperties});
   }
 }
