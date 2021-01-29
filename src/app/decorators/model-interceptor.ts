@@ -1,5 +1,6 @@
-import {findIndex as _findIndex, cloneDeep as deepClone} from 'lodash';
+import {cloneDeep as deepClone, findIndex as _findIndex} from 'lodash';
 import {identity} from 'rxjs';
+import {SendInterceptorInterface} from './send-interceptor-interface';
 
 // tslint:disable-next-line:typedef
 export function InitClassInterceptor(callback?: any) {
@@ -27,10 +28,9 @@ export function InitClassInterceptor(callback?: any) {
 }
 
 
-// @ts-ignore
 // tslint:disable-next-line:typedef
-export function SendInterceptor(interceptorCallback?) {
-  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+export function SendInterceptor(interceptorCallback?: any) {
+  return <T extends SendInterceptorInterface>(target: any, propertyKey: string, descriptor: T) => {
     const originalMethod = descriptor.value;
     const metadataProperty = 'metadata_' + propertyKey + '_params';
     // @ts-ignore

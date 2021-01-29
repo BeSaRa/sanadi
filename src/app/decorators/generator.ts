@@ -1,5 +1,6 @@
 import {map} from 'rxjs/operators';
 import {map as _map} from 'lodash';
+import {GeneratorInterface} from './generator-interface';
 
 function _generateModel(data: any, model: any, property?: string, receiveCallback?: any): any {
   let finalData;
@@ -24,16 +25,21 @@ function _generateCollection(collection: any, model: any, property?: string, rec
 // @ts-ignore
 export function Generator(model?, isCollection = false, options?: { property?: string, interceptReceive?: any } = {property: 'rs'}): any {
   // @ts-ignore
-  return (target, property, descriptor: PropertyDescriptor) => {
+  return <T extends GeneratorInterface>(target, property, descriptor: T) => {
     const original = descriptor.value;
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
-    descriptor.value = function (...args): any {
+    descriptor.value = function(...args): any {
       // @ts-ignore
       if (typeof this._getModel !== 'undefined') {
         // @ts-ignore
         model = this._getModel();
       }
+
+      if (typeof this._getReceiveInterceptor !== 'undefined') {
+        options.interceptReceive = this._getReceiveInterceptor();
+      }
+
       return original.apply(this, args).pipe(
         map(data => isCollection
           ? _generateCollection(data, model, options?.property, options?.interceptReceive)
