@@ -2,7 +2,9 @@ import {
   validateFieldsStatus,
   requiredValidator as required,
   numberValidator,
-  patternValidator as customPattern
+  patternValidator as customPattern,
+  minlengthValidator as minLength,
+  maxlengthValidator as maxLength
 } from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
@@ -78,6 +80,8 @@ export const CustomValidators = {
   required,
   customPattern,
   numberValidator,
+  minLength,
+  maxLength,
   getValidationData,
   defaultLengths
 };

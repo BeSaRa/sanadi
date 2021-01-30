@@ -1,6 +1,7 @@
 import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {isValidValue} from '../helpers/utils';
+import {hasValidLength, isValidValue} from '../helpers/utils';
 import {customValidationTypes} from '../types/types';
+import {max} from 'rxjs/operators';
 
 const validationPatterns: any = {
   ENG: new RegExp(/^[a-zA-Z ]+$/),
@@ -23,6 +24,44 @@ export function numberValidator(): ValidatorFn {
     }
     const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
     return !isValid ? {number: true} : null;
+  };
+}
+
+export function maxlengthValidator(maxLength: number): ValidatorFn {
+  if (maxLength === 0 || !isValidValue(maxLength)) {
+    return Validators.nullValidator;
+  }
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value) || !hasValidLength(control.value)) {
+      return null;
+    }
+    let isInvalid: boolean;
+    if (typeof control.value === 'string') {
+      isInvalid = (control.value.trim().length > maxLength);
+    } else {
+      isInvalid = (control.value.length > maxLength);
+    }
+    return isInvalid ? {maxlength: {requiredLength: maxLength, actualLength: control.value.length}} : null;
+  };
+}
+
+export function minlengthValidator(minLength: number): ValidatorFn {
+  if (!isValidValue(minLength)) {
+    return Validators.nullValidator;
+  }
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value) || !hasValidLength(control.value)) {
+      // don't validate empty values to allow optional controls
+      // don't validate values without `length` property
+      return null;
+    }
+    let isInvalid: boolean;
+    if (typeof control.value === 'string') {
+      isInvalid = (control.value.trim().length < minLength);
+    } else {
+      isInvalid = (control.value.length < minLength);
+    }
+    return isInvalid ? {minlength: {requiredLength: minLength, actualLength: control.value.length}} : null;
   };
 }
 

@@ -1,4 +1,4 @@
-export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast};
+export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast, hasValidLength};
 
 /**
  * @description Checks if given value is valid
@@ -7,6 +7,11 @@ export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast};
  */
 function isValidValue(value: any): boolean {
   return ((typeof value === 'string') ? (value.trim() !== '') : (typeof value !== 'undefined' && value !== null));
+}
+
+function hasValidLength(value: any): boolean {
+  // non-strict comparison is intentional, to check for both `null` and `undefined` values
+  return value != null && typeof value.length === 'number';
 }
 
 /**
