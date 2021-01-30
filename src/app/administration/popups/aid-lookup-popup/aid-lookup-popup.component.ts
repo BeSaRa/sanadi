@@ -46,7 +46,7 @@ export class AidLookupPopupComponent implements OnInit {
     this.form = this.fb.group({
       arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
       enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      aidCode: [this.model.aidCode, [Validators.required, CustomValidators.numberValidator(), Validators.maxLength(50)]],
+      aidCode: [this.model.aidCode, [Validators.required, CustomValidators.number, Validators.maxLength(50)]],
       aidType: [this.model.aidType ?? this.aidType, [Validators.required]],
       parent: [this.aidType === AidTypes.CLASSIFICATIONS ? null : (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent],
       status: [this.model.status]

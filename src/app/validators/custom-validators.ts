@@ -1,7 +1,7 @@
 import {
   validateFieldsStatus,
   requiredValidator as required,
-  numberValidator,
+  numberValidator as number,
   patternValidator as customPattern,
   minlengthValidator as minLength,
   maxlengthValidator as maxLength
@@ -79,7 +79,7 @@ export const CustomValidators = {
   validateFieldsStatus,
   required,
   customPattern,
-  numberValidator,
+  number,
   minLength,
   maxLength,
   getValidationData,

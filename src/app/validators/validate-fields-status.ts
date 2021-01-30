@@ -1,7 +1,6 @@
 import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {hasValidLength, isValidValue} from '../helpers/utils';
 import {customValidationTypes} from '../types/types';
-import {max} from 'rxjs/operators';
 
 const validationPatterns: any = {
   ENG: new RegExp(/^[a-zA-Z ]+$/),
@@ -17,14 +16,12 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
   };
 }
 
-export function numberValidator(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+export function numberValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) {
       return null;
     }
     const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
     return !isValid ? {number: true} : null;
-  };
 }
 
 export function maxlengthValidator(maxLength: number): ValidatorFn {
