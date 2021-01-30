@@ -4,7 +4,7 @@ import {customValidationTypes} from '../types/types';
 
 const validationPatterns: any = {
   ENG: new RegExp(/^[a-zA-Z ]+$/),
-  AR: new RegExp(/^[ء-ي]+$/)
+  AR: new RegExp(/^[\u0621-\u064A ]+$/)
 };
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
