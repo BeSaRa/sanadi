@@ -68,20 +68,20 @@ export class OrganizationUnitPopupComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      orgUnitType: [this.model.orgUnitType, Validators.required],
-      orgCode: [{value: this.model.orgCode, disabled: this.operation}, [Validators.required, Validators.maxLength(10)]],
-      status: [{value: this.model.status, disabled: this.operation}, Validators.required],
-      email: [this.model.email, [Validators.required, Validators.email, Validators.maxLength(50)]],
-      phoneNumber1: [this.model.phoneNumber1, [Validators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      orgUnitType: [this.model.orgUnitType, CustomValidators.required],
+      orgCode: [{value: this.model.orgCode, disabled: this.operation}, [CustomValidators.required, Validators.maxLength(10)]],
+      status: [{value: this.model.status, disabled: this.operation}, CustomValidators.required],
+      email: [this.model.email, [CustomValidators.required, Validators.email, Validators.maxLength(50)]],
+      phoneNumber1: [this.model.phoneNumber1, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       phoneNumber2: [this.model.phoneNumber2, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-      buildingName: [this.model.buildingName, [Validators.required, Validators.maxLength(200)]],
-      unitName: [this.model.unitName, [Validators.required, Validators.maxLength(200)]],
-      street: [this.model.street, [Validators.required, Validators.maxLength(200)]],
-      zone: [this.model.zone, [Validators.required, Validators.maxLength(100)]],
-      orgNationality: [this.model.orgNationality, Validators.required],
+      buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
+      unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
+      street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
+      zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
+      orgNationality: [this.model.orgNationality, CustomValidators.required],
       poBoxNum: [this.model.poBoxNum, [CustomValidators.number, Validators.maxLength(10)]]
     });
     this.fm = new FormManager(this.form, this.langService);

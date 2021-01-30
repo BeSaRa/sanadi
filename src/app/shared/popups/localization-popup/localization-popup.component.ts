@@ -9,6 +9,7 @@ import {ToastService} from '../../../services/toast.service';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {extender} from '../../../helpers/extender';
+import {CustomValidators} from '../../../validators/custom-validators';
 
 @Component({
   selector: 'app-localization-popup',
@@ -40,9 +41,9 @@ export class LocalizationPopupComponent implements OnInit {
       localizationKey: [{
         value: this.model.localizationKey,
         disabled: this.operation
-      }, [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
-      arName: [this.model.arName, [Validators.required, Validators.maxLength(1000)]],
-      enName: [this.model.enName, [Validators.required, Validators.maxLength(1000)]]
+      }, [CustomValidators.required, Validators.minLength(3), Validators.maxLength(150)]],
+      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(1000)]],
+      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(1000)]]
     });
     this.fm = new FormManager(this.form, this.langService);
     // will check it later

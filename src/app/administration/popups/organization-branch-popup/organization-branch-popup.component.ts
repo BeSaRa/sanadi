@@ -68,18 +68,18 @@ export class OrganizationBranchPopupComponent implements OnInit {
   private buildForm(): void {
     this.form = this.fb.group({
       orgId: [this.orgUnit.id],
-      arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      status: [this.model.status, Validators.required],
+      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      status: [this.model.status, CustomValidators.required],
       // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
-      phoneNumber1: [this.model.phoneNumber1, [Validators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneNumber1: [this.model.phoneNumber1, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       phoneNumber2: [this.model.phoneNumber2, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-      // buildingName: [this.model.buildingName, [Validators.required, Validators.maxLength(200)]],
-      // unitName: [this.model.unitName, [Validators.required, Validators.maxLength(200)]],
-      // street: [this.model.street, [Validators.required, Validators.maxLength(200)]],
-      // zone: [this.model.zone, [Validators.required, Validators.maxLength(100)]],
-      isMain: [this.model.isMain, [Validators.required]]
+      // buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
+      // unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
+      // street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
+      // zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
+      isMain: [this.model.isMain, [CustomValidators.required]]
     });
     this.fm = new FormManager(this.form, this.langService);
 

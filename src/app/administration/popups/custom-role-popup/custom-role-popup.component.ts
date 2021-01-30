@@ -69,8 +69,8 @@ export class CustomRolePopupComponent implements OnInit {
     this.form = this.fb.group({
       basic: this.fb.group({
         status: [this.model.status],
-        arName: [this.model.arName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-        enName: [this.model.enName, [Validators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+        arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+        enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
         description: [this.model.description, Validators.maxLength(200)],
       }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName'])}),
       permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
