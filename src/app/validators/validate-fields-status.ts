@@ -1,5 +1,11 @@
-import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {isValidValue} from '../helpers/utils';
+import {customValidationTypes} from '../types/types';
+
+const validationPatterns: any = {
+  ENG: new RegExp(/^[a-zA-Z ]+$/),
+  AR: new RegExp(/^[ء-ي]+$/)
+};
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
   return (formGroup): ValidationErrors | null => {
@@ -24,3 +30,18 @@ export function requiredValidator(control: AbstractControl): ValidationErrors | 
   return !isValidValue(control.value) ? {required: true} : null;
 }
 
+export function patternValidator(patternName: customValidationTypes): ValidatorFn {
+  if (!patternName || !validationPatterns.hasOwnProperty(patternName)) {
+    return Validators.nullValidator;
+  }
+
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+    const response: object = {};
+    // @ts-ignore
+    response[patternName] = true;
+    return !validationPatterns[patternName].test(control.value) ? response : null;
+  };
+}

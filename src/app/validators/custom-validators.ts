@@ -1,4 +1,9 @@
-import {validateFieldsStatus, requiredValidator as required, numberValidator} from './validate-fields-status';
+import {
+  validateFieldsStatus,
+  requiredValidator as required,
+  numberValidator,
+  patternValidator as customPattern
+} from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
@@ -38,7 +43,9 @@ const errorKeys: IKeyValue = {
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
       return message.change({max: errorValue.max});
     }
-  }
+  },
+  ENG: {key: 'err_english_only', replaceValues: null},
+  AR: {key: 'err_arabic_only', replaceValues: null}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
@@ -69,6 +76,7 @@ function _getControlName(control: AbstractControl): string | null {
 export const CustomValidators = {
   validateFieldsStatus,
   required,
+  customPattern,
   numberValidator,
   getValidationData,
   defaultLengths
