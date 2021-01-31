@@ -2,7 +2,7 @@ import {
   validateFieldsStatus,
   requiredValidator as required,
   numberValidator as number,
-  patternValidator as customPattern,
+  patternValidator as pattern,
   minlengthValidator as minLength,
   maxlengthValidator as maxLength
 } from './validate-fields-status';
@@ -11,6 +11,7 @@ import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 
 const defaultLengths = {
+  MIN_LENGTH: 3,
   ARABIC_NAME_MAX: 300,
   ENGLISH_NAME_MAX: 300,
   EMAIL_MAX: 200,
@@ -78,7 +79,7 @@ function _getControlName(control: AbstractControl): string | null {
 export const CustomValidators = {
   validateFieldsStatus,
   required,
-  customPattern,
+  pattern,
   number,
   minLength,
   maxLength,
