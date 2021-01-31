@@ -68,12 +68,20 @@ export class OrganizationBranchPopupComponent implements OnInit {
   private buildForm(): void {
     this.form = this.fb.group({
       orgId: [this.orgUnit.id],
-      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      arName: [this.model.arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+      ]],
+      enName: [this.model.enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+      ]],
       status: [this.model.status, CustomValidators.required],
       // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
-      phoneNumber1: [this.model.phoneNumber1, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      phoneNumber2: [this.model.phoneNumber2, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneNumber1: [this.model.phoneNumber1, [
+        CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneNumber2: [this.model.phoneNumber2, [
+        CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
       // buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
       // unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],

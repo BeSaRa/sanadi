@@ -57,14 +57,23 @@ export class OrganizationUserPopupComponent implements OnInit {
       orgBranchId: [this.model.orgBranchId, [CustomValidators.required]],
       customRoleId: [this.model.customRoleId, CustomValidators.required],
       userType: [this.model.userType, CustomValidators.required],
-      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      arName: [this.model.arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+      ]],
+      enName: [this.model.enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+      ]],
       qid: [this.model.qid, [CustomValidators.required, CustomValidators.number, Validators.minLength(7), Validators.maxLength(10)]],
       empNum: [this.model.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-      phoneNumber: [this.model.phoneNumber, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      phoneNumber: [this.model.phoneNumber, [
+        CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       phoneExtension: [this.model.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]],
-      officialPhoneNumber: [this.model.officialPhoneNumber, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      email: [this.model.email, [CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
+      officialPhoneNumber: [this.model.officialPhoneNumber, [
+        CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      email: [this.model.email, [
+        CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
       jobTitle: [this.model.jobTitle, [CustomValidators.required]],
       status: [this.model.status, CustomValidators.required]
     });

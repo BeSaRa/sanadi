@@ -44,11 +44,19 @@ export class AidLookupPopupComponent implements OnInit {
 
   buildForm(): void {
     this.form = this.fb.group({
-      arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      arName: [this.model.arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+      ]],
+      enName: [this.model.enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+      ]],
       aidCode: [this.model.aidCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(50)]],
       aidType: [this.model.aidType ?? this.aidType, [CustomValidators.required]],
-      parent: [this.aidType === AidTypes.CLASSIFICATIONS ? null : (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent],
+      parent: [
+        this.aidType === AidTypes.CLASSIFICATIONS ? null : (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent
+      ],
       status: [this.model.status]
     }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType'])});
 
