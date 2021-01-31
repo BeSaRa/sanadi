@@ -19,7 +19,7 @@ export class FieldErrorMessageComponent {
   }
 
   get errorMessage(): (string | null) {
-    if (!this.control){
+    if (!this.control) {
       return null;
     }
     let objValidationData;
@@ -38,7 +38,7 @@ export class FieldErrorMessageComponent {
       return messageText;
     }
     // @ts-ignore
-    const fieldLabel = this.labelText || this.langService.map[this.labelKey];
+    const fieldLabel = this.labelText || (this.labelKey ? this.langService.map[this.labelKey] : '');
     return objValidationData.message.replaceValues(messageText, objValidationData.errorValue, fieldLabel);
   }
 
