@@ -1,9 +1,10 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {ITypeDialogList} from '../../../interfaces/i-type-dialog-list';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
+import {DIALOG_CONFIG_TOKEN, DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {LangService} from '../../../services/lang.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {FactoryService} from '../../../services/factory.service';
+import {IDialogPredefinedConfig} from '../../../interfaces/i-dialog-predefined-config';
 
 @Component({
   selector: 'app-predefined-dialog',
@@ -22,7 +23,8 @@ export class PredefinedDialogComponent implements OnInit {
   userClickOn = UserClickOn;
   langService: LangService = {} as LangService;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: any) {
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
+              @Inject(DIALOG_CONFIG_TOKEN) public config: IDialogPredefinedConfig) {
   }
 
   ngOnInit(): void {
