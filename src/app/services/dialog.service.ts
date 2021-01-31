@@ -6,6 +6,7 @@ import {IDialogConfig} from '../interfaces/i-dialog-config';
 import {PredefinedDialogComponent} from '../shared/popups/predefined-dialog/predefined-dialog.component';
 import {ITypeDialogList} from '../interfaces/i-type-dialog-list';
 import {FactoryService} from './factory.service';
+import {IDialogPredefinedConfig} from '../interfaces/i-dialog-predefined-config';
 
 @Injectable({
   providedIn: 'root'
@@ -37,23 +38,23 @@ export class DialogService {
     return this._showDialog(component, data, config);
   }
 
-  alert(data?: string, config?: IDialogConfig): DialogRef {
+  alert(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'alert');
   }
 
-  error(data?: string, config?: IDialogConfig): DialogRef {
+  error(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'error');
   }
 
-  success(data?: string, config?: IDialogConfig): DialogRef {
+  success(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'success');
   }
 
-  info(data?: string, config?: IDialogConfig): DialogRef {
+  info(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'info');
   }
 
-  confirm(data?: string, config?: IDialogConfig): DialogRef {
+  confirm(data?: string, config: IDialogPredefinedConfig = {cancelBtn: 'btn_no', actionBtn: 'btn_yes'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'confirm');
   }
 
