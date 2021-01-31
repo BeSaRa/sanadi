@@ -5,3 +5,4 @@ import {InjectionToken} from '@angular/core';
  */
 export const TOAST_DATA_TOKEN = new InjectionToken('TOAST_TOKEN');
 export const DIALOG_DATA_TOKEN = new InjectionToken('DIALOG_TOKEN');
+export const DIALOG_CONFIG_TOKEN = new InjectionToken('CONFIG_TOKEN');
