@@ -1,4 +1,18 @@
 export interface ILanguageKeys {
+  approved_aid_amount: string;
+  aid_status: string;
+  aid_type: string;
+  request_aid_amount: string;
+  request_date: string;
+  request_number: string;
+  personal_aid: string;
+  family_info: string;
+  date_of_birth: string;
+  personal_info: string;
+  sponsors_count: string;
+  gender: string;
+  select: string;
+  select_beneficiary: string;
   btn_close: string;
   no_result_for_your_search_criteria: string;
   id_number: string;

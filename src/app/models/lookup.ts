@@ -38,4 +38,12 @@ export class Lookup extends BaseModel<Lookup> {
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
+
+  setValues(arName: string, enName: string, lookupKey: number, id: number): Lookup {
+    this.arName = arName;
+    this.enName = enName;
+    this.lookupKey = lookupKey;
+    this.id = id;
+    return this;
+  }
 }

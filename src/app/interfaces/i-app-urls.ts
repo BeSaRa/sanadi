@@ -13,6 +13,9 @@ export interface IAppUrls {
   ORGANIZATION: string;
   ORG_USER: string;
   CACHE_SERVICE: string;
+  BENEFICIARY: string;
+  SUBVENTION_REQUEST: string;
+  SUBVENTION_REQUEST_AID: string;
 
   [index: string]: string;
 }

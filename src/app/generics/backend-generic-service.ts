@@ -7,7 +7,7 @@ import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {isValidValue} from '../helpers/utils';
 
-export abstract class BackendGenericService<T extends { id?: number }> implements BackendServiceInterface<T> {
+export abstract class BackendGenericService<T> implements BackendServiceInterface<T> {
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
@@ -67,6 +67,21 @@ export abstract class BackendGenericService<T extends { id?: number }> implement
       }
     }
     return queryString.substring(0, queryString.length - 1);
+  }
+
+  _parseObjectToQueryString(data: IKeyValue, myKey?: string): string {
+    let queryString = [];
+    for (const key in data) {
+      if (!data.hasOwnProperty(key)) {
+        continue;
+      }
+      if (typeof data[key] === 'object') {
+        queryString.push(this._parseObjectToQueryString(data[key], key));
+      } else {
+        queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]);
+      }
+    }
+    return queryString.join('&');
   }
 }
 

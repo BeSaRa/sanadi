@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -42,6 +42,7 @@ export class LangService extends BackendGenericService<Localization> {
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
               private dialogService: DialogService,
+              private ngZone: NgZone,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
@@ -79,6 +80,7 @@ export class LangService extends BackendGenericService<Localization> {
       const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
       return {...acc, [key]: current[currentLang]} as ILanguageKeys;
     }, {lang: this.languageChange.value.code} as Record<keyof ILanguageKeys, string>);
+    console.log('HI');
     return this.map;
   }
 

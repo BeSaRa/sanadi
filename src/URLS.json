@@ -11,5 +11,8 @@
   "AID_LOOKUPS_CRITERIA": "admin/aid-lookup/criteria",
   "ORGANIZATION": "admin/ou",
   "ORG_USER": "admin/user",
-  "CACHE_SERVICE":"admin/config/refresh-cache"
+  "CACHE_SERVICE": "admin/config/refresh-cache",
+  "BENEFICIARY": "aids/beneficiary",
+  "SUBVENTION_REQUEST": "aids/subvention-request",
+  "SUBVENTION_REQUEST_AID": "aids/subvention-request/sub-aids"
 }

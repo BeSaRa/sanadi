@@ -10,4 +10,12 @@ export interface ILookupMap {
   OrgUserStatus: Lookup[];
   OrgUserType: Lookup[];
   SubAidPeriodicType: Lookup[];
+  BenAddressStatus: Lookup[];
+  BenEducationLevel: Lookup[];
+  BenIdType: Lookup[];
+  BenMaritialStatus: Lookup[];
+  Gender: Lookup[];
+  GovOccuptionStatus: Lookup[];
+  GovOccuptionType: Lookup[];
+  ResidenceStatus: Lookup[];
 }

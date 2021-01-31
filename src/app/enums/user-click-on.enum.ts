@@ -1,4 +1,6 @@
 export enum UserClickOn {
   YES,
-  NO
+  NO,
+  CLOSE,
+  CANCEL
 }

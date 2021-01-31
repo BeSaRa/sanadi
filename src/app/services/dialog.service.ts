@@ -38,23 +38,23 @@ export class DialogService {
     return this._showDialog(component, data, config);
   }
 
-  alert(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
+  alert(data?: string, config: Partial<IDialogPredefinedConfig> = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'alert');
   }
 
-  error(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
+  error(data?: string, config: Partial<IDialogPredefinedConfig> = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'error');
   }
 
-  success(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
+  success(data?: string, config: Partial<IDialogPredefinedConfig> = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'success');
   }
 
-  info(data?: string, config: IDialogPredefinedConfig = {actionBtn: 'btn_close'}): DialogRef {
+  info(data?: string, config: Partial<IDialogPredefinedConfig> = {actionBtn: 'btn_close'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'info');
   }
 
-  confirm(data?: string, config: IDialogPredefinedConfig = {cancelBtn: 'btn_no', actionBtn: 'btn_yes'}): DialogRef {
+  confirm(data?: string, config: Partial<IDialogPredefinedConfig> = {cancelBtn: 'btn_no', actionBtn: 'btn_yes'}): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'confirm');
   }
 
