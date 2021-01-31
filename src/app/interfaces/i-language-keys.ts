@@ -1,4 +1,16 @@
 export interface ILanguageKeys {
+  btn_close: string;
+  no_result_for_your_search_criteria: string;
+  id_number: string;
+  id_type: string;
+  arabic_name: string;
+  english_name: string;
+  inquiry_by_id: string;
+  inquiry_by_name: string;
+  equal: string;
+  end_with: string;
+  start_with: string;
+  contains: string;
   something_went_wrong_during_process: string;
   msg_update_cache_success: string;
   lbl_inactive: string;
