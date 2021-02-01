@@ -65,7 +65,7 @@
             "scripts": [
               {
                 "bundleName": "bootstrap-js",
-                "input": "node_modules/bootstrap/dist/js/bootstrap.min.js"
+                "input": "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
               }
             ]
           },

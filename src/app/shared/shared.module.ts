@@ -19,6 +19,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {PageHeaderComponent} from './components/page-header/page-header.component';
 import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 import {FieldErrorMessageComponent} from './components/field-error-message/field-error-message.component';
+import { TooltipDirective } from './directives/tooltip.directive';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import {FieldErrorMessageComponent} from './components/field-error-message/field
     PredefinedDialogComponent,
     PageHeaderComponent,
     LocalizationPopupComponent,
-    FieldErrorMessageComponent
+    FieldErrorMessageComponent,
+    TooltipDirective
   ],
   imports: [
     CommonModule,
@@ -63,7 +65,8 @@ import {FieldErrorMessageComponent} from './components/field-error-message/field
     PredefinedDialogComponent,
     PageHeaderComponent,
     LocalizationPopupComponent,
-    FieldErrorMessageComponent
+    FieldErrorMessageComponent,
+    TooltipDirective
   ]
 })
 export class SharedModule {
