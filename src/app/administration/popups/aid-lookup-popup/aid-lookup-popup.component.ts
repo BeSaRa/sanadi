@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {FormManager} from '../../../models/form-manager';
@@ -10,13 +10,17 @@ import {ToastService} from '../../../services/toast.service';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {AidTypes} from '../../../enums/aid-types.enum';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-aid-lookup-popup',
   templateUrl: './aid-lookup-popup.component.html',
   styleUrls: ['./aid-lookup-popup.component.scss']
 })
-export class AidLookupPopupComponent implements OnInit {
+export class AidLookupPopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   model: AidLookup;
   parentId: number;
@@ -38,8 +42,15 @@ export class AidLookupPopupComponent implements OnInit {
     this.setGridAidType();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.buildForm();
+    this._saveModel();
   }
 
   buildForm(): void {
@@ -68,14 +79,21 @@ export class AidLookupPopupComponent implements OnInit {
   }
 
   saveModel(): void {
-    let aidLookup = extender<AidLookup>(AidLookup, {...this.model, ...this.form.value});
-    const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-    const sub = aidLookup.save().subscribe(aid => {
-      //@ts-ignore
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$.pipe(
+      takeUntil(this.destroy$),
+      exhaustMap(() => {
+        const aidLookup = extender<AidLookup>(AidLookup, {...this.model, ...this.form.value});
+        return aidLookup.save();
+      }),
+    ).subscribe(aid => {
+      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       this.toast.success(message.change({x: aid.aidCode}));
       this.model = aid;
       this.operation = OperationTypes.UPDATE;
-      sub.unsubscribe();
     });
   }
 

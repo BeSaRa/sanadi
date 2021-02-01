@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {Localization} from '../../../models/localization';

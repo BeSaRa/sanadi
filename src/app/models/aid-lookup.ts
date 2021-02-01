@@ -9,7 +9,7 @@ import {Lookup} from './lookup';
 export class AidLookup extends BaseModel<AidLookup> {
   aidCode!: string;
   category: number | undefined;
-  status: boolean = false;
+  status: boolean = true;
   statusDateModified: number | undefined;
   aidType: number | undefined;
   aidTypeInfo: Lookup | undefined;
