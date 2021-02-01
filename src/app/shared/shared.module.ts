@@ -38,8 +38,7 @@ import { TooltipDirective } from './directives/tooltip.directive';
     PageHeaderComponent,
     LocalizationPopupComponent,
     FieldErrorMessageComponent,
-    BulkActionsComponent
-    FieldErrorMessageComponent,
+    BulkActionsComponent,
     TooltipDirective
   ],
   imports: [

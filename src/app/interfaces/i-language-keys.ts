@@ -129,4 +129,8 @@ export interface ILanguageKeys {
   msg_delete_success: string;
   msg_delete_success_except: string;
   msg_delete_fail: string;
+  btn_add: string;
+  btn_reload: string;
+  btn_edit: string;
+  btn_delete: string;
 }
