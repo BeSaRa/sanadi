@@ -80,7 +80,6 @@ export class LangService extends BackendGenericService<Localization> {
       const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
       return {...acc, [key]: current[currentLang]} as ILanguageKeys;
     }, {lang: this.languageChange.value.code} as Record<keyof ILanguageKeys, string>);
-    console.log('HI');
     return this.map;
   }
 
