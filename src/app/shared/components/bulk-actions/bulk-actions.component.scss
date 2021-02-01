@@ -1,0 +1,12 @@
+#selected-record-count {
+  border-right: 1px solid grey;
+  border-left: none;
+  padding: 0 10px;
+}
+
+:host-context(html[dir="rtl"]) {
+  #selected-record-count {
+    border-left: 1px solid grey;
+    border-right: none;
+  }
+}

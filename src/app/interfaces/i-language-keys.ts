@@ -124,4 +124,9 @@ export interface ILanguageKeys {
   err_max_number: string;
   lbl_status_date_modified: string;
   lbl_copyright: string;
+  lbl_search: string;
+  msg_confirm_delete_selected: string;
+  msg_delete_success: string;
+  msg_delete_success_except: string;
+  msg_delete_fail: string;
 }

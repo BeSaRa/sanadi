@@ -1,7 +1,7 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
 import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {IKeyValue} from '../interfaces/i-key-value';
@@ -39,6 +39,15 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
 
   delete(modelId: number): Observable<boolean> {
     return this.http.delete<boolean>(this._getServiceURL() + '/' + modelId);
+  }
+
+  deleteBulk(modelIds: any[]): Observable<any> {
+    return this.http.request('delete', this._getServiceURL() + '/bulk', {body: modelIds})
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
   }
 
   @Generator()

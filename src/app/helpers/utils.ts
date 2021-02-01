@@ -1,4 +1,4 @@
-export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast, hasValidLength};
+export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast, hasValidLength, generateHtmlList};
 
 /**
  * @description Checks if given value is valid
@@ -51,4 +51,28 @@ function isValidAdminResult(objectToCheck: any): boolean {
  */
 function generateModelAndCast(model: any, data: any): (any) {
   return Object.assign(new model(), data);
+}
+
+/**
+ * @description Generates the html ordered list of passed string values
+ * @param title: string
+ * @param namesList: string[]
+ */
+function generateHtmlList(title: string, namesList: string[]): HTMLDivElement {
+  const div = document.createElement('div');
+  div.classList.add('dynamic-list-container');
+
+  const titleElement = document.createElement('h6');
+  titleElement.innerText = title;
+
+  const list: HTMLOListElement = document.createElement('ol');
+  for (const name of namesList) {
+    const item = document.createElement('li');
+    item.appendChild(document.createTextNode(name));
+    list.appendChild(item);
+  }
+
+  div.append(titleElement);
+  div.append(list);
+  return div;
 }

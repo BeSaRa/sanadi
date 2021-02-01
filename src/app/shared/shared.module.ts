@@ -19,6 +19,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {PageHeaderComponent} from './components/page-header/page-header.component';
 import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 import {FieldErrorMessageComponent} from './components/field-error-message/field-error-message.component';
+import {BulkActionsComponent} from './components/bulk-actions/bulk-actions.component';
 import { TooltipDirective } from './directives/tooltip.directive';
 
 
@@ -36,6 +37,8 @@ import { TooltipDirective } from './directives/tooltip.directive';
     PredefinedDialogComponent,
     PageHeaderComponent,
     LocalizationPopupComponent,
+    FieldErrorMessageComponent,
+    BulkActionsComponent
     FieldErrorMessageComponent,
     TooltipDirective
   ],
@@ -66,6 +69,7 @@ import { TooltipDirective } from './directives/tooltip.directive';
     PageHeaderComponent,
     LocalizationPopupComponent,
     FieldErrorMessageComponent,
+    BulkActionsComponent,
     TooltipDirective
   ]
 })

@@ -148,6 +148,12 @@ html[dir="rtl"] {
       margin-left: 10px;
     }
   }
+
+  .dynamic-list-container {
+    li {
+      text-align: right;
+    }
+  }
 }
 
 .icon-btn {
@@ -165,4 +171,16 @@ html[dir="rtl"] {
 
 .invalid-feedback {
   width: 90%;
+}
+
+.dynamic-list-container {
+  ol, ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      text-align: left;
+      color: red;
+    }
+  }
 }

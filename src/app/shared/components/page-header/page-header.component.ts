@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 import {LangService} from '../../../services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -10,6 +10,7 @@ import {isEmptyObject} from '../../../helpers/utils';
   styleUrls: ['./page-header.component.scss']
 })
 export class PageHeaderComponent implements OnInit, OnDestroy {
+  @HostBinding('class') containerClass = 'col-4';
   @Input() pageTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() clickOnReload$: BehaviorSubject<any> = {} as BehaviorSubject<any>;
   @Input() clickOnNew$: Subject<any> = {} as Subject<any>;
