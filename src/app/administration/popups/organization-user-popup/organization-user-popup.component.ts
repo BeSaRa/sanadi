@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {FormManager} from '../../../models/form-manager';
@@ -16,13 +16,17 @@ import {CustomRole} from '../../../models/custom-role';
 import {OrgBranch} from '../../../models/org-branch';
 import {OrganizationBranchService} from '../../../services/organization-branch.service';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-organization-user-popup',
   templateUrl: './organization-user-popup.component.html',
   styleUrls: ['./organization-user-popup.component.scss']
 })
-export class OrganizationUserPopupComponent implements OnInit {
+export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   model: OrgUser;
   operation: OperationTypes;
@@ -47,8 +51,15 @@ export class OrganizationUserPopupComponent implements OnInit {
     this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.buildForm();
+    this._saveModel();
   }
 
   buildForm(): void {
@@ -85,16 +96,22 @@ export class OrganizationUserPopupComponent implements OnInit {
     }
   }
 
-
   saveModel(): void {
-    const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.form.value});
-    const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-    const sub = orgUser.save().subscribe(user => {
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$.pipe(
+      takeUntil(this.destroy$),
+      exhaustMap(() => {
+        const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.form.value});
+        return orgUser.save();
+      })).subscribe(user => {
+      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       // @ts-ignore
       this.toast.success(message.change({x: user.arName}));
       this.model = user;
       this.operation = OperationTypes.UPDATE;
-      sub.unsubscribe();
     });
   }
 
