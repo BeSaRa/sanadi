@@ -133,4 +133,5 @@ export interface ILanguageKeys {
   btn_reload: string;
   btn_edit: string;
   btn_delete: string;
+  validate_fields: string;
 }
