@@ -10,6 +10,7 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {cloneDeep as _deepClone} from 'lodash';
 
 @Component({
   selector: 'app-organization-user',
@@ -19,11 +20,55 @@ import {ConfigurationService} from '../../../services/configuration.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
+
+  selectedRecords: OrgUser[] = [];
+
+  private _addSelected(record: OrgUser): void {
+    this.selectedRecords.push(_deepClone(record));
+  }
+
+  private _removeSelected(record: OrgUser): void {
+    const index = this.selectedRecords.findIndex((item) => {
+      return item.id === record.id;
+    });
+    this.selectedRecords.splice(index, 1);
+  }
+
+  isIndeterminateSelection(): boolean {
+    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.orgUsers.length;
+  }
+
+  isFullSelection(): boolean {
+    return this.selectedRecords.length === this.orgUsers.length;
+  }
+
+  isSelected(record: OrgUser): boolean {
+    return !!this.selectedRecords.find((item) => {
+      return item.id === record.id;
+    });
+  }
+
+  onSelect($event: Event, record: OrgUser): void {
+    const checkBox = $event.target as HTMLInputElement;
+    if (checkBox.checked) {
+      this._addSelected(record);
+    } else {
+      this._removeSelected(record);
+    }
+  }
+
+  onSelectAll($event: Event): void {
+    if (this.selectedRecords.length === this.orgUsers.length) {
+      this.selectedRecords = [];
+    } else {
+      this.selectedRecords = _deepClone(this.orgUsers);
+    }
+  }
 
   constructor(private orgUserService: OrganizationUserService,
               public langService: LangService,
@@ -79,6 +124,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       })
     ).subscribe((orgUsers) => {
       this.orgUsers = orgUsers;
+      this.selectedRecords = [];
     });
   }
 
