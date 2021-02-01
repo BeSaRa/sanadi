@@ -18,6 +18,7 @@
               <div class="form-check form-switch">
                 <input class="form-check-input cursor-pointer" [checked]="row.status" (change)="updateStatus(row)"
                        type="checkbox"
+                       tooltip="{{row.status ? langService.map.lbl_active : langService.map.lbl_inactive}}"
                        id="custom-role-status-{{rowIndex}}">
               </div>
             </td>

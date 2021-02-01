@@ -21,6 +21,7 @@
             <td cdk-cell *cdkCellDef="let row; let rowIndex = index">
               <div class="form-check form-switch">
                 <input class="form-check-input cursor-pointer" [checked]="row.status" (change)="updateStatus(row)"
+                       tooltip="{{row.status ? langService.map.lbl_active : langService.map.lbl_inactive}}"
                        type="checkbox"
                        id="custom-role-status-{{rowIndex}}">
               </div>
