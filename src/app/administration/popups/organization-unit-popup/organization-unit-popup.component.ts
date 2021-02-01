@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
@@ -13,13 +13,17 @@ import {Lookup} from '../../../models/lookup';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-organization-unit-popup',
   templateUrl: './organization-unit-popup.component.html',
   styleUrls: ['./organization-unit-popup.component.scss']
 })
-export class OrganizationUnitPopupComponent implements OnInit {
+export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   fm!: FormManager;
   operation: OperationTypes;
@@ -49,6 +53,14 @@ export class OrganizationUnitPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this._saveModel();
+  }
+
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   canShowTab(tab: string | object): boolean {
@@ -100,15 +112,23 @@ export class OrganizationUnitPopupComponent implements OnInit {
   }
 
   saveModel(): void {
-    const orgUnit = extender<OrgUnit>(OrgUnit, {...this.model, ...this.fm.getForm()?.value});
-    orgUnit.save()
-      .subscribe((local) => {
-        const message = (this.operation === OperationTypes.CREATE)
-          ? this.langService.map.msg_create_x_success
-          : this.langService.map.msg_update_x_success;
-        this.toast.success(message.change({x: orgUnit.getName()}));
-        this.model = local;
-        this.operation = OperationTypes.UPDATE;
-      });
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$.pipe(
+      takeUntil(this.destroy$),
+      exhaustMap(() => {
+        const orgUnit = extender<OrgUnit>(OrgUnit, {...this.model, ...this.fm.getForm()?.value});
+        return orgUnit.save();
+      })
+    ).subscribe((orgUnit) => {
+      const message = (this.operation === OperationTypes.CREATE)
+        ? this.langService.map.msg_create_x_success
+        : this.langService.map.msg_update_x_success;
+      this.toast.success(message.change({x: orgUnit.getName()}));
+      this.model = orgUnit;
+      this.operation = OperationTypes.UPDATE;
+    });
   }
 }
