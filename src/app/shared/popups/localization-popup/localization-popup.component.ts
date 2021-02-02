@@ -10,13 +10,17 @@ import {OperationTypes} from '../../../enums/operation-types.enum';
 import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-localization-popup',
   templateUrl: './localization-popup.component.html',
   styleUrls: ['./localization-popup.component.scss']
 })
-export class LocalizationPopupComponent implements OnInit {
+export class LocalizationPopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   model: Localization;
   operation: OperationTypes;
@@ -33,6 +37,13 @@ export class LocalizationPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this._saveModel();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   buildForm(): void {
@@ -53,15 +64,22 @@ export class LocalizationPopupComponent implements OnInit {
   }
 
   saveModel(): void {
-    let localization = extender<Localization>(Localization, {...this.model, ...this.form.value});
-    const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-    const sub = localization.save().subscribe(local => {
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$
+      .pipe(takeUntil(this.destroy$),
+        exhaustMap(() => {
+          const localization = extender<Localization>(Localization, {...this.model, ...this.form.value});
+          return localization.save();
+        })).subscribe(local => {
+      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       //@ts-ignore
       this.toast.success(message.change({x: local.localizationKey}));
       this.model = local;
       this.operation = OperationTypes.UPDATE;
       this.form.get('localizationKey')?.disable();
-      sub.unsubscribe();
     });
   }
 
