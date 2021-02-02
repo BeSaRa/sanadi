@@ -12,6 +12,7 @@ import {ToastService} from '../../../services/toast.service';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {cloneDeep as _deepClone} from 'lodash';
 import {generateHtmlList} from '../../../helpers/utils';
+import {IGridAction} from '../../../interfaces/i-grid-action';
 
 @Component({
   selector: 'app-organization-user',
@@ -28,11 +29,11 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   reloadSubscription!: Subscription;
 
   selectedRecords: OrgUser[] = [];
-  actionsList: any[] = [
+  actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
-      actionCallback: ($event: MouseEvent) => {
+      callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
     }
@@ -49,11 +50,11 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.selectedRecords.splice(index, 1);
   }
 
-  isIndeterminateSelection(): boolean {
+  get isIndeterminateSelection(): boolean {
     return this.selectedRecords.length > 0 && this.selectedRecords.length < this.orgUsers.length;
   }
 
-  isFullSelection(): boolean {
+  get isFullSelection(): boolean {
     return this.selectedRecords.length === this.orgUsers.length;
   }
 

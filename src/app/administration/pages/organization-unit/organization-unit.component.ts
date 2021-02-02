@@ -13,6 +13,9 @@ import {LookupCategories} from '../../../enums/lookup-categories';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {generateHtmlList} from '../../../helpers/utils';
+import {cloneDeep as _deepClone} from 'lodash';
+import {IGridAction} from '../../../interfaces/i-grid-action';
 
 @Component({
   selector: 'app-organization-unit',
@@ -23,10 +26,63 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   organizations: OrgUnit[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
+
+  selectedRecords: OrgUnit[] = [];
+  actionsList: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      icon: 'mdi-close-box',
+      callback: ($event: MouseEvent) => {
+        this.deleteBulk($event);
+      }
+    }
+  ];
+
+  private _addSelected(record: OrgUnit): void {
+    this.selectedRecords.push(_deepClone(record));
+  }
+
+  private _removeSelected(record: OrgUnit): void {
+    const index = this.selectedRecords.findIndex((item) => {
+      return item.id === record.id;
+    });
+    this.selectedRecords.splice(index, 1);
+  }
+
+  get isIndeterminateSelection(): boolean {
+    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.organizations.length;
+  }
+
+  get isFullSelection(): boolean {
+    return this.selectedRecords.length === this.organizations.length;
+  }
+
+  isSelected(record: OrgUnit): boolean {
+    return !!this.selectedRecords.find((item) => {
+      return item.id === record.id;
+    });
+  }
+
+  onSelect($event: Event, record: OrgUnit): void {
+    const checkBox = $event.target as HTMLInputElement;
+    if (checkBox.checked) {
+      this._addSelected(record);
+    } else {
+      this._removeSelected(record);
+    }
+  }
+
+  onSelectAll($event: Event): void {
+    if (this.selectedRecords.length === this.organizations.length) {
+      this.selectedRecords = [];
+    } else {
+      this.selectedRecords = _deepClone(this.organizations);
+    }
+  }
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
@@ -70,6 +126,43 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       });
   }
 
+  _mapBulkResponse(resultMap: any, key: string): void {
+    const failedRecords: OrgUnit[] = [];
+    for (const item of this.selectedRecords) {
+      // @ts-ignore
+      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
+        failedRecords.push(item);
+      }
+    }
+    if (failedRecords.length === 0) {
+      this.toast.success(this.langService.map.msg_delete_success);
+    } else if (failedRecords.length === this.selectedRecords.length) {
+      this.toast.success(this.langService.map.msg_delete_fail);
+    } else {
+      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
+      this.dialogService.info(listHtml.outerHTML);
+    }
+  }
+
+  deleteBulk($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
+        .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const ids = this.selectedRecords.map((item) => {
+            return item.id;
+          });
+          const sub = this.organizationUnitService.deleteBulk(ids).subscribe((response) => {
+            this._mapBulkResponse(response, 'id');
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        }
+      });
+    }
+  }
+
   edit(model: OrgUnit, event: MouseEvent): void {
     event.preventDefault();
     const sub = this.organizationUnitService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
@@ -95,6 +188,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       })
     ).subscribe((orgUnits) => {
       this.organizations = orgUnits;
+      this.selectedRecords = [];
     });
   }
 }

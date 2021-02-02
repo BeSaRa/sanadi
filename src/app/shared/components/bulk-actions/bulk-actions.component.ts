@@ -1,9 +1,6 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {OrgUser} from '../../../models/org-user';
-import {generateHtmlList} from '../../../helpers/utils';
-import {ToastService} from '../../../services/toast.service';
 import {LangService} from '../../../services/lang.service';
-import {DialogService} from '../../../services/dialog.service';
+import {IGridAction} from '../../../interfaces/i-grid-action';
 
 @Component({
   selector: 'app-bulk-actions',
@@ -16,13 +13,11 @@ export class BulkActionsComponent {
   @Input() actionsList!: any[];
   @Input() selectedRecords!: any[];
 
-  constructor(private toast: ToastService,
-              public langService: LangService,
-              private dialogService: DialogService) {
+  constructor(public langService: LangService) {
   }
 
-  callback(action: any, $event: MouseEvent): any {
-    action.actionCallback($event);
+  callback(action: IGridAction, $event: MouseEvent): any {
+    action.callback($event);
   }
 
 }

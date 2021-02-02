@@ -2,7 +2,9 @@
   <div class="col-12 d-flex align-items-center justify-content-end">
     <h1 class="h6 text-primary m-0 d-inline-block" id="selected-record-count">{{selectedRecords.length}} selected</h1>
     <ng-container *ngFor="let action of actionsList">
-      <button class="btn btn-link outline-none" (click)="callback(action, $event)">
+      <button class="btn btn-link outline-none"
+              tooltip="{{langService.map[action.langKey]}}"
+              (click)="callback(action, $event)">
         <i class="mdi {{action.icon}}"></i></button>
     </ng-container>
   </div>

@@ -2,6 +2,7 @@ import {BaseModel} from './base-model';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
+import {INames} from '../interfaces/i-names';
 
 export class Localization extends BaseModel<Localization> {
   localizationKey: string | undefined;
@@ -27,5 +28,9 @@ export class Localization extends BaseModel<Localization> {
 
   update(): Observable<Localization> {
     return this.service.update(this);
+  }
+
+  getName(): string {
+    return this[(this.service.map.lang + 'Name') as keyof INames];
   }
 }
