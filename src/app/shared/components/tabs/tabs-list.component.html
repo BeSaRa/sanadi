@@ -1,0 +1,12 @@
+<ul *ngIf="tabs.length" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
+  <li *ngFor="let tab of tabs" role="presentation" class="nav-item">
+    <a class="nav-link position-relative" [class.active]="tab.active" aria-current="page" data-bs-toggle="tab" role="tab"
+       (click)="selectTab(tab)" href="{{tab.tabId}}">{{tab.title}}
+      <span *ngIf="tab.hasError"
+            class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
+    </a>
+  </li>
+</ul>
+<div id="{{tabContainerId}}-content" class="tab-content">
+  <ng-content></ng-content>
+</div>

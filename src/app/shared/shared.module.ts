@@ -20,7 +20,9 @@ import {PageHeaderComponent} from './components/page-header/page-header.componen
 import {LocalizationPopupComponent} from './popups/localization-popup/localization-popup.component';
 import {FieldErrorMessageComponent} from './components/field-error-message/field-error-message.component';
 import {BulkActionsComponent} from './components/bulk-actions/bulk-actions.component';
-import { TooltipDirective } from './directives/tooltip.directive';
+import {TooltipDirective} from './directives/tooltip.directive';
+import {TabsListComponent} from './components/tabs/tabs-list.component';
+import { TabComponent } from './components/tab/tab.component';
 
 
 @NgModule({
@@ -39,7 +41,9 @@ import { TooltipDirective } from './directives/tooltip.directive';
     LocalizationPopupComponent,
     FieldErrorMessageComponent,
     BulkActionsComponent,
-    TooltipDirective
+    TooltipDirective,
+    TabsListComponent,
+    TabComponent
   ],
   imports: [
     CommonModule,
@@ -69,7 +73,9 @@ import { TooltipDirective } from './directives/tooltip.directive';
     LocalizationPopupComponent,
     FieldErrorMessageComponent,
     BulkActionsComponent,
-    TooltipDirective
+    TooltipDirective,
+    TabsListComponent,
+    TabComponent
   ]
 })
 export class SharedModule {

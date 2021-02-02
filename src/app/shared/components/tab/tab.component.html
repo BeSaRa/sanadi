@@ -1,0 +1,4 @@
+<div [id]="tabId" [hidden]="!active">
+  <ng-content *ngIf="!template"></ng-content>
+  <ng-container [ngTemplateOutlet]="template"></ng-container>
+</div>
