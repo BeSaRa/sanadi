@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {OperationTypes} from '../../../enums/operation-types.enum';
@@ -14,13 +14,17 @@ import {LangService} from '../../../services/lang.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-organization-branch-popup',
   templateUrl: './organization-branch-popup.component.html',
   styleUrls: ['./organization-branch-popup.component.scss']
 })
-export class OrganizationBranchPopupComponent implements OnInit {
+export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   fm!: FormManager;
   operation: OperationTypes;
@@ -48,6 +52,13 @@ export class OrganizationBranchPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this._saveModel();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   get popupTitle(): string {
@@ -97,9 +108,18 @@ export class OrganizationBranchPopupComponent implements OnInit {
   }
 
   saveModel(): void {
-    const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getForm()?.value});
-    orgBranch.save()
-      .subscribe(() => {
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$
+      .pipe(
+        takeUntil(this.destroy$),
+        exhaustMap(() => {
+          const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getForm()?.value});
+          return orgBranch.save();
+        }))
+      .subscribe(orgBranch => {
         const message = (this.operation === OperationTypes.CREATE)
           ? this.langService.map.msg_create_x_success
           : this.langService.map.msg_update_x_success;
