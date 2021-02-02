@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {LangService} from '../../../services/lang.service';
@@ -9,9 +9,9 @@ import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {LookupService} from '../../../services/lookup.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
-import {combineLatest, of} from 'rxjs';
+import {combineLatest, of, Subject} from 'rxjs';
 import {PermissionService} from '../../../services/permission.service';
-import {take} from 'rxjs/operators';
+import {exhaustMap, take, takeUntil} from 'rxjs/operators';
 import {Permission} from '../../../models/permission';
 import {CheckGroup} from '../../../models/check-group';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
@@ -25,7 +25,9 @@ import {Lookup} from '../../../models/lookup';
   templateUrl: './custom-role-popup.component.html',
   styleUrls: ['./custom-role-popup.component.scss']
 })
-export class CustomRolePopupComponent implements OnInit {
+export class CustomRolePopupComponent implements OnInit, OnDestroy {
+  private save$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   fm!: FormManager;
   operation: OperationTypes;
@@ -52,6 +54,13 @@ export class CustomRolePopupComponent implements OnInit {
   ngOnInit(): void {
     this.buildGroups();
     this.buildForm();
+    this._saveModel();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   private buildGroups() {
@@ -92,13 +101,20 @@ export class CustomRolePopupComponent implements OnInit {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_custom_role : this.langService.map.lbl_edit_custom_role;
   };
 
-
   saveModel(): void {
-    const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
-    customRole.setPermissionSet(this.selectedPermissions);
-    customRole.save()
-      .subscribe((customRole) => {
-        let message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$
+      .pipe(takeUntil(this.destroy$),
+        exhaustMap(() => {
+          const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
+          customRole.setPermissionSet(this.selectedPermissions);
+          return customRole.save();
+        }))
+      .subscribe(customRole => {
+        const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
         // @ts-ignore
         this.toast.success(message.change({x: customRole.getName()}));
         this.model = customRole;
