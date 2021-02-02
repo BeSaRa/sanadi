@@ -10,7 +10,7 @@ import {IGridAction} from '../../../interfaces/i-grid-action';
 export class BulkActionsComponent {
   @HostBinding('class') containerClass = 'col-8';
 
-  @Input() actionsList!: any[];
+  @Input() actionsList!: IGridAction[];
   @Input() selectedRecords!: any[];
 
   constructor(public langService: LangService) {

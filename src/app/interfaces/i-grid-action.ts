@@ -1,5 +1,7 @@
+import {ILanguageKeys} from './i-language-keys';
+
 export interface IGridAction {
-  langKey: string;
+  langKey: keyof ILanguageKeys;
   icon: string;
   callback: any;
 }
