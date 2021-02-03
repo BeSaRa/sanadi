@@ -27,6 +27,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
+  xDeleteMessage = this.langService.map.lbl_organization + ', ' + this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUser[] = [];
   actionsList: IGridAction[] = [
@@ -105,7 +106,9 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   delete(model: OrgUser, event: MouseEvent): void {
     event.preventDefault();
     // @ts-ignore
-    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()}))
+    this.dialogService.confirm(
+      this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+      this.langService.map.msg_confirm_delete_x.change({x: model.getName()}))
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
@@ -139,7 +142,9 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   deleteBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
-      this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
+      this.dialogService.confirm(
+        this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+        this.langService.map.msg_confirm_delete_selected)
         .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const ids = this.selectedRecords.map((item) => {

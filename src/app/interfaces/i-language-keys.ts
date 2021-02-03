@@ -170,4 +170,5 @@ export interface ILanguageKeys {
   btn_edit: string;
   btn_delete: string;
   validate_fields: string;
+  msg_delete_will_change_x_status_to_retired: string;
 }
