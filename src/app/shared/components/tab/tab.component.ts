@@ -13,6 +13,7 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() template!: TemplateRef<any>;
   @Input() name!: string;
   @Input() hasError: boolean = false;
+  @Input() disabled : boolean = false
 
   constructor() {
   }
