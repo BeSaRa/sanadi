@@ -16,7 +16,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
   @Input()
   set tooltip(value) {
     this._tooltip = value;
-    if (this.ref) {
+    if (this.ref && this.ref.tip) {
       this.ref.tip.querySelector('.tooltip-inner').innerText = value;
     }
   }
