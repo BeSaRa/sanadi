@@ -2,7 +2,7 @@
   <div class="row">
     <app-page-header pageTitle="menu_organization_user" [clickOnReload$]="reload$"
                      [clickOnNew$]="add$"></app-page-header>
-    <app-bulk-actions *ngIf="selectedRecords.length"
+    <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                       [selectedRecords]="selectedRecords"
                       [actionsList]="actionsList"></app-bulk-actions>
   </div>

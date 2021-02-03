@@ -1,7 +1,7 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <div class="row">
     <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$" pageTitle="menu_custom_role"></app-page-header>
-    <app-bulk-actions *ngIf="selectedRecords.length"
+    <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                       [selectedRecords]="selectedRecords"
                       [actionsList]="actionsList"></app-bulk-actions>
   </div>
