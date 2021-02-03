@@ -32,9 +32,11 @@ export class TooltipDirective implements OnInit, OnDestroy {
         return this.tooltip;
       }
     });
+    console.log(this.ref);
   }
 
   ngOnDestroy(): void {
+    console.log(this.ref);
     this.ref.tip = null;
     this.ref.dispose();
     this.ref = null;
