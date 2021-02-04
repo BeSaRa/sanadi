@@ -25,6 +25,7 @@
     "bootstrap": "^5.0.0-beta1",
     "helpful-decorators": "^2.1.0",
     "lodash": "^4.17.20",
+    "ng2-date-picker": "^11.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
