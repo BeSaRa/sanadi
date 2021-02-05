@@ -28,18 +28,17 @@ export class TooltipDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.ref = new this.toolTipModel(this.elementRef.nativeElement, {
       delay: 100,
+      trigger: 'hover',
       title: () => {
         return this.tooltip;
       }
     });
-    console.log(this.ref);
   }
 
   ngOnDestroy(): void {
-    console.log(this.ref);
-    this.ref.tip = null;
-    this.ref.dispose();
-    this.ref = null;
+    if (this.ref._popper && typeof this.ref._popper.destroy !== 'undefined') {
+      this.ref.dispose();
+    }
   }
 
 }
