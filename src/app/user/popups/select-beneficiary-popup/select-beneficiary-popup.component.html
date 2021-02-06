@@ -31,9 +31,11 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
       <td cdk-cell *cdkCellDef="let row">
         <div class="d-flex flex-row">
-          <a href="#" (click)="selectBeneficiary(row , $event)" tooltip="{{langService.map.select}}" class="icon-btn">
+          <!--<a href="#" (click)="selectBeneficiary(row , $event)" tooltip="{{langService.map.select}}" class="icon-btn">
             <i class="mdi mdi-check-circle"></i>
-          </a>
+          </a>-->
+          <button class="btn btn-primary"
+                  (click)="selectBeneficiary(row , $event)">{{langService.map.select}}</button>
         </div>
       </td>
     </ng-container>
