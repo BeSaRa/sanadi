@@ -6,6 +6,7 @@ import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
 import {Generator} from '../decorators/generator';
 import {SubventionRequestAid} from '../models/subvention-request-aid';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,10 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   _getReceiveInterceptor() {
 
+  }
+
+
+  loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
   }
 }

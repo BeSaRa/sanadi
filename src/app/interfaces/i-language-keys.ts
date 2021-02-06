@@ -1,7 +1,7 @@
 export interface ILanguageKeys {
   msg_all_required_fields_are_filled: string;
   home_phone_number: string;
-  building_name : string;
+  building_name: string;
   notes: string;
   status_date: string;
   btn_clear: string;
@@ -38,6 +38,7 @@ export interface ILanguageKeys {
   provided_aid: string;
   income_employment: string;
   request_info: string;
+  print: string;
   approved_aid_amount: string;
   aid_status: string;
   aid_type: string;

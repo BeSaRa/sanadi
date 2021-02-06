@@ -1,4 +1,12 @@
-export {isValidValue, isEmptyObject, isValidAdminResult, generateModelAndCast, hasValidLength, generateHtmlList};
+export {
+  isValidValue,
+  isEmptyObject,
+  isValidAdminResult,
+  generateModelAndCast,
+  hasValidLength,
+  generateHtmlList,
+  printBlobData
+};
 
 /**
  * @description Checks if given value is valid
@@ -75,4 +83,20 @@ function generateHtmlList(title: string, namesList: string[]): HTMLDivElement {
   div.append(titleElement);
   div.append(list);
   return div;
+}
+
+/**
+ * @description Opens the blob data in new browser tab or download if IE browser
+ * @param data:Blob
+ * @param fileName?:string
+ */
+function printBlobData(data: Blob, fileName?: string): void {
+  if (window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(data, fileName ?? 'sanadi-' + new Date().valueOf() + '.pdf');
+  } else {
+    const a: HTMLAnchorElement = document.createElement('a');
+    a.href = URL.createObjectURL(data);
+    a.target = '_blank';
+    a.click();
+  }
 }

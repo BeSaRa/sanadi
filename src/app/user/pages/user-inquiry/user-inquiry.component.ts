@@ -17,6 +17,8 @@ import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionRequestAid} from '../../../models/subvention-request-aid';
 import {SubventionRequestAidService} from '../../../services/subvention-request-aid.service';
+import {SubventionRequestService} from '../../../services/subvention-request.service';
+import {printBlobData} from '../../../helpers/utils';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -49,6 +51,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               public langService: LangService,
               private dialogService: DialogService,
               public lookupService: LookupService,
+              private subventionRequestService: SubventionRequestService,
               private subventionRequestAidService: SubventionRequestAidService,
               private beneficiaryService: BeneficiaryService) {
   }
@@ -68,14 +71,14 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildStringOperators() {
     this.stringOperators = ['equal', 'contains', 'start_with', 'end_with'].map((item, index) => {
       return (new Lookup().setValues(
-        this.langService.getArabicLocalByKey(<keyof ILanguageKeys> item),
-        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys> item),
+        this.langService.getArabicLocalByKey(<keyof ILanguageKeys>item),
+        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys>item),
         index,
         index + 1
       ));
@@ -189,5 +192,17 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
         this.beneficiary = result.beneficiary;
         this.requests = result.requests;
       });
+  }
+
+  printResult($event: MouseEvent): void {
+    this.subventionRequestService.loadByCriteriaAsBlob({
+      beneficiary: {
+        ...this.getCurrentFormValue(),
+        benPrimaryIdNumber: this.beneficiary?.benPrimaryIdNumber,
+        benPrimaryIdType: this.beneficiary?.benPrimaryIdType,
+      }
+    }).subscribe((data) => {
+      printBlobData(data, 'InquiryResult.pdf');
+    });
   }
 }
