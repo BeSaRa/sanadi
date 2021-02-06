@@ -1,4 +1,5 @@
 import {AdminResult} from './admin-result';
+import {SubventionApprovedAid} from './subvention-approved-aid';
 
 export class SubventionRequestAid {
   requestId!: number;
@@ -7,6 +8,7 @@ export class SubventionRequestAid {
   charityRefNo!: string;
   creationDate!: string;
   requestFullSerial!: string;
+  aids!: SubventionApprovedAid[];
   aidLookupInfo!: AdminResult;
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
