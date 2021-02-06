@@ -20,9 +20,9 @@ export abstract class BaseModel<D> implements INames, ModelCrudInterface<D> {
   abstract update(): Observable<D>;
 
   // shallow clone
-  clone(): D {
+  clone(override?: Partial<D>): D {
     const constructor = this.constructor;
     // @ts-ignore
-    return Object.assign(new constructor(), this);
+    return Object.assign(new constructor(), this, override);
   }
 }
