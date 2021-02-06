@@ -6,6 +6,7 @@ import {UrlService} from './url.service';
 import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import * as interceptor from '../model-interceptors/subvertion-request-aid-interceptor';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
+    FactoryService.registerService('subventionRequestAidService', this);
   }
 
   @Generator(undefined, true)
