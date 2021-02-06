@@ -72,7 +72,11 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
     let queryString = '?';
     for (const key of Object.keys(queryStringOptions)) {
       if (isValidValue(queryStringOptions[key])) {
-        queryString += key + '=' + queryStringOptions[key] + '&';
+        if (typeof queryStringOptions[key] === 'string'){
+          queryString += key + '=' + queryStringOptions[key].trim() + '&';
+        } else {
+          queryString += key + '=' + queryStringOptions[key] + '&';
+        }
       }
     }
     return queryString.substring(0, queryString.length - 1);
@@ -85,9 +89,16 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
         continue;
       }
       if (typeof data[key] === 'object') {
-        queryString.push(this._parseObjectToQueryString(data[key], myKey ? myKey + '.' + key : key));
+        queryString.push(this._parseObjectToQueryString(data[key], myKey ? (myKey + '.' + key) : key));
       } else {
-        data[key] !== undefined ? queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]) : null;
+        if (data[key] !== undefined) {
+          let value = data[key];
+          if (typeof data[key] === 'string') {
+            value = data[key].trim();
+          }
+          queryString.push(myKey ? (myKey + `.${key}=${value}`) : key + '=' + data[key]);
+        }
+        // data[key] !== undefined ? queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]) : null;
       }
     }
     return queryString.join('&');
