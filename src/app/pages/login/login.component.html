@@ -29,7 +29,7 @@
                          id="password"
                          [type]="passwordFieldType">
                 </div>
-                <button id="view-password-btn"
+                <button type="button" id="view-password-btn"
                         tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
                         tabindex="-1" (click)="togglePasswordView($event)">
                   <i class="mdi {{icon}}"></i>
