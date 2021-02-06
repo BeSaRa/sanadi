@@ -1,485 +1,552 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <app-page-header pageTitle="menu_provide_request"></app-page-header>
-  <tabs-list class="py-4">
-    <tab [template]="personalInfo" [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-    <tab [template]="income" [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-    <tab [template]="address" [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
-    <tab [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-    <tab [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
-    <tab [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-  </tabs-list>
-  <!--  personal info Tab -->
-  <ng-template #personalInfo>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.qatari_id_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <div class="input-group">
-              <input class="form-control" type="text">
-              <button class="input-group-text">
-                <i class="mdi mdi-account-search"></i>
-              </button>
+  <form autocomplete="off" [formGroup]="form" id="form">
+    <tabs-list [activeTabIndex]="2" class="py-4">
+      <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
+           [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
+      <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
+           [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
+      <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
+           [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+      <tab [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+      <tab [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+      <tab [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+    </tabs-list>
+    <!--  personal info Tab -->
+    <ng-template #personalInfo>
+      <div formGroupName="idTypes" class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="qid" class="col-sm-12 col-md-4 my-auto">{{langService.map.qatari_id_number}}</label>
+            <div class="col-md-8 col-sm-12">
+              <div class="input-group">
+                <input formControlName="qid" id="qid" (keyup)="fieldChange($event)" class="form-control" type="text">
+                <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
+                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                  <i class="mdi mdi-close-circle text-primary"></i>
+                </button>
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('qid')"
+                        (click)="getBeneficiaryData('qid')" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="gccId" class="col-sm-12 col-md-4 my-auto">{{langService.map.gcc_id_number}}</label>
+            <div class="col-md-8 col-sm-12">
+              <div class="input-group">
+                <input formControlName="gccId" id="gccId" (keyup)="fieldChange($event)" class="form-control"
+                       type="text">
+                <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
+                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                  <i class="mdi mdi-close-circle text-primary"></i></button>
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('gccId')"
+                        (click)="getBeneficiaryData('gccId')" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.gcc_id_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <div class="input-group">
-              <input class="form-control" type="text">
-              <button class="input-group-text">
-                <i class="mdi mdi-account-search"></i>
-              </button>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="visa" class="col-sm-12 col-md-4 my-auto">{{langService.map.visa_number}}</label>
+            <div class="col-md-8 col-sm-12">
+              <div class="input-group">
+                <input formControlName="visa" id="visa" (keyup)="fieldChange($event)" class="form-control" type="text">
+                <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
+                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                  <i class="mdi mdi-close-circle text-primary"></i>
+                </button>
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('visa')"
+                        (click)="getBeneficiaryData('visa')" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="passport" class="col-sm-12 col-md-4 my-auto">{{langService.map.passport_number}}</label>
+            <div class="col-md-8 col-sm-12">
+              <div class="input-group">
+                <input formControlName="passport" id="passport" (keyup)="fieldChange($event)" class="form-control"
+                       type="text">
+                <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')" (click)="clearField('passport')"
+                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                  <i class="mdi mdi-close-circle text-primary"></i>
+                </button>
+                <button tabindex="-1" type="button" (click)="getBeneficiaryData('passport')" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.visa_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <div class="input-group">
-              <input class="form-control" type="text">
-              <button class="input-group-text">
-                <i class="mdi mdi-account-search"></i>
-              </button>
+      <div formGroupName="personalTab">
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="nationality" class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_nationality}}</label>
+              <div class="col-md-8 col-sm-12">
+                <select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
+                        id="nationality" class="form-select">
+                  <option *ngFor="let option of lookup.listByCategory.Nationality"
+                          [ngValue]="option.lookupKey">{{option.getName()}}</option>
+                </select>
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.passport_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <div class="input-group">
-              <input class="form-control" type="text">
-              <button class="input-group-text">
-                <i class="mdi mdi-account-search"></i>
-              </button>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="arName" class="col-sm-12 col-md-4 my-auto">{{langService.map.arabic_name}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
+                       class="form-control" type="text">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="enName" class="col-sm-12 col-md-4 my-auto">{{langService.map.english_name}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
+                       class="form-control" type="text">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="dateOfBirth" class="col-sm-12 col-md-4 my-auto">{{langService.map.date_of_birth}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input id="dateOfBirth" [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
+                       formControlName="dateOfBirth" class="form-control" type="date">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="gender" class="col-sm-12 col-md-4 my-auto">{{langService.map.gender}}</label>
+              <div class="col-md-8 col-sm-12">
+                <select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
+                        class="form-select">
+                  <option [value]="option.lookupKey"
+                          *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
+                  <app-field-error-message
+                    [control]="fm.getFormField('personalTab.gender')"></app-field-error-message>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="mobile" class="col-sm-12 col-md-4 my-auto">{{langService.map.mobile_number}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
+                       formControlName="phoneNumber1" class="form-control" type="text">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="employer" class="col-sm-12 col-md-4 my-auto">{{langService.map.employer}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')" formControlName="employeer"
+                       class="form-control" type="text">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="educationLevel"
+                     class="col-sm-12 col-md-4 my-auto">{{langService.map.educational_level}}</label>
+              <div class="col-md-8 col-sm-12">
+                <select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
+                        id="educationLevel" class="form-select">
+                  <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
+                          [value]="option.lookupKey">{{option.getName()}}</option>
+                </select>
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="sponsorsCount" class="col-sm-12 col-md-4 my-auto">{{langService.map.sponsors_count}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input id="sponsorsCount" formControlName="benDependentsCount" class="form-control" type="number">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="maritalStatus" class="col-sm-12 col-md-4 my-auto">{{langService.map.marital_status}}</label>
+              <div class="col-md-8 col-sm-12">
+                <select id="maritalStatus" formControlName="maritalStatus" class="form-select">
+                  <option *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
+                          [value]="option.lookupKey">{{option.getName()}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="false" class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label class="col-sm-12 col-md-4 my-auto">{{langService.map.family_member_count}}</label>
+              <div class="col-md-8 col-sm-12">
+                <input class="form-control" type="text">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row mb-4">
+              <label for="occupationStatus"
+                     class="col-sm-12 col-md-4 my-auto">{{langService.map.beneficiary_category}}</label>
+              <div class="col-md-8 col-sm-12">
+                <select id="occupationStatus" formControlName="occuptionStatus" class="form-select">
+                  <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
+                          [value]="option.lookupKey">{{option.getName()}}</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </ng-template>
+    <!-- income Tab  -->
+    <ng-template formGroupName="incomeTab" #income>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="employmentStatus"
+                   class="col-sm-12 col-md-4 my-auto">{{langService.map.employment_status}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select formControlName="occuptionStatus" id="employmentStatus"
+                      class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="occupation" class="col-sm-12 col-md-4 my-auto">{{langService.map.occupation}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="occupation" formControlName="occuption" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="workplace" class="col-sm-12 col-md-4 my-auto">{{langService.map.workplace}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input formControlName="employeerAddress" id="workplace" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="monthlyIncome" class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_income}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="monthlyIncome" formControlName="benIncome" class="form-control" type="number">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="extraIncome" class="col-sm-12 col-md-4 my-auto">{{langService.map.extra_income}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input formControlName="benExtraIncome" class="form-control" id="extraIncome" type="number">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="extraIncomeSource"
+                   class="col-sm-12 col-md-4 my-auto">{{langService.map.extra_income_source}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input formControlName="benExtraIncomeSource" id="extraIncomeSource" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.total_debts}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input disabled class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_installment}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input disabled class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="monthlyRent" class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_rent}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="monthlyRent" formControlName="benHouseRent" class="form-control" type="number">
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <!-- address Tab  -->
+    <ng-template formGroupName="addressTab" #address>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="city" class="col-sm-12 col-md-4 my-auto">{{langService.map.city}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select id="city" formControlName="residenceCountry" class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.Countries"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="zone" class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_zone}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="zone" formControlName="zone" class="form-control" type="number">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="street" class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_street}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="street" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="buildingName" class="col-sm-12 col-md-4 my-auto">{{langService.map.building_name}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="buildingName" formControlName="buildingName" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="unit" class="col-sm-12 col-md-4 my-auto">{{langService.map.unit}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="unit" formControlName="unit" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="homePhoneNumber"
+                   class="col-sm-12 col-md-4 my-auto">{{langService.map.home_phone_number}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input id="homePhoneNumber" formControlName="unit" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label for="address" class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_address}}</label>
+            <div class="col-md-10 col-sm-12">
+              <textarea id="address" rows="5" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <!-- request Info Tab-->
+    <ng-template #requestInfo>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.reason_of_request}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.SubRequestType"
+                        value="">{{option.getName()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.request_date}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="date">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-2 my-auto">{{langService.map.request_summary}}</label>
+            <div class="col-md-10 col-sm-12">
+              <textarea rows="5" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <!-- Aid Tab-->
+    <ng-template #providedAid>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.approval_date}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="date">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.aid_type}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.AidType">{{option.getName()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_periodicity}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.months_count}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="number">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_date}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="date">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.amount}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_description}}</label>
+            <div class="col-md-10 col-sm-12">
+              <textarea rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-row align-items-center justify-content-center">
+        <button class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
+        <button class="btn btn-secondary m-2">{{langService.map.btn_clear}}</button>
+      </div>
+    </ng-template>
+    <!-- Request Status -->
+    <ng-template #requestStatus>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.status_date}}</label>
+            <div class="col-md-8 col-sm-12">
+              <input class="form-control" type="date">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-4 my-auto">{{langService.map.request_status}}</label>
+            <div class="col-md-8 col-sm-12">
+              <select class="form-select">
+                <option value="">Male</option>
+                <option value="">Female</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row mb-4">
+            <label class="col-sm-12 col-md-2 my-auto">{{langService.map.notes}}</label>
+            <div class="col-md-10 col-sm-12">
+              <textarea rows="3" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <hr/>
+    <div class="d-flex flex-row justify-content-center">
+      <button (click)="saveModel()" class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
+      <button class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
     </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label for="nationality" class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_nationality}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select id="nationality" class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.Nationality"
-                      [value]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.arabic_name}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.english_name}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.date_of_birth}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="date">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.gender}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option [value]="option.lookupKey"
-                      *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.mobile_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.employer}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.sponsors_count}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.family_member_count}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label for="educationLevel" class="col-sm-12 col-md-4 my-auto">{{langService.map.educational_level}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select id="educationLevel" class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
-                      value="">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.marital_status}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.beneficiary_category}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
-                      value="option.lookupKey">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- income Tab  -->
-  <ng-template #income>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.employment_status}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
-                      [value]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.workplace}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.occupation}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_income}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.extra_income}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.extra_income_source}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.total_debts}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_installment}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_rent}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- address Tab  -->
-  <ng-template #address>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.city}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.Countries"
-                      [value]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_zone}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_street}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.building_number}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.unit}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_address}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea rows="5" class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- request Info Tab-->
-  <ng-template #requestInfo>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.reason_of_request}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.SubRequestType" value="">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.request_date}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="date">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-2 my-auto">{{langService.map.request_summary}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea rows="5" class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <!-- Aid Tab-->
-  <ng-template #providedAid>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.approval_date}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="date">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.aid_type}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.AidType">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_periodicity}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.months_count}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_date}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="date">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.amount}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="text">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_description}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea rows="3" class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <button class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
-      <button class="btn btn-secondary m-2">{{langService.map.btn_clear}}</button>
-    </div>
-  </ng-template>
-  <!-- Request Status -->
-  <ng-template #requestStatus>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.status_date}}</label>
-          <div class="col-md-8 col-sm-12">
-            <input class="form-control" type="date">
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-4 my-auto">{{langService.map.request_status}}</label>
-          <div class="col-md-8 col-sm-12">
-            <select class="form-select">
-              <option value="">Male</option>
-              <option value="">Female</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row mb-4">
-          <label class="col-sm-12 col-md-2 my-auto">{{langService.map.notes}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea rows="3" class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-  <hr/>
-  <div class="d-flex flex-row justify-content-center">
-    <button (click)="saveModel()" class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
-    <button class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-  </div>
+  </form>
 </div>
 
 
