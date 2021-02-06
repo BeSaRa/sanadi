@@ -23,6 +23,7 @@ import {BulkActionsComponent} from './components/bulk-actions/bulk-actions.compo
 import {TooltipDirective} from './directives/tooltip.directive';
 import {TabsListComponent} from './components/tabs/tabs-list.component';
 import { TabComponent } from './components/tab/tab.component';
+import {GridSearchComponent} from './components/grid-search/grid-search.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { TabComponent } from './components/tab/tab.component';
     BulkActionsComponent,
     TooltipDirective,
     TabsListComponent,
-    TabComponent
+    TabComponent,
+    GridSearchComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +77,8 @@ import { TabComponent } from './components/tab/tab.component';
     BulkActionsComponent,
     TooltipDirective,
     TabsListComponent,
-    TabComponent
+    TabComponent,
+    GridSearchComponent
   ]
 })
 export class SharedModule {

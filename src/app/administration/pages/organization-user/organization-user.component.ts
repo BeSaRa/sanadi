@@ -11,8 +11,9 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {cloneDeep as _deepClone} from 'lodash';
-import {generateHtmlList} from '../../../helpers/utils';
+import {filterList, generateHtmlList} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-organization-user',
@@ -22,12 +23,14 @@ import {IGridAction} from '../../../interfaces/i-grid-action';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
 
   orgUsers: OrgUser[] = [];
+  orgUsersClone: OrgUser[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
-  xDeleteMessage = this.langService.map.lbl_organization + ', ' + this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
+  xDeleteMessage = this.langService.map.lbl_organization + ', ' +
+    this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUser[] = [];
   actionsList: IGridAction[] = [
@@ -39,6 +42,22 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       }
     }
   ];
+
+  bindingKeys: IKeyValue = {
+    arName: 'arName',
+    enName: 'enName',
+    empNum: 'empNum',
+    organization: (record: any): string => {
+      return 'orgUnitInfo.' + this.langService.map.lang + 'Name';
+    },
+    branch: (record: any): string => {
+      return 'orgBranchInfo.' + this.langService.map.lang + 'Name';
+    },
+    status: (record: any): string => {
+      return '';
+    },
+    statusDateModified: 'statusDateModified'
+  };
 
   private _addSelected(record: OrgUser): void {
     this.selectedRecords.push(_deepClone(record));
@@ -177,6 +196,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       })
     ).subscribe((orgUsers) => {
       this.orgUsers = orgUsers;
+      this.orgUsersClone = orgUsers.slice();
       this.selectedRecords = [];
     });
   }
@@ -194,4 +214,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.addSubscription?.unsubscribe();
   }
 
+  search(searchText: string): void {
+    this.orgUsers = filterList(searchText, this.orgUsersClone, this.bindingKeys);
+  }
 }

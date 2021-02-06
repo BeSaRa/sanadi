@@ -5,7 +5,9 @@ export {
   generateModelAndCast,
   hasValidLength,
   generateHtmlList,
-  printBlobData
+  printBlobData,
+  filterList,
+  getPropertyValue
 };
 
 /**
@@ -99,4 +101,66 @@ function printBlobData(data: Blob, fileName?: string): void {
     a.target = '_blank';
     a.click();
   }
+}
+
+function _getPropertyValue(record: any, property: string): any {
+  if (!record) {
+    return null;
+  }
+  if (property.indexOf('.') > -1) {
+    const arr = property.split('.');
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < arr.length; i++) {
+      const prop = arr.shift();
+      // @ts-ignore
+      return getPropertyValue(record[prop], arr.join('.'));
+    }
+  } else {
+    if (typeof record === 'string' || typeof record === 'number') {
+      return record;
+    }
+    return record[property];
+  }
+}
+
+function getPropertyValue(record: any, property: string): any {
+  const recordCopy = {...record};
+  return _getPropertyValue(recordCopy, property);
+}
+
+function filterList(searchText: string, records: any[], searchKeys: any): any[] {
+  if (!searchText) {
+    return records;
+  }
+  let propertyToSearch: any = null;
+  let propertyValue: any = null;
+  let result: boolean;
+  return records.filter((item) => {
+    for (const searchKey in searchKeys) {
+      if (searchKeys.hasOwnProperty(searchKey)) {
+        propertyToSearch = searchKeys[searchKey];
+
+        if (!propertyToSearch) {
+          result = false;
+          break;
+        }
+
+        if (typeof propertyToSearch === 'function') {
+          propertyToSearch = propertyToSearch(item);
+        }
+
+        // if property to search has value(property name defined), then search, otherwise, skip search
+        if (propertyToSearch) {
+          propertyValue = getPropertyValue(item, propertyToSearch);
+          if (propertyValue && propertyValue.toString().toLowerCase().indexOf(searchText.slice().toLowerCase().trim()) > -1) {
+            result = true;
+            break;
+          }
+          result = false;
+        }
+        result = false;
+      }
+    }
+    return result;
+  });
 }

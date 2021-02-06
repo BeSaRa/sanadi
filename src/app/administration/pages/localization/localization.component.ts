@@ -10,7 +10,8 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
-import {generateHtmlList} from '../../../helpers/utils';
+import {filterList, generateHtmlList} from '../../../helpers/utils';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-localization',
@@ -19,11 +20,18 @@ import {generateHtmlList} from '../../../helpers/utils';
 })
 export class LocalizationComponent implements OnInit, OnDestroy, PageComponentInterface<Localization> {
   localization: Localization[] = [];
+  localizationsClone: Localization[] = [];
   displayedColumns: string[] = ['rowSelection', 'localizationKey', 'arName', 'enName', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   add$ = new Subject<any>();
+
+  bindingKeys: IKeyValue = {
+    localizationKey: 'localizationKey',
+    arName: 'arName',
+    enName: 'enName'
+  };
 
   selectedRecords: Localization[] = [];
   actionsList: IGridAction[] = [
@@ -99,6 +107,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
       })
     ).subscribe((locals) => {
       this.localization = locals;
+      this.localizationsClone = locals.slice();
       this.selectedRecords = [];
     });
   }
@@ -180,5 +189,9 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
         }
       });
     }
+  }
+
+  search(searchText: string): void {
+    this.localization = filterList(searchText, this.localizationsClone, this.bindingKeys);
   }
 }

@@ -4,6 +4,7 @@
     <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                       [selectedRecords]="selectedRecords"
                       [actionsList]="actionsList"></app-bulk-actions>
+    <app-grid-search (searchTextEvent)="search($event)"></app-grid-search>
   </div>
   <div class="row pt-3">
     <div class="col-12">
