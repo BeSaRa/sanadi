@@ -4,6 +4,7 @@ import {BeneficiaryService} from '../services/beneficiary.service';
 import {Observable} from 'rxjs';
 import {AdminResult} from './admin-result';
 import {LangService} from '../services/lang.service';
+import {CustomValidators} from '../validators/custom-validators';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -48,6 +49,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
+  occuptionStatus!: number;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -69,6 +71,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   orgUserInfo!: AdminResult;
   residenceCountryInfo!: AdminResult;
   residenceStatusInfo!: AdminResult;
+  benNationalityInfo!: AdminResult;
 
   constructor() {
     super();
@@ -77,18 +80,100 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   }
 
   create(): Observable<Beneficiary> {
-    throw new Error('Method not implemented.');
+    return this.service.create(this);
   }
 
   delete(): Observable<boolean> {
-    throw new Error('Method not implemented.');
+    return this.service.delete(this.id);
   }
 
   save(): Observable<Beneficiary> {
-    throw new Error('Method not implemented.');
+    return this.id ? this.update() : this.create();
   }
 
   update(): Observable<Beneficiary> {
-    throw new Error('Method not implemented.');
+    return this.service.update(this);
+  }
+
+  getPersonalFields(control: boolean = false): any {
+    const {
+      benNationality,
+      dateOfBirth,
+      gender,
+      enName,
+      arName,
+      benPrimaryIdNumber,
+      benPrimaryIdType,
+      phoneNumber1,
+      employeer,
+      benDependentsCount,
+      educationLevel,
+      maritalStatus,
+      occuptionStatus,
+      benSecIdNumber,
+      benSecIdType
+    } = this;
+
+    return {
+      benNationality: control ? [benNationality, CustomValidators.required] : benNationality,
+      dateOfBirth: control ? [dateOfBirth, CustomValidators.required] : dateOfBirth,
+      gender: control ? [gender, CustomValidators.required] : gender,
+      enName: control ? [arName, CustomValidators.required] : enName,
+      arName: control ? [arName, CustomValidators.required] : arName,
+      benPrimaryIdNumber: control ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
+      benPrimaryIdType: control ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
+      phoneNumber1: control ? [phoneNumber1, CustomValidators.required] : phoneNumber1,
+      employeer: control ? [employeer, CustomValidators.required] : employeer,
+      benDependentsCount: control ? [benDependentsCount, CustomValidators.required] : benDependentsCount,
+      educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
+      maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
+      occuptionStatus: control ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
+      benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
+      benSecIdType: control ? [benSecIdType] : benSecIdType
+    };
+  }
+
+  getEmployerFields(controls: boolean): any {
+    const {
+      occuptionStatus,
+      occuption,
+      employeerAddress,
+      benIncome,
+      benExtraIncome,
+      benExtraIncomeSource,
+      benHouseRent
+    } = this;
+
+    return {
+      occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
+      occuption: controls ? [occuption] : occuption,
+      employeerAddress: controls ? [employeerAddress] : employeerAddress,
+      benIncome: controls ? [benIncome] : benIncome,
+      benExtraIncome: controls ? [benExtraIncome] : benExtraIncome,
+      benExtraIncomeSource: controls ? [benExtraIncomeSource] : benExtraIncomeSource,
+      benHouseRent: controls ? [benHouseRent] : benHouseRent
+    };
+  }
+
+  getAddressFields(control: boolean): any {
+    const {
+      residenceStatus,
+      residenceCountry,
+      unit,
+      buildingName,
+      zone,
+      addressStatus,
+      homePhoneNumber
+    } = this;
+
+    return {
+      residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
+      unit: control ? [unit] : unit,
+      buildingName: control ? [buildingName] : buildingName,
+      zone: control ? [zone] : zone,
+      // addressStatus: control ? [addressStatus] : addressStatus,
+      // residenceStatus: control ? [residenceStatus , CustomValidators.required] : residenceStatus,
+      homePhoneNumber: control ? [homePhoneNumber] : homePhoneNumber,
+    };
   }
 }

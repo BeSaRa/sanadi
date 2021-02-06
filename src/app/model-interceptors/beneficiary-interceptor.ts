@@ -1,7 +1,9 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
+import {formatDate} from '@angular/common';
 
 function send(model: any): any {
+  delete model.langService;
   delete model.service;
   delete model.OccuptionStatusInfo;
   delete model.addressStatusInfo;
@@ -19,6 +21,8 @@ function send(model: any): any {
   delete model.orgUserInfo;
   delete model.residenceCountryInfo;
   delete model.residenceStatusInfo;
+  delete model.benNationalityInfo;
+  model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
   return model;
 }
 
@@ -39,6 +43,7 @@ function receive(model: Beneficiary): any {
   model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
   model.residenceCountryInfo = AdminResult.createInstance(model.residenceCountryInfo);
   model.residenceStatusInfo = AdminResult.createInstance(model.residenceStatusInfo);
+  model.dateOfBirth = formatDate(new Date(model.dateOfBirth), 'yyyy-MM-dd', 'en-US');
   return model;
 }
 
