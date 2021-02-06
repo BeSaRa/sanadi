@@ -16,7 +16,7 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
-    FactoryService.registerService('subventionRequestAidService', this);
+    FactoryService.registerService('SubventionRequestAidService', this);
   }
 
   @Generator(undefined, true)
