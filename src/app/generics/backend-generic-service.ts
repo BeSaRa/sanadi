@@ -85,9 +85,9 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
         continue;
       }
       if (typeof data[key] === 'object') {
-        queryString.push(this._parseObjectToQueryString(data[key], key));
+        queryString.push(this._parseObjectToQueryString(data[key], myKey ? myKey + '.' + key : key));
       } else {
-        queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]);
+        data[key] !== undefined ? queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]) : null;
       }
     }
     return queryString.join('&');
