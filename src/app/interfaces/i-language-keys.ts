@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  msg_all_required_fields_are_filled: string;
+  home_phone_number: string;
+  building_name : string;
   notes: string;
   status_date: string;
   btn_clear: string;
