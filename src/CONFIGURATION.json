@@ -13,5 +13,6 @@
     "http",
     "https"
   ],
+  "UNEMPLOYED_LOOKUP_KEY": 4,
   "DEFAULT_DATE_FORMAT": "medium"
 }

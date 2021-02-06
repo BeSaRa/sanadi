@@ -7,4 +7,5 @@ export interface IAppConfig {
   TOKEN_STORE_KEY: string;
   EXTERNAL_PROTOCOLS: string[];
   DEFAULT_DATE_FORMAT: string;
+  UNEMPLOYED_LOOKUP_KEY: number;
 }
