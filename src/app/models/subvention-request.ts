@@ -3,6 +3,7 @@ import {BaseModel} from './base-model';
 import {SubventionRequestService} from '../services/subvention-request.service';
 import {FactoryService} from '../services/factory.service';
 import {SubventionRequestAidService} from '../services/subvention-request-aid.service';
+import {CustomValidators} from '../validators/custom-validators';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -18,7 +19,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   creationDate!: string;
   approvalIndicator!: number;
   status!: number;
-  statusDateModified!: number;
+  statusDateModified!: string;
   orgBranchId!: number;
   orgId!: number;
   benId!: number;
@@ -33,18 +34,35 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   }
 
   create(): Observable<SubventionRequest> {
-    throw new Error('Method not implemented.');
+    return this.service.create(this);
   }
 
   delete(): Observable<boolean> {
-    throw new Error('Method not implemented.');
+    return this.service.delete(this.id);
   }
 
   save(): Observable<SubventionRequest> {
-    throw new Error('Method not implemented.');
+    return this.id ? this.update() : this.create();
   }
 
   update(): Observable<SubventionRequest> {
-    throw new Error('Method not implemented.');
+    return this.service.update(this);
+  }
+
+  getInfoFields(control: boolean = false): any {
+    const {requestType, creationDate} = this;
+    return {
+      requestType: control ? [requestType, CustomValidators.required] : requestType,
+      creationDate: control ? [creationDate, CustomValidators.required] : creationDate
+    };
+  }
+
+  getStatusFields(control: boolean = false): any {
+    const {status, statusDateModified, requestSummary} = this;
+    return {
+      status: control ? [status, CustomValidators.required] : status,
+      statusDateModified: control ? [statusDateModified] : statusDateModified,
+      requestSummary: control ? [requestSummary] : requestSummary
+    };
   }
 }

@@ -50,6 +50,10 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   orgId!: number;
   orgUserId!: number;
   occuptionStatus!: number;
+  streetName!: string;
+  addressDescription!: string;
+  benNotes!: string;
+  benCategory!: number;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -109,9 +113,10 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benDependentsCount,
       educationLevel,
       maritalStatus,
-      occuptionStatus,
       benSecIdNumber,
-      benSecIdType
+      benSecIdType,
+      benNotes,
+      benCategory
     } = this;
 
     return {
@@ -127,13 +132,14 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benDependentsCount: control ? [benDependentsCount, CustomValidators.required] : benDependentsCount,
       educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
       maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
-      occuptionStatus: control ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
       benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
-      benSecIdType: control ? [benSecIdType] : benSecIdType
+      benSecIdType: control ? [benSecIdType] : benSecIdType,
+      benNotes: control ? [benNotes] : benNotes,
+      benCategory: control ? [benCategory, CustomValidators.required] : benCategory
     };
   }
 
-  getEmployerFields(controls: boolean): any {
+  getEmployerFields(controls: boolean = false): any {
     const {
       occuptionStatus,
       occuption,
@@ -155,7 +161,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
     };
   }
 
-  getAddressFields(control: boolean): any {
+  getAddressFields(control: boolean = false): any {
     const {
       residenceStatus,
       residenceCountry,
@@ -163,17 +169,21 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       buildingName,
       zone,
       addressStatus,
+      addressDescription,
+      streetName,
       homePhoneNumber
     } = this;
 
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
+      streetName: control ? [streetName, CustomValidators.required] : streetName,
+      buildingName: control ? [buildingName, CustomValidators.required] : buildingName,
+      zone: control ? [zone, CustomValidators.required] : zone,
       unit: control ? [unit] : unit,
-      buildingName: control ? [buildingName] : buildingName,
-      zone: control ? [zone] : zone,
-      // addressStatus: control ? [addressStatus] : addressStatus,
-      // residenceStatus: control ? [residenceStatus , CustomValidators.required] : residenceStatus,
       homePhoneNumber: control ? [homePhoneNumber] : homePhoneNumber,
+      addressDescription: control ? [addressDescription] : addressDescription,
+      // residenceStatus: control ? [residenceStatus , CustomValidators.required] : residenceStatus,
+      // addressStatus: control ? [addressStatus] : addressStatus,
     };
   }
 }

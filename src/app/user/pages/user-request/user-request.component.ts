@@ -5,12 +5,15 @@ import {DialogService} from '../../../services/dialog.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {Subject} from 'rxjs';
-import {distinctUntilChanged, filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {distinctUntilChanged, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {ToastService} from '../../../services/toast.service';
+import {SubventionRequest} from '../../../models/subvention-request';
+import {SubventionRequestService} from '../../../services/subvention-request.service';
+import {SubventionAid} from '../../../models/subvention-aid';
 
 @Component({
   selector: 'app-user-request',
@@ -19,12 +22,19 @@ import {ToastService} from '../../../services/toast.service';
 })
 export class UserRequestComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
+  private save$: Subject<any> = new Subject<any>();
+  private saveAid$: Subject<any> = new Subject<any>();
   private idMap: { [index: string]: number } = {
     qid: 1,
     gccId: 3,
     visa: 6,
     passport: 5,
   };
+  private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
+  private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
+  private currentBeneficiary?: Beneficiary;
+  currentRequest?: SubventionRequest;
+  aid: SubventionAid[] = [];
   fm!: FormManager;
   form!: FormGroup;
   idNumbersChanges$: Subject<{ field: string, value: string }> = new Subject<{ field: string, value: string }>();
@@ -34,9 +44,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     passport: false,
     gccId: false
   };
-  private selectedBeneficiary?: Beneficiary;
-  private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
-  private beneficiaryLoaded$: Subject<Beneficiary> = new Subject<Beneficiary>();
+  displayAidForm: boolean = true;
+  // static value for now till we finish the authentication
+  currentUser = {orgBranchId: 1, orgId: 1, orgUserId: 1};
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -44,13 +54,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private configurationService: ConfigurationService,
               private toastService: ToastService,
+              private subventionRequestService: SubventionRequestService,
               private fb: FormBuilder) {
 
   }
 
 
-  private buildForm(beneficiary ?: Beneficiary) {
+  private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
     beneficiary = beneficiary ? beneficiary : new Beneficiary();
+    request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       idTypes: this.fb.group({
         passport: [],
@@ -61,9 +73,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
       incomeTab: this.fb.group(beneficiary.getEmployerFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
-      requestInfoTab: this.fb.group({}),
-      aidTab: this.fb.group({}),
-      requestStatusTab: this.fb.group({})
+      requestInfoTab: this.fb.group(request.getInfoFields(true)),
+      requestStatusTab: this.fb.group(request.getStatusFields(true)),
+      aidTab: this.fb.group((new SubventionAid()).getAidFields(true)),
     });
     this.fm = new FormManager(this.form, this.langService);
   }
@@ -121,45 +133,203 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((beneficiary) => {
         if (beneficiary instanceof Beneficiary) {
-          this.selectedBeneficiary = beneficiary;
+          this.currentBeneficiary = beneficiary;
+          this.updateIdsForms('passport', beneficiary.benSecIdNumber);
+          for (const key in this.idMap) {
+            if (this.idMap[key] === beneficiary.benPrimaryIdType) {
+              this.updateIdsForms('passport', beneficiary.benSecIdNumber);
+              this.updateIdsForms(key, beneficiary.benPrimaryIdNumber);
+            }
+          }
         } else {
-          this.selectedBeneficiary = undefined;
+          this.currentBeneficiary = undefined;
         }
-        this.updateBeneficiaryFrom(this.selectedBeneficiary);
+        this.updateBeneficiaryFrom(this.currentBeneficiary);
       });
   }
 
   private updateBeneficiaryFrom(selectedBeneficiary: undefined | Beneficiary) {
+    const personal = this.fm.getFormField('personalTab');
+    const income = this.fm.getFormField('incomeTab');
+    const address = this.fm.getFormField('addressTab');
+
     if (!selectedBeneficiary) {
-      this.fm.getFormField('personalTab')?.reset();
+      personal?.reset();
+      income?.reset();
+      address?.reset();
     } else {
-      this.fm.getFormField('personalTab')?.patchValue(selectedBeneficiary.getPersonalFields());
+      personal?.patchValue(selectedBeneficiary.getPersonalFields());
+      income?.patchValue(selectedBeneficiary.getEmployerFields());
+      address?.patchValue(selectedBeneficiary.getAddressFields());
     }
 
   }
 
+  private updateRequestForm(request: undefined | SubventionRequest) {
+    const requestInfo = this.fm.getFormField('requestInfoTab');
+    const requestStatus = this.fm.getFormField('requestStatusTab');
+    if (!request) {
+      requestInfo?.reset();
+      requestStatus?.reset();
+    } else {
+      requestStatus?.patchValue(request.getStatusFields());
+      requestInfo?.patchValue(request.getInfoFields());
+    }
+  }
 
-  private listenToBeneficiaryLoaded() {
-    this.beneficiaryLoaded$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((beneficiary) => {
-        for (const key in this.idMap) {
-          if (this.idMap[key] === beneficiary.benPrimaryIdType) {
-            this.updateIdsForms(key, beneficiary.benPrimaryIdNumber);
-            this.updateIdsForms('passport', beneficiary.benSecIdNumber);
-            break;
-          }
-        }
+  private updateIdsForms(key: string, value: string) {
+    const field = `idTypes.${key}`, control = this.fm.getFormField(field);
+    if (key !== 'passport') {
+      this.disableOtherIdFieldsExcept(key);
+    }
+    control?.setValue(value);
+    control?.updateValueAndValidity();
+  }
+
+  private updateSecondaryIdNumber(field: { field: string, value: string }): void {
+    this.fm.getFormField('personalTab.benSecIdNumber')?.setValue(field.value);
+    this.fm.getFormField('personalTab.benSecIdType')?.setValue(field.value.length ? this.idMap[field.field] : null);
+  }
+
+  private listenToOccupationStatus() {
+    const requiredList = ['occuption', 'employeerAddress', 'benIncome'];
+    this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        map(value => {
+          return value !== this.configurationService.CONFIG.UNEMPLOYED_LOOKUP_KEY;
+        }),
+        distinctUntilChanged()
+      )
+      .subscribe((required) => {
+        requiredList.forEach(field => {
+          const control = this.fm.getFormField(`incomeTab.${field}`);
+          control?.setValidators(required ? CustomValidators.required : null);
+          control?.updateValueAndValidity();
+        });
       });
+  }
+
+  private listenToExtraIncome() {
+    this.fm.getFormField('incomeTab.benExtraIncome')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      map(value => Number(value))
+    ).subscribe((value) => {
+      const control = this.fm.getFormField('incomeTab.benExtraIncomeSource');
+      value ? control?.setValidators(CustomValidators.required) : null;
+      control?.updateValueAndValidity();
+    });
+  }
+
+  private listenToSaveModel() {
+    // map formStatus
+    const formStatus$ = this.save$
+      .pipe(
+        takeUntil(this.destroy$),
+        map(() => this.fm.getForm()?.valid)
+      );
+    // filter invalidForm stream
+    const invalidForm$ = formStatus$.pipe(
+      takeUntil(this.destroy$),
+      filter(value => {
+        return value === false;
+      })
+    );
+    // filter valid form stream
+    const validForm$ = formStatus$.pipe(
+      takeUntil(this.destroy$),
+      filter(value => {
+        return value === true;
+      })
+    );
+    // prepare the beneficiary/request Models.
+    const requestWithBeneficiary$ = validForm$.pipe(
+      takeUntil(this.destroy$),
+      map(() => {
+        return {
+          beneficiary: this.prepareBeneficiary(),
+          request: this.prepareRequest(),
+        };
+      })
+    );
+    // save beneficiary with request
+    requestWithBeneficiary$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((value) => {
+        return value.beneficiary.save()
+          .pipe(
+            tap((beneficiary) => {
+              this.currentBeneficiary = beneficiary.clone();
+            }),
+            switchMap((bene) => {
+              value.request.benId = bene.id;
+              return value.request.save().pipe(tap((request) => {
+                this.currentRequest = request.clone();
+              }));
+            })
+          );
+      }))
+      .subscribe(() => {
+        this.toastService.success(this.langService.map.msg_request_has_been_added_successfully);
+      });
+    // if we have invalid forms display dialog to tell the user that is something wrong happened.
+    invalidForm$.subscribe(() => {
+      this.checkFormFieldsCallback();
+    });
+  }
+
+  private checkFormFieldsCallback() {
+    this.dialogService.error(this.langService.map.msg_all_required_fields_are_filled).onAfterClose$
+      .pipe(take(1))
+      .subscribe(() => {
+        this.fm.displayFormValidity();
+      });
+  }
+
+  private prepareBeneficiary(): Beneficiary {
+    const personal = this.fm.getFormField('personalTab')?.value;
+    const income = this.fm.getFormField('incomeTab')?.value;
+    const address = this.fm.getFormField('addressTab')?.value;
+    return this.currentBeneficiary = (new Beneficiary())
+      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...this.currentUser});
+  }
+
+  private prepareRequest(): SubventionRequest {
+    const request = {
+      ...this.currentRequest,
+      ...this.fm.getFormField('requestInfoTab')?.value,
+      ...this.fm.getFormField('requestStatusTab')?.value,
+      ...this.currentUser,
+      requestChannel: 1 // SANADI PORTAL
+    };
+    return this.currentRequest = (new SubventionRequest()).clone(request);
+  }
+
+  get pageTitle(): string {
+    return this.currentRequest?.id ?
+      (this.langService.map.request_number + '' + this.currentRequest.requestFullSerial) :
+      this.langService.map.menu_provide_request;
   }
 
   ngOnInit(): void {
     this.buildForm();
     this.listenToIdNumberChange();
     this.listenToBeneficiaryChange();
-    this.listenToBeneficiaryLoaded();
+    this.listenToRequestChange();
     this.listenToOccupationStatus();
     this.listenToExtraIncome();
+    this.listenToSaveModel();
+    this.listenToSaveAid();
+
+
+    this.subventionRequestService.load().subscribe((list) => {
+      this.requestChanged$.next(list[list.length - 1]);
+    });
+
+    this.beneficiaryService.load().subscribe((list) => {
+      this.beneficiaryChanged$.next(list[list.length - 1]);
+    });
   }
 
   ngOnDestroy() {
@@ -169,33 +339,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   saveModel() {
-    if (this.fm.getForm()?.invalid) {
-      this.dialogService.error(this.langService.map.msg_all_required_fields_are_filled).onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.fm.displayFormValidity();
-        });
-      return;
-    }
-    const personal = this.fm.getFormField('personalTab')?.value;
-    const income = this.fm.getFormField('incomeTab')?.value;
-    const address = this.fm.getFormField('addressTab')?.value;
-
-    if (this.selectedBeneficiary) {
-      this.selectedBeneficiary = (new Beneficiary()).clone({...this.selectedBeneficiary, ...personal, ...income, ...address});
-
-      this.selectedBeneficiary.save().subscribe(() => {
-        this.toastService.success('!HI ALL EVERY Thing Updated Successfully !');
-      });
-    }
-
+    this.save$.next(null);
   }
 
   getBeneficiaryData(fieldName: string) {
     const primaryNumber = this.fm.getFormField('personalTab.benPrimaryIdNumber')?.value;
     const secondary = this.fm.getFormField('personalTab.benSecIdNumber')?.value;
-
-    console.log(secondary ? secondary : undefined, secondary ? this.idMap['passport'] : undefined);
 
     this.beneficiaryService
       .loadByCriteria({
@@ -238,48 +387,49 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateIdsForms(key: string, value: string) {
-    const field = `idTypes.${key}`;
-    if (key !== 'passport') {
-      this.disableOtherIdFieldsExcept(key);
-    }
-    this.fm.getFormField(field)?.setValue(value);
-    this.fm.getFormField(field)?.updateValueAndValidity();
+  saveAid() {
+    this.saveAid$.next();
   }
 
-  private updateSecondaryIdNumber(field: { field: string, value: string }): void {
-    this.fm.getFormField('personalTab.benSecIdNumber')?.setValue(field.value);
-    this.fm.getFormField('personalTab.benSecIdType')?.setValue(field.value.length ? this.idMap[field.field] : null);
+  cancelAid() {
+    this.resetAid();
+    this.displayAidForm = false;
   }
 
-  private listenToOccupationStatus() {
-    const requiredList = ['occuption', 'employeerAddress', 'benIncome'];
-    this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
-      .pipe(
-        takeUntil(this.destroy$),
-        map(value => {
-          return value !== this.configurationService.CONFIG.UNEMPLOYED_LOOKUP_KEY;
-        }),
-        distinctUntilChanged()
-      )
-      .subscribe((required) => {
-        requiredList.forEach(field => {
-          const control = this.fm.getFormField(`incomeTab.${field}`);
-          control?.setValidators(required ? CustomValidators.required : null);
-          control?.updateValueAndValidity();
+  private resetAid() {
+    this.fm.getFormField('aidTab.aidForm')?.reset();
+  }
+
+  private listenToSaveAid() {
+    const formStatus$ = this.saveAid$.pipe(map(() => {
+      return this.fm.getFormField('aidTab')?.valid;
+    }));
+
+    const validForm$ = formStatus$.pipe(filter(value => !!value));
+    const invalidForm$ = formStatus$.pipe(filter(value => !value));
+
+    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.dialogService
+        .error(this.langService.map.msg_all_required_fields_are_filled)
+        .onAfterClose$
+        .pipe(take(1))
+        .subscribe(() => {
+          this.fm.getFormField('aidTab')?.markAllAsTouched();
         });
-      });
+    });
+
+    validForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.toastService.success('!! FROM FIELD GOOD YOU CAN SUBMIT IT !!');
+    });
+
   }
 
-  private listenToExtraIncome() {
-    this.fm.getFormField('incomeTab.benExtraIncome')?.valueChanges.pipe(
-      takeUntil(this.destroy$),
-      distinctUntilChanged(),
-      map(value => Number(value))
-    ).subscribe((value) => {
-      const control = this.fm.getFormField('incomeTab.benExtraIncomeSource');
-      value ? control?.setValidators(CustomValidators.required) : null;
-      control?.updateValueAndValidity();
-    });
+  private listenToRequestChange() {
+    this.requestChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((request) => {
+        this.currentRequest = request || undefined;
+        this.updateRequestForm(this.currentRequest);
+      });
   }
 }

@@ -1,6 +1,8 @@
 import {Lookup} from '../models/lookup';
 
 export interface ILookupMap {
+  SubRequestStatus: Lookup[];
+  BenCategory: Lookup[];
   SubRequestType: Lookup[];
   Countries: Lookup[];
   BenOccuptionStatus: Lookup[];

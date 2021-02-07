@@ -6,15 +6,22 @@ import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
 import {Generator} from '../decorators/generator';
 import {SubventionRequestAid} from '../models/subvention-request-aid';
+import {SubventionRequestAidService} from './subvention-request-aid.service';
 import {Observable} from 'rxjs';
+import {SubventionAidService} from './subvention-aid.service';
+import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubventionRequestService extends BackendGenericService<SubventionRequest> {
   list!: SubventionRequest[];
+  private interceptor: SubventionRequestInterceptor = new SubventionRequestInterceptor();
 
-  constructor(private urlService: UrlService, public http: HttpClient) {
+  constructor(private urlService: UrlService,
+              public http: HttpClient,
+              private subventionAidService: SubventionAidService,
+              private subventionRequestAidService: SubventionRequestAidService) {
     super();
     FactoryService.registerService('SubventionRequestService', this);
   }
@@ -29,7 +36,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   _getSendInterceptor() {
-
+    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
@@ -37,9 +44,8 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   _getReceiveInterceptor() {
-
+    return this.interceptor.receive;
   }
-
 
   loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
