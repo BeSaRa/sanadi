@@ -8,6 +8,10 @@ function _generateModel(data: any, model: any, property?: string, receiveCallbac
     model = instance._getModel();
   }
 
+  if (instance && typeof instance._getReceiveInterceptor !== 'undefined') {
+    receiveCallback = instance._getReceiveInterceptor();
+  }
+
   if (!property) {
     finalData = model ? Object.assign(new model(), data) : data;
   } else {
@@ -34,16 +38,13 @@ export function Generator(model?, isCollection = false, options?: { property?: s
     const original = descriptor.value;
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
-    descriptor.value = function (...args): any {
+    descriptor.value = function(...args): any {
       // @ts-ignore
       if (typeof this._getModel !== 'undefined') {
         // @ts-ignore
         model = this._getModel();
       }
 
-      if (typeof this._getReceiveInterceptor !== 'undefined') {
-        options.interceptReceive = this._getReceiveInterceptor();
-      }
 
       return original.apply(this, args).pipe(
         map(data => isCollection
