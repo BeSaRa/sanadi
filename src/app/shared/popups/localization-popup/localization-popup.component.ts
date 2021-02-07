@@ -8,10 +8,9 @@ import {FactoryService} from '../../../services/factory.service';
 import {ToastService} from '../../../services/toast.service';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {Subject} from 'rxjs';
-import {exhaustMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-localization-popup',
@@ -71,16 +70,21 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
     this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          const localization = extender<Localization>(Localization, {...this.model, ...this.form.value});
-          return localization.save();
-        })).subscribe(local => {
-      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-      //@ts-ignore
-      this.toast.success(message.change({x: local.localizationKey}));
-      this.model = local;
-      this.operation = OperationTypes.UPDATE;
-      this.form.get('localizationKey')?.disable();
-    });
+          const localization = (new Localization()).clone({...this.model, ...this.form.value});
+          return localization.save().pipe(catchError(() => {
+            return of(undefined);
+          }));
+        }))
+      .subscribe((local) => {
+        if (typeof local === 'undefined') {
+          return;
+        }
+        const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
+        this.toast.success(message.change({x: local.localizationKey}));
+        this.model = local;
+        this.operation = OperationTypes.UPDATE;
+        this.form.get('localizationKey')?.disable();
+      });
   }
 
   get popupTitle(): string {
