@@ -542,107 +542,171 @@
       </div>
     </ng-template>
     <!-- Aid Tab-->
-    <ng-template formGroupName="aidTab" #providedAid>
-      <div *ngIf="displayAidForm">
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="aidType" class="col-sm-12 col-md-4 my-auto">{{langService.map.aid_type}}</label>
-              <div class="col-md-8 col-sm-12">
-                <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.aidLookupId')" formControlName="aidLookupId"
-                        class="form-select">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of lookup.listByCategory.AidType">{{option.getName()}}</option>
-                </select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.aidLookupId')"></app-field-error-message>
+    <ng-template formArrayName="aidTab" #providedAid>
+      <ng-container *ngFor="let _ of aidFormArray.controls; let i = index">
+        <div [formGroupName]="i">
+          <div class="row d-flex flex-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="mainAidType" class="col-sm-12 col-md-4 my-auto">{{langService.map.main_aid_type}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <select #mainAidLookup (change)="mainAidChanged(mainAidLookup.value)" id="mainAidType"
+                          [ngClass]="fm.getStatusClass('aidTab.0.mainAidType')"
+                          formControlName="mainAidType"
+                          class="form-select">
+                    <option [ngValue]="option.id"
+                            *ngFor="let option of aidLookups">{{option.getName()}}</option>
+                  </select>
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.mainAidType')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="aidType" class="col-sm-12 col-md-4 my-auto">{{langService.map.aid_type}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
+                          formControlName="aidLookupId"
+                          class="form-select">
+                    <option [ngValue]="option.id"
+                            *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
+                  </select>
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="approvalDate" class="col-sm-12 col-md-4 my-auto">{{langService.map.approval_date}}</label>
-              <div class="col-md-8 col-sm-12">
-                <input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.approvalDate')"
-                       formControlName="approvalDate" class="form-control" type="date">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.approvalDate')"></app-field-error-message>
+          <div class="row d-flex flex-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="approvalDate" class="col-sm-12 col-md-4 my-auto">{{langService.map.approval_date}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
+                         formControlName="approvalDate" class="form-control" type="date">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="periodicType"
+                       class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_periodicity}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')" formControlName="periodicType"
+                          id="periodicType" class="form-select">
+                    <option [ngValue]="option.lookupKey"
+                            *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
+                  </select>
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="periodicType"
-                     class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_periodicity}}</label>
-              <div class="col-md-8 col-sm-12">
-                <select [ngClass]="fm.getStatusClass('aidTab.periodicType')" formControlName="periodicType"
-                        id="periodicType" class="form-select">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-                </select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.periodicType')"></app-field-error-message>
+          <div class="row d-flex flex-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="aidStartPayDate" class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_date}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <input [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')" id="aidStartPayDate"
+                         formControlName="aidStartPayDate" class="form-control" type="date">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="aidAmount" class="col-sm-12 col-md-4 my-auto">{{langService.map.amount}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
+                         class="form-control" type="number">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="installementsCount"
-                     class="col-sm-12 col-md-4 my-auto">{{langService.map.months_count}}</label>
-              <div class="col-md-8 col-sm-12">
-                <input [ngClass]="fm.getStatusClass('aidTab.installementsCount')" id="installementsCount"
-                       formControlName="installementsCount" class="form-control" type="number">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.installementsCount')"></app-field-error-message>
+          <div class="row d-flex flex-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="installementsCount"
+                       class="col-sm-12 col-md-4 my-auto">{{langService.map.months_count}}</label>
+                <div class="col-md-8 col-sm-12">
+                  <input [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
+                         formControlName="installementsCount" class="form-control" type="number">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="aidStartPayDate" class="col-sm-12 col-md-4 my-auto">{{langService.map.payment_date}}</label>
-              <div class="col-md-8 col-sm-12">
-                <input [ngClass]="fm.getStatusClass('aidTab.aidStartPayDate')" id="aidStartPayDate"
-                       formControlName="aidStartPayDate" class="form-control" type="date">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.aidStartPayDate')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="aidAmount" class="col-sm-12 col-md-4 my-auto">{{langService.map.amount}}</label>
-              <div class="col-md-8 col-sm-12">
-                <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.aidAmount')" formControlName="aidAmount"
-                       class="form-control" type="text">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.aidAmount')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12">
-            <div class="row d-flex flex-column flex-md-row mb-4">
-              <label for="aidDescription" class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_description}}</label>
-              <div class="col-md-10 col-sm-12">
-                <textarea [ngClass]="fm.getStatusClass('aidTab.aidDescription')" id="aidDescription"
+          <div class="row d-flex flex-row">
+            <div class="col-sm-12">
+              <div class="row d-flex flex-column flex-md-row mb-4">
+                <label for="aidDescription"
+                       class="col-sm-12 col-md-2 my-auto">{{langService.map.lbl_description}}</label>
+                <div class="col-md-10 col-sm-12">
+                <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
                           formControlName="aidDescription" rows="3" class="form-control"></textarea>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.aidDescription')"></app-field-error-message>
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
+          <div class="d-flex flex-row align-items-center justify-content-center">
+            <button (click)="saveAid()"
+                    class="btn btn-primary m-2">{{hasEditAid ? langService.map.btn_save : langService.map.btn_add}}</button>
+            <button [disabled]="!subventionAid.length" (click)="cancelAid()"
+                    class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+          </div>
         </div>
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="saveAid()" class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
-          <button [disabled]="!aid.length" (click)="cancelAid()"
-                  class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-        </div>
-      </div>
+      </ng-container>
+      <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
+                       [clickOnNew$]="addAid$"></app-page-header>
+      <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+             [dataSource]="subventionAid">
+        <ng-container cdkColumnDef="approvalDate">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.approval_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.approvalDate}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidLookupId">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="periodicType">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="installementsCount">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.monthly_installment}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidStartPayDate">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.aidStartPayDate}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="aidAmount">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;">
+            <div class="d-flex flex-row">
+              <a href="#" (click)="deleteAid(row , i , $event)" class="icon-btn"><i
+                class="mdi mdi-close-box"></i></a>
+              <a href="#" (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></a>
+            </div>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
+      </table>
     </ng-template>
     <hr/>
     <div class="d-flex flex-row justify-content-center">

@@ -107,7 +107,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     this.reloadSubscription = this.reload$.pipe(switchMap(() => {
       // TODO if status empty the BE default status true
       const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId};
-      return this.aidLookupService.getByCriteria(criteria);
+      return this.aidLookupService.loadByCriteria(criteria);
     })).subscribe(aidLookups => {
       this.aidLookups = aidLookups;
       this.selectedRecords = [];

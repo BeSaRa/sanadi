@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {SubventionAid} from '../models/subvention-aid';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
 import {SubventionAidInterceptor} from '../model-interceptors/subvention-aid-interceptor';
+import {Generator} from '../decorators/generator';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +34,18 @@ export class SubventionAidService extends BackendGenericService<SubventionAid> {
 
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_AID;
+  }
+
+  @Generator(undefined, true)
+  private _loadByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
+    return this.http.get<SubventionAid[]>(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({
+        fromObject: criteria
+      })
+    });
+  }
+
+  loadByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
+    return this._loadByCriteria(criteria);
   }
 }

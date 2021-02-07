@@ -10,6 +10,7 @@ import {SubventionRequestAidService} from './subvention-request-aid.service';
 import {Observable} from 'rxjs';
 import {SubventionAidService} from './subvention-aid.service';
 import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
+import {SubventionAid} from '../models/subvention-aid';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,9 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
+  }
+
+  loadSubventionAidByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
+    return this.subventionAidService.loadByCriteria(criteria);
   }
 }

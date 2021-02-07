@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  main_aid_type: string;
   btn_reset: string;
   msg_request_has_been_added_successfully: string;
   msg_all_required_fields_are_filled: string;

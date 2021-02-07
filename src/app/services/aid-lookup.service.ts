@@ -33,7 +33,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   @Generator(AidLookup, true)
-  getByCriteria(criteria: IAidLookupCriteria): Observable<AidLookup[]> {
+  loadByCriteria(criteria: IAidLookupCriteria): Observable<AidLookup[]> {
     const queryParams = this.buildCriteriaQueryParams(criteria);
 
     return this.http.get<AidLookup[]>(this.urlService.URLS.AID_LOOKUPS_CRITERIA, {

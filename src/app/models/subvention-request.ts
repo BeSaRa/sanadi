@@ -4,6 +4,7 @@ import {SubventionRequestService} from '../services/subvention-request.service';
 import {FactoryService} from '../services/factory.service';
 import {SubventionRequestAidService} from '../services/subvention-request-aid.service';
 import {CustomValidators} from '../validators/custom-validators';
+import {SubventionAid} from './subvention-aid';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -47,6 +48,13 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
 
   update(): Observable<SubventionRequest> {
     return this.service.update(this);
+  }
+
+  loadRequestAids(): Observable<SubventionAid[]> {
+    return this.service.loadSubventionAidByCriteria({
+      benId: 1,
+      requestId: 1
+    });
   }
 
   getInfoFields(control: boolean = false): any {
