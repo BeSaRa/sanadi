@@ -19,6 +19,7 @@ import {AidLookup} from '../../../models/aid-lookup';
 import {Lookup} from '../../../models/lookup';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionAidService} from '../../../services/subvention-aid.service';
+import {StatusEnum} from '../../../enums/status.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -287,7 +288,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             tap((beneficiary) => {
               this.currentBeneficiary = beneficiary.clone();
             }),
+            catchError(() => {
+              return of(null);
+            }),
             switchMap((bene) => {
+              if (!(bene instanceof Beneficiary)) {
+                return of(null);
+              }
               value.request.benId = bene.id;
               return value.request.save().pipe(
                 catchError(() => {
@@ -310,6 +317,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           aidList.push(item.save());
         });
         combineLatest(aidList).pipe(takeUntil(this.destroy$)).subscribe((list) => {
+          console.log(list);
           this.toastService.success(this.langService.map.msg_request_has_been_added_successfully);
         });
       });
@@ -364,7 +372,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToSaveAid();
     this.listenToAddAid();
 
-    this.aidLookupService.loadByCriteria({status: true, aidType: 2})
+    this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
       .pipe(take(1))
       .subscribe((lookups) => {
         this.aidLookups = lookups;
@@ -378,20 +386,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (!this.subventionAid.length) {
       this.aidChanged$.next(new SubventionAid());
     }
-    // this.subventionRequestService.load().subscribe((list) => {
-    //   const request = list[list.length - 1];
-    //   this.requestChanged$.next(request);
-    //   request.loadRequestAids().subscribe((aid) => {
-    //     this.subventionAid = aid;
-    //   });
-    //
-    // });
-
-    // this.beneficiaryService.load().subscribe((list) => {
-    //   this.beneficiaryChanged$.next(list[list.length - 1]);
-    // });
-
-
   }
 
   ngOnDestroy() {
@@ -539,7 +533,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       status: true,
       parent: Number(value)
     }).subscribe((result) => {
-      this.subAidLookupsArray = result.slice();
+      this.subAidLookupsArray = result;
       this.subAidLookup = result.reduce((acc, item) => {
         return {...acc, [item.id]: item};
       }, {} as Record<number, AidLookup>);
@@ -577,7 +571,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private listenToAddAid() {
     this.addAid$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.aidChanged$.next((new SubventionAid()).clone());
+        this.aidChanged$.next(new SubventionAid());
       });
   }
 }

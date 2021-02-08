@@ -23,6 +23,7 @@ function send(model: any): any {
   delete model.residenceStatusInfo;
   delete model.benNationalityInfo;
   model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
+  model.benPrimaryIdNationality = model.benNationality;
   return model;
 }
 
