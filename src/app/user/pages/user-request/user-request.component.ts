@@ -414,7 +414,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (!list.length) {
           return this.beneficiaryChanged$.next(null);
         }
-        list.length > 1 ? this.beneficiaryService.openSelectBeneficiaryDialog(list) : this.beneficiaryChanged$.next(list[0]);
+        list.length > 1 ? this.beneficiaryService.openSelectBeneficiaryDialog(list).onAfterClose$.subscribe((beneficiary) => {
+          if (beneficiary instanceof Beneficiary) {
+            this.beneficiaryChanged$.next(beneficiary);
+          }
+        }) : this.beneficiaryChanged$.next(list[0]);
       });
   }
 
