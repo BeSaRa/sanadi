@@ -178,4 +178,16 @@ export interface ILanguageKeys {
   btn_delete: string;
   validate_fields: string;
   msg_delete_will_change_x_status_to_retired: string;
+  advanced: string;
+  fax_number: string;
+  hotline: string;
+  unified_economic_record: string;
+  website: string;
+  establishment_date: string;
+  budget_closure_date: string;
+  registry_number: string;
+  auditor: string;
+  link_to_internal_system: string;
+  law_subjected_name: string;
+  board_of_directors_period: string;
 }

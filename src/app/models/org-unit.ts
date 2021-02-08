@@ -25,6 +25,17 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   registryDate: string | undefined;
   orgNationality: number | undefined;
   poBoxNum: number | undefined;
+  unifiedEconomicRecord: string | undefined;
+  hotLine: number | undefined;
+  faxNumber: number | undefined;
+  webSite: string | undefined;
+  establishmentDate: string | undefined;
+  registryNumber: string | undefined;
+  budgetClosureDate: string | undefined;
+  orgUnitAuditor: string | undefined;
+  linkToInternalSystem: string | undefined;
+  lawSubjectedName: string | undefined;
+  boardDirectorsPeriod: string | undefined;
 
   service: OrganizationUnitService;
   langService: LangService;
