@@ -530,7 +530,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   mainAidChanged(value: string) {
     this.aidLookupService.loadByCriteria({
       aidType: 3,
-      status: true,
+      status: StatusEnum.ACTIVE,
       parent: Number(value)
     }).subscribe((result) => {
       this.subAidLookupsArray = result;
