@@ -14,7 +14,7 @@ export function interceptSendAidLookup(model: AidLookup | any): (AidLookup | any
   delete model.service;
   delete model.langService;
   delete model.statusInfo;
-  delete model.aidTypeInfo;
-  // delete model.parentInfo;
+  delete model.aidTypeInfo; // removed because it has private services or properties which need to removed. better to remove entire object
+  delete model.parentInfo;
   return model;
 }
