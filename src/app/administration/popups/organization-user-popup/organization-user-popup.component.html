@@ -2,82 +2,82 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
 </div>
 <div class="dialog-content">
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
-         class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
-        <span *ngIf="fm.getFieldInvalidStatus('basic')"
-              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a id="permissions-tab" href="#permissions-tab-content" data-bs-toggle="tab" role="tab"
-         class="nav-link position-relative">{{langService.map.lbl_permissions}}
-        <span *ngIf="fm.getFieldInvalidStatus('permissions')"
-              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-      </a>
-    </li>
-  </ul>
-  <div class="tab-content pt-2">
-    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab"
-         id="basic-tab-content">
-      <form style="width: 600px;" novalidate autocomplete="off" [formGroup]="form">
+  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
+           class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
+          <span *ngIf="fm.getFieldInvalidStatus('basic')"
+                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
+        </a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a id="permissions-tab" href="#permissions-tab-content" data-bs-toggle="tab" role="tab"
+           class="nav-link position-relative">{{langService.map.lbl_permissions}}
+          <span *ngIf="fm.getFieldInvalidStatus('permissions')"
+                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content pt-2">
+      <div formGroupName="basic" class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab"
+           id="basic-tab-content">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
+            <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
+            <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="empNum" class="form-label">{{langService.map.lbl_employee_number}}</label>
-            <input id="empNum" [ngClass]="fm.getStatusClass('empNum')" formControlName="empNum"
+            <input id="empNum" [ngClass]="fm.getStatusClass('basic.empNum')" formControlName="empNum"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('empNum')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.empNum')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="qid" class="form-label">{{langService.map.lbl_qid}}</label>
-            <input id="qid" [ngClass]="fm.getStatusClass('qid')" formControlName="qid"
+            <input id="qid" [ngClass]="fm.getStatusClass('basic.qid')" formControlName="qid"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('qid')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.qid')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
-            <input id="phoneExtension" [ngClass]="fm.getStatusClass('phoneExtension')"
-                   formControlName="phoneExtension"
+            <label for="phoneNumber" class="form-label">{{langService.map.lbl_phone}}</label>
+            <input id="phoneNumber" [ngClass]="fm.getStatusClass('basic.phoneNumber')" formControlName="phoneNumber"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('phoneExtension')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="phoneNumber" class="form-label">{{langService.map.lbl_phone}}</label>
-            <input id="phoneNumber" [ngClass]="fm.getStatusClass('phoneNumber')" formControlName="phoneNumber"
+            <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
+            <input id="phoneExtension" [ngClass]="fm.getStatusClass('basic.phoneExtension')"
+                   formControlName="phoneExtension"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('phoneNumber')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.phoneExtension')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="officialPhoneNumber" class="form-label">{{langService.map.lbl_official_phone_number}}</label>
-            <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('officialPhoneNumber')"
+            <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('basic.officialPhoneNumber')"
                    formControlName="officialPhoneNumber"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('officialPhoneNumber')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.officialPhoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
-            <input id="email" [ngClass]="fm.getStatusClass('email')" formControlName="email"
+            <input id="email" [ngClass]="fm.getStatusClass('basic.email')" formControlName="email"
                    class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('email')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -85,23 +85,23 @@
             <label for="userType" class="form-label">{{langService.map.lbl_user_type}}</label>
             <select id="userType" formControlName="userType"
                     class="form-select"
-                    [ngClass]="fm.getStatusClass('userType')">
+                    [ngClass]="fm.getStatusClass('basic.userType')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of userTypeList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="fm.getFormField('userType')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.userType')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="jobTitle" class="form-label">{{langService.map.lbl_job_title}}</label>
             <select id="jobTitle" formControlName="jobTitle"
                     class="form-select"
-                    [ngClass]="fm.getStatusClass('jobTitle')">
+                    [ngClass]="fm.getStatusClass('basic.jobTitle')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of jobTitleList"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
-            <app-field-error-message [control]="fm.getFormField('jobTitle')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.jobTitle')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -109,60 +109,90 @@
             <label for="orgId" class="form-label">{{langService.map.lbl_org_unit}}</label>
             <select id="orgId" formControlName="orgId"
                     class="form-select"
-                    [ngClass]="fm.getStatusClass('orgId')" (change)="onOrgUnitChange()">
+                    [ngClass]="fm.getStatusClass('basic.orgId')" (change)="onOrgUnitChange()">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let ou of orgUnitList"
                       [ngValue]="ou.id">{{ou.getName()}}</option>
             </select>
-            <app-field-error-message [control]="fm.getFormField('orgId')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.orgId')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="orgBranchId" class="form-label">{{langService.map.lbl_branch}}</label>
             <select id="orgBranchId" formControlName="orgBranchId"
                     class="form-select"
-                    [ngClass]="fm.getStatusClass('orgBranchId')">
+                    [ngClass]="fm.getStatusClass('basic.orgBranchId')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let branch of orgBranchList"
                       [ngValue]="branch.id">{{branch.getName()}}</option>
             </select>
-            <app-field-error-message [control]="fm.getFormField('orgBranchId')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('basic.orgBranchId')"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="form-select"
+                    [ngClass]="fm.getStatusClass('basic.status')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of orgUserStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div formGroupName="permissions" class="tab-pane fade" role="tabpanel" aria-labelledby="permissions-tab"
+           id="permissions-tab-content">
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
             <label for="customRoleId" class="form-label">{{langService.map.lbl_custom_role}}</label>
             <select id="customRoleId" formControlName="customRoleId"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('customRoleId')">
+                    class="form-select" (change)="updatePermissionsByRole($event)"
+                    [ngClass]="fm.getStatusClass('permissions.customRoleId')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let role of customRoleList"
                       [disabled]="!role.status"
                       [ngValue]="role.id">{{role.getName()}}</option>
             </select>
-            <app-field-error-message [control]="fm.getFormField('customRoleId')"></app-field-error-message>
-          </div>
-          <div class="col-sm-6 mb-4 position-relative">
-            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
-            <select id="status" formControlName="status"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('status')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of orgUserStatusList"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
+            <app-field-error-message [control]="fm.getFormField('permissions.customRoleId')"></app-field-error-message>
           </div>
         </div>
-      </form>
+        <div class="row" *ngIf="fm.getFormField('permissions.customRoleId')?.value">
+          <ng-container>
+            <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
+              <div class="p-2 border border-1">
+                <div class="form-check mb-2 pb-2 border-bottom">
+                  <input [indeterminate]="checkBoxGroup.isIndeterminate()" [checked]="checkBoxGroup.isFull()"
+                         type="checkbox"
+                         id="group-id-{{checkBoxGroup.group.id}}" (change)="onGroupClicked(checkBoxGroup)"
+                         class="form-check-input cursor-pointer">
+                  <label for="group-id-{{checkBoxGroup.group.id}}"
+                         class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
+                </div>
+                <div *ngFor="let row of checkBoxGroup.rows" class="d-flex flex-row">
+                  <div *ngFor="let permission of row" class="form-check flex-grow-1">
+                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
+                           id="group-permission-id-{{permission.id}}"
+                           (change)="onPermissionClicked($event , permission , checkBoxGroup)"
+                           class="form-check-input cursor-pointer">
+                    <label for="group-permission-id-{{permission.id}}"
+                           class="cursor-pointer">{{permission.getName()}}</label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
-    <div class="tab-pane fade" role="tabpanel" aria-labelledby="permissions-tab"
-         id="permissions-tab-content">
-    </div>
-  </div>
+  </form>
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
+          class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>

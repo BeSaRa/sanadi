@@ -3,6 +3,7 @@ import {BackendGenericService} from '../generics/backend-generic-service';
 import {Permission} from '../models/permission';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class PermissionService extends BackendGenericService<Permission> {
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
+    FactoryService.registerService('PermissionService', this);
   }
 
   _getModel(): any {

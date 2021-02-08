@@ -19,6 +19,9 @@ import {isValidValue} from '../helpers/utils';
 import {OrganizationUnitService} from './organization-unit.service';
 import {CustomRole} from '../models/custom-role';
 import {OrgUnit} from '../models/org-unit';
+import {PermissionService} from './permission.service';
+import {OrganizationUserPermissionService} from './organization-user-permission.service';
+import {OrgUserPermission} from '../models/org-user-permission';
 
 @Injectable({
   providedIn: 'root'
@@ -26,41 +29,60 @@ import {OrgUnit} from '../models/org-unit';
 export class OrganizationUserService extends BackendGenericService<OrgUser> {
   list!: OrgUser[];
 
-  constructor(public http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              private dialogService: DialogService,
+              private customRoleService: CustomRoleService,
+              private organizationUnitService: OrganizationUnitService,
+              private permissionService: PermissionService,
+              private orgUserPermissionService: OrganizationUserPermissionService) {
     super();
     FactoryService.registerService('OrganizationUserService', this);
   }
 
+  private _loadInitData(userId?: number): Observable<{
+    customRoles: CustomRole[],
+    orgUnits: OrgUnit[],
+    orgUserPermissions: OrgUserPermission[]
+  }> {
+    return forkJoin({
+      customRoles: this.customRoleService.load(),
+      orgUnits: this.organizationUnitService.load(),
+      orgUserPermissions: !userId ? of([]) : this.orgUserPermissionService.loadByUserId(userId)
+    });
+  }
+
   openCreateDialog(): Observable<DialogRef> {
-    return this._loadCustomRolesAndOrgUnits()
+    return this._loadInitData()
       .pipe(
-        switchMap((res: [CustomRole[], OrgUnit[]]) => {
+        switchMap((result) => {
           return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
             model: new OrgUser(),
             operation: OperationTypes.CREATE,
-            customRoleList: res[0],
-            orgUnitList: res[1]
+            customRoleList: result.customRoles,
+            orgUnitList: result.orgUnits,
+            orgUserPermissions: result.orgUserPermissions
           }));
         })
       );
   }
 
   openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this._loadCustomRolesAndOrgUnits()
-      .pipe(
-        switchMap((res: [CustomRole[], OrgUnit[]]) => {
-          return this.getById(modelId).pipe(
-            switchMap((orgUser: OrgUser) => {
-              return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
-                model: orgUser,
-                operation: OperationTypes.UPDATE,
-                customRoleList: res[0],
-                orgUnitList: res[1]
-              }));
-            })
-          );
-        })
-      );
+    return this._loadInitData(modelId).pipe(
+      switchMap((result) => {
+        return this.getById(modelId).pipe(
+          switchMap((orgUser: OrgUser) => {
+            return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
+              model: orgUser,
+              operation: OperationTypes.UPDATE,
+              customRoleList: result.customRoles,
+              orgUnitList: result.orgUnits,
+              orgUserPermissions: result.orgUserPermissions
+            }));
+          })
+        );
+      })
+    );
   }
 
   _getModel(): any {
@@ -77,12 +99,6 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
 
   _getReceiveInterceptor(): any {
     return interceptReceiveOrganizationUser;
-  }
-
-  private _loadCustomRolesAndOrgUnits(): Observable<[CustomRole[], OrgUnit[]]> {
-    const customRoleService = FactoryService.getService<CustomRoleService>('CustomRoleService');
-    const organizationUnitService = FactoryService.getService<OrganizationUnitService>('OrganizationUnitService');
-    return forkJoin([customRoleService.load(), organizationUnitService.load()]);
   }
 
 

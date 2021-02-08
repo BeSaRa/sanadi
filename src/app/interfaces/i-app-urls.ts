@@ -16,6 +16,8 @@ export interface IAppUrls {
   BENEFICIARY: string;
   SUBVENTION_REQUEST: string;
   SUBVENTION_REQUEST_AID: string;
-  SUBVENTION_AID : string;
+  SUBVENTION_AID: string;
+  ORG_USER_PERMISSION: string;
+
   [index: string]: string;
 }

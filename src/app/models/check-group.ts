@@ -47,6 +47,7 @@ export class CheckGroup<T extends { id: number }> {
 
   setSelected(selected: number[]): void {
     this.selected = selected;
+    this.filterSelection();
   }
 
   updateChunkCount(chunkCount: number): void {
@@ -67,11 +68,11 @@ export class CheckGroup<T extends { id: number }> {
     });
   }
 
-  isSelected(id: number) {
+  isSelected(id: number): boolean {
     return this.selected.indexOf(id) !== -1;
   }
 
-  toggleSelection() {
+  toggleSelection(): void {
     if (this.isEmpty() || this.isIndeterminate()) {
       this.selected = this.idList.slice();
     } else {
