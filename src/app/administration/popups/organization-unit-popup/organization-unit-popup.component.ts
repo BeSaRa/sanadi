@@ -13,8 +13,8 @@ import {Lookup} from '../../../models/lookup';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {Subject} from 'rxjs';
-import {exhaustMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -66,7 +66,6 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = !(tab.name && tab.name === this.tabsData.branches.name);
   }
-
 
   get popupTitle(): string {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_unit : this.langService.map.lbl_edit_org_unit;
@@ -143,9 +142,15 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
       exhaustMap(() => {
         const orgUnit = extender<OrgUnit>(OrgUnit,
           {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.advanced});
-        return orgUnit.save();
+        return orgUnit.save().pipe(
+          catchError(() => {
+            return of(null);
+          }));
       })
     ).subscribe((orgUnit) => {
+      if (!orgUnit) {
+        return;
+      }
       const message = (this.operation === OperationTypes.CREATE)
         ? this.langService.map.msg_create_x_success
         : this.langService.map.msg_update_x_success;
