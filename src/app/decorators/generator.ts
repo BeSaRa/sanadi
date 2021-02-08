@@ -8,7 +8,7 @@ function _generateModel(data: any, model: any, property?: string, receiveCallbac
     model = instance._getModel();
   }
 
-  if (instance && typeof instance._getReceiveInterceptor !== 'undefined') {
+  if (instance && typeof instance._getReceiveInterceptor !== 'undefined' && !!instance._getReceiveInterceptor()) {
     receiveCallback = instance._getReceiveInterceptor();
   }
 
