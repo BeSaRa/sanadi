@@ -24,24 +24,13 @@
          [id]="'basic-tab-content'+aidType">
       <form class="min-w400px" novalidate autocomplete="off" [formGroup]="form">
         <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label for="aidCode" class="form-label">{{langService.map.lbl_aid_code}}</label>
-            <input id="aidCode"
-                   [ngClass]="fm.getStatusClass('aidCode')"
-                   formControlName="aidCode" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('aidCode')"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
+          <div class="col-sm-6 mb-4 position-relative">
             <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                    class="form-control"/>
@@ -49,11 +38,23 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <div class="form-check form-switch">
-              <input type="checkbox" id="status" formControlName="status" class="form-check-input cursor-pointer">
-              <label for="status" class="cursor-pointer">{{fm.getStatusFieldTranslate('status')}}</label>
-            </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="aidCode" class="form-label">{{langService.map.lbl_aid_code}}</label>
+            <input id="aidCode"
+                   [ngClass]="fm.getStatusClass('aidCode')"
+                   formControlName="aidCode" class="form-control">
+            <app-field-error-message [control]="fm.getFormField('aidCode')"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <select id="status" formControlName="status"
+                    class="form-select"
+                    [ngClass]="fm.getStatusClass('status')">
+              <option value="">{{langService.map.lbl_none}}</option>
+              <option *ngFor="let option of aidLookupStatusList"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
           </div>
         </div>
       </form>
@@ -66,7 +67,8 @@
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
+          class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>

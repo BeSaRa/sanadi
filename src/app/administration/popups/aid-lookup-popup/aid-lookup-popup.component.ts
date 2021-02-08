@@ -12,6 +12,9 @@ import {CustomValidators} from '../../../validators/custom-validators';
 import {AidTypes} from '../../../enums/aid-types.enum';
 import {Subject} from 'rxjs';
 import {exhaustMap, takeUntil} from 'rxjs/operators';
+import {Lookup} from '../../../models/lookup';
+import {LookupCategories} from '../../../enums/lookup-categories';
+import {LookupService} from '../../../services/lookup.service';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -29,9 +32,12 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
   aidType: number;
   gridAidType!: number;
   isAidTabVisible!: boolean;
+  aidLookupStatusList!: Lookup[];
+  statusChangeSubscription: any;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
               private toast: ToastService,
+              private lookupService: LookupService,
               public langService: LangService,
               private fb: FormBuilder) {
     this.model = data.model;
@@ -40,17 +46,32 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
     this.aidType = data.aidType;
     this.checkIfAidTabEnabled();
     this.setGridAidType();
+    this.aidLookupStatusList = lookupService.getByCategory(LookupCategories.AID_LOOKUP_STATUS);
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+    this._destroyStatusChangeSubscribe();
   }
 
   ngOnInit(): void {
     this.buildForm();
+    this._initStatusChangeSubscribe();
     this._saveModel();
+  }
+
+  private _initStatusChangeSubscribe(): void {
+    this.statusChangeSubscription = this.fm.getFormField('status')?.valueChanges.subscribe(() => {
+      console.log(new Date().toISOString());
+      this.fm.getFormField('statusDateModified')?.setValue(new Date().toISOString());
+    });
+  }
+
+  private _destroyStatusChangeSubscribe(): void {
+    this.statusChangeSubscription.complete();
+    this.statusChangeSubscription.unsubscribe();
   }
 
   buildForm(): void {
@@ -68,8 +89,9 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
       parent: [
         this.aidType === AidTypes.CLASSIFICATIONS ? null : (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent
       ],
-      status: [this.model.status]
-    }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType'])});
+      status: [this.model.status, [CustomValidators.required]],
+      statusDateModified: [this.model.statusDateModified]
+    }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status'])});
 
     this.fm = new FormManager(this.form, this.langService);
     // will check it later
@@ -90,7 +112,8 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
         return aidLookup.save();
       }),
     ).subscribe(aid => {
-      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
+      const message = this.operation === OperationTypes.CREATE
+        ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       this.toast.success(message.change({x: aid.aidCode}));
       this.model = aid;
       this.operation = OperationTypes.UPDATE;

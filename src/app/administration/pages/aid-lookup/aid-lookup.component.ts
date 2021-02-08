@@ -186,19 +186,6 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     }
   }
 
-  updateStatus(aidLookup: AidLookup): void {
-    const sub = aidLookup.toggleStatus().update().subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: aidLookup.getName()}));
-      sub.unsubscribe();
-    }, () => {
-      // @ts-ignore
-      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: aidLookup.getName()}));
-      aidLookup.toggleStatus();
-      sub.unsubscribe();
-    });
-  }
-
   getTitleText(): (keyof ILanguageKeys) {
     let title: keyof ILanguageKeys;
     switch (this.aidType) {

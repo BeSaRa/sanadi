@@ -27,7 +27,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     FactoryService.registerService('AidLookupService', this);
   }
 
-  @Generator(AidLookup, true, {interceptReceive: interceptReceiveAidLookup})
+  @Generator(AidLookup, true)
   load(prepare?: boolean): Observable<AidLookup[]> {
     return super.load(prepare);
   }
@@ -94,5 +94,6 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   _getReceiveInterceptor(): any {
+    return interceptReceiveAidLookup;
   }
 }

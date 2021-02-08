@@ -9,7 +9,7 @@ import {Lookup} from './lookup';
 export class AidLookup extends BaseModel<AidLookup> {
   aidCode!: string;
   category: number | undefined;
-  status: boolean = true;
+  status: number | undefined;
   statusDateModified: number | undefined;
   aidType: number | undefined;
   aidTypeInfo: Lookup | undefined;
@@ -18,6 +18,7 @@ export class AidLookup extends BaseModel<AidLookup> {
 
   private service: AidLookupService;
   private langService: LangService;
+  private statusInfo!: Lookup;
 
   constructor() {
     super();
@@ -39,11 +40,6 @@ export class AidLookup extends BaseModel<AidLookup> {
 
   update(): Observable<AidLookup> {
     return this.service.update(this);
-  }
-
-  toggleStatus(): AidLookup {
-    this.status = !this.status;
-    return this;
   }
 
   getName(): string {
