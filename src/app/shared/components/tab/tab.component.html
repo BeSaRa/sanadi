@@ -1,4 +1,4 @@
-<div [id]="tabId" [hidden]="!active">
+<div [id]="tabId" [hidden]="!active" [ngStyle]="{'width': tabWidth ? tabWidth : null}">
   <ng-content *ngIf="!template"></ng-content>
   <ng-container [ngTemplateOutlet]="template"></ng-container>
 </div>
