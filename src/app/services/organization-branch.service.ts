@@ -49,7 +49,7 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     return this.http.get<OrgBranch[]>(this._getServiceURL() + '/criteria' + queryString);
   }
 
-  loadByCriteria(criteria: { orgId?: number, status?: number }): Observable<OrgBranch[]> {
+  loadByCriteria(criteria: { 'org-id'?: number, status?: number }): Observable<OrgBranch[]> {
     return this._loadByCriteria(criteria);
   }
 

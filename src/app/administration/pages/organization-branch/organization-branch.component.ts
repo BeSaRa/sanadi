@@ -186,7 +186,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
         if (!this.organization || !this.organization.id) {
           return of([]);
         }
-        return this.organizationBranchService.loadByCriteria({orgId: this.organization?.id});
+        return this.organizationBranchService.loadByCriteria({'org-id': this.organization?.id});
       })
     ).subscribe((branches) => {
       this.branches = branches;
