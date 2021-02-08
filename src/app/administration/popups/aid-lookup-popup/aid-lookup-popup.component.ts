@@ -33,7 +33,6 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
   gridAidType!: number;
   isAidTabVisible!: boolean;
   aidLookupStatusList!: Lookup[];
-  statusChangeSubscription: any;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
               private toast: ToastService,
@@ -53,7 +52,6 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-    this._destroyStatusChangeSubscribe();
   }
 
   ngOnInit(): void {
@@ -63,15 +61,11 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
   }
 
   private _initStatusChangeSubscribe(): void {
-    this.statusChangeSubscription = this.fm.getFormField('status')?.valueChanges.subscribe(() => {
-      console.log(new Date().toISOString());
-      this.fm.getFormField('statusDateModified')?.setValue(new Date().toISOString());
-    });
-  }
-
-  private _destroyStatusChangeSubscribe(): void {
-    this.statusChangeSubscription.complete();
-    this.statusChangeSubscription.unsubscribe();
+    this.fm.getFormField('status')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.fm.getFormField('statusDateModified')?.setValue(new Date().toISOString());
+      });
   }
 
   buildForm(): void {
