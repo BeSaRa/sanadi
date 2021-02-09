@@ -550,7 +550,7 @@
               <div class="row d-flex flex-column flex-md-row mb-4">
                 <label for="mainAidType" class="col-sm-12 col-md-4 my-auto">{{langService.map.main_aid_type}}</label>
                 <div class="col-md-8 col-sm-12">
-                  <select #mainAidLookup (change)="mainAidChanged(mainAidLookup.value)" id="mainAidType"
+                  <select id="mainAidType"
                           [ngClass]="fm.getStatusClass('aidTab.0.mainAidType')"
                           formControlName="mainAidType"
                           class="form-select">

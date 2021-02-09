@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
@@ -55,7 +55,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   };
   aidLookups: AidLookup[] = [];
   subAidLookupsArray: AidLookup[] = [];
-  subAidLookup: Record<number, AidLookup> = {};
+  subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
   // static value for now till we finish the authentication
   currentUser = {orgBranchId: 1, orgId: 1, orgUserId: 1};
   periodicityLookups: Record<number, Lookup> = {};
@@ -136,7 +136,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private disableOtherIdFieldsExcept(fieldName: string): void {
     ['qid', 'visa', 'gccId'].forEach(field => {
-      const fieldPath = `idTypes.${field}`;
+      const fieldPath = 'idTypes.' + field;
       field !== fieldName ? this.fm.getFormField(fieldPath)?.disable() : this.fm.getFormField(fieldPath)?.enable();
       field !== fieldName ? this.idFieldsClearButtons[field] = false : this.idFieldsClearButtons[field] = true;
     });
@@ -144,7 +144,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private enableAllIdFields(): void {
     ['qid', 'visa', 'gccId'].forEach(field => {
-      const fieldPath = `idTypes.${field}`;
+      const fieldPath = 'idTypes' + field;
       this.fm.getFormField(fieldPath)?.enable();
       this.idFieldsClearButtons[field] = false;
     });
@@ -317,7 +317,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           aidList.push(item.save());
         });
         combineLatest(aidList).pipe(takeUntil(this.destroy$)).subscribe((list) => {
-          console.log(list);
+          console.log('list', list);
           this.toastService.success(this.langService.map.msg_request_has_been_added_successfully);
         });
       });
@@ -378,9 +378,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.aidLookups = lookups;
       });
 
-    this.periodicityLookups = this.lookup.listByCategory.SubAidPeriodicType.reduce((acc, item) => {
-      return {...acc, [item.lookupKey]: item};
-    }, {} as Record<number, Lookup>);
+    this.preparePeriodicityLookups();
 
     // just start display the form for the first time if there is no aid list.
     if (!this.subventionAid.length) {
@@ -454,6 +452,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   cancelAid() {
     this.resetAid();
+    this.editAidIndex = -1;
+    this.hasEditAid = false;
+  }
+
+  private preparePeriodicityLookups(): void {
+    this.periodicityLookups = this.lookup.listByCategory.SubAidPeriodicType.reduce((acc, item) => {
+      return {...acc, [item.lookupKey]: item};
+    }, {} as Record<number, Lookup>);
+  }
+
+  private prepareLookupAid(): void {
+    this.subAidLookup = this.subAidLookupsArray.reduce((acc, item) => {
+      return {...acc, [item.id]: item};
+    }, this.subAidLookup);
   }
 
   private resetAid() {
@@ -494,6 +506,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.subventionAid.push(subventionAid);
         } else {
           this.subventionAid.splice(this.editAidIndex, 1, subventionAid);
+          this.hasEditAid = false;
+          this.editAidIndex = -1;
         }
         this.subventionAid = this.subventionAid.slice();
         this.aidChanged$.next(null);
@@ -522,26 +536,21 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     aidArray.clear();
     if (aid) {
       aidArray.push(this.fb.group(aid.getAidFields(true)));
+      aidArray.at(0).get('mainAidType')?.valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((parentId: number) => {
+          this.aidLookupIdField.setValue(null);
+          this.loadSubAidCategory(parentId);
+        });
     }
-    aidArray.markAsUntouched();
-    aidArray.markAsPristine();
   }
 
   get aidFormArray(): FormArray {
     return this.fm.getFormField('aidTab') as FormArray;
   }
 
-  mainAidChanged(value: string) {
-    this.aidLookupService.loadByCriteria({
-      aidType: 3,
-      status: StatusEnum.ACTIVE,
-      parent: Number(value)
-    }).subscribe((result) => {
-      this.subAidLookupsArray = result;
-      this.subAidLookup = result.reduce((acc, item) => {
-        return {...acc, [item.id]: item};
-      }, {} as Record<number, AidLookup>);
-    });
+  get aidLookupIdField(): FormControl {
+    return this.form.get('aidTab.0.aidLookupId') as FormControl;
   }
 
   deleteAid(row: SubventionAid, index: number, $event: MouseEvent): any {
@@ -576,6 +585,22 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.addAid$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.aidChanged$.next(new SubventionAid());
+      });
+  }
+
+  private loadSubAidCategory(parentId: number) {
+    // thanks to khaled he saved my life here for ever thanks again.
+    this.subAidLookupsArray = [];
+    this.aidLookupService
+      .loadByCriteria({
+        aidType: 3,
+        status: StatusEnum.ACTIVE,
+        parent: Number(parentId)
+      })
+      .pipe(take(1))
+      .subscribe((list) => {
+        this.subAidLookupsArray = list;
+        this.prepareLookupAid();
       });
   }
 }
