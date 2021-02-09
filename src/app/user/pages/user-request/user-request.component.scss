@@ -1,3 +1,13 @@
+@import "src/scss/custom_variables";
+
 .col-sm-12 {
   position: relative;
 }
+
+@include media-breakpoint-up(md) {
+  .row.d-flex.flex-column.flex-md-row {
+    margin-bottom: 10px;
+  }
+}
+
+
