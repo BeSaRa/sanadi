@@ -167,6 +167,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
   bindOrgBranchList(): void {
     this.orgBranchList = [];
+    if (!this.fm.getFormField('basic.orgId')?.value) {
+      return;
+    }
     this.organizationBranchService.loadByCriteria({'org-id': this.fm.getFormField('basic.orgId')?.value})
       .subscribe((orgBranch: OrgBranch[]) => {
         this.orgBranchList = orgBranch;
@@ -202,7 +205,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         });
       }
     }
-    console.log('default selected permissions', this.selectedPermissions);
   }
 
   updatePermissionsByRole($event: Event): void {
@@ -215,7 +217,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         return item.permissionId;
       });
     }
-    console.log('selectedPermissions', this.selectedPermissions);
     this.groups.forEach(group => {
       group.setSelected(this.selectedPermissions);
     });
