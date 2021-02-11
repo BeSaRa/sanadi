@@ -24,7 +24,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "lodash"
+              "lodash",
+              "crypto-js"
             ],
             "outputPath": "dist/sanadi",
             "index": "src/index.html",
