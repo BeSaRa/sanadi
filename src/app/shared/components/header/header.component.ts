@@ -2,6 +2,9 @@ import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core
 import {Subscription} from 'rxjs';
 import {AppRootScrollService} from '../../../services/app-root-scroll.service';
 import {LangService} from '../../../services/lang.service';
+import {AuthService} from '../../../services/auth.service';
+import {ToastService} from '../../../services/toast.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +18,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('header') element: ElementRef | undefined;
   scrollSubscription: Subscription | undefined;
 
-  constructor(private scrollService: AppRootScrollService, public langService: LangService) {
+  constructor(private scrollService: AppRootScrollService,
+              public langService: LangService,
+              private toastService: ToastService,
+              private router: Router,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -60,5 +67,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toggleLanguage(event: MouseEvent) {
     event.preventDefault();
     this.langService.toggleLanguage();
+  }
+
+  logout(event: MouseEvent) {
+    event.preventDefault();
+    this.authService.logout().subscribe(() => {
+      this.toastService.success(this.langService.map.msg_logout_success);
+      return this.router.navigate(['/']);
+    });
   }
 }
