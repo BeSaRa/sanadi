@@ -1,28 +1,46 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../services/lang.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from '../../validators/custom-validators';
+import {AuthService} from '../../services/auth.service';
+import {of, Subject} from 'rxjs';
+import {catchError, delay, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
+import {ToastService} from '../../services/toast.service';
+import {ECookieService} from '../../services/e-cookie.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
   loginForm: FormGroup = {} as FormGroup;
+  private destroy$: Subject<any> = new Subject<any>();
+  private login$: Subject<any> = new Subject<any>();
 
-  constructor(public lang: LangService, private router: Router, private fb: FormBuilder) {
+  constructor(public lang: LangService,
+              private router: Router,
+              private fb: FormBuilder,
+              private eCookieService: ECookieService,
+              private toastService: ToastService,
+              private authService: AuthService) {
+
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username: ['', CustomValidators.required],
-      password: ['', CustomValidators.required]
+      password: [''] // for now it is not required till we make full integration with NAS Services.
     });
-
+    this.listenToLoginEvent();
   }
 
   togglePasswordView(event: Event): void {
@@ -31,7 +49,31 @@ export class LoginComponent implements OnInit {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  processLogin(): Promise<any> {
-    return this.router.navigate(['home']);
+  processLogin(): void {
+    this.login$.next();
+  }
+
+  private listenToLoginEvent(): void {
+    this.login$.pipe(
+      exhaustMap(() => {
+        return this.authService
+          .login({qId: this.loginForm.get('username')?.value})
+          .pipe(
+            mapTo(true),
+            tap(() => {
+              this.toastService.success(this.lang.map.msg_login_success);
+            }, () => {
+              this.toastService.error(this.lang.map.msg_invalid_username_password);
+            }),
+            catchError(() => {
+              return of(false);
+            }),
+            delay(2000)
+          );
+      }),
+      takeUntil(this.destroy$),
+    ).subscribe((navigate) => {
+      return navigate ? this.router.navigate(['/home']) : null;
+    });
   }
 }
