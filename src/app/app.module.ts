@@ -33,6 +33,7 @@ import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handle
   ],
   imports: [
     BrowserModule,
+    CookieModule.forRoot(),
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
