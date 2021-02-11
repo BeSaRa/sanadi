@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
 import {CookieOptions, CookieService, ICookieService} from 'ngx-cookie';
 import {EncryptionService} from './encryption.service';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ECookieService implements ICookieService {
+  readonly encryptedKeyPrefix = '$$';
 
   constructor(private service: CookieService, private encryptionService: EncryptionService) {
-
+    FactoryService.registerService('ECookieService', this);
   }
 
   get(key: string): string {
@@ -39,23 +41,27 @@ export class ECookieService implements ICookieService {
     return this.service.remove(key, options);
   }
 
+  removeE(key: string, options?: CookieOptions): void {
+    this.remove(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix, options);
+  }
+
   removeAll(options?: CookieOptions): void {
     this.service.removeAll(options);
   }
 
   putE(key: string, value: string, options?: CookieOptions): void {
-    this.put(key, this.encryptionService.encrypt(value), options);
+    this.put(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix, this.encryptionService.encrypt(value), options);
   }
 
   getE(key: string): string {
-    return this.encryptionService.decrypt(this.get(key));
+    return this.encryptionService.decrypt(this.get(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix));
   }
 
   putEObject(key: string, value: object, options?: CookieOptions): void {
-    return this.put(key, this.encryptionService.encrypt(value), options);
+    return this.put(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix, this.encryptionService.encrypt(value), options);
   }
 
   getEObject(key: string): object | undefined {
-    return this.encryptionService.decrypt(this.get(key));
+    return this.encryptionService.decrypt(this.get(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix));
   }
 }
