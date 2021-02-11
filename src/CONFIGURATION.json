@@ -7,8 +7,8 @@
   "BASE_ENVIRONMENT_INDEX": 0,
   "BASE_URL": "",
   "API_VERSION": "v1",
-  "TOKEN_HEADER_KEY": "auth-token",
-  "TOKEN_STORE_KEY": "sanadi-token",
+  "TOKEN_HEADER_KEY": "Authorization",
+  "TOKEN_STORE_KEY": "__T__",
   "EXTERNAL_PROTOCOLS": [
     "http",
     "https"
