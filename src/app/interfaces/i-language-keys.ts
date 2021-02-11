@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  msg_logout_success: string;
+  logout: string;
+  msg_login_success: string;
+  msg_invalid_username_password: string;
   main_aid_type: string;
   btn_reset: string;
   msg_request_has_been_added_successfully: string;
