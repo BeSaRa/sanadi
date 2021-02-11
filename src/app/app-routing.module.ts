@@ -16,11 +16,11 @@ const routes: Routes = [
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
-      {path: 'error', component: ErrorPageComponent},
-      {path: '**', component: ErrorPageComponent},
+      {path: '**', redirectTo: '../error'}
     ]
   },
-  {path: '**', redirectTo: 'home/error'}
+  {path: 'error', component: ErrorPageComponent},
+  {path: '**', redirectTo: 'error'}
 ];
 
 
