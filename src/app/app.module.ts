@@ -24,6 +24,9 @@ import {OrganizationUserService} from './services/organization-user.service';
 import {AidLookupService} from './services/aid-lookup.service';
 import {OrganizationUnitService} from './services/organization-unit.service';
 import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handler';
+import {CookieModule} from 'ngx-cookie';
+import {TokenService} from './services/token.service';
+import {AuthService} from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +48,20 @@ import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handle
       provide: APP_INITIALIZER,
       useFactory: AppModule.AppInit,
       multi: true,
-      deps: [HttpClient, ConfigurationService, UrlService, LangService, InfoService, LookupService, CustomRoleService, OrganizationBranchService, OrganizationUserService, AidLookupService, OrganizationUnitService]
+      deps: [
+        HttpClient,
+        ConfigurationService,
+        UrlService,
+        LangService,
+        InfoService,
+        LookupService,
+        TokenService,
+        AuthService,
+        CustomRoleService,
+        OrganizationBranchService,
+        OrganizationUserService,
+        AidLookupService,
+        OrganizationUnitService]
     },
     httpInterceptors
   ],
@@ -62,7 +78,9 @@ export class AppModule {
                  urlService: UrlService,
                  langService: LangService,
                  infoService: InfoService,
-                 lookupService: LookupService): () => Promise<unknown> {
+                 lookupService: LookupService,
+                 tokenService: TokenService,
+                 authService: AuthService): () => Promise<unknown> {
     AppModule.http = http;
     return () => {
       return forkJoin({
@@ -76,7 +94,7 @@ export class AppModule {
             langService.list = infoResult.localizationSet;
             langService._loadDone$.next(langService.list);
             lookupService.setLookupsMap(infoResult.lookupMap);
-            return infoResult;
+            return tokenService.setAuthService(authService).validateToken().toPromise();
           });
         });
     };
