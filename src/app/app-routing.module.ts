@@ -3,12 +3,15 @@ import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
 import {ErrorPageComponent} from './shared/components/error-page/error-page.component';
+import {AuthGuard} from './guards/auth-guard';
+import {GuestGuard} from './guards/guest-guard';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: 'login', component: LoginComponent},
+  {path: 'login', component: LoginComponent, canActivate: [GuestGuard]},
   {
     path: 'home', component: HomeComponent,
+    canActivate: [AuthGuard],
     children: [
       {path: '', redirectTo: 'user', pathMatch: 'full'},
       {
