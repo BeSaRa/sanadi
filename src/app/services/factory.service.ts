@@ -20,6 +20,6 @@ export class FactoryService {
     if (!FactoryService.services.hasOwnProperty(serviceName)) {
       throw Error('Service not register yet: ' + serviceName);
     }
-    return FactoryService.services[serviceName];
+    return FactoryService.services[serviceName] as T;
   }
 }
