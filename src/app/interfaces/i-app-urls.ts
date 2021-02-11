@@ -18,6 +18,8 @@ export interface IAppUrls {
   SUBVENTION_REQUEST_AID: string;
   SUBVENTION_AID: string;
   ORG_USER_PERMISSION: string;
+  AUTHENTICATE: string;
+  VALIDATE_TOKEN: string;
 
   [index: string]: string;
 }
