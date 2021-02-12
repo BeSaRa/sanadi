@@ -5,7 +5,17 @@ import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
-import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
@@ -91,10 +101,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       idTypes: this.fb.group({
-        passport: [],
-        visa: [],
-        qid: [],
-        gccId: []
+        passport: [null, [CustomValidators.pattern('PASSPORT')]],
+        visa: [null, [CustomValidators.number]],
+        qid: [null, [CustomValidators.number, CustomValidators.minLength(7), CustomValidators.maxLength(10)]],
+        gccId: [null, [CustomValidators.number]]
       }),
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
       incomeTab: this.fb.group(beneficiary.getEmployerFields(true)),

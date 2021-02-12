@@ -26,8 +26,10 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="qid" class="col-sm-12 col-md-4 my-auto">{{langService.map.qatari_id_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <input formControlName="qid" id="qid" (keyup)="fieldChange($event)" class="form-control" type="text">
+              <div class="input-group has-validation">
+                <input formControlName="qid" id="qid" class="form-control" type="text"
+                       [ngClass]="fm.getStatusClass('idTypes.qid')" (keyup)="fieldChange($event)">
+                <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
@@ -43,8 +45,9 @@
             <label for="gccId" class="col-sm-12 col-md-4 my-auto">{{langService.map.gcc_id_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
-                <input formControlName="gccId" id="gccId" (keyup)="fieldChange($event)" class="form-control"
-                       type="text">
+                <input formControlName="gccId" id="gccId" class="form-control" type="text"
+                       [ngClass]="fm.getStatusClass('idTypes.gccId')" (keyup)="fieldChange($event)">
+                <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i></button>
@@ -61,7 +64,9 @@
             <label for="visa" class="col-sm-12 col-md-4 my-auto">{{langService.map.visa_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
-                <input formControlName="visa" id="visa" (keyup)="fieldChange($event)" class="form-control" type="text">
+                <input formControlName="visa" id="visa" class="form-control" type="text"
+                       [ngClass]="fm.getStatusClass('idTypes.visa')" (keyup)="fieldChange($event)">
+                <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
@@ -77,8 +82,9 @@
             <label for="passport" class="col-sm-12 col-md-4 my-auto">{{langService.map.passport_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
-                <input formControlName="passport" id="passport" (keyup)="fieldChange($event)" class="form-control"
-                       type="text">
+                <input formControlName="passport" id="passport" class="form-control" type="text"
+                       [ngClass]="fm.getStatusClass('idTypes.visa')" (keyup)="fieldChange($event)">
+                <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')" (click)="clearField('passport')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
