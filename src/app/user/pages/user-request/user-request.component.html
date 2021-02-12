@@ -83,7 +83,7 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
                 <input formControlName="passport" id="passport" class="form-control" type="text"
-                       [ngClass]="fm.getStatusClass('idTypes.visa')" (keyup)="fieldChange($event)">
+                       [ngClass]="fm.getStatusClass('idTypes.passport')" (keyup)="fieldChange($event)">
                 <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')" (click)="clearField('passport')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">

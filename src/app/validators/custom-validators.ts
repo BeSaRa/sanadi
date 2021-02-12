@@ -49,7 +49,8 @@ const errorKeys: IKeyValue = {
     }
   },
   ENG: {key: 'err_english_only', replaceValues: null},
-  AR: {key: 'err_arabic_only', replaceValues: null}
+  AR: {key: 'err_arabic_only', replaceValues: null},
+  PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
