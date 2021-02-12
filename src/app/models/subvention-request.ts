@@ -5,6 +5,7 @@ import {FactoryService} from '../services/factory.service';
 import {SubventionRequestAidService} from '../services/subvention-request-aid.service';
 import {CustomValidators} from '../validators/custom-validators';
 import {SubventionAid} from './subvention-aid';
+import {Validators} from '@angular/forms';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -70,7 +71,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return {
       status: control ? [status, CustomValidators.required] : status,
       statusDateModified: control ? [statusDateModified] : statusDateModified,
-      requestSummary: control ? [requestSummary] : requestSummary
+      requestSummary: control ? [requestSummary, [Validators.maxLength(1000)]] : requestSummary
     };
   }
 }
