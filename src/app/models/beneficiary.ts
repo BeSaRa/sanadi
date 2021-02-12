@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {AdminResult} from './admin-result';
 import {LangService} from '../services/lang.service';
 import {CustomValidators} from '../validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -123,8 +124,15 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benNationality: control ? [benNationality, CustomValidators.required] : benNationality,
       dateOfBirth: control ? [dateOfBirth, CustomValidators.required] : dateOfBirth,
       gender: control ? [gender, CustomValidators.required] : gender,
-      enName: control ? [arName, CustomValidators.required] : enName,
-      arName: control ? [arName, CustomValidators.required] : arName,
+      enName: control ? [enName, [CustomValidators.required,
+        CustomValidators.pattern('ENG'),
+        Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
+      arName: control ? [arName, [CustomValidators.required,
+        CustomValidators.pattern('AR'),
+        Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+      ]] : arName,
       benPrimaryIdNumber: control ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
       benPrimaryIdType: control ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
       phoneNumber1: control ? [phoneNumber1, CustomValidators.required] : phoneNumber1,
