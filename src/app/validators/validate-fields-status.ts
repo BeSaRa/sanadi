@@ -4,7 +4,8 @@ import {customValidationTypes} from '../types/types';
 
 const validationPatterns: any = {
   ENG: new RegExp(/^[a-zA-Z ]+$/),
-  AR: new RegExp(/^[\u0621-\u064A ]+$/)
+  AR: new RegExp(/^[\u0621-\u064A ]+$/),
+  PASSPORT: new RegExp(/^(?!^0+$)[a-zA-Z0-9]{6,9}$/g)
 };
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
@@ -17,11 +18,11 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
 }
 
 export function numberValidator(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) {
-      return null;
-    }
-    const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
-    return !isValid ? {number: true} : null;
+  if (!control.value) {
+    return null;
+  }
+  const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
+  return !isValid ? {number: true} : null;
 }
 
 export function maxlengthValidator(maxLength: number): ValidatorFn {

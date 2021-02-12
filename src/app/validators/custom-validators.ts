@@ -4,7 +4,7 @@ import {
   numberValidator as number,
   patternValidator as pattern,
   minlengthValidator as minLength,
-  maxlengthValidator as maxLength, numberValidator
+  maxlengthValidator as maxLength
 } from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
@@ -85,7 +85,6 @@ export const CustomValidators = {
   minLength,
   maxLength,
   anyFieldsHasLength,
-  numberValidator,
   getValidationData,
   defaultLengths
 };
