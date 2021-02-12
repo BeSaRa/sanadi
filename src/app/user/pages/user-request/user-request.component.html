@@ -261,7 +261,10 @@
             <div class="row d-flex flex-column flex-md-row">
               <label for="benNotes" class="col-sm-12 col-md-2 my-auto">{{langService.map.notes}}</label>
               <div class="col-md-10 col-sm-12">
-                <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"></textarea>
+                <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
+                          [ngClass]="fm.getStatusClass('personalTab.benNotes')" ></textarea>
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -316,7 +319,7 @@
             <label for="monthlyIncome" class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="monthlyIncome" [ngClass]="fm.getStatusClass('incomeTab.benIncome')" formControlName="benIncome"
-                     class="form-control" type="number">
+                     class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
             </div>
@@ -329,7 +332,7 @@
             <label for="extraIncome" class="col-sm-12 col-md-4 my-auto">{{langService.map.extra_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')" formControlName="benExtraIncome"
-                     class="form-control" id="extraIncome" type="number">
+                     class="form-control" id="extraIncome">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
             </div>
@@ -372,7 +375,7 @@
             <label for="monthlyRent" class="col-sm-12 col-md-4 my-auto">{{langService.map.monthly_rent}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
-                     formControlName="benHouseRent" class="form-control" type="number">
+                     formControlName="benHouseRent" class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
             </div>
@@ -402,7 +405,7 @@
             <label for="zone" class="col-sm-12 col-md-4 my-auto">{{langService.map.lbl_zone}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                     class="form-control" type="number">
+                     class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
             </div>
@@ -629,7 +632,7 @@
                 <label for="aidAmount" class="col-sm-12 col-md-4 my-auto">{{langService.map.amount}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
-                         class="form-control" type="number">
+                         class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
                 </div>
@@ -643,7 +646,7 @@
                        class="col-sm-12 col-md-4 my-auto">{{langService.map.months_count}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <input [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
-                         formControlName="installementsCount" class="form-control" type="number">
+                         formControlName="installementsCount" class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
                 </div>

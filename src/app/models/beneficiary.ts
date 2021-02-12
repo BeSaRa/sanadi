@@ -144,7 +144,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
       benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
       benSecIdType: control ? [benSecIdType] : benSecIdType,
-      benNotes: control ? [benNotes] : benNotes,
+      benNotes: control ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
       benCategory: control ? [benCategory, CustomValidators.required] : benCategory
     };
   }
@@ -164,10 +164,10 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
       occuption: controls ? [occuption] : occuption,
       employeerAddress: controls ? [employeerAddress] : employeerAddress,
-      benIncome: controls ? [benIncome] : benIncome,
-      benExtraIncome: controls ? [benExtraIncome] : benExtraIncome,
-      benExtraIncomeSource: controls ? [benExtraIncomeSource] : benExtraIncomeSource,
-      benHouseRent: controls ? [benHouseRent] : benHouseRent
+      benIncome: controls ? [benIncome, [CustomValidators.number, Validators.min(0)]] : benIncome,
+      benExtraIncome: controls ? [benExtraIncome, [CustomValidators.number, Validators.min(0)]] : benExtraIncome,
+      benExtraIncomeSource: controls ? [benExtraIncomeSource, [Validators.maxLength(500)]] : benExtraIncomeSource,
+      benHouseRent: controls ? [benHouseRent, [CustomValidators.number, Validators.min(0)]] : benHouseRent
     };
   }
 
