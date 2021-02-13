@@ -87,7 +87,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
           value: this.model.orgCode,
           disabled: this.operation
         }, [CustomValidators.required, Validators.maxLength(10)]],
-        status: [{value: this.model.status, disabled: this.operation}, CustomValidators.required],
+        status: [this.model.status, CustomValidators.required],
         email: [this.model.email, [CustomValidators.required, Validators.email, Validators.maxLength(50)]],
         phoneNumber1: [this.model.phoneNumber1, [
           CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],

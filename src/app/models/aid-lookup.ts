@@ -34,6 +34,10 @@ export class AidLookup extends BaseModel<AidLookup> {
     return this.service.delete(this.id);
   }
 
+  deactivate(): Observable<boolean> {
+    return this.service.deactivate(this.id);
+  }
+
   save(): Observable<AidLookup> {
     return this.id ? this.service.update(this) : this.service.create(this);
   }

@@ -33,7 +33,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUser[] = [];
-  actionsList: IGridAction[] = [
+  /*actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -41,7 +41,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
         this.deleteBulk($event);
       }
     }
-  ];
+  ];*/
+  actionsList: IGridAction[] = [];
 
   bindingKeys: IKeyValue = {
     arName: 'arName',
@@ -126,11 +127,11 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     event.preventDefault();
     // @ts-ignore
     this.dialogService.confirm(
-      this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+      this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users}) + '<br/>' +
       this.langService.map.msg_confirm_delete_x.change({x: model.getName()}))
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = model.delete().subscribe(() => {
+        const sub = model.deactivate().subscribe(() => {
           // @ts-ignore
           this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
           this.reload$.next(null);

@@ -73,6 +73,10 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     );
   }
 
+  deactivate(id: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
+  }
+
   _getReceiveInterceptor(): any {
   }
 }

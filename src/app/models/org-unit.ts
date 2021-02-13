@@ -56,6 +56,10 @@ export class OrgUnit extends BaseModel<OrgUnit> {
     return this.service.delete(this.id);
   }
 
+  deactivate(): Observable<boolean> {
+    return this.service.deactivate(this.id);
+  }
+
   save(): Observable<OrgUnit> {
     return this.id ? this.update() : this.create();
   }

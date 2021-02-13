@@ -52,6 +52,7 @@
                     [ngClass]="fm.getStatusClass('status')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of aidLookupStatusList"
+                      [disabled]="option.isRetiredAidLookupStatus()"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
             <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>

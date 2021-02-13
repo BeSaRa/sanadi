@@ -57,6 +57,10 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     );*/
   }
 
+  deactivate(id: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
+  }
+
   _getModel(): any {
     return OrgUnit;
   }

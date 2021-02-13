@@ -20,9 +20,17 @@
       <form style="width: 600px" novalidate autocomplete="off" [formGroup]="form">
         <div class="row">
           <!--Org Name-->
-          <div class="col-sm-12 mb-4 position-relative">
+          <div class="col-sm-6 mb-4">
             <label for="orgName" class="form-label">{{langService.map.lbl_organization}}</label>
             <label id="orgName" class="form-control">{{orgUnit?.getName()}}</label>
+          </div>
+          <!--isMain-->
+          <div class="col-sm-6 mb-4 position-relative">
+            <div class="form-check form-switch position-absolute top-50">
+              <input type="checkbox" id="isMain" formControlName="isMain" class="form-check-input cursor-pointer">
+              <label for="status"
+                     class="cursor-pointer">{{fm.getBooleanFieldTranslate('isMain', 'lbl_main', 'lbl_yes', 'lbl_no')}}</label>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -70,6 +78,7 @@
                     [ngClass]="fm.getStatusClass('status')">
               <option value="">{{langService.map.lbl_none}}</option>
               <option *ngFor="let option of orgUnitStatusList"
+                      [disabled]="option.isRetiredOrgStatus()"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>
             <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
@@ -130,16 +139,6 @@
             <app-field-error-message [control]="fm.getFormField('zone')"></app-field-error-message>
           </div>
         </div>-->
-        <div class="row">
-          <!--isMain-->
-          <div class="col-sm-6 mb-4">
-            <div class="form-check form-switch">
-              <input type="checkbox" id="isMain" formControlName="isMain" class="form-check-input cursor-pointer">
-              <label for="status"
-                     class="cursor-pointer">{{fm.getBooleanFieldTranslate('isMain', 'lbl_main', 'lbl_yes', 'lbl_no')}}</label>
-            </div>
-          </div>
-        </div>
       </form>
     </div>
     <div class="tab-pane fade" role="tabpanel" aria-labelledby="users-tab"

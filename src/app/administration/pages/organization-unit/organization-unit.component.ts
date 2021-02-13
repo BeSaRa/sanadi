@@ -30,9 +30,11 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
+  xDeleteMessage = this.langService.map.lbl_organization + ', ' +
+    this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUnit[] = [];
-  actionsList: IGridAction[] = [
+  /*actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -40,7 +42,8 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
         this.deleteBulk($event);
       }
     }
-  ];
+  ];*/
+  actionsList: IGridAction[] = [];
 
   private _addSelected(record: OrgUnit): void {
     this.selectedRecords.push(_deepClone(record));
@@ -112,12 +115,12 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
 
   delete(model: OrgUnit, event: MouseEvent): void {
     event.preventDefault();
-    // @ts-ignore
-    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$
+    const deleteMsg = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+      this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
+    this.dialogService.confirm(deleteMsg).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          const sub = model.delete().subscribe(() => {
-            // @ts-ignore
+          const sub = model.deactivate().subscribe(() => {
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
             this.reload$.next(null);
             sub.unsubscribe();

@@ -34,7 +34,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   reloadSubscription!: Subscription;
 
   selectedRecords: AidLookup[] = [];
-  actionsList: IGridAction[] = [
+  /*actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -42,7 +42,8 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
         this.deleteBulk($event);
       }
     }
-  ];
+  ];*/
+  actionsList: IGridAction[] = [];
 
   private _addSelected(record: AidLookup): void {
     this.selectedRecords.push(_deepClone(record));
@@ -141,7 +142,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
-          aidLookup.delete().subscribe(() => {
+          aidLookup.deactivate().subscribe(() => {
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: aidLookup.aidCode}));
             this.reload$.next(null);
           });
