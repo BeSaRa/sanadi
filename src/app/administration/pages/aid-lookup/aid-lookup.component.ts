@@ -61,7 +61,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   }
 
   get isFullSelection(): boolean {
-    return this.selectedRecords.length === this.aidLookups.length;
+    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.aidLookups.length;
   }
 
   isSelected(record: AidLookup): boolean {

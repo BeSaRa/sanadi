@@ -60,7 +60,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   }
 
   get isFullSelection(): boolean {
-    return this.selectedRecords.length === this.branches.length;
+    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.branches.length;
   }
 
   isSelected(record: OrgBranch): boolean {

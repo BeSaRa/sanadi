@@ -53,7 +53,7 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   }
 
   get isFullSelection(): boolean {
-    return this.selectedRecords.length === this.customRoles.length;
+    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.customRoles.length;
   }
 
   isSelected(record: CustomRole): boolean {

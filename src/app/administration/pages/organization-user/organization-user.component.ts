@@ -76,7 +76,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   }
 
   get isFullSelection(): boolean {
-    return this.selectedRecords.length === this.orgUsers.length;
+    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.orgUsers.length;
   }
 
   isSelected(record: OrgUser): boolean {
