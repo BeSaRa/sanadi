@@ -29,7 +29,6 @@
               <div class="input-group has-validation">
                 <input formControlName="qid" id="qid" class="form-control" type="text"
                        [ngClass]="fm.getStatusClass('idTypes.qid')" (keyup)="fieldChange($event)">
-                <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
@@ -38,6 +37,7 @@
                         (click)="getBeneficiaryData('qid')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
+                <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -47,7 +47,6 @@
               <div class="input-group">
                 <input formControlName="gccId" id="gccId" class="form-control" type="text"
                        [ngClass]="fm.getStatusClass('idTypes.gccId')" (keyup)="fieldChange($event)">
-                <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i></button>
@@ -55,6 +54,7 @@
                         (click)="getBeneficiaryData('gccId')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
+                <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -66,7 +66,6 @@
               <div class="input-group">
                 <input formControlName="visa" id="visa" class="form-control" type="text"
                        [ngClass]="fm.getStatusClass('idTypes.visa')" (keyup)="fieldChange($event)">
-                <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
@@ -75,6 +74,7 @@
                         (click)="getBeneficiaryData('visa')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
+                <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -84,7 +84,6 @@
               <div class="input-group">
                 <input formControlName="passport" id="passport" class="form-control" type="text"
                        [ngClass]="fm.getStatusClass('idTypes.passport')" (keyup)="fieldChange($event)">
-                <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')" (click)="clearField('passport')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
@@ -92,6 +91,7 @@
                 <button tabindex="-1" type="button" (click)="getBeneficiaryData('passport')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
+                <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
               </div>
             </div>
           </div>
