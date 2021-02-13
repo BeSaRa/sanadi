@@ -3,8 +3,8 @@ import {hasValidLength, isValidValue} from '../helpers/utils';
 import {customValidationTypes} from '../types/types';
 
 const validationPatterns: any = {
-  ENG: new RegExp(/^[a-zA-Z ]+$/),
-  AR: new RegExp(/^[\u0621-\u064A ]+$/),
+  ENG: new RegExp(/^[a-zA-Z0-9\- ]+$/),
+  AR: new RegExp(/^[\u0621-\u064A0-9\u0660-\u0669\- ]+$/),
   PASSPORT: new RegExp(/^(?!^0+$)[a-zA-Z0-9]{6,9}$/g)
 };
 
