@@ -5,6 +5,8 @@ import {LangService} from '../../../services/lang.service';
 import {AuthService} from '../../../services/auth.service';
 import {ToastService} from '../../../services/toast.service';
 import {Router} from '@angular/router';
+import {DialogService} from '../../../services/dialog.service';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               public langService: LangService,
               private toastService: ToastService,
               private router: Router,
+              private dialogService: DialogService,
               private authService: AuthService) {
   }
 
@@ -71,9 +74,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout(event: MouseEvent) {
     event.preventDefault();
-    this.authService.logout().subscribe(() => {
-      this.toastService.success(this.langService.map.msg_logout_success);
-      return this.router.navigate(['/']);
+    this.dialogService.confirm(this.langService.map.msg_are_you_sure_you_want_logout).onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        this.authService.logout().subscribe(() => {
+          this.toastService.success(this.langService.map.msg_logout_success);
+          return this.router.navigate(['/']);
+        });
+      }
     });
   }
 }
