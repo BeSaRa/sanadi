@@ -192,6 +192,7 @@
               <th>{{langService.map.request_aid_amount}}</th>
               <th>{{langService.map.aid_type}}</th>
               <th>{{langService.map.approved_aid_amount}}</th>
+              <th>{{langService.map.lbl_actions}}</th>
             </tr>
             </thead>
             <tbody>
@@ -207,6 +208,14 @@
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.requestedAidAmount}} </td>
                   <td> {{aid.aidLookupInfo.getName()}} </td>
                   <td> {{aid.aidAmount}} </td>
+                  <td *ngIf="firstAid" [rowSpan]="request.aids.length">
+                    <div class="d-flex flex-row">
+                      <button class="btn btn-link outline-none"
+                              tooltip="{{langService.map.print_request_form}}"
+                              (click)="printRequest($event, request)">
+                        <i class="mdi mdi-printer"></i></button>
+                    </div>
+                  </td>
                 </tr>
               </ng-template>
               <ng-template #noAidRow>
@@ -218,6 +227,14 @@
                   <td> {{request.requestedAidAmount}} </td>
                   <td></td>
                   <td></td>
+                  <td>
+                    <div class="d-flex flex-row">
+                      <button class="btn btn-link outline-none"
+                              tooltip="{{langService.map.print_request_form}}"
+                              (click)="printRequest($event, request)">
+                        <i class="mdi mdi-printer"></i></button>
+                    </div>
+                  </td>
                 </tr>
               </ng-template>
             </ng-container>

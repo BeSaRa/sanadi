@@ -70,7 +70,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
@@ -190,7 +190,13 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
         benPrimaryIdType: this.beneficiary?.benPrimaryIdType,
       }
     }).subscribe((data) => {
-      printBlobData(data, 'InquiryResult.pdf');
+      printBlobData(data, 'InquiryByCriteriaSearchResult.pdf');
+    });
+  }
+
+  printRequest($event: MouseEvent, request: SubventionRequestAid): void {
+    this.subventionRequestService.loadByRequestIdAsBlob(request.requestId).subscribe((data) => {
+      printBlobData(data, 'InquiryByIdSearchResult.pdf');
     });
   }
 }
