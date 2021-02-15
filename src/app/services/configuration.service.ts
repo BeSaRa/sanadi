@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IAppConfig} from '../interfaces/i-app-config';
 import {FactoryService} from './factory.service';
+import {range} from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {FactoryService} from './factory.service';
 export class ConfigurationService {
   public BASE_URL = '';
   public CONFIG = {} as IAppConfig;
+  static CURRENT_FULL_YEAR = (new Date()).getFullYear();
 
   constructor() {
     FactoryService.registerService('AppConfigurationService', this);
@@ -43,5 +45,19 @@ export class ConfigurationService {
       this.BASE_URL += this.CONFIG.API_VERSION;
     }
     return this.BASE_URL;
+  }
+
+  getSearchYears(): number[] {
+    return this.CONFIG.SEARCH_YEARS_BY === 'RANGE' ?
+      ConfigurationService.getYearsRange(this.CONFIG.SEARCH_YEARS_RANGE)
+      : ConfigurationService.getYearsStart(this.CONFIG.SEARCH_YEARS_START);
+  }
+
+  private static getYearsRange(yearRange: number) {
+    return range(ConfigurationService.CURRENT_FULL_YEAR, (ConfigurationService.CURRENT_FULL_YEAR - yearRange));
+  }
+
+  private static getYearsStart(startYear: number) {
+    return range(startYear, ConfigurationService.CURRENT_FULL_YEAR + 1);
   }
 }

@@ -5,16 +5,16 @@
         <div class="d-flex flex-column align-items-center justify-content-center">
           <div class="row">
             <img alt="Logo" id="logo-image" class="mx-auto d-block img-fluid"
-                 src="assets/images/logo.png">
+                 src="assets/images/sanady-logo.png">
           </div>
-          <h3 class="text-center text-primary">SANADI</h3>
+<!--          <h3 class="text-center text-primary">SANADI</h3>-->
           <form autocomplete="off" [formGroup]="loginForm" action="#">
             <div class="d-flex flex-column">
               <div class="mb-3">
                 <label class="form-label" for="username">{{lang.map.lbl_username}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-account"></i>
-                  <input formControlName="username" autofocus tabindex="1" id="username"
+                  <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
                          [placeholder]="lang.map.lbl_enter_mobile_or_email"
                          class="form-control"
                          type="text">

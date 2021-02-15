@@ -24,6 +24,7 @@
     "@mdi/font": "^5.8.55",
     "bootstrap": "^5.0.0-beta1",
     "crypto-js": "^4.0.0",
+    "dayjs": "^1.10.4",
     "helpful-decorators": "^2.1.0",
     "lodash": "^4.17.20",
     "ng2-date-picker": "^11.0.0",

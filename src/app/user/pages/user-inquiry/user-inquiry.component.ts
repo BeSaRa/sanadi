@@ -30,7 +30,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   private search$: Subject<any> = new Subject<any>();
   form !: FormGroup;
   fm!: FormManager;
-  stringOperators: Lookup[] = [];
+  stringOperators: Lookup[] = this.lookupService.getStringOperators();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   displayIdCriteria: boolean = false;
@@ -58,7 +58,6 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildPageForm();
-    this.buildStringOperators();
     this.listenToInquiryTypeChange();
     this.listenToIdTypeChange();
     this.listenToSearch();
@@ -71,18 +70,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
-  }
-
-  private buildStringOperators() {
-    this.stringOperators = ['equal', 'contains', 'start_with', 'end_with'].map((item, index) => {
-      return (new Lookup().setValues(
-        this.langService.getArabicLocalByKey(<keyof ILanguageKeys>item),
-        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys>item),
-        index,
-        index + 1
-      ));
-    });
+    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {

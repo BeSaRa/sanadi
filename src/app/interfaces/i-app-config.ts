@@ -1,4 +1,5 @@
 export interface IAppConfig {
+  TIMESTAMP: string;
   ENVIRONMENTS_URLS: string [];
   BASE_ENVIRONMENT_INDEX: number;
   BASE_URL: string;
@@ -8,4 +9,7 @@ export interface IAppConfig {
   EXTERNAL_PROTOCOLS: string[];
   DEFAULT_DATE_FORMAT: string;
   UNEMPLOYED_LOOKUP_KEY: number;
+  SEARCH_YEARS_RANGE: number;
+  SEARCH_YEARS_START: number;
+  SEARCH_YEARS_BY: string;
 }

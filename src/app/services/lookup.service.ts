@@ -9,6 +9,8 @@ import {Generator} from '../decorators/generator';
 import {ILookupMap} from '../interfaces/i-lookup-map';
 import {isValidValue} from '../helpers/utils';
 import {FactoryService} from './factory.service';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {LangService} from './lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class LookupService extends BackendGenericService<Lookup> {
   list!: Lookup[];
   listByCategory!: ILookupMap;
 
-  constructor(public http: HttpClient, private urlService: UrlService) {
+  constructor(public http: HttpClient, private urlService: UrlService, private langService: LangService) {
     super();
     FactoryService.registerService('LookupService', this);
   }
@@ -108,5 +110,16 @@ export class LookupService extends BackendGenericService<Lookup> {
   }
 
   _getReceiveInterceptor(): any {
+  }
+
+  getStringOperators(): Lookup[] {
+    return ['equal', 'contains', 'start_with', 'end_with'].map((item, index) => {
+      return (new Lookup().setValues(
+        this.langService.getArabicLocalByKey(<keyof ILanguageKeys> item),
+        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys> item),
+        index,
+        index + 1
+      ));
+    });
   }
 }

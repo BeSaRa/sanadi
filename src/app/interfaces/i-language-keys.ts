@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+    status_date_from: string;
+    status_date_to: string;
+    creation_date_from: string;
+    creation_date_to: string;
+    search_method: string;
+    serial_number: string;
+    year: string;
     msg_are_you_sure_you_want_logout: string;
     search_result: string;
     search_criteria: string;

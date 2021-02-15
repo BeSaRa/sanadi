@@ -11,6 +11,7 @@ import {Observable} from 'rxjs';
 import {SubventionAidService} from './subvention-aid.service';
 import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
 import {SubventionAid} from '../models/subvention-aid';
+import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +55,9 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   loadSubventionAidByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
     return this.subventionAidService.loadByCriteria(criteria);
+  }
+
+  loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
+    return this.subventionRequestAidService.loadByCriteria(criteria);
   }
 }
