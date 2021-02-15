@@ -10,7 +10,7 @@ import {FormManager} from '../../../models/form-manager';
 import {StringOperator} from '../../../enums/string-operator.enum';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, filter, map, share, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-request-criteria';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
@@ -38,9 +38,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   stringOperationMap: typeof StringOperator = StringOperator;
   private simpleSearch$!: Observable<string>;
   private advancedSearch$!: Observable<string>;
-  private result$: Subject<SubventionRequestAid[]> = new Subject<SubventionRequestAid[]>();
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
-  requests$: Observable<SubventionRequestAid[]> = this.result$.asObservable();
+  requests: SubventionRequestAid[] = [];
 
   constructor(public langService: LangService,
               private fb: FormBuilder,
@@ -173,7 +172,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
         }),
         takeUntil(this.destroy$),
-      ).subscribe(this.result$);
+      ).subscribe(result => this.requests = result);
   }
 
   private onAdvancedSearch() {
@@ -192,10 +191,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
         }),
         takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {
-        console.log(value);
-      });
+      ).subscribe(result => this.requests = result);
   }
 
   onClickSimpleSearch() {

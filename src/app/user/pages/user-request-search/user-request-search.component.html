@@ -229,7 +229,7 @@
     </ng-template>
   </form>
   <ng-template #searchResult>
-    <div *ngIf="(requests$|async)?.length">
+    <div *ngIf="requests.length">
       <div class="row">
         <div class="col-12 d-flex align-items-center justify-content-end">
           <button class="btn btn-link outline-none"
@@ -252,7 +252,7 @@
           </tr>
           </thead>
           <tbody>
-          <ng-container *ngFor="let request of (requests$|async);">
+          <ng-container *ngFor="let request of requests;">
             <div *ngIf="request.aids && request.aids.length > 0; then multiAidRow else noAidRow"></div>
             <ng-template #multiAidRow>
               <tr *ngFor="let aid of request.aids; let firstAid = first;">
