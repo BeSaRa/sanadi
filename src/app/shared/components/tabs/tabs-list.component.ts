@@ -12,21 +12,8 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   static aliveTabsCount: number = 0;
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
-  _activeTabIndex: number = 0;
-  @Input()
-  set activeTabIndex(value: number) {
-    if (value) {
-      this._activeTabIndex = value;
-    }
-    const tab = this.getTabByIndex(this.activeTabIndex);
-    if (tab) {
-      this.selectTab(tab);
-    }
-  }
-
-  get activeTabIndex(): number {
-    return this._activeTabIndex;
-  };
+  @Input() activeTabIndex: number = 0;
+  @Input() tabByIndex$!: Subject<number>;
 
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   private destroy$: Subject<any> = new Subject<any>();
@@ -54,6 +41,17 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
         });
     });
     this.selectFirstTabIfThereIsNoActiveIndex();
+    this.listenToSelectTabByIndex();
+  }
+
+  private listenToSelectTabByIndex() {
+    if (this.tabByIndex$) {
+      this.tabByIndex$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((index) => {
+          this.selectTabByIndex(index);
+        });
+    }
   }
 
   /**
@@ -103,5 +101,12 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
       item.tabIndex === tab.tabIndex ? (item.active = true) : (item.active = false);
     });
     this.onTabChange.emit(tab);
+  }
+
+  selectTabByIndex(index: number): void {
+    const tab = this.getTabByIndex(index);
+    if (tab) {
+      this.selectTab(tab);
+    }
   }
 }
