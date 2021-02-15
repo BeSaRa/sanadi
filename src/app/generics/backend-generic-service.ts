@@ -72,7 +72,7 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
     let queryString = '?';
     for (const key of Object.keys(queryStringOptions)) {
       if (isValidValue(queryStringOptions[key])) {
-        if (typeof queryStringOptions[key] === 'string'){
+        if (typeof queryStringOptions[key] === 'string') {
           queryString += key + '=' + queryStringOptions[key].trim() + '&';
         } else {
           queryString += key + '=' + queryStringOptions[key] + '&';
@@ -91,17 +91,18 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
       if (typeof data[key] === 'object') {
         queryString.push(this._parseObjectToQueryString(data[key], myKey ? (myKey + '.' + key) : key));
       } else {
-        if (data[key] !== undefined) {
+        if (data[key] !== undefined && data[key] !== null && (data[key] + '').trim().length) {
           let value = data[key];
           if (typeof data[key] === 'string') {
             value = data[key].trim();
           }
           queryString.push(myKey ? (myKey + `.${key}=${value}`) : key + '=' + data[key]);
         }
-        // data[key] !== undefined ? queryString.push(myKey ? (myKey + `.${key}=${data[key]}`) : key + '=' + data[key]) : null;
       }
     }
-    return queryString.join('&');
+    return queryString.filter((item) => {
+      return item;
+    }).join('&');
   }
 }
 
