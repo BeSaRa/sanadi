@@ -12,7 +12,22 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   static aliveTabsCount: number = 0;
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
-  @Input() activeTabIndex: number = 0;
+  _activeTabIndex: number = 0;
+  @Input()
+  set activeTabIndex(value: number) {
+    if (value) {
+      this._activeTabIndex = value;
+    }
+    const tab = this.getTabByIndex(this.activeTabIndex);
+    if (tab) {
+      this.selectTab(tab);
+    }
+  }
+
+  get activeTabIndex(): number {
+    return this._activeTabIndex;
+  };
+
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   private destroy$: Subject<any> = new Subject<any>();
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
@@ -62,11 +77,18 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
     }
     let tab;
     if (this.activeTabIndex) {
-      tab = this.tabs.find((item) => {
-        return item.tabIndex === this.activeTabIndex;
-      });
+      tab = this.getTabByIndex(this.activeTabIndex);
     }
     this.selectTab(tab || this.tabs.first);
+  }
+
+  private getTabByIndex(index: number): TabComponent | undefined {
+    if (!this.tabs) {
+      return undefined;
+    }
+    return this.tabs.find(tab => {
+      return tab.tabIndex === index;
+    });
   }
 
   /**
