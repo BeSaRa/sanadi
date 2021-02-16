@@ -3,6 +3,7 @@ import {AdminResult} from '../models/admin-result';
 import {map as _map} from 'lodash';
 
 function send(model: any): any {
+  delete model.subventionRequestService;
   return model;
 }
 

@@ -261,8 +261,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   printRequest($event: MouseEvent, request: SubventionRequestAid): void {
-    this.subventionRequestService.loadByRequestIdAsBlob(request.requestId).subscribe((data) => {
-      printBlobData(data, 'RequestByIdSearchResult.pdf');
-    });
+    request.printRequest('RequestByIdSearchResult.pdf');
   }
 }
