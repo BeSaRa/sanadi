@@ -1,6 +1,7 @@
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {LangService} from '../services/lang.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {IStatusClasses} from '../interfaces/i-status-classes';
 
 export class FormManager {
   constructor(private form: FormGroup, private langService: LangService) {
@@ -33,10 +34,22 @@ export class FormManager {
     return !!(ctrl?.valid && (ctrl?.touched || ctrl?.dirty));
   }
 
-  getStatusClass(field: string): { 'is-valid': boolean, 'is-invalid': boolean } {
+  getStatusClass(field: string): IStatusClasses {
     return {
-      'is-valid': this.getFieldValidStatus(field),
+      ...this.getInvalidClass(field),
+      ...this.getValidClass(field)
+    };
+  }
+
+  getInvalidClass(field: string): Pick<IStatusClasses, 'is-invalid'> {
+    return {
       'is-invalid': this.getFieldInvalidStatus(field)
+    };
+  }
+
+  getValidClass(field: string): Pick<IStatusClasses, 'is-valid'> {
+    return {
+      'is-valid': this.getFieldValidStatus(field)
     };
   }
 
@@ -55,6 +68,4 @@ export class FormManager {
     const inactive = this.langService.map[inactiveLabel as keyof ILanguageKeys];
     return label + ' : ' + (this.getFormField(field)?.value ? active : inactive);
   }
-
-
 }
