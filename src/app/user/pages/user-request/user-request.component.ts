@@ -5,17 +5,7 @@ import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {combineLatest, Observable, of, Subject} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  exhaustMap,
-  filter,
-  map,
-  switchMap,
-  take,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
@@ -30,6 +20,7 @@ import {Lookup} from '../../../models/lookup';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionAidService} from '../../../services/subvention-aid.service';
 import {StatusEnum} from '../../../enums/status.enum';
+import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 
 @Component({
   selector: 'app-user-request',
@@ -82,6 +73,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'actions'
   ];
 
+  dateConfig: IDatePickerDirectiveConfig = {
+    format: 'YYYY-MM-DD'
+  };
+
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -114,6 +109,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       aidTab: this.fb.array([]),
     });
     this.fm = new FormManager(this.form, this.langService);
+    const bd = this.form.get('personalTab.dateOfBirth');
+    bd?.valueChanges.subscribe(() => {
+      console.log(bd);
+    });
   }
 
   private listenToIdNumberChange() {
@@ -154,7 +153,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private enableAllIdFields(): void {
     ['qid', 'visa', 'gccId'].forEach(field => {
-      const fieldPath = 'idTypes' + field;
+      const fieldPath = 'idTypes.' + field;
       this.fm.getFormField(fieldPath)?.enable();
       this.idFieldsClearButtons[field] = false;
     });

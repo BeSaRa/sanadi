@@ -24,6 +24,7 @@ import {TooltipDirective} from './directives/tooltip.directive';
 import {TabsListComponent} from './components/tabs/tabs-list.component';
 import { TabComponent } from './components/tab/tab.component';
 import {GridSearchComponent} from './components/grid-search/grid-search.component';
+import {DpDatePickerModule} from 'ng2-date-picker';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import {GridSearchComponent} from './components/grid-search/grid-search.componen
     PortalModule,
     A11yModule,
     CdkTableModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DpDatePickerModule
   ],
   exports: [
     CommonModule,
@@ -62,6 +64,7 @@ import {GridSearchComponent} from './components/grid-search/grid-search.componen
     PortalModule,
     A11yModule,
     CdkTableModule,
+    DpDatePickerModule,
     ReactiveFormsModule,
     FooterComponent,
     HeaderComponent,
