@@ -6,6 +6,6 @@ export function anyFieldsHasLength(fields: string[]): ValidatorFn {
       const value = control.get(field)?.value;
       return value ? value.trim().length : false;
     });
-    return valid ? null : {emptyFields: fields};
+    return valid ? null : {atLeastOneRequired: fields};
   };
 }

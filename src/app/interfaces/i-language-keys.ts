@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  at_least_one_field_should_be_filled: string;
   status_date_from: string;
   status_date_to: string;
   creation_date_from: string;

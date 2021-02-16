@@ -50,7 +50,13 @@ const errorKeys: IKeyValue = {
   },
   ENG: {key: 'err_english_only', replaceValues: null},
   AR: {key: 'err_arabic_only', replaceValues: null},
-  PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null}
+  PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
+  atLeastOneRequired: {
+    key: 'at_least_one_field_should_be_filled',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({fields: errorValue.join(', ')});
+    }
+  },
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
