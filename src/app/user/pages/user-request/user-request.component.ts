@@ -109,10 +109,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       aidTab: this.fb.array([]),
     });
     this.fm = new FormManager(this.form, this.langService);
-    const bd = this.form.get('personalTab.dateOfBirth');
-    bd?.valueChanges.subscribe(() => {
-      console.log(bd);
-    });
   }
 
   private listenToIdNumberChange() {
@@ -190,8 +186,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
     if (!selectedBeneficiary) {
       personal?.reset();
+      personal?.markAsPristine();
       income?.reset();
+      income?.markAsPristine();
       address?.reset();
+      address?.markAsPristine();
     } else {
       personal?.patchValue(selectedBeneficiary.getPersonalFields());
       income?.patchValue(selectedBeneficiary.getEmployerFields());
@@ -431,7 +430,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   clearField(fieldName: string) {
     const field = this.fm.getFormField(`idTypes.${fieldName}`);
+    const passport = this.fm.getFormField(`idTypes.passport`);
     field?.patchValue(null);
+    passport?.patchValue(null);
     this.idFieldsClearButtons[fieldName] = false;
     this.enableAllIdFields();
     this.beneficiaryChanged$.next(null);
