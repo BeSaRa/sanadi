@@ -9,7 +9,7 @@
     <div class="row mt-3">
       <tabs-list [tabByIndex$]="tabIndex$">
         <tab [template]="searchCriteria" [title]="langService.map.search_criteria"></tab>
-        <tab [template]="searchResult" [title]="langService.map.search_result"></tab>
+        <tab [disabled]="!requests.length" [template]="searchResult" [title]="langService.map.search_result"></tab>
       </tabs-list>
     </div>
     <ng-template #searchCriteria>
