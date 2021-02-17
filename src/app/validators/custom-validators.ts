@@ -54,7 +54,7 @@ const errorKeys: IKeyValue = {
   atLeastOneRequired: {
     key: 'at_least_one_field_should_be_filled',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({fields: errorValue.join(', ')});
+      return message.change({fields: '( ' + errorValue.join(', ') + ') '});
     }
   },
 };
