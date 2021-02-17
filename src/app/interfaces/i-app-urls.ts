@@ -20,6 +20,7 @@ export interface IAppUrls {
   ORG_USER_PERMISSION: string;
   AUTHENTICATE: string;
   VALIDATE_TOKEN: string;
+  SUBVENTION_LOG: string;
 
   [index: string]: string;
 }

@@ -7,11 +7,17 @@ import {FactoryService} from './factory.service';
 import {Generator} from '../decorators/generator';
 import {SubventionRequestAid} from '../models/subvention-request-aid';
 import {SubventionRequestAidService} from './subvention-request-aid.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SubventionAidService} from './subvention-aid.service';
 import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
 import {SubventionAid} from '../models/subvention-aid';
 import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
+import {SubventionLogService} from './subvention-log.service';
+import {switchMap} from 'rxjs/operators';
+import {SubventionLog} from '../models/subvention-log';
+import {SubventionLogPopupComponent} from '../user/popups/subvention-log-popup/subvention-log-popup.component';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {DialogService} from './dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +29,9 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   constructor(private urlService: UrlService,
               public http: HttpClient,
               private subventionAidService: SubventionAidService,
-              private subventionRequestAidService: SubventionRequestAidService) {
+              private subventionRequestAidService: SubventionRequestAidService,
+              private subventionLogService: SubventionLogService,
+              private dialogService: DialogService) {
     super();
     FactoryService.registerService('SubventionRequestService', this);
   }
@@ -63,5 +71,14 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByCriteria(criteria);
+  }
+
+  openLogDialog(requestId: number): Observable<DialogRef> {
+    return this.subventionLogService.loadByRequestId(requestId)
+      .pipe(
+        switchMap((logList: SubventionLog[]) => {
+          return of(this.dialogService.show<SubventionLog[]>(SubventionLogPopupComponent, logList));
+        })
+      );
   }
 }

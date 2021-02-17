@@ -3,6 +3,7 @@ import {SubventionApprovedAid} from './subvention-approved-aid';
 import {FactoryService} from '../services/factory.service';
 import {SubventionRequestService} from '../services/subvention-request.service';
 import {printBlobData} from '../helpers/utils';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 export class SubventionRequestAid {
   requestId!: number;
@@ -27,6 +28,14 @@ export class SubventionRequestAid {
     this.subventionRequestService.loadByRequestIdAsBlob(this.requestId)
       .subscribe((data) => {
         printBlobData(data, fileName);
+      });
+  }
+
+  showLog($event: MouseEvent): void {
+    $event.preventDefault();
+    this.subventionRequestService.openLogDialog(this.requestId)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
       });
   }
 }

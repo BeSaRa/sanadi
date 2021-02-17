@@ -207,4 +207,10 @@ export interface ILanguageKeys {
   law_subjected_name: string;
   board_of_directors_period: string;
   print_request_form: string;
+  show_logs: string;
+  user: string;
+  action_type: string;
+  action_time: string;
+  comments: string;
+  logs: string;
 }
