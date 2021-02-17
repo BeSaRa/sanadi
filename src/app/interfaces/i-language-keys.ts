@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  msg_aid_updated_successfully: string;
+  msg_aid_added_successfully: string;
   at_least_one_field_should_be_filled: string;
   status_date_from: string;
   status_date_to: string;
@@ -19,6 +21,7 @@ export interface ILanguageKeys {
   main_aid_type: string;
   btn_reset: string;
   msg_request_has_been_added_successfully: string;
+  msg_request_has_been_updated_successfully: string;
   msg_all_required_fields_are_filled: string;
   home_phone_number: string;
   building_name: string;

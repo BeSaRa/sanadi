@@ -6,6 +6,7 @@ import {SubventionRequestAidService} from '../services/subvention-request-aid.se
 import {CustomValidators} from '../validators/custom-validators';
 import {SubventionAid} from './subvention-aid';
 import {Validators} from '@angular/forms';
+import {formatDate} from '@angular/common';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -18,7 +19,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestSummary!: string;
   charityRefNo!: string;
   charitySerialNo!: string;
-  creationDate!: string;
+  creationDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   approvalIndicator!: number;
   status: number = 2;
   statusDateModified!: string;

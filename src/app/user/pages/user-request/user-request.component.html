@@ -514,8 +514,10 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="creationDate" class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')" id="creationDate"
-                     formControlName="creationDate" class="form-control" type="date">
+              <input theme="dp-material" [dpDayPicker]="dateConfig"
+                     [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
+                     id="creationDate"
+                     formControlName="creationDate" class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
             </div>
@@ -758,8 +760,10 @@
     </ng-template>
     <hr/>
     <div class="d-flex flex-row justify-content-center">
-      <button type="button" (click)="saveModel()" class="btn btn-primary m-2">{{langService.map.btn_add}}</button>
-      <button type="button" class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+      <button type="button" (click)="saveModel()"
+              class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
+      <button type="button" (click)="cancelRequest()"
+              class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
     </div>
   </form>
 </div>

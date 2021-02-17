@@ -21,7 +21,8 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionAidService} from '../../../services/subvention-aid.service';
 import {StatusEnum} from '../../../enums/status.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -87,6 +88,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private subventionAidService: SubventionAidService,
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
+              private router: Router,
               private fb: FormBuilder) {
 
   }
@@ -322,17 +324,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (!request) {
           return;
         }
-        this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
 
+        if (this.editMode) {
+          this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
+        } else {
+          this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
+        }
         this.currentRequest = request.clone();
-
+        this.editMode = true;
         if (!this.requestStatusTab.value) {
           this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
-        }
-        if (this.fm.getFormField('requestStatusTab')?.value) {
-          if (!this.subventionAid.length) {
-            this.aidChanged$.next(new SubventionAid());
-          }
         }
       });
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
@@ -397,7 +398,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private listenToRouteParams() {
     let request: SubventionRequest, beneficiary: Beneficiary, aid: SubventionAid[];
-
     const request$ = this.activeRoute
       .params
       .pipe(
@@ -427,6 +427,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.subventionAid = aid;
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
       this.requestChanged$.next(request);
+      this.editMode = true;
     });
 
   }
@@ -546,19 +547,32 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         return this.fm.getFormField('aidTab.0') as AbstractControl;
       }),
       map((form) => {
-        return (new SubventionAid()).clone({...this.currentAid, ...form.value, ...this.currentUser});
-      }))
-      .subscribe((subventionAid) => {
-        if (!this.hasEditAid) {
-          this.subventionAid.push(subventionAid);
-        } else {
-          this.subventionAid.splice(this.editAidIndex, 1, subventionAid);
-          this.hasEditAid = false;
-          this.editAidIndex = -1;
-        }
-        this.subventionAid = this.subventionAid.slice();
-        this.aidChanged$.next(null);
-      });
+        return (new SubventionAid()).clone({...this.currentAid, ...form.value, subventionRequestId: this.currentRequest?.id});
+      }),
+      exhaustMap((aid) => {
+        return aid
+          .save()
+          .pipe(catchError(() => of(null)));
+      })
+    ).subscribe((subventionAid) => {
+      if (!subventionAid) {
+        return;
+      }
+
+      let message: string;
+      if (!this.hasEditAid) {
+        this.subventionAid.push(subventionAid);
+        message = this.langService.map.msg_aid_added_successfully;
+      } else {
+        this.subventionAid.splice(this.editAidIndex, 1, subventionAid);
+        this.hasEditAid = false;
+        this.editAidIndex = -1;
+        message = this.langService.map.msg_aid_updated_successfully;
+      }
+      this.toastService.success(message);
+      this.subventionAid = this.subventionAid.slice();
+      this.aidChanged$.next(null);
+    });
 
   }
 
@@ -604,15 +618,27 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('requestStatusTab') as FormGroup;
   }
 
-  deleteAid(row: SubventionAid, index: number, $event: MouseEvent): any {
+  get aidInstallmentsCount(): FormControl {
+    return this.fm.getFormField('aidTab.0.installementsCount') as FormControl;
+  }
+
+
+  deleteAid(subventionAid: SubventionAid, index: number, $event: MouseEvent): any {
     $event.preventDefault();
     this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
       .onAfterClose$
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
-        click === UserClickOn.YES ? this.subventionAid.splice(index, 1) : null;
-        if (!this.subventionAid.length) {
-          this.aidChanged$.next(new SubventionAid());
+        if (click === UserClickOn.YES) {
+          subventionAid.delete()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+              this.subventionAid.splice(index, 1);
+              this.toastService.success(this.langService.map.msg_delete_success);
+              if (!this.subventionAid.length) {
+                this.aidChanged$.next(new SubventionAid());
+              }
+            });
         }
       });
   }
@@ -656,6 +682,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   periodicChange(per: HTMLSelectElement) {
-    console.log(per);
+    const value = Number(per.value.split(': ').pop());
+    if (value === PeriodicPayment.MONTHLY) {
+      this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
+    } else {
+      this.aidInstallmentsCount.setValidators(CustomValidators.number);
+    }
+    this.aidInstallmentsCount.updateValueAndValidity();
+  }
+
+  cancelRequest(): any {
+    return this.router.navigate(['.']);
   }
 }
