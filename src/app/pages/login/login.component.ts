@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {CustomValidators} from '../../validators/custom-validators';
 import {AuthService} from '../../services/auth.service';
 import {of, Subject} from 'rxjs';
-import {catchError, delay, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '../../services/toast.service';
 import {ECookieService} from '../../services/e-cookie.service';
 
@@ -67,8 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             }),
             catchError(() => {
               return of(false);
-            }),
-            delay(2000)
+            })
           );
       }),
       takeUntil(this.destroy$),
