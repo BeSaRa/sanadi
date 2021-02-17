@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
+import {delay, distinctUntilChanged} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoadingService {
   private state$ = new BehaviorSubject<boolean>(false);
-  loading$: Observable<boolean> = this.state$.asObservable().pipe(distinctUntilChanged());
+  loading$: Observable<boolean> = this.state$.asObservable().pipe(delay(0), distinctUntilChanged());
 
   constructor() {
   }
