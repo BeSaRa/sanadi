@@ -54,8 +54,8 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
 
   loadRequestAids(): Observable<SubventionAid[]> {
     return this.service.loadSubventionAidByCriteria({
-      benId: 1,
-      requestId: 1
+      benId: this.benId,
+      requestId: this.id
     });
   }
 
