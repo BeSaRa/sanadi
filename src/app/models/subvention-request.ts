@@ -20,7 +20,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   charitySerialNo!: string;
   creationDate!: string;
   approvalIndicator!: number;
-  status!: number;
+  status: number = 2;
   statusDateModified!: string;
   orgBranchId!: number;
   orgId!: number;
@@ -59,10 +59,11 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   }
 
   getInfoFields(control: boolean = false): any {
-    const {requestType, creationDate} = this;
+    const {requestType, creationDate, requestedAidAmount} = this;
     return {
       requestType: control ? [requestType, CustomValidators.required] : requestType,
-      creationDate: control ? [creationDate, CustomValidators.required] : creationDate
+      creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
+      requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number]] : requestedAidAmount
     };
   }
 
