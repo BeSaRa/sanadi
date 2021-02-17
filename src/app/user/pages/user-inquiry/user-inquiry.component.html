@@ -165,12 +165,6 @@
           <a class="nav-link active" id="personal-aid-tab" data-bs-toggle="tab" href="#personal-aid" role="tab"
              aria-controls="personal-aids" aria-selected="true">{{langService.map.personal_aid}}</a>
         </li>
-        <!--  we hide this part cause there is no integration with MOI yet  -->
-        <!--        <li class="nav-item" role="presentation">-->
-        <!--          <a class="nav-link" id="family-aids-tab" data-bs-toggle="tab" href="#family-aids" role="tab"-->
-        <!--             aria-controls="family-aids"-->
-        <!--             aria-selected="false">Family Aids</a>-->
-        <!--        </li>-->
       </ul>
       <div class="tab-content py-3">
         <div class="tab-pane fade show active" id="personal-aid" role="tabpanel" aria-labelledby="personal-aid-tab">
@@ -252,95 +246,7 @@
             </ng-container>
             </tbody>
           </table>
-          <!--<table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="requests">
-            <ng-container cdkColumnDef="requestNumber">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_number}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block"> {{row.requestFullSerial}} </span>
-              </td>
-            </ng-container>
-            <ng-container cdkColumnDef="requestDate">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_date}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.creationDate|date}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="organization">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_org_unit}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.orgBranchInfo.getName()}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="aidType">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.aidType}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="requestedAidAmount">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.requestedAidAmount}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="aidStatus">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_status}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="approvedValue">
-              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.approved_aid_amount}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount}} </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="personalRequestColumns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: personalRequestColumns;"></tr>
-          </table>-->
         </div>
-        <!--        <div class="tab-pane fade show" id="family-aids" role="tabpanel" aria-labelledby="personal-aids">-->
-        <!--          <div class="table-responsive">-->
-        <!--            <table class="table table-striped table-bordered caption-top">-->
-        <!--              <thead>-->
-        <!--              <tr>-->
-        <!--                <th scope="col">Request Number</th>-->
-        <!--                <th scope="col">Request Date</th>-->
-        <!--                <th scope="col">Foundation / Charity</th>-->
-        <!--                <th scope="col">Type of Aid</th>-->
-        <!--                <th scope="col">Request Status</th>-->
-        <!--                <th scope="col">Aid Value</th>-->
-        <!--                <th scope="col">Approved Value</th>-->
-        <!--              </tr>-->
-        <!--              </thead>-->
-        <!--              <tbody>-->
-        <!--              <tr>-->
-        <!--                <td><span class="dir-ltr d-inline-block">2020-AID-1265</span></td>-->
-        <!--                <td>20-12-2021</td>-->
-        <!--                <td>Qatar Charity</td>-->
-        <!--                <td>Medical Aid</td>-->
-        <!--                <td>Approved</td>-->
-        <!--                <td>150,000 QR</td>-->
-        <!--                <td>100,000 QR</td>-->
-        <!--              </tr>-->
-        <!--              <tr>-->
-        <!--                <td><span class="dir-ltr d-inline-block">2020-AID-1265</span></td>-->
-        <!--                <td>20-12-2021</td>-->
-        <!--                <td>Eid Charity</td>-->
-        <!--                <td>Medical Aid</td>-->
-        <!--                <td>Approved</td>-->
-        <!--                <td>150,000 QR</td>-->
-        <!--                <td>100,000 QR</td>-->
-        <!--              </tr>-->
-        <!--              <tr>-->
-        <!--                <td><span class="dir-ltr d-inline-block">2020-AID-1265</span></td>-->
-        <!--                <td>20-12-2021</td>-->
-        <!--                <td>Qatar Foundation</td>-->
-        <!--                <td>Medical Aid</td>-->
-        <!--                <td>Approved</td>-->
-        <!--                <td>150,000 QR</td>-->
-        <!--                <td>100,000 QR</td>-->
-        <!--              </tr>-->
-        <!--              <tr>-->
-        <!--                <td><span class="dir-ltr d-inline-block">2020-AID-1265</span></td>-->
-        <!--                <td>20-12-2021</td>-->
-        <!--                <td>Qatar Foundation</td>-->
-        <!--                <td>Medical Aid</td>-->
-        <!--                <td>Approved</td>-->
-        <!--                <td>150,000 QR</td>-->
-        <!--                <td>100,000 QR</td>-->
-        <!--              </tr>-->
-        <!--              </tbody>-->
-        <!--            </table>&lt;!&ndash; table &ndash;&gt;-->
-        <!--          </div>&lt;!&ndash; table container&ndash;&gt;-->
-        <!--        </div>-->
       </div>
     </div>
   </div>

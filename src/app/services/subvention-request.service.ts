@@ -37,9 +37,8 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     FactoryService.registerService('SubventionRequestService', this);
   }
 
-  @Generator(SubventionRequestAid, true)
-  loadSubventionAidByBeneficiaryId(beneficiaryId: number) {
-    return this.http.get(this.urlService.URLS.SUBVENTION_REQUEST + '/sub-aids/beneficiary/' + beneficiaryId);
+  loadSubventionRequestAidByBeneficiaryId(beneficiaryId: number): Observable<SubventionRequestAid[]> {
+    return this.subventionRequestAidService.loadByBeneficiaryId(beneficiaryId);
   }
 
   _getModel() {

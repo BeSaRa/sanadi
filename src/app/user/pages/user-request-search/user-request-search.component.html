@@ -276,6 +276,10 @@
                     <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}" class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
                     </a>
+                    <a (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-book-edit"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -299,6 +303,10 @@
                     </a>
                     <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}" class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
+                    </a>
+                    <a (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-book-edit"></i>
                     </a>
                   </div>
                 </td>

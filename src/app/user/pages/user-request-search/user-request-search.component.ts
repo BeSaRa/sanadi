@@ -16,6 +16,7 @@ import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '../../../services/dialog.service';
 import {printBlobData} from '../../../helpers/utils';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-request-search',
@@ -46,6 +47,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
+              private router : Router,
               private subventionRequestService: SubventionRequestService) {
   }
 
@@ -263,5 +265,9 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   printRequest($event: MouseEvent, request: SubventionRequestAid): void {
     $event.preventDefault();
     request.printRequest('RequestByIdSearchResult.pdf');
+  }
+
+  editRequest(request: SubventionRequestAid): any {
+    return this.router.navigate(['/home/user/request', {id: request.requestId}]);
   }
 }

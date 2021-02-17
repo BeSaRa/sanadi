@@ -442,7 +442,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.save$.next(null);
   }
 
-  getBeneficiaryData(fieldName: string) {
+  getBeneficiaryData(fieldName: string, $event?: Event) {
+    $event?.preventDefault();
     const primaryNumber = this.fm.getFormField('personalTab.benPrimaryIdNumber')?.value;
     const secondary = this.fm.getFormField('personalTab.benSecIdNumber')?.value;
 
@@ -484,8 +485,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     const element = event.target as HTMLInputElement;
     if (event.code === 'NumpadEnter' || event.code === 'Enter' && element.value.trim().length) {
       event.preventDefault();
-      event.stopImmediatePropagation();
-      this.getBeneficiaryData(element.id);
+      event.stopPropagation();
       return;
     }
     this.idNumbersChanges$.next({
@@ -693,5 +693,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   cancelRequest(): any {
     return this.router.navigate(['.']);
+  }
+
+  submit(event: any) {
+    console.log('SUBMIT', event);
   }
 }
