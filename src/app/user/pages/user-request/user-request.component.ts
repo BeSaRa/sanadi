@@ -4,8 +4,8 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {combineLatest, Observable, of, Subject} from 'rxjs';
-import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, distinctUntilChanged, exhaustMap, filter, map, pluck, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
@@ -21,6 +21,7 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionAidService} from '../../../services/subvention-aid.service';
 import {StatusEnum} from '../../../enums/status.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-user-request',
@@ -62,7 +63,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   periodicityLookups: Record<number, Lookup> = {};
   hasEditAid = false;
   private editAidIndex: number = -1;
-
+  editMode = false;
   aidColumns = [
     'approvalDate',
     'aidLookupId',
@@ -72,7 +73,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'aidAmount',
     'actions'
   ];
-
   dateConfig: IDatePickerDirectiveConfig = {
     format: 'YYYY-MM-DD'
   };
@@ -86,6 +86,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private subventionRequestService: SubventionRequestService,
               private subventionAidService: SubventionAidService,
               private aidLookupService: AidLookupService,
+              private activeRoute: ActivatedRoute,
               private fb: FormBuilder) {
 
   }
@@ -100,15 +101,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         visa: [null, [CustomValidators.number]],
         qid: [null, [CustomValidators.number, CustomValidators.minLength(7), CustomValidators.maxLength(10)]],
         gccId: [null, [CustomValidators.number]]
-      }),
+      }, {validators: CustomValidators.anyFieldsHasLength(['visa', 'qid', 'gccId'])}),
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
       incomeTab: this.fb.group(beneficiary.getEmployerFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
-      requestStatusTab: this.fb.group(request.getStatusFields(true)),
+      requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
       aidTab: this.fb.array([]),
     });
     this.fm = new FormManager(this.form, this.langService);
+  }
+
+  private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
+    request = request ? request : new SubventionRequest();
+    return this.fb.group(request.getStatusFields(true)) as FormGroup;
   }
 
   private listenToIdNumberChange() {
@@ -307,9 +313,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               return value.request.save().pipe(
                 catchError(() => {
                   return of(null);
-                }),
-                tap((request) => {
-                  this.currentRequest = request?.clone();
                 })
               );
             })
@@ -319,15 +322,18 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (!request) {
           return;
         }
-        const aidList: Observable<SubventionAid>[] = [];
-        this.subventionAid.forEach(item => {
-          item.subventionRequestId = request.id;
-          aidList.push(item.save());
-        });
-        combineLatest(aidList).pipe(takeUntil(this.destroy$)).subscribe((list) => {
-          console.log('list', list);
-          this.toastService.success(this.langService.map.msg_request_has_been_added_successfully);
-        });
+        this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
+
+        this.currentRequest = request.clone();
+
+        if (!this.requestStatusTab.value) {
+          this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
+        }
+        if (this.fm.getFormField('requestStatusTab')?.value) {
+          if (!this.subventionAid.length) {
+            this.aidChanged$.next(new SubventionAid());
+          }
+        }
       });
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
     invalidForm$.subscribe(() => {
@@ -348,7 +354,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     const income = this.fm.getFormField('incomeTab')?.value;
     const address = this.fm.getFormField('addressTab')?.value;
     return this.currentBeneficiary = (new Beneficiary())
-      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...this.currentUser});
+      .clone({...this.currentBeneficiary, ...personal, ...income, ...address});
   }
 
   private prepareRequest(): SubventionRequest {
@@ -356,7 +362,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       ...this.currentRequest,
       ...this.fm.getFormField('requestInfoTab')?.value,
       ...this.fm.getFormField('requestStatusTab')?.value,
-      ...this.currentUser,
       requestChannel: 1 // SANADI PORTAL
     };
     return this.currentRequest = (new SubventionRequest()).clone(request);
@@ -387,11 +392,43 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       });
 
     this.preparePeriodicityLookups();
+    this.listenToRouteParams();
+  }
 
-    // just start display the form for the first time if there is no aid list.
-    if (!this.subventionAid.length) {
-      this.aidChanged$.next(new SubventionAid());
-    }
+  private listenToRouteParams() {
+    let request: SubventionRequest, beneficiary: Beneficiary, aid: SubventionAid[];
+
+    const request$ = this.activeRoute
+      .params
+      .pipe(
+        filter(params => params.hasOwnProperty('id')),
+        pluck('id'),
+        switchMap((requestId: number) => {
+          return this.subventionRequestService.getById(requestId);
+        }),
+        tap(myRequest => request = myRequest)
+      );
+
+    const beneficiary$ = request$.pipe(
+      pluck('benId'),
+      switchMap((id: number) => {
+        return this.beneficiaryService.getById(id);
+      }),
+      tap(myBeneficiary => beneficiary = myBeneficiary),
+    );
+
+    beneficiary$.pipe(
+      switchMap(() => {
+        return request.loadRequestAids();
+      }),
+      tap(myAid => aid = myAid)
+    ).subscribe(() => {
+      this.beneficiaryChanged$.next(beneficiary);
+      this.subventionAid = aid;
+      this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
+      this.requestChanged$.next(request);
+    });
+
   }
 
   ngOnDestroy() {
@@ -563,6 +600,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.form.get('aidTab.0.aidLookupId') as FormControl;
   }
 
+  get requestStatusTab(): FormGroup {
+    return this.fm.getFormField('requestStatusTab') as FormGroup;
+  }
+
   deleteAid(row: SubventionAid, index: number, $event: MouseEvent): any {
     $event.preventDefault();
     this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
@@ -612,5 +653,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.subAidLookupsArray = list;
         this.prepareLookupAid();
       });
+  }
+
+  periodicChange(per: HTMLSelectElement) {
+    console.log(per);
   }
 }

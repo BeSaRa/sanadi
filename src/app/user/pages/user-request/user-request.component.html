@@ -14,9 +14,10 @@
            [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
       <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
            [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('requestStatusTab')" [template]="requestStatus"
+      <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+           [template]="requestStatus"
            [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('aidTab')" [template]="providedAid"
+      <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('aidTab')" [template]="providedAid"
            [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
     </tabs-list>
     <!--  personal info Tab -->
@@ -41,7 +42,7 @@
               </div>
             </div>
           </div>
-          <div class="row d-flex flex-column flex-md-row">
+          <div class="row d-flex flex-column flex-md-row mb-0">
             <label for="gccId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.gcc_id_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
@@ -78,7 +79,7 @@
               </div>
             </div>
           </div>
-          <div class="row d-flex flex-column flex-md-row">
+          <div class="row d-flex flex-column flex-md-row mb-0">
             <label for="passport" class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
@@ -97,6 +98,14 @@
           </div>
         </div>
       </div>
+      <div class="w-100 position-relative d-flex flex-row align-items-center justify-content-center mb-4">
+        <div class="d-flex flex-row align-items-center justify-content-center">
+          <div [ngClass]="fm.getInvalidClass('idTypes')"></div>
+          <app-field-error-message class="translate-middle-y"
+                                   [control]="fm.getFormField('idTypes')"></app-field-error-message>
+        </div>
+      </div>
+      <hr class="mb-4"/>
       <div formGroupName="personalTab">
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
@@ -513,6 +522,21 @@
           </div>
         </div>
       </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="requestedAidAmount"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
+                     formControlName="requestedAidAmount"
+                     id="requestedAidAmount" class="form-control">
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-template>
     <!-- Request Status -->
     <ng-template formGroupName="requestStatusTab" #requestStatus>
@@ -617,7 +641,8 @@
                 <label for="periodicType"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')" formControlName="periodicType"
+                  <select (change)="periodicChange(per)" #per [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
+                          formControlName="periodicType"
                           id="periodicType" class="form-select">
                     <option [ngValue]="option.lookupKey"
                             *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
