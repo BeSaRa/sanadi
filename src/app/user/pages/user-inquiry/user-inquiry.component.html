@@ -210,10 +210,10 @@
                   <td> {{aid.aidAmount}} </td>
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length">
                     <div class="d-flex flex-row">
-                      <button class="btn btn-link outline-none"
-                              tooltip="{{langService.map.print_request_form}}"
-                              (click)="printRequest($event, request)">
-                        <i class="mdi mdi-printer"></i></button>
+                      <a href="#" (click)="printRequest($event, request)"
+                         tooltip="{{langService.map.print_request_form}}" class="icon-btn">
+                        <i class="mdi mdi-printer"></i>
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -229,10 +229,10 @@
                   <td></td>
                   <td>
                     <div class="d-flex flex-row">
-                      <button class="btn btn-link outline-none"
-                              tooltip="{{langService.map.print_request_form}}"
-                              (click)="printRequest($event, request)">
-                        <i class="mdi mdi-printer"></i></button>
+                      <a href="#" (click)="printRequest($event, request)"
+                         tooltip="{{langService.map.print_request_form}}" class="icon-btn">
+                        <i class="mdi mdi-printer"></i>
+                      </a>
                     </div>
                   </td>
                 </tr>

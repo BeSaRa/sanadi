@@ -195,6 +195,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   printRequest($event: MouseEvent, request: SubventionRequestAid): void {
+    $event.preventDefault();
     request.printRequest('InquiryByIdSearchResult.pdf');
   }
 }
