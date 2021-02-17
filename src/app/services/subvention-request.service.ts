@@ -18,6 +18,7 @@ import {SubventionLog} from '../models/subvention-log';
 import {SubventionLogPopupComponent} from '../user/popups/subvention-log-popup/subvention-log-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
+import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -78,6 +79,15 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
       .pipe(
         switchMap((logList: SubventionLog[]) => {
           return of(this.dialogService.show<SubventionLog[]>(SubventionLogPopupComponent, logList));
+        })
+      );
+  }
+
+  openAidDialog(requestId: number): Observable<DialogRef> {
+    return this.loadSubventionAidByCriteria({requestId})
+      .pipe(
+        switchMap((aidList: SubventionAid[]) => {
+          return of(this.dialogService.show<SubventionAid[]>(SubventionAidPopupComponent, aidList));
         })
       );
   }

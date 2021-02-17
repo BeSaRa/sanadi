@@ -217,4 +217,6 @@ export interface ILanguageKeys {
   action_time: string;
   comments: string;
   logs: string;
+  show_aids: string;
+  aids: string;
 }

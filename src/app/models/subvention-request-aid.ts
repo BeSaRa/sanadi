@@ -38,4 +38,12 @@ export class SubventionRequestAid {
         dialog.onAfterClose$.subscribe();
       });
   }
+
+  showAid($event: MouseEvent): void {
+    $event.preventDefault();
+    this.subventionRequestService.openAidDialog(this.requestId)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
 }
