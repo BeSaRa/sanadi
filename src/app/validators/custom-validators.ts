@@ -17,7 +17,9 @@ const defaultLengths = {
   ENGLISH_NAME_MAX: 300,
   EMAIL_MAX: 200,
   PHONE_NUMBER_MAX: 50,
-  ADDRESS_MAX: 1000
+  ADDRESS_MAX: 1000,
+  QID_MIN: 7,
+  QID_MAX: 11
 };
 
 const errorKeys: IKeyValue = {
