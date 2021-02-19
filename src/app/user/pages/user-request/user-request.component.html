@@ -127,7 +127,8 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="arName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
+              <label asteriskIfRequired="arName" for="arName"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
                        class="form-control" type="text">
@@ -306,7 +307,7 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="occupation" class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
+            <label asteriskIfRequired="occuption" for="occupation" class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="occupation" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
                      class="form-control" type="text">

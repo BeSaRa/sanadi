@@ -25,6 +25,7 @@ import {TabsListComponent} from './components/tabs/tabs-list.component';
 import { TabComponent } from './components/tab/tab.component';
 import {GridSearchComponent} from './components/grid-search/grid-search.component';
 import {DpDatePickerModule} from 'ng2-date-picker';
+import { AsteriskIfRequiredDirective } from './directives/asterisk-if-required.directive';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import {DpDatePickerModule} from 'ng2-date-picker';
     TooltipDirective,
     TabsListComponent,
     TabComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    AsteriskIfRequiredDirective
   ],
   imports: [
     CommonModule,
@@ -81,7 +83,8 @@ import {DpDatePickerModule} from 'ng2-date-picker';
     TooltipDirective,
     TabsListComponent,
     TabComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    AsteriskIfRequiredDirective
   ]
 })
 export class SharedModule {
