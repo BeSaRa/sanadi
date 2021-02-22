@@ -1,6 +1,8 @@
 import {FactoryService} from '../services/factory.service';
 import {SubventionLogService} from '../services/subvention-log.service';
 import {AdminResult} from './admin-result';
+import {searchFunctionType} from '../types/types';
+
 
 export class SubventionLog {
   id!: number;
@@ -37,6 +39,15 @@ export class SubventionLog {
   // temp properties
   private service: SubventionLogService;
   actionTimeString!: string;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    organization: text => this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
+    branch: text => this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
+    user: text => this.orgUserInfo.getName().toLowerCase().indexOf(text) !== -1,
+    actionType: text => this.actionTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
+    actionTimeString: 'actionTimeString',
+    userComments: 'userComments'
+  };
 
   constructor() {
     this.service = FactoryService.getService('SubventionLogService');

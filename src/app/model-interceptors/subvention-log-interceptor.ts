@@ -27,6 +27,7 @@ export class SubventionLogInterceptor implements IModelInterceptor<SubventionLog
   send(model: any | SubventionLog): any {
     delete model.service;
     delete model.actionTimeString;
+    delete model.searchFields;
     return model;
   }
 

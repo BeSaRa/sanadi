@@ -16,7 +16,7 @@ export class AdminResult {
 
 
   getName(): string {
-    return this[(this.langService.map.lang + 'Name') as keyof INames];
+    return this[(this.langService.map.lang + 'Name') as keyof INames] || '';
   }
 
   static createInstance(model: AdminResult): AdminResult {

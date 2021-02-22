@@ -2,13 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {Localization} from '../../../models/localization';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {filterList} from '../../../helpers/utils';
+import {filterList, searchInObject} from '../../../helpers/utils';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
@@ -22,14 +22,10 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   displayedColumns: string[] = ['localizationKey', 'arName', 'enName', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
+  searchSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   add$ = new Subject<any>();
-
-  bindingKeys: IKeyValue = {
-    localizationKey: 'localizationKey',
-    arName: 'arName',
-    enName: 'enName'
-  };
+  search$: Subject<string> = new Subject<string>();
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
 
@@ -38,11 +34,13 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
+    this.listenToSearch();
   }
 
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   listenToReload(): void {
@@ -98,6 +96,16 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   }
 
   search(searchText: string): void {
-    this.localization = filterList(searchText, this.localizationsClone, this.bindingKeys);
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.localization = this.localizationsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
   }
 }

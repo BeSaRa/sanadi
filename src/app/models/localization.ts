@@ -3,11 +3,18 @@ import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
 import {INames} from '../interfaces/i-names';
+import {searchFunctionType} from '../types/types';
 
 export class Localization extends BaseModel<Localization> {
   localizationKey: string | undefined;
   module: number = 0;
   private service: LangService;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    localizationKey: 'localizationKey'
+  };
 
   constructor() {
     super();

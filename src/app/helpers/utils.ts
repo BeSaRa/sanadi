@@ -1,3 +1,5 @@
+import {searchFunctionType} from '../types/types';
+
 export {
   isValidValue,
   isEmptyObject,
@@ -7,7 +9,8 @@ export {
   generateHtmlList,
   printBlobData,
   filterList,
-  getPropertyValue
+  getPropertyValue,
+  searchInObject
 };
 
 /**
@@ -162,5 +165,29 @@ function filterList(searchText: string, records: any[], searchKeys: any): any[] 
       }
     }
     return result;
+  });
+}
+
+/**
+ * @description Search the given text in object.
+ * If no searchFields are provided in object, record will be returned as searchText exists in record
+ * @param objectToSearch: any
+ * @param searchText: string
+ */
+function searchInObject(objectToSearch: any, searchText: string = ''): boolean {
+  // if no searchFields mentioned, don't search and return all item as existing after filter
+  if (!objectToSearch.searchFields) {
+    return true;
+  }
+  const keys = Object.keys(objectToSearch.searchFields);
+  return keys.some(key => {
+    if (typeof objectToSearch.searchFields[key] === 'function') {
+      const func = objectToSearch.searchFields[key] as searchFunctionType;
+      return func(searchText.toLowerCase());
+    } else {
+      const field = objectToSearch.searchFields[key];
+      const value = (objectToSearch[field] as string) + '';
+      return value.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+    }
   });
 }
