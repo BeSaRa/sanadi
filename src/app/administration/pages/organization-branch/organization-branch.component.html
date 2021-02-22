@@ -1,9 +1,9 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <div class="row">
-  <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$" pageTitle="lbl_org_branches"></app-page-header>
-  <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
-                    [selectedRecords]="selectedRecords"
-                    [actionsList]="actionsList"></app-bulk-actions>
+    <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$" pageTitle="lbl_org_branches"></app-page-header>
+    <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
+                      [selectedRecords]="selectedRecords"
+                      [actionsList]="actionsList"></app-bulk-actions>
   </div>
   <div class="row pt-3">
     <div class="col-12">

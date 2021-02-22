@@ -32,6 +32,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   orgUnitStatusList: Lookup[];
   orgNationalityList: Lookup[];
   saveVisible = true;
+  validateFieldsVisible = true;
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -65,6 +66,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
 
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = !(tab.name && tab.name === this.tabsData.branches.name);
+    this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.branches.name);
   }
 
   get popupTitle(): string {

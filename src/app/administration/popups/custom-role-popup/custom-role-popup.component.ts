@@ -19,6 +19,7 @@ import {extender} from '../../../helpers/extender';
 import {ToastService} from '../../../services/toast.service';
 import {CustomRolePermissionService} from '../../../services/custom-role-permission.service';
 import {Lookup} from '../../../models/lookup';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -35,6 +36,12 @@ export class CustomRolePopupComponent implements OnInit, OnDestroy {
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
   groups: CheckGroup<Permission>[] = [];
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    permissions: {name: 'permissions'}
+  };
+  saveVisible = true;
+  validateFieldsVisible = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<CustomRole>,
               private lookupService: LookupService,
@@ -49,6 +56,9 @@ export class CustomRolePopupComponent implements OnInit, OnDestroy {
     this.selectedPermissions = data.customRolePermissions.map((item: CustomRolePermission) => {
       return item.permissionId;
     });
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
   }
 
   ngOnInit(): void {

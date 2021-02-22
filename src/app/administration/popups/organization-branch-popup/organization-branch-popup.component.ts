@@ -33,11 +33,11 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
   orgUnitStatusList: Lookup[];
 
   tabsData: IKeyValue = {
-    basic: {key: 'basic', show: true},
-    users: {
-      key: 'users', show: (): boolean => !!this.model.id
-    }
+    basic: {name: 'basic'},
+    users: {name: 'users'}
   };
+  saveVisible = true;
+  validateFieldsVisible = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgBranch>,
               private lookupService: LookupService,
@@ -48,6 +48,11 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
     this.model = data.model;
     this.orgUnit = data.orgUnit;
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
 
   ngOnInit(): void {
@@ -65,40 +70,31 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_branch : this.langService.map.lbl_edit_org_branch;
   }
 
-  canShowTab(tab: string | object): boolean {
-    // @ts-ignore
-    const tabName = (typeof tab === 'string') ? tab : tab.key;
-    if (!this.tabsData.hasOwnProperty(tabName)) {
-      return false;
-    } else {
-      const canShow = this.tabsData[tabName].show;
-      return (typeof canShow === 'function') ? canShow() : canShow;
-    }
-  }
-
   private buildForm(): void {
     this.form = this.fb.group({
-      orgId: [this.orgUnit.id],
-      arName: [this.model.arName, [
-        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
-      ]],
-      enName: [this.model.enName, [
-        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
-      ]],
-      status: [this.model.status, CustomValidators.required],
-      // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
-      phoneNumber1: [this.model.phoneNumber1, [
-        CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      phoneNumber2: [this.model.phoneNumber2, [
-        CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-      // buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
-      // unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
-      // street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
-      // zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
-      isMain: [this.model.isMain, [CustomValidators.required]]
+      basic: this.fb.group({
+        orgId: [this.orgUnit.id],
+        arName: [this.model.arName, [
+          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+        ]],
+        enName: [this.model.enName, [
+          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+        ]],
+        status: [this.model.status, CustomValidators.required],
+        // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
+        phoneNumber1: [this.model.phoneNumber1, [
+          CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+        phoneNumber2: [this.model.phoneNumber2, [
+          CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+        address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
+        // buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
+        // unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
+        // street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
+        // zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
+        isMain: [this.model.isMain, [CustomValidators.required]]
+      }, {validators: CustomValidators.validateFieldsStatus(['orgId', 'arName', 'enName', 'status', 'phoneNumber1', 'phoneNumber2', 'address', 'isMain'])})
     });
     this.fm = new FormManager(this.form, this.langService);
 
@@ -116,7 +112,7 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         exhaustMap(() => {
-          const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getForm()?.value});
+          const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getFormField('basic')?.value});
           return orgBranch.save();
         }))
       .subscribe(orgBranch => {

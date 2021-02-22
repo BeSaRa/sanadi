@@ -24,6 +24,7 @@ import {CheckGroup} from '../../../models/check-group';
 import {PermissionService} from '../../../services/permission.service';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
 import {OrganizationUserPermissionService} from '../../../services/organization-user-permission.service';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -51,6 +52,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   selectedPermissions: number[] = [];
   groups: CheckGroup<Permission>[] = [];
 
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    permissions: {name: 'permissions'}
+  };
+  saveVisible = true;
+  validateFieldsVisible = true;
 
   static buildPermissionsByGroupId(permissions: Permission[]): any {
     return permissions.reduce((acc, current) => {
@@ -79,6 +86,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
     this._setDefaultPermissions();
 
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
   }
 
   ngOnDestroy(): void {

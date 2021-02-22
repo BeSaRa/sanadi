@@ -3,10 +3,11 @@
 </div>
 <div class="dialog-content">
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list>
-      <tab name="basic" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
+    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
-      <tab name="permissions" [template]="permissionsTabTemplate" [title]="langService.map.lbl_permissions"
+      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
+           [title]="langService.map.lbl_permissions"
            [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
@@ -190,11 +191,12 @@
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
-          class="btn btn-link">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity()"
+          tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

@@ -2,38 +2,28 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
 </div>
 <div class="dialog-content">
-  <form style="width: 500px" novalidate autocomplete="off"
-        [formGroup]="form">
-    <ul class="nav nav-tabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a id="basic-tab" href="#basic-tab-content" data-bs-toggle="tab" role="tab"
-           class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
-          <span *ngIf="fm.getFieldInvalidStatus('basic')"
-                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-        </a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a id="permissions-tab" href="#permissions-tab-content" data-bs-toggle="tab" role="tab"
-           class="nav-link position-relative">{{langService.map.lbl_permissions}}
-          <span *ngIf="fm.getFieldInvalidStatus('permissions')"
-                class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-        </a>
-      </li>
-    </ul>
-    <div formGroupName="basic" class="tab-content pt-2">
-      <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
+  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
+           [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
+      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
+           [title]="langService.map.lbl_permissions"
+           [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
+    </tabs-list>
+    <ng-template #basicTabTemplate>
+      <div formGroupName="basic">
         <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label asteriskIfRequired="arName" for="arName"
+                   class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName"
                    [ngClass]="fm.getStatusClass('basic.arName')"
                    formControlName="arName" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label asteriskIfRequired="enName" for="enName"
+                   class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName"
                    [ngClass]="fm.getStatusClass('basic.enName')"
                    formControlName="enName" class="form-control">
@@ -50,7 +40,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 mb-4">
+          <div class="col-sm-6 mb-4">
             <div class="form-check form-switch">
               <input type="checkbox" id="status" formControlName="status" class="form-check-input cursor-pointer">
               <label for="status" class="cursor-pointer">{{fm.getStatusFieldTranslate('basic.status')}}</label>
@@ -58,8 +48,9 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" role="tabpanel" aria-labelledby="permissions-tab"
-           id="permissions-tab-content">
+    </ng-template>
+    <ng-template #permissionsTabTemplate>
+      <div formGroupName="permissions">
         <div class="row">
           <ng-container>
             <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
@@ -86,16 +77,18 @@
               </div>
             </div>
           </ng-container>
-        </div><!-- group -->
+        </div>
       </div>
-    </div>
+    </ng-template>
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity()"
+          tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button dialogClose="welcome" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

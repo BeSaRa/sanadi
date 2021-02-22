@@ -11,20 +11,22 @@
            [template]="advancedInfoTemplate" [tabWidth]="'600px'"
            [title]="langService.map.advanced">{{langService.map.advanced}}</tab>
       <tab [name]="tabsData.branches.name" [template]="branchesTemplate"
-           [disabled]="!model.id" [title]="langService.map.lbl_org_branches">{{langService.map.lbl_org_branches}}</tab>
+           *ngIf="model.id" [title]="langService.map.lbl_org_branches">{{langService.map.lbl_org_branches}}</tab>
     </tabs-list>
     <ng-template #basicInfoTemplate style="width: 600px">
       <div formGroupName="basic">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <label asteriskIfRequired="arName" for="arName"
+                   class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName"
                    [ngClass]="fm.getStatusClass('basic.arName')"
                    formControlName="arName" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <label asteriskIfRequired="enName" for="enName"
+                   class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName"
                    [ngClass]="fm.getStatusClass('basic.enName')"
                    formControlName="enName" class="form-control">
@@ -45,7 +47,8 @@
             <app-field-error-message [control]="fm.getFormField('basic.orgUnitType')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="orgCode" for="orgCode" class="form-label">{{langService.map.lbl_org_unit_code}}</label>
+            <label asteriskIfRequired="orgCode" for="orgCode"
+                   class="form-label">{{langService.map.lbl_org_unit_code}}</label>
             <input id="orgCode"
                    [ngClass]="fm.getStatusClass('basic.orgCode')"
                    formControlName="orgCode" class="form-control">
@@ -75,7 +78,8 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="phoneNumber1" asteriskIfRequired="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
+            <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
+                   class="form-label">{{langService.map.lbl_phone_1}}</label>
             <input id="phoneNumber1"
                    [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
                    formControlName="phoneNumber1" class="form-control">
@@ -101,14 +105,16 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="buildingName" for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
+            <label asteriskIfRequired="buildingName" for="buildingName"
+                   class="form-label">{{langService.map.lbl_building_name}}</label>
             <input id="buildingName"
                    [ngClass]="fm.getStatusClass('basic.buildingName')"
                    formControlName="buildingName" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.buildingName')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="unitName" for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
+            <label asteriskIfRequired="unitName" for="unitName"
+                   class="form-label">{{langService.map.lbl_unit_name}}</label>
             <input id="unitName"
                    [ngClass]="fm.getStatusClass('basic.unitName')"
                    formControlName="unitName" class="form-control">
@@ -260,8 +266,8 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
-          class="btn btn-link">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity()"
+          tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
