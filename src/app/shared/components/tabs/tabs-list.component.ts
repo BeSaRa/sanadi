@@ -1,6 +1,6 @@
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, NgZone, OnDestroy, Output, QueryList} from '@angular/core';
+import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
-import {take, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -19,7 +19,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   private destroy$: Subject<any> = new Subject<any>();
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
-  constructor(private ngZone: NgZone) {
+  constructor() {
     ++TabsListComponent.aliveTabsCount;
     this.tabContainerNumber = TabsListComponent.aliveTabsCount;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
@@ -33,15 +33,14 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    this.prepareTabs();
-    this.tabs.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.ngZone.onStable.pipe(take(1))
-        .subscribe(() => {
-          this.prepareTabs();
-        });
+    Promise.resolve().then(() => {
+      this.prepareTabs();
+      this.tabs.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.prepareTabs();
+      });
+      this.selectFirstTabIfThereIsNoActiveIndex();
+      this.listenToSelectTabByIndex();
     });
-    this.selectFirstTabIfThereIsNoActiveIndex();
-    this.listenToSelectTabByIndex();
   }
 
   private listenToSelectTabByIndex() {
