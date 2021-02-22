@@ -95,12 +95,16 @@
           <tr>
             <th>{{langService.map.lbl_nationality}}</th>
             <td>{{beneficiary?.benPrimaryIdNationalityInfo?.getName()}}</td>
-            <th>{{langService.map.gender}}</th>
-            <td>{{beneficiary?.genderInfo?.getName()}}</td>
+            <th>{{langService.map.id_type}}</th>
+            <td>{{beneficiary?.benPrimaryIdTypeInfo.getName()}}</td>
           </tr>
           <tr>
+            <th>{{langService.map.gender}}</th>
+            <td>{{beneficiary?.genderInfo?.getName()}}</td>
             <th>{{langService.map.date_of_birth}}</th>
             <td>{{beneficiary?.dateOfBirth|date}}</td>
+          </tr>
+          <tr>
             <th>{{langService.map.sponsors_count}}</th>
             <td class="position-relative">
               <div class="d-flex align-items-center flex-row h-100 w-100">
@@ -208,10 +212,12 @@
                          tooltip="{{langService.map.print_request_form}}" class="icon-btn">
                         <i class="mdi mdi-printer"></i>
                       </a>
-                      <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}" class="icon-btn">
+                      <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                         class="icon-btn">
                         <i class="mdi mdi-history"></i>
                       </a>
-                      <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}" class="icon-btn">
+                      <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                         class="icon-btn">
                         <i class="mdi mdi-heart-multiple"></i>
                       </a>
                     </div>
@@ -233,10 +239,12 @@
                          tooltip="{{langService.map.print_request_form}}" class="icon-btn">
                         <i class="mdi mdi-printer"></i>
                       </a>
-                      <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}" class="icon-btn">
+                      <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                         class="icon-btn">
                         <i class="mdi mdi-history"></i>
                       </a>
-                      <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}" class="icon-btn">
+                      <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                         class="icon-btn">
                         <i class="mdi mdi-heart-multiple"></i>
                       </a>
                     </div>
