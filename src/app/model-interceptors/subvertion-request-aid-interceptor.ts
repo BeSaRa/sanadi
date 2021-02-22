@@ -8,12 +8,11 @@ function send(model: any): any {
 }
 
 function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
-  model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
   model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
   model.orgInfo = AdminResult.createInstance(model.orgInfo);
   model.statusInfo = AdminResult.createInstance(model.statusInfo);
   model.aids = model.aids.map((aid) => {
-    aid.aidLookupInfo = AdminResult.createInstance(model.statusInfo);
+    aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
     return aid;
   });
   return model;
