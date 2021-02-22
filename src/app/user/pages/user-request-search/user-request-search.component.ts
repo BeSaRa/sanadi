@@ -256,7 +256,19 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     let simple = this.getSimpleSearchValues();
     let beneficiary = this.fm.getFormField('advancedSearch.beneficiary')?.value;
     let request = this.fm.getFormField('advancedSearch.request')?.value;
-    this.latestCriteria = {...simple, ...request, beneficiary: {...simple.beneficiary, ...beneficiary}};
+    this.latestCriteria = {
+      ...simple,
+      ...request,
+      beneficiary: {...simple.beneficiary, ...beneficiary},
+      creationDateFrom: request.creationDateFrom ?
+        dayjs(request.creationDateFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.creationDateFrom,
+      creationDateTo: request.creationDateTo ?
+        dayjs(request.creationDateTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.creationDateTo,
+      statusDateModifiedFrom: request.statusDateModifiedFrom ?
+        dayjs(request.statusDateModifiedFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedFrom,
+      statusDateModifiedTo: request.statusDateModifiedTo ?
+        dayjs(request.statusDateModifiedTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedTo
+    };
     return {...this.latestCriteria};
   }
 
