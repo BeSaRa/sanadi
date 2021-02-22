@@ -1,8 +1,10 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <div class="row">
-    <div class="col-12 d-flex align-items-center">
+    <!--<div class="col-12 d-flex align-items-center">
       <h1 class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_under_process}}</h1>
-    </div>
+    </div>-->
+    <app-page-header pageTitle="menu_under_process"></app-page-header>
+    <app-grid-search (searchTextEvent)="search($event)"></app-grid-search>
   </div>
   <div class="mt-3">
     <div class="table-responsive">
@@ -25,7 +27,7 @@
             <tr *ngFor="let aid of request.aids; let firstAid = first;">
               <td *ngIf="firstAid" [rowSpan]="request.aids.length"><span
                 class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-              <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.creationDate|date}} </td>
+              <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.creationDateString}}</td>
               <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.orgBranchInfo.getName()}} </td>
               <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.statusInfo.getName()}} </td>
               <td> {{aid.aidLookupInfo.getName()}} </td>
@@ -55,7 +57,7 @@
           <ng-template #noAidRow>
             <tr>
               <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-              <td> {{request.creationDate|date}} </td>
+              <td> {{request.creationDateString}} </td>
               <td> {{request.orgBranchInfo.getName()}} </td>
               <td> {{request.statusInfo.getName()}} </td>
               <td> {{request.requestedAidAmount}} </td>

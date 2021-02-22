@@ -1,9 +1,11 @@
 import {SubventionRequestAid} from '../models/subvention-request-aid';
 import {AdminResult} from '../models/admin-result';
-import {SubventionApprovedAid} from '../models/subvention-approved-aid';
+import {DatePipe} from '@angular/common';
 
 function send(model: any): any {
   delete model.subventionRequestService;
+  delete model.underProcessingSearchFields;
+  delete model.creationDateString;
   return model;
 }
 
@@ -15,6 +17,9 @@ function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
     aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
     return aid;
   });
+  // @ts-ignore
+  model.creationDateString = new DatePipe('en-US').transform(model.creationDate);
+
   return model;
 }
 
