@@ -34,7 +34,7 @@
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
-                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('qid')"
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
                         (click)="getBeneficiaryData('qid')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -51,7 +51,7 @@
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i></button>
-                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('gccId')"
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
                         (click)="getBeneficiaryData('gccId')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -71,7 +71,7 @@
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
-                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('visa')"
+                <button tabindex="-1" type="button" [disabled]="!isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
                         (click)="getBeneficiaryData('visa')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -89,7 +89,8 @@
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
-                <button tabindex="-1" type="button" (click)="getBeneficiaryData('passport')" class="input-group-text">
+                <button tabindex="-1" type="button" [disabled]="fm.getFormField('idTypes.passport')?.invalid"
+                        (click)="getBeneficiaryData('passport')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
                 <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
@@ -439,7 +440,7 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="street"  asteriskIfRequired="streetName"
+            <label for="street" asteriskIfRequired="streetName"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street" formControlName="streetName"
