@@ -173,20 +173,21 @@ function filterList(searchText: string, records: any[], searchKeys: any): any[] 
  * If no searchFields are provided in object, record will be returned as searchText exists in record
  * @param objectToSearch: any
  * @param searchText: string
+ * @param searchFieldsProperty: string = 'searchFields'
  */
-function searchInObject(objectToSearch: any, searchText: string = ''): boolean {
+function searchInObject(objectToSearch: any, searchText: string = '', searchFieldsProperty: string = 'searchFields'): boolean {
   // if no searchFields mentioned, don't search and return all item as existing after filter
-  if (!objectToSearch.searchFields) {
+  if (!objectToSearch.hasOwnProperty(searchFieldsProperty)) {
     return true;
   }
-  const keys = Object.keys(objectToSearch.searchFields);
+  const keys = Object.keys(objectToSearch[searchFieldsProperty]);
   return keys.some(key => {
-    if (typeof objectToSearch.searchFields[key] === 'function') {
-      const func = objectToSearch.searchFields[key] as searchFunctionType;
+    if (typeof objectToSearch[searchFieldsProperty][key] === 'function') {
+      const func = objectToSearch[searchFieldsProperty][key] as searchFunctionType;
       return func(searchText.toLowerCase());
     } else {
-      const field = objectToSearch.searchFields[key];
-      const value = (objectToSearch[field] as string) + '';
+      const field = objectToSearch[searchFieldsProperty][key];
+      const value = objectToSearch[field] ? (objectToSearch[field] as string) + '' : '';
       return value.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
     }
   });
