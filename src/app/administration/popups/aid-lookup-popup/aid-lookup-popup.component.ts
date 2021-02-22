@@ -64,16 +64,7 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    this._initStatusChangeSubscribe();
     this._saveModel();
-  }
-
-  private _initStatusChangeSubscribe(): void {
-    this.fm.getFormField('status')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.fm.getFormField('statusDateModified')?.setValue(new Date().toISOString());
-      });
   }
 
   setDialogButtonsVisibility(tab: any): void {
