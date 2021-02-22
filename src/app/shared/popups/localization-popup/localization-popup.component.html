@@ -6,7 +6,7 @@
         [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label for="localizationKey" class="form-label">{{langService.map.lbl_localization_key}}</label>
+        <label asteriskIfRequired="localizationKey" for="localizationKey" class="form-label">{{langService.map.lbl_localization_key}}</label>
         <input id="localizationKey"
                [ngClass]="fm.getStatusClass('localizationKey')"
                formControlName="localizationKey" class="form-control">
@@ -15,7 +15,7 @@
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+        <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
         <textarea id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
                   class="form-control"></textarea>
         <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
@@ -23,7 +23,7 @@
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
         <textarea id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
                   class="form-control"></textarea>
         <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>

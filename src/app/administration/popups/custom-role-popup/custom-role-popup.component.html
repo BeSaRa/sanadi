@@ -24,7 +24,7 @@
       <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab" id="basic-tab-content">
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
-            <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName"
                    [ngClass]="fm.getStatusClass('basic.arName')"
                    formControlName="arName" class="form-control">
@@ -33,7 +33,7 @@
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
-            <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName"
                    [ngClass]="fm.getStatusClass('basic.enName')"
                    formControlName="enName" class="form-control">

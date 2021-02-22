@@ -36,7 +36,7 @@
         <div class="row">
           <!--Arabic Name-->
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName"
                    [ngClass]="fm.getStatusClass('arName')"
                    formControlName="arName" class="form-control">
@@ -44,7 +44,7 @@
           </div>
           <!--English Name-->
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName"
                    [ngClass]="fm.getStatusClass('enName')"
                    formControlName="enName" class="form-control">
@@ -54,7 +54,8 @@
         <div class="row">
           <!--Phone Number 1-->
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="phoneNumber1" class="form-label">{{langService.map.lbl_phone_1}}</label>
+            <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
+                   class="form-label">{{langService.map.lbl_phone_1}}</label>
             <input id="phoneNumber1"
                    [ngClass]="fm.getStatusClass('phoneNumber1')"
                    formControlName="phoneNumber1" class="form-control">
@@ -72,7 +73,8 @@
         <div class="row">
           <!--Status-->
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <label for="status" asteriskIfRequired="status"
+                   class="form-label">{{langService.map.lbl_status}}</label>
             <select id="status" formControlName="status"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('status')">

@@ -110,7 +110,7 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="nationality"
+              <label for="nationality" asteriskIfRequired="benNationality"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
@@ -139,7 +139,8 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="enName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
+              <label asteriskIfRequired="enName" for="enName"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
                        class="form-control" type="text">
@@ -152,7 +153,7 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="dateOfBirth"
+              <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
@@ -165,7 +166,8 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="gender" class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
+              <label for="gender" asteriskIfRequired="gender"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
                         class="form-select">
@@ -181,7 +183,8 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="mobile" class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+              <label for="mobile" asteriskIfRequired="phoneNumber1"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
                        formControlName="phoneNumber1" class="form-control" type="text">
@@ -192,7 +195,8 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="employer" class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
+              <label for="employer" asteriskIfRequired="employeer"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')" formControlName="employeer"
                        class="form-control" type="text">
@@ -205,7 +209,7 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="educationLevel"
+              <label for="educationLevel" asteriskIfRequired="educationLevel"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
@@ -220,7 +224,7 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="sponsorsCount"
+              <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="sponsorsCount" [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
@@ -234,7 +238,7 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="maritalStatus"
+              <label for="maritalStatus" asteriskIfRequired="maritalStatus"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
@@ -257,7 +261,7 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="occupationStatus"
+              <label for="occupationStatus" asteriskIfRequired="benCategory"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
@@ -291,7 +295,7 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="employmentStatus"
+            <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
@@ -307,7 +311,8 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="occuption" for="occupation" class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
+            <label asteriskIfRequired="occuption" for="occupation"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="occupation" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
                      class="form-control" type="text">
@@ -320,7 +325,8 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="workplace" class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
+            <label for="workplace" asteriskIfRequired="employeerAddress"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
                      id="workplace" class="form-control" type="text">
@@ -331,7 +337,7 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="monthlyIncome"
+            <label for="monthlyIncome" asteriskIfRequired="benIncome"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="monthlyIncome" [ngClass]="fm.getStatusClass('incomeTab.benIncome')" formControlName="benIncome"
@@ -404,7 +410,8 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="city" class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
+            <label for="city" asteriskIfRequired="residenceCountry"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
                       formControlName="residenceCountry" class="form-select">
@@ -418,7 +425,8 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="zone" class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
+            <label for="zone" asteriskIfRequired="zone"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
                      class="form-control">
@@ -431,7 +439,8 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="street" class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
+            <label for="street"  asteriskIfRequired="streetName"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street" formControlName="streetName"
                      class="form-control" type="text">
@@ -442,7 +451,7 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="buildingName"
+            <label for="buildingName" asteriskIfRequired="buildingName"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
@@ -498,7 +507,7 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="requestType"
+            <label for="requestType" asteriskIfRequired="requestType"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
@@ -513,7 +522,8 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="creationDate" class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
+            <label for="creationDate" asteriskIfRequired="creationDate"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input theme="dp-material" [dpDayPicker]="dateConfig"
                      [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
@@ -528,7 +538,7 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="requestedAidAmount"
+            <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"

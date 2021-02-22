@@ -13,13 +13,15 @@
       <div formGroupName="basic">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="arName" class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <label asteriskIfRequired="arName" for="arName"
+                   class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="enName" class="form-label">{{langService.map.lbl_english_name}}</label>
+            <label asteriskIfRequired="enName" for="enName"
+                   class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
@@ -27,13 +29,15 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="empNum" class="form-label">{{langService.map.lbl_employee_number}}</label>
+            <label for="empNum" asteriskIfRequired="empNum"
+                   class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" [ngClass]="fm.getStatusClass('basic.empNum')" formControlName="empNum"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.empNum')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="qid" class="form-label">{{langService.map.lbl_qid}}</label>
+            <label for="qid" asteriskIfRequired="qid"
+                   class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" [ngClass]="fm.getStatusClass('basic.qid')" formControlName="qid"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.qid')"></app-field-error-message>
@@ -41,7 +45,8 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="phoneNumber" class="form-label">{{langService.map.lbl_phone}}</label>
+            <label for="phoneNumber" asteriskIfRequired="phoneNumber"
+                   class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" [ngClass]="fm.getStatusClass('basic.phoneNumber')" formControlName="phoneNumber"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber')"></app-field-error-message>
@@ -63,7 +68,7 @@
             <app-field-error-message [control]="fm.getFormField('basic.officialPhoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
+            <label asteriskIfRequired="email" for="email" class="form-label">{{langService.map.lbl_email}}</label>
             <input id="email" [ngClass]="fm.getStatusClass('basic.email')" formControlName="email"
                    class="form-control"/>
             <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
@@ -71,7 +76,8 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="userType" class="form-label">{{langService.map.lbl_user_type}}</label>
+            <label for="userType" asteriskIfRequired="userType"
+                   class="form-label">{{langService.map.lbl_user_type}}</label>
             <select id="userType" formControlName="userType"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('basic.userType')">
@@ -82,7 +88,8 @@
             <app-field-error-message [control]="fm.getFormField('basic.userType')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="jobTitle" class="form-label">{{langService.map.lbl_job_title}}</label>
+            <label for="jobTitle" asteriskIfRequired="jobTitle"
+                   class="form-label">{{langService.map.lbl_job_title}}</label>
             <select id="jobTitle" formControlName="jobTitle"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('basic.jobTitle')">
@@ -95,7 +102,7 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="orgId" class="form-label">{{langService.map.lbl_org_unit}}</label>
+            <label for="orgId" asteriskIfRequired="orgId" class="form-label">{{langService.map.lbl_org_unit}}</label>
             <select id="orgId" formControlName="orgId"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('basic.orgId')" (change)="onOrgUnitChange()">
@@ -106,7 +113,8 @@
             <app-field-error-message [control]="fm.getFormField('basic.orgId')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="orgBranchId" class="form-label">{{langService.map.lbl_branch}}</label>
+            <label for="orgBranchId" asteriskIfRequired="orgBranchId"
+                   class="form-label">{{langService.map.lbl_branch}}</label>
             <select id="orgBranchId" formControlName="orgBranchId"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('basic.orgBranchId')">
@@ -119,7 +127,8 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <label for="status" asteriskIfRequired="status"
+                   class="form-label">{{langService.map.lbl_status}}</label>
             <select id="status" formControlName="status"
                     class="form-select"
                     [ngClass]="fm.getStatusClass('basic.status')">
