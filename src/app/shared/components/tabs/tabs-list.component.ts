@@ -1,6 +1,15 @@
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList} from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList
+} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
-import {takeUntil} from 'rxjs/operators';
+import {delay, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -35,7 +44,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   ngAfterContentInit(): void {
     Promise.resolve().then(() => {
       this.prepareTabs();
-      this.tabs.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.tabs.changes.pipe(takeUntil(this.destroy$), delay(0)).subscribe(() => {
         this.prepareTabs();
       });
       this.selectFirstTabIfThereIsNoActiveIndex();
