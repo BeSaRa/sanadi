@@ -22,7 +22,7 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
   templateUrl: './aid-lookup-popup.component.html',
   styleUrls: ['./aid-lookup-popup.component.scss']
 })
-export class AidLookupPopupComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AidLookupPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
@@ -51,6 +51,7 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy, AfterViewInit
     this.parentId = data.parentId;
     this.operation = data.operation;
     this.aidType = data.aidType;
+    this.checkIfAidTabEnabled();
     this.setGridAidType();
     this.aidLookupStatusList = lookupService.getByCategory(LookupCategories.AID_LOOKUP_STATUS);
   }
@@ -59,12 +60,6 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy, AfterViewInit
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    timer(0).subscribe(() => {
-      this.checkIfAidTabEnabled();
-    });
   }
 
   ngOnInit(): void {
