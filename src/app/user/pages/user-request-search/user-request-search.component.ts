@@ -47,7 +47,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
-              private router : Router,
+              private router: Router,
               private subventionRequestService: SubventionRequestService) {
   }
 
@@ -66,6 +66,10 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.onAdvancedSearch();
 
     this.setInitialValues();
+  }
+
+  get getResultTabTitle(): string {
+    return this.langService.map.search_result + (!this.requests.length ? '' : ' (' + this.requests.length + ')');
   }
 
   private buildForm() {
