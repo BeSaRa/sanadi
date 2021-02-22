@@ -2,82 +2,68 @@
   <h1 class="h6 text-white">{{popupTitle}}</h1>
 </div>
 <div class="dialog-content">
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a [id]="'basic-tab'+aidType" [href]="'#basic-tab-content'+aidType" data-bs-toggle="tab" role="tab"
-         class="nav-link active position-relative">{{langService.map.lbl_basic_info}}
-        <span *ngIf="fm.getFieldInvalidStatus('basic')"
-              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-      </a>
-    </li>
-    <li class="nav-item" role="presentation" *ngIf="isAidTabVisible">
-      <a [id]="'aid-lookup-list-tab'+aidType" [href]="'#aid-lookup-list-tab-content' + aidType" data-bs-toggle="tab"
-         role="tab"
-         class="nav-link position-relative">{{getTabTitleText()}}
-        <span *ngIf="fm.getFieldInvalidStatus('aid-lookup-list')"
-              class="position-absolute text-danger top-0 start-0 translate-middle mdi mdi-alert-circle"></span>
-      </a>
-    </li>
-  </ul>
-  <div class="tab-content pt-2">
-    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="basic-tab"
-         [id]="'basic-tab-content'+aidType">
-      <form class="min-w400px" novalidate autocomplete="off" [formGroup]="form">
-        <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="arName" for="arName"
-                   class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName" [ngClass]="fm.getStatusClass('arName')" formControlName="arName"
-                   class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
+  <form novalidate autocomplete="off" [formGroup]="form">
+    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
+           [hasError]="fm.getFieldInvalidStatus('basic')" [tabWidth]="'400px'"></tab>
+      <tab [name]="tabsData.childAids.name" [template]="childAidsTabTemplate" [title]="getTabTitleText()"
+           [disabled]="!model.id" *ngIf="isAidTabVisible"></tab>
+      <ng-template #basicTabTemplate>
+        <div formGroupName="basic">
+          <div class="row">
+            <div class="col-sm-6 mb-4 position-relative">
+              <label asteriskIfRequired="arName" for="arName"
+                     class="form-label">{{langService.map.lbl_arabic_name}}</label>
+              <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
+                     class="form-control"/>
+              <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
+            </div>
+            <div class="col-sm-6 mb-4 position-relative">
+              <label asteriskIfRequired="enName" for="enName"
+                     class="form-label">{{langService.map.lbl_english_name}}</label>
+              <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
+                     class="form-control"/>
+              <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
+            </div>
           </div>
-          <div class="col-sm-6 mb-4 position-relative">
-            <label asteriskIfRequired="enName" for="enName"
-                   class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName" [ngClass]="fm.getStatusClass('enName')" formControlName="enName"
-                   class="form-control"/>
-            <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6 mb-4 position-relative">
-            <label for="aidCode" asteriskIfRequired="aidCode"
-                   class="form-label">{{langService.map.lbl_aid_code}}</label>
-            <input id="aidCode"
-                   [ngClass]="fm.getStatusClass('aidCode')"
-                   formControlName="aidCode" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('aidCode')"></app-field-error-message>
-          </div>
-          <div class="col-sm-6 mb-4 position-relative">
-            <label for="status" asteriskIfRequired="status"
-                   class="form-label">{{langService.map.lbl_status}}</label>
-            <select id="status" formControlName="status"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('status')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of aidLookupStatusList"
-                      [disabled]="option.isRetiredAidLookupStatus()"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
-            <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
+          <div class="row">
+            <div class="col-sm-6 mb-4 position-relative">
+              <label asteriskIfRequired="aidCode" for="aidCode"
+                     class="form-label">{{langService.map.lbl_aid_code}}</label>
+              <input id="aidCode"
+                     [ngClass]="fm.getStatusClass('basic.aidCode')"
+                     formControlName="aidCode" class="form-control">
+              <app-field-error-message [control]="fm.getFormField('basic.aidCode')"></app-field-error-message>
+            </div>
+            <div class="col-sm-6 mb-4 position-relative">
+              <label asteriskIfRequired="status" for="status" class="form-label">{{langService.map.lbl_status}}</label>
+              <select id="status" formControlName="status"
+                      class="form-select"
+                      [ngClass]="fm.getStatusClass('basic.status')">
+                <option value="">{{langService.map.lbl_none}}</option>
+                <option *ngFor="let option of aidLookupStatusList"
+                        [disabled]="option.isRetiredAidLookupStatus()"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
+            </div>
           </div>
         </div>
-      </form>
-    </div>
-    <div class="tab-pane fade show" role="tabpanel" aria-labelledby="aid-lookup-list-tab"
-         [id]="'aid-lookup-list-tab-content'+aidType" *ngIf="isAidTabVisible">
-      <app-aid-lookup [aidType]="gridAidType" [parentId]="parentId"></app-aid-lookup>
-    </div>
-  </div>
+      </ng-template>
+      <ng-template #childAidsTabTemplate>
+        <app-aid-lookup [aidType]="gridAidType" [parentId]="model.id"></app-aid-lookup>
+      </ng-template>
+    </tabs-list>
+  </form>
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
-          class="btn btn-link">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity()"
+          tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button *ngIf="saveVisible" [disabled]="form.invalid" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
-
