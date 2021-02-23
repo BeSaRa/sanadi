@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 import {OrgUser} from '../../../models/org-user';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {OrganizationUserService} from '../../../services/organization-user.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {LangService} from '../../../services/lang.service';
@@ -11,7 +11,7 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {cloneDeep as _deepClone} from 'lodash';
-import {filterList, generateHtmlList} from '../../../helpers/utils';
+import {filterList, generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 
@@ -21,7 +21,6 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
   styleUrls: ['./organization-user.component.scss']
 })
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
-
   orgUsers: OrgUser[] = [];
   orgUsersClone: OrgUser[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
@@ -29,6 +28,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
+  search$: Subject<string> = new Subject<string>();
+  searchSubscription!: Subscription;
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
@@ -112,6 +113,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
+    this.listenToSearch();
   }
 
   add(): void {
@@ -197,7 +199,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       })
     ).subscribe((orgUsers) => {
       this.orgUsers = orgUsers;
-      this.orgUsersClone = orgUsers.slice();
+      this.orgUsersClone = orgUsers;
       this.selectedRecords = [];
     });
   }
@@ -213,9 +215,20 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   search(searchText: string): void {
-    this.orgUsers = filterList(searchText, this.orgUsersClone, this.bindingKeys);
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.orgUsers = this.orgUsersClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
   }
 }

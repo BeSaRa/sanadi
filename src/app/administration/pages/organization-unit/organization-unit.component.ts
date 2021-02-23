@@ -6,14 +6,14 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogRef} from '../../../shared/models/dialog-ref';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {OrgUnit} from '../../../models/org-unit';
 import {OrganizationUnitService} from '../../../services/organization-unit.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {generateHtmlList} from '../../../helpers/utils';
+import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {cloneDeep as _deepClone} from 'lodash';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 
@@ -25,10 +25,13 @@ import {IGridAction} from '../../../interfaces/i-grid-action';
 export class OrganizationUnitComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUnit> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  search$: Subject<string> = new Subject<string>();
   organizations: OrgUnit[] = [];
+  organizationsClone: OrgUnit[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
+  searchSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
@@ -99,11 +102,13 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   ngOnDestroy(): void {
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
+    this.listenToSearch();
   }
 
   add(): void {
@@ -191,7 +196,22 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       })
     ).subscribe((orgUnits) => {
       this.organizations = orgUnits;
+      this.organizationsClone = orgUnits;
       this.selectedRecords = [];
+    });
+  }
+
+  search(searchText: string): void {
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.organizations = this.organizationsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
     });
   }
 }

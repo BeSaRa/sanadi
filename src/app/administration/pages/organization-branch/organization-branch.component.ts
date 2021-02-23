@@ -9,13 +9,13 @@ import {OrganizationBranchService} from '../../../services/organization-branch.s
 
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogRef} from '../../../shared/models/dialog-ref';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
 import {OrgUnit} from '../../../models/org-unit';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
-import {generateHtmlList} from '../../../helpers/utils';
+import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 
 @Component({
   selector: 'app-organization-branch',
@@ -25,12 +25,15 @@ import {generateHtmlList} from '../../../helpers/utils';
 export class OrganizationBranchComponent implements OnInit, OnDestroy, PageComponentInterface<OrgBranch> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  search$: Subject<string> = new Subject<string>();
   branches: OrgBranch[] = [];
+  branchesClone: OrgBranch[] = [];
 
   @Input() organization!: OrgUnit;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'address', 'status', 'statusDateModified', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
+  searchSubscription!: Subscription;
 
   selectedRecords: OrgBranch[] = [];
   /*actionsList: IGridAction[] = [
@@ -96,11 +99,13 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   ngOnDestroy(): void {
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
+    this.listenToSearch();
   }
 
   add(): void {
@@ -191,7 +196,22 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       })
     ).subscribe((branches) => {
       this.branches = branches;
+      this.branchesClone = branches;
       this.selectedRecords = [];
+    });
+  }
+
+  search(searchText: string): void {
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.branches = this.branchesClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
     });
   }
 

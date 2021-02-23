@@ -6,6 +6,7 @@ import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
 import {CustomRolePermission} from './custom-role-permission';
 import {Permission} from './permission';
+import {searchFunctionType} from '../types/types';
 
 export class CustomRole extends BaseModel<CustomRole> {
   status: boolean = true;
@@ -13,6 +14,11 @@ export class CustomRole extends BaseModel<CustomRole> {
   description: string = '';
   service: CustomRoleService;
   langService: LangService;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName'
+  };
 
   constructor() {
     super();

@@ -7,6 +7,7 @@ import {FactoryService} from '../services/factory.service';
 import {OrganizationBranchService} from '../services/organization-branch.service';
 import {Lookup} from './lookup';
 import {LookupCategories} from '../enums/lookup-categories';
+import {searchFunctionType} from '../types/types';
 
 export class OrgBranch extends BaseModel<OrgBranch> {
   orgId: number | undefined;
@@ -25,6 +26,16 @@ export class OrgBranch extends BaseModel<OrgBranch> {
   service: OrganizationBranchService;
   langService: LangService;
   lookupService: LookupService;
+  statusDateModifiedString!: string;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    phoneNumber1: 'phoneNumber1',
+    address: 'address',
+    statusModifiedDate: 'statusDateModifiedString',
+    status: text => this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
+  };
 
   constructor() {
     super();

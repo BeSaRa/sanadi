@@ -5,7 +5,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {LangService} from '../../../services/lang.service';
 import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {AidLookupService} from '../../../services/aid-lookup.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DialogRef} from '../../../shared/models/dialog-ref';
@@ -13,7 +13,7 @@ import {AidTypes} from '../../../enums/aid-types.enum';
 import {IAidLookupCriteria} from '../../../interfaces/i-aid-lookup-criteria';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {generateHtmlList} from '../../../helpers/utils';
+import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
 
@@ -27,11 +27,14 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   @Input() parentId!: number;
 
   aidLookups: AidLookup[] = [];
+  aidLookupsClone: AidLookup[] = [];
   displayedColumns: string[] = ['rowSelection', 'aidCode', 'arName', 'enName', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
+  search$: Subject<string> = new Subject<string>();
+  searchSubscription!: Subscription;
 
   selectedRecords: AidLookup[] = [];
   /*actionsList: IGridAction[] = [
@@ -95,6 +98,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
+    this.listenToSearch();
   }
 
   listenToAdd(): void {
@@ -111,6 +115,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       return this.aidLookupService.loadByCriteria(criteria);
     })).subscribe(aidLookups => {
       this.aidLookups = aidLookups;
+      this.aidLookupsClone = aidLookups;
       this.selectedRecords = [];
     });
   }
@@ -207,5 +212,20 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
+    this.searchSubscription?.unsubscribe();
+  }
+
+  search(searchText: string): void {
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.aidLookups = this.aidLookupsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
   }
 }

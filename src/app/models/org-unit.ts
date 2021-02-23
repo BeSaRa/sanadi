@@ -7,6 +7,7 @@ import {OrganizationUnitService} from '../services/organization-unit.service';
 import {Lookup} from './lookup';
 import {LookupService} from '../services/lookup.service';
 import {LookupCategories} from '../enums/lookup-categories';
+import {searchFunctionType} from '../types/types';
 
 export class OrgUnit extends BaseModel<OrgUnit> {
   phoneNumber1: string | undefined;
@@ -40,6 +41,18 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   service: OrganizationUnitService;
   langService: LangService;
   lookupService: LookupService;
+  statusDateModifiedString!: string;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    nationality: text => this.getOrgNationalityLookup()?.getName().toLowerCase().indexOf(text) !== -1,
+    phoneNumber1: 'phoneNumber1',
+    email: 'email',
+    address: 'address',
+    statusModifiedDate: 'statusDateModifiedString',
+    status: text => this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
+  };
 
   constructor() {
     super();

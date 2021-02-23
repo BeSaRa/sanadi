@@ -4,7 +4,10 @@ import {OrgBranch} from '../models/org-branch';
 import {FactoryService} from './factory.service';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {interceptOrganizationBranch} from '../model-interceptors/organization-branch-interceptor';
+import {
+  interceptOrganizationBranch,
+  interceptOrganizationBranchReceive
+} from '../model-interceptors/organization-branch-interceptor';
 import {Observable, of} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -78,5 +81,6 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
   }
 
   _getReceiveInterceptor(): any {
+    return interceptOrganizationBranchReceive;
   }
 }

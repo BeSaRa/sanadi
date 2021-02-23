@@ -4,14 +4,14 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CustomRoleService} from '../../../services/custom-role.service';
 import {CustomRole} from '../../../models/custom-role';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, tap} from 'rxjs/operators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
-import {generateHtmlList} from '../../../helpers/utils';
+import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 
 @Component({
   selector: 'app-custom-role',
@@ -21,10 +21,13 @@ import {generateHtmlList} from '../../../helpers/utils';
 export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInterface<CustomRole> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  search$: Subject<string> = new Subject<string>();
   customRoles: CustomRole[] = [];
+  customRolesClone: CustomRole[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
+  searchSubscription!: Subscription;
 
   selectedRecords: CustomRole[] = [];
   actionsList: IGridAction[] = [
@@ -89,11 +92,13 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   ngOnDestroy(): void {
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
+    this.listenToSearch();
   }
 
   add(): void {
@@ -181,6 +186,7 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       })
     ).subscribe((roles) => {
       this.customRoles = roles;
+      this.customRolesClone = roles;
       this.selectedRecords = [];
     });
   }
@@ -195,6 +201,20 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
       model.toggleStatus();
       sub.unsubscribe();
+    });
+  }
+
+  search(searchText: string): void {
+    this.search$.next(searchText);
+  }
+
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      debounceTime(500)
+    ).subscribe((searchText) => {
+      this.customRoles = this.customRolesClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
     });
   }
 }

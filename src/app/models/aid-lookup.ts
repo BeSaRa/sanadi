@@ -5,6 +5,7 @@ import {AidLookupService} from '../services/aid-lookup.service';
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {Lookup} from './lookup';
+import {searchFunctionType} from '../types/types';
 
 export class AidLookup extends BaseModel<AidLookup> {
   aidCode!: string;
@@ -19,6 +20,15 @@ export class AidLookup extends BaseModel<AidLookup> {
   private service: AidLookupService;
   private langService: LangService;
   private statusInfo!: Lookup;
+  statusDateModifiedString!: string;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    aidCode: 'aidCode',
+    arName: 'arName',
+    enName: 'enName',
+    status: text => this.statusInfo?.getName().toLowerCase().indexOf(text) !== -1,
+    statusModifiedDate: 'statusDateModifiedString'
+  };
 
   constructor() {
     super();

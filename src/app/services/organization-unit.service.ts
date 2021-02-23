@@ -10,7 +10,10 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {switchMap} from 'rxjs/operators';
-import {interceptOrganizationUnit} from '../model-interceptors/organization-unit-interceptor';
+import {
+  interceptOrganizationUnit,
+  interceptOrganizationUnitReceive
+} from '../model-interceptors/organization-unit-interceptor';
 import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
 
 @Injectable({
@@ -74,5 +77,6 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   _getReceiveInterceptor(): any {
+    return interceptOrganizationUnitReceive;
   }
 }

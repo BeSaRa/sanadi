@@ -4,6 +4,7 @@
     <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                       [selectedRecords]="selectedRecords"
                       [actionsList]="actionsList"></app-bulk-actions>
+    <app-grid-search *ngIf="!selectedRecords.length" (searchTextEvent)="search($event)"></app-grid-search>
   </div>
   <div class="row pt-3">
     <div class="col-12">
@@ -49,7 +50,7 @@
           <ng-container cdkColumnDef="statusDateModified">
             <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_status_date_modified}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <span>{{row.statusDateModified | date: configService.CONFIG.DEFAULT_DATE_FORMAT }}</span></td>
+              <span>{{row.statusDateModifiedString}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_status}}</th>

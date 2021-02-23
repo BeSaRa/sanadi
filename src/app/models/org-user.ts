@@ -11,6 +11,7 @@ import {AdminResult} from './admin-result';
 import {Lookup} from './lookup';
 import {LookupCategories} from '../enums/lookup-categories';
 import {LookupService} from '../services/lookup.service';
+import {searchFunctionType} from '../types/types';
 
 export class OrgUser extends BaseModel<OrgUser> {
   email: string | undefined;
@@ -36,6 +37,17 @@ export class OrgUser extends BaseModel<OrgUser> {
   private service: OrganizationUserService;
   private langService: LangService;
   lookupService: LookupService;
+  statusDateModifiedString!: string;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    empNum: 'empNum',
+    organization: text => this.orgUnitInfo?.getName().toLowerCase().indexOf(text) !== -1,
+    branch: text => this.orgBranchInfo?.getName().toLowerCase().indexOf(text) !== -1,
+    status: text => this.getOrgUserStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1,
+    statusModifiedDate: 'statusDateModifiedString'
+  };
 
   constructor() {
     super();
