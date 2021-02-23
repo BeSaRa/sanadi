@@ -6,13 +6,22 @@ import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
 import {OrganizationUnitComponent} from './pages/organization-unit/organization-unit.component';
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
+import {PermissionGuard} from '../guards/permission-guard';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
   {path: 'localization', component: LocalizationComponent},
-  {path: 'custom-role', component: CustomRoleComponent},
+  {
+    path: 'custom-role', component: CustomRoleComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_CUSTOM_ROLE'}
+  },
   {path: 'organizations', component: OrganizationUnitComponent},
-  {path: 'aid', component: AidLookupContainerComponent},
+  {
+    path: 'aid', component: AidLookupContainerComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_AID_TYPE'}
+  },
   {path: 'users', component: OrganizationUserComponent}
 ];
 

@@ -290,7 +290,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   editRequest(request: SubventionRequestAid): any {
-    return this.router.navigate(['/home/user/request', {id: request.requestId}]);
+    return this.router.navigate(['/home/user/request', request.requestId]);
   }
 
   cancelRequest(request: SubventionRequestAid) {

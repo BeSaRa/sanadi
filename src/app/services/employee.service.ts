@@ -4,6 +4,7 @@ import {OrgUser} from '../models/org-user';
 import {OrgBranch} from '../models/org-branch';
 import {OrgUnit} from '../models/org-unit';
 import {Permission} from '../models/permission';
+import {isValidValue} from '../helpers/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +83,24 @@ export class EmployeeService {
     return !(permissionKeys.some(key => {
       return !this.hasPermissionTo(key);
     }));
+  }
+
+  /**
+   * @description Check if user has given permission or permissions
+   * @param permissionKey: string | string[]
+   * @param bulkPermissionsCheckAny: boolean
+   */
+  checkPermissions(permissionKey: string | string[], bulkPermissionsCheckAny: boolean = false): boolean {
+    if (!isValidValue(permissionKey)) {
+      return true;
+    }
+    if (typeof permissionKey === 'string') {
+      return this.hasPermissionTo(permissionKey);
+    } else {
+      if (bulkPermissionsCheckAny) {
+        return this.hasAnyPermissions(permissionKey);
+      }
+      return this.hasAllPermissions(permissionKey);
+    }
   }
 }

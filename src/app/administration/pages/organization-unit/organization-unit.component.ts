@@ -16,6 +16,7 @@ import {ConfigurationService} from '../../../services/configuration.service';
 import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {cloneDeep as _deepClone} from 'lodash';
 import {IGridAction} from '../../../interfaces/i-grid-action';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-organization-unit',
@@ -93,7 +94,9 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private organizationUnitService: OrganizationUnitService,
-              public lookupService: LookupService, private toast: ToastService,
+              public lookupService: LookupService,
+              private toast: ToastService,
+              public empService: EmployeeService,
               public configService: ConfigurationService) {
     this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
   }

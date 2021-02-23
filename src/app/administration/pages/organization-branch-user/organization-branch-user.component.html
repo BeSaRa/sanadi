@@ -24,7 +24,8 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <div class="d-flex flex-row">
-                <a href="#" (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
+                <a href="#" *ngIf="empService.checkPermissions('ADMIN_EDIT_USER')"
+                   (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
                   <i class="mdi mdi-pen"></i>
                 </a>
               </div>

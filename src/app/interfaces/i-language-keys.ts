@@ -226,4 +226,5 @@ export interface ILanguageKeys {
   show_aids: string;
   aids: string;
   show_details: string;
+  access_denied: string;
 }

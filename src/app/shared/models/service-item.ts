@@ -3,7 +3,9 @@ export class ServiceItem {
               public arName: string,
               public enName: string,
               public route: string,
-              public icon: string
+              public icon: string,
+              public permissionKey: string | string[] = '',
+              public checkAnyPermission: boolean = false
   ) {
 
   }

@@ -14,6 +14,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
   @Input() pageTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() clickOnReload$: BehaviorSubject<any> = {} as BehaviorSubject<any>;
   @Input() clickOnNew$: Subject<any> = {} as Subject<any>;
+  @Input() addPermission = true;
 
   isReloadAvailable = false;
   isAddAvailable = false;
@@ -22,7 +23,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isAddAvailable = !isEmptyObject(this.clickOnNew$);
+    this.isAddAvailable = this.addPermission && !isEmptyObject(this.clickOnNew$);
     this.isReloadAvailable = !isEmptyObject(this.clickOnReload$);
   }
 

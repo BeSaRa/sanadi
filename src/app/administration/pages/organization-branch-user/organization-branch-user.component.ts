@@ -8,6 +8,7 @@ import {switchMap, tap} from 'rxjs/operators';
 import {OrgBranch} from '../../../models/org-branch';
 import {OrgUnit} from '../../../models/org-unit';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-organization-branch-user',
@@ -25,7 +26,9 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
 
-  constructor(private orgUserService: OrganizationUserService, public langService: LangService) {
+  constructor(private orgUserService: OrganizationUserService,
+              public langService: LangService,
+              public empService: EmployeeService) {
   }
 
   ngOnInit(): void {

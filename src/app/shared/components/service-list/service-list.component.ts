@@ -3,6 +3,7 @@ import {ServiceItem} from '../../models/service-item';
 import {listAnimation} from '../../../animations/list.animation';
 import {LangService} from '../../../services/lang.service';
 import {Subscription} from 'rxjs';
+import {EmployeeService} from '../../../services/employee.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   public property: 'arName' | 'enName' = 'arName';
   private langSubscription?: Subscription;
 
-  constructor(private langService: LangService, private  cd: ChangeDetectorRef) {
+  constructor(private langService: LangService, private  cd: ChangeDetectorRef,
+              public empService: EmployeeService) {
   }
 
   ngOnInit(): void {

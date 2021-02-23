@@ -18,7 +18,8 @@ export class AdminHomeComponent implements OnInit {
       new ServiceItem(1,
         this.langService.getArabicLocalByKey('menu_aid'),
         this.langService.getEnglishLocalByKey('menu_aid'),
-        './aid', 'mdi-hand-heart'
+        './aid', 'mdi-hand-heart',
+        'MANAGE_AID_TYPE'
       ),
       new ServiceItem(2,
         this.langService.getArabicLocalByKey('menu_organizations'),
@@ -38,7 +39,8 @@ export class AdminHomeComponent implements OnInit {
       new ServiceItem(4,
         this.langService.getArabicLocalByKey('menu_custom_role'),
         this.langService.getEnglishLocalByKey('menu_custom_role'),
-        './custom-role', 'mdi-card-account-details-star-outline'
+        './custom-role', 'mdi-card-account-details-star-outline',
+        'MANAGE_CUSTOM_ROLE'
       )
     ];
   }

@@ -14,6 +14,7 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {filterList, generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-organization-user',
@@ -107,6 +108,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
               public langService: LangService,
               private toast: ToastService,
               public configService: ConfigurationService,
+              public empService: EmployeeService,
               private dialogService: DialogService) {
   }
 
