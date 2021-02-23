@@ -12,7 +12,7 @@ export class ConfigurationService {
   static CURRENT_FULL_YEAR = (new Date()).getFullYear();
 
   constructor() {
-    FactoryService.registerService('AppConfigurationService', this);
+    FactoryService.registerService('ConfigurationService', this);
   }
 
   public setConfigurations(configurations: IAppConfig): ConfigurationService {

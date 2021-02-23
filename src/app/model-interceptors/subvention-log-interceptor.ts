@@ -18,7 +18,7 @@ export class SubventionLogInterceptor implements IModelInterceptor<SubventionLog
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.requestStatusInfo = model.requestStatusInfo ? AdminResult.createInstance(model.requestStatusInfo) : undefined;
 
-    const configurationService = FactoryService.getService('AppConfigurationService');
+    const configurationService = FactoryService.getService('ConfigurationService');
     // @ts-ignore
     model.actionTimeString = new DatePipe('en-US').transform(model.actionTime, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
     return model;

@@ -23,7 +23,7 @@ export function interceptReceiveOrganizationUser(model: OrgUser | any): (OrgUser
 
   model.statusDateModifiedString = '';
   if (model.statusDateModified) {
-    const configurationService = FactoryService.getService('AppConfigurationService');
+    const configurationService = FactoryService.getService('ConfigurationService');
     // @ts-ignore
     model.statusDateModifiedString = new DatePipe('en-US').transform(model.statusDateModified, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
   }

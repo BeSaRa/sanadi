@@ -14,7 +14,7 @@ export function interceptOrganizationUnit(model: OrgUnit | any): (OrgUnit | any)
 export function interceptOrganizationUnitReceive(model: OrgUnit | any): (OrgUnit | any) {
   model.statusDateModifiedString = '';
   if (model.statusDateModified) {
-    const configurationService = FactoryService.getService('AppConfigurationService');
+    const configurationService = FactoryService.getService('ConfigurationService');
     // @ts-ignore
     model.statusDateModifiedString = new DatePipe('en-US').transform(model.statusDateModified, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
   }
