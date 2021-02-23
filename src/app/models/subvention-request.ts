@@ -7,6 +7,10 @@ import {CustomValidators} from '../validators/custom-validators';
 import {SubventionAid} from './subvention-aid';
 import {Validators} from '@angular/forms';
 import {formatDate} from '@angular/common';
+import {AdminResult} from './admin-result';
+import {printBlobData} from '../helpers/utils';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {searchFunctionType} from '../types/types';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -29,6 +33,25 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   // not belongs to the Model
   service: SubventionRequestService;
   subventionRequestAidService: SubventionRequestAidService;
+
+  orgBranchInfo!: AdminResult;
+  orgInfo!: AdminResult;
+  orgUserInfo!: AdminResult;
+  requestChannelInfo!: AdminResult;
+  requestStatusInfo!: AdminResult;
+  requestTypeInfo!: AdminResult;
+  creationDateString!: string;
+
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    requestNumber: 'requestFullSerial',
+    requestSerial: 'requestSerial',
+    requestDate: 'creationDateString',
+    requestedAidAmount: 'requestedAidAmount',
+    organization: text => this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
+    requestStatusInfo: text => this.requestStatusInfo.getName().toLowerCase().indexOf(text) !== -1
+  };
+
 
   constructor() {
     super();
@@ -75,5 +98,29 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
       statusDateModified: control ? [statusDateModified] : statusDateModified,
       requestSummary: control ? [requestSummary, [Validators.maxLength(1000)]] : requestSummary
     };
+  }
+
+  printRequest(fileName?: string, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.service.loadByRequestIdAsBlob(this.id)
+      .subscribe((data) => {
+        printBlobData(data, fileName);
+      });
+  }
+
+  showLog($event: MouseEvent): void {
+    $event.preventDefault();
+    this.service.openLogDialog(this.id)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
+
+  showAid($event: MouseEvent): void {
+    $event.preventDefault();
+    this.service.openAidDialog(this.id)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
   }
 }
