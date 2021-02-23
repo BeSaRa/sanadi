@@ -1,5 +1,7 @@
-<div class="dialog-toolbar bg-primary">
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{langService.map.select_beneficiary}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
 </div>
 <div class="dialog-content">
   <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="list">

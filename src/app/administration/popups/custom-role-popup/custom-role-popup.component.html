@@ -1,5 +1,7 @@
-<div class="dialog-toolbar bg-primary">
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
 <div class="dialog-content">
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
@@ -90,5 +92,5 @@
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
-  <button dialogClose="welcome" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
