@@ -20,7 +20,7 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
   @Input() orgBranch!: OrgBranch;
 
   users: OrgUser[] = [];
-  displayedColumns: string[] = ['id', 'empNum', 'arName', 'enName', 'actions'];
+  displayedColumns: string[] = ['empNum', 'arName', 'enName', 'actions'];
   add$: Subject<any> = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);

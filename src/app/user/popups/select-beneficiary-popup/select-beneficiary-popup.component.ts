@@ -12,7 +12,7 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 })
 export class SelectBeneficiaryPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
-  displayedColumns: string[] = ['id', 'arName', 'enName', 'gender', 'nationality', 'sponsors', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'gender', 'nationality', 'sponsors', 'actions'];
 
   constructor(public langService: LangService,
               @Inject(DIALOG_DATA_TOKEN) public list: Beneficiary[], private dialogRef: DialogRef) {
