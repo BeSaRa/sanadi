@@ -73,6 +73,11 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.subventionRequestAidService.loadByCriteria(criteria);
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  loadUnderProcess(): Observable<SubventionRequest[]> {
+    return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/active-requests');
+  }
+
   openLogDialog(requestId: number): Observable<DialogRef> {
     return this.subventionLogService.loadByRequestId(requestId)
       .pipe(
