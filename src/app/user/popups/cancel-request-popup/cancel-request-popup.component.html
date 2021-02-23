@@ -1,0 +1,23 @@
+<div class="dialog-toolbar bg-primary">
+  <h1 class="h6 text-white">{{langService.map.cancel_request}} : {{ serial}} </h1>
+</div>
+<div class="dialog-content min-w400px">
+  <div class="row">
+    <div class="col-12">
+      <div class="position-relative">
+        <label class="form-label" for="reason">{{langService.map.cancellation_reason}} <span
+          class="text-danger">*</span></label>
+        <textarea [class.is-invalid]="reason.invalid && (reason.touched || reason.dirty)" [formControl]="reason"
+                  id="reason"
+                  class="form-control mb-4"
+                  rows="5"></textarea>
+        <app-field-error-message [control]="reason"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button [dialogClose]="reason.value"
+          class="btn btn-primary">{{langService.map.btn_cancel}}</button>
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
+</div>

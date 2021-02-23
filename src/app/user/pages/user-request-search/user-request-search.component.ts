@@ -10,13 +10,14 @@ import {FormManager} from '../../../models/form-manager';
 import {StringOperator} from '../../../enums/string-operator.enum';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-request-criteria';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '../../../services/dialog.service';
 import {printBlobData} from '../../../helpers/utils';
 import {Router} from '@angular/router';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -43,6 +44,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   requests: SubventionRequestAid[] = [];
 
   constructor(public langService: LangService,
+              private toastService: ToastService,
               private fb: FormBuilder,
               private lookupService: LookupService,
               private configurationService: ConfigurationService,
@@ -289,5 +291,13 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   editRequest(request: SubventionRequestAid): any {
     return this.router.navigate(['/home/user/request', {id: request.requestId}]);
+  }
+
+  cancelRequest(request: SubventionRequestAid) {
+    request.cancel()
+      .pipe(take(1))
+      .subscribe((status) => {
+        status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+      });
   }
 }

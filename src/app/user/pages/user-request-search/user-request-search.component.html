@@ -239,55 +239,61 @@
         </div>
       </div>
       <div class="row">
-        <table class="table table-striped table-bordered caption-top">
-          <thead role="rowgroup">
-          <tr>
-            <th>{{langService.map.request_number}}</th>
-            <th>{{langService.map.request_date}}</th>
-            <th>{{langService.map.lbl_org_unit}}</th>
-            <th>{{langService.map.request_status}}</th>
-            <th>{{langService.map.request_type}}</th>
-            <th>{{langService.map.request_aid_amount}}</th>
-            <th>{{langService.map.approved_aid_amount}}</th>
-            <th>{{langService.map.lbl_actions}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <ng-container *ngFor="let request of requests;">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered caption-top">
+            <thead role="rowgroup">
             <tr>
-              <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-              <td> {{request.creationDateString}} </td>
-              <td> {{request.orgBranchInfo.getName()}} </td>
-              <td> {{request.statusInfo.getName()}} </td>
-              <td></td>
-              <td> {{request.requestedAidAmount}} </td>
-              <td>{{request.approvedAmount}}</td>
-              <td>
-                <div class="d-flex flex-row">
-                  <a tooltip="{{langService.map.aid_count}}" class="icon-btn"><span
-                    class="badge bg-primary">{{request.aidCount}}</span></a>
-                  <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-printer"></i>
-                  </a>
-                  <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-history"></i>
-                  </a>
-                  <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-heart-multiple"></i>
-                  </a>
-                  <a (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-book-edit"></i>
-                  </a>
-                </div>
-              </td>
+              <th>{{langService.map.request_number}}</th>
+              <th>{{langService.map.request_date}}</th>
+              <th>{{langService.map.lbl_org_unit}}</th>
+              <th>{{langService.map.request_status}}</th>
+              <th>{{langService.map.request_type}}</th>
+              <th>{{langService.map.request_aid_amount}}</th>
+              <th>{{langService.map.approved_aid_amount}}</th>
+              <th>{{langService.map.lbl_actions}}</th>
             </tr>
-          </ng-container>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let request of requests;">
+              <tr>
+                <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
+                <td> {{request.creationDateString}} </td>
+                <td> {{request.orgBranchInfo.getName()}} </td>
+                <td> {{request.statusInfo.getName()}} </td>
+                <td></td>
+                <td> {{request.requestedAidAmount}} </td>
+                <td>{{request.approvedAmount}}</td>
+                <td>
+                  <div class="d-flex flex-row">
+                    <a tooltip="{{langService.map.aid_count}}" class="icon-btn"><span
+                      class="badge bg-primary">{{request.aidCount}}</span></a>
+                    <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-printer"></i>
+                    </a>
+                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-history"></i>
+                    </a>
+                    <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-heart-multiple"></i>
+                    </a>
+                    <a (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-book-edit"></i>
+                    </a>
+                    <button (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
+                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
+                      <i class="mdi mdi-book-cancel"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

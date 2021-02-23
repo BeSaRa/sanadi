@@ -19,6 +19,7 @@ import {SubventionLogPopupComponent} from '../user/popups/subvention-log-popup/s
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
 import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
+import {CancelRequestPopupComponent} from '../user/popups/cancel-request-popup/cancel-request-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -97,5 +98,17 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
           return of(this.dialogService.show<SubventionAid[]>(SubventionAidPopupComponent, aidList));
         })
       );
+  }
+
+  openCancelDialog(request: SubventionRequest | SubventionRequestAid): DialogRef {
+    return this.dialogService.show(CancelRequestPopupComponent, {
+      request
+    });
+  }
+
+  cancelRequest(requestId: number, reason: string): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/cancel/' + requestId, {
+      reason
+    });
   }
 }

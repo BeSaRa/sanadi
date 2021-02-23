@@ -11,6 +11,8 @@ import {AdminResult} from './admin-result';
 import {printBlobData} from '../helpers/utils';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
+import {UserClickOn} from '../enums/user-click-on.enum';
+import {take} from 'rxjs/operators';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -122,5 +124,28 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
+  }
+
+
+  cancel(): Observable<boolean> {
+    return new Observable((subscriber) => {
+      const sub = this.service
+        .openCancelDialog(this)
+        .onAfterClose$
+        .subscribe((result: UserClickOn | string) => {
+          if (typeof result !== 'string') {
+            return subscriber.next(false);
+          }
+          this.service
+            .cancelRequest(this.id, result)
+            .pipe(
+              take(1)
+            )
+            .subscribe(subscriber);
+        });
+      return () => {
+        sub.unsubscribe();
+      };
+    });
   }
 }

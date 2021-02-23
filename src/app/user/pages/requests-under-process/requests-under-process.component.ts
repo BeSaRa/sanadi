@@ -3,8 +3,9 @@ import {LangService} from '../../../services/lang.service';
 import {SubventionRequestService} from '../../../services/subvention-request.service';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {debounceTime} from 'rxjs/operators';
+import {debounceTime, switchMap, take} from 'rxjs/operators';
 import {SubventionRequest} from '../../../models/subvention-request';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -20,6 +21,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
+              private toastService: ToastService,
               public langService: LangService) {
   }
 
@@ -41,6 +43,15 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     return this.router.navigate(['/home/user/request', {id: request.id}]);
   }
 
+  cancelRequest(request: SubventionRequest) {
+    request.cancel()
+      .pipe(take(1))
+      .subscribe((status) => {
+        status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+        this.reload$.next(null);
+      });
+  }
+
   search(searchText: string): void {
     this.search$.next(searchText);
   }
@@ -56,7 +67,12 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   }
 
   private listenToReload() {
-    this.subventionRequestService.loadUnderProcess().subscribe((requests) => {
+    this.reload$.pipe(
+      switchMap(() => {
+        return this.subventionRequestService
+          .loadUnderProcess();
+      }),
+    ).subscribe((requests) => {
       this.requests = requests;
       this.requestsClone = requests.slice();
     });
