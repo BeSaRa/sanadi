@@ -5,7 +5,7 @@ import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
 
 export class Permission extends BaseModel<Permission> {
-  permissionKey: string | undefined;
+  permissionKey!: string;
   description: string | undefined;
   groupId!: number;
   status: boolean | undefined;

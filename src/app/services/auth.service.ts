@@ -62,7 +62,7 @@ export class AuthService {
         withLatestFrom(this.isAuthenticatedTrigger$),
         map(([isAuthenticated, loginData]) => {
           if (isAuthenticated && loginData) {
-            this.employeeService.setCurrentEmployeeData(loginData.orgUser, loginData.orgBranch, loginData.orgUnit);
+            this.employeeService.setCurrentEmployeeData(loginData.orgUser, loginData.orgBranch, loginData.orgUnit, loginData.permissionSet);
             this.tokenService.setToken(loginData.token);
           } else {
             this.employeeService.clear();
