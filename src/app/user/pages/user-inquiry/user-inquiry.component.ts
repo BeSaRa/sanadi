@@ -183,15 +183,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   printResult($event: MouseEvent): void {
-    this.subventionRequestService.loadByCriteriaAsBlob({
-      beneficiary: {
-        ...this.getCurrentFormValue(),
-        benPrimaryIdNumber: this.beneficiary?.benPrimaryIdNumber,
-        benPrimaryIdType: this.beneficiary?.benPrimaryIdType,
-      }
-    }).subscribe((data) => {
-      printBlobData(data, 'InquiryByCriteriaSearchResult.pdf');
-    });
+    // @ts-ignore
+    this.subventionRequestService.loadByBeneficiaryIdAsBlob(this.beneficiary?.id)
+      .subscribe((data) => {
+        printBlobData(data, 'InquiryByCriteriaSearchResult.pdf');
+      });
   }
 
   printRequest($event: MouseEvent, request: SubventionRequestAid): void {

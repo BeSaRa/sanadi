@@ -60,6 +60,9 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
   }
+  loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export', {responseType: 'blob'});
+  }
 
   loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/' + requestId + '/export', {responseType: 'blob'});
