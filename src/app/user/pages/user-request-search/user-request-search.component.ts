@@ -10,7 +10,7 @@ import {FormManager} from '../../../models/form-manager';
 import {StringOperator} from '../../../enums/string-operator.enum';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, map, share, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-request-criteria';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
@@ -228,6 +228,10 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private getBeneficiarySimpleValues(): Partial<IBeneficiaryCriteria> {
     let beneficiary = {...this.fm.getFormField('simpleSearch.beneficiary')?.value};
 
+    if (!beneficiary.benPrimaryIdNumber) {
+      delete beneficiary.benPrimaryIdType;
+    }
+
     if (!beneficiary.arName.value) {
       delete beneficiary.arName;
     }
@@ -272,7 +276,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     return {...this.latestCriteria};
   }
 
-  printResult($event: MouseEvent): void {
+  printResult(): void {
     this.subventionRequestService.loadByCriteriaAsBlob(this.latestCriteria).subscribe((data) => {
       printBlobData(data, 'RequestByCriteriaSearchResult.pdf');
     });

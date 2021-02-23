@@ -8,7 +8,6 @@ import {searchFunctionType} from '../types/types';
 
 export class SubventionRequestAid {
   requestId!: number;
-  aidAmount!: number;
   requestedAidAmount!: number;
   charityRefNo!: string;
   creationDate!: string;
@@ -18,15 +17,17 @@ export class SubventionRequestAid {
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   statusInfo!: AdminResult;
-
   private subventionRequestService: SubventionRequestService;
   creationDateString!: string;
+  approvedAmount: number = 0;
+
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',
     requestDate: 'creationDateString',
     organization: text => this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
     requestStatus: text => this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
+  aidCount: any = 0;
 
   constructor() {
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');

@@ -6,7 +6,7 @@ import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
 
 export class SubventionAid extends BaseModel<SubventionAid> {
-  installementsCount!: number;
+  installementsCount: number = 0;
   periodicType!: number;
   approvalDate!: string;
   aidAmount!: number;

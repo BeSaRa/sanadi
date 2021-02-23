@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  aid_count: string;
+  request_type: string;
   msg_aid_updated_successfully: string;
   msg_aid_added_successfully: string;
   at_least_one_field_should_be_filled: string;

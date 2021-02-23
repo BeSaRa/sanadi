@@ -6,6 +6,8 @@ function send(model: any): any {
   delete model.subventionRequestService;
   delete model.underProcessingSearchFields;
   delete model.creationDateString;
+  delete model.aidCount;
+  delete model.approvedAmount;
   return model;
 }
 
@@ -15,6 +17,10 @@ function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
   model.statusInfo = AdminResult.createInstance(model.statusInfo);
   model.aids = model.aids.map((aid) => {
     aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
+    model.approvedAmount += aid.aidAmount;
+    if (aid.aidAmount) {
+      model.aidCount += 1;
+    }
     return aid;
   });
   // @ts-ignore
