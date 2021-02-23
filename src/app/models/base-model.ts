@@ -2,6 +2,8 @@ import {INames} from '../interfaces/i-names';
 import {ModelCrudInterface} from '../interfaces/model-crud-interface';
 import {Observable} from 'rxjs';
 import {Cloneable} from './cloneable';
+import {ISearchFields} from '../interfaces/i-search-fields';
+import {searchFunctionType} from '../types/types';
 
 export abstract class BaseModel<D> extends Cloneable<D> implements INames, ModelCrudInterface<D> {
   // @ts-ignore
@@ -19,4 +21,20 @@ export abstract class BaseModel<D> extends Cloneable<D> implements INames, Model
   abstract save(): Observable<D>;
 
   abstract update(): Observable<D>;
+
+  search(searchText: string): boolean {
+    const self = this as unknown as ISearchFields;
+    const fields = (this as unknown as ISearchFields).searchFields;
+    const keys = Object.keys(fields);
+    return keys.some(key => {
+      if (typeof self.searchFields[key] === 'function') {
+        const func = self.searchFields[key] as searchFunctionType;
+        return func(searchText.toLowerCase());
+      } else {
+        const field = self.searchFields[key] as keyof BaseModel<D>;
+        const value = this[field] ? (this[field] as string) + '' : '';
+        return value.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+      }
+    });
+  }
 }
