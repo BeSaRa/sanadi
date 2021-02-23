@@ -1,6 +1,7 @@
 import {map} from 'rxjs/operators';
 import {map as _map} from 'lodash';
 import {GeneratorInterface} from './generator-interface';
+import {GeneralInterceptor} from '../model-interceptors/general-interceptor';
 
 function _generateModel(data: any, model: any, property?: string, receiveCallback?: any, instance?: any): any {
   let finalData;
@@ -18,7 +19,7 @@ function _generateModel(data: any, model: any, property?: string, receiveCallbac
     finalData = model ? Object.assign(new model(), data[property]) : data[property];
   }
 
-  return receiveCallback ? receiveCallback(finalData) : finalData;
+  return GeneralInterceptor.receive(receiveCallback ? receiveCallback(finalData) : finalData);
 }
 
 function _generateCollection(collection: any, model: any, property?: string, receiveCallback?: any, instance?: any): any {

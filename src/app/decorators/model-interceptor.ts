@@ -1,6 +1,7 @@
 import {cloneDeep as deepClone, findIndex as _findIndex} from 'lodash';
 import {identity} from 'rxjs';
 import {SendInterceptorInterface} from './send-interceptor-interface';
+import {GeneralInterceptor} from '../model-interceptors/general-interceptor';
 
 // tslint:disable-next-line:typedef
 export function InitClassInterceptor(callback?: any) {
@@ -48,8 +49,10 @@ export function SendInterceptor(interceptorCallback?: any): any {
         // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < params.length; i++) {
           const isObject = typeof params[i] === 'object';
-          newArgs[isObject ? params[i].index : params[i]] = isObject ?
-            (params[i].callback(newArgs[params[i].index])) : interceptorCallback(newArgs[params[i]]);
+          newArgs[isObject ? params[i].index : params[i]] = GeneralInterceptor.send(
+            isObject ?
+              (params[i].callback(newArgs[params[i].index])) : interceptorCallback(newArgs[params[i]])
+          );
         }
       }
       return originalMethod.apply(this, newArgs);
