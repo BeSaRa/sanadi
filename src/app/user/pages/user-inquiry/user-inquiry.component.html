@@ -74,8 +74,10 @@
       <!-- Form Button -->
       <div class="row">
         <div class="col d-flex flex-row justify-content-start">
-          <button (click)="search()" [disabled]="currentForm?.invalid" class="btn shadow-sm btn-primary">Search</button>
-          <button (click)="resetCurrentForm()" class="btn shadow-sm btn-secondary mx-3">Clear</button>
+          <button (click)="search()" [disabled]="currentForm?.invalid"
+                  class="btn shadow-sm btn-primary">{{langService.map.lbl_search}}</button>
+          <button (click)="resetCurrentForm()"
+                  class="btn shadow-sm btn-secondary mx-3">{{langService.map.btn_clear}}</button>
         </div>
       </div>
     </form>
@@ -109,7 +111,7 @@
             <td class="position-relative">
               <div class="d-flex align-items-center flex-row h-100 w-100">
                 <span>{{beneficiary?.benDependentsCount}}</span><span class="flex-grow-1"></span>
-                <button disabled class="btn btn-sm btn-primary shadow-sm">Show Details</button>
+                <button disabled class="btn btn-sm btn-primary shadow-sm">{{langService.map.show_details}}</button>
               </div>
             </td>
           </tr>

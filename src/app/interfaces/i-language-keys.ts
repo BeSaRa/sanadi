@@ -220,4 +220,5 @@ export interface ILanguageKeys {
   logs: string;
   show_aids: string;
   aids: string;
+  show_details: string;
 }
