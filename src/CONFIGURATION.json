@@ -15,7 +15,7 @@
     "https"
   ],
   "UNEMPLOYED_LOOKUP_KEY": 4,
-  "DEFAULT_DATE_FORMAT": "medium",
+  "DEFAULT_DATE_FORMAT": "mediumDate",
   "SEARCH_YEARS_RANGE": 10,
   "SEARCH_YEARS_START": 2010,
   "SEARCH_YEARS_BY": "RANGE",
