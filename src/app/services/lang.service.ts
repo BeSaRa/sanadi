@@ -18,6 +18,8 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {LangType, LocalizationMap} from '../types/types';
 import {BackendGenericService} from '../generics/backend-generic-service';
+import {ECookieService} from './e-cookie.service';
+import {ConfigurationService} from './configuration.service';
 
 
 @Injectable({
@@ -43,6 +45,8 @@ export class LangService extends BackendGenericService<Localization> {
               public http: HttpClient,
               private dialogService: DialogService,
               private ngZone: NgZone,
+              private eCookieService: ECookieService,
+              private configurationService: ConfigurationService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
@@ -102,6 +106,8 @@ export class LangService extends BackendGenericService<Localization> {
     if (!silent) {
       this.languageChange.next(language);
     }
+
+    this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
     this.prepareCurrentLang();
   }
 
@@ -111,6 +117,17 @@ export class LangService extends BackendGenericService<Localization> {
   toggleLanguage(): void {
     const code = this.languageToggler[this.languageChange.value.code];
     this.changeLanguage(this.languages[code]);
+  }
+
+  changeLanguageByCode(code: string): void {
+    this.changeLanguage(this.languages[code]);
+  }
+
+  readLanguageFromCookie(): void {
+    const lang = this.eCookieService.getEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY) as Language;
+    if (lang) {
+      this.changeLanguage(lang);
+    }
   }
 
   private getLocalByKey(key: keyof ILanguageKeys): Localization {

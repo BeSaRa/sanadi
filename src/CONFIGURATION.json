@@ -10,6 +10,7 @@
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
   "TOKEN_STORE_KEY": "__T__",
+  "LANGUAGE_STORE_KEY": "__L__",
   "EXTERNAL_PROTOCOLS": [
     "http",
     "https"

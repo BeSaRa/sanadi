@@ -12,4 +12,5 @@ export interface IAppConfig {
   SEARCH_YEARS_RANGE: number;
   SEARCH_YEARS_START: number;
   SEARCH_YEARS_BY: string;
+  LANGUAGE_STORE_KEY: string;
 }

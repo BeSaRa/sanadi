@@ -92,6 +92,7 @@ export class AppModule {
           urlService.prepareUrls(latest.urls);
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
             langService.list = infoResult.localizationSet;
+            langService.readLanguageFromCookie();
             langService._loadDone$.next(langService.list);
             lookupService.setLookupsMap(infoResult.lookupMap);
             return tokenService.setAuthService(authService).validateToken().toPromise();
