@@ -133,7 +133,10 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         jobTitle: [this.model.jobTitle, [CustomValidators.required]],
         status: [this.model.status, CustomValidators.required],
         customRoleId: [this.model.customRoleId] // not required as it is dummy to be tracked from permissions tab
-      }),
+      }, {validators: CustomValidators.validateFieldsStatus([
+        'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
+        'officialPhoneNumber', 'email', 'userType', 'jobTitle', 'orgId', 'orgBranchId', 'status'
+        ])}),
       permissions: this.fb.group({
         customRoleId: [this.model.customRoleId, CustomValidators.required],
         permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
