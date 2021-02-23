@@ -160,6 +160,14 @@ html[dir="rtl"] {
   margin: 0 10px;
 }
 
+button.icon-btn {
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  outline: none;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
