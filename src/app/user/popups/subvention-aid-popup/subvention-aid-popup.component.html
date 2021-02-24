@@ -12,7 +12,7 @@
     </ng-container>
     <ng-container cdkColumnDef="aidLookupId">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+      <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo.getName()}} </td>
     </ng-container>
     <ng-container cdkColumnDef="periodicType">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
