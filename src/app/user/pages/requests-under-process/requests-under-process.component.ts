@@ -6,6 +6,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap, take} from 'rxjs/operators';
 import {SubventionRequest} from '../../../models/subvention-request';
 import {ToastService} from '../../../services/toast.service';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -22,7 +23,8 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
               private toastService: ToastService,
-              public langService: LangService) {
+              public langService: LangService,
+              public empService: EmployeeService) {
   }
 
   ngOnInit(): void {

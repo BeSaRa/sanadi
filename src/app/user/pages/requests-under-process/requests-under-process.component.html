@@ -34,11 +34,13 @@
                    class="icon-btn">
                   <i class="mdi mdi-history"></i>
                 </a>
-                <button (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                        (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
                         class="icon-btn text-primary">
                   <i class="mdi mdi-book-edit"></i>
                 </button>
-                <button (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
+                <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                        (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
                         class="btn icon-btn text-primary">
                   <i class="mdi mdi-book-cancel"></i>
                 </button>

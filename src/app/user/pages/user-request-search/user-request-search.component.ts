@@ -18,6 +18,7 @@ import {DialogService} from '../../../services/dialog.service';
 import {printBlobData} from '../../../helpers/utils';
 import {Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -50,7 +51,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
               private router: Router,
-              private subventionRequestService: SubventionRequestService) {
+              private subventionRequestService: SubventionRequestService,
+              public empService: EmployeeService) {
   }
 
   ngOnDestroy(): void {

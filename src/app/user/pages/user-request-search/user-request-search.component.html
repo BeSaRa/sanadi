@@ -222,7 +222,8 @@
           <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
             <button (click)="onClickAdvancedSearch()"
                     class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
-            <button (click)="clearAdvancedSearch()" class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
+            <button (click)="clearAdvancedSearch()"
+                    class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
           </div>
         </div>
       </div><!-- advanced search -->
@@ -279,11 +280,13 @@
                        class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
                     </a>
-                    <a (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                    <a *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                       (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
                        class="icon-btn">
                       <i class="mdi mdi-book-edit"></i>
                     </a>
-                    <button (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
+                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                            (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
                             [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
                       <i class="mdi mdi-book-cancel"></i>
                     </button>
