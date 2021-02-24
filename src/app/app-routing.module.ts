@@ -5,6 +5,7 @@ import {HomeComponent} from './pages/home/home.component';
 import {ErrorPageComponent} from './shared/components/error-page/error-page.component';
 import {AuthGuard} from './guards/auth-guard';
 import {GuestGuard} from './guards/guest-guard';
+import {PermissionGuard} from './guards/permission-guard';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -16,6 +17,8 @@ const routes: Routes = [
       {path: '', redirectTo: 'user', pathMatch: 'full'},
       {
         path: 'administration',
+        canActivate: [PermissionGuard],
+        data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
