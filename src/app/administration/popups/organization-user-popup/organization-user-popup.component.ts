@@ -247,6 +247,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.groups.forEach(group => {
       group.setSelected(this.selectedPermissions);
     });
+    this.updatePermissionFormField();
   }
 
   onGroupClicked(group: CheckGroup<Permission>): void {
