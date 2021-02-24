@@ -95,12 +95,12 @@ export class EmployeeService {
       return true;
     }
     if (typeof permissionKey === 'string') {
-      return this.hasPermissionTo(permissionKey);
+      return this.hasPermissionTo(permissionKey as string);
     } else {
       if (bulkPermissionsCheckAny) {
-        return this.hasAnyPermissions(permissionKey);
+        return this.hasAnyPermissions(permissionKey as string[]);
       }
-      return this.hasAllPermissions(permissionKey);
+      return this.hasAllPermissions(permissionKey as string[]);
     }
   }
 
