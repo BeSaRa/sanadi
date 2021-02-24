@@ -19,7 +19,7 @@ const routes: Routes = [
   {
     path: 'organizations', component: OrganizationUnitComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: ['ADMIN_ADD_OU', 'ADMIN_EDIT_OU', 'ADMIN_DELETE_OU'], checkAnyPermission: true}
+    data: {configPermissionGroup: 'MANAGE_ORG_PERMISSIONS_GROUP', checkAnyPermission: true}
   },
   {
     path: 'aid', component: AidLookupContainerComponent,

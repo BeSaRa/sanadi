@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ServiceItem} from '../../../shared/models/service-item';
 import {LangService} from '../../../services/lang.service';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-admin-home',
@@ -10,7 +11,8 @@ import {LangService} from '../../../services/lang.service';
 export class AdminHomeComponent implements OnInit {
   serviceList: ServiceItem[] = [];
 
-  constructor(private langService: LangService) {
+  constructor(private langService: LangService,
+              private configService: ConfigurationService) {
   }
 
   ngOnInit(): void {
@@ -25,7 +27,7 @@ export class AdminHomeComponent implements OnInit {
         this.langService.getArabicLocalByKey('menu_organizations'),
         this.langService.getEnglishLocalByKey('menu_organizations'),
         './organizations', 'mdi-office-building',
-        ['ADMIN_ADD_OU', 'ADMIN_EDIT_OU', 'ADMIN_DELETE_OU'], true
+        this.configService.CONFIG.MANAGE_ORG_PERMISSIONS_GROUP, true
       ),
       new ServiceItem(3,
         this.langService.getArabicLocalByKey('menu_users'),
