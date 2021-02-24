@@ -210,6 +210,16 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.clickSearchButton$.next('advanced');
   }
 
+  clearSimpleSearch(): void {
+    this.fm.getFormField('simpleSearch')?.reset();
+    this.setInitialValues();
+  }
+
+  clearAdvancedSearch(): void {
+    this.fm.getFormField('advancedSearch')?.reset();
+    this.setInitialValuesAdvanced();
+  }
+
   private goToResult(): void {
     this.tabIndex$.next(1);
   }
@@ -254,8 +264,13 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private setInitialValues(): void {
     // set initial value for the year
     this.yearField.setValue(this.years[0]);
-
     this.idTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
+    this.arNameOperatorField.setValue(StringOperator[StringOperator.EQUALS]);
+    this.enNameOperatorField.setValue(StringOperator[StringOperator.EQUALS]);
+  }
+
+  private setInitialValuesAdvanced(): void {
+
   }
 
   private getAdvancedSearchValues(): Partial<ISubventionRequestCriteria> {
