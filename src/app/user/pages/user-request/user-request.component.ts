@@ -384,7 +384,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   get pageTitle(): string {
     return this.currentRequest?.id ?
-      (this.langService.map.request_number + '' + this.currentRequest.requestFullSerial) :
+      (this.langService.map.request_number + ': ' + this.currentRequest.requestFullSerial) :
       this.langService.map.menu_provide_request;
   }
 
