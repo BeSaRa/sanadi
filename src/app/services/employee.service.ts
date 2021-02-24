@@ -103,4 +103,8 @@ export class EmployeeService {
       return this.hasAllPermissions(permissionKey);
     }
   }
+
+  isCurrentEmployee(user: OrgUser): boolean {
+    return this.orgUser?.id === user.id;
+  }
 }

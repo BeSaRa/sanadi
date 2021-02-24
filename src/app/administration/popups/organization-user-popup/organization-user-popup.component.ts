@@ -17,7 +17,7 @@ import {OrgBranch} from '../../../models/org-branch';
 import {OrganizationBranchService} from '../../../services/organization-branch.service';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {combineLatest, of, Subject} from 'rxjs';
-import {concatMap, exhaustMap, map, mapTo, mergeMap, take, takeUntil} from 'rxjs/operators';
+import {catchError, concatMap, exhaustMap, map, mapTo, mergeMap, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {Permission} from '../../../models/permission';
 import {OrgUserPermission} from '../../../models/org-user-permission';
 import {CheckGroup} from '../../../models/check-group';
@@ -25,6 +25,8 @@ import {PermissionService} from '../../../services/permission.service';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
 import {OrganizationUserPermissionService} from '../../../services/organization-user-permission.service';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {EmployeeService} from '../../../services/employee.service';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -75,6 +77,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private permissionService: PermissionService,
               private userPermissionService: OrganizationUserPermissionService,
               private lookupService: LookupService,
+              private employeeService: EmployeeService,
+              private authService: AuthService,
               private fb: FormBuilder) {
     this.model = data.model;
     this.operation = data.operation;
@@ -133,10 +137,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         jobTitle: [this.model.jobTitle, [CustomValidators.required]],
         status: [this.model.status, CustomValidators.required],
         customRoleId: [this.model.customRoleId] // not required as it is dummy to be tracked from permissions tab
-      }, {validators: CustomValidators.validateFieldsStatus([
-        'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-        'officialPhoneNumber', 'email', 'userType', 'jobTitle', 'orgId', 'orgBranchId', 'status'
-        ])}),
+      }, {
+        validators: CustomValidators.validateFieldsStatus([
+          'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
+          'officialPhoneNumber', 'email', 'userType', 'jobTitle', 'orgId', 'orgBranchId', 'status'
+        ])
+      }),
       permissions: this.fb.group({
         customRoleId: [this.model.customRoleId, CustomValidators.required],
         permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
@@ -166,7 +172,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
                 return savedUser;
               }));
           }));
-      })).subscribe((user) => {
+      }),
+      switchMap((user) => {
+        return this.employeeService.isCurrentEmployee(user) ? this.authService.validateToken()
+          .pipe(catchError(error => of(user)), map(_ => user)) : of(user);
+      }),
+    ).subscribe((user) => {
       const message = (this.operation === OperationTypes.CREATE)
         ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       // @ts-ignore
