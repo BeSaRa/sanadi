@@ -6,7 +6,7 @@ import {
   minlengthValidator as minLength,
   maxlengthValidator as maxLength
 } from './validate-fields-status';
-import {AbstractControl} from '@angular/forms';
+import {AbstractControl, Validators} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 import {anyFieldsHasLength} from './any-fields-has-length';
@@ -21,6 +21,14 @@ const defaultLengths = {
   QID_MIN: 7,
   QID_MAX: 11
 };
+
+const commonValidations = {
+  qId: [number, Validators.minLength(defaultLengths.QID_MIN), Validators.maxLength(defaultLengths.QID_MAX)],
+  passport: [pattern('PASSPORT')],
+  gccId: [number],
+  visaNumber: [number],
+  phone: [number, Validators.maxLength(defaultLengths.PHONE_NUMBER_MAX)]
+}
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},
@@ -95,5 +103,6 @@ export const CustomValidators = {
   maxLength,
   anyFieldsHasLength,
   getValidationData,
-  defaultLengths
+  defaultLengths,
+  commonValidations
 };
