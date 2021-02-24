@@ -5,7 +5,7 @@ import {SubventionRequestAid} from '../../../models/subvention-request-aid';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {StringOperator} from '../../../enums/string-operator.enum';
 import {CustomValidators} from '../../../validators/custom-validators';
@@ -81,17 +81,17 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       simpleSearch: this.fb.group({
         year: [],
         request: this.fb.group({
-          requestSerial: []
+          requestSerial: [null, Validators.maxLength(50)]
         }),
         beneficiary: this.fb.group({
           benPrimaryIdType: [],
           benPrimaryIdNumber: [],
           arName: this.fb.group({
-            value: [],
-            operator: [StringOperator[StringOperator.EQUALS]]
+            value: [null, [CustomValidators.pattern('AR'), Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+            operator: [StringOperator[StringOperator.EQUALS]],
           }),
           enName: this.fb.group({
-            value: [],
+            value: [null, [CustomValidators.pattern('ENG'), Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
             operator: [StringOperator[StringOperator.EQUALS]]
           })
         })
@@ -110,7 +110,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           statusDateModifiedTo: []
         }),
         beneficiary: this.fb.group({
-          phoneNumber1: [null, CustomValidators.number],
+          phoneNumber1: [null, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
           benNationality: [],
         })
       })

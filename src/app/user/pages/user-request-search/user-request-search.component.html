@@ -19,8 +19,10 @@
             <div class="row">
               <label for="requestSerial"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control">
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control"
+                       [ngClass]="fm.getStatusClass('simpleSearch.request.requestSerial')">
+                <app-field-error-message [control]="fm.getFormField('simpleSearch.request.requestSerial')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -73,8 +75,10 @@
             <div class="col-sm-12 col-md-6">
               <div class="row">
                 <label for="arName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input formControlName="value" id="arName" type="text" class="form-control">
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input formControlName="value" id="arName" type="text" class="form-control"
+                         [ngClass]="fm.getStatusClass('simpleSearch.beneficiary.arName.value')">
+                  <app-field-error-message [control]="fm.getFormField('simpleSearch.beneficiary.arName.value')"></app-field-error-message>
                 </div>
               </div>
             </div>
@@ -95,8 +99,10 @@
             <div class="col-sm-12 col-md-6">
               <div class="row">
                 <label for="enName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input id="enName" formControlName="value" type="text" class="form-control">
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="enName" formControlName="value" type="text" class="form-control"
+                         [ngClass]="fm.getStatusClass('simpleSearch.beneficiary.enName.value')">
+                  <app-field-error-message [control]="fm.getFormField('simpleSearch.beneficiary.enName.value')"></app-field-error-message>
                 </div>
               </div>
             </div>
@@ -143,8 +149,10 @@
               <div class="row">
                 <label for="phoneNumber1"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1">
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
+                         [ngClass]="fm.getStatusClass('advancedSearch.beneficiary.phoneNumber1')">
+                  <app-field-error-message [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
                 </div>
               </div>
             </div>
