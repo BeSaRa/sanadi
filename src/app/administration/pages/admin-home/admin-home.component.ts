@@ -30,7 +30,8 @@ export class AdminHomeComponent implements OnInit {
       new ServiceItem(3,
         this.langService.getArabicLocalByKey('menu_users'),
         this.langService.getEnglishLocalByKey('menu_users'),
-        './users', 'mdi-account-group'
+        './users', 'mdi-account-group',
+        ['ADMIN_ADD_USER', 'ADMIN_EDIT_USER', 'ADMIN_DELETE_USER'], true
       ),
       new ServiceItem(4,
         this.langService.getArabicLocalByKey('menu_localization'),

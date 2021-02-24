@@ -26,7 +26,11 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: 'MANAGE_AID_TYPE'}
   },
-  {path: 'users', component: OrganizationUserComponent}
+  {
+    path: 'users', component: OrganizationUserComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: ['ADMIN_ADD_USER', 'ADMIN_EDIT_USER', 'ADMIN_DELETE_USER'], checkAnyPermission: true}
+  }
 ];
 
 @NgModule({
