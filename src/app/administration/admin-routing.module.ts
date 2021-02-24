@@ -16,7 +16,11 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: 'MANAGE_CUSTOM_ROLE'}
   },
-  {path: 'organizations', component: OrganizationUnitComponent},
+  {
+    path: 'organizations', component: OrganizationUnitComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: ['ADMIN_ADD_OU', 'ADMIN_EDIT_OU', 'ADMIN_DELETE_OU'], checkAnyPermission: true}
+  },
   {
     path: 'aid', component: AidLookupContainerComponent,
     canActivate: [PermissionGuard],

@@ -24,7 +24,8 @@ export class AdminHomeComponent implements OnInit {
       new ServiceItem(2,
         this.langService.getArabicLocalByKey('menu_organizations'),
         this.langService.getEnglishLocalByKey('menu_organizations'),
-        './organizations', 'mdi-office-building'
+        './organizations', 'mdi-office-building',
+        ['ADMIN_ADD_OU', 'ADMIN_EDIT_OU', 'ADMIN_DELETE_OU'], true
       ),
       new ServiceItem(3,
         this.langService.getArabicLocalByKey('menu_users'),
