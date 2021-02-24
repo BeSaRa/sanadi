@@ -255,7 +255,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     // set initial value for the year
     this.yearField.setValue(this.years[0]);
 
-    this.idTypeField.setValue(this.idTypes[0].lookupKey);
+    this.idTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
   }
 
   private getAdvancedSearchValues(): Partial<ISubventionRequestCriteria> {

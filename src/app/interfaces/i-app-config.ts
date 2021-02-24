@@ -9,6 +9,7 @@ export interface IAppConfig {
   EXTERNAL_PROTOCOLS: string[];
   DEFAULT_DATE_FORMAT: string;
   UNEMPLOYED_LOOKUP_KEY: number;
+  QID_LOOKUP_KEY: number;
   SEARCH_YEARS_RANGE: number;
   SEARCH_YEARS_START: number;
   SEARCH_YEARS_BY: string;
