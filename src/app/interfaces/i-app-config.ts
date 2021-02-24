@@ -16,4 +16,5 @@ export interface IAppConfig {
   LANGUAGE_STORE_KEY: string;
   ADMIN_PERMISSIONS_GROUP: string[];
   MANAGE_ORG_PERMISSIONS_GROUP: string[];
+  MANAGE_USER_PERMISSIONS_GROUP: string[];
 }

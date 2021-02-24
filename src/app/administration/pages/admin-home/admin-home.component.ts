@@ -33,7 +33,7 @@ export class AdminHomeComponent implements OnInit {
         this.langService.getArabicLocalByKey('menu_users'),
         this.langService.getEnglishLocalByKey('menu_users'),
         './users', 'mdi-account-group',
-        ['ADMIN_ADD_USER', 'ADMIN_EDIT_USER', 'ADMIN_DELETE_USER'], true
+        this.configService.CONFIG.MANAGE_USER_PERMISSIONS_GROUP, true
       ),
       new ServiceItem(4,
         this.langService.getArabicLocalByKey('menu_localization'),

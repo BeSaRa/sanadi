@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'users', component: OrganizationUserComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: ['ADMIN_ADD_USER', 'ADMIN_EDIT_USER', 'ADMIN_DELETE_USER'], checkAnyPermission: true}
+    data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
   }
 ];
 
