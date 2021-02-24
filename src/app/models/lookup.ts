@@ -51,6 +51,10 @@ export class Lookup extends BaseModel<Lookup> {
     return Number(this.category) === Number(LookupCategories.ORG_STATUS_CAT_ID) && this.lookupKey === 0;
   }
 
+  isRetiredOrgUserStatus(): boolean {
+    return Number(this.category) === Number(LookupCategories.ORG_USER_STATUS_CAT_ID) && this.lookupKey === 0;
+  }
+
   isRetiredAidLookupStatus(): boolean {
     return Number(this.category) === Number(LookupCategories.AID_LOOKUP_STATUS_CAT_ID) && this.lookupKey === 0;
   }
