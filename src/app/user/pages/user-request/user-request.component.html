@@ -380,17 +380,24 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
+            <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input disabled class="form-control" type="text">
+              <input [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts" formControlName="totalDebts"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
             </div>
           </div>
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_installment}}</label>
+            <label for="totalInstalments"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_installment}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input disabled class="form-control" type="text">
+              <input [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
+                     formControlName="totalInstalments" class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
             </div>
           </div>
         </div>
