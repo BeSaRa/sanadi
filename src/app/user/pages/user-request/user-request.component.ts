@@ -5,7 +5,20 @@ import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {of, Subject} from 'rxjs';
-import {catchError, distinctUntilChanged, exhaustMap, filter, map, pairwise, pluck, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  pluck,
+  share,
+  switchMap,
+  take,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
@@ -272,29 +285,35 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToSaveModel() {
-    // map formStatus
-    const formStatus$ = this.save$
+
+    const formAidValid$ = this.save$
       .pipe(
-        takeUntil(this.destroy$),
-        map(() => this.fm.getForm()?.valid)
+        tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
+        filter(_ => this.validRequestStatus()),
+        share()
       );
+
+
+    // map formStatus
+    const formStatus$ = formAidValid$.pipe(
+      map(() => this.fm.getForm()?.valid)
+    );
+
+
     // filter invalidForm stream
     const invalidForm$ = formStatus$.pipe(
-      takeUntil(this.destroy$),
       filter(value => {
         return value === false;
       })
     );
     // filter valid form stream
     const validForm$ = formStatus$.pipe(
-      takeUntil(this.destroy$),
       filter(value => {
         return value === true;
       })
     );
     // prepare the beneficiary/request Models.
     const requestWithBeneficiary$ = validForm$.pipe(
-      takeUntil(this.destroy$),
       map(() => {
         return {
           beneficiary: this.prepareBeneficiary(),
@@ -304,7 +323,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     );
     // save beneficiary with request
     requestWithBeneficiary$
-      .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((value) => {
         return value.beneficiary.save()
           .pipe(
@@ -327,6 +345,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             })
           );
       }))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((request) => {
         if (!request) {
           return;
@@ -345,9 +364,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }
       });
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
-    invalidForm$.subscribe(() => {
-      this.checkFormFieldsCallback();
-    });
+    invalidForm$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.checkFormFieldsCallback();
+      });
   }
 
   private checkFormFieldsCallback() {
@@ -707,10 +728,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.router.navigate(['.']);
   }
 
-  submit(event: any) {
-    console.log('SUBMIT', event);
-  }
-
   private listenToRequestStatusChange(group: FormGroup) {
     group.get('status')?.valueChanges
       .pipe(
@@ -727,5 +744,17 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   isProvidedAidDisabled(): boolean {
     return this.requestStatusArray.indexOf(this.fm.getFormField('requestStatusTab')?.value?.status) !== -1;
+  }
+
+  private validRequestStatus(): boolean {
+    const status = this.requestStatusTab.get('status');
+    if (!status) {
+      return true;
+    }
+    return !(status.value === SubventionRequestStatus.APPROVED && !this.subventionAid.length);
+  }
+
+  private displayRequestStatusMessage(): void {
+    this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
   }
 }
