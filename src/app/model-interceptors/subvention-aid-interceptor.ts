@@ -7,7 +7,7 @@ export class SubventionAidInterceptor implements IModelInterceptor<SubventionAid
   receive(model: SubventionAid): SubventionAid {
     model.approvalDate = model.approvalDate ? formatDate(new Date(model.approvalDate), 'yyyy-MM-dd', 'en-US') : '';
     model.aidStartPayDate = model.aidStartPayDate ? formatDate(new Date(model.aidStartPayDate), 'yyyy-MM-dd', 'en-US') : '';
-    model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo)
+    model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
     return model;
   }
 

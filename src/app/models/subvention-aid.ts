@@ -21,10 +21,9 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
-  aidLookupInfo!: AdminResult;
+  aidLookupInfo!: Partial<AdminResult>;
   periodicTypeInfo!: AdminResult;
   service: SubventionAidService;
-  mainAidType!: number;
 
   constructor() {
     super();
@@ -56,8 +55,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       aidDescription,
       aidStartPayDate,
       aidLookupId,
-      installementsCount,
-      mainAidType
+      installementsCount
     } = this;
 
     return {
@@ -68,7 +66,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       aidDescription: control ? [aidDescription, [CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
-      mainAidType: control ? [mainAidType, CustomValidators.required] : mainAidType,
+      mainAidType: control ? [this.aidLookupInfo?.parent, CustomValidators.required] : this.aidLookupInfo?.parent,
       installementsCount: control ? [installementsCount, [CustomValidators.number]] : installementsCount
     };
   }

@@ -4,13 +4,15 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {of, Subject} from 'rxjs';
+import {from, of, Subject} from 'rxjs';
 import {
   catchError,
+  concatMap,
   distinctUntilChanged,
   exhaustMap,
   filter,
   map,
+  mergeMap,
   pairwise,
   pluck,
   share,
@@ -73,8 +75,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   aidLookups: AidLookup[] = [];
   subAidLookupsArray: AidLookup[] = [];
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
-  // static value for now till we finish the authentication
-  currentUser = {orgBranchId: 1, orgId: 1, orgUserId: 1};
   periodicityLookups: Record<number, Lookup> = {};
   hasEditAid = false;
   private editAidIndex: number = -1;
@@ -451,8 +451,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       switchMap(() => {
         return request.loadRequestAids();
       }),
-      tap(myAid => aid = myAid)
-    ).subscribe(() => {
+      tap(myAid => aid = myAid),
+      map(aid => aid.map(item => item.aidLookupInfo.parent)),
+      mergeMap(ids => from([...new Set(ids)])),
+      concatMap((parentId) => {
+        return this.loadSubAidCategory(parentId as number).pipe(catchError(error => of([])));
+      }),
+    ).subscribe((_) => {
       this.beneficiaryChanged$.next(beneficiary);
       this.subventionAid = aid;
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
@@ -561,7 +566,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
     const validForm$ = aidForm$.pipe(filter((form) => form.valid));
     const invalidForm$ = aidForm$.pipe(filter((form) => form.invalid));
-
+    let parentValue = 0;
     invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.dialogService
         .error(this.langService.map.msg_all_required_fields_are_filled)
@@ -578,6 +583,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         return this.fm.getFormField('aidTab.0') as AbstractControl;
       }),
       map((form) => {
+        parentValue = form.value.mainAidType;
         return (new SubventionAid()).clone({
           ...this.currentAid, ...form.value,
           subventionRequestId: this.currentRequest?.id
@@ -595,7 +601,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       let message: string;
       if (!this.hasEditAid) {
-        this.subventionAid.push(subventionAid);
+        this.subventionAid.push(subventionAid.clone({
+          aidLookupInfo: {parent: parentValue}
+        }));
         message = this.langService.map.msg_aid_added_successfully;
       } else {
         this.subventionAid.splice(this.editAidIndex, 1, subventionAid);
@@ -607,7 +615,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.subventionAid = this.subventionAid.slice();
       this.aidChanged$.next(null);
     });
-
   }
 
   private listenToRequestChange() {
@@ -635,7 +642,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((parentId: number) => {
           this.aidLookupIdField.setValue(null);
-          this.loadSubAidCategory(parentId);
+          this.loadSubAidCategory(parentId).subscribe();
         });
     }
   }
@@ -702,17 +709,19 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private loadSubAidCategory(parentId: number) {
     // thanks to khaled he saved my life here for ever thanks again.
     this.subAidLookupsArray = [];
-    this.aidLookupService
+    return this.aidLookupService
       .loadByCriteria({
         aidType: 3,
         status: StatusEnum.ACTIVE,
         parent: Number(parentId)
       })
-      .pipe(take(1))
-      .subscribe((list) => {
-        this.subAidLookupsArray = list;
-        this.prepareLookupAid();
-      });
+      .pipe(
+        take(1),
+        tap(list => {
+          this.subAidLookupsArray = list;
+          this.prepareLookupAid();
+        })
+      );
   }
 
   periodicChange(per: HTMLSelectElement) {
