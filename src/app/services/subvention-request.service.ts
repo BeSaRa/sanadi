@@ -86,7 +86,10 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.subventionLogService.loadByRequestId(requestId)
       .pipe(
         switchMap((logList: SubventionLog[]) => {
-          return of(this.dialogService.show<SubventionLog[]>(SubventionLogPopupComponent, logList));
+          return of(this.dialogService.show(SubventionLogPopupComponent, {
+            requestId,
+            logList
+          }));
         })
       );
   }

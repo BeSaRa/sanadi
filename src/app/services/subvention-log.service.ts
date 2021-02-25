@@ -37,6 +37,10 @@ export class SubventionLogService extends BackendGenericService<SubventionLog> {
     return this.interceptor.receive;
   }
 
+  loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/export/' + requestId, {responseType: 'blob'});
+  }
+
   @Generator(undefined, true)
   loadByRequestId(requestId: number): Observable<SubventionLog[]> {
     return this.http.get<SubventionLog[]>(this._getServiceURL() + '/request-id/' + requestId);
