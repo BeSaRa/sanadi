@@ -1,7 +1,15 @@
 <div class="container bg-white shadow-sm p-4 h-100">
   <div class="row">
     <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary m-0 d-inline-block">{{pageTitle}}</h1>
+      <h1 *ngIf="!!currentRequest?.id"
+          class="h6 text-primary m-0 d-inline-block">{{langService.map.request_number + ' : '}}
+        <span class="user-select-all">{{currentRequest?.requestFullSerial}}</span></h1>
+      <h1 *ngIf="!currentRequest?.id"
+          class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_provide_request}}</h1>
+      <button [tooltip]="langService.map.print_request_form" *ngIf="currentRequest?.id"
+              (click)="currentRequest?.printRequest('request.pdf' , $event)"
+              class="icon-btn text-primary"><i
+        class="mdi mdi-printer"></i></button>
     </div>
   </div>
   <form autocomplete="off" [formGroup]="form" id="form">
@@ -17,7 +25,8 @@
       <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
            [template]="requestStatus"
            [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('aidTab')"
+      <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
+           [hasError]="fm.getFieldInvalidStatus('aidTab')"
            [template]="providedAid"
            [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
     </tabs-list>
