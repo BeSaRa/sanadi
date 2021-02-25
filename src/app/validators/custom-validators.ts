@@ -23,12 +23,13 @@ const defaultLengths = {
 };
 
 const commonValidations = {
-  qId: [number, Validators.minLength(defaultLengths.QID_MIN), Validators.maxLength(defaultLengths.QID_MAX)],
+  qId: [number, minLength(defaultLengths.QID_MIN), maxLength(defaultLengths.QID_MAX)],
   passport: [pattern('PASSPORT')],
   gccId: [number],
-  visaNumber: [number],
-  phone: [number, Validators.maxLength(defaultLengths.PHONE_NUMBER_MAX)]
-}
+  gccRId: [number],
+  visa: [number],
+  phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)]
+};
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},

@@ -19,6 +19,7 @@ import {printBlobData} from '../../../helpers/utils';
 import {Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
+import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'app-user-request-search',
@@ -43,6 +44,15 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private advancedSearch$!: Observable<string>;
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
   requests: SubventionRequestAid[] = [];
+
+  private idTypesValidationsMap: { [index: number]: any } = {
+    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
+    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
+    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.RESIDENCE_QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
+    [BeneficiaryIdTypes.GCC_RID]: CustomValidators.commonValidations.gccRId,
+  };
 
   constructor(public langService: LangService,
               private toastService: ToastService,
@@ -127,15 +137,15 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   get enNameField(): FormControl {
-    return this.fm.getFormField('simpleSearch.beneficiary.enName.value')! as FormControl;
+    return this.fm.getFormField('simpleSearch.beneficiary.enName.value') as FormControl;
   }
 
   get enNameOperatorField(): FormControl {
-    return this.fm.getFormField('simpleSearch.beneficiary.enName.operator')! as FormControl;
+    return this.fm.getFormField('simpleSearch.beneficiary.enName.operator') as FormControl;
   }
 
   get idTypeField(): FormControl {
-    return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdType')! as FormControl;
+    return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdType') as FormControl;
   }
 
   get yearField(): FormControl {
@@ -143,21 +153,26 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   get creationDateFromField(): FormControl {
-    return this.fm.getFormField('advancedSearch.creationDates.creationDateFrom')! as FormControl;
+    return this.fm.getFormField('advancedSearch.creationDates.creationDateFrom') as FormControl;
   }
 
   get creationDateToField(): FormControl {
-    return this.fm.getFormField('advancedSearch.creationDates.creationDateTo')! as FormControl;
+    return this.fm.getFormField('advancedSearch.creationDates.creationDateTo') as FormControl;
+  }
+
+  get primaryIdNumberField(): FormControl {
+    return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber') as FormControl;
   }
 
   private onIdTypeChange() {
     this.idTypeField.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
+      .subscribe((value: number) => {
         // empty the idNumber
-        this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber')?.setValue(null);
+        this.primaryIdNumberField.setValue(null);
         // set validation for it if need.
-        console.log('DO SOME VALIDATION FOR THE SELECTED TYPE');
+        this.primaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
+        this.primaryIdNumberField.updateValueAndValidity();
       });
   }
 
