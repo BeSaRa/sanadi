@@ -8,6 +8,7 @@ import {searchFunctionType} from '../types/types';
 import {Observable} from 'rxjs';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
+import {SubventionRequestStatus} from '../enums/subvention-request-status';
 
 export class SubventionRequestAid {
   requestId!: number;
@@ -82,6 +83,6 @@ export class SubventionRequestAid {
   }
 
   notUnderProcess(): boolean {
-    return this.statusInfo.enName !== 'Under Processing';
+    return this.statusInfo.lookupKey !== SubventionRequestStatus.UNDER_PROCESSING;
   }
 }

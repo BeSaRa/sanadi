@@ -7,6 +7,7 @@ export class AdminResult {
   arName = '';
   enName = '';
   parent?: number;
+  lookupKey?: number;
 
   private langService: LangService;
 

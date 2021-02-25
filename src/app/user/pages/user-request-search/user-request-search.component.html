@@ -295,11 +295,11 @@
                        class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
                     </a>
-                    <a *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                       (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                       class="icon-btn">
+                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                            (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
                       <i class="mdi mdi-book-edit"></i>
-                    </a>
+                    </button>
                     <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
                             (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
                             [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
