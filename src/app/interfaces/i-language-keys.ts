@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  remove_provided_aid_first_to_change_request_status: string;
   request_cancelled_successfully: string;
   cancellation_reason: string;
   cancel_request: string;

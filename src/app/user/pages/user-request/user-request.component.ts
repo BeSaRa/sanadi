@@ -5,18 +5,7 @@ import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {of, Subject} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  exhaustMap,
-  filter,
-  map,
-  pluck,
-  switchMap,
-  take,
-  takeUntil,
-  tap
-} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, exhaustMap, filter, map, pairwise, pluck, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
 import {ConfigurationService} from '../../../services/configuration.service';
@@ -34,6 +23,7 @@ import {StatusEnum} from '../../../enums/status.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
+import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
 
 @Component({
   selector: 'app-user-request',
@@ -88,6 +78,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   dateConfig: IDatePickerDirectiveConfig = {
     format: 'YYYY-MM-DD'
   };
+  private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -130,7 +121,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
     request = request ? request : new SubventionRequest();
-    return this.fb.group(request.getStatusFields(true)) as FormGroup;
+    const group = this.fb.group(request.getStatusFields(true)) as FormGroup;
+    this.listenToRequestStatusChange(group);
+    return group;
   }
 
   private listenToIdNumberChange() {
@@ -714,5 +707,23 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   submit(event: any) {
     console.log('SUBMIT', event);
+  }
+
+  private listenToRequestStatusChange(group: FormGroup) {
+    group.get('status')?.valueChanges
+      .pipe(
+        pairwise(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(([oldValue, newValue]: SubventionRequestStatus[]) => {
+        if (this.requestStatusArray.indexOf(newValue) !== -1 && this.subventionAid.length) {
+          this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
+          group.get('status')?.setValue(oldValue);
+        }
+      });
+  }
+
+  isProvidedAidDisabled(): boolean {
+    return this.requestStatusArray.indexOf(this.fm.getFormField('requestStatusTab')?.value?.status) !== -1;
   }
 }
