@@ -4,10 +4,9 @@ import {FormManager} from '../../../models/form-manager';
 import {LangService} from '../../../services/lang.service';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Lookup} from '../../../models/lookup';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 import {LookupService} from '../../../services/lookup.service';
 import {forkJoin, of, Subject} from 'rxjs';
-import {mergeMap, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
@@ -70,7 +69,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
@@ -132,7 +131,8 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => {
-          return this.beneficiaryService.loadByCriteria(this.getCurrentFormValue());
+          return this.beneficiaryService.loadByCriteria(this.getCurrentFormValue())
+            .pipe(catchError(_ => of([])));
         })
       )
       .subscribe((beneficiaries: Beneficiary[]) => {
