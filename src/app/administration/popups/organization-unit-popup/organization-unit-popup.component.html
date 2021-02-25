@@ -201,18 +201,24 @@
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
-            <label for="establishmentDate" class="form-label">{{langService.map.unified_economic_record}}</label>
-            <input id="establishmentDate" type="date"
+            <label for="establishmentDate" class="form-label">{{langService.map.establishment_date}}</label>
+            <!--<input id="establishmentDate" type="date"
                    [ngClass]="fm.getStatusClass('advanced.establishmentDate')"
-                   formControlName="establishmentDate" class="form-control">
+                   formControlName="establishmentDate" class="form-control">-->
+            <input theme="dp-material" [dpDayPicker]="dateConfig" id="establishmentDate"
+                   formControlName="establishmentDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('advanced.establishmentDate')">
             <app-field-error-message
               [control]="fm.getFormField('advanced.establishmentDate')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="budgetClosureDate" class="form-label">{{langService.map.budget_closure_date}}</label>
-            <input id="budgetClosureDate" type="date"
+            <!--<input id="budgetClosureDate" type="date"
                    [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')"
-                   formControlName="budgetClosureDate" class="form-control">
+                   formControlName="budgetClosureDate" class="form-control">-->
+            <input theme="dp-material" [dpDayPicker]="dateConfig" id="budgetClosureDate"
+                   formControlName="budgetClosureDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')">
             <app-field-error-message
               [control]="fm.getFormField('advanced.budgetClosureDate')"></app-field-error-message>
           </div>

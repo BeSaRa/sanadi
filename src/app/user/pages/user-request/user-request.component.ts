@@ -89,7 +89,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'actions'
   ];
   dateConfig: IDatePickerDirectiveConfig = {
-    format: 'YYYY-MM-DD'
+    format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
+    // disableKeypress: true
   };
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
 

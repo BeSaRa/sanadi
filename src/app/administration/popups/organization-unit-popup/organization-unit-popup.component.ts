@@ -15,6 +15,8 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
+import {ConfigurationService} from '../../../services/configuration.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -40,11 +42,17 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     branches: {name: 'branches'}
   };
 
+  dateConfig: IDatePickerDirectiveConfig = {
+    format: this.configService.CONFIG.DATEPICKER_FORMAT,
+    // disableKeypress: true
+  };
+
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgUnit>,
               private lookupService: LookupService,
               private fb: FormBuilder,
               private toast: ToastService,
-              public langService: LangService) {
+              public langService: LangService,
+              private configService: ConfigurationService) {
     this.operation = data.operation;
     this.model = data.model;
     this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);

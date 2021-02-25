@@ -20,6 +20,7 @@ import {Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
+import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 
 @Component({
   selector: 'app-user-request-search',
@@ -52,6 +53,11 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.RESIDENCE_QID]: CustomValidators.commonValidations.qId,
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
     [BeneficiaryIdTypes.GCC_RID]: CustomValidators.commonValidations.gccRId,
+  };
+
+  dateConfig: IDatePickerDirectiveConfig = {
+    format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
+    // disableKeypress: true
   };
 
   constructor(public langService: LangService,
