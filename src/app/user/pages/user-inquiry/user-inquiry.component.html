@@ -66,7 +66,7 @@
           <div class="mb-3">
             <label for="nationality">{{langService.map.lbl_nationality}}</label>
             <select formControlName="benPrimaryIdNationality" id="nationality" class="form-select">
-              <option *ngFor="let option of nationalities">{{option.getName()}}</option>
+              <option [ngValue]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</option>
             </select>
           </div>
         </div>
