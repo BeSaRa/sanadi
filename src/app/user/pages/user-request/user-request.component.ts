@@ -339,6 +339,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }
         this.currentRequest = request.clone();
         this.editMode = true;
+        this.disableOtherIdFieldsExcept('none');
         if (!this.requestStatusTab.value) {
           this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
         }
@@ -435,6 +436,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
       this.requestChanged$.next(request);
       this.editMode = true;
+      this.disableOtherIdFieldsExcept('none');
     });
 
   }

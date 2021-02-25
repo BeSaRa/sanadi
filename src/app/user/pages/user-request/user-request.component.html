@@ -45,7 +45,7 @@
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
                 <button tabindex="-1" type="button"
-                        [disabled]="!isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
+                        [disabled]="editMode || !isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
                         (click)="getBeneficiaryData('qid')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -63,7 +63,7 @@
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i></button>
                 <button tabindex="-1" type="button"
-                        [disabled]="!isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
+                        [disabled]="editMode || !isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
                         (click)="getBeneficiaryData('gccId')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -84,7 +84,7 @@
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
                 <button tabindex="-1" type="button"
-                        [disabled]="!isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
+                        [disabled]="editMode || !isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
                         (click)="getBeneficiaryData('visa')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
@@ -102,7 +102,8 @@
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
-                <button tabindex="-1" type="button" [disabled]="fm.getFormField('idTypes.passport')?.invalid"
+                <button tabindex="-1" type="button"
+                        [disabled]="editMode || fm.getFormField('idTypes.passport')?.invalid"
                         (click)="getBeneficiaryData('passport')" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
