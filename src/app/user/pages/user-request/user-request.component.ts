@@ -42,6 +42,7 @@ import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
 import {Pair} from '../../../interfaces/pair';
 import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
+import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -54,9 +55,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private saveAid$: Subject<any> = new Subject<any>();
   private idMap: { [index: string]: number } = {
     qid: 1,
-    gccId: 3,
-    visa: 6,
-    passport: 5,
+    gccId: 2,
+    visa: 4,
+    passport: 3,
   };
   private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
   private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
@@ -359,22 +360,22 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           }));
         })
       ).subscribe((request) => {
-        if (!request) {
-          return;
-        }
+      if (!request) {
+        return;
+      }
 
-        if (this.editMode) {
-          this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
-        } else {
-          this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
-        }
-        this.currentRequest = request.clone();
-        this.editMode = true;
-        this.disableOtherIdFieldsExcept('none');
-        if (!this.requestStatusTab.value) {
-          this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
-        }
-      });
+      if (this.editMode) {
+        this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
+      } else {
+        this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
+      }
+      this.currentRequest = request.clone();
+      this.editMode = true;
+      this.disableOtherIdFieldsExcept('none');
+      if (!this.requestStatusTab.value) {
+        this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
+      }
+    });
 
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
     invalidForm$
