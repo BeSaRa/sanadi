@@ -6,6 +6,9 @@ import {AdminResult} from './admin-result';
 import {LangService} from '../services/lang.service';
 import {CustomValidators} from '../validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {map} from 'rxjs/operators';
+import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
+import {Pair} from '../interfaces/pair';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -96,6 +99,21 @@ export class Beneficiary extends BaseModel<Beneficiary> {
 
   save(): Observable<Beneficiary> {
     return this.id ? this.update() : this.create();
+  }
+
+  createWithValidate(validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    return this.service.createWithValidate(this, validate).pipe(map((value) => {
+      if (value.second) {
+        value.second = Object.assign(new Beneficiary, value.second);
+      }
+      return value;
+    }));
+  }
+
+  saveWithValidate(validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    return this.id ? this.update().pipe(
+      map(value => ({first: BeneficiarySaveStatus.SAVED, second: value}))
+    ) : this.createWithValidate(validate);
   }
 
   update(): Observable<Beneficiary> {

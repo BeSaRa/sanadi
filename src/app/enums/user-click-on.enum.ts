@@ -2,5 +2,6 @@ export enum UserClickOn {
   YES,
   NO,
   CLOSE,
-  CANCEL
+  CANCEL,
+  THIRD_BTN
 }

@@ -58,5 +58,13 @@ export class DialogService {
     return this._showDialog(PredefinedDialogComponent, data, config, 'confirm');
   }
 
+  confirmWithTree(data?: string, config: Partial<IDialogPredefinedConfig> = {
+    cancelBtn: 'btn_no',
+    actionBtn: 'btn_yes',
+    thirdBtn: 'btn_save'
+  }): DialogRef {
+    return this._showDialog(PredefinedDialogComponent, data, config, 'confirmWithThree');
+  }
+
 
 }

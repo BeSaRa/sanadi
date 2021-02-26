@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  btn_inquire: string;
+  btn_continue : string;
+  beneficiary_already_exists: string;
   msg_approved_request_without_one_aid_at_least: string;
   remove_provided_aid_first_to_change_request_status: string;
   request_cancelled_successfully: string;

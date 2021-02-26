@@ -19,7 +19,8 @@ import {
   switchMap,
   take,
   takeUntil,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Beneficiary} from '../../../models/beneficiary';
@@ -39,6 +40,8 @@ import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
+import {Pair} from '../../../interfaces/pair';
+import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -93,6 +96,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     // disableKeypress: true
   };
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
+  private validateStatus: boolean = true;
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -289,6 +293,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
     const formAidValid$ = this.save$
       .pipe(
+        tap(val => console.log(val)),
         tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
         filter(_ => this.validRequestStatus()),
         share()
@@ -313,6 +318,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         return value === true;
       })
     );
+
+
     // prepare the beneficiary/request Models.
     const requestWithBeneficiary$ = validForm$.pipe(
       map(() => {
@@ -322,32 +329,36 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         };
       })
     );
-    // save beneficiary with request
-    requestWithBeneficiary$
-      .pipe(exhaustMap((value) => {
-        return value.beneficiary.save()
-          .pipe(
-            tap((beneficiary) => {
-              this.currentBeneficiary = beneficiary.clone();
-            }),
-            catchError(() => {
-              return of(null);
-            }),
-            switchMap((bene) => {
-              if (!(bene instanceof Beneficiary)) {
-                return of(null);
-              }
-              value.request.benId = bene.id;
-              return value.request.save().pipe(
-                catchError(() => {
-                  return of(null);
-                })
-              );
-            })
-          );
-      }))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((request) => {
+
+    const saveBeneficiary$ = requestWithBeneficiary$
+      .pipe(
+        map(value => value.beneficiary),
+        exhaustMap(beneficiary => {
+          return beneficiary.saveWithValidate(this.validateStatus).pipe(catchError(() => {
+            return of(null);
+          }));
+        }),
+        tap((value) => this.displayBeneficiaryExistsMessage(value)),
+        map(value => {
+          return value?.second;
+        }),
+        filter(value => !!value)
+      );
+
+    saveBeneficiary$
+      .pipe(
+        withLatestFrom(requestWithBeneficiary$),
+        map((value) => {
+          value[1].request.benId = value[0]?.id as number;
+          return value[1].request;
+        }),
+        exhaustMap((request: SubventionRequest) => {
+          return request.save().pipe(catchError(() => {
+            console.log('save Request Failed');
+            return of(null);
+          }));
+        })
+      ).subscribe((request) => {
         if (!request) {
           return;
         }
@@ -364,6 +375,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
         }
       });
+
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
     invalidForm$
       .pipe(takeUntil(this.destroy$))
@@ -453,9 +465,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }),
       tap(myAid => aid = myAid),
       map(aid => aid.map(item => item.aidLookupInfo.parent)),
-      mergeMap(ids => from([...new Set(ids)])),
+      mergeMap(ids => {
+        return ids.length ? from([...new Set(ids)]) : of([]);
+      }),
       concatMap((parentId) => {
-        return this.loadSubAidCategory(parentId as number).pipe(catchError(error => of([])));
+        return this.loadSubAidCategory(parentId as number).pipe(catchError(() => {
+          return of([]);
+        }));
       }),
     ).subscribe((_) => {
       this.beneficiaryChanged$.next(beneficiary);
@@ -766,5 +782,36 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   private displayRequestStatusMessage(): void {
     this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
+  }
+
+  private displayBeneficiaryExistsMessage(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): any {
+    if (!value) {
+      return;
+    }
+
+    if (value.first === BeneficiarySaveStatus.EXISTING) {
+      this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
+        actionBtn: 'btn_continue',
+        thirdBtn: 'btn_inquire',
+        cancelBtn: 'btn_cancel'
+      })
+        .onAfterClose$
+        .pipe(take(1))
+        .subscribe((click: UserClickOn) => {
+          if (click === UserClickOn.YES) {
+            this.validateStatus = false;
+            this.save$.next();
+          } else if (click === UserClickOn.NO) {
+            this.beneficiaryChanged$.next(null);
+            this.requestChanged$.next(null);
+          } else {
+            const ben = this.prepareBeneficiary();
+            this.router.navigate(['/home/user/inquiry', {
+              idNumber: ben.benPrimaryIdNumber,
+              idType: ben.benPrimaryIdType
+            }]).then();
+          }
+        });
+    }
   }
 }

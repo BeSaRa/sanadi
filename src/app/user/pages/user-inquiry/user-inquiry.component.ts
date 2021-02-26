@@ -40,9 +40,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
     [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
     [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
-    [BeneficiaryIdTypes.RESIDENCE_QID]: CustomValidators.commonValidations.qId,
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
-    [BeneficiaryIdTypes.GCC_RID]: CustomValidators.commonValidations.gccRId,
   };
 
   constructor(private fb: FormBuilder,

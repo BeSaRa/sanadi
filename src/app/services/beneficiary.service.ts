@@ -11,12 +11,15 @@ import {IBeneficiaryCriteria} from '../interfaces/i-beneficiary-criteria';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
 import {SelectBeneficiaryPopupComponent} from '../user/popups/select-beneficiary-popup/select-beneficiary-popup.component';
+import {Pair} from '../interfaces/pair';
+import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
+import {map} from 'rxjs/operators';
+import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BeneficiaryService extends BackendGenericService<Beneficiary> {
-
   list!: Beneficiary[];
 
   constructor(public  http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
@@ -35,6 +38,15 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
 
   loadByCriteria(criteria: Partial<IBeneficiaryCriteria>): Observable<Beneficiary[]> {
     return this._loadByCriteria(criteria);
+  }
+
+  @SendInterceptor()
+  createWithValidate(@InterceptParam() beneficiary: Beneficiary, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    return this.http.post<Pair<BeneficiarySaveStatus, Beneficiary>>(this._getServiceURL() + '/validate-save', beneficiary, {
+      params: new HttpParams({
+        fromObject: {'with-check': validate + ''}
+      })
+    }).pipe(map((response: any) => response.rs));
   }
 
   _getModel() {
