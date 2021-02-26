@@ -2,6 +2,7 @@ import {Component, HostListener} from '@angular/core';
 import {LangService} from './services/lang.service';
 import {AppRootScrollService} from './services/app-root-scroll.service';
 import {LoadingService} from './services/loading.service';
+import {CacheService} from './services/cache.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,11 @@ export class AppComponent {
 
   constructor(private langService: LangService,
               public  loadingService: LoadingService,
+              private cacheService: CacheService,
               private appScrollService: AppRootScrollService) {
+
+    // @ts-ignore
+    window['cacheService'] = cacheService;
   }
 
   @HostListener('window:keydown', ['$event'])
