@@ -317,7 +317,7 @@
                     </a>
                     <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
                             (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
+                            class="btn icon-btn text-primary">
                       <i class="mdi mdi-book-edit"></i>
                     </button>
                     <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
