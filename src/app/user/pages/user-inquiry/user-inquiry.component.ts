@@ -75,7 +75,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       searchById: this.fb.group({
         benPrimaryIdNationality: [1],
         benPrimaryIdType: [1],
-        benPrimaryIdNumber: [null, CustomValidators.required]
+        benPrimaryIdNumber: [null, this.idTypesValidationsMap[1]]
       }),
       searchByName: this.fb.group({
         operator: [1],
