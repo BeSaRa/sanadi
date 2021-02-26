@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {LangService} from '../../../services/lang.service';
 import {BeneficiaryService} from '../../../services/beneficiary.service';
@@ -36,15 +36,14 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   displayNationality: boolean = false;
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
-  personalRequestColumns: string[] = [
-    'requestNumber',
-    'requestDate',
-    'organization',
-    'aidType',
-    'requestedAidAmount',
-    'aidStatus',
-    'approvedValue'
-  ];
+  private idTypesValidationsMap: { [index: number]: any } = {
+    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
+    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
+    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.RESIDENCE_QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
+    [BeneficiaryIdTypes.GCC_RID]: CustomValidators.commonValidations.gccRId,
+  };
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -97,10 +96,17 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     });
   }
 
+  get primaryIdNumberField(): FormControl {
+    return this.fm.getFormField('searchById.benPrimaryIdNumber') as FormControl;
+  }
+
   private listenToIdTypeChange() {
     this.fm.getFormField('searchById.benPrimaryIdType')?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe((value) => {
+      // set validation for it if need.
+      this.primaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
+      this.primaryIdNumberField.updateValueAndValidity();
       this.displayNationality = value === BeneficiaryIdTypes.PASSPORT;
     });
   }
@@ -182,7 +188,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       });
   }
 
-  printResult($event: MouseEvent): void {
+  printResult(): void {
     // @ts-ignore
     this.subventionRequestService.loadByBeneficiaryIdAsBlob(this.beneficiary?.id)
       .subscribe((data) => {
