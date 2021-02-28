@@ -1,9 +1,4 @@
 <div class="container-fluid p-0 h-100">
-  <div *ngIf="loadingService.loading$|async"
-       class="loading-overlay d-flex flex-column align-items-center justify-content-center">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
+  <app-loading *ngIf="loadingService.loading$|async"></app-loading>
   <router-outlet></router-outlet>
 </div>
