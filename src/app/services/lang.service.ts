@@ -1,4 +1,4 @@
-import {Inject, Injectable, NgZone} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -35,21 +35,22 @@ export class LangService extends BackendGenericService<Localization> {
     ar: 'en',
     en: 'ar'
   };
-  private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.en);
+  private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.ar);
   public onLanguageChange$: Observable<Language> = this.languageChange.asObservable();
   protected firstTime = true;
   public map: LangType = {} as LangType;
   private localizationMap: LocalizationMap = {} as LocalizationMap;
+  private linkElement!: HTMLLinkElement;
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
               private dialogService: DialogService,
-              private ngZone: NgZone,
               private eCookieService: ECookieService,
               private configurationService: ConfigurationService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
+    this.createStyleElement();
     this.changeLanguage(this.languageChange.value);
     this.firstTime = false;
 
@@ -57,6 +58,13 @@ export class LangService extends BackendGenericService<Localization> {
       this.prepareCurrentLang();
       this.prepareLocalizationMap();
     });
+  }
+
+
+  private createStyleElement(): void {
+    this.linkElement = this.document.createElement('link');
+    this.linkElement.rel = 'stylesheet';
+    this.document.head.appendChild(this.linkElement);
   }
 
   /**
@@ -75,7 +83,7 @@ export class LangService extends BackendGenericService<Localization> {
    * @private
    */
   private changeStyleHref(style: Styles): void {
-    (this.document.querySelector(`link[href^="bootstrap"]`) as HTMLLinkElement).href = style;
+    this.linkElement.href = style;
   }
 
   private prepareCurrentLang(): ILanguageKeys {

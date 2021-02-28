@@ -54,7 +54,7 @@
               {
                 "bundleName": "bootstrap",
                 "input": "src/assets/style/bootstrap.css",
-                "inject": true
+                "inject": false
               },
               {
                 "bundleName": "bootstrap-rtl",
