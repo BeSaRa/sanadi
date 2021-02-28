@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "ebla:build": "ng build --base-href /sanadi-ui/"
+    "prod": "ng build --prod --base-href /sanadi-ui/"
   },
   "private": true,
   "dependencies": {
