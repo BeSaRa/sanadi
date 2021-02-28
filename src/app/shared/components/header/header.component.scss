@@ -4,10 +4,24 @@
   display: block;
 }
 
+#brand-link {
+  max-height: 90px !important;
+  display: flex;
+  flex-direction: row;
+}
+
 #main-navbar-links {
   li a.active {
     border-bottom: .4rem solid $gold;
   }
+}
+
+#main-logo {
+  width: 60%;
+}
+
+#sanady-word {
+  max-height: 80px !important;
 }
 
 @include media-breakpoint-up(md) {
