@@ -2,7 +2,6 @@ import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
 import {TOAST_DATA_TOKEN} from '../../tokens/tokens';
 import {animate, AnimationEvent, style, transition, trigger} from '@angular/animations';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
@@ -11,21 +10,21 @@ import {animate, AnimationEvent, style, transition, trigger} from '@angular/anim
     trigger('slideInOut', [
       transition(':enter', [
         style({
-          transform: 'translateX(-100%) scale(0)',
+          transform: 'translateY(-100%) scale(0)',
           opacity: 0
         }),
         animate('250ms ease-out', style({
-          transform: 'translateX(0) scale(1)',
+          transform: 'translateY(0) scale(1)',
           opacity: 1
         }))
       ]),
       transition(':leave', [
         style({
-          transform: 'translateX(0) scale(1)',
+          transform: 'translateY(0) scale(1)',
           opacity: 1
         }),
         animate('250ms ease-out', style({
-          transform: 'translateX(-100%) scale(0)',
+          transform: 'translateY(-100%) scale(0)',
           opacity: 0
         }))
       ])

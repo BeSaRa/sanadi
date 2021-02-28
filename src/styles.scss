@@ -83,8 +83,10 @@ html[dir="rtl"] .table-responsive {
 }
 
 .main-toast-wrapper {
-  display: block;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .panel-class {
