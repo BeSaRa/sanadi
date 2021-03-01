@@ -159,7 +159,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
         CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber1,
       employeer: control ? [employeer, CustomValidators.required] : employeer,
       benDependentsCount: control ? [benDependentsCount, [CustomValidators.required,
-        CustomValidators.number, Validators.min(0)]] : benDependentsCount,
+        CustomValidators.number, Validators.min(0) , CustomValidators.maxLength(2)]] : benDependentsCount,
       educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
       maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
       benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,

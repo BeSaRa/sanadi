@@ -242,7 +242,7 @@
               <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input id="sponsorsCount" [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
+                <input maxlength="2" id="sponsorsCount" [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
                        formControlName="benDependentsCount" class="form-control">
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>

@@ -42,7 +42,6 @@ import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
 import {Pair} from '../../../interfaces/pair';
 import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
-import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'app-user-request',
