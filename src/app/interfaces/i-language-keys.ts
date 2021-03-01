@@ -232,4 +232,7 @@ export interface ILanguageKeys {
   aids: string;
   show_details: string;
   access_denied: string;
+  err_english_num_only: string;
+  err_arabic_num_only: string;
+  err_english_arabic_only: string;
 }

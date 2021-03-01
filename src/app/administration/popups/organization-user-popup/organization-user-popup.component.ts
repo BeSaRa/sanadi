@@ -116,11 +116,11 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         userType: [this.model.userType, CustomValidators.required],
         arName: [this.model.arName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
         ]],
         enName: [this.model.enName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
         qid: [this.model.qid, [CustomValidators.required, CustomValidators.number,
           Validators.minLength(CustomValidators.defaultLengths.QID_MIN),

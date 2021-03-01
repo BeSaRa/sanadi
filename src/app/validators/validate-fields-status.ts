@@ -3,9 +3,12 @@ import {hasValidLength, isValidValue} from '../helpers/utils';
 import {customValidationTypes} from '../types/types';
 
 const validationPatterns: any = {
-  ENG: new RegExp(/^[a-zA-Z0-9\- ]+$/),
-  AR: new RegExp(/^[\u0621-\u064A0-9\u0660-\u0669\- ]+$/),
-  PASSPORT: new RegExp("^[A-Z][0-9]{8}$")
+  ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
+  AR_NUM: new RegExp(/^[\u0621-\u064A0-9\u0660-\u0669\- ]+$/),
+  PASSPORT: new RegExp("^[A-Z][0-9]{8}$"),
+  ENG_ONLY: new RegExp(/^[a-zA-Z ]+$/),
+  AR_ONLY: new RegExp(/^[\u0621-\u064A ]+$/),
+  ENG_AR_ONLY: new RegExp(/^[a-zA-Z\u0621-\u064A ]+$/)
 };
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {

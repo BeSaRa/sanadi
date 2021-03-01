@@ -76,11 +76,11 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
         orgId: [this.orgUnit.id],
         arName: [this.model.arName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
         ]],
         enName: [this.model.enName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
         status: [this.model.status, CustomValidators.required],
         // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],

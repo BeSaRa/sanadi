@@ -77,11 +77,11 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
       basic: this.fb.group({
         arName: [this.model.arName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
         ]],
         enName: [this.model.enName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG')
+          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
         aidCode: [this.model.aidCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(50)]],
         aidType: [this.model.aidType ?? this.aidType, [CustomValidators.required]],

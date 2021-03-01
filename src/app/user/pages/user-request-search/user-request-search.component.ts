@@ -101,11 +101,11 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           benPrimaryIdType: [],
           benPrimaryIdNumber: [],
           arName: this.fb.group({
-            value: [null, [CustomValidators.pattern('AR'), Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
+            value: [null, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
             operator: [StringOperator[StringOperator.EQUALS]],
           }),
           enName: this.fb.group({
-            value: [null, [CustomValidators.pattern('ENG'), Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+            value: [null, [CustomValidators.pattern('ENG_NUM'), Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
             operator: [StringOperator[StringOperator.EQUALS]]
           })
         })
