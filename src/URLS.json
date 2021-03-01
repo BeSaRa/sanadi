@@ -19,5 +19,9 @@
   "SUBVENTION_REQUEST": "aids/subvention-request",
   "SUBVENTION_REQUEST_AID": "aids/subvention-request/sub-aids",
   "SUBVENTION_LOG": "aids/subvention-request-log",
-  "SUBVENTION_AID": "/aids/subvention-aid"
+  "SUBVENTION_AID": "/aids/subvention-aid",
+  "EXT_YOUTUBE": "https://www.youtube.com/channel/UCP53uXuaKvH4A6lCblvggIg",
+  "EXT_INSTAGRAM": "https://www.instagram.com/racaqa/",
+  "EXT_FACEBOOK": "https://web.facebook.com/RACAqa/",
+  "EXT_TWITTER": "https://twitter.com/Racaqa"
 }

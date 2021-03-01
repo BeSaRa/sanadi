@@ -21,6 +21,10 @@ export interface IAppUrls {
   AUTHENTICATE: string;
   VALIDATE_TOKEN: string;
   SUBVENTION_LOG: string;
+  EXT_YOUTUBE: string;
+  EXT_INSTAGRAM: string;
+  EXT_FACEBOOK: string;
+  EXT_TWITTER: string;
 
   [index: string]: string;
 }

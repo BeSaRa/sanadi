@@ -7,6 +7,7 @@ import {ToastService} from '../../../services/toast.service';
 import {Router} from '@angular/router';
 import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {UrlService} from '../../../services/url.service';
 
 @Component({
   selector: 'app-header',
@@ -25,7 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private router: Router,
               private dialogService: DialogService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              public urlService: UrlService) {
   }
 
   ngOnInit(): void {
