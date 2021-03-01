@@ -50,7 +50,7 @@ export class LangService extends BackendGenericService<Localization> {
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
-    this.createStyleElement();
+    this.getLinkElement();
     this.changeLanguage(this.languageChange.value);
     this.firstTime = false;
 
@@ -61,10 +61,8 @@ export class LangService extends BackendGenericService<Localization> {
   }
 
 
-  private createStyleElement(): void {
-    this.linkElement = this.document.createElement('link');
-    this.linkElement.rel = 'stylesheet';
-    this.document.head.appendChild(this.linkElement);
+  private getLinkElement(): void {
+    this.linkElement = this.document.getElementById('main-style') as HTMLLinkElement;
   }
 
   /**
