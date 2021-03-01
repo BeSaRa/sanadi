@@ -1,12 +1,12 @@
 import {
-  validateFieldsStatus,
-  requiredValidator as required,
+  maxlengthValidator as maxLength,
+  minlengthValidator as minLength,
   numberValidator as number,
   patternValidator as pattern,
-  minlengthValidator as minLength,
-  maxlengthValidator as maxLength
+  requiredValidator as required,
+  validateFieldsStatus
 } from './validate-fields-status';
-import {AbstractControl, Validators} from '@angular/forms';
+import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 import {anyFieldsHasLength} from './any-fields-has-length';
@@ -16,7 +16,7 @@ const defaultLengths = {
   ARABIC_NAME_MAX: 300,
   ENGLISH_NAME_MAX: 300,
   EMAIL_MAX: 200,
-  PHONE_NUMBER_MAX: 50,
+  PHONE_NUMBER_MAX: 20,
   ADDRESS_MAX: 1000,
   QID_MIN: 7,
   QID_MAX: 11
