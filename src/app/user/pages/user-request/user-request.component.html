@@ -661,7 +661,7 @@
               <div class="row d-flex flex-column flex-md-row">
                 <label for="aidAmount" asteriskIfRequired="aidAmount" class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
+                  <input id="aidAmount"  maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
                          class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
@@ -690,9 +690,7 @@
                 <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <!--<input [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')" id="aidStartPayDate"
-                         formControlName="aidStartPayDate" class="form-control" type="date">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="aidStartPayDate"
+                  <input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
                          formControlName="aidStartPayDate" class="form-control"
                          [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
                   <app-field-error-message

@@ -97,6 +97,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     max: this.today
     // disableKeypress: true
   };
+  dateConfigFuture: IDatePickerDirectiveConfig = {
+    format: this.configurationService.CONFIG.DATEPICKER_FORMAT
+  };
   aidPeriodicTypeSub!: Subscription;
 
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
