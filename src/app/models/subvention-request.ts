@@ -29,6 +29,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   approvalIndicator!: number;
   status: number = 2;
   statusDateModified!: string;
+  requestNotes!: string;
   orgBranchId!: number;
   orgId!: number;
   benId!: number;
@@ -85,20 +86,21 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   }
 
   getInfoFields(control: boolean = false): any {
-    const {requestType, creationDate, requestedAidAmount} = this;
+    const {requestType, creationDate, requestedAidAmount, requestSummary} = this;
     return {
       requestType: control ? [requestType, CustomValidators.required] : requestType,
       creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
-      requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number]] : requestedAidAmount
+      requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number]] : requestedAidAmount,
+      requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary
     };
   }
 
   getStatusFields(control: boolean = false): any {
-    const {status, statusDateModified, requestSummary} = this;
+    const {status, statusDateModified, requestNotes} = this;
     return {
       status: control ? [status, CustomValidators.required] : status,
       statusDateModified: control ? [statusDateModified] : statusDateModified,
-      requestSummary: control ? [requestSummary, [Validators.maxLength(1000)]] : requestSummary
+      requestNotes: control ? [requestNotes] : requestNotes
     };
   }
 

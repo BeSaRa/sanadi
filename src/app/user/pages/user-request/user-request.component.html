@@ -572,6 +572,19 @@
           </div>
         </div>
       </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label asteriskIfRequired="requestSummary" for="requestSummary" class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
+            <div class="col-md-10 col-sm-12">
+              <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
+                        formControlName="requestSummary" rows="5" class="form-control"></textarea>
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-template>
     <!-- Request Status -->
     <ng-template formGroupName="requestStatusTab" #requestStatus>
@@ -612,12 +625,12 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="requestSummary" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
+            <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
             <div class="col-md-10 col-sm-12">
-              <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestSummary')" id="requestSummary"
-                        formControlName="requestSummary" rows="5" class="form-control"></textarea>
+              <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
+                        formControlName="requestNotes" rows="5" class="form-control"></textarea>
               <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.requestSummary')"></app-field-error-message>
+                [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
             </div>
           </div>
         </div>
