@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {of, Subject, Subscription} from 'rxjs';
 import {
@@ -278,7 +278,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .subscribe((required) => {
         requiredList.forEach(field => {
           const control = this.fm.getFormField(`incomeTab.${field}`);
-          control?.setValidators(required ? CustomValidators.required : null);
+          control?.setValidators(required ? [CustomValidators.required, CustomValidators.number, Validators.min(0)] : null);
           control?.updateValueAndValidity();
         });
       });

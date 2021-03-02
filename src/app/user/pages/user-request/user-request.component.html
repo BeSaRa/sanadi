@@ -329,7 +329,7 @@
             <label asteriskIfRequired="occuption" for="occupation"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input id="occupation" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
+              <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.occuptionStatus')"></app-field-error-message>
@@ -343,7 +343,7 @@
             <label for="workplace" asteriskIfRequired="employeerAddress"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
+              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
                      id="workplace" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
@@ -355,7 +355,7 @@
             <label for="monthlyIncome" asteriskIfRequired="benIncome"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input id="monthlyIncome" [ngClass]="fm.getStatusClass('incomeTab.benIncome')" formControlName="benIncome"
+              <input id="monthlyIncome" maxlength="20" formControlName="benIncome" [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
                      class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
@@ -368,7 +368,7 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="extraIncome" class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')" formControlName="benExtraIncome"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')" formControlName="benExtraIncome"
                      class="form-control" id="extraIncome">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
@@ -380,7 +380,7 @@
             <label for="extraIncomeSource"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.extraIncomeSource')" formControlName="benExtraIncomeSource"
+              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.extraIncomeSource')" formControlName="benExtraIncomeSource"
                      id="extraIncomeSource" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.extraIncomeSource')"></app-field-error-message>
@@ -393,7 +393,7 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts" formControlName="totalDebts"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts" formControlName="totalDebts"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
@@ -405,7 +405,7 @@
             <label for="totalInstalments"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_installment}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
                      formControlName="totalInstalments" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
@@ -418,7 +418,7 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="monthlyRent" class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                      formControlName="benHouseRent" class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
@@ -644,7 +644,8 @@
           <div class="row d-flex flex-row">
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="aidType" asteriskIfRequired="aidLookupId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
+                <label for="aidType" asteriskIfRequired="aidLookupId"
+                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
                           formControlName="aidLookupId"
@@ -659,9 +660,11 @@
             </div>
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="aidAmount" asteriskIfRequired="aidAmount" class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
+                <label for="aidAmount" asteriskIfRequired="aidAmount"
+                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <input id="aidAmount"  maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
+                  <input id="aidAmount" maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
+                         formControlName="aidAmount"
                          class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
