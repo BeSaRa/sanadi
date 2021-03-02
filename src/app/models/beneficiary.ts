@@ -210,16 +210,14 @@ export class Beneficiary extends BaseModel<Beneficiary> {
 
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
-      streetName: control ? [streetName, [CustomValidators.required, Validators.maxLength(200)]] : streetName,
-      buildingName: control ? [buildingName, [CustomValidators.required,
-        Validators.maxLength(200)]] : buildingName,
-      zone: control ? [zone, [CustomValidators.required, Validators.maxLength(100)]] : zone,
-      unit: control ? [unit, [Validators.maxLength(200)]] : unit,
+      streetName: control ? [streetName, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : streetName,
+      buildingName: control ? [buildingName, [CustomValidators.number, CustomValidators.required,
+        Validators.maxLength(20)]] : buildingName,
+      zone: control ? [zone, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : zone,
+      unit: control ? [unit, [CustomValidators.number, CustomValidators.maxLength(20)]] : unit,
       homePhoneNumber: control ? [homePhoneNumber, [CustomValidators.number,
         Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : homePhoneNumber,
-      addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription,
-      // residenceStatus: control ? [residenceStatus , CustomValidators.required] : residenceStatus,
-      // addressStatus: control ? [addressStatus] : addressStatus,
+      addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
     };
   }
 }

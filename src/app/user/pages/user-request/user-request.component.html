@@ -450,7 +450,7 @@
             <label for="zone" asteriskIfRequired="zone"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
                      class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
@@ -464,7 +464,7 @@
             <label for="street" asteriskIfRequired="streetName"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street" formControlName="streetName"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street" formControlName="streetName"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
@@ -476,7 +476,7 @@
             <label for="buildingName" asteriskIfRequired="buildingName"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
                      formControlName="buildingName" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
@@ -489,7 +489,7 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
@@ -501,7 +501,7 @@
             <label for="homePhoneNumber"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
                      formControlName="homePhoneNumber" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
