@@ -644,24 +644,7 @@
           <div class="row d-flex flex-row">
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="mainAidType"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.main_aid_type}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select id="mainAidType"
-                          [ngClass]="fm.getStatusClass('aidTab.0.mainAidType')"
-                          formControlName="mainAidType"
-                          class="form-select">
-                    <option [ngValue]="option.id"
-                            *ngFor="let option of aidLookups">{{option.getName()}}</option>
-                  </select>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.mainAidType')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label for="aidType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
+                <label for="aidType" asteriskIfRequired="aidLookupId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
                           formControlName="aidLookupId"
@@ -674,11 +657,22 @@
                 </div>
               </div>
             </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="aidAmount" asteriskIfRequired="aidAmount" class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
+                <div class="col-md-8 col-sm-12 mb-4">
+                  <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
+                         class="form-control">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="row d-flex flex-row">
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="approvalDate"
+                <label asteriskIfRequired="approvalDate" for="approvalDate"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <!--<input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
@@ -693,7 +687,7 @@
             </div>
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="periodicType"
+                <label asteriskIfRequired="periodicType" for="periodicType"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <select (change)="periodicChange(per)" #per [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
@@ -711,7 +705,7 @@
           <div class="row d-flex flex-row">
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="aidStartPayDate"
+                <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <!--<input [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')" id="aidStartPayDate"
@@ -724,22 +718,11 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label for="aidAmount" class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input id="aidAmount" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')" formControlName="aidAmount"
-                         class="form-control">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
           </div>
           <div class="row d-flex flex-row">
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="installementsCount"
+                <label asteriskIfRequired="installementsCount" for="installementsCount"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.months_count}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
                   <input [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
@@ -753,7 +736,7 @@
           <div class="row d-flex flex-row">
             <div class="col-sm-12">
               <div class="row d-flex flex-column flex-md-row">
-                <label for="aidDescription"
+                <label asteriskIfRequired="aidDescription" for="aidDescription"
                        class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
                 <div class="col-md-10 col-sm-12">
                 <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"

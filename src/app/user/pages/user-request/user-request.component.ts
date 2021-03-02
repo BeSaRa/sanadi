@@ -4,7 +4,7 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {from, of, Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -12,7 +12,6 @@ import {
   exhaustMap,
   filter,
   map,
-  mergeMap,
   pairwise,
   pluck,
   share,
@@ -468,12 +467,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         return request.loadRequestAids();
       }),
       tap(myAid => aid = myAid),
-      map(aid => aid.map(item => item.aidLookupInfo.parent)),
-      mergeMap(ids => {
-        return ids.length ? from([...new Set(ids)]) : of([]);
-      }),
-      concatMap((parentId) => {
-        return this.loadSubAidCategory(parentId as number).pipe(catchError(() => {
+      concatMap(() => {
+        return this.loadSubAidCategory().pipe(catchError(() => {
           return of([]);
         }));
       }),
@@ -658,12 +653,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     aidArray.clear();
     if (aid) {
       aidArray.push(this.fb.group(aid.getAidFields(true)));
-      aidArray.at(0).get('mainAidType')?.valueChanges
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((parentId: number) => {
-          this.aidLookupIdField.setValue(null);
-          this.loadSubAidCategory(parentId).subscribe();
-        });
+      this.loadSubAidCategory().subscribe();
     }
   }
 
@@ -726,14 +716,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadSubAidCategory(parentId: number) {
+  private loadSubAidCategory() {
     // thanks to khaled he saved my life here for ever thanks again.
     this.subAidLookupsArray = [];
     return this.aidLookupService
       .loadByCriteria({
         aidType: 3,
-        status: StatusEnum.ACTIVE,
-        parent: Number(parentId)
+        status: StatusEnum.ACTIVE
       })
       .pipe(
         take(1),
