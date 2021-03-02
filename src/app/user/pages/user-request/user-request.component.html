@@ -687,24 +687,6 @@
             </div>
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="periodicType" for="periodicType"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select (change)="periodicChange(per)" #per [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
-                          formControlName="periodicType"
-                          id="periodicType" class="form-select">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-                  </select>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
                 <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
@@ -720,6 +702,22 @@
             </div>
           </div>
           <div class="row d-flex flex-row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label asteriskIfRequired="periodicType" for="periodicType"
+                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
+                <div class="col-md-8 col-sm-12 mb-4">
+                  <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
+                          formControlName="periodicType"
+                          id="periodicType" class="form-select">
+                    <option [ngValue]="option.lookupKey"
+                            *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
+                  </select>
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
                 <label asteriskIfRequired="installementsCount" for="installementsCount"

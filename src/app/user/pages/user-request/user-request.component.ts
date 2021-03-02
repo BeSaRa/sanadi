@@ -4,7 +4,7 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {of, Subject} from 'rxjs';
+import {of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -97,6 +97,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     max: this.today
     // disableKeypress: true
   };
+  aidPeriodicTypeSub!: Subscription;
 
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
@@ -654,6 +655,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (aid) {
       aidArray.push(this.fb.group(aid.getAidFields(true)));
       this.loadSubAidCategory().subscribe();
+      this.aidPeriodicTypeSub = this.aidPeriodicType
+        .valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((value) => {
+          this.periodicChange(value);
+        });
+      this.aidPeriodicType.updateValueAndValidity();
+    } else {
+      this.aidPeriodicTypeSub?.unsubscribe();
     }
   }
 
@@ -671,6 +681,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   get aidInstallmentsCount(): FormControl {
     return this.fm.getFormField('aidTab.0.installementsCount') as FormControl;
+  }
+
+  get aidPeriodicType(): FormControl {
+    return this.aidFormArray.get('0.periodicType') as FormControl;
   }
 
 
@@ -733,12 +747,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       );
   }
 
-  periodicChange(per: HTMLSelectElement) {
-    const value = Number(per.value.split(': ').pop());
+  periodicChange(value: number) {
     if (value === PeriodicPayment.MONTHLY) {
       this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
+      this.aidInstallmentsCount.enable();
     } else {
       this.aidInstallmentsCount.setValidators(CustomValidators.number);
+      this.aidInstallmentsCount.setValue(0);
+      this.aidInstallmentsCount.disable();
     }
     this.aidInstallmentsCount.updateValueAndValidity();
   }
