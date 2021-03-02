@@ -90,7 +90,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return {
       requestType: control ? [requestType, CustomValidators.required] : requestType,
       creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
-      requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number , CustomValidators.maxLength(20)]] : requestedAidAmount,
+      requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : requestedAidAmount,
       requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary
     };
   }
@@ -100,7 +100,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return {
       status: control ? [status, CustomValidators.required] : status,
       statusDateModified: control ? [statusDateModified] : statusDateModified,
-      requestNotes: control ? [requestNotes] : requestNotes
+      requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }
 
