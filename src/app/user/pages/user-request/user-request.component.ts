@@ -42,6 +42,7 @@ import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
 import {Pair} from '../../../interfaces/pair';
 import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-user-request',
@@ -91,10 +92,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'aidAmount',
     'actions'
   ];
+  today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   dateConfig: IDatePickerDirectiveConfig = {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
+    max: this.today
     // disableKeypress: true
   };
+
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
 

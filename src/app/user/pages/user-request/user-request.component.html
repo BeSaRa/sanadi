@@ -563,7 +563,7 @@
             <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
                      formControlName="requestedAidAmount"
                      id="requestedAidAmount" class="form-control">
               <app-field-error-message
@@ -575,7 +575,8 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="requestSummary" for="requestSummary" class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
+            <label asteriskIfRequired="requestSummary" for="requestSummary"
+                   class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
             <div class="col-md-10 col-sm-12">
               <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
                         formControlName="requestSummary" rows="5" class="form-control"></textarea>
