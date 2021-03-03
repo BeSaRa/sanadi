@@ -308,7 +308,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       map(value => Number(value))
     ).subscribe((value) => {
       const control = this.fm.getFormField('incomeTab.benExtraIncomeSource');
-      value ? control?.setValidators(CustomValidators.required) : null;
+      value ? control?.setValidators([CustomValidators.required, Validators.maxLength(100)])
+        : control?.setValidators([Validators.maxLength(100)]);
       control?.updateValueAndValidity();
     });
   }
