@@ -520,13 +520,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     $event?.preventDefault();
     const primaryNumber = this.fm.getFormField('personalTab.benPrimaryIdNumber')?.value;
     const secondary = this.fm.getFormField('personalTab.benSecIdNumber')?.value;
+    const nationality = this.fm.getFormField('personalTab.benNationality')?.value;
+
+    if (fieldName === 'passport' && !nationality) {
+      this.dialogService.info(this.langService.map.msg_select_nationality);
+      return;
+    }
 
     this.beneficiaryService
       .loadByCriteria({
         benPrimaryIdNumber: primaryNumber ? primaryNumber : undefined,
         benPrimaryIdType: primaryNumber ? this.idMap[fieldName] : undefined,
         benSecIdNumber: secondary ? secondary : undefined,
-        benSecIdType: secondary ? this.idMap['passport'] : undefined
+        benSecIdType: secondary ? this.idMap['passport'] : undefined,
+        benSecIdNationality: secondary ? nationality : undefined
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(list => {
