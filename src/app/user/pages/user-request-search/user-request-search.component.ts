@@ -46,6 +46,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private advancedSearch$!: Observable<string>;
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
   requests: SubventionRequestAid[] = [];
+  searchType?: 'simple' | 'advanced';
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -193,6 +194,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           return this.getSimpleSearchValues();
         }),
         switchMap((criteria) => {
+          this.searchType = 'simple';
           return this.subventionRequestService.loadByCriteria(criteria)
             .pipe(catchError(() => {
               return of([]);
@@ -212,6 +214,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           return this.getAdvancedSearchValues();
         }),
         switchMap((criteria) => {
+          this.searchType = 'advanced';
           return this.subventionRequestService.loadByCriteria(criteria)
             .pipe(catchError(() => {
               return of([]);
@@ -222,6 +225,10 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroy$)
       ).subscribe(result => this.requests = result);
+  }
+
+  reloadSearchResults() {
+    this.searchType === 'simple' ? this.clickSearchButton$.next('simple') : this.clickSearchButton$.next('advanced');
   }
 
   onClickSimpleSearch() {
@@ -335,6 +342,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((status) => {
         status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+        this.reloadSearchResults();
       });
   }
 
@@ -343,6 +351,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((status) => {
         status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+        this.reloadSearchResults();
       });
   }
 }

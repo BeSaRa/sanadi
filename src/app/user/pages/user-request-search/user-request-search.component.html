@@ -267,7 +267,13 @@
   <ng-template #searchResult>
     <div *ngIf="requests.length">
       <div class="row">
-        <div class="col-12 d-flex align-items-center justify-content-end">
+        <div class="col-6 d-flex align-items-center justify-content-start">
+          <button class="btn btn-link outline-none"
+                  tooltip="{{langService.map.btn_reload}}"
+                  (click)="reloadSearchResults()">
+            <i class="mdi mdi-reload"></i></button>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-end">
           <button class="btn btn-link outline-none"
                   tooltip="{{langService.map.print}}"
                   (click)="printResult()">
