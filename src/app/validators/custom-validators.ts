@@ -4,7 +4,9 @@ import {
   numberValidator as number,
   patternValidator as pattern,
   requiredValidator as required,
-  validateFieldsStatus
+  validateFieldsStatus,
+  maxDateValidator as maxDate,
+  minDateValidator as minDate
 } from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
@@ -71,6 +73,18 @@ const errorKeys: IKeyValue = {
       return message.change({fields: '( ' + errorValue.join(', ') + ') '});
     }
   },
+  maxDate: {
+    key: 'err_max_date',
+    replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
+      return message.change({maxDate: errorValue.requiredMaxDate});
+    }
+  },
+  minDate: {
+    key: 'err_min_date',
+    replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
+      return message.change({minDate: errorValue.requiredMinDate});
+    }
+  }
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
@@ -108,5 +122,7 @@ export const CustomValidators = {
   anyFieldsHasLength,
   getValidationData,
   defaultLengths,
-  commonValidations
+  commonValidations,
+  maxDate,
+  minDate
 };

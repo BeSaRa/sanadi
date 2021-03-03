@@ -1,6 +1,9 @@
 import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {hasValidLength, isValidValue} from '../helpers/utils';
 import {customValidationTypes} from '../types/types';
+import * as dayjs from 'dayjs';
+import {FactoryService} from '../services/factory.service';
+import {ConfigurationService} from '../services/configuration.service';
 
 const validationPatterns: any = {
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
@@ -83,5 +86,47 @@ export function patternValidator(patternName: customValidationTypes): ValidatorF
     // @ts-ignore
     response[patternName] = true;
     return !validationPatterns[patternName].test(control.value) ? response : null;
+  };
+}
+
+export function maxDateValidator(maxDate: string | Date, format: string = ''): ValidatorFn {
+  if (!maxDate || !isValidValue(maxDate)) {
+    return Validators.nullValidator;
+  }
+  return (control: AbstractControl): ValidationErrors | null => {
+    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+    format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+    let isInvalid: boolean = true;
+    if (typeof maxDate === 'string') {
+      isInvalid = dayjs(control.value.trim(), format).isAfter(dayjs(maxDate, format));
+    } else {
+      isInvalid = dayjs(control.value, format).isAfter(dayjs(maxDate, format));
+    }
+    return isInvalid ? {maxDate: {requiredMaxDate: maxDate, actualMaxDate: control.value}} : null;
+  };
+}
+
+export function minDateValidator(minDate: string | Date, format: string = ''): ValidatorFn {
+  if (!minDate || !isValidValue(minDate)) {
+    return Validators.nullValidator;
+  }
+  return (control: AbstractControl): ValidationErrors | null => {
+    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+    format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+    let isInvalid: boolean = true;
+    if (typeof minDate === 'string') {
+      isInvalid = dayjs(control.value.trim(), format).isBefore(dayjs(minDate, format));
+    } else {
+      isInvalid = dayjs(control.value, format).isBefore(dayjs(minDate, format));
+    }
+    return isInvalid ? {minDate: {requiredMinDate: minDate, actualMinDate: control.value}} : null;
   };
 }

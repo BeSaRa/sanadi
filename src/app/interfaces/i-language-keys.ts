@@ -235,4 +235,6 @@ export interface ILanguageKeys {
   err_english_num_only: string;
   err_arabic_num_only: string;
   err_english_arabic_only: string;
+  err_max_date: string;
+  err_min_date: string;
 }
