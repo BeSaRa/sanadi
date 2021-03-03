@@ -142,7 +142,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
 
     return {
       benNationality: control ? [benNationality, CustomValidators.required] : benNationality,
-      dateOfBirth: control ? [dateOfBirth, CustomValidators.required] : dateOfBirth,
+      dateOfBirth: control ? [dateOfBirth, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : dateOfBirth,
       gender: control ? [gender, CustomValidators.required] : gender,
       enName: control ? [enName, [CustomValidators.required,
         CustomValidators.pattern('ENG_ONLY'),
