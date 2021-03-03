@@ -82,6 +82,28 @@ export class SubventionRequestAid {
     });
   }
 
+  deleteRequest(): Observable<boolean> {
+    return new Observable((subscriber) => {
+      const sub = this.subventionRequestService
+        .openDeleteDialog(this)
+        .onAfterClose$
+        .subscribe((result: UserClickOn | string) => {
+          if (typeof result !== 'string') {
+            return subscriber.next(false);
+          }
+          this.subventionRequestService
+            .deleteRequest(this.requestId, result)
+            .pipe(
+              take(1)
+            )
+            .subscribe(subscriber);
+        });
+      return () => {
+        sub.unsubscribe();
+      };
+    });
+  }
+
   notUnderProcess(): boolean {
     return this.statusInfo.lookupKey !== SubventionRequestStatus.UNDER_PROCESSING;
   }

@@ -21,6 +21,7 @@ import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
+import {SubventionRequest} from '../../../models/subvention-request';
 
 @Component({
   selector: 'app-user-request-search',
@@ -334,6 +335,14 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((status) => {
         status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
+      });
+  }
+
+  deleteRequest(request: SubventionRequestAid) {
+    request.deleteRequest()
+      .pipe(take(1))
+      .subscribe((status) => {
+        status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
       });
   }
 }

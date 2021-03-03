@@ -19,7 +19,7 @@ import {SubventionLogPopupComponent} from '../user/popups/subvention-log-popup/s
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
 import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
-import {CancelRequestPopupComponent} from '../user/popups/cancel-request-popup/cancel-request-popup.component';
+import {ReasonPopupComponent} from '../user/popups/reason-popup/reason-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
   }
+
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export', {responseType: 'blob'});
   }
@@ -104,13 +105,31 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   openCancelDialog(request: SubventionRequest | SubventionRequestAid): DialogRef {
-    return this.dialogService.show(CancelRequestPopupComponent, {
-      request
+    return this.dialogService.show(ReasonPopupComponent, {
+      record: request,
+      titleText: request.requestFullSerial,
+      submitButtonKey: 'btn_cancel'
+    });
+  }
+
+  openDeleteDialog(request: SubventionRequest | SubventionRequestAid): DialogRef {
+    return this.dialogService.show(ReasonPopupComponent, {
+      record: request,
+      titleText: request.requestFullSerial,
+      submitButtonKey: 'btn_delete'
     });
   }
 
   cancelRequest(requestId: number, reason: string): Observable<boolean> {
-    return this.http.put<boolean>(this._getServiceURL() + '/cancel/' + requestId, {
+    return this.http.put<boolean>(this._getServiceURL() + '/cancel', {
+      requestId: requestId,
+      reason
+    });
+  }
+
+  deleteRequest(requestId: number, reason: string): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/delete', {
+      requestId: requestId,
       reason
     });
   }

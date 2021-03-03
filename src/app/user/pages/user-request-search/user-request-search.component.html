@@ -325,6 +325,11 @@
                             [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
                       <i class="mdi mdi-book-cancel"></i>
                     </button>
+                    <button *ngIf="!request.notUnderProcess()"
+                            (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
+                            class="btn icon-btn text-primary">
+                      <i class="mdi mdi-trash-can"></i>
+                    </button>
                   </div>
                 </td>
               </tr>

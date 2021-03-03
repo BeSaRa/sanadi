@@ -13,6 +13,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
+import {SubventionRequestStatus} from '../enums/subvention-request-status';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -78,6 +79,10 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return this.service.update(this);
   }
 
+  isUnderProcessing(): boolean {
+    return this.status === SubventionRequestStatus.UNDER_PROCESSING;
+  }
+
   loadRequestAids(): Observable<SubventionAid[]> {
     return this.service.loadSubventionAidByCriteria({
       benId: this.benId,
@@ -140,6 +145,28 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
           }
           this.service
             .cancelRequest(this.id, result)
+            .pipe(
+              take(1)
+            )
+            .subscribe(subscriber);
+        });
+      return () => {
+        sub.unsubscribe();
+      };
+    });
+  }
+
+  deleteRequest(): Observable<boolean> {
+    return new Observable((subscriber) => {
+      const sub = this.service
+        .openDeleteDialog(this)
+        .onAfterClose$
+        .subscribe((result: UserClickOn | string) => {
+          if (typeof result !== 'string') {
+            return subscriber.next(false);
+          }
+          this.service
+            .deleteRequest(this.id, result)
             .pipe(
               take(1)
             )

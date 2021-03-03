@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CancelRequestPopupComponent } from './cancel-request-popup.component';
+import { ReasonPopupComponent } from './reason-popup.component';
 
 describe('CancelRequestPopupComponent', () => {
-  let component: CancelRequestPopupComponent;
-  let fixture: ComponentFixture<CancelRequestPopupComponent>;
+  let component: ReasonPopupComponent;
+  let fixture: ComponentFixture<ReasonPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CancelRequestPopupComponent ]
+      declarations: [ ReasonPopupComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CancelRequestPopupComponent);
+    fixture = TestBed.createComponent(ReasonPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

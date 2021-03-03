@@ -10,7 +10,7 @@ import {UserRequestSearchComponent} from './pages/user-request-search/user-reque
 import {SubventionLogPopupComponent} from './popups/subvention-log-popup/subvention-log-popup.component';
 import {SubventionAidPopupComponent} from './popups/subvention-aid-popup/subvention-aid-popup.component';
 import {RequestsUnderProcessComponent} from './pages/requests-under-process/requests-under-process.component';
-import { CancelRequestPopupComponent } from './popups/cancel-request-popup/cancel-request-popup.component';
+import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component';
 
 
 @NgModule({
@@ -23,7 +23,7 @@ import { CancelRequestPopupComponent } from './popups/cancel-request-popup/cance
     SubventionLogPopupComponent,
     SubventionAidPopupComponent,
     RequestsUnderProcessComponent,
-    CancelRequestPopupComponent],
+    ReasonPopupComponent],
   imports: [
     SharedModule,
     UserRoutingModule

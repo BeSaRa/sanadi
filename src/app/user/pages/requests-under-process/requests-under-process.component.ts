@@ -54,6 +54,15 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       });
   }
 
+  deleteRequest(request: SubventionRequest) {
+    request.deleteRequest()
+      .pipe(take(1))
+      .subscribe((status) => {
+        status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
+        this.reload$.next(null);
+      });
+  }
+
   search(searchText: string): void {
     this.search$.next(searchText);
   }

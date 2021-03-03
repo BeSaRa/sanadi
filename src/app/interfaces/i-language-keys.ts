@@ -240,4 +240,5 @@ export interface ILanguageKeys {
   err_invalid_format: string;
   err_invalid_date: string;
   msg_select_nationality: string;
+  reason: string;
 }

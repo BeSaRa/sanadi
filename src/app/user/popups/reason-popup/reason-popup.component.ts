@@ -6,19 +6,22 @@ import {SubventionRequest} from '../../../models/subvention-request';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {FormControl} from '@angular/forms';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
 @Component({
-  selector: 'app-cancel-request-popup',
-  templateUrl: './cancel-request-popup.component.html',
-  styleUrls: ['./cancel-request-popup.component.scss']
+  selector: 'app-reason-popup',
+  templateUrl: './reason-popup.component.html',
+  styleUrls: ['./reason-popup.component.scss']
 })
-export class CancelRequestPopupComponent implements OnInit {
+export class ReasonPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
-  readonly serial: string;
+  readonly recordText: string;
+  readonly submitButtonKey: string;
   reason: FormControl = new FormControl('', CustomValidators.required);
 
-  constructor(public langService: LangService, @Inject(DIALOG_DATA_TOKEN) public data: { request: SubventionRequest | SubventionRequestAid }) {
-    this.serial = data.request.requestFullSerial;
+  constructor(public langService: LangService, @Inject(DIALOG_DATA_TOKEN) public data: { record: any, titleText: string, submitButtonKey: keyof ILanguageKeys}) {
+    this.recordText = data.titleText;
+    this.submitButtonKey = data.submitButtonKey;
   }
 
   ngOnInit(): void {
