@@ -16,7 +16,7 @@ import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 export class ReasonPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
   readonly recordText: string;
-  readonly submitButtonKey: string;
+  readonly submitButtonKey: keyof ILanguageKeys;
   reason: FormControl = new FormControl('', CustomValidators.required);
 
   constructor(public langService: LangService, @Inject(DIALOG_DATA_TOKEN) public data: { record: any, titleText: string, submitButtonKey: keyof ILanguageKeys}) {
