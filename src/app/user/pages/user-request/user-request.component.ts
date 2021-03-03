@@ -803,6 +803,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
           group.get('status')?.setValue(oldValue);
         }
+        const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
+
+        if (newValue === SubventionRequestStatus.APPROVED) {
+          group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(requestInfoRequestDate?.value)]);
+        } else {
+          group.get('statusDateModified')?.setValidators(null);
+        }
+        group.get('statusDateModified')?.updateValueAndValidity();
       });
   }
 

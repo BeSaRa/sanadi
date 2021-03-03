@@ -99,7 +99,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     const {status, statusDateModified, requestNotes} = this;
     return {
       status: control ? [status, CustomValidators.required] : status,
-      statusDateModified: control ? [statusDateModified] : statusDateModified,
+      statusDateModified: control ? [statusDateModified, [CustomValidators.minDate(this.creationDate)]] : statusDateModified,
       requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }
