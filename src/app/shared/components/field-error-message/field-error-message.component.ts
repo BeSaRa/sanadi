@@ -32,6 +32,11 @@ export class FieldErrorMessageComponent {
     if (!objValidationData || !objValidationData.message) {
       return null;
     }
+    // handle invalid date format
+    if (objValidationData.errorValue && objValidationData.errorValue.invalidDateFormat) {
+      return this.langService.map.err_invalid_date;
+    }
+
     // @ts-ignore
     const messageText = this.langService.map[objValidationData.message.key];
     if (!objValidationData.message.replaceValues) {

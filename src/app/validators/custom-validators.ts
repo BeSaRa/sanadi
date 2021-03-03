@@ -73,6 +73,7 @@ const errorKeys: IKeyValue = {
       return message.change({fields: '( ' + errorValue.join(', ') + ') '});
     }
   },
+  format: {key: 'err_invalid_format', replaceValues: null},
   maxDate: {
     key: 'err_max_date',
     replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {

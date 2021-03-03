@@ -94,19 +94,24 @@ export function maxDateValidator(maxDate: string | Date, format: string = ''): V
     return Validators.nullValidator;
   }
   return (control: AbstractControl): ValidationErrors | null => {
-    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
-    format = format || configService.CONFIG.DATEPICKER_FORMAT;
-
     if (!isValidValue(control.value)) {
       return null;
     }
-    let isInvalid: boolean = true;
-    if (typeof maxDate === 'string') {
-      isInvalid = dayjs(control.value.trim(), format).isAfter(dayjs(maxDate, format));
-    } else {
-      isInvalid = dayjs(control.value, format).isAfter(dayjs(maxDate, format));
+
+    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+    format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+    const formattedControlValue = dayjs(control.value.trim()).format(format);
+    if (formattedControlValue === 'Invalid Date' || dayjs(control.value.trim(), format).isAfter(dayjs(maxDate, format))) {
+      return {
+        maxDate: {
+          invalidDateFormat: formattedControlValue === 'Invalid Date',
+          requiredMaxDate: formattedControlValue === 'Invalid Date' ? '' : dayjs(maxDate).format(format),
+          actualMaxDate: control.value
+        }
+      };
     }
-    return isInvalid ? {maxDate: {requiredMaxDate: maxDate, actualMaxDate: control.value}} : null;
+    return null;
   };
 }
 
@@ -115,18 +120,23 @@ export function minDateValidator(minDate: string | Date, format: string = ''): V
     return Validators.nullValidator;
   }
   return (control: AbstractControl): ValidationErrors | null => {
-    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
-    format = format || configService.CONFIG.DATEPICKER_FORMAT;
-
     if (!isValidValue(control.value)) {
       return null;
     }
-    let isInvalid: boolean = true;
-    if (typeof minDate === 'string') {
-      isInvalid = dayjs(control.value.trim(), format).isBefore(dayjs(minDate, format));
-    } else {
-      isInvalid = dayjs(control.value, format).isBefore(dayjs(minDate, format));
+
+    const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+    format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+    const formattedControlValue = dayjs(control.value.trim()).format(format);
+    if (formattedControlValue === 'Invalid Date' || dayjs(control.value.trim(), format).isBefore(dayjs(minDate, format))) {
+      return {
+        minDate: {
+          invalidDateFormat: formattedControlValue === 'Invalid Date',
+          requiredMinDate: formattedControlValue === 'Invalid Date' ? '' : dayjs(minDate).format(format),
+          actualMinDate: control.value
+        }
+      };
     }
-    return isInvalid ? {minDate: {requiredMinDate: minDate, actualMinDate: control.value}} : null;
+    return null;
   };
 }
