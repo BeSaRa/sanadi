@@ -284,6 +284,23 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       });
   }
 
+  private listenToNationalityChange() {
+    this.fm.getFormField('personalTab.benNationality')?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      map(value => Number(value))
+    ).subscribe((value) => {
+      const control = this.fm.getFormField('personalTab.employeer');
+      // 1 is Qatari
+      if (value !== 1) {
+        control?.setValidators([CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY')]);
+      } else {
+        control?.setValidators([CustomValidators.pattern('ENG_AR_ONLY')]);
+      }
+      control?.updateValueAndValidity();
+    });
+  }
+
   private listenToExtraIncome() {
     this.fm.getFormField('incomeTab.benExtraIncome')?.valueChanges.pipe(
       takeUntil(this.destroy$),
@@ -434,6 +451,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToSaveModel();
     this.listenToSaveAid();
     this.listenToAddAid();
+    this.listenToNationalityChange();
 
     this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
       .pipe(take(1))
