@@ -19,7 +19,7 @@
   </div>
 </div>
 <div class="dialog-actions">
-  <button [dialogClose]="reason.value"
+  <button [disabled]="reason.invalid" [dialogClose]="reason.value"
           class="btn btn-primary">{{langService.map[submitButtonKey]}}</button>
   <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
 </div>
