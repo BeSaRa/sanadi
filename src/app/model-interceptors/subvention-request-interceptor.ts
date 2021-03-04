@@ -34,6 +34,7 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
     delete model.requestTypeInfo;
     delete model.searchFields;
     delete model.creationDateString;
+    delete model.configService;
     model.creationDate = (new Date(model.creationDate)).toISOString();
     return model;
   }

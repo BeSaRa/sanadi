@@ -14,6 +14,8 @@ import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
 import {SubventionRequestStatus} from '../enums/subvention-request-status';
+import * as dayjs from 'dayjs';
+import {ConfigurationService} from '../services/configuration.service';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -37,6 +39,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   // not belongs to the Model
   service: SubventionRequestService;
   subventionRequestAidService: SubventionRequestAidService;
+  configService: ConfigurationService;
 
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
@@ -61,6 +64,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     super();
     this.service = FactoryService.getService('SubventionRequestService');
     this.subventionRequestAidService = FactoryService.getService('SubventionRequestAidService');
+    this.configService = FactoryService.getService('ConfigurationService');
   }
 
   create(): Observable<SubventionRequest> {
@@ -104,7 +108,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     const {status, statusDateModified, requestNotes} = this;
     return {
       status: control ? [status, CustomValidators.required] : status,
-      statusDateModified: control ? [statusDateModified, [CustomValidators.minDate(this.creationDate)]] : statusDateModified,
+      statusDateModified: control ? [statusDateModified ? statusDateModified : dayjs().format(this.configService.CONFIG.DATEPICKER_FORMAT), [CustomValidators.minDate(this.creationDate)]] : statusDateModified,
       requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }
