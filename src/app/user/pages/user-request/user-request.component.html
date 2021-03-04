@@ -213,7 +213,7 @@
               <label for="employer" asteriskIfRequired="employeer"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')" formControlName="employeer"
+                <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')" formControlName="employeer"
                        class="form-control" type="text">
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
