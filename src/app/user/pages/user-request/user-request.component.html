@@ -724,7 +724,7 @@
                 <label asteriskIfRequired="installementsCount" for="installementsCount"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.months_count}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <input [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
+                  <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
                          formControlName="installementsCount" class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>

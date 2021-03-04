@@ -60,13 +60,13 @@ export class SubventionAid extends BaseModel<SubventionAid> {
 
     return {
       id: control ? [id] : id,
-      approvalDate: control ? [approvalDate] : approvalDate,
+      approvalDate: control ? [approvalDate, CustomValidators.required] : approvalDate,
       periodicType: control ? [periodicType, CustomValidators.required] : periodicType,
       aidAmount: control ? [aidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : aidAmount,
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
-      aidStartPayDate: control ? [aidStartPayDate] : aidStartPayDate,
+      aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
-      installementsCount: control ? [installementsCount, [CustomValidators.number]] : installementsCount
+      installementsCount: control ? [installementsCount, [CustomValidators.number , CustomValidators.maxLength(20)]] : installementsCount
     };
   }
 }
