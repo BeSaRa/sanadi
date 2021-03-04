@@ -123,7 +123,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   private prepareSearchById(): Partial<IBeneficiaryCriteria> {
-    return {...this.currentForm?.value};
+    let formValue = {...this.currentForm?.value};
+    if (formValue.benPrimaryIdType !== BeneficiaryIdTypes.PASSPORT) {
+      delete formValue.benPrimaryIdNationality;
+    }
+    return formValue;
   }
 
   private getCurrentFormValue(): Partial<IBeneficiaryCriteria> {
