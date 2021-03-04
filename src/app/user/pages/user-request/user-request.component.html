@@ -332,7 +332,7 @@
               <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
                      class="form-control" type="text">
               <app-field-error-message
-                [control]="fm.getFormField('incomeTab.occuptionStatus')"></app-field-error-message>
+                [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -343,7 +343,7 @@
             <label for="workplace" asteriskIfRequired="employeerAddress"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
+              <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
                      id="workplace" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>

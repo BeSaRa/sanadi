@@ -126,8 +126,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       idTypes: this.fb.group({
-        passport: [null, [CustomValidators.pattern('PASSPORT') , CustomValidators.maxLength(20)]],
-        visa: [null, [CustomValidators.number , CustomValidators.maxLength(20)]],
+        passport: [null, [CustomValidators.pattern('PASSPORT'), CustomValidators.maxLength(20)]],
+        visa: [null, [CustomValidators.number, CustomValidators.maxLength(20)]],
         qid: [null, [CustomValidators.number,
           CustomValidators.minLength(CustomValidators.defaultLengths.QID_MIN),
           CustomValidators.maxLength(CustomValidators.defaultLengths.QID_MAX)
@@ -266,7 +266,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToOccupationStatus() {
-    const requiredList = ['occuption', 'employeerAddress', 'benIncome'];
+    const requiredList: { [key: string]: any } = {
+      occuption: [CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)],
+      employeerAddress: [CustomValidators.required, CustomValidators.maxLength(215)],
+      benIncome: [CustomValidators.required, CustomValidators.maxLength(20), CustomValidators.number, Validators.min(0)]
+    };
     this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
       .pipe(
         takeUntil(this.destroy$),
@@ -276,11 +280,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((required) => {
-        requiredList.forEach(field => {
-          const control = this.fm.getFormField(`incomeTab.${field}`);
-          control?.setValidators(required ? [CustomValidators.required, CustomValidators.number, Validators.min(0)] : null);
+        const keys = Object.keys(requiredList);
+        for (let i = 0; i < keys.length; i++) {
+          const control = this.fm.getFormField(`incomeTab.${keys[i]}`);
+          control?.setValidators(required ? requiredList[keys[i]] : null);
           control?.updateValueAndValidity();
-        });
+        }
       });
   }
 

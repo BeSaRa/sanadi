@@ -184,8 +184,8 @@ export class Beneficiary extends BaseModel<Beneficiary> {
 
     return {
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
-      occuption: controls ? [occuption] : occuption,
-      employeerAddress: controls ? [employeerAddress] : employeerAddress,
+      occuption: controls ? [occuption, CustomValidators.maxLength(100)] : occuption,
+      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress,
       benIncome: controls ? [benIncome, [CustomValidators.number, Validators.min(0)]] : benIncome,
       benExtraIncome: controls ? [benExtraIncome, [CustomValidators.number, Validators.min(0)]] : benExtraIncome,
       benExtraIncomeSource: controls ? [benExtraIncomeSource, [Validators.maxLength(100)]] : benExtraIncomeSource,
