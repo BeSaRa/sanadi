@@ -126,8 +126,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       idTypes: this.fb.group({
-        passport: [null, [CustomValidators.pattern('PASSPORT')]],
-        visa: [null, [CustomValidators.number]],
+        passport: [null, [CustomValidators.pattern('PASSPORT') , CustomValidators.maxLength(20)]],
+        visa: [null, [CustomValidators.number , CustomValidators.maxLength(20)]],
         qid: [null, [CustomValidators.number,
           CustomValidators.minLength(CustomValidators.defaultLengths.QID_MIN),
           CustomValidators.maxLength(CustomValidators.defaultLengths.QID_MAX)
@@ -850,6 +850,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           } else if (click === UserClickOn.NO) {
             this.beneficiaryChanged$.next(null);
             this.requestChanged$.next(null);
+
+            this.form.markAsUntouched();
+            this.form.markAsPristine();
+
           } else {
             const ben = this.prepareBeneficiary();
             this.router.navigate(['/home/user/inquiry', {
