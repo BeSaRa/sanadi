@@ -126,7 +126,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       idTypes: this.fb.group({
-        passport: [null, [CustomValidators.pattern('PASSPORT'), CustomValidators.maxLength(20)]],
+        passport: [null, CustomValidators.commonValidations.passport],
         visa: [null, [CustomValidators.number, CustomValidators.maxLength(20)]],
         qid: [null, [CustomValidators.number,
           CustomValidators.minLength(CustomValidators.defaultLengths.QID_MIN),

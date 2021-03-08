@@ -20,16 +20,16 @@ const defaultLengths = {
   EMAIL_MAX: 200,
   PHONE_NUMBER_MAX: 20,
   ADDRESS_MAX: 1000,
-  QID_MIN: 7,
+  QID_MIN: 11,
   QID_MAX: 11
 };
 
 const commonValidations = {
   qId: [number, minLength(defaultLengths.QID_MIN), maxLength(defaultLengths.QID_MAX)],
-  passport: [pattern('PASSPORT')],
-  gccId: [number],
-  gccRId: [number],
-  visa: [number],
+  passport: [pattern('ENG_NUM_ONLY'), maxLength(20)],
+  gccId: [number, maxLength(20)],
+  gccRId: [number, maxLength(20)],
+  visa: [number, maxLength(20)],
   phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)]
 };
 
@@ -66,6 +66,7 @@ const errorKeys: IKeyValue = {
   ENG_ONLY: {key: 'err_english_only', replaceValues: null},
   AR_ONLY: {key: 'err_arabic_only', replaceValues: null},
   ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
+  ENG_NUM_ONLY: {key: 'err_english_num_only', replaceValues: null},
   PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
   atLeastOneRequired: {
     key: 'at_least_one_field_should_be_filled',
