@@ -1,0 +1,13 @@
+:host {
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+}
+
+.bundle-version {
+  background: rgba(255,255,255,.8);
+  padding: 5px 10px;
+  margin: 10px;
+  font-size: 12px;
+  border-radius: 10px;
+}
