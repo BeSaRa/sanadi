@@ -1,4 +1,5 @@
 export interface IAppConfig {
+  VERSION: string;
   TIMESTAMP: string;
   ENVIRONMENTS_URLS: string [];
   BASE_ENVIRONMENT_INDEX: number;
