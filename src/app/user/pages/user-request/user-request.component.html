@@ -38,7 +38,7 @@
             <label for="qid" class="col-sm-12 col-md-4 col-form-label">{{langService.map.qatari_id_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group has-validation">
-                <input formControlName="qid" id="qid" class="form-control" type="text"
+                <input maxlength="11" formControlName="qid" id="qid" class="form-control" type="text"
                        [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)">
                 <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
