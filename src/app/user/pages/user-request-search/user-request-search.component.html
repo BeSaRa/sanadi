@@ -139,10 +139,10 @@
             </div>
             <div class="col-sm-12 col-md-6">
               <div class="row">
-                <label for="employmentStatus"
+                <label for="occuptionStatus"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <select class="form-select" id="employmentStatus">
+                  <select formControlName="occuptionStatus" class="form-select"  id="occuptionStatus">
                     <option [ngValue]="option.lookupKey"
                             *ngFor="let option of employmentStatus">{{option.getName()}}</option>
                   </select>
