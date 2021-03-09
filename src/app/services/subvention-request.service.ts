@@ -61,7 +61,9 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(criteria), {responseType: 'blob'});
+    let finalCriteria = {...criteria};
+    finalCriteria.lang = this.langService.getPrintingLanguage();
+    return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(finalCriteria), {responseType: 'blob'});
   }
 
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
