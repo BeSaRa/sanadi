@@ -29,7 +29,7 @@ export class LangService extends BackendGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
     en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
-    ar: new Language(1, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
+    ar: new Language(2, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
   };
   private languageToggler: { [index: string]: string } = {
     ar: 'en',
@@ -41,6 +41,10 @@ export class LangService extends BackendGenericService<Localization> {
   public map: LangType = {} as LangType;
   private localizationMap: LocalizationMap = {} as LocalizationMap;
   private linkElement!: HTMLLinkElement;
+  printingLanguage: { [index: string]: number } = {
+    ar: 1,
+    en: 2
+  }
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
@@ -173,6 +177,10 @@ export class LangService extends BackendGenericService<Localization> {
 
   getCurrentLanguage(): Language {
     return this.languages[this.map.lang];
+  }
+
+  getPrintingLanguage(): number {
+    return this.printingLanguage[this.map.lang];
   }
 
   _getModel(): any {

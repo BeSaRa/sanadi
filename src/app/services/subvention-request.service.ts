@@ -20,6 +20,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
 import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
 import {ReasonPopupComponent} from '../user/popups/reason-popup/reason-popup.component';
+import {LangService} from './lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   constructor(private urlService: UrlService,
               public http: HttpClient,
+              private langService: LangService,
               private subventionAidService: SubventionAidService,
               private subventionRequestAidService: SubventionRequestAidService,
               private subventionLogService: SubventionLogService,
@@ -67,7 +69,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/' + requestId + '/export', {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/' + requestId + '/export?lang=' + this.langService.getPrintingLanguage(), {responseType: 'blob'});
   }
 
   loadSubventionAidByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
