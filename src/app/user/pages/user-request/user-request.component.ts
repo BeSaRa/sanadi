@@ -268,7 +268,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private listenToOccupationStatus() {
     const requiredList: { [key: string]: any } = {
       occuption: [CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)],
-      employeerAddress: [CustomValidators.required, CustomValidators.maxLength(215)],
+      employeerAddress: [CustomValidators.required, CustomValidators.maxLength(512)],
       benIncome: [CustomValidators.required, CustomValidators.maxLength(20), CustomValidators.number, Validators.min(0)]
     };
     this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
