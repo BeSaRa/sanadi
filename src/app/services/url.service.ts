@@ -3,16 +3,21 @@ import {FactoryService} from './factory.service';
 import {ConfigurationService} from './configuration.service';
 import {IAppUrls} from '../interfaces/i-app-urls';
 import {forEach as _forEach, some as _some} from 'lodash';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UrlService {
-  constructor(private config: ConfigurationService) {
+  constructor(private config: ConfigurationService,
+              private router: Router) {
     FactoryService.registerService('UrlService', this);
+    this.listenRouteChange();
   }
 
   public URLS = {} as IAppUrls;
+  public previousPath: string = '';
+  public currentPath: string = '';
 
   static hasTrailingSlash(url: string): boolean {
     return ((url + '').indexOf('/')) === ((url + '').length - 1);
@@ -45,4 +50,14 @@ export class UrlService {
     return external ? url : this.URLS.BASE_URL + '/' + UrlService.removePrefixSlash(url);
   }
 
+
+  listenRouteChange(): void {
+    this.currentPath = this.router.url;
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.previousPath = this.currentPath;
+        this.currentPath = event.url;
+      }
+    });
+  }
 }
