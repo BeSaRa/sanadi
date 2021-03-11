@@ -6,7 +6,7 @@ import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {forkJoin, of, Subject} from 'rxjs';
-import {catchError, mergeMap, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
