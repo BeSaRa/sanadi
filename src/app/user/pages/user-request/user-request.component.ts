@@ -190,6 +190,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     });
   }
 
+  get idTypesFields(): FormGroup {
+    return this.fm.getFormField('idTypes') as FormGroup;
+  }
+
   private enableAllIdFields(): void {
     ['qid', 'visa', 'gccId'].forEach(field => {
       const fieldPath = 'idTypes.' + field;
@@ -870,10 +874,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           } else if (click === UserClickOn.NO) {
             this.beneficiaryChanged$.next(null);
             this.requestChanged$.next(null);
-
+            this.idTypesFields.reset();
             this.form.markAsUntouched();
             this.form.markAsPristine();
-
           } else {
             const ben = this.prepareBeneficiary();
             this.router.navigate(['/home/user/inquiry', {
