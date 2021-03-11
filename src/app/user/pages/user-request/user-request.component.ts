@@ -387,7 +387,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         map(value => {
           return value?.second;
         }),
-        filter(value => !!value)
+        filter(value => !!value),
+        tap(beneficiary => this.currentBeneficiary = beneficiary)
       );
 
     saveBeneficiary$
