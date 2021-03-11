@@ -725,10 +725,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('aidTab') as FormArray;
   }
 
-  get aidLookupIdField(): FormControl {
-    return this.form.get('aidTab.0.aidLookupId') as FormControl;
-  }
-
   get requestStatusTab(): FormGroup {
     return this.fm.getFormField('requestStatusTab') as FormGroup;
   }
