@@ -42,6 +42,7 @@ import {SubventionRequestStatus} from '../../../enums/subvention-request-status'
 import {Pair} from '../../../interfaces/pair';
 import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
+import {ReadModeService} from '../../../services/read-mode.service';
 
 @Component({
   selector: 'app-user-request',
@@ -101,9 +102,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT
   };
   aidPeriodicTypeSub!: Subscription;
-
+  readOnly = false;
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
+
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -116,6 +118,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
+              private readModeService: ReadModeService,
               private fb: FormBuilder) {
 
   }
@@ -245,9 +248,17 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (!request) {
       requestInfo?.reset();
       requestStatus?.reset();
+      this.readOnly = false;
     } else {
       requestStatus?.patchValue(request.getStatusFields());
       requestInfo?.patchValue(request.getInfoFields());
+
+      if (request.id) {
+        this.readOnly = this.readModeService.isReadOnly(request.id);
+        this.fm.displayFormValidity();
+      } else {
+        this.readOnly = false;
+      }
     }
   }
 
@@ -515,6 +526,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+    // empty read mode request
+    if (this.currentRequest?.id) {
+      this.readModeService.deleteReadOnly(this.currentRequest.id);
+    }
   }
 
   saveModel() {

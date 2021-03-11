@@ -21,7 +21,7 @@ import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
-import {SubventionRequest} from '../../../models/subvention-request';
+import {ReadModeService} from '../../../services/read-mode.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -67,6 +67,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
               private router: Router,
+              private readModeService: ReadModeService,
               private subventionRequestService: SubventionRequestService,
               public empService: EmployeeService) {
   }
@@ -354,5 +355,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
         this.reloadSearchResults();
       });
+  }
+
+  showRequestDetails(request: SubventionRequestAid, $event: MouseEvent) {
+    // start read mode request
+    $event.preventDefault();
+    this.readModeService.setReadOnly(request.requestId);
+    this.router.navigate(['/home/user/request', request.requestId]).then();
   }
 }

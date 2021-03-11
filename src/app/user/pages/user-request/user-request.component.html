@@ -13,23 +13,25 @@
     </div>
   </div>
   <form autocomplete="off" [formGroup]="form" id="form">
-    <tabs-list class="py-4">
-      <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
-           [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
-           [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
-           [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
-           [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-      <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-           [template]="requestStatus"
-           [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
-           [hasError]="fm.getFieldInvalidStatus('aidTab')"
-           [template]="providedAid"
-           [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
-    </tabs-list>
+    <fieldset [disabled]="readOnly">
+      <tabs-list class="py-4">
+        <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
+             [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
+        <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
+             [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
+        <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
+             [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+        <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
+             [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+        <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+             [template]="requestStatus"
+             [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+        <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
+             [hasError]="fm.getFieldInvalidStatus('aidTab')"
+             [template]="providedAid"
+             [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+      </tabs-list>
+    </fieldset>
     <!--  personal info Tab -->
     <ng-template #personalInfo>
       <div formGroupName="idTypes" class="row d-flex flex-row">
@@ -93,12 +95,14 @@
             </div>
           </div>
           <div class="row d-flex flex-column flex-md-row mb-0">
-            <label for="passport" class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
+            <label for="passport"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
                 <input maxlength="20" formControlName="passport" id="passport" class="form-control" type="text"
                        [ngClass]="fm.getInvalidClass('idTypes.passport')" (keyup)="fieldChange($event)">
-                <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')" (click)="clearField('passport')"
+                <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')"
+                        (click)="clearField('passport')"
                         class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                   <i class="mdi mdi-close-circle text-primary"></i>
                 </button>
@@ -213,7 +217,8 @@
               <label for="employer" asteriskIfRequired="employeer"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')" formControlName="employeer"
+                <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
+                       formControlName="employeer"
                        class="form-control" type="text">
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
@@ -242,7 +247,8 @@
               <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="2" id="sponsorsCount" [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
+                <input maxlength="2" id="sponsorsCount"
+                       [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
                        formControlName="benDependentsCount" class="form-control">
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
@@ -295,8 +301,8 @@
             <div class="row d-flex flex-column flex-md-row">
               <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
               <div class="col-md-10 col-sm-12">
-                <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
-                          [ngClass]="fm.getStatusClass('personalTab.benNotes')"></textarea>
+                    <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
+                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"></textarea>
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
               </div>
@@ -329,7 +335,8 @@
             <label asteriskIfRequired="occuption" for="occupation"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')" formControlName="occuption"
+              <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')"
+                     formControlName="occuption"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
@@ -343,7 +350,8 @@
             <label for="workplace" asteriskIfRequired="employeerAddress"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')" formControlName="employeerAddress"
+              <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')"
+                     formControlName="employeerAddress"
                      id="workplace" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
@@ -355,7 +363,8 @@
             <label for="monthlyIncome" asteriskIfRequired="benIncome"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input id="monthlyIncome" maxlength="20" formControlName="benIncome" [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
+              <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
+                     [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
                      class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
@@ -366,9 +375,11 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="extraIncome" class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
+            <label for="extraIncome"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')" formControlName="benExtraIncome"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
+                     formControlName="benExtraIncome"
                      class="form-control" id="extraIncome">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
@@ -380,7 +391,8 @@
             <label for="extraIncomeSource"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')" formControlName="benExtraIncomeSource"
+              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
+                     formControlName="benExtraIncomeSource"
                      id="extraIncomeSource" class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
@@ -393,7 +405,8 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts" formControlName="totalDebts"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
+                     formControlName="totalDebts"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
@@ -416,7 +429,8 @@
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="monthlyRent" class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
+            <label for="monthlyRent"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                      formControlName="benHouseRent" class="form-control">
@@ -464,7 +478,8 @@
             <label for="street" asteriskIfRequired="streetName"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street" formControlName="streetName"
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
+                     formControlName="streetName"
                      class="form-control" type="text">
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
@@ -515,8 +530,8 @@
             <label for="addressDescription"
                    class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_address}}</label>
             <div class="col-md-10 col-sm-12">
-              <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
-                        formControlName="addressDescription" rows="5" class="form-control"></textarea>
+                  <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
+                            formControlName="addressDescription" rows="5" class="form-control"></textarea>
               <app-field-error-message
                 [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
             </div>
@@ -578,8 +593,8 @@
             <label asteriskIfRequired="requestSummary" for="requestSummary"
                    class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
             <div class="col-md-10 col-sm-12">
-              <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
-                        formControlName="requestSummary" rows="5" class="form-control"></textarea>
+                  <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
+                            formControlName="requestSummary" rows="5" class="form-control"></textarea>
               <app-field-error-message
                 [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
             </div>
@@ -628,8 +643,8 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
             <div class="col-md-10 col-sm-12">
-              <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
-                        formControlName="requestNotes" rows="5" class="form-control"></textarea>
+                  <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
+                            formControlName="requestNotes" rows="5" class="form-control"></textarea>
               <app-field-error-message
                 [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
             </div>
@@ -724,7 +739,8 @@
                 <label asteriskIfRequired="installementsCount" for="installementsCount"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.months_count}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')" id="installementsCount"
+                  <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
+                         id="installementsCount"
                          formControlName="installementsCount" class="form-control">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
@@ -738,8 +754,8 @@
                 <label asteriskIfRequired="aidDescription" for="aidDescription"
                        class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
                 <div class="col-md-10 col-sm-12">
-                <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
-                          formControlName="aidDescription" rows="3" class="form-control"></textarea>
+                    <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
+                              formControlName="aidDescription" rows="3" class="form-control"></textarea>
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
                 </div>
@@ -786,9 +802,9 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; let i = index;">
             <div class="d-flex flex-row">
-              <a href="#" (click)="deleteAid(row , i , $event)" class="icon-btn"><i
-                class="mdi mdi-close-box"></i></a>
-              <a href="#" (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></a>
+              <button (click)="deleteAid(row , i , $event)" class="icon-btn"><i
+                class="mdi mdi-close-box"></i></button>
+              <button (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></button>
             </div>
           </td>
         </ng-container>
