@@ -814,10 +814,13 @@
     </ng-template>
     <hr/>
     <div class="d-flex flex-row justify-content-center">
-      <button type="button" (click)="saveModel()"
+      <button [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
               class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
       <button type="button" (click)="cancelRequest()"
               class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+      <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+        <i class="mdi mdi-information-outline text-info"></i>
+      </button>
     </div>
   </form>
 </div>
