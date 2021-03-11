@@ -100,10 +100,9 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
 
   private listenToIdTypeChange() {
     this.fm.getFormField('searchById.benPrimaryIdType')?.valueChanges.pipe(
-      takeUntil(this.destroy$),
-      withLatestFrom(this.primaryIdNumberField.valueChanges)
-    ).subscribe(([value, field]) => {
-      console.log(value, field , this.primaryIdNumberField);
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      console.log('LOOKUP KEY: ', value);
       // set validation for it if need.
       this.primaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
       this.primaryIdNumberField.updateValueAndValidity();
