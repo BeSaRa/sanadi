@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {FormManager} from '../../../models/form-manager';
@@ -10,8 +10,8 @@ import {ToastService} from '../../../services/toast.service';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {AidTypes} from '../../../enums/aid-types.enum';
-import {Subject, timer} from 'rxjs';
-import {exhaustMap, takeUntil, timeout} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {exhaustMap, takeUntil} from 'rxjs/operators';
 import {Lookup} from '../../../models/lookup';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {LookupService} from '../../../services/lookup.service';

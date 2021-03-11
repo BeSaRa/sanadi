@@ -7,7 +7,7 @@
   <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
-           [hasError]="fm.getFieldInvalidStatus('basic')" [tabWidth]="'400px'"></tab>
+           [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.childAids.name" [template]="childAidsTabTemplate" [title]="getTabTitleText()"
            [disabled]="!model.id" *ngIf="isAidTabVisible"></tab>
       <ng-template #basicTabTemplate>
