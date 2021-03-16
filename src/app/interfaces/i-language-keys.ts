@@ -241,4 +241,5 @@ export interface ILanguageKeys {
   err_invalid_date: string;
   msg_select_nationality: string;
   reason: string;
+  number_of_installments: string;
 }
