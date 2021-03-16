@@ -6,7 +6,7 @@
     "http://localhost:9080",
     "http://eblaepm.no-ip.org:9090/sanadi-services/api/"
   ],
-  "BASE_ENVIRONMENT_INDEX": 0,
+  "BASE_ENVIRONMENT_INDEX": 1,
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",

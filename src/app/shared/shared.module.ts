@@ -22,13 +22,13 @@ import {FieldErrorMessageComponent} from './components/field-error-message/field
 import {BulkActionsComponent} from './components/bulk-actions/bulk-actions.component';
 import {TooltipDirective} from './directives/tooltip.directive';
 import {TabsListComponent} from './components/tabs/tabs-list.component';
-import { TabComponent } from './components/tab/tab.component';
+import {TabComponent} from './components/tab/tab.component';
 import {GridSearchComponent} from './components/grid-search/grid-search.component';
 import {DpDatePickerModule} from 'ng2-date-picker';
-import { AsteriskIfRequiredDirective } from './directives/asterisk-if-required.directive';
-import { LoadingComponent } from './components/loading/loading.component';
-import { VersionComponent } from './components/version/version.component';
-
+import {AsteriskIfRequiredDirective} from './directives/asterisk-if-required.directive';
+import {LoadingComponent} from './components/loading/loading.component';
+import {VersionComponent} from './components/version/version.component';
+import {NgxMaskModule} from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -62,11 +62,13 @@ import { VersionComponent } from './components/version/version.component';
     A11yModule,
     CdkTableModule,
     ReactiveFormsModule,
-    DpDatePickerModule
+    DpDatePickerModule,
+    NgxMaskModule.forRoot()
   ],
   exports: [
     CommonModule,
     OverlayModule,
+    NgxMaskModule,
     PortalModule,
     A11yModule,
     CdkTableModule,

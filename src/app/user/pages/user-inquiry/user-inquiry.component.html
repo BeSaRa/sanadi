@@ -208,9 +208,9 @@
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.creationDate|date}} </td>
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.orgBranchInfo.getName()}} </td>
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.statusInfo.getName()}} </td>
-                  <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.requestedAidAmount}} </td>
+                  <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
                   <td> {{aid.aidLookupInfo.getName()}} </td>
-                  <td> {{aid.aidAmount}} </td>
+                  <td> {{aid.aidAmount | mask:'separator':','}} </td>
                   <td *ngIf="firstAid" [rowSpan]="request.aids.length">
                     <div class="d-flex flex-row">
                       <a href="#" (click)="printRequest($event, request)"
@@ -235,7 +235,7 @@
                   <td> {{request.creationDate|date}} </td>
                   <td> {{request.orgBranchInfo.getName()}} </td>
                   <td> {{request.statusInfo.getName()}} </td>
-                  <td> {{request.requestedAidAmount}} </td>
+                  <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
                   <td></td>
                   <td></td>
                   <td>

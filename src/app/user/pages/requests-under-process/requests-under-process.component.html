@@ -23,7 +23,7 @@
             <td> {{request.creationDateString}} </td>
             <td> {{request.orgBranchInfo.getName()}} </td>
             <td> {{request.requestStatusInfo.getName()}} </td>
-            <td> {{request.requestedAidAmount}} </td>
+            <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
             <td>
               <div class="d-flex flex-row">
                 <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"

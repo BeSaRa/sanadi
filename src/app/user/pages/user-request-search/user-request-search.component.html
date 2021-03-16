@@ -142,7 +142,7 @@
                 <label for="occuptionStatus"
                        class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
                 <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="occuptionStatus" class="form-select"  id="occuptionStatus">
+                  <select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
                     <option [ngValue]="option.lookupKey"
                             *ngFor="let option of employmentStatus">{{option.getName()}}</option>
                   </select>
@@ -306,8 +306,8 @@
                 <td> {{request.orgBranchInfo.getName()}} </td>
                 <td> {{request.statusInfo.getName()}} </td>
                 <td></td>
-                <td> {{request.requestedAidAmount}} </td>
-                <td>{{request.approvedAmount}}</td>
+                <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
+                <td>{{request.approvedAmount | mask:'separator': ','}}</td>
                 <td>
                   <div class="d-flex flex-row">
                     <a tooltip="{{langService.map.aid_count}}" class="icon-btn"><span
