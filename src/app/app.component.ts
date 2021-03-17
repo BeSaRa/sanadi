@@ -3,6 +3,7 @@ import {LangService} from './services/lang.service';
 import {AppRootScrollService} from './services/app-root-scroll.service';
 import {LoadingService} from './services/loading.service';
 import {CacheService} from './services/cache.service';
+import {NavigationService} from './services/navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +16,12 @@ export class AppComponent {
   constructor(private langService: LangService,
               public  loadingService: LoadingService,
               private cacheService: CacheService,
+              private navigationService: NavigationService,
               private appScrollService: AppRootScrollService) {
 
     // @ts-ignore
     window['cacheService'] = cacheService;
+    this.navigationService.listenRouteChange();
   }
 
   @HostListener('window:keydown', ['$event'])
