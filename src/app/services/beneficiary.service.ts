@@ -41,7 +41,8 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   @SendInterceptor()
-  createWithValidate(@InterceptParam() beneficiary: Beneficiary, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+  createWithValidate(@InterceptParam() beneficiary: Partial<Beneficiary>, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    delete beneficiary.id;
     return this.http.post<Pair<BeneficiarySaveStatus, Beneficiary>>(this._getServiceURL() + '/validate-save', beneficiary, {
       params: new HttpParams({
         fromObject: {'with-check': validate + ''}
