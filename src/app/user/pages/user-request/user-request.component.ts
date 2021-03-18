@@ -379,7 +379,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(
         map(value => value.beneficiary),
         exhaustMap(beneficiary => {
-          return beneficiary.saveWithValidate(this.validateStatus).pipe(catchError(() => {
+          return beneficiary.saveWithValidate(this.validateStatus , this.currentRequest).pipe(catchError(() => {
             return of(null);
           }));
         }),

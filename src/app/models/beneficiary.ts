@@ -9,6 +9,7 @@ import {Validators} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {Pair} from '../interfaces/pair';
+import {SubventionRequest} from './subvention-request';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -110,8 +111,8 @@ export class Beneficiary extends BaseModel<Beneficiary> {
     }));
   }
 
-  saveWithValidate(validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
-    return this.id ? this.update().pipe(
+  saveWithValidate(validate: boolean = true, currentRequest: SubventionRequest | undefined): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    return currentRequest && currentRequest.id ? this.update().pipe(
       map(value => ({first: BeneficiarySaveStatus.SAVED, second: value}))
     ) : this.createWithValidate(validate);
   }
