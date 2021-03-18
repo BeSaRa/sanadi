@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  back : string;
   btn_inquire: string;
   btn_continue : string;
   beneficiary_already_exists: string;
