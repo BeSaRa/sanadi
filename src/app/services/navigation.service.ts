@@ -24,4 +24,12 @@ export class NavigationService {
       }
     });
   }
+
+  hasBackUrl(): boolean {
+    return !!(this.previousPath && this.previousPath !== '/' && this.previousPath !== '/login');
+  }
+
+  goToBack(): void {
+    this.router.navigate([this.previousPath]);
+  }
 }

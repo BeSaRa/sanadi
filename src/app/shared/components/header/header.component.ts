@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {UrlService} from '../../../services/url.service';
+import {NavigationService} from '../../../services/navigation.service';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private router: Router,
               private dialogService: DialogService,
+              private navigationService: NavigationService,
               private authService: AuthService,
               public urlService: UrlService) {
   }
@@ -84,5 +86,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  thereIsNoBack() {
+    return !this.navigationService.hasBackUrl();
+  }
+
+  back($event: MouseEvent) {
+    $event.preventDefault();
+    this.navigationService.goToBack();
   }
 }
