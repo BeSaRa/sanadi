@@ -769,7 +769,7 @@
           <div class="d-flex flex-row align-items-center justify-content-center">
             <button (click)="saveAid()"
                     class="btn btn-primary m-2">{{hasEditAid ? langService.map.btn_save : langService.map.btn_add}}</button>
-            <button [disabled]="!subventionAid.length" (click)="cancelAid()"
+            <button (click)="cancelAid()"
                     class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
           </div>
         </div>
