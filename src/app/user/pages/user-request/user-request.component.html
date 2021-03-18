@@ -817,7 +817,7 @@
       </table>
     </ng-template>
     <hr/>
-    <div class="d-flex flex-row justify-content-center">
+    <div *ngIf="!aidFormArray.controls.length" class="d-flex flex-row justify-content-center">
       <button [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
               class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
       <button type="button" (click)="cancelRequest()"
