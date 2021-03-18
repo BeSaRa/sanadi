@@ -124,6 +124,7 @@ app-dialog-container {
   max-width: 100%;
   box-sizing: content-box;
   min-width: 200px;
+
   &:not(.no-fixed-height) {
     height: 65vh;
   }
@@ -223,4 +224,10 @@ dp-date-picker {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, .1);
+}
+
+html[dir='rtl'] {
+  .dp-calendar-nav-left, .dp-calendar-nav-right {
+    transform: rotate(180deg);
+  }
 }
