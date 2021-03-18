@@ -14,14 +14,14 @@ const routes: Routes = [
     path: 'home', component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
-      {path: '', redirectTo: 'user', pathMatch: 'full'},
+      {path: '', redirectTo: 'main', pathMatch: 'full'},
       {
         path: 'administration',
         canActivate: [PermissionGuard],
         data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
-      {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+      {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       //{path: '**', redirectTo: '../error'}
     ]
   },

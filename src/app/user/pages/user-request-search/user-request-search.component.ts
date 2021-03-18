@@ -336,7 +336,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   editRequest(request: SubventionRequestAid): any {
-    return this.router.navigate(['/home/user/request', request.requestId]);
+    return this.router.navigate(['/home/main/request', request.requestId]);
   }
 
   cancelRequest(request: SubventionRequestAid) {
@@ -361,6 +361,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     // start read mode request
     $event.preventDefault();
     this.readModeService.setReadOnly(request.requestId);
-    this.router.navigate(['/home/user/request', request.requestId]).then();
+    this.router.navigate(['/home/main/request', request.requestId]).then();
   }
 }

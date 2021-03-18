@@ -876,7 +876,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             this.form.markAsPristine();
           } else {
             const ben = this.prepareBeneficiary();
-            this.router.navigate(['/home/user/inquiry', {
+            this.router.navigate(['/home/main/inquiry', {
               idNumber: ben.benPrimaryIdNumber,
               idType: ben.benPrimaryIdType
             }]).then();
