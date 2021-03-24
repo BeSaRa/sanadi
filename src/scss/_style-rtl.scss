@@ -1,0 +1,31 @@
+@import "custom_mixin";
+
+@include rtl_direction {
+  .dialog-actions {
+    border-top: 1px solid tint-color($primary, 80);
+    display: flex;
+    justify-content: flex-end;
+
+    & > * {
+      margin: 0;
+    }
+
+    & > *:not(:last-child) {
+      margin-left: 10px;
+    }
+  }
+
+  .dynamic-list-container {
+    li {
+      text-align: right;
+    }
+  }
+
+  .dp-calendar-nav-left, .dp-calendar-nav-right {
+    transform: rotate(180deg);
+  }
+
+  .table-responsive {
+    padding-right: 1px;
+  }
+}

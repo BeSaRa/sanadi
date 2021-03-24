@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./scss/custom_variables";
+@import "./scss/style-rtl";
 
 html, body {
   background-color: $gray-100;
@@ -18,10 +19,6 @@ router-outlet {
 
 #password {
   padding-right: 35px !important;
-}
-
-html[dir="rtl"] .table-responsive {
-  padding-right: 1px;
 }
 
 .dir-ltr {
@@ -140,27 +137,6 @@ app-dialog-container {
   }
 }
 
-html[dir="rtl"] {
-  .dialog-actions {
-    border-top: 1px solid tint-color($primary, 80);
-    display: flex;
-    justify-content: flex-end;
-
-    & > * {
-      margin: 0;
-    }
-
-    & > *:not(:last-child) {
-      margin-left: 10px;
-    }
-  }
-
-  .dynamic-list-container {
-    li {
-      text-align: right;
-    }
-  }
-}
 
 .icon-btn {
   margin: 0 10px;
@@ -224,10 +200,4 @@ dp-date-picker {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, .1);
-}
-
-html[dir='rtl'] {
-  .dp-calendar-nav-left, .dp-calendar-nav-right {
-    transform: rotate(180deg);
-  }
 }
