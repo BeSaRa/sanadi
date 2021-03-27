@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
     this.langService.toggleLanguage();
   }
 
-  logout() {
+  logout(): void {
     this.dialogService
       .confirm(this.langService.map.msg_are_you_sure_you_want_logout)
       .onAfterClose$
@@ -66,11 +66,15 @@ export class HeaderComponent implements OnInit {
       });
   }
 
-  private _logout() {
+  private _logout(): void {
     this.authService.logout().subscribe(() => {
       this.router.navigate(['/login']).then(() => {
         this.toastService.success(this.langService.map.msg_logout_success);
       });
     });
+  }
+
+  goToHome(): void {
+    this.router.navigate(['home', 'main']).then();
   }
 }
