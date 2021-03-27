@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ServiceItem} from '../../../shared/models/service-item';
 import {LangService} from '../../../services/lang.service';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {MenuItem} from '../../../models/menu-item';
+import {MenuItemService} from '../../../services/menu-item.service';
 
 @Component({
   selector: 'app-user-home',
@@ -10,9 +12,12 @@ import {ConfigurationService} from '../../../services/configuration.service';
 })
 export class UserHomeComponent implements OnInit {
   serviceList: ServiceItem[] = [];
+  menuItems: MenuItem[] = this.menuItemService.getMenuByRouteGroup('main');
 
   constructor(private langService: LangService,
+              private menuItemService: MenuItemService,
               private configService: ConfigurationService) {
+
   }
 
   ngOnInit(): void {

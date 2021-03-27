@@ -10,23 +10,24 @@
 }
 
 .service-item {
-  transition: all .2s ease-in-out;
-  @include border-radius(10px);
+  width: 180px;
+  height: 230px;
+  cursor: pointer;
+}
 
-  &:hover {
-    transform: scale(1.1);
-  }
+.service-title {
+  text-decoration: none;
+  font-weight: bold;
+}
 
-  a {
-    text-decoration: none;
-  }
+.service-item-icon {
+  border-radius: 10px;
+}
 
-  .mdi {
-    font-size: 100px;
-    line-height: 1;
-  }
+.service-svg-icon {
+  text-align: center;
+}
 
-  .service-title {
-    font-weight: bold;
-  }
+.service-image {
+  //height: 130px;
 }

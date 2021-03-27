@@ -2,8 +2,12 @@
   <app-sidebar #sidebar class="flex-grow-0 flex-shrink-0 d-flex"></app-sidebar>
   <main class="flex-grow-1 align-self-stretch d-flex flex-column">
     <app-header [sidebar]="sidebar"></app-header>
-    <div class="flex-grow-1" id="main-content">
-      <router-outlet></router-outlet>
+    <div class="flex-grow-1 flex-shrink-1 container-fluid d-flex flex-column p-2" id="main-content">
+      <ng-scrollbar [dir]="scrollDirection">
+        <div class="h-100 container-fluid p-3">
+          <router-outlet></router-outlet>
+        </div>
+      </ng-scrollbar>
     </div>
     <app-footer></app-footer>
   </main>

@@ -1,12 +1,15 @@
-<ul [@homeRouterAnimation]="list.length"
-    class="services-list d-flex flex-row justify-content-center align-self-center flex-wrap">
-  <ng-container *ngFor="let item of list">
-    <li *ngIf="empService.checkPermissions(item.permissionKey, item.checkAnyPermission)"
-        mouseEnterLeave="shadow-lg" class="service-item shadow-sm p-3 m-3 border border-1">
-      <a [routerLink]="item.route" class="d-flex flex-column align-items-center">
-        <span [class]="item.icon" class="mdi"></span>
-        <span class="service-title">{{item[property]}}</span>
-      </a>
-    </li>
-  </ng-container>
+<ul [@homeRouterAnimation]="list.length" class="services-list d-flex flex-row flex-wrap justify-content-center">
+  <li *ngFor="let item of list" class="service-item p-2 m-2 flex-shrink-0 d-flex flex-column align-items-center">
+    <div (click)="navigateToPath(item)" mouseEnterLeave="shadow-lg" [style.background-image]="iconBackground"
+         class="service-item-icon shadow-sm border border-1 flex-grow-1 align-self-stretch">
+      <div *ngIf="item.isSVGIcon()" class="service-svg-icon">
+        <img class="service-image" alt="{{item.getName()}}" src="assets/images/icons/{{item.icon}}.svg">
+      </div>
+      <div *ngIf="item.isFontIcon()" class="service-svg-icon"></div>
+    </div>
+    <a class="service-title my-2" [routerLink]="item.path">{{item.getName()}}</a>
+  </li>
 </ul>
+
+
+<!-- *ngIf="empService.checkPermissions(item.permissionKey, item.checkAnyPermission)" -->

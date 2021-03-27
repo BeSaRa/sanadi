@@ -27,6 +27,7 @@ import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handle
 import {CookieModule} from 'ngx-cookie';
 import {TokenService} from './services/token.service';
 import {AuthService} from './services/auth.service';
+import {MenuItemService} from './services/menu-item.service';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {AuthService} from './services/auth.service';
         LookupService,
         TokenService,
         AuthService,
+        MenuItemService,
         CustomRoleService,
         OrganizationBranchService,
         OrganizationUserService,
@@ -80,7 +82,8 @@ export class AppModule {
                  infoService: InfoService,
                  lookupService: LookupService,
                  tokenService: TokenService,
-                 authService: AuthService): () => Promise<unknown> {
+                 authService: AuthService,
+                 menuItemService: MenuItemService): () => Promise<unknown> {
     AppModule.http = http;
     return () => {
       return forkJoin({
@@ -95,7 +98,10 @@ export class AppModule {
             langService.readLanguageFromCookie();
             langService._loadDone$.next(langService.list);
             lookupService.setLookupsMap(infoResult.lookupMap);
-            return tokenService.setAuthService(authService).validateToken().toPromise();
+            return tokenService.setAuthService(authService)
+              .validateToken().toPromise().then(() => {
+                return menuItemService.load().toPromise();
+              });
           });
         });
     };

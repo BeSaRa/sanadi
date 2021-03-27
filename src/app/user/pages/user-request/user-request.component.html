@@ -1,200 +1,691 @@
-<div class="container bg-white shadow-sm p-4 h-100">
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 *ngIf="!!currentRequest?.id"
-          class="h6 text-primary m-0 d-inline-block">{{langService.map.request_number + ' : '}}
-        <span class="user-select-all">{{currentRequest?.requestFullSerial}}</span></h1>
-      <h1 *ngIf="!currentRequest?.id"
-          class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_provide_request}}</h1>
-      <button [tooltip]="langService.map.print_request_form" *ngIf="currentRequest?.id"
-              (click)="currentRequest?.printRequest('request.pdf' , $event)"
-              class="icon-btn text-primary"><i
-        class="mdi mdi-printer"></i></button>
-    </div>
+<div class="row">
+  <div class="col-12 d-flex align-items-center">
+    <h1 *ngIf="!!currentRequest?.id"
+        class="h6 text-primary m-0 d-inline-block">{{langService.map.request_number + ' : '}}
+      <span class="user-select-all">{{currentRequest?.requestFullSerial}}</span></h1>
+    <h1 *ngIf="!currentRequest?.id"
+        class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_provide_request}}</h1>
+    <button [tooltip]="langService.map.print_request_form" *ngIf="currentRequest?.id"
+            (click)="currentRequest?.printRequest('request.pdf' , $event)"
+            class="icon-btn text-primary"><i
+      class="mdi mdi-printer"></i></button>
   </div>
-  <form autocomplete="off" [formGroup]="form" id="form">
-    <fieldset [disabled]="readOnly">
-      <tabs-list class="py-4">
-        <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
-             [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-        <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
-             [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-        <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
-             [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
-        <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
-             [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-        <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-             [template]="requestStatus"
-             [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-        <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
-             [hasError]="fm.getFieldInvalidStatus('aidTab')"
-             [template]="providedAid"
-             [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
-      </tabs-list>
-    </fieldset>
-    <!--  personal info Tab -->
-    <ng-template #personalInfo>
-      <div formGroupName="idTypes" class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="qid" class="col-sm-12 col-md-4 col-form-label">{{langService.map.qatari_id_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group has-validation">
-                <input maxlength="11" formControlName="qid" id="qid" class="form-control" type="text"
-                       [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)">
-                <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
-                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                  <i class="mdi mdi-close-circle text-primary"></i>
-                </button>
-                <button tabindex="-1" type="button"
-                        [disabled]="editMode || !isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
-                        (click)="getBeneficiaryData('qid')" class="input-group-text">
-                  <i class="mdi mdi-account-search text-primary"></i>
-                </button>
-                <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-column flex-md-row mb-0">
-            <label for="gccId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.gcc_id_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <input maxlength="20" formControlName="gccId" id="gccId" class="form-control" type="text"
-                       [ngClass]="fm.getInvalidClass('idTypes.gccId')" (keyup)="fieldChange($event)">
-                <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
-                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                  <i class="mdi mdi-close-circle text-primary"></i></button>
-                <button tabindex="-1" type="button"
-                        [disabled]="editMode || !isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
-                        (click)="getBeneficiaryData('gccId')" class="input-group-text">
-                  <i class="mdi mdi-account-search text-primary"></i>
-                </button>
-                <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
-              </div>
+</div>
+<form autocomplete="off" [formGroup]="form" id="form">
+  <fieldset [disabled]="readOnly">
+    <tabs-list class="py-4">
+      <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
+           [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
+      <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
+           [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
+      <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
+           [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+      <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
+           [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+      <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+           [template]="requestStatus"
+           [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+      <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
+           [hasError]="fm.getFieldInvalidStatus('aidTab')"
+           [template]="providedAid"
+           [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+    </tabs-list>
+  </fieldset>
+  <!--  personal info Tab -->
+  <ng-template #personalInfo>
+    <div formGroupName="idTypes" class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="qid" class="col-sm-12 col-md-4 col-form-label">{{langService.map.qatari_id_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="input-group has-validation">
+              <input maxlength="11" formControlName="qid" id="qid" class="form-control" type="text"
+                     [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)">
+              <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
+                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                <i class="mdi mdi-close-circle text-primary"></i>
+              </button>
+              <button tabindex="-1" type="button"
+                      [disabled]="editMode || !isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
+                      (click)="getBeneficiaryData('qid')" class="input-group-text">
+                <i class="mdi mdi-account-search text-primary"></i>
+              </button>
+              <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
             </div>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="visa" class="col-sm-12 col-md-4 col-form-label">{{langService.map.visa_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <input maxlength="20" formControlName="visa" id="visa" class="form-control" type="text"
-                       [ngClass]="fm.getInvalidClass('idTypes.visa')" (keyup)="fieldChange($event)">
-                <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
-                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                  <i class="mdi mdi-close-circle text-primary"></i>
-                </button>
-                <button tabindex="-1" type="button"
-                        [disabled]="editMode || !isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
-                        (click)="getBeneficiaryData('visa')" class="input-group-text">
-                  <i class="mdi mdi-account-search text-primary"></i>
-                </button>
-                <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-column flex-md-row mb-0">
-            <label for="passport"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <input maxlength="20" formControlName="passport" id="passport" class="form-control" type="text"
-                       [ngClass]="fm.getInvalidClass('idTypes.passport')" (keyup)="fieldChange($event)">
-                <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')"
-                        (click)="clearField('passport')"
-                        class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                  <i class="mdi mdi-close-circle text-primary"></i>
-                </button>
-                <button tabindex="-1" type="button"
-                        [disabled]="editMode || fm.getFormField('idTypes.passport')?.invalid"
-                        (click)="getBeneficiaryData('passport')" class="input-group-text">
-                  <i class="mdi mdi-account-search text-primary"></i>
-                </button>
-                <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
-              </div>
+        <div class="row d-flex flex-column flex-md-row mb-0">
+          <label for="gccId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.gcc_id_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="input-group">
+              <input maxlength="20" formControlName="gccId" id="gccId" class="form-control" type="text"
+                     [ngClass]="fm.getInvalidClass('idTypes.gccId')" (keyup)="fieldChange($event)">
+              <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
+                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                <i class="mdi mdi-close-circle text-primary"></i></button>
+              <button tabindex="-1" type="button"
+                      [disabled]="editMode || !isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
+                      (click)="getBeneficiaryData('gccId')" class="input-group-text">
+                <i class="mdi mdi-account-search text-primary"></i>
+              </button>
+              <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
             </div>
           </div>
         </div>
       </div>
-      <div class="w-100 position-relative d-flex flex-row align-items-center justify-content-center mb-4">
-        <div class="d-flex flex-row align-items-center justify-content-center">
-          <div [ngClass]="fm.getInvalidClass('idTypes')"></div>
-          <app-field-error-message class="translate-middle-y"
-                                   [control]="fm.getFormField('idTypes')"></app-field-error-message>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="visa" class="col-sm-12 col-md-4 col-form-label">{{langService.map.visa_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="input-group">
+              <input maxlength="20" formControlName="visa" id="visa" class="form-control" type="text"
+                     [ngClass]="fm.getInvalidClass('idTypes.visa')" (keyup)="fieldChange($event)">
+              <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
+                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                <i class="mdi mdi-close-circle text-primary"></i>
+              </button>
+              <button tabindex="-1" type="button"
+                      [disabled]="editMode || !isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
+                      (click)="getBeneficiaryData('visa')" class="input-group-text">
+                <i class="mdi mdi-account-search text-primary"></i>
+              </button>
+              <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-column flex-md-row mb-0">
+          <label for="passport"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="input-group">
+              <input maxlength="20" formControlName="passport" id="passport" class="form-control" type="text"
+                     [ngClass]="fm.getInvalidClass('idTypes.passport')" (keyup)="fieldChange($event)">
+              <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')"
+                      (click)="clearField('passport')"
+                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
+                <i class="mdi mdi-close-circle text-primary"></i>
+              </button>
+              <button tabindex="-1" type="button"
+                      [disabled]="editMode || fm.getFormField('idTypes.passport')?.invalid"
+                      (click)="getBeneficiaryData('passport')" class="input-group-text">
+                <i class="mdi mdi-account-search text-primary"></i>
+              </button>
+              <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-100 position-relative d-flex flex-row align-items-center justify-content-center mb-4">
+      <div class="d-flex flex-row align-items-center justify-content-center">
+        <div [ngClass]="fm.getInvalidClass('idTypes')"></div>
+        <app-field-error-message class="translate-middle-y"
+                                 [control]="fm.getFormField('idTypes')"></app-field-error-message>
+      </div>
+    </div>
+    <hr class="mb-4"/>
+    <div formGroupName="personalTab">
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="nationality" asteriskIfRequired="benNationality"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
+                      id="nationality" class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.Nationality"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
+            </div>
+          </div>
         </div>
       </div>
-      <hr class="mb-4"/>
-      <div formGroupName="personalTab">
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="nationality" asteriskIfRequired="benNationality"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
-                        id="nationality" class="form-select">
-                  <option *ngFor="let option of lookup.listByCategory.Nationality"
-                          [ngValue]="option.lookupKey">{{option.getName()}}</option>
-                </select>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
-              </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label asteriskIfRequired="arName" for="arName"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
             </div>
           </div>
         </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="arName" for="arName"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
-                       class="form-control" type="text">
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="enName" for="enName"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
-                       class="form-control" type="text">
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
-              </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label asteriskIfRequired="enName" for="enName"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
             </div>
           </div>
         </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
+                     [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
+                     formControlName="dateOfBirth" class="form-control">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="gender" asteriskIfRequired="gender"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
+                      class="form-select">
+                <option [value]="option.lookupKey"
+                        *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.gender')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="mobile" asteriskIfRequired="phoneNumber1"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
+                     formControlName="phoneNumber1" class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="employer" asteriskIfRequired="employeer"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
+                     formControlName="employeer"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="educationLevel" asteriskIfRequired="educationLevel"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
+                      id="educationLevel" class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="2" id="sponsorsCount"
+                     [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
+                     formControlName="benDependentsCount" class="form-control">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="maritalStatus" asteriskIfRequired="maritalStatus"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
+                      formControlName="maritalStatus" class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.maritalStatus')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="false" class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label class="col-sm-12 col-md-4 col-form-label">{{langService.map.family_member_count}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input aria-label="family count" class="form-control" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="occupationStatus" asteriskIfRequired="benCategory"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
+                      formControlName="benCategory" class="form-select">
+                <option *ngFor="let option of lookup.listByCategory.BenCategory"
+                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
+              </select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benCategory')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
+            <div class="col-md-10 col-sm-12">
+                    <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
+                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"></textarea>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- income Tab  -->
+  <ng-template formGroupName="incomeTab" #income>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
+                    id="employmentStatus"
+                    class="form-select">
+              <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.occuptionStatus')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label asteriskIfRequired="occuption" for="occupation"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')"
+                   formControlName="occuption"
+                   class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="workplace" asteriskIfRequired="employeerAddress"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')"
+                   formControlName="employeerAddress"
+                   id="workplace" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="monthlyIncome" asteriskIfRequired="benIncome"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
+                   [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
+                   class="form-control" mask="separator" thousandSeparator=",">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="extraIncome"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
+                   formControlName="benExtraIncome"
+                   class="form-control" id="extraIncome"
+                   mask="separator" thousandSeparator=",">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="extraIncomeSource"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
+                   formControlName="benExtraIncomeSource"
+                   id="extraIncomeSource" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
+                   formControlName="totalDebts"
+                   class="form-control" type="text"
+                   mask="separator" thousandSeparator=",">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="totalInstalments"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
+                   formControlName="totalInstalments" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="monthlyRent"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
+                   formControlName="benHouseRent" class="form-control"
+                   mask="separator" thousandSeparator=",">
+            <app-field-error-message
+              [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- address Tab  -->
+  <ng-template formGroupName="addressTab" #address>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="city" asteriskIfRequired="residenceCountry"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
+                    formControlName="residenceCountry" class="form-select">
+              <option *ngFor="let option of lookup.listByCategory.Countries"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="zone" asteriskIfRequired="zone"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
+                   class="form-control">
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="street" asteriskIfRequired="streetName"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
+                   formControlName="streetName"
+                   class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="buildingName" asteriskIfRequired="buildingName"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
+                   formControlName="buildingName" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
+                   class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="homePhoneNumber"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
+                   formControlName="homePhoneNumber" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="addressDescription"
+                 class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_address}}</label>
+          <div class="col-md-10 col-sm-12">
+                  <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
+                            formControlName="addressDescription" rows="5" class="form-control"></textarea>
+            <app-field-error-message
+              [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- request Info Tab-->
+  <ng-template formGroupName="requestInfoTab" #requestInfo>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="requestType" asteriskIfRequired="requestType"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
+                    id="requestType" class="form-select">
+              <option *ngFor="let option of lookup.listByCategory.SubRequestType"
+                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
+            </select>
+            <app-field-error-message
+              [control]="fm.getFormField('requestInfoTab.requestType')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="creationDate" asteriskIfRequired="creationDate"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input theme="dp-material" [dpDayPicker]="dateConfig"
+                   [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
+                   id="creationDate"
+                   formControlName="creationDate" class="form-control">
+            <app-field-error-message
+              [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <input maxlength="20" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
+                   formControlName="requestedAidAmount"
+                   id="requestedAidAmount" class="form-control"
+                   mask="separator" thousandSeparator=",">
+            <app-field-error-message
+              [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12">
+        <div class="row d-flex flex-column flex-md-row">
+          <label asteriskIfRequired="requestSummary" for="requestSummary"
+                 class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
+          <div class="col-md-10 col-sm-12">
+                  <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
+                            formControlName="requestSummary" rows="5" class="form-control"></textarea>
+            <app-field-error-message
+              [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Request Status -->
+  <ng-template formGroupName="requestStatusTab" #requestStatus>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="requestStatus"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <select [ngClass]="fm.getStatusClass('requestStatusTab.status')" id="requestStatus"
+                    formControlName="status" class="form-select">
+              <option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
+                      [ngValue]="option.lookupKey">
+                {{option.getName()}}
+              </option>
+            </select>
+            <app-field-error-message
+              [control]="fm.getFormField('requestStatusTab.status')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="statusDateModified" asteriskIfRequired="statusDateModified"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <!--<input id="statusDateModified" [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"
+                   formControlName="statusDateModified" class="form-control" type="date">-->
+            <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
+                   formControlName="statusDateModified" class="form-control"
+                   [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+            <app-field-error-message
+              [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex flex-row">
+      <div class="col-sm-12">
+        <div class="row d-flex flex-column flex-md-row">
+          <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
+          <div class="col-md-10 col-sm-12">
+                  <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
+                            formControlName="requestNotes" rows="5" class="form-control"></textarea>
+            <app-field-error-message
+              [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Aid Tab-->
+  <ng-template formArrayName="aidTab" #providedAid>
+    <ng-container *ngFor="let _ of aidFormArray.controls; let i = index">
+      <div [formGroupName]="i">
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
+              <label for="aidType" asteriskIfRequired="aidLookupId"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
-                       [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
-                       formControlName="dateOfBirth" class="form-control">
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="gender" asteriskIfRequired="gender"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
+                <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
+                        formControlName="aidLookupId"
                         class="form-select">
-                  <option [value]="option.lookupKey"
-                          *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
+                  <option [ngValue]="option.id"
+                          *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
                 </select>
                 <app-field-error-message
-                  [control]="fm.getFormField('personalTab.gender')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="aidAmount" asteriskIfRequired="aidAmount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <input id="aidAmount" maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
+                       formControlName="aidAmount" class="form-control"
+                       mask="separator" thousandSeparator=",">
+                <app-field-error-message
+                  [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -202,26 +693,29 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="mobile" asteriskIfRequired="phoneNumber1"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+              <label asteriskIfRequired="approvalDate" for="approvalDate"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
-                       formControlName="phoneNumber1" class="form-control" type="text">
+                <!--<input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
+                       formControlName="approvalDate" class="form-control" type="date">-->
+                <input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
+                       formControlName="approvalDate" class="form-control"
+                       [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
                 <app-field-error-message
-                  [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
               </div>
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="employer" asteriskIfRequired="employeer"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
+              <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                       formControlName="employeer"
-                       class="form-control" type="text">
+                <input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
+                       formControlName="aidStartPayDate" class="form-control"
+                       [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
                 <app-field-error-message
-                  [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -229,69 +723,30 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="educationLevel" asteriskIfRequired="educationLevel"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
+              <label asteriskIfRequired="periodicType" for="periodicType"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
-                        id="educationLevel" class="form-select">
-                  <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
-                          [ngValue]="option.lookupKey">{{option.getName()}}</option>
+                <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
+                        formControlName="periodicType"
+                        id="periodicType" class="form-select">
+                  <option [ngValue]="option.lookupKey"
+                          *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
                 </select>
                 <app-field-error-message
-                  [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
               </div>
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
+              <label asteriskIfRequired="installementsCount" for="installementsCount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="2" id="sponsorsCount"
-                       [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
-                       formControlName="benDependentsCount" class="form-control">
+                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
+                       id="installementsCount"
+                       formControlName="installementsCount" class="form-control">
                 <app-field-error-message
-                  [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="maritalStatus" asteriskIfRequired="maritalStatus"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
-                        formControlName="maritalStatus" class="form-select">
-                  <option *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
-                          [ngValue]="option.lookupKey">{{option.getName()}}</option>
-                </select>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.maritalStatus')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="false" class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label class="col-sm-12 col-md-4 col-form-label">{{langService.map.family_member_count}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input class="form-control" type="text">
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="occupationStatus" asteriskIfRequired="benCategory"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
-                        formControlName="benCategory" class="form-select">
-                  <option *ngFor="let option of lookup.listByCategory.BenCategory"
-                          [ngValue]="option.lookupKey">{{option.getName()}}</option>
-                </select>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.benCategory')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -299,535 +754,76 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
+              <label asteriskIfRequired="aidDescription" for="aidDescription"
+                     class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
               <div class="col-md-10 col-sm-12">
-                    <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
-                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"></textarea>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <!-- income Tab  -->
-    <ng-template formGroupName="incomeTab" #income>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
-                      id="employmentStatus"
-                      class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.occuptionStatus')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="occuption" for="occupation"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')"
-                     formControlName="occuption"
-                     class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="workplace" asteriskIfRequired="employeerAddress"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')"
-                     formControlName="employeerAddress"
-                     id="workplace" class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="monthlyIncome" asteriskIfRequired="benIncome"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
-                     [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
-                     class="form-control" mask="separator" thousandSeparator=",">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="extraIncome"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
-                     formControlName="benExtraIncome"
-                     class="form-control" id="extraIncome"
-                     mask="separator" thousandSeparator=",">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="extraIncomeSource"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
-                     formControlName="benExtraIncomeSource"
-                     id="extraIncomeSource" class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
-                     formControlName="totalDebts"
-                     class="form-control" type="text"
-                     mask="separator" thousandSeparator=",">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="totalInstalments"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
-                     formControlName="totalInstalments" class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="monthlyRent"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
-                     formControlName="benHouseRent" class="form-control"
-                     mask="separator" thousandSeparator=",">
-              <app-field-error-message
-                [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <!-- address Tab  -->
-    <ng-template formGroupName="addressTab" #address>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="city" asteriskIfRequired="residenceCountry"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
-                      formControlName="residenceCountry" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.Countries"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="zone" asteriskIfRequired="zone"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                     class="form-control">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="street" asteriskIfRequired="streetName"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
-                     formControlName="streetName"
-                     class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="buildingName" asteriskIfRequired="buildingName"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
-                     formControlName="buildingName" class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                     class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="homePhoneNumber"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                     formControlName="homePhoneNumber" class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="addressDescription"
-                   class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_address}}</label>
-            <div class="col-md-10 col-sm-12">
-                  <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
-                            formControlName="addressDescription" rows="5" class="form-control"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <!-- request Info Tab-->
-    <ng-template formGroupName="requestInfoTab" #requestInfo>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="requestType" asteriskIfRequired="requestType"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
-                      id="requestType" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.SubRequestType"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.requestType')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="creationDate" asteriskIfRequired="creationDate"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input theme="dp-material" [dpDayPicker]="dateConfig"
-                     [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
-                     id="creationDate"
-                     formControlName="creationDate" class="form-control">
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
-                     formControlName="requestedAidAmount"
-                     id="requestedAidAmount" class="form-control"
-                     mask="separator" thousandSeparator=",">
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="requestSummary" for="requestSummary"
-                   class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
-            <div class="col-md-10 col-sm-12">
-                  <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
-                            formControlName="requestSummary" rows="5" class="form-control"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <!-- Request Status -->
-    <ng-template formGroupName="requestStatusTab" #requestStatus>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="requestStatus"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('requestStatusTab.status')" id="requestStatus"
-                      formControlName="status" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
-                        [ngValue]="option.lookupKey">
-                  {{option.getName()}}
-                </option>
-              </select>
-              <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.status')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="statusDateModified" asteriskIfRequired="statusDateModified"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <!--<input id="statusDateModified" [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"
-                     formControlName="statusDateModified" class="form-control" type="date">-->
-              <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
-                     formControlName="statusDateModified" class="form-control"
-                     [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
-              <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
-            <div class="col-md-10 col-sm-12">
-                  <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
-                            formControlName="requestNotes" rows="5" class="form-control"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <!-- Aid Tab-->
-    <ng-template formArrayName="aidTab" #providedAid>
-      <ng-container *ngFor="let _ of aidFormArray.controls; let i = index">
-        <div [formGroupName]="i">
-          <div class="row d-flex flex-row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label for="aidType" asteriskIfRequired="aidLookupId"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
-                          formControlName="aidLookupId"
-                          class="form-select">
-                    <option [ngValue]="option.id"
-                            *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
-                  </select>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label for="aidAmount" asteriskIfRequired="aidAmount"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input id="aidAmount" maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                         formControlName="aidAmount" class="form-control"
-                         mask="separator" thousandSeparator=",">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="approvalDate" for="approvalDate"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <!--<input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
-                         formControlName="approvalDate" class="form-control" type="date">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
-                         formControlName="approvalDate" class="form-control"
-                         [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
-                         formControlName="aidStartPayDate" class="form-control"
-                         [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="periodicType" for="periodicType"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
-                          formControlName="periodicType"
-                          id="periodicType" class="form-select">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-                  </select>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="installementsCount" for="installementsCount"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
-                         id="installementsCount"
-                         formControlName="installementsCount" class="form-control">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-row">
-            <div class="col-sm-12">
-              <div class="row d-flex flex-column flex-md-row">
-                <label asteriskIfRequired="aidDescription" for="aidDescription"
-                       class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
-                <div class="col-md-10 col-sm-12">
                     <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
                               formControlName="aidDescription" rows="3" class="form-control"></textarea>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
-                </div>
+                <app-field-error-message
+                  [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
               </div>
             </div>
           </div>
-          <div class="d-flex flex-row align-items-center justify-content-center">
-            <button (click)="saveAid()"
-                    class="btn btn-primary m-2">{{hasEditAid ? langService.map.btn_save : langService.map.btn_add}}</button>
-            <button (click)="cancelAid()"
-                    class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-          </div>
         </div>
+        <div class="d-flex flex-row align-items-center justify-content-center">
+          <button (click)="saveAid()"
+                  class="btn btn-primary m-2">{{hasEditAid ? langService.map.btn_save : langService.map.btn_add}}</button>
+          <button (click)="cancelAid()"
+                  class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+    <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
+                     [clickOnNew$]="addAid$"></app-page-header>
+    <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+           [dataSource]="subventionAid">
+      <ng-container cdkColumnDef="approvalDate">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.approval_date}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.approvalDate}} </td>
       </ng-container>
-      <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
-                       [clickOnNew$]="addAid$"></app-page-header>
-      <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
-             [dataSource]="subventionAid">
-        <ng-container cdkColumnDef="approvalDate">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.approval_date}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.approvalDate}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="aidLookupId">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="periodicType">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="installementsCount">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.number_of_installments}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="aidStartPayDate">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_date}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.aidStartPayDate}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="aidAmount">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:'separator':','}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-          <td cdk-cell *cdkCellDef="let row; let i = index;">
-            <div class="d-flex flex-row">
-              <button (click)="deleteAid(row , i , $event)" class="icon-btn"><i
-                class="mdi mdi-close-box"></i></button>
-              <button (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></button>
-            </div>
-          </td>
-        </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
-        <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
-      </table>
-    </ng-template>
-    <hr/>
-    <div *ngIf="!aidFormArray.controls.length" class="d-flex flex-row justify-content-center">
-      <button [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
-              class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
-      <button type="button" (click)="cancelRequest()"
-              class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-      <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
-              class="btn btn-link">
-        <i class="mdi mdi-information-outline text-info"></i>
-      </button>
-    </div>
-  </form>
-</div>
-
-
+      <ng-container cdkColumnDef="aidLookupId">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="periodicType">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="installementsCount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.number_of_installments}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="aidStartPayDate">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_date}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.aidStartPayDate}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="aidAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:'separator':','}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index;">
+          <div class="d-flex flex-row">
+            <button (click)="deleteAid(row , i , $event)" class="icon-btn"><i
+              class="mdi mdi-close-box"></i></button>
+            <button (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></button>
+          </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
+    </table>
+  </ng-template>
+  <hr/>
+  <div *ngIf="!aidFormArray.controls.length" class="d-flex flex-row justify-content-center">
+    <button [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
+            class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
+    <button type="button" (click)="cancelRequest()"
+            class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+    <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
+            class="btn btn-link">
+      <i class="mdi mdi-information-outline text-info"></i>
+    </button>
+  </div>
+</form>

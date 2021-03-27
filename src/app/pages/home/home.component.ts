@@ -1,16 +1,35 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {LangService} from '../../services/lang.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {Direction} from '@angular/cdk/bidi';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  scrollDirection: Direction = 'ltr';
+  private destroy$: Subject<any> = new Subject<any>();
 
-  constructor() {
+  constructor(private langService: LangService) {
+
   }
 
   ngOnInit(): void {
+    this.langService
+      .onLanguageChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((language) => {
+        this.scrollDirection = language.direction;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
 }

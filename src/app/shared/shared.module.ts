@@ -31,6 +31,7 @@ import {VersionComponent} from './components/version/version.component';
 import {NgxMaskModule} from 'ngx-mask';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FlipIconDirective } from './directives/flip-icon.directive';
+import {NgScrollbarModule} from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -67,9 +68,11 @@ import { FlipIconDirective } from './directives/flip-icon.directive';
     CdkTableModule,
     ReactiveFormsModule,
     DpDatePickerModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    NgScrollbarModule
   ],
   exports: [
+    NgScrollbarModule,
     CommonModule,
     OverlayModule,
     NgxMaskModule,

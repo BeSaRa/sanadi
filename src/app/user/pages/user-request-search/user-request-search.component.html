@@ -1,353 +1,350 @@
-<div class="container shadow-sm h-100 bg-white p-4">
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_request_search}}</h1>
-    </div>
+<div class="row">
+  <div class="col-12 d-flex align-items-center">
+    <h1 class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_request_search}}</h1>
   </div>
-
-  <form autocomplete="off" [formGroup]="form">
-    <div class="row mt-3">
-      <tabs-list [tabByIndex$]="tabIndex$">
-        <tab [template]="searchCriteria" [title]="langService.map.search_criteria"></tab>
-        <tab [disabled]="!requests.length" [template]="searchResult" [title]="getResultTabTitle"></tab>
-      </tabs-list>
-    </div>
-    <ng-template #searchCriteria>
-      <div formGroupName="simpleSearch" id="simple-search">
+</div>
+<form autocomplete="off" [formGroup]="form">
+  <div class="row mt-3">
+    <tabs-list [tabByIndex$]="tabIndex$">
+      <tab [template]="searchCriteria" [title]="langService.map.search_criteria"></tab>
+      <tab [disabled]="!requests.length" [template]="searchResult" [title]="getResultTabTitle"></tab>
+    </tabs-list>
+  </div>
+  <ng-template #searchCriteria>
+    <div formGroupName="simpleSearch" id="simple-search">
+      <div class="row">
+        <div formGroupName="request" class="col-sm-12 col-md-6">
+          <div class="row">
+            <label for="requestSerial"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control"
+                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestSerial')">
+              <app-field-error-message
+                [control]="fm.getFormField('simpleSearch.request.requestSerial')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row">
+            <label for="year" class="col-sm-12 col-md-4 col-form-label">{{langService.map.year}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <select formControlName="year" class="form-select" id="year">
+                <option [ngValue]="year" *ngFor="let year of years">{{year}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div formGroupName="beneficiary">
         <div class="row">
-          <div formGroupName="request" class="col-sm-12 col-md-6">
+          <div class="col-sm-12 col-md-6">
             <div class="row">
-              <label for="requestSerial"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control"
-                       [ngClass]="fm.getInvalidClass('simpleSearch.request.requestSerial')">
-                <app-field-error-message
-                  [control]="fm.getFormField('simpleSearch.request.requestSerial')"></app-field-error-message>
+              <label for="idType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_type}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="benPrimaryIdType" class="form-select"
+                        id="idType">
+                  <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
+                </select>
               </div>
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row">
-              <label for="year" class="col-sm-12 col-md-4 col-form-label">{{langService.map.year}}</label>
+              <label for="idNumber" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benPrimaryIdNumber')" id="idNumber"
+                       formControlName="benPrimaryIdNumber" type="text" class="form-control">
+                <app-field-error-message
+                  [control]="fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div formGroupName="arName" class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="arMethod"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <select formControlName="year" class="form-select" id="year">
-                  <option [ngValue]="year" *ngFor="let year of years">{{year}}</option>
+                <select formControlName="operator" class="form-select" id="arMethod">
+                  <option [ngValue]="stringOperationMap[option.lookupKey]"
+                          *ngFor="let option of stringOperators">{{option.getName()}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="arName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input formControlName="value" id="arName" type="text" class="form-control"
+                       [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.arName.value')">
+                <app-field-error-message
+                  [control]="fm.getFormField('simpleSearch.beneficiary.arName.value')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div formGroupName="enName" class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="enMethod"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="operator" class="form-select" id="enMethod">
+                  <option [ngValue]="stringOperationMap[option.lookupKey]"
+                          *ngFor="let option of stringOperators">{{option.getName()}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="enName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="enName" formControlName="value" type="text" class="form-control"
+                       [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.enName.value')">
+                <app-field-error-message
+                  [control]="fm.getFormField('simpleSearch.beneficiary.enName.value')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 d-flex flex-row align-items-center justify-content-center">
+          <button (click)="onClickSimpleSearch()" class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
+          <button (click)="clearSimpleSearch()" class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
+        </div>
+      </div>
+    </div> <!-- simple search-->
+    <hr/>
+    <div formGroupName="advancedSearch" id="advanced-search">
+      <div formGroupName="beneficiary">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="nationality"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="benNationality" class="form-select" id="nationality">
+                  <option [ngValue]="option.lookupKey"
+                          *ngFor="let option of nationalities">{{option.getName()}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="occuptionStatus"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
+                  <option [ngValue]="option.lookupKey"
+                          *ngFor="let option of employmentStatus">{{option.getName()}}</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
-        <div formGroupName="beneficiary">
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="idType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_type}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="benPrimaryIdType" class="form-select"
-                          id="idType">
-                    <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="idNumber" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benPrimaryIdNumber')" id="idNumber"
-                         formControlName="benPrimaryIdNumber" type="text" class="form-control">
-                  <app-field-error-message
-                    [control]="fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber')"></app-field-error-message>
-                </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="phoneNumber1"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
+                       [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')">
+                <app-field-error-message
+                  [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
               </div>
             </div>
           </div>
-          <div formGroupName="arName" class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="arMethod"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="operator" class="form-select" id="arMethod">
-                    <option [ngValue]="stringOperationMap[option.lookupKey]"
-                            *ngFor="let option of stringOperators">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="arName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input formControlName="value" id="arName" type="text" class="form-control"
-                         [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.arName.value')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('simpleSearch.beneficiary.arName.value')"></app-field-error-message>
-                </div>
+        </div>
+      </div>
+      <div formGroupName="request">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="status"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="status" class="form-select" id="status">
+                  <option [ngValue]="option.lookupKey"
+                          *ngFor="let option of requestsStatus">{{option.getName()}}</option>
+                </select>
               </div>
             </div>
           </div>
-          <div formGroupName="enName" class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="enMethod"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="operator" class="form-select" id="enMethod">
-                    <option [ngValue]="stringOperationMap[option.lookupKey]"
-                            *ngFor="let option of stringOperators">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="enName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="enName" formControlName="value" type="text" class="form-control"
-                         [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.enName.value')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('simpleSearch.beneficiary.enName.value')"></app-field-error-message>
-                </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="requestType"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <select formControlName="requestType" class="form-select" id="requestType">
+                  <option [ngValue]="option.lookupKey"
+                          *ngFor="let option of requestTypes">{{option.getName()}}</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex flex-row align-items-center justify-content-center">
-            <button (click)="onClickSimpleSearch()" class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
-            <button (click)="clearSimpleSearch()" class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
-          </div>
-        </div>
-      </div> <!-- simple search-->
-      <hr/>
-      <div formGroupName="advancedSearch" id="advanced-search">
-        <div formGroupName="beneficiary">
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="nationality"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="benNationality" class="form-select" id="nationality">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of nationalities">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="occuptionStatus"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of employmentStatus">{{option.getName()}}</option>
-                  </select>
-                </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="creationDateFrom"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_from}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <!--<input type="date" formControlName="creationDateFrom" class="form-control" id="creationDateFrom">-->
+                <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
+                       formControlName="creationDateFrom" class="form-control"
+                       [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">
+                <app-field-error-message
+                  [control]="fm.getFormField('advancedSearch.creationDates.creationDateFrom')"></app-field-error-message>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="phoneNumber1"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
-                         [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div formGroupName="request">
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="status"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="status" class="form-select" id="status">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of requestsStatus">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="requestType"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-                <div class="col-md-8 col-sm-12 mb-4">
-                  <select formControlName="requestType" class="form-select" id="requestType">
-                    <option [ngValue]="option.lookupKey"
-                            *ngFor="let option of requestTypes">{{option.getName()}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="creationDateFrom"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_from}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <!--<input type="date" formControlName="creationDateFrom" class="form-control" id="creationDateFrom">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
-                         formControlName="creationDateFrom" class="form-control"
-                         [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('advancedSearch.creationDates.creationDateFrom')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="creationDateTo"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_to}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <!--<input type="date" formControlName="creationDateTo" class="form-control" id="creationDateTo">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
-                         formControlName="creationDateTo" class="form-control datepicker-field"
-                         [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('advancedSearch.creationDates.creationDateTo')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="statusDateFrom"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_from}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <!--<input type="date" formControlName="statusDateModifiedFrom" class="form-control" id="statusDateFrom">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
-                         formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
-                         [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="row">
-                <label for="statusDateTo"
-                       class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_to}}</label>
-                <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <!--<input type="date" formControlName="statusDateModifiedTo" class="form-control" id="statusDateTo">-->
-                  <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
-                         formControlName="statusDateModifiedTo" class="form-control datepicker-field"
-                         [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>
-                </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="creationDateTo"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_to}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <!--<input type="date" formControlName="creationDateTo" class="form-control" id="creationDateTo">-->
+                <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
+                       formControlName="creationDateTo" class="form-control datepicker-field"
+                       [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">
+                <app-field-error-message
+                  [control]="fm.getFormField('advancedSearch.creationDates.creationDateTo')"></app-field-error-message>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
-            <button (click)="onClickAdvancedSearch()"
-                    class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
-            <button (click)="clearAdvancedSearch()"
-                    class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="statusDateFrom"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_from}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <!--<input type="date" formControlName="statusDateModifiedFrom" class="form-control" id="statusDateFrom">-->
+                <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
+                       formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
+                       [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">
+                <app-field-error-message
+                  [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
+              </div>
+            </div>
           </div>
-        </div>
-      </div><!-- advanced search -->
-    </ng-template>
-  </form>
-  <ng-template #searchResult>
-    <div *ngIf="requests.length">
-      <div class="row">
-        <div class="col-6 d-flex align-items-center justify-content-start">
-          <button class="btn btn-link outline-none"
-                  tooltip="{{langService.map.btn_reload}}"
-                  (click)="reloadSearchResults()">
-            <i class="mdi mdi-reload"></i></button>
-        </div>
-        <div class="col-6 d-flex align-items-center justify-content-end">
-          <button class="btn btn-link outline-none"
-                  tooltip="{{langService.map.print}}"
-                  (click)="printResult()">
-            <i class="mdi mdi-printer"></i></button>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="statusDateTo"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_to}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <!--<input type="date" formControlName="statusDateModifiedTo" class="form-control" id="statusDateTo">-->
+                <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
+                       formControlName="statusDateModifiedTo" class="form-control datepicker-field"
+                       [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">
+                <app-field-error-message
+                  [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered caption-top">
-            <thead role="rowgroup">
-            <tr>
-              <th>{{langService.map.request_number}}</th>
-              <th>{{langService.map.request_date}}</th>
-              <th>{{langService.map.lbl_org_unit}}</th>
-              <th>{{langService.map.request_status}}</th>
-              <th>{{langService.map.request_type}}</th>
-              <th>{{langService.map.request_aid_amount}}</th>
-              <th>{{langService.map.approved_aid_amount}}</th>
-              <th>{{langService.map.lbl_actions}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let request of requests;">
-              <tr>
-                <td>
-                  <a href="#" (click)="showRequestDetails(request , $event)"
-                     class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </a>
-                </td>
-                <td> {{request.creationDateString}} </td>
-                <td> {{request.orgBranchInfo.getName()}} </td>
-                <td> {{request.statusInfo.getName()}} </td>
-                <td></td>
-                <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
-                <td>{{request.approvedAmount | mask:'separator': ','}}</td>
-                <td>
-                  <div class="d-flex flex-row">
-                    <a tooltip="{{langService.map.aid_count}}" class="icon-btn"><span
-                      class="badge bg-primary">{{request.aidCount}}</span></a>
-                    <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-printer"></i>
-                    </a>
-                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-history"></i>
-                    </a>
-                    <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-heart-multiple"></i>
-                    </a>
-                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                            (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                            class="btn icon-btn text-primary">
-                      <i class="mdi mdi-book-edit"></i>
-                    </button>
-                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                            (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
-                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
-                      <i class="mdi mdi-book-cancel"></i>
-                    </button>
-                    <button *ngIf="!request.notUnderProcess()"
-                            (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
-                            class="btn icon-btn text-primary">
-                      <i class="mdi mdi-trash-can"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </ng-container>
-            </tbody>
-          </table>
+        <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
+          <button (click)="onClickAdvancedSearch()"
+                  class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
+          <button (click)="clearAdvancedSearch()"
+                  class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
         </div>
+      </div>
+    </div><!-- advanced search -->
+  </ng-template>
+</form>
+<ng-template #searchResult>
+  <div *ngIf="requests.length">
+    <div class="row">
+      <div class="col-6 d-flex align-items-center justify-content-start">
+        <button class="btn btn-link outline-none"
+                tooltip="{{langService.map.btn_reload}}"
+                (click)="reloadSearchResults()">
+          <i class="mdi mdi-reload"></i></button>
+      </div>
+      <div class="col-6 d-flex align-items-center justify-content-end">
+        <button class="btn btn-link outline-none"
+                tooltip="{{langService.map.print}}"
+                (click)="printResult()">
+          <i class="mdi mdi-printer"></i></button>
       </div>
     </div>
+    <div class="row">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered caption-top">
+          <thead role="rowgroup">
+          <tr>
+            <th>{{langService.map.request_number}}</th>
+            <th>{{langService.map.request_date}}</th>
+            <th>{{langService.map.lbl_org_unit}}</th>
+            <th>{{langService.map.request_status}}</th>
+            <th>{{langService.map.request_type}}</th>
+            <th>{{langService.map.request_aid_amount}}</th>
+            <th>{{langService.map.approved_aid_amount}}</th>
+            <th>{{langService.map.lbl_actions}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let request of requests;">
+            <tr>
+              <td>
+                <a href="#" (click)="showRequestDetails(request , $event)"
+                   class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </a>
+              </td>
+              <td> {{request.creationDateString}} </td>
+              <td> {{request.orgBranchInfo.getName()}} </td>
+              <td> {{request.statusInfo.getName()}} </td>
+              <td></td>
+              <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
+              <td>{{request.approvedAmount | mask:'separator': ','}}</td>
+              <td>
+                <div class="d-flex flex-row">
+                  <a tooltip="{{langService.map.aid_count}}" class="icon-btn"><span
+                    class="badge bg-primary">{{request.aidCount}}</span></a>
+                  <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
+                     class="icon-btn">
+                    <i class="mdi mdi-printer"></i>
+                  </a>
+                  <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                     class="icon-btn">
+                    <i class="mdi mdi-history"></i>
+                  </a>
+                  <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                     class="icon-btn">
+                    <i class="mdi mdi-heart-multiple"></i>
+                  </a>
+                  <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                          (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                          class="btn icon-btn text-primary">
+                    <i class="mdi mdi-book-edit"></i>
+                  </button>
+                  <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                          (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
+                          [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
+                    <i class="mdi mdi-book-cancel"></i>
+                  </button>
+                  <button *ngIf="!request.notUnderProcess()"
+                          (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
+                          class="btn icon-btn text-primary">
+                    <i class="mdi mdi-trash-can"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-  </ng-template>
-</div>
+</ng-template>

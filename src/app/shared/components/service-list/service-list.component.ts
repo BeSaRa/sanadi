@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ServiceItem} from '../../models/service-item';
 import {listAnimation} from '../../../animations/list.animation';
 import {LangService} from '../../../services/lang.service';
 import {Subscription} from 'rxjs';
 import {EmployeeService} from '../../../services/employee.service';
+import {MenuItem} from '../../../models/menu-item';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -15,22 +16,28 @@ import {EmployeeService} from '../../../services/employee.service';
 })
 export class ServiceListComponent implements OnInit, OnDestroy {
   @Input()
-  public list: ServiceItem[] = [];
+  public list: MenuItem[] = [];
   public property: 'arName' | 'enName' = 'arName';
   private langSubscription?: Subscription;
+  iconBackground: string = 'url(assets/images/top-pattern.png)';
 
-  constructor(private langService: LangService, private  cd: ChangeDetectorRef,
+  constructor(private langService: LangService,
+              private  cd: ChangeDetectorRef,
+              private router: Router,
               public empService: EmployeeService) {
   }
 
   ngOnInit(): void {
-    this.langSubscription = this.langService.onLanguageChange$.subscribe((val) => {
-      this.property = val.code + 'Name' as 'arName' | 'enName';
+    this.langSubscription = this.langService.onLanguageChange$.subscribe(() => {
       this.cd.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
     this.langSubscription?.unsubscribe();
+  }
+
+  navigateToPath(item: MenuItem): void {
+    this.router.navigate([item.path]).then();
   }
 }

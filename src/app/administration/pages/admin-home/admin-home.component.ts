@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ServiceItem} from '../../../shared/models/service-item';
 import {LangService} from '../../../services/lang.service';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {MenuItem} from '../../../models/menu-item';
+import {MenuItemService} from '../../../services/menu-item.service';
 
 @Component({
   selector: 'app-admin-home',
@@ -10,8 +12,10 @@ import {ConfigurationService} from '../../../services/configuration.service';
 })
 export class AdminHomeComponent implements OnInit {
   serviceList: ServiceItem[] = [];
+  menuItems: MenuItem[] = this.menuItemService.getMenuByRouteGroup('administration');
 
   constructor(private langService: LangService,
+              private menuItemService: MenuItemService,
               private configService: ConfigurationService) {
   }
 

@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "langKey": "menu_administration",
+    "path": "/home/administration",
+    "icon": "administration",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "main"
+  },
+  {
+    "id": 2,
+    "langKey": "menu_inquiries",
+    "path": "/home/main/inquiry",
+    "icon": "inquires",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "main"
+  },
+  {
+    "id": 3,
+    "langKey": "menu_provide_request",
+    "path": "/home/main/request",
+    "icon": "provide-request",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "main"
+  },
+  {
+    "id": 5,
+    "langKey": "menu_request_search",
+    "path": "/home/main/request-search",
+    "icon": "search-request",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "main"
+  },
+  {
+    "id": 6,
+    "langKey": "menu_under_process",
+    "path": "/home/main/requests-under-process",
+    "icon": "in-progress",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "main"
+  },
+  {
+    "id": 7,
+    "langKey": "menu_aid",
+    "path": "/home/administration/aid",
+    "icon": "aid",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "administration"
+  },
+  {
+    "id": 8,
+    "langKey": "menu_under_process",
+    "path": "/home/administration/organizations",
+    "icon": "organizations",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "administration"
+  },
+  {
+    "id": 9,
+    "langKey": "menu_under_process",
+    "path": "/home/administration/users",
+    "icon": "users",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "administration"
+  },
+  {
+    "id": 10,
+    "langKey": "menu_under_process",
+    "path": "/home/administration/localization",
+    "icon": "localization",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "administration"
+  },
+  {
+    "id": 11,
+    "langKey": "menu_under_process",
+    "path": "/home/administration/custom-role",
+    "icon": "custom-roles",
+    "iconType": "svg",
+    "permission": "",
+    "permissionGroup": null,
+    "parent": null,
+    "routeGroup": "administration"
+  }
+]
