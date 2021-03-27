@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {tap} from 'rxjs/operators';
+import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class MenuItemService {
   constructor(public http: HttpClient) {
   }
 
-  @Generator(MenuItem, true, {property: ''})
+  @Generator(MenuItem, true, {property: '', interceptReceive: MenuItemInterceptor.receive})
   private _load(): Observable<MenuItem[]> {
     return this.http.get<MenuItem[]>('MENU.json');
   }
@@ -24,7 +25,8 @@ export class MenuItemService {
   load(): Observable<MenuItem[]> {
     return this._load().pipe(
       tap((menuItems) => this.menuItems = menuItems),
-      tap(_ => this.prepareMenuItems())
+      tap(_ => this.prepareMenuItems()),
+      tap(items => console.log(items))
     );
   }
 

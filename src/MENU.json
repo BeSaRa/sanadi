@@ -5,8 +5,8 @@
     "path": "/home/administration",
     "icon": "administration",
     "iconType": "svg",
-    "permission": "",
-    "permissionGroup": null,
+    "permission": null,
+    "permissionGroup": "ADMIN_PERMISSIONS_GROUP",
     "parent": null,
     "group": "main"
   },
@@ -16,7 +16,7 @@
     "path": "/home/main/inquiry",
     "icon": "inquires",
     "iconType": "svg",
-    "permission": "",
+    "permission": "BEN_SEARCH",
     "permissionGroup": null,
     "parent": null,
     "group": "main"
@@ -27,7 +27,7 @@
     "path": "/home/main/request",
     "icon": "provide-request",
     "iconType": "svg",
-    "permission": "",
+    "permission": "SUBVENTION_ADD",
     "permissionGroup": null,
     "parent": null,
     "group": "main"
@@ -38,7 +38,7 @@
     "path": "/home/main/request-search",
     "icon": "search-request",
     "iconType": "svg",
-    "permission": "",
+    "permission": "SUBVENTION_SEARCH",
     "permissionGroup": null,
     "parent": null,
     "group": "main"
@@ -49,7 +49,7 @@
     "path": "/home/main/requests-under-process",
     "icon": "in-progress",
     "iconType": "svg",
-    "permission": "",
+    "permission": "UNDER_PROCESSING_REQUESTS",
     "permissionGroup": null,
     "parent": null,
     "group": "main"
@@ -60,9 +60,9 @@
     "path": "/home/administration/aid",
     "icon": "aid",
     "iconType": "svg",
-    "permission": "",
+    "permission": "MANAGE_AID_TYPE",
     "permissionGroup": null,
-    "parent": null,
+    "parent": 1,
     "group": "administration"
   },
   {
@@ -71,9 +71,9 @@
     "path": "/home/administration/organizations",
     "icon": "organizations",
     "iconType": "svg",
-    "permission": "",
-    "permissionGroup": null,
-    "parent": null,
+    "permission": null,
+    "permissionGroup": "MANAGE_ORG_PERMISSIONS_GROUP",
+    "parent": 1,
     "group": "administration"
   },
   {
@@ -82,9 +82,9 @@
     "path": "/home/administration/users",
     "icon": "users",
     "iconType": "svg",
-    "permission": "",
-    "permissionGroup": null,
-    "parent": null,
+    "permission": null,
+    "permissionGroup": "MANAGE_USER_PERMISSIONS_GROUP",
+    "parent": 1,
     "group": "administration"
   },
   {
@@ -93,9 +93,9 @@
     "path": "/home/administration/localization",
     "icon": "localization",
     "iconType": "svg",
-    "permission": "",
+    "permission": null,
     "permissionGroup": null,
-    "parent": null,
+    "parent": 1,
     "group": "administration"
   },
   {
@@ -104,9 +104,9 @@
     "path": "/home/administration/custom-role",
     "icon": "custom-roles",
     "iconType": "svg",
-    "permission": "",
+    "permission": "MANAGE_CUSTOM_ROLE",
     "permissionGroup": null,
-    "parent": null,
+    "parent": 1,
     "group": "administration"
   }
 ]
