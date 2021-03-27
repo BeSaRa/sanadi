@@ -16,7 +16,7 @@ export class MenuItem {
   parent!: number;
   group: string = '';
   children: MenuItem[] = [];
-
+  expend: boolean = false;
   langService: LangService;
   configService: ConfigurationService;
 
@@ -43,5 +43,9 @@ export class MenuItem {
 
   getPermissions(): string[] | string {
     return this.permissionList.length ? this.permissionList : this.permission;
+  }
+
+  toggle(): void {
+    this.expend = !this.expend;
   }
 }

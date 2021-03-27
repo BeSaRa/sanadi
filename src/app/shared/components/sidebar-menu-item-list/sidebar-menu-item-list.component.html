@@ -1,6 +1,7 @@
 <ul class="sidebar-menu-list">
   <ng-container *ngFor="let item of items">
-    <li *ngIf="empService.checkPermissions(item.getPermissions(), true)"
+    <li [@expendCollapse]="item.expend ? 'expend' : 'collapse'"
+        *ngIf="empService.checkPermissions(item.getPermissions(), true)"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <div class="d-flex flex-row align-items-center justify-content-start">
@@ -13,7 +14,8 @@
             </div>
           </div>
         </div>
-        <a [routerLink]="[item.path]" class="menu-item-title flex-grow-1 align-self-stretch d-flex align-items-center position-relative">
+        <a href="#" (click)="toggleCollapseOrNavigate(item , $event)"
+           class="menu-item-title flex-grow-1 align-self-stretch d-flex align-items-center position-relative">
           <span>{{item.getName()}}</span>
         </a>
       </div>
