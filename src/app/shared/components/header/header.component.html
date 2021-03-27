@@ -25,14 +25,17 @@
     <span class="flex-grow-1 align-self-stretch"></span>
     <ul class="d-flex flex-row text-primary align-items-end" id="header-menu-actions">
       <li>
-        <a class="d-flex flex-row align-items-center" href="#"><i flipIcon
-                                                                  class="mdi mdi-arrow-left"></i><span>back</span></a>
+        <a [tooltip]="langService.map.back" class="d-flex flex-row align-items-center" href="#">
+          <i flipIcon class="mdi mdi-arrow-left"></i>
+          <!--<span>back</span>--></a>
       </li>
       <li>
-        <button (click)="goToHome()" class="icon-btn"><i class="mdi mdi-home"></i></button>
+        <button [tooltip]="langService.map.home" (click)="goToHome()" class="icon-btn"><i class="mdi mdi-home"></i>
+        </button>
       </li>
       <li>
-        <button (click)="logout()" class="icon-btn"><i class="mdi mdi-logout"></i></button>
+        <button [tooltip]="langService.map.logout" (click)="logout()" class="icon-btn"><i class="mdi mdi-logout"></i>
+        </button>
       </li>
     </ul>
   </div>

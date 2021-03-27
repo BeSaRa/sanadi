@@ -67,7 +67,7 @@
   },
   {
     "id": 8,
-    "langKey": "menu_under_process",
+    "langKey": "menu_organizations",
     "path": "/home/administration/organizations",
     "icon": "organizations",
     "iconType": "svg",
@@ -78,7 +78,7 @@
   },
   {
     "id": 9,
-    "langKey": "menu_under_process",
+    "langKey": "menu_users",
     "path": "/home/administration/users",
     "icon": "users",
     "iconType": "svg",
@@ -89,7 +89,7 @@
   },
   {
     "id": 10,
-    "langKey": "menu_under_process",
+    "langKey": "menu_localization",
     "path": "/home/administration/localization",
     "icon": "localization",
     "iconType": "svg",
@@ -100,7 +100,7 @@
   },
   {
     "id": 11,
-    "langKey": "menu_under_process",
+    "langKey": "menu_custom_role",
     "path": "/home/administration/custom-role",
     "icon": "custom-roles",
     "iconType": "svg",

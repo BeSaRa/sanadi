@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  home: string;
   back : string;
   btn_inquire: string;
   btn_continue : string;
