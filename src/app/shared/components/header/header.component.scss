@@ -4,50 +4,31 @@
   display: block;
 }
 
-#brand-link {
-  max-height: 90px !important;
-  display: flex;
-  flex-direction: row;
+.lang-icon {
+  width: 20px;
+  margin: 0 5px;
 }
 
-#main-navbar-links {
-  li a.active {
-    border-bottom: .4rem solid $gold;
+#user-image {
+  width: 40px;
+}
+
+#user-name {
+  font-weight: bold;
+}
+
+#header-menu-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    text-decoration: none;
+    margin: 0 10px;
+    height: 28px;
+  }
+
+  li:hover, a:hover {
+    color: $gold;
   }
 }
-
-#main-logo {
-  width: 60%;
-}
-
-#sanady-word {
-  max-height: 80px !important;
-}
-
-@include media-breakpoint-up(md) {
-  #main-logo {
-    max-width: none;
-  }
-}
-
-#main-navbar {
-  position: absolute;
-  right: 0;
-  left: 0;
-  z-index: 4;
-}
-
-header {
-  padding-bottom: 92px;
-
-  &.sticky {
-    #main-navbar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-
-    }
-  }
-}
-

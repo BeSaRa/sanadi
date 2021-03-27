@@ -1,44 +1,39 @@
-<header #header>
-  <nav id="secondary-navbar" class="navbar-expand navbar-dark bg-primary">
-    <div class="container">
-      <div class="d-flex w-100 flex-row">
-        <ul class="navbar-nav align-self-center">
-          <li class="nav-item"><a href="{{urlService.URLS.EXT_INSTAGRAM}}" target="_blank"
-                                  class="nav-link mdi mdi-instagram"></a></li>
-          <li class="nav-item"><a href="{{urlService.URLS.EXT_YOUTUBE}}" target="_blank"
-                                  class="nav-link mdi mdi-youtube"></a></li>
-          <li class="nav-item"><a href="{{urlService.URLS.EXT_FACEBOOK}}" target="_blank"
-                                  class="nav-link mdi mdi-facebook"></a></li>
-          <li class="nav-item"><a href="{{urlService.URLS.EXT_TWITTER}}" target="_blank"
-                                  class="nav-link mdi mdi-twitter"></a></li>
-        </ul>
-        <div class="flex-grow-1"></div>
-        <ul class="navbar-nav align-self-center">
-          <li class="nav-item"><a href="#" (click)="toggleLanguage($event)"
-                                  class="nav-link">{{langService.getCurrentLanguage().toggleTo}}</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <nav id="main-navbar" class="navbar p-0 shadow-sm bg-white navbar-expand-md navbar-light">
-    <div class="container flex-column flex-md-row">
-      <div class="d-flex flex-row">
-        <a routerLink="/home" id="brand-link">
-          <img id="main-logo" class="img-fluid" src="assets/images/sanady-logo.svg" alt="logo">
-          <img id="sanady-word" src="assets/images/sanady-word.png" alt="logo word ">
+<div class="d-flex flex-column">
+  <div class="container-fluid bg-primary navbar-dark d-flex flex-row">
+    <!--    <button (click)="toggleSidebar()" class="icon-btn">-->
+    <!--      <i flipIcon class="mdi {{menuState}} text-white"></i>-->
+    <!--    </button>-->
+    <span class="flex-grow-1"></span>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="toggleLang($event)">
+          <span>{{langService.getCurrentLanguage().toggleTo}}</span>
+          <img alt="lang code" class="lang-icon" src="assets/images/{{langService.getCurrentLanguage().code}}.svg"/>
         </a>
-        <button class="navbar-toggler align-self-center" type="button" data-bs-toggle="collapse"
-                data-bs-target="#main-navigation-wrapper"
-                aria-controls="main-navigation-wrapper" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-      <div id="main-navigation-wrapper" class="collapse navbar-collapse align-self-md-end justify-content-end">
-        <ul id="main-navbar-links" class="navbar-nav">
-          <li class="nav-item"><a href="#" (click)="logout($event)" class="nav-link">{{langService.map.logout}}</a></li>
-          <li class="nav-item"><a href="#" [class.disabled]="thereIsNoBack()" (click)="back($event)" class="nav-link">{{langService.map.back}}</a></li>
-        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="container-fluid shadow-sm d-flex flex-row py-2">
+    <div class="d-flex flex-row" id="user-info">
+      <img alt="user avatar" id="user-image" src="assets/images/man.svg">
+      <div id="user-info-details" class="mx-2">
+        <div id="user-name">{{employee?.getUser()?.getName()}}</div>
+        <div
+          id="user-department">{{ employee?.getOrgUnit()?.getName() + ' - ' + employee?.getBranch()?.getName()}}</div>
       </div>
     </div>
-  </nav>
-</header>
+    <span class="flex-grow-1 align-self-stretch"></span>
+    <ul class="d-flex flex-row text-primary align-items-end" id="header-menu-actions">
+      <li>
+        <a class="d-flex flex-row align-items-center" href="#"><i flipIcon
+                                                                  class="mdi mdi-arrow-left"></i><span>back</span></a>
+      </li>
+      <li>
+        <button class="icon-btn"><i class="mdi mdi-home"></i></button>
+      </li>
+      <li>
+        <button class="icon-btn"><i class="mdi mdi-logout"></i></button>
+      </li>
+    </ul>
+  </div>
+</div>

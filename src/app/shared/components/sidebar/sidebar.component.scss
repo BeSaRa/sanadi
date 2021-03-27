@@ -1,0 +1,87 @@
+:host {
+  display: flex;
+  background-color: #F1F1F1;
+  overflow: hidden;
+
+  &.sidebar-opened {
+    // width : 250px
+  }
+
+  &.sidebar-closed {
+    // width : 60px
+  }
+}
+
+#main-sidebar-wrapper {
+  position: relative;
+  max-width: 100%;
+
+  & > *:not(.pattern) {
+    z-index: 2;
+  }
+}
+
+.pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: repeat-x;
+  z-index: 1;
+
+  &.top {
+    background-position: top center;
+  }
+
+  &.bottom {
+    background-position: bottom center;
+  }
+
+}
+
+#top-fake-nav {
+  height: 40px;
+}
+
+#app-logo {
+
+}
+
+#sanady-logo {
+  height: 48px;
+}
+
+#sanady-word {
+  height: 48px;
+  margin: 0 10px;
+}
+
+:host.sidebar-closed {
+  #sanady-word {
+    display: none;
+  }
+
+  #menu-item-search {
+    visibility: hidden;
+  }
+}
+
+#search-item-btn {
+  border: none;
+  background-color: transparent;
+  top: 0;
+  margin-top: 23px;
+}
+
+:host-context(html[dir="ltr"]) {
+  #search-item-btn {
+    right: 18px;
+  }
+}
+
+:host-context(html[dir="rtl"]) {
+  #search-item-btn {
+    left: 18px;
+  }
+}

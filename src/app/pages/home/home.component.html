@@ -1,7 +1,10 @@
-<div class="d-flex flex-column h-100">
-  <app-header></app-header>
-  <main class="flex-grow-1">
-    <router-outlet></router-outlet>
+<div id="main-wrapper" class="bg-white h-100 d-flex flex-row">
+  <app-sidebar #sidebar class="flex-grow-0 flex-shrink-0 d-flex"></app-sidebar>
+  <main class="flex-grow-1 align-self-stretch d-flex flex-column">
+    <app-header [sidebar]="sidebar"></app-header>
+    <div class="flex-grow-1" id="main-content">
+      <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
   </main>
-  <app-footer class="mt-auto"></app-footer>
 </div>

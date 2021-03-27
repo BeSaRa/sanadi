@@ -1,0 +1,22 @@
+<div id="main-sidebar-wrapper" class="d-flex align-self-stretch flex-grow-1 flex-column">
+  <div [style.background-image]="topImage" class="pattern top"></div>
+  <div [style.background-image]="bottomImage" class="pattern bottom"></div>
+  <div id="top-fake-nav"
+       [class.justify-content-center]="closeAnimationDone"
+       [class.justify-content-end]="!closeAnimationDone"
+       class="bg-primary d-flex flex-row align-items-center">
+    <button (click)="toggle()" class="icon-btn"><i flipIcon [class.mdi-menu-open]="isOpened"
+                                                   class="mdi mdi-menu text-white"></i></button>
+  </div>
+  <div id="app-logo" class="d-flex align-items-center justify-content-start shadow-sm p-2">
+    <img id="sanady-logo" alt="sanady-logo" src="assets/images/sanady-logo.svg">
+    <img id="sanady-word" alt="sanady-logo" src="assets/images/sanady-word.png">
+  </div>
+  <div id="menu-item-search" class="p-3 position-relative">
+    <input id="search-item-input" aria-label="Username" placeholder="search..." class="form-control"/>
+    <button type="button" id="search-item-btn" class="position-absolute" tabindex="-1">
+      <i class="mdi mdi-magnify text-primary"></i>
+    </button>
+  </div>
+</div>
+

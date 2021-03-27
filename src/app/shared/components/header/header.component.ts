@@ -1,99 +1,46 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppRootScrollService} from '../../../services/app-root-scroll.service';
 import {LangService} from '../../../services/lang.service';
-import {AuthService} from '../../../services/auth.service';
-import {ToastService} from '../../../services/toast.service';
-import {Router} from '@angular/router';
-import {DialogService} from '../../../services/dialog.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {UrlService} from '../../../services/url.service';
-import {NavigationService} from '../../../services/navigation.service';
+import {SidebarComponent} from '../sidebar/sidebar.component';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  /**
-   * @description header element to use it later to attach/detach
-   */
-  @ViewChild('header') element: ElementRef | undefined;
-  scrollSubscription: Subscription | undefined;
+export class HeaderComponent implements OnInit {
+  @Input()
+  sidebar!: SidebarComponent;
+  menuState: string = 'mdi-menu';
 
   constructor(private scrollService: AppRootScrollService,
               public langService: LangService,
-              private toastService: ToastService,
-              private router: Router,
-              private dialogService: DialogService,
-              private navigationService: NavigationService,
-              private authService: AuthService,
+              public employee: EmployeeService,
               public urlService: UrlService) {
   }
 
   ngOnInit(): void {
     this.scrollService.onScroll$.subscribe((scroll) => this.onScroll(scroll));
+    this.sidebar.openStateChanged$.subscribe((isOpen) => {
+      this.menuState = isOpen ? 'mdi-menu-open' : 'mdi-menu';
+    });
   }
 
   /**
    * @description eventListener callback to listen to scroll event on the window.
    */
   onScroll(scroll: number): void {
-    if (scroll >= 40) {
-      this._attachSticky();
-    } else {
-      this._detachSticky();
-    }
+    console.log('scrolling : ', scroll);
   }
 
-  /**
-   * @description private method to attach "Sticky" class to main navbar.
-   * @private
-   */
-  private _attachSticky(): void {
-    if (!this.element?.nativeElement.classList.contains('sticky')) {
-      this.element?.nativeElement.classList.add('sticky');
-    }
+  toggleSidebar() {
+    this.sidebar.toggle();
   }
 
-  /**
-   * @description private method to detach "Sticky" class from main navbar.
-   * @private
-   */
-  private _detachSticky(): void {
-    if (this.element?.nativeElement.classList.contains('sticky')) {
-      this.element?.nativeElement.classList.remove('sticky');
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.scrollSubscription?.unsubscribe();
-  }
-
-  toggleLanguage(event: MouseEvent) {
-    event.preventDefault();
-    this.langService.toggleLanguage();
-  }
-
-  logout(event: MouseEvent) {
-    event.preventDefault();
-    this.dialogService.confirm(this.langService.map.msg_are_you_sure_you_want_logout).onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        this.authService.logout().subscribe(() => {
-          this.toastService.success(this.langService.map.msg_logout_success);
-          return this.router.navigate(['/']);
-        });
-      }
-    });
-  }
-
-  thereIsNoBack() {
-    return !this.navigationService.hasBackUrl();
-  }
-
-  back($event: MouseEvent) {
+  toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.navigationService.goToBack();
+    this.langService.toggleLanguage();
   }
 }

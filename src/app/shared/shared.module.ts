@@ -29,6 +29,8 @@ import {AsteriskIfRequiredDirective} from './directives/asterisk-if-required.dir
 import {LoadingComponent} from './components/loading/loading.component';
 import {VersionComponent} from './components/version/version.component';
 import {NgxMaskModule} from 'ngx-mask';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { FlipIconDirective } from './directives/flip-icon.directive';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import {NgxMaskModule} from 'ngx-mask';
     GridSearchComponent,
     AsteriskIfRequiredDirective,
     LoadingComponent,
-    VersionComponent
+    VersionComponent,
+    SidebarComponent,
+    FlipIconDirective
   ],
   imports: [
     CommonModule,
@@ -92,7 +96,8 @@ import {NgxMaskModule} from 'ngx-mask';
     GridSearchComponent,
     AsteriskIfRequiredDirective,
     LoadingComponent,
-    VersionComponent
+    VersionComponent,
+    SidebarComponent
   ]
 })
 export class SharedModule {
