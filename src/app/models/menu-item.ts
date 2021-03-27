@@ -12,7 +12,7 @@ export class MenuItem {
   permissionList: string[] = [];
   permission!: string;
   parent!: number;
-  routeGroup: string = '';
+  group: string = '';
   children: MenuItem[] = [];
   langService: LangService;
 

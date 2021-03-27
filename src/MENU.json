@@ -8,7 +8,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "main"
+    "group": "main"
   },
   {
     "id": 2,
@@ -19,7 +19,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "main"
+    "group": "main"
   },
   {
     "id": 3,
@@ -30,7 +30,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "main"
+    "group": "main"
   },
   {
     "id": 5,
@@ -41,7 +41,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "main"
+    "group": "main"
   },
   {
     "id": 6,
@@ -52,7 +52,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "main"
+    "group": "main"
   },
   {
     "id": 7,
@@ -63,7 +63,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "administration"
+    "group": "administration"
   },
   {
     "id": 8,
@@ -74,7 +74,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "administration"
+    "group": "administration"
   },
   {
     "id": 9,
@@ -85,7 +85,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "administration"
+    "group": "administration"
   },
   {
     "id": 10,
@@ -96,7 +96,7 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "administration"
+    "group": "administration"
   },
   {
     "id": 11,
@@ -107,6 +107,6 @@
     "permission": "",
     "permissionGroup": null,
     "parent": null,
-    "routeGroup": "administration"
+    "group": "administration"
   }
 ]

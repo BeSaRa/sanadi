@@ -65,6 +65,6 @@ export class MenuItemService {
   }
 
   getMenuByRouteGroup(routeGroupName: string): MenuItem[] {
-    return this.menuItems.filter(item => item.routeGroup === routeGroupName);
+    return this.menuItems.filter(item => item.group === routeGroupName);
   }
 }
