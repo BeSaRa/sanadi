@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "langKey": "menu_administration",
-    "path": "/home/administration",
-    "icon": "administration",
-    "iconType": "svg",
-    "permission": null,
-    "permissionGroup": "ADMIN_PERMISSIONS_GROUP",
+    "langKey": "menu_under_process",
+    "path": "/home/main/requests-under-process",
+    "icon": "in-progress",
+    "isSvg": true,
+    "permission": "UNDER_PROCESSING_REQUESTS",
+    "permissionGroup": null,
     "parent": null,
     "group": "main"
   },
@@ -15,7 +15,7 @@
     "langKey": "menu_inquiries",
     "path": "/home/main/inquiry",
     "icon": "inquires",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": "BEN_SEARCH",
     "permissionGroup": null,
     "parent": null,
@@ -26,7 +26,7 @@
     "langKey": "menu_provide_request",
     "path": "/home/main/request",
     "icon": "provide-request",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": "SUBVENTION_ADD",
     "permissionGroup": null,
     "parent": null,
@@ -37,7 +37,7 @@
     "langKey": "menu_request_search",
     "path": "/home/main/request-search",
     "icon": "search-request",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": "SUBVENTION_SEARCH",
     "permissionGroup": null,
     "parent": null,
@@ -45,12 +45,12 @@
   },
   {
     "id": 6,
-    "langKey": "menu_under_process",
-    "path": "/home/main/requests-under-process",
-    "icon": "in-progress",
-    "iconType": "svg",
-    "permission": "UNDER_PROCESSING_REQUESTS",
-    "permissionGroup": null,
+    "langKey": "menu_administration",
+    "path": "/home/administration",
+    "icon": "administration",
+    "isSvg": true,
+    "permission": null,
+    "permissionGroup": "ADMIN_PERMISSIONS_GROUP",
     "parent": null,
     "group": "main"
   },
@@ -59,10 +59,10 @@
     "langKey": "menu_aid",
     "path": "/home/administration/aid",
     "icon": "aid",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": "MANAGE_AID_TYPE",
     "permissionGroup": null,
-    "parent": 1,
+    "parent": 6,
     "group": "administration"
   },
   {
@@ -70,10 +70,10 @@
     "langKey": "menu_organizations",
     "path": "/home/administration/organizations",
     "icon": "organizations",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": null,
     "permissionGroup": "MANAGE_ORG_PERMISSIONS_GROUP",
-    "parent": 1,
+    "parent": 6,
     "group": "administration"
   },
   {
@@ -81,10 +81,10 @@
     "langKey": "menu_users",
     "path": "/home/administration/users",
     "icon": "users",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": null,
     "permissionGroup": "MANAGE_USER_PERMISSIONS_GROUP",
-    "parent": 1,
+    "parent": 6,
     "group": "administration"
   },
   {
@@ -92,10 +92,10 @@
     "langKey": "menu_localization",
     "path": "/home/administration/localization",
     "icon": "localization",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": null,
     "permissionGroup": null,
-    "parent": 1,
+    "parent": 6,
     "group": "administration"
   },
   {
@@ -103,10 +103,10 @@
     "langKey": "menu_custom_role",
     "path": "/home/administration/custom-role",
     "icon": "custom-roles",
-    "iconType": "svg",
+    "isSvg": true,
     "permission": "MANAGE_CUSTOM_ROLE",
     "permissionGroup": null,
-    "parent": 1,
+    "parent": 6,
     "group": "administration"
   }
 ]

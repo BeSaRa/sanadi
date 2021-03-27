@@ -9,7 +9,7 @@ export class MenuItem {
   langKey!: keyof ILanguageKeys;
   path!: string;
   icon!: string;
-  iconType: 'svg' | 'font' = 'font';
+  isSvg: boolean = true;
   permissionGroup!: string;
   permissionList: string[] = [];
   permission!: string;
@@ -30,11 +30,11 @@ export class MenuItem {
   }
 
   isSVGIcon(): boolean {
-    return this.iconType === 'svg';
+    return this.isSvg;
   }
 
   isFontIcon(): boolean {
-    return this.iconType === 'font';
+    return !this.isSvg;
   }
 
   preparePermissionList(): void {

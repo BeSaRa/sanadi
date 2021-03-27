@@ -1,6 +1,11 @@
 import {Component, HostBinding, HostListener, OnInit} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {MenuItemService} from '../../../services/menu-item.service';
+import {MenuItem} from '../../../models/menu-item';
+import {Direction} from '@angular/cdk/bidi';
+import {takeUntil} from 'rxjs/operators';
+import {LangService} from '../../../services/lang.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -36,11 +41,20 @@ export class SidebarComponent implements OnInit {
   topImage: string = 'url(assets/images/top-pattern.png)';
   bottomImage: string = 'url(assets/images/bottom-pattern.png)';
   closeAnimationDone: boolean = false;
+  items: MenuItem[] = this.menuItemService.parents;
+  scrollDirection: Direction = 'ltr';
+  destroy$: Subject<any> = new Subject<any>();
 
-  constructor() {
+  constructor(private menuItemService: MenuItemService, public langService: LangService) {
   }
 
   ngOnInit(): void {
+    this.langService
+      .onLanguageChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((language) => {
+        this.scrollDirection = language.direction;
+      });
   }
 
   @HostListener('@openClose.done', ['$event'])

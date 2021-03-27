@@ -32,6 +32,7 @@ import {NgxMaskModule} from 'ngx-mask';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FlipIconDirective } from './directives/flip-icon.directive';
 import {NgScrollbarModule} from 'ngx-scrollbar';
+import { SidebarMenuItemListComponent } from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {NgScrollbarModule} from 'ngx-scrollbar';
     LoadingComponent,
     VersionComponent,
     SidebarComponent,
-    FlipIconDirective
+    FlipIconDirective,
+    SidebarMenuItemListComponent
   ],
   imports: [
     CommonModule,

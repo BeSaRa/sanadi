@@ -12,11 +12,16 @@
     <img id="sanady-logo" alt="sanady-logo" src="assets/images/sanady-logo.svg">
     <img id="sanady-word" alt="sanady-logo" src="assets/images/sanady-word.png">
   </div>
-  <div id="menu-item-search" class="p-3 position-relative">
-    <input id="search-item-input" aria-label="Username" placeholder="search..." class="form-control"/>
+  <div id="menu-item-search" class="px-3 pt-3 position-relative">
+    <input id="search-item-input" aria-label="Username" [placeholder]="langService.map.lbl_search"
+           class="form-control"/>
     <button type="button" id="search-item-btn" class="position-absolute" tabindex="-1">
       <i class="mdi mdi-magnify text-primary"></i>
     </button>
   </div>
+  <div class="flex-grow-1 align-self-stretch" id="menu-item-list">
+    <ng-scrollbar visibility="hover" [dir]="scrollDirection">
+      <app-sidebar-menu-item-list [items]="items"></app-sidebar-menu-item-list>
+    </ng-scrollbar>
+  </div>
 </div>
-

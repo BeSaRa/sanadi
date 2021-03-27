@@ -24,10 +24,13 @@
   border-radius: 10px;
 }
 
-.service-svg-icon {
+.service-svg-icon, .service-font-icon {
   text-align: center;
 }
-
 .service-image {
-  //height: 130px;
+  height: 171.11px;
+}
+.service-font-icon i {
+  font-size: 70px;
+  line-height: 70px;
 }

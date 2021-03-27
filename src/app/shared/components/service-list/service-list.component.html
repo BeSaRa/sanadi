@@ -2,12 +2,16 @@
   <ng-container *ngFor="let item of list">
     <li *ngIf="empService.checkPermissions(item.getPermissions(), true)"
         class="service-item p-2 m-2 flex-shrink-0 d-flex flex-column align-items-center">
-      <div (click)="navigateToPath(item)" mouseEnterLeave="shadow-lg" [style.background-image]="iconBackground"
-           class="service-item-icon shadow-sm border border-1 flex-grow-1 align-self-stretch">
-        <div *ngIf="item.isSVGIcon()" class="service-svg-icon">
+      <div (click)="navigateToPath(item)" mouseEnterLeave="shadow-lg"
+           [style.background-image]="iconBackground"
+           class="service-item-icon shadow-sm border border-1
+            flex-grow-1 d-flex align-self-stretch justify-content-center align-items-center">
+        <div *ngIf="item.isSVGIcon()" class="service-svg-icon flex-grow-1">
           <img class="service-image" alt="{{item.getName()}}" src="assets/images/icons/{{item.icon}}.svg">
         </div>
-        <div *ngIf="item.isFontIcon()" class="service-svg-icon"></div>
+        <div *ngIf="item.isFontIcon()" class="service-font-icon flex-grow-1">
+          <i class="text-primary mdi {{item.icon}}"></i>
+        </div>
       </div>
       <a class="service-title my-2" [routerLink]="item.path">{{item.getName()}}</a>
     </li>

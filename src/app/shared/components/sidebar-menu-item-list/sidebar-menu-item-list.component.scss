@@ -1,0 +1,32 @@
+@import "src/scss/custom_variables";
+
+.sidebar-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  a {
+    text-decoration-line: none;
+  }
+
+  li.parent-menu-item {
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
+
+.sidebar-menu-icon {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+}
+
+.sidebar-menu-item-svg {
+  height: 50px;
+  width: 50px;
+}
+
+:host-context(.sidebar-closed) {
+  a.menu-item-title {
+    display: none !important;
+  }
+}
