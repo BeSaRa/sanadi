@@ -11,6 +11,7 @@ import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {Router} from '@angular/router';
+import {NavigationService} from '../../../services/navigation.service';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
               public employee: EmployeeService,
               private toastService: ToastService,
               private router: Router,
+              public navigationService: NavigationService,
               public urlService: UrlService) {
   }
 
@@ -76,5 +78,9 @@ export class HeaderComponent implements OnInit {
 
   goToHome(): void {
     this.router.navigate(['home', 'main']).then();
+  }
+
+  goToBack() {
+    this.navigationService.goToBack();
   }
 }
