@@ -188,7 +188,7 @@
           <thead role="rowgroup">
           <tr>
             <th>{{langService.map.request_number}}</th>
-            <th>{{langService.map.request_date}}</th>
+            <th class="date">{{langService.map.request_date}}</th>
             <th>{{langService.map.lbl_org_unit}}</th>
             <th>{{langService.map.aid_status}}</th>
             <th>{{langService.map.request_aid_amount}}</th>
@@ -204,7 +204,7 @@
               <tr *ngFor="let aid of request.aids; let firstAid = first;">
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"><span
                   class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.creationDate|date}} </td>
+                <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="date"> {{request.creationDate|date}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.orgBranchInfo.getName()}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.statusInfo.getName()}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
@@ -231,7 +231,7 @@
             <ng-template #noAidRow>
               <tr>
                 <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-                <td> {{request.creationDate|date}} </td>
+                <td class="date"> {{request.creationDate|date}} </td>
                 <td> {{request.orgBranchInfo.getName()}} </td>
                 <td> {{request.statusInfo.getName()}} </td>
                 <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
