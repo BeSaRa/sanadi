@@ -650,12 +650,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return this.fm.getFormField('aidTab.0') as AbstractControl;
+        return this.fm.getFormField('aidTab.0') as FormArray;
       }),
       map((form) => {
         parentValue = form.value.mainAidType;
         return (new SubventionAid()).clone({
-          // @ts-ignore
           ...this.currentAid, ...form.getRawValue(),
           subventionRequestId: this.currentRequest?.id
         });
