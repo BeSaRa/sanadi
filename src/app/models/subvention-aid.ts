@@ -4,6 +4,7 @@ import {SubventionAidService} from '../services/subvention-aid.service';
 import {FactoryService} from '../services/factory.service';
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
+import {Validators} from '@angular/forms';
 
 export class SubventionAid extends BaseModel<SubventionAid> {
   installementsCount: number = 0;
@@ -66,7 +67,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
-      installementsCount: control ? [installementsCount, [CustomValidators.number , CustomValidators.maxLength(20)]] : installementsCount
+      installementsCount: control ? [installementsCount, [CustomValidators.number , Validators.min(1), CustomValidators.maxLength(20)]] : installementsCount
     };
   }
 }

@@ -379,7 +379,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(
         map(value => value.beneficiary),
         exhaustMap(beneficiary => {
-          return beneficiary.saveWithValidate(this.validateStatus , this.currentRequest).pipe(catchError(() => {
+          return beneficiary.saveWithValidate(this.validateStatus, this.currentRequest).pipe(catchError(() => {
             return of(null);
           }));
         }),
@@ -655,7 +655,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       map((form) => {
         parentValue = form.value.mainAidType;
         return (new SubventionAid()).clone({
-          ...this.currentAid, ...form.value,
+          // @ts-ignore
+          ...this.currentAid, ...form.getRawValue(),
           subventionRequestId: this.currentRequest?.id
         });
       }),
@@ -730,7 +731,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   get aidInstallmentsCount(): FormControl {
-    return this.fm.getFormField('aidTab.0.installementsCount') as FormControl;
+    return this.aidFormArray.get('0.installementsCount') as FormControl;
   }
 
   get aidPeriodicType(): FormControl {
@@ -799,10 +800,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   periodicChange(value: number) {
     if (value === PeriodicPayment.MONTHLY) {
-      this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
+      this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number, Validators.min(1)]);
       this.aidInstallmentsCount.enable();
     } else {
-      this.aidInstallmentsCount.setValidators(CustomValidators.number);
+      this.aidInstallmentsCount.setValidators([CustomValidators.number, Validators.min(1)]);
       this.aidInstallmentsCount.setValue(0);
       this.aidInstallmentsCount.disable();
     }

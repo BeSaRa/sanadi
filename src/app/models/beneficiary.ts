@@ -191,7 +191,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benExtraIncome: controls ? [benExtraIncome, [CustomValidators.number, Validators.min(0)]] : benExtraIncome,
       benExtraIncomeSource: controls ? [benExtraIncomeSource, [Validators.maxLength(100)]] : benExtraIncomeSource,
       benHouseRent: controls ? [benHouseRent, [CustomValidators.number, Validators.min(0)]] : benHouseRent,
-      totalInstalments: controls ? [totalInstalments, [CustomValidators.number, Validators.min(0)]] : totalInstalments,
+      totalInstalments: controls ? [totalInstalments, [CustomValidators.number, Validators.min(1)]] : totalInstalments,
       totalDebts: controls ? [totalDebts, [CustomValidators.number, Validators.min(0)]] : totalDebts
     };
   }
