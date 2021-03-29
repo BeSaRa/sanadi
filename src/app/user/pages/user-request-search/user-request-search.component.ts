@@ -9,8 +9,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {StringOperator} from '../../../enums/string-operator.enum';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {of, Subject, Subscription} from 'rxjs';
+import {catchError, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-request-criteria';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
@@ -30,7 +30,6 @@ import {ReadModeService} from '../../../services/read-mode.service';
 })
 export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
-  clickSearchButton$: Subject<string> = new Subject<string>();
   tabIndex$: Subject<number> = new Subject<number>();
   years: number[] = this.configurationService.getSearchYears();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
@@ -42,11 +41,10 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   form: FormGroup = {} as FormGroup;
   fm: FormManager = {} as FormManager;
   stringOperationMap: typeof StringOperator = StringOperator;
-  private simpleSearch$!: Observable<string>;
-  private advancedSearch$!: Observable<string>;
+  private search$: Subject<any> = new Subject<any>();
+  searchSubscription!: Subscription;
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
   requests: SubventionRequestAid[] = [];
-  searchType?: 'simple' | 'advanced';
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -76,6 +74,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+    this.searchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -83,9 +82,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.onIdTypeChange();
 
     this.listenToSearch();
-    this.onSimpleSearch();
-    this.onAdvancedSearch();
-
     this.setInitialValues();
   }
 
@@ -105,11 +101,11 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           benPrimaryIdNumber: [],
           arName: this.fb.group({
             value: [null, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-            operator: [StringOperator[StringOperator.EQUALS]],
+            operator: [StringOperator[StringOperator.CONTAINS]],
           }),
           enName: this.fb.group({
             value: [null, [CustomValidators.pattern('ENG_NUM'), Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-            operator: [StringOperator[StringOperator.EQUALS]]
+            operator: [StringOperator[StringOperator.CONTAINS]]
           })
         })
       }),
@@ -184,71 +180,45 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       });
   }
 
-  private listenToSearch() {
-    this.simpleSearch$ = this.clickSearchButton$.pipe(filter(value => value === 'simple'));
-    this.advancedSearch$ = this.clickSearchButton$.pipe(filter(value => value === 'advanced'));
+  private listenToSearch(): void {
+    this.searchSubscription = this.search$.pipe(
+      map(() => {
+        return this.getAdvancedSearchValues();
+      }),
+      switchMap((criteria) => {
+        return this.subventionRequestService.loadByCriteria(criteria)
+          .pipe(catchError(() => {
+            return of([]);
+          }));
+      }),
+      tap((result: SubventionRequestAid[]) => {
+        return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+      }),
+      takeUntil(this.destroy$),
+    ).subscribe(result => this.requests = result);
   }
 
-  private onSimpleSearch() {
-    this.simpleSearch$
-      .pipe(
-        map(() => {
-          return this.getSimpleSearchValues();
-        }),
-        switchMap((criteria) => {
-          this.searchType = 'simple';
-          return this.subventionRequestService.loadByCriteria(criteria)
-            .pipe(catchError(() => {
-              return of([]);
-            }));
-        }),
-        tap((result: SubventionRequestAid[]) => {
-          return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
-        }),
-        takeUntil(this.destroy$),
-      ).subscribe(result => this.requests = result);
-  }
-
-  private onAdvancedSearch() {
-    this.advancedSearch$
-      .pipe(
-        map(() => {
-          return this.getAdvancedSearchValues();
-        }),
-        switchMap((criteria) => {
-          this.searchType = 'advanced';
-          return this.subventionRequestService.loadByCriteria(criteria)
-            .pipe(catchError(() => {
-              return of([]);
-            }));
-        }),
-        tap((result: SubventionRequestAid[]) => {
-          return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
-        }),
-        takeUntil(this.destroy$)
-      ).subscribe(result => this.requests = result);
+  onSearch(): void {
+    this.search$.next(true);
   }
 
   reloadSearchResults() {
-    this.searchType === 'simple' ? this.clickSearchButton$.next('simple') : this.clickSearchButton$.next('advanced');
+    this.onSearch()
   }
 
-  onClickSimpleSearch() {
-    this.clickSearchButton$.next('simple');
-  }
-
-  onClickAdvancedSearch() {
-    this.clickSearchButton$.next('advanced');
-  }
-
-  clearSimpleSearch(): void {
+  private clearSimpleSearch(): void {
     this.fm.getFormField('simpleSearch')?.reset();
     this.setInitialValues();
   }
 
-  clearAdvancedSearch(): void {
+  private clearAdvancedSearch(): void {
     this.fm.getFormField('advancedSearch')?.reset();
     this.setInitialValuesAdvanced();
+  }
+
+  clearSearch(): void {
+    this.clearSimpleSearch();
+    this.clearAdvancedSearch();
   }
 
   private goToResult(): void {
@@ -296,8 +266,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     // set initial value for the year
     this.yearField.setValue(this.years[0]);
     this.idTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
-    this.arNameOperatorField.setValue(StringOperator[StringOperator.EQUALS]);
-    this.enNameOperatorField.setValue(StringOperator[StringOperator.EQUALS]);
+    this.arNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
+    this.enNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
   }
 
   private setInitialValuesAdvanced(): void {
@@ -312,15 +282,19 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       ...simple,
       ...request,
       beneficiary: {...simple.beneficiary, ...beneficiary},
-      creationDateFrom: request.creationDateFrom ?
-        dayjs(request.creationDateFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.creationDateFrom,
-      creationDateTo: request.creationDateTo ?
-        dayjs(request.creationDateTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.creationDateTo,
       statusDateModifiedFrom: request.statusDateModifiedFrom ?
         dayjs(request.statusDateModifiedFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedFrom,
       statusDateModifiedTo: request.statusDateModifiedTo ?
         dayjs(request.statusDateModifiedTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedTo
     };
+
+    if (request.creationDateFrom || request.creationDateTo) {
+      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(request.creationDateFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(request.creationDateTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+    } else {
+      this.latestCriteria.creationDateFrom = simple.creationDateFrom;
+      this.latestCriteria.creationDateTo = simple.creationDateTo;
+    }
     return {...this.latestCriteria};
   }
 

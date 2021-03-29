@@ -112,154 +112,163 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12 d-flex flex-row align-items-center justify-content-center">
-          <button (click)="onClickSimpleSearch()" class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
-          <button (click)="clearSimpleSearch()" class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
-        </div>
-      </div>
     </div> <!-- simple search-->
+    <div class="accordion" id="advancedSearchAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="criteriaHeader">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#criteriaWrapper" aria-expanded="true" aria-controls="criteriaWrapper">
+            {{langService.map.advanced_search}}
+          </button>
+        </h2>
+        <div id="criteriaWrapper" class="accordion-collapse collapse show" aria-labelledby="criteriaHeader" data-bs-parent="#advancedSearchAccordion">
+          <div class="accordion-body">
+            <div formGroupName="advancedSearch" id="advanced-search">
+              <div formGroupName="beneficiary">
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="nationality"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4">
+                        <select formControlName="benNationality" class="form-select" id="nationality">
+                          <option [ngValue]="option.lookupKey"
+                                  *ngFor="let option of nationalities">{{option.getName()}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="occuptionStatus"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4">
+                        <select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
+                          <option [ngValue]="option.lookupKey"
+                                  *ngFor="let option of employmentStatus">{{option.getName()}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="phoneNumber1"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                        <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
+                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')">
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div formGroupName="request">
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="status"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4">
+                        <select formControlName="status" class="form-select" id="status">
+                          <option [ngValue]="option.lookupKey"
+                                  *ngFor="let option of requestsStatus">{{option.getName()}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="requestType"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4">
+                        <select formControlName="requestType" class="form-select" id="requestType">
+                          <option [ngValue]="option.lookupKey"
+                                  *ngFor="let option of requestTypes">{{option.getName()}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="creationDateFrom"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_from}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                        <!--<input type="date" formControlName="creationDateFrom" class="form-control" id="creationDateFrom">-->
+                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
+                               formControlName="creationDateFrom" class="form-control"
+                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">
+                        <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.creationDates.creationDateFrom')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="creationDateTo"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_to}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                        <!--<input type="date" formControlName="creationDateTo" class="form-control" id="creationDateTo">-->
+                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
+                               formControlName="creationDateTo" class="form-control datepicker-field"
+                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">
+                        <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.creationDates.creationDateTo')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="statusDateFrom"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_from}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                        <!--<input type="date" formControlName="statusDateModifiedFrom" class="form-control" id="statusDateFrom">-->
+                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
+                               formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="statusDateTo"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_to}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                        <!--<input type="date" formControlName="statusDateModifiedTo" class="form-control" id="statusDateTo">-->
+                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
+                               formControlName="statusDateModifiedTo" class="form-control datepicker-field"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- advanced search -->
+          </div>
+        </div>
+      </div>
+    </div>
     <hr/>
-    <div formGroupName="advancedSearch" id="advanced-search">
-      <div formGroupName="beneficiary">
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="nationality"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select formControlName="benNationality" class="form-select" id="nationality">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of nationalities">{{option.getName()}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="occuptionStatus"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of employmentStatus">{{option.getName()}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="phoneNumber1"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
-                       [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')">
-                <app-field-error-message
-                  [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="row">
+      <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
+        <button (click)="onSearch()"
+                class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
+        <button (click)="clearSearch()"
+                class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
       </div>
-      <div formGroupName="request">
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="status"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select formControlName="status" class="form-select" id="status">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of requestsStatus">{{option.getName()}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="requestType"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select formControlName="requestType" class="form-select" id="requestType">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of requestTypes">{{option.getName()}}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="creationDateFrom"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_from}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <!--<input type="date" formControlName="creationDateFrom" class="form-control" id="creationDateFrom">-->
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
-                       formControlName="creationDateFrom" class="form-control"
-                       [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">
-                <app-field-error-message
-                  [control]="fm.getFormField('advancedSearch.creationDates.creationDateFrom')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="creationDateTo"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_to}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <!--<input type="date" formControlName="creationDateTo" class="form-control" id="creationDateTo">-->
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
-                       formControlName="creationDateTo" class="form-control datepicker-field"
-                       [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">
-                <app-field-error-message
-                  [control]="fm.getFormField('advancedSearch.creationDates.creationDateTo')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="statusDateFrom"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_from}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <!--<input type="date" formControlName="statusDateModifiedFrom" class="form-control" id="statusDateFrom">-->
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
-                       formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
-                       [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">
-                <app-field-error-message
-                  [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="statusDateTo"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_to}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <!--<input type="date" formControlName="statusDateModifiedTo" class="form-control" id="statusDateTo">-->
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
-                       formControlName="statusDateModifiedTo" class="form-control datepicker-field"
-                       [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">
-                <app-field-error-message
-                  [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 d-flex flex-row align-items-center justify-content-center ">
-          <button (click)="onClickAdvancedSearch()"
-                  class="btn btn-primary mx-2">{{langService.map.lbl_search}}</button>
-          <button (click)="clearAdvancedSearch()"
-                  class="btn btn-secondary mx-2">{{langService.map.btn_clear}}</button>
-        </div>
-      </div>
-    </div><!-- advanced search -->
+    </div>
   </ng-template>
 </form>
 <ng-template #searchResult>

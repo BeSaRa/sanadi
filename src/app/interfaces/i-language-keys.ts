@@ -212,6 +212,7 @@ export interface ILanguageKeys {
   validate_fields: string;
   msg_delete_will_change_x_status_to_retired: string;
   advanced: string;
+  advanced_search: string;
   fax_number: string;
   hotline: string;
   unified_economic_record: string;
@@ -244,4 +245,5 @@ export interface ILanguageKeys {
   msg_select_nationality: string;
   reason: string;
   number_of_installments: string;
+  msg_search_date_hint: string;
 }
