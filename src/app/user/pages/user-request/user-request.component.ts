@@ -145,6 +145,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       aidTab: this.fb.array([]),
     });
     this.fm = new FormManager(this.form, this.langService);
+    this.listenToRequestDateChange();
   }
 
   private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
@@ -813,6 +814,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.router.navigate(['.']);
   }
 
+  private listenToRequestDateChange() {
+    this.fm.getFormField('requestInfoTab.creationDate')?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      if (this.currentRequest) {
+        this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
+      }
+    });
+  }
+
   private listenToRequestStatusChange(group: FormGroup) {
     group.get('status')?.valueChanges
       .pipe(
@@ -829,7 +840,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (newValue === SubventionRequestStatus.APPROVED) {
           group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(requestInfoRequestDate?.value)]);
         } else {
-          group.get('statusDateModified')?.setValidators(null);
+          group.get('statusDateModified')?.setValidators(CustomValidators.minDate(requestInfoRequestDate?.value));
         }
         group.get('statusDateModified')?.updateValueAndValidity();
       });
