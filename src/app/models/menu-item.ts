@@ -19,6 +19,10 @@ export class MenuItem {
   expend: boolean = false;
   langService: LangService;
   configService: ConfigurationService;
+  arName!: string;
+  enName!: string;
+  arSearchText!: string;
+  enSearchText!: string;
 
   constructor() {
     this.langService = FactoryService.getService('LangService');
@@ -47,5 +51,20 @@ export class MenuItem {
 
   toggle(): void {
     this.expend = !this.expend;
+  }
+
+  getLangKeyValues(): void {
+    this.enName = this.langService.getEnglishLocalByKey(this.langKey);
+    this.arName = this.langService.getArabicLocalByKey(this.langKey);
+  }
+
+  getChildrenText(parentArName?: string, parentEnName?: string): void {
+    this.arSearchText = parentArName ? parentArName + this.arName.toLowerCase() : this.arName.toLowerCase();
+    this.enSearchText = parentEnName ? parentEnName + this.enName.toLowerCase() : this.enName.toLowerCase();
+    this.children.forEach(item => {
+      item.getChildrenText(this.arName.toLowerCase(), this.enName.toLowerCase());
+      this.arSearchText += item.arSearchText;
+      this.enSearchText += item.enSearchText;
+    });
   }
 }

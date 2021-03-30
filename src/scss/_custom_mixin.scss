@@ -3,3 +3,9 @@
     @content;
   }
 }
+
+@mixin ltr_direction {
+  html[dir="rtl"] {
+    @content;
+  }
+}

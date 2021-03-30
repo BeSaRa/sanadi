@@ -33,6 +33,8 @@ import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {FlipIconDirective} from './directives/flip-icon.directive';
 import {NgScrollbarModule} from 'ngx-scrollbar';
 import {SidebarMenuItemListComponent} from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
+import {MenuItemFilterPipe} from './pipes/menu-item-filter.pipe';
+import { HighlightPipe } from './pipes/highlight.pipe';
 import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
@@ -60,7 +62,9 @@ import {NgSelectModule} from '@ng-select/ng-select';
     VersionComponent,
     SidebarComponent,
     FlipIconDirective,
-    SidebarMenuItemListComponent
+    SidebarMenuItemListComponent,
+    MenuItemFilterPipe,
+    HighlightPipe
   ],
   imports: [
     CommonModule,

@@ -38,6 +38,8 @@ export class MenuItemService {
     });
 
     this.getParentChildren(this.parents);
+
+    this.parents.forEach(item => item.getChildrenText());
   }
 
   private addMenuItemToChildren(item: MenuItem): void {

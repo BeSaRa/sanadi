@@ -16,18 +16,27 @@ import {Router} from '@angular/router';
       state('expend', style({
         height: '!'
       })),
-      transition('collapse <=> expend', animate('250ms ease-in-out'))
+      transition('collapse <=> expend', animate('.2s ease-in-out')),
     ])
   ]
 })
 export class SidebarMenuItemListComponent implements OnInit {
   @Input()
   items: MenuItem[] = [];
+  @Input()
+  level!: number;
+
+  _searchText: string = '';
+  @Input()
+  set searchText(value: string | null) {
+    this._searchText = value ? value : '';
+  }
 
   constructor(public empService: EmployeeService, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.level = ++this.level;
   }
 
   toggleCollapseOrNavigate(item: MenuItem, $event: MouseEvent) {

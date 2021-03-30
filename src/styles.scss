@@ -147,10 +147,14 @@ app-dialog-container {
 button.icon-btn {
   border: none;
   background-color: transparent;
-  color: inherit;
-  padding: 0;
-  outline: none;
+
+  &:not(:disabled) {
+    color: inherit;
+    padding: 0;
+    outline: none;
+  }
 }
+
 
 .cursor-pointer {
   cursor: pointer;
@@ -202,6 +206,15 @@ dp-date-picker {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, .1);
+}
+
+.home-scroll-component .ng-scroll-content {
+  height: 99%;
+}
+
+mark {
+  background-color: yellow !important;
+  padding: 0;
 }
 
 th.date, td.date {

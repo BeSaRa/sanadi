@@ -1,25 +1,29 @@
-<ul class="sidebar-menu-list">
-  <ng-container *ngFor="let item of items">
-    <li [@expendCollapse]="item.expend ? 'expend' : 'collapse'"
+<ul class="sidebar-menu-list level-{{level}}">
+  <ng-container *ngFor="let item of items | menuItemFilter : _searchText">
+    <li [@expendCollapse]="item.expend || _searchText.length ? 'expend' : 'collapse'"
         *ngIf="empService.checkPermissions(item.getPermissions(), true)"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <div class="sidebar-menu-icon d-flex justify-content-center align-items-center">
           <div *ngIf="!item.parent">
-            <div *ngIf="item.isSVGIcon()" class="sidebar-menu-item-svg">
-              <img alt="{{item.getName()}}" src="assets/images/icons/{{item.icon}}.svg">
-            </div>
-            <div *ngIf="item.isFontIcon()" class="sidebar-menu-item-font"><i class="mdi {{item.icon}} text-primary"></i>
-            </div>
+            <a class="icon-link" href="#" (click)="toggleCollapseOrNavigate(item , $event)">
+              <div *ngIf="item.isSVGIcon()" class="sidebar-menu-item-svg">
+                <img alt="{{item.getName()}}" src="assets/images/icons/{{item.icon}}.svg">
+              </div>
+              <div *ngIf="item.isFontIcon()" class="sidebar-menu-item-font"><i
+                class="mdi {{item.icon}} text-primary"></i>
+              </div>
+            </a>
           </div>
         </div>
         <a href="#" (click)="toggleCollapseOrNavigate(item , $event)"
            class="menu-item-title flex-grow-1 align-self-stretch d-flex align-items-center position-relative">
-          <span>{{item.getName()}}</span>
+          <span [innerHTML]="item.getName()|highlight:_searchText"></span>
         </a>
       </div>
-      <app-sidebar-menu-item-list *ngIf="item.children" [items]="item.children"></app-sidebar-menu-item-list>
+      <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"
+                                  [items]="item.children"></app-sidebar-menu-item-list>
     </li>
   </ng-container>
 </ul>

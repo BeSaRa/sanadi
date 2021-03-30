@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  show_hide_sidebar: string;
   home: string;
   back : string;
   btn_inquire: string;

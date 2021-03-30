@@ -37,9 +37,9 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.scrollService.onScroll$.subscribe((scroll) => this.onScroll(scroll));
-    this.sidebar.openStateChanged$.subscribe((isOpen) => {
-      this.menuState = isOpen ? 'mdi-menu-open' : 'mdi-menu';
-    });
+    // this.sidebar.openStateChanged$.subscribe((isOpen) => {
+    //   this.menuState = isOpen ? 'mdi-menu-open' : 'mdi-menu';
+    // });
   }
 
   /**

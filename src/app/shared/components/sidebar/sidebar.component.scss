@@ -42,10 +42,13 @@
 
 #top-fake-nav {
   height: 40px;
+  justify-content: center;
 }
 
-#app-logo {
-
+:host.going-to-open, :host.going-to-close, :host.sidebar-opened, :host.sidebar-opened-hover {
+  #top-fake-nav {
+    justify-content: flex-end;
+  }
 }
 
 #sanady-logo {
@@ -62,7 +65,7 @@
     display: none;
   }
 
-  #menu-item-search {
+  #search-item-input {
     visibility: hidden;
   }
 }
@@ -87,5 +90,9 @@
 }
 
 #menu-item-list {
+  height: 0;
+}
+
+#sidebar-content-wrapper {
   height: 0;
 }

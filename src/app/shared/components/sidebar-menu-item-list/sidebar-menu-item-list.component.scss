@@ -1,9 +1,35 @@
 @import "src/scss/custom_variables";
+@import "src/scss/custom_mixin";
 
 .sidebar-menu-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
+
+  &:not(.level-1) {
+    & > li {
+      position: relative;
+
+      &:before {
+        position: absolute;
+        width: 25px;
+        height: 0;
+        content: "";
+        border-bottom: dashed .5px $gold;
+        top: 25px;
+      }
+    }
+
+  }
+
+  &:not(.level-1):before {
+    position: absolute;
+    width: 0;
+    height: 100%;
+    content: "";
+    border-left: .5px dashed $gold;
+  }
 
   a {
     text-decoration-line: none;
@@ -32,5 +58,37 @@
 :host-context(.sidebar-closed) {
   a.menu-item-title {
     display: none !important;
+  }
+}
+
+:host-context(html[dir="ltr"]) {
+  .sidebar-menu-list:not(.level-1) {
+    padding-left: 25px;
+
+    &:before {
+      left: 25px;
+    }
+  }
+}
+
+:host-context(html[dir="rtl"]) {
+  .sidebar-menu-list:not(.level-1) {
+    padding-right: 25px;
+  }
+
+  .sidebar-menu-list:not(.level-1):before {
+    right: 25px;
+  }
+}
+
+:host-context(.sidebar-closed) {
+  .sidebar-menu-list:not(.level-1) {
+    & > li:before {
+      display: none;
+    }
+  }
+
+  .sidebar-menu-list:not(.level-1):before {
+    display: none;
   }
 }

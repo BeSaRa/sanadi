@@ -25,8 +25,7 @@
     <span class="flex-grow-1 align-self-stretch"></span>
     <ul class="d-flex flex-row text-primary align-items-end" id="header-menu-actions">
       <li>
-        <button (click)="goToBack()" [disabled]="!navigationService.hasBackUrl()" [tooltip]="langService.map.back"
-                class="icon-btn">
+        <button (click)="goToBack()" class="icon-btn" [disabled]="!navigationService.hasBackUrl()" [tooltip]="langService.map.back">
           <i flipIcon class="mdi mdi-arrow-left"></i></button>
       </li>
       <li>

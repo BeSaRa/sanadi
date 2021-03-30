@@ -1,51 +1,74 @@
-import {Component, HostBinding, HostListener, OnInit} from '@angular/core';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {MenuItemService} from '../../../services/menu-item.service';
 import {MenuItem} from '../../../models/menu-item';
 import {Direction} from '@angular/cdk/bidi';
-import {takeUntil} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   animations: [
-    trigger('openClose', [
+    trigger('openCloseHoverInOut', [
       state('opened', style({
         width: '250px'
       })),
       state('closed', style({
         width: '60px'
       })),
-      transition('opened <=> closed', animate('250ms ease-in-out'))
-    ]),
+      state('hoverIn', style({
+        width: '250px'
+      })),
+      state('hoverOut', style({
+        width: '60px'
+      })),
+      transition('opened <=> closed', animate('250ms ease-in-out')),
+      transition('hoverIn <=> hoverOut', animate('250ms ease-in-out')),
+      transition('hoverOut <=> opened', animate('250ms ease-in-out')),
+      transition('closed <=> hoverIn', animate('250ms ease-in-out')),
+      transition('hoverIn <=> opened', animate(0))
+    ])
   ]
 })
 export class SidebarComponent implements OnInit {
-  @HostBinding('@openClose')
-  get sidebarState(): string {
-    return this.isOpened ? 'opened' : 'closed';
-  }
-
-  @HostBinding('class.sidebar-closed')
-  get sidebarClosed(): boolean {
-    return !this.isOpened;
-  }
-
-  @HostBinding('class.sidebar-opened')
-  isOpened: boolean = true;
-  private openStateChange: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isOpened);
-  openStateChanged$ = this.openStateChange.asObservable();
+  @HostBinding('@openCloseHoverInOut')
+  sidebarAnimation: 'opened' | 'closed' | 'hoverIn' | 'hoverOut' = 'opened';
   topImage: string = 'url(assets/images/top-pattern.png)';
   bottomImage: string = 'url(assets/images/bottom-pattern.png)';
-  closeAnimationDone: boolean = false;
   items: MenuItem[] = this.menuItemService.parents;
   scrollDirection: Direction = 'ltr';
   destroy$: Subject<any> = new Subject<any>();
+  searchInput: FormControl = new FormControl('');
 
-  constructor(private menuItemService: MenuItemService, public langService: LangService) {
+  @HostBinding('class.sidebar-opened')
+  isOpened: boolean = true;
+
+  @HostBinding('class.sidebar-closed')
+  get isClosed(): boolean {
+    return !this.isOpened && this.sidebarAnimation !== 'hoverIn';
+  }
+
+  @HostBinding('class.sidebar-opened-hover')
+  get openedByHover(): boolean {
+    return this.sidebarAnimation === 'hoverIn';
+  }
+
+
+  searchText: Observable<string> = this.searchInput
+    .valueChanges
+    .pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    );
+
+  constructor(private menuItemService: MenuItemService,
+              private element: ElementRef,
+              private renderer: Renderer2,
+              public langService: LangService) {
   }
 
   ngOnInit(): void {
@@ -57,27 +80,67 @@ export class SidebarComponent implements OnInit {
       });
   }
 
-  @HostListener('@openClose.done', ['$event'])
-  animationDone(event: AnimationEvent): void {
-    this.closeAnimationDone = event.toState === 'closed';
-  }
-
-  @HostListener('@openClose.start', ['$event'])
-  animationStart(event: AnimationEvent): void {
-    this.closeAnimationDone = event.toState === 'opened' ? false : this.closeAnimationDone;
-  }
 
   toggle(): void {
-    this.isOpened ? this.close() : this.open();
+    this.isOpened ? this.startClose() : this.startOpen();
   }
 
-  open(): void {
-    this.isOpened = true;
-    this.openStateChange.next(this.isOpened);
+  sidebarMouseEnter(): void {
+    if (!this.isOpened) {
+      this.sidebarAnimation = 'hoverIn';
+    }
   }
 
-  close(): void {
-    this.isOpened = false;
-    this.openStateChange.next(this.isOpened);
+  sidebarMouseOut(): void {
+    if (!this.isOpened) {
+      this.sidebarAnimation = 'hoverOut';
+    }
+  }
+
+  pinSidebar() {
+    this.startOpen();
+  }
+
+  private startClose() {
+    this.sidebarAnimation = 'closed';
+  }
+
+  private startOpen() {
+    this.sidebarAnimation = 'opened';
+  }
+
+  @HostListener('@openCloseHoverInOut.start', ['$event'])
+  animationStartCallBack(event: AnimationEvent): void {
+    if (event.toState === 'opened' || event.toState === 'hoverIn') {
+      this.renderer.addClass(this.element.nativeElement, 'going-to-open');
+    }
+
+    if (event.toState === 'hoverOut' || event.toState === 'closed') {
+      this.renderer.addClass(this.element.nativeElement, 'going-to-close');
+    }
+  }
+
+  @HostListener('@openCloseHoverInOut.done', ['$event'])
+  animationDoneCallback(event: AnimationEvent): void {
+    if (event.fromState === 'closed' && event.toState === 'opened') {
+      this.isOpened = true;
+    }
+
+    if (event.fromState === 'opened' && event.toState === 'closed') {
+      this.isOpened = false;
+    }
+
+    if (event.fromState === 'hoverOut' && event.toState === 'opened') {
+      this.isOpened = true;
+    }
+
+    if (event.fromState === 'hoverIn' && event.toState === 'opened') {
+      this.isOpened = true;
+    }
+
+    this.renderer.removeClass(this.element.nativeElement, 'going-to-open');
+    this.renderer.removeClass(this.element.nativeElement, 'going-to-close');
+
+
   }
 }
