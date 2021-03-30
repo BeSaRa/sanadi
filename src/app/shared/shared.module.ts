@@ -29,10 +29,11 @@ import {AsteriskIfRequiredDirective} from './directives/asterisk-if-required.dir
 import {LoadingComponent} from './components/loading/loading.component';
 import {VersionComponent} from './components/version/version.component';
 import {NgxMaskModule} from 'ngx-mask';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { FlipIconDirective } from './directives/flip-icon.directive';
+import {SidebarComponent} from './components/sidebar/sidebar.component';
+import {FlipIconDirective} from './directives/flip-icon.directive';
 import {NgScrollbarModule} from 'ngx-scrollbar';
-import { SidebarMenuItemListComponent } from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
+import {SidebarMenuItemListComponent} from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { SidebarMenuItemListComponent } from './components/sidebar-menu-item-lis
     ReactiveFormsModule,
     DpDatePickerModule,
     NgxMaskModule.forRoot(),
-    NgScrollbarModule
+    NgScrollbarModule,
+    NgSelectModule
   ],
   exports: [
     NgScrollbarModule,
@@ -102,8 +104,10 @@ import { SidebarMenuItemListComponent } from './components/sidebar-menu-item-lis
     AsteriskIfRequiredDirective,
     LoadingComponent,
     VersionComponent,
-    SidebarComponent
+    SidebarComponent,
+    NgSelectModule
   ]
 })
 export class SharedModule {
+
 }

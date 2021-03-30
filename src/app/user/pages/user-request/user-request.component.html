@@ -130,12 +130,21 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="nationality" asteriskIfRequired="benNationality"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <!--<select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
                       id="nationality" class="form-select">
                 <option *ngFor="let option of lookup.listByCategory.Nationality"
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
+              </select>-->
+              <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="nationality"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="benNationality"
+                         [ngClass]="fm.getStatusClass('personalTab.benNationality')">
+                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
             </div>
@@ -186,12 +195,21 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="gender" asteriskIfRequired="gender"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <!--<select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
                       class="form-select">
                 <option [value]="option.lookupKey"
                         *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
-              </select>
+              </select>-->
+              <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="gender"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="gender"
+                         [ngClass]="fm.getStatusClass('personalTab.gender')">
+                <ng-option *ngFor="let option of lookup.listByCategory.Gender" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.gender')"></app-field-error-message>
             </div>
@@ -230,12 +248,21 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="educationLevel" asteriskIfRequired="educationLevel"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <!--<select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
                       id="educationLevel" class="form-select">
                 <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
+              </select>-->
+              <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="educationLevel"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="educationLevel"
+                         [ngClass]="fm.getStatusClass('personalTab.educationLevel')">
+                <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
             </div>
@@ -260,12 +287,21 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="maritalStatus" asteriskIfRequired="maritalStatus"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <!--<select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
                       formControlName="maritalStatus" class="form-select">
                 <option *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
+              </select>-->
+              <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="maritalStatus"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="maritalStatus"
+                         [ngClass]="fm.getStatusClass('personalTab.maritalStatus')">
+                <ng-option *ngFor="let option of lookup.listByCategory.BenMaritialStatus" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.maritalStatus')"></app-field-error-message>
             </div>
@@ -283,12 +319,21 @@
           <div class="row d-flex flex-column flex-md-row">
             <label for="occupationStatus" asteriskIfRequired="benCategory"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <!--<select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
                       formControlName="benCategory" class="form-select">
                 <option *ngFor="let option of lookup.listByCategory.BenCategory"
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>
+              </select>-->
+              <ng-select [selectOnTab]="true" labelForId="occupationStatus" [clearable]="false"
+                         placeholder="{{langService.map.select}}" id="occupationStatus"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="benCategory"
+                         [ngClass]="fm.getStatusClass('personalTab.benCategory')">
+                <ng-option *ngFor="let option of lookup.listByCategory.BenCategory" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benCategory')"></app-field-error-message>
             </div>
@@ -317,13 +362,22 @@
         <div class="row d-flex flex-column flex-md-row">
           <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <!--<select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
                     id="employmentStatus"
                     class="form-select">
               <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
+            </select>-->
+            <ng-select [selectOnTab]="true" labelForId="employmentStatus" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="employmentStatus"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="occuptionStatus"
+                       [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')">
+              <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.occuptionStatus')"></app-field-error-message>
           </div>
@@ -450,12 +504,21 @@
         <div class="row d-flex flex-column flex-md-row">
           <label for="city" asteriskIfRequired="residenceCountry"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <!--<select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
                     formControlName="residenceCountry" class="form-select">
               <option *ngFor="let option of lookup.listByCategory.Countries"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
+            </select>-->
+            <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="city"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="residenceCountry"
+                       [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
+              <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
             <app-field-error-message
               [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
           </div>
@@ -548,12 +611,21 @@
         <div class="row d-flex flex-column flex-md-row">
           <label for="requestType" asteriskIfRequired="requestType"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <!--<select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
                     id="requestType" class="form-select">
               <option *ngFor="let option of lookup.listByCategory.SubRequestType"
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>
+            </select>-->
+            <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="requestType"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="requestType"
+                       [ngClass]="fm.getStatusClass('requestInfoTab.requestType')">
+              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestType" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestType')"></app-field-error-message>
           </div>
@@ -612,14 +684,23 @@
         <div class="row d-flex flex-column flex-md-row">
           <label for="requestStatus"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <select [ngClass]="fm.getStatusClass('requestStatusTab.status')" id="requestStatus"
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <!--<select [ngClass]="fm.getStatusClass('requestStatusTab.status')" id="requestStatus"
                     formControlName="status" class="form-select">
               <option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
                       [ngValue]="option.lookupKey">
                 {{option.getName()}}
               </option>
-            </select>
+            </select>-->
+            <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="requestStatus"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="status"
+                       [ngClass]="fm.getStatusClass('requestStatusTab.status')">
+              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
             <app-field-error-message
               [control]="fm.getFormField('requestStatusTab.status')"></app-field-error-message>
           </div>
@@ -664,13 +745,22 @@
             <div class="row d-flex flex-column flex-md-row">
               <label for="aidType" asteriskIfRequired="aidLookupId"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <!--<select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
                         formControlName="aidLookupId"
                         class="form-select">
                   <option [ngValue]="option.id"
                           *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
-                </select>
+                </select>-->
+                <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
+                           placeholder="{{langService.map.select}}" id="aidType"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="aidLookupId"
+                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
+                  <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
               </div>
@@ -725,13 +815,22 @@
             <div class="row d-flex flex-column flex-md-row">
               <label asteriskIfRequired="periodicType" for="periodicType"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <!--<select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
                         formControlName="periodicType"
                         id="periodicType" class="form-select">
                   <option [ngValue]="option.lookupKey"
                           *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-                </select>
+                </select>-->
+                <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
+                           placeholder="{{langService.map.select}}" id="periodicType"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="periodicType"
+                           [ngClass]="fm.getStatusClass('aidTab.0.periodicType')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
               </div>

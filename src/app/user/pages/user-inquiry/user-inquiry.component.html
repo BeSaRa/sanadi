@@ -24,11 +24,19 @@
     <!-- Search By Name -->
     <div formGroupName="searchByName" *ngIf="!displayIdCriteria" class="row">
       <div class="col flex-grow-1">
-        <div class="mb-4">
+        <div class="mb-4 ng-select-wrapper">
           <label for="searchMethod">{{langService.map.search_method}}</label>
-          <select formControlName="operator" class="form-select" id="searchMethod" name="idType">
+          <!--<select formControlName="operator" class="form-select" id="searchMethod" name="idType">
             <option [value]="option.lookupKey" *ngFor="let option of stringOperators">{{option.getName()}}</option>
-          </select>
+          </select>-->
+          <ng-select [selectOnTab]="true" labelForId="searchMethod" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="searchMethod"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="operator">
+            <ng-option *ngFor="let option of stringOperators" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
         </div>
       </div>
       <div class="col flex-grow-1">
@@ -47,11 +55,19 @@
     <!-- Search By Id  -->
     <div formGroupName="searchById" *ngIf="displayIdCriteria" class="row flex-sm-column flex-md-row">
       <div class="col flex-grow-1">
-        <div class="mb-4">
+        <div class="mb-4 ng-select-wrapper">
           <label for="idType">{{langService.map.id_type}}</label>
-          <select formControlName="benPrimaryIdType" class="form-select" id="idType" name="idType">
+          <!--<select formControlName="benPrimaryIdType" class="form-select" id="idType" name="idType">
             <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
-          </select>
+          </select>-->
+          <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="idType"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="benPrimaryIdType">
+            <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
         </div>
       </div>
       <div class="col flex-grow-1">
@@ -65,11 +81,19 @@
         </div>
       </div>
       <div *ngIf="displayNationality" class="col flex-grow-1">
-        <div class="mb-4">
+        <div class="mb-4 ng-select-wrapper">
           <label for="nationality">{{langService.map.lbl_nationality}}</label>
-          <select formControlName="benPrimaryIdNationality" id="nationality" class="form-select">
+          <!--<select formControlName="benPrimaryIdNationality" id="nationality" class="form-select">
             <option [ngValue]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</option>
-          </select>
+          </select>-->
+          <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="nationality"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="benPrimaryIdNationality">
+            <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
         </div>
       </div>
     </div>
@@ -207,7 +231,8 @@
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="date"> {{request.creationDate|date}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.orgBranchInfo.getName()}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.statusInfo.getName()}} </td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
+                <td *ngIf="firstAid"
+                    [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
                 <td> {{aid.aidLookupInfo.getName()}} </td>
                 <td> {{aid.aidAmount | mask:'separator':','}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length">

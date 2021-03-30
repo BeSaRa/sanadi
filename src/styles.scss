@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./scss/custom_variables";
 @import "./scss/style-rtl";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 html, body {
   background-color: $gray-100;
@@ -210,3 +211,37 @@ th.date, td.date {
 .font-12 {
   font-size: 12px;
 }
+
+.ng-select-wrapper {
+  position: relative !important
+}
+
+ng-select {
+  .ng-select-container {
+    height: 38px !important;
+  }
+
+  &.ng-touched {
+    &.ng-valid {
+      &.ng-select-opened {
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+      }
+
+      .ng-select-container {
+        border-color: #198754 !important;
+      }
+    }
+
+    &.ng-invalid {
+      &.ng-select-opened {
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+      }
+
+      .ng-select-container {
+        border-color: #dc3545 !important;
+      }
+    }
+  }
+}
+
+

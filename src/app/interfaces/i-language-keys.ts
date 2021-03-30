@@ -246,4 +246,5 @@ export interface ILanguageKeys {
   reason: string;
   number_of_installments: string;
   msg_search_date_hint: string;
+  msg_not_found: string;
 }
