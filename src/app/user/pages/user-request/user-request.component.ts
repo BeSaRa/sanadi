@@ -43,6 +43,7 @@ import {Pair} from '../../../interfaces/pair';
 import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
 import {ReadModeService} from '../../../services/read-mode.service';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-user-request',
@@ -102,6 +103,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT
   };
   aidPeriodicTypeSub!: Subscription;
+  aidApprovalDateSub!: Subscription;
   readOnly = false;
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
@@ -522,7 +524,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.subventionAid = aid;
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
 
-      if (!request.isUnderProcessing()){
+      if (!request.isUnderProcessing()) {
         this.readModeService.setReadOnly(request.id);
       }
 
@@ -722,8 +724,25 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.periodicChange(value);
         });
       this.aidPeriodicType.updateValueAndValidity();
+
+      const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate')?.value;
+      if (requestCreationDate) {
+        this.aidApprovalDate?.setValidators(CustomValidators.minDate(requestCreationDate));
+        this.aidPaymentDate?.setValidators(CustomValidators.minDate(requestCreationDate));
+      }
+      this.aidApprovalDateSub = this.aidApprovalDate?.valueChanges.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(value => {
+        let minDate = this.fm.getFormField('requestInfoTab.creationDate')?.value;
+        if (dayjs(value).isAfter(dayjs(minDate))) {
+          minDate = value;
+        }
+        this.aidPaymentDate?.setValidators(CustomValidators.minDate(minDate));
+        this.aidPaymentDate?.updateValueAndValidity();
+      });
     } else {
       this.aidPeriodicTypeSub?.unsubscribe();
+      this.aidApprovalDateSub?.unsubscribe();
     }
   }
 
@@ -743,6 +762,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.aidFormArray.get('0.periodicType') as FormControl;
   }
 
+  get aidApprovalDate(): FormControl {
+    return this.aidFormArray.get('0.approvalDate') as FormControl;
+  }
+
+  get aidPaymentDate(): FormControl {
+    return this.aidFormArray.get('0.aidStartPayDate') as FormControl;
+  }
 
   deleteAid(subventionAid: SubventionAid, index: number, $event: MouseEvent): any {
     $event.preventDefault();
@@ -825,6 +851,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     ).subscribe(value => {
       if (this.currentRequest) {
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
+        if (value) {
+          this.aidApprovalDate?.setValidators(CustomValidators.minDate(value));
+          this.aidApprovalDate?.updateValueAndValidity();
+
+          this.aidPaymentDate?.setValidators(CustomValidators.minDate(value));
+          this.aidPaymentDate?.updateValueAndValidity();
+        }
       }
     });
   }
