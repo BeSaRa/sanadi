@@ -137,6 +137,7 @@
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
               </select>-->
               <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                         [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="nationality"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="benNationality"
@@ -202,6 +203,7 @@
                         *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
               </select>-->
               <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
+                         [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="gender"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="gender"
@@ -255,6 +257,7 @@
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
               </select>-->
               <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
+                         [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="educationLevel"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="educationLevel"
@@ -294,6 +297,7 @@
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
               </select>-->
               <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
+                         [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="maritalStatus"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="maritalStatus"
@@ -326,6 +330,7 @@
                         [ngValue]="option.lookupKey">{{option.getName()}}</option>
               </select>-->
               <ng-select [selectOnTab]="true" labelForId="occupationStatus" [clearable]="false"
+                         [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="occupationStatus"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="benCategory"
@@ -370,6 +375,7 @@
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>-->
             <ng-select [selectOnTab]="true" labelForId="employmentStatus" [clearable]="false"
+                       [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="employmentStatus"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="occuptionStatus"
@@ -511,6 +517,7 @@
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>-->
             <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
+                       [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="city"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="residenceCountry"
@@ -618,6 +625,7 @@
                       [ngValue]="option.lookupKey">{{option.getName()}}</option>
             </select>-->
             <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
+                       [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestType"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="requestType"
@@ -693,6 +701,7 @@
               </option>
             </select>-->
             <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
+                       [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestStatus"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status"
@@ -753,6 +762,7 @@
                           *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
                 </select>-->
                 <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
+                           [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="aidType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="aidLookupId"
@@ -823,6 +833,7 @@
                           *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
                 </select>-->
                 <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
+                           [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="periodicType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="periodicType"

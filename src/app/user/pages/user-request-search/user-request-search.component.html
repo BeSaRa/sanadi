@@ -398,6 +398,7 @@
                     <i class="mdi mdi-heart-multiple"></i>
                   </a>
                   <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                          [disabled]="request.notUnderProcess()"
                           (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
                           class="btn icon-btn text-primary">
                     <i class="mdi mdi-book-edit"></i>

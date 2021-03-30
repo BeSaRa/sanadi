@@ -521,6 +521,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.beneficiaryChanged$.next(beneficiary);
       this.subventionAid = aid;
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
+
+      if (!request.isUnderProcessing()){
+        this.readModeService.setReadOnly(request.id);
+      }
+
       this.requestChanged$.next(request);
       this.editMode = true;
       this.disableOtherIdFieldsExcept('none');
