@@ -46,6 +46,7 @@ export class SidebarComponent implements OnInit {
 
   @HostBinding('class.sidebar-opened')
   isOpened: boolean = true;
+  private ongoingState: boolean = false;
 
   @HostBinding('class.sidebar-closed')
   get isClosed(): boolean {
@@ -86,13 +87,13 @@ export class SidebarComponent implements OnInit {
   }
 
   sidebarMouseEnter(): void {
-    if (!this.isOpened) {
+    if (!this.isOpened && !this.ongoingState) {
       this.sidebarAnimation = 'hoverIn';
     }
   }
 
   sidebarMouseOut(): void {
-    if (!this.isOpened) {
+    if (!this.isOpened && !this.ongoingState) {
       this.sidebarAnimation = 'hoverOut';
     }
   }
@@ -118,6 +119,7 @@ export class SidebarComponent implements OnInit {
     if (event.toState === 'hoverOut' || event.toState === 'closed') {
       this.renderer.addClass(this.element.nativeElement, 'going-to-close');
     }
+    this.ongoingState = true;
   }
 
   @HostListener('@openCloseHoverInOut.done', ['$event'])
@@ -140,7 +142,6 @@ export class SidebarComponent implements OnInit {
 
     this.renderer.removeClass(this.element.nativeElement, 'going-to-open');
     this.renderer.removeClass(this.element.nativeElement, 'going-to-close');
-
-
+    this.ongoingState = false;
   }
 }
