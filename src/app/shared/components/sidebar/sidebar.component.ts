@@ -7,6 +7,12 @@ import {Direction} from '@angular/cdk/bidi';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
 import {FormControl} from '@angular/forms';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {AuthService} from '../../../services/auth.service';
+import {DialogService} from '../../../services/dialog.service';
+import {Router} from '@angular/router';
+import {ToastService} from '../../../services/toast.service';
+import {NavigationService} from '../../../services/navigation.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -68,7 +74,12 @@ export class SidebarComponent implements OnInit {
 
   constructor(private menuItemService: MenuItemService,
               private element: ElementRef,
+              private authService: AuthService,
+              private dialogService: DialogService,
               private renderer: Renderer2,
+              private toastService: ToastService,
+              public navigationService: NavigationService,
+              private router: Router,
               public langService: LangService) {
   }
 
@@ -143,5 +154,31 @@ export class SidebarComponent implements OnInit {
     this.renderer.removeClass(this.element.nativeElement, 'going-to-open');
     this.renderer.removeClass(this.element.nativeElement, 'going-to-close');
     this.ongoingState = false;
+  }
+
+  logout(): void {
+    this.dialogService
+      .confirm(this.langService.map.msg_are_you_sure_you_want_logout)
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((click: UserClickOn) => {
+        return click === UserClickOn.YES ? this._logout() : null;
+      });
+  }
+
+  private _logout(): void {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/login']).then(() => {
+        this.toastService.success(this.langService.map.msg_logout_success);
+      });
+    });
+  }
+
+  goToHome(): void {
+    this.router.navigate(['home', 'main']).then();
+  }
+
+  goToBack() {
+    this.navigationService.goToBack();
   }
 }

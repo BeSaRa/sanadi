@@ -1,8 +1,5 @@
 <div class="d-flex flex-column">
   <div class="container-fluid bg-primary navbar-dark d-flex flex-row">
-    <!--    <button (click)="toggleSidebar()" class="icon-btn">-->
-    <!--      <i flipIcon class="mdi {{menuState}} text-white"></i>-->
-    <!--    </button>-->
     <span class="flex-grow-1"></span>
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -23,19 +20,5 @@
       </div>
     </div>
     <span class="flex-grow-1 align-self-stretch"></span>
-    <ul class="d-flex flex-row text-primary align-items-end" id="header-menu-actions">
-      <li>
-        <button (click)="goToBack()" class="icon-btn" [disabled]="!navigationService.hasBackUrl()" [tooltip]="langService.map.back">
-          <i flipIcon class="mdi mdi-arrow-left"></i></button>
-      </li>
-      <li>
-        <button [tooltip]="langService.map.home" (click)="goToHome()" class="icon-btn"><i class="mdi mdi-home"></i>
-        </button>
-      </li>
-      <li>
-        <button [tooltip]="langService.map.logout" (click)="logout()" class="icon-btn"><i class="mdi mdi-logout"></i>
-        </button>
-      </li>
-    </ul>
   </div>
 </div>
