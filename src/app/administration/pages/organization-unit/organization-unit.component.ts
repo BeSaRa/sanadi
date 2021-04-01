@@ -29,7 +29,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   organizations: OrgUnit[] = [];
   organizationsClone: OrgUnit[] = [];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   searchSubscription!: Subscription;

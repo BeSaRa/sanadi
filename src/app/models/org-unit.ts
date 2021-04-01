@@ -24,7 +24,7 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   orgUnitType: number | undefined;
   registryCreator: number | undefined;
   registryDate: string | undefined;
-  orgNationality: number | undefined;
+  orgNationality: number | undefined = 1;
   poBoxNum: number | undefined;
   unifiedEconomicRecord: string | undefined;
   hotLine: number | undefined;
@@ -46,7 +46,7 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    nationality: text => this.getOrgNationalityLookup()?.getName().toLowerCase().indexOf(text) !== -1,
+    // nationality: text => this.getOrgNationalityLookup()?.getName().toLowerCase().indexOf(text) !== -1,
     phoneNumber1: 'phoneNumber1',
     email: 'email',
     address: 'address',

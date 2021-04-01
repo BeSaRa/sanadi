@@ -32,7 +32,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   model: OrgUnit;
   orgUnitTypesList: Lookup[];
   orgUnitStatusList: Lookup[];
-  orgNationalityList: Lookup[];
+  // orgNationalityList: Lookup[];
   saveVisible = true;
   validateFieldsVisible = true;
 
@@ -57,7 +57,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     this.model = data.model;
     this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
-    this.orgNationalityList = lookupService.getByCategory(LookupCategories.NATIONALITY);
+    // this.orgNationalityList = lookupService.getByCategory(LookupCategories.NATIONALITY);
   }
 
   ngOnInit(): void {
