@@ -24,19 +24,19 @@ export class ConfigurationService {
   private prepareBaseUrl(): string {
     if (
       !this.CONFIG.hasOwnProperty('ENVIRONMENTS_URLS') ||
-      !this.CONFIG.ENVIRONMENTS_URLS.length
+      !Object.keys(this.CONFIG.ENVIRONMENTS_URLS).length
     ) {
       throw Error('There is no ENVIRONMENTS_URLS Property or empty provided inside app-configuration.json file Kindly check it');
     }
 
-    if (typeof this.CONFIG.BASE_ENVIRONMENT_INDEX === 'undefined') {
+    if (typeof this.CONFIG.BASE_ENVIRONMENT === 'undefined') {
       throw Error('there is no BASE_ENVIRONMENT_INDEX provided inside app-configuration.json file');
     }
 
-    if (typeof this.CONFIG.ENVIRONMENTS_URLS[this.CONFIG.BASE_ENVIRONMENT_INDEX] === 'undefined') {
-      throw Error('the provided BASE_ENVIRONMENT_INDEX not exists inside ENVIRONMENTS_URLS array in app-configuration.json file');
+    if (typeof this.CONFIG.ENVIRONMENTS_URLS[this.CONFIG.BASE_ENVIRONMENT] === 'undefined') {
+      throw Error('the provided BASE_ENVIRONMENT not exists inside ENVIRONMENTS_URLS array in app-configuration.json file');
     }
-    this.BASE_URL = this.CONFIG.ENVIRONMENTS_URLS[this.CONFIG.BASE_ENVIRONMENT_INDEX];
+    this.BASE_URL = this.CONFIG.ENVIRONMENTS_URLS[this.CONFIG.BASE_ENVIRONMENT];
 
     if (this.CONFIG.hasOwnProperty('API_VERSION') && this.CONFIG.API_VERSION) {
       if (this.BASE_URL.lastIndexOf('/') !== (this.BASE_URL.length - 1)) {

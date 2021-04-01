@@ -1,8 +1,8 @@
 export interface IAppConfig {
   VERSION: string;
   TIMESTAMP: string;
-  ENVIRONMENTS_URLS: string [];
-  BASE_ENVIRONMENT_INDEX: number;
+  ENVIRONMENTS_URLS: Record<string, string>;
+  BASE_ENVIRONMENT: string;
   BASE_URL: string;
   API_VERSION: string;
   TOKEN_HEADER_KEY: string;
