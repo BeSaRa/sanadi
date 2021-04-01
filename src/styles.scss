@@ -216,8 +216,9 @@ mark {
   padding: 0;
 }
 
-th.date, td.date {
-  min-width: 110px;
+th.date-column, td.date-column {
+  width: 110px;
+  max-width: 110px;
 }
 
 .font-12 {

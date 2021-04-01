@@ -49,8 +49,8 @@
           <td cdk-cell *cdkCellDef="let row"> {{row.address}} </td>
         </ng-container>
         <ng-container cdkColumnDef="statusDateModified">
-          <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_status_date_modified}}</th>
-          <td cdk-cell *cdkCellDef="let row">
+          <th cdk-header-cell *cdkHeaderCellDef class="date-column">{{langService.map.lbl_status_date_modified}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="date-column">
             <span>{{row.statusDateModifiedString}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="status">

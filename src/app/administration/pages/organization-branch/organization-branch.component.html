@@ -43,8 +43,8 @@
           <td cdk-cell *cdkCellDef="let row"> {{row.getOrgStatusLookup()?.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="statusDateModified">
-          <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_status_date_modified}}</th>
-          <td cdk-cell *cdkCellDef="let row">{{row.statusDateModifiedString}}</td>
+          <th cdk-header-cell *cdkHeaderCellDef class="date-column">{{langService.map.lbl_status_date_modified}}</th>
+          <td cdk-cell *cdkCellDef="let row" class="date-column">{{row.statusDateModifiedString}}</td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
