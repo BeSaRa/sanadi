@@ -26,14 +26,17 @@ export abstract class BaseModel<D> extends Cloneable<D> implements INames, Model
     const self = this as unknown as ISearchFields;
     const fields = (this as unknown as ISearchFields).searchFields;
     const keys = Object.keys(fields);
+    if (!searchText) {
+      return true;
+    }
     return keys.some(key => {
       if (typeof self.searchFields[key] === 'function') {
         const func = self.searchFields[key] as searchFunctionType;
-        return func(searchText.toLowerCase());
+        return func(searchText.trim().toLowerCase());
       } else {
         const field = self.searchFields[key] as keyof BaseModel<D>;
         const value = this[field] ? (this[field] as string) + '' : '';
-        return value.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+        return value.toLowerCase().indexOf(searchText.trim().toLowerCase()) !== -1;
       }
     });
   }
