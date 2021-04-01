@@ -11,6 +11,7 @@ import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {DialogRef} from '../../models/dialog-ref';
 
 @Component({
   selector: 'app-localization-popup',
@@ -28,9 +29,9 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Localization>,
               private toast: ToastService,
+              private dialogRef: DialogRef,
               private fb: FormBuilder) {
     this.model = data.model;
-    console.log('this.model', this.model);
     this.operation = data.operation;
   }
 
@@ -84,6 +85,7 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
         this.model = local;
         this.operation = OperationTypes.UPDATE;
         this.form.get('localizationKey')?.disable();
+        this.dialogRef.close(this.model);
       });
   }
 

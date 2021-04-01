@@ -16,6 +16,7 @@ import {Lookup} from '../../../models/lookup';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {LookupService} from '../../../services/lookup.service';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {DialogRef} from '../../../shared/models/dialog-ref';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -46,6 +47,7 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private lookupService: LookupService,
               public langService: LangService,
+              private dialogRef: DialogRef,
               private fb: FormBuilder) {
     this.model = data.model;
     this.parentId = data.parentId;
@@ -118,6 +120,9 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
       this.model = aid;
       this.operation = OperationTypes.UPDATE;
       this.checkIfAidTabEnabled();
+      if (this.aidType === AidTypes.SUB_CATEGORY) {
+        this.dialogRef.close(this.model);
+      }
     });
   }
 
