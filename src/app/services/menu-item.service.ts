@@ -25,8 +25,7 @@ export class MenuItemService {
   load(): Observable<MenuItem[]> {
     return this._load().pipe(
       tap((menuItems) => this.menuItems = menuItems),
-      tap(_ => this.prepareMenuItems()),
-      tap(items => console.log(items))
+      tap(_ => this.prepareMenuItems())
     );
   }
 

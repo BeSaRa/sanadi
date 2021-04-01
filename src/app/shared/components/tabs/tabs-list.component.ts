@@ -1,36 +1,30 @@
-import {
-  AfterContentInit,
-  Component,
-  ContentChildren,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-  QueryList
-} from '@angular/core';
+import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
-import {delay, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {TabListService} from './tab-list-service';
 
 @Component({
   selector: 'tabs-list , [tabs-list]',
   templateUrl: './tabs-list.component.html',
-  styleUrls: ['./tabs-list.component.scss']
+  styleUrls: ['./tabs-list.component.scss'],
+  providers: [
+    TabListService
+  ]
 })
 export class TabsListComponent implements OnDestroy, AfterContentInit {
-  static aliveTabsCount: number = 0;
-  tabContainerId: string = '';
-  tabContainerNumber: number = 0;
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
+  static aliveTabsCount: number = 0;
+  private destroy$: Subject<any> = new Subject<any>();
+
+  tabContainerId: string = '';
+  tabContainerNumber: number = 0;
 
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
-  private destroy$: Subject<any> = new Subject<any>();
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
-  constructor() {
-    ++TabsListComponent.aliveTabsCount;
-    this.tabContainerNumber = TabsListComponent.aliveTabsCount;
+  constructor(private tabListService: TabListService) {
+    this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
   }
 
@@ -42,59 +36,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    Promise.resolve().then(() => {
-      this.prepareTabs();
-      this.tabs.changes.pipe(takeUntil(this.destroy$), delay(0)).subscribe(() => {
-        this.prepareTabs();
-      });
-      this.selectFirstTabIfThereIsNoActiveIndex();
-      this.listenToSelectTabByIndex();
-    });
-  }
-
-  private listenToSelectTabByIndex() {
-    if (this.tabByIndex$) {
-      this.tabByIndex$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((index) => {
-          this.selectTabByIndex(index);
-        });
-    }
-  }
-
-  /**
-   * @description prepare tabs and indexes
-   * @private
-   */
-  private prepareTabs(): void {
-    this.tabs.forEach((tab, index) => {
-      tab.tabId = '#' + this.tabContainerId + '-tab-' + index;
-      tab.tabIndex = index;
-    });
-  }
-
-  /**
-   * @description select first tab if there is no Active tab Index provided by user.
-   * @private
-   */
-  private selectFirstTabIfThereIsNoActiveIndex(): void {
-    if (!this.tabs.length) {
-      return;
-    }
-    let tab;
-    if (this.activeTabIndex) {
-      tab = this.getTabByIndex(this.activeTabIndex);
-    }
-    this.selectTab(tab || this.tabs.first);
-  }
-
-  private getTabByIndex(index: number): TabComponent | undefined {
-    if (!this.tabs) {
-      return undefined;
-    }
-    return this.tabs.find(tab => {
-      return tab.tabIndex === index;
-    });
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex);
   }
 
   /**
@@ -105,16 +47,6 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
     if (tab.active) {
       return;
     }
-    this.tabs.forEach(item => {
-      item.tabIndex === tab.tabIndex ? (item.active = true) : (item.active = false);
-    });
-    this.onTabChange.emit(tab);
-  }
-
-  selectTabByIndex(index: number): void {
-    const tab = this.getTabByIndex(index);
-    if (tab) {
-      this.selectTab(tab);
-    }
+    this.tabListService.changeSelectedTabTo$.next(tab);
   }
 }
