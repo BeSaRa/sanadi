@@ -3,7 +3,7 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
-<div class="dialog-content">
+<div class="dialog-content" #dialogContent>
   <form class="min-w400px" novalidate autocomplete="off"
         [formGroup]="form">
     <div class="row">
@@ -34,7 +34,7 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>

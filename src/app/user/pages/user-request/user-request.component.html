@@ -931,7 +931,8 @@
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-    <button tabindex="-1" (click)="fm.displayFormValidity()" tooltip="{{langService.map.validate_fields}}"
+    <button tabindex="-1" (click)="fm.displayFormValidity(fm.mainContentId)"
+            tooltip="{{langService.map.validate_fields}}"
             class="btn btn-link">
       <i class="mdi mdi-information-outline text-info"></i>
     </button>

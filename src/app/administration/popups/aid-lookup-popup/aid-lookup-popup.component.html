@@ -3,7 +3,7 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
-<div class="dialog-content">
+<div class="dialog-content" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
@@ -71,7 +71,7 @@
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity()"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>

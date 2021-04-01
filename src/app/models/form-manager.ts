@@ -2,8 +2,12 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {LangService} from '../services/lang.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {IStatusClasses} from '../interfaces/i-status-classes';
+import {TemplateRef} from '@angular/core';
 
 export class FormManager {
+
+  mainContentId = 'main-content';
+
   constructor(private form: FormGroup, private langService: LangService) {
   }
 
@@ -53,8 +57,25 @@ export class FormManager {
     };
   }
 
-  displayFormValidity(): void {
+  /**
+   * @description Highlight validity of all fields in form
+   * @param elmRefToScroll
+   * Scroll the form to the top of given element
+   */
+  displayFormValidity(elmRefToScroll: any = ''): void {
     this.form.markAllAsTouched();
+
+    if (!elmRefToScroll) {
+      return;
+    }
+
+    if (typeof elmRefToScroll === 'string') {
+      elmRefToScroll = document.getElementById(elmRefToScroll) as HTMLElement;
+    }
+
+    if (elmRefToScroll.scrollTop > 0) {
+      elmRefToScroll.scrollTo({top: 0, behavior: "smooth"});
+    }
   }
 
   getStatusFieldTranslate(field: string): any {
