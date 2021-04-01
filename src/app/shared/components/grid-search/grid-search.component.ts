@@ -26,4 +26,9 @@ export class GridSearchComponent implements OnInit {
     this.searchTextEvent.emit(this.searchText.value);
   }
 
+  clearSearch($event: MouseEvent): void {
+    this.searchText.setValue('');
+    this.searchTextEvent.emit(this.searchText.value);
+  }
+
 }
