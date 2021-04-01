@@ -177,18 +177,18 @@ function filterList(searchText: string, records: any[], searchKeys: any): any[] 
  */
 function searchInObject(objectToSearch: any, searchText: string = '', searchFieldsProperty: string = 'searchFields'): boolean {
   // if no searchFields mentioned, don't search and return all item as existing after filter
-  if (!objectToSearch.hasOwnProperty(searchFieldsProperty)) {
+  if (!objectToSearch.hasOwnProperty(searchFieldsProperty) || !searchText) {
     return true;
   }
   const keys = Object.keys(objectToSearch[searchFieldsProperty]);
   return keys.some(key => {
     if (typeof objectToSearch[searchFieldsProperty][key] === 'function') {
       const func = objectToSearch[searchFieldsProperty][key] as searchFunctionType;
-      return func(searchText.toLowerCase());
+      return func(searchText.trim().toLowerCase());
     } else {
       const field = objectToSearch[searchFieldsProperty][key];
       const value = objectToSearch[field] ? (objectToSearch[field] as string) + '' : '';
-      return value.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+      return value.toLowerCase().indexOf(searchText.trim().toLowerCase()) !== -1;
     }
   });
 }
