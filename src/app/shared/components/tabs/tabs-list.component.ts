@@ -61,5 +61,6 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
       return;
     }
     this.tabListService.changeSelectedTabTo$.next(tab);
+    this.onTabChange.emit(tab);
   }
 }
