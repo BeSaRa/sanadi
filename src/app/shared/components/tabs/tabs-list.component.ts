@@ -1,7 +1,8 @@
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList} from '@angular/core';
+import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {Subject} from 'rxjs';
 import {TabListService} from './tab-list-service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'tabs-list , [tabs-list]',
@@ -11,7 +12,7 @@ import {TabListService} from './tab-list-service';
     TabListService
   ]
 })
-export class TabsListComponent implements OnDestroy, AfterContentInit {
+export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   static aliveTabsCount: number = 0;
@@ -26,6 +27,18 @@ export class TabsListComponent implements OnDestroy, AfterContentInit {
   constructor(private tabListService: TabListService) {
     this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
+  }
+
+  ngOnInit(): void {
+    this.listenToOutSideTabChange();
+  }
+
+  private listenToOutSideTabChange() {
+    if (this.tabByIndex$) {
+      this.tabByIndex$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(index => this.tabListService.selectTabByIndex(index));
+    }
   }
 
   ngOnDestroy(): void {

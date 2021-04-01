@@ -40,7 +40,7 @@ export class TabListService implements OnDestroy {
     }
   }
 
-  private selectTabByIndex(index: number): void {
+  selectTabByIndex(index: number): void {
     const tab = this.findTabByIndex(index);
     this.changeSelectedTabTo$.next(tab);
   }
