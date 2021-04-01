@@ -25,7 +25,7 @@ import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 export class OrganizationBranchComponent implements OnInit, OnDestroy, PageComponentInterface<OrgBranch> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   branches: OrgBranch[] = [];
   branchesClone: OrgBranch[] = [];
 
@@ -198,6 +198,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       this.branches = branches;
       this.branchesClone = branches;
       this.selectedRecords = [];
+      this.search$.next(this.search$.value);
     });
   }
 

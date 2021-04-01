@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {SubventionRequestService} from '../../../services/subvention-request.service';
 import {Router} from '@angular/router';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {debounceTime, switchMap, take} from 'rxjs/operators';
 import {SubventionRequest} from '../../../models/subvention-request';
 import {ToastService} from '../../../services/toast.service';
@@ -17,7 +17,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   requests: SubventionRequest[] = [];
   requestsClone: SubventionRequest[] = [];
   searchSubscription!: Subscription;
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
 
   constructor(private subventionRequestService: SubventionRequestService,
@@ -86,6 +86,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     ).subscribe((requests) => {
       this.requests = requests;
       this.requestsClone = requests.slice();
+      this.search$.next(this.search$.value);
     });
   }
 }

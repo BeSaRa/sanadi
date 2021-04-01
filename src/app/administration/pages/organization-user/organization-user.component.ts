@@ -29,7 +29,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
@@ -203,6 +203,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       this.orgUsers = orgUsers;
       this.orgUsersClone = orgUsers;
       this.selectedRecords = [];
+      this.search$.next(this.search$.value);
     });
   }
 

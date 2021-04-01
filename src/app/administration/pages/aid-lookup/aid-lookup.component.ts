@@ -33,7 +33,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
 
   selectedRecords: AidLookup[] = [];
@@ -117,6 +117,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       this.aidLookups = aidLookups;
       this.aidLookupsClone = aidLookups;
       this.selectedRecords = [];
+      this.search$.next(this.search$.value);
     });
   }
 

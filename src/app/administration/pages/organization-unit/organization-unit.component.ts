@@ -26,7 +26,7 @@ import {EmployeeService} from '../../../services/employee.service';
 export class OrganizationUnitComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUnit> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   organizations: OrgUnit[] = [];
   organizationsClone: OrgUnit[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'orgNationality', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions'];
@@ -201,6 +201,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       this.organizations = orgUnits;
       this.organizationsClone = orgUnits;
       this.selectedRecords = [];
+      this.search$.next(this.search$.value);
     });
   }
 

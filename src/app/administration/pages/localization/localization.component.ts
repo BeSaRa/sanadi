@@ -25,7 +25,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   searchSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   add$ = new Subject<any>();
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
 
@@ -51,6 +51,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
     ).subscribe((locals) => {
       this.localization = locals;
       this.localizationsClone = locals.slice();
+      this.search$.next(this.search$.value);
     });
   }
 

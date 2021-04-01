@@ -21,7 +21,7 @@ import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInterface<CustomRole> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  search$: Subject<string> = new Subject<string>();
+  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   customRoles: CustomRole[] = [];
   customRolesClone: CustomRole[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
@@ -188,6 +188,7 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       this.customRoles = roles;
       this.customRolesClone = roles;
       this.selectedRecords = [];
+      this.search$.next(this.search$.value);
     });
   }
 
