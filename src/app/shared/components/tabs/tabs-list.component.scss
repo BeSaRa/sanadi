@@ -1,3 +1,7 @@
 :host {
   display: block;
 }
+
+.tab-link:not(:disabled) {
+  cursor: pointer;
+}
