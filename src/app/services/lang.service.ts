@@ -85,7 +85,7 @@ export class LangService extends BackendGenericService<Localization> {
    * @private
    */
   private changeStyleHref(style: Styles): void {
-    this.linkElement.href = style;
+    this.linkElement.href = 'assets/style/'+style;
   }
 
   private prepareCurrentLang(): ILanguageKeys {

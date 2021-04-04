@@ -39,7 +39,12 @@
               {
                 "glob": "*",
                 "input": "node_modules/@mdi/font/fonts",
-                "output": "fonts"
+                "output": "assets/fonts"
+              },
+              {
+                "glob": "materialdesignicons.min.css",
+                "input": "node_modules/@mdi/font/css/",
+                "output": "assets/style/"
               },
               "src/assets",
               "src/CONFIGURATION.json",
@@ -47,21 +52,6 @@
               "src/MENU.json"
             ],
             "styles": [
-              {
-                "bundleName": "material-icons",
-                "input": "node_modules/@mdi/font/css/materialdesignicons.min.css",
-                "inject": true
-              },
-              {
-                "bundleName": "bootstrap",
-                "input": "src/assets/style/bootstrap.css",
-                "inject": false
-              },
-              {
-                "bundleName": "bootstrap-rtl",
-                "input": "src/assets/style/bootstrap-rtl.css",
-                "inject": false
-              },
               "src/styles.scss"
             ],
             "scripts": [

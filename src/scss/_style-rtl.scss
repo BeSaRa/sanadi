@@ -1,6 +1,10 @@
+@import "custom_variables";
 @import "custom_mixin";
 
 @include rtl_direction {
+  body {
+    font-family: 'Tajawal', sans-serif;
+  }
   .dialog-actions {
     border-top: 1px solid tint-color($primary, 80);
     display: flex;
