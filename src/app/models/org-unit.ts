@@ -37,6 +37,7 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   linkToInternalSystem: string | undefined;
   lawSubjectedName: string | undefined;
   boardDirectorsPeriod: string | undefined;
+  city: number | undefined;
 
   service: OrganizationUnitService;
   langService: LangService;

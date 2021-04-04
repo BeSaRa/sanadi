@@ -161,6 +161,21 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label for="city" asteriskIfRequired="city"
+                   class="form-label">{{langService.map.city}}</label>
+            <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="city"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="city"
+                       [ngClass]="fm.getStatusClass('basic.city')">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of cityList" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message [control]="fm.getFormField('basic.city')"></app-field-error-message>
+          </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="poBoxNum" class="form-label">{{langService.map.lbl_po_box_num}}</label>
             <input id="poBoxNum"
@@ -168,6 +183,8 @@
                    formControlName="poBoxNum" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.poBoxNum')"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="faxNumber" asteriskIfRequired="faxNumber"
                    class="form-label">{{langService.map.fax_number}}</label>
@@ -176,8 +193,6 @@
                    formControlName="faxNumber" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.faxNumber')"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="hotLine" asteriskIfRequired="hotLine"
                    class="form-label">{{langService.map.hotline}}</label>
@@ -186,31 +201,59 @@
                    formControlName="hotLine" class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.hotLine')"></app-field-error-message>
           </div>
-
-          <!--<div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
-            <label for="orgNationality" asteriskIfRequired="orgNationality"
-                   class="form-label">{{langService.map.lbl_nationality}}</label>
-            &lt;!&ndash;<select id="orgNationality" formControlName="orgNationality"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.orgNationality')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of orgNationalityList"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>&ndash;&gt;
-            <ng-select [selectOnTab]="true" labelForId="orgNationality" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="orgNationality"
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label for="registryCreator" asteriskIfRequired="registryCreator"
+                   class="form-label">{{langService.map.registered_by}}</label>
+            <ng-select [selectOnTab]="true" labelForId="registryCreator" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="registryCreator"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="orgNationality"
-                       [ngClass]="fm.getStatusClass('basic.orgNationality')">
+                       formControlName="registryCreator"
+                       [ngClass]="fm.getStatusClass('basic.registryCreator')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of orgNationalityList" [value]="option.lookupKey">
+              <ng-option *ngFor="let option of orgUnitList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
             <app-field-error-message [control]="fm.getFormField('basic.orgNationality')"></app-field-error-message>
-          </div>-->
+          </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label for="registryDate" asteriskIfRequired="registryDate"
+                   class="form-label">{{langService.map.first_registration_date}}</label>
+            <input theme="dp-material" [dpDayPicker]="dateConfig" id="registryDate"
+                   formControlName="registryDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('basic.registryDate')">
+            <app-field-error-message [control]="fm.getFormField('basic.registryDate')"></app-field-error-message>
+          </div>
         </div>
       </div>
+
+
+
+
+      <!--<div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+        <label for="orgNationality" asteriskIfRequired="orgNationality"
+               class="form-label">{{langService.map.lbl_nationality}}</label>
+        &lt;!&ndash;<select id="orgNationality" formControlName="orgNationality"
+                class="form-select"
+                [ngClass]="fm.getStatusClass('basic.orgNationality')">
+          <option value="">{{langService.map.lbl_none}}</option>
+          <option *ngFor="let option of orgNationalityList"
+                  [ngValue]="option.lookupKey">{{option.getName()}}</option>
+        </select>&ndash;&gt;
+        <ng-select [selectOnTab]="true" labelForId="orgNationality" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="orgNationality"
+                   [notFoundText]="langService.map.msg_not_found"
+                   formControlName="orgNationality"
+                   [ngClass]="fm.getStatusClass('basic.orgNationality')">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-option *ngFor="let option of orgNationalityList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message [control]="fm.getFormField('basic.orgNationality')"></app-field-error-message>
+      </div>-->
     </ng-template>
     <ng-template #advancedInfoTemplate style="width: 600px">
       <div formGroupName="advanced">

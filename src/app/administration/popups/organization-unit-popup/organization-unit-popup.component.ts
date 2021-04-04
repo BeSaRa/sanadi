@@ -17,6 +17,7 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {OrganizationUnitService} from '../../../services/organization-unit.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -32,6 +33,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   model: OrgUnit;
   orgUnitTypesList: Lookup[];
   orgUnitStatusList: Lookup[];
+  orgUnitList: OrgUnit[];
+  cityList: Lookup[];
   // orgNationalityList: Lookup[];
   saveVisible = true;
   validateFieldsVisible = true;
@@ -52,11 +55,14 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private toast: ToastService,
               public langService: LangService,
-              private configService: ConfigurationService) {
+              private configService: ConfigurationService,
+              private orgUnitService: OrganizationUnitService) {
     this.operation = data.operation;
     this.model = data.model;
+    this.orgUnitList = this.orgUnitService.list;
     this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
+    this.cityList = lookupService.listByCategory.Countries;
     // this.orgNationalityList = lookupService.getByCategory(LookupCategories.NATIONALITY);
   }
 
@@ -108,14 +114,18 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
         street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
         zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
+        city: [this.model.city, [CustomValidators.required]],
         orgNationality: [this.model.orgNationality, CustomValidators.required],
         poBoxNum: [this.model.poBoxNum, [CustomValidators.number, Validators.maxLength(10)]],
         hotLine: [this.model.hotLine, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
         faxNumber: [this.model.faxNumber, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
+        registryCreator: [this.model.registryCreator],
+        registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
-          'address', 'buildingName', 'unitName', 'street', 'zone', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber'
+          'address', 'buildingName', 'unitName', 'street', 'zone', 'city', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber', 'registryCreator',
+          'registryDate'
         ])
       }),
       advanced: this.fb.group({

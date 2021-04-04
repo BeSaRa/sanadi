@@ -248,4 +248,6 @@ export interface ILanguageKeys {
   number_of_installments: string;
   msg_search_date_hint: string;
   msg_not_found: string;
+  registered_by: string;
+  first_registration_date: string;
 }
