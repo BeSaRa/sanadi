@@ -212,7 +212,7 @@
                        formControlName="registryCreator"
                        [ngClass]="fm.getStatusClass('basic.registryCreator')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of orgUnitList" [value]="option.id">
+              <ng-option *ngFor="let option of orgUnitsList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>

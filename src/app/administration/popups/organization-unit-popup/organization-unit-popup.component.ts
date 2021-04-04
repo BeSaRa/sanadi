@@ -17,7 +17,6 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {OrganizationUnitService} from '../../../services/organization-unit.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -33,7 +32,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   model: OrgUnit;
   orgUnitTypesList: Lookup[];
   orgUnitStatusList: Lookup[];
-  orgUnitList: OrgUnit[];
+  orgUnitsList: OrgUnit[];
   cityList: Lookup[];
   // orgNationalityList: Lookup[];
   saveVisible = true;
@@ -55,11 +54,10 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private toast: ToastService,
               public langService: LangService,
-              private configService: ConfigurationService,
-              private orgUnitService: OrganizationUnitService) {
+              private configService: ConfigurationService) {
     this.operation = data.operation;
     this.model = data.model;
-    this.orgUnitList = this.orgUnitService.list;
+    this.orgUnitsList = data.orgUnitsList;
     this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
     this.cityList = lookupService.listByCategory.Countries;

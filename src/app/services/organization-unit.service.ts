@@ -33,7 +33,8 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   openCreateDialog(): DialogRef {
     return this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
       model: new OrgUnit(),
-      operation: OperationTypes.CREATE
+      operation: OperationTypes.CREATE,
+      orgUnitsList: this.list
     });
   }
 
@@ -42,7 +43,8 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
       switchMap((orgUnit: OrgUnit) => {
         return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
           model: orgUnit,
-          operation: OperationTypes.UPDATE
+          operation: OperationTypes.UPDATE,
+          orgUnitsList: this.list
         }));
       })
     );
