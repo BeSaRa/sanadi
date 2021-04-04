@@ -727,8 +727,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate')?.value;
       if (requestCreationDate) {
-        this.aidApprovalDate?.setValidators(CustomValidators.minDate(requestCreationDate));
-        this.aidPaymentDate?.setValidators(CustomValidators.minDate(requestCreationDate));
+        this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDate)]);
+        this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDate)]);
       }
       this.aidApprovalDateSub = this.aidApprovalDate?.valueChanges.pipe(
         takeUntil(this.destroy$)
@@ -737,7 +737,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (dayjs(value).isAfter(dayjs(minDate))) {
           minDate = value;
         }
-        this.aidPaymentDate?.setValidators(CustomValidators.minDate(minDate));
+        this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(minDate)]);
         this.aidPaymentDate?.updateValueAndValidity();
       });
     } else {
@@ -852,10 +852,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       if (this.currentRequest) {
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
         if (value) {
-          this.aidApprovalDate?.setValidators(CustomValidators.minDate(value));
+          this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(value)]);
           this.aidApprovalDate?.updateValueAndValidity();
 
-          this.aidPaymentDate?.setValidators(CustomValidators.minDate(value));
+          this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(value)]);
           this.aidPaymentDate?.updateValueAndValidity();
         }
       }
