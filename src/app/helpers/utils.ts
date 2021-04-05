@@ -18,7 +18,8 @@ export {
   searchInObject,
   changeDateToDatepicker,
   changeDateFromDatepicker,
-  getDatepickerOptions
+  getDatepickerOptions,
+  getDateStringFromDate
 };
 
 /**
@@ -209,16 +210,27 @@ function changeDateToDatepicker(dateValue: any): IMyDateModel {
   return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};
 }
 
-function changeDateFromDatepicker(dateValue: (IMyDateModel | undefined | null) = null, format: string = ''): (Date | undefined | null | string | IMyDateModel) {
-  if (!dateValue || !dateValue.singleDate?.jsDate) {
+function changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
+  if (!dateValue) {
     return dateValue;
   }
-  if (format) {
-    // return string
-    return dayjs(dateValue.singleDate?.jsDate).format(format);
-  }
-  // return Date object
   return dateValue.singleDate?.jsDate;
+}
+
+function getDateStringFromDate(dateValue: any, format: string = ''): string {
+  if (!dateValue || typeof dateValue === 'string') {
+    return dateValue;
+  }
+
+  let date = dateValue;
+  if (date.hasOwnProperty('singleDate')) {
+    date = date.singleDate.hasOwnProperty('jsDate') ? date.singleDate.jsDate : date.singleDate;
+  }
+
+  const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+  format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+  return dayjs(date).format(format);
 }
 
 
