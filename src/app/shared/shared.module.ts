@@ -34,8 +34,10 @@ import {FlipIconDirective} from './directives/flip-icon.directive';
 import {NgScrollbarModule} from 'ngx-scrollbar';
 import {SidebarMenuItemListComponent} from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
 import {MenuItemFilterPipe} from './pipes/menu-item-filter.pipe';
-import { HighlightPipe } from './pipes/highlight.pipe';
+import {HighlightPipe} from './pipes/highlight.pipe';
 import {NgSelectModule} from '@ng-select/ng-select';
+import {AngularMyDatePickerModule} from 'angular-mydatepicker';
+import { DateFixDirective } from './directives/date-fix.directive';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,8 @@ import {NgSelectModule} from '@ng-select/ng-select';
     FlipIconDirective,
     SidebarMenuItemListComponent,
     MenuItemFilterPipe,
-    HighlightPipe
+    HighlightPipe,
+    DateFixDirective
   ],
   imports: [
     CommonModule,
@@ -77,7 +80,8 @@ import {NgSelectModule} from '@ng-select/ng-select';
     DpDatePickerModule,
     NgxMaskModule.forRoot(),
     NgScrollbarModule,
-    NgSelectModule
+    NgSelectModule,
+    AngularMyDatePickerModule
   ],
   exports: [
     NgScrollbarModule,
@@ -109,7 +113,9 @@ import {NgSelectModule} from '@ng-select/ng-select';
     LoadingComponent,
     VersionComponent,
     SidebarComponent,
-    NgSelectModule
+    NgSelectModule,
+    AngularMyDatePickerModule,
+    DateFixDirective
   ]
 })
 export class SharedModule {

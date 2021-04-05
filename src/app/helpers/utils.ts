@@ -1,4 +1,8 @@
 import {searchFunctionType} from '../types/types';
+import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
+import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
+import {FactoryService} from '../services/factory.service';
+import {ConfigurationService} from '../services/configuration.service';
 
 export {
   isValidValue,
@@ -10,7 +14,10 @@ export {
   printBlobData,
   filterList,
   getPropertyValue,
-  searchInObject
+  searchInObject,
+  changeDateToDatepicker,
+  changeDateFromDatepicker,
+  getDatepickerOptions
 };
 
 /**
@@ -191,4 +198,72 @@ function searchInObject(objectToSearch: any, searchText: string = '', searchFiel
       return value.toLowerCase().indexOf(searchText.trim().toLowerCase()) !== -1;
     }
   });
+}
+
+function changeDateToDatepicker(dateValue: any): IMyDateModel {
+  if (!dateValue) {
+    return dateValue;
+  }
+  // return {isRange: false, singleDate: {formatted: dayjs(dateValue).format(dateFormat)}, dateRange: undefined};
+  return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};
+}
+
+function changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
+  if (!dateValue) {
+    return dateValue;
+  }
+  return dateValue.singleDate?.jsDate;
+}
+
+
+function _getDatepickerDisableDate(customOptions: IDatepickerCustomOptions): Date {
+  let disableDate = new Date(), skipDays = 1; //skipDays = 1 to ignore today when disabling
+
+  // if ignoreDays is passed, disableToday will be ignored and only ignoreDays will be used
+  if (customOptions.ignoreDays && customOptions.ignoreDays > 0) {
+    skipDays = customOptions.ignoreDays;
+  } else if (customOptions.disableToday) {
+    skipDays = 0;
+  }
+  if (skipDays > 0) {
+    if (customOptions.disablePeriod === 'past') {
+      disableDate.setDate(disableDate.getDate() - skipDays);
+    } else if (customOptions.disablePeriod === 'future') {
+      disableDate.setDate(disableDate.getDate() + skipDays);
+    }
+  }
+  return disableDate;
+}
+
+/**
+ * @description Get date picker options for angularMyDatepicker
+ * @param customOptions
+ */
+function getDatepickerOptions(customOptions: IDatepickerCustomOptions): IAngularMyDpOptions {
+  const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+  const format = customOptions.format || configService.CONFIG.DATEPICKER_FORMAT;
+
+  let options: IAngularMyDpOptions = {
+    dateRange: false,
+    dateFormat: format.toLowerCase(),
+    inputFieldValidation: false
+  };
+  if (customOptions.disablePeriod === 'none') {
+    return options;
+  }
+  const disableDate = _getDatepickerDisableDate(customOptions);
+  if (customOptions.disablePeriod === 'past') {
+    options.disableUntil = {
+      year: disableDate.getFullYear(),
+      month: disableDate.getMonth() + 1,
+      day: disableDate.getDate()
+    }
+  } else if (customOptions.disablePeriod === 'future') {
+    options.disableSince = {
+      year: disableDate.getFullYear(),
+      month: disableDate.getMonth() + 1,
+      day: disableDate.getDate()
+    };
+  }
+  return options;
 }
