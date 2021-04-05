@@ -3,6 +3,7 @@ import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
 import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
+import * as dayjs from 'dayjs';
 
 export {
   isValidValue,
@@ -208,10 +209,15 @@ function changeDateToDatepicker(dateValue: any): IMyDateModel {
   return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};
 }
 
-function changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
-  if (!dateValue) {
+function changeDateFromDatepicker(dateValue: (IMyDateModel | undefined | null) = null, format: string = ''): (Date | undefined | null | string | IMyDateModel) {
+  if (!dateValue || !dateValue.singleDate?.jsDate) {
     return dateValue;
   }
+  if (format) {
+    // return string
+    return dayjs(dateValue.singleDate?.jsDate).format(format);
+  }
+  // return Date object
   return dateValue.singleDate?.jsDate;
 }
 
