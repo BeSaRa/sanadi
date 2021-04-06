@@ -6,6 +6,7 @@ import {UserRequestComponent} from './pages/user-request/user-request.component'
 import {UserRequestSearchComponent} from './pages/user-request-search/user-request-search.component';
 import {RequestsUnderProcessComponent} from './pages/requests-under-process/requests-under-process.component';
 import {PermissionGuard} from '../guards/permission-guard';
+import {CanDeactivateGuard} from '../guards/can-deactivate.guard';
 
 const routes: Routes = [
   {path: '', component: UserHomeComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {
     path: 'request', component: UserRequestComponent,
     canActivate: [PermissionGuard],
+    canDeactivate: [CanDeactivateGuard],
     data: {permissionKey: 'SUBVENTION_ADD'}
   },
   {

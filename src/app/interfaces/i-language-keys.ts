@@ -250,4 +250,5 @@ export interface ILanguageKeys {
   msg_not_found: string;
   registered_by: string;
   first_registration_date: string;
+  msg_unsaved_changes_confirm: string;
 }

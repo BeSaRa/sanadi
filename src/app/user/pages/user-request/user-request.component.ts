@@ -47,6 +47,7 @@ import * as dayjs from 'dayjs';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {CanNavigateOptions} from '../../../types/types';
 
 @Component({
   selector: 'app-user-request',
@@ -1010,5 +1011,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
     }, 100);
+  }
+
+  /**
+   * @description Check if user can navigate to other pages
+   */
+  canDeactivate(): CanNavigateOptions {
+    if (this.editMode || !this.form.dirty) {
+      return 'ALLOW';
+    }
+    return 'CONFIRM_UNSAVED_CHANGES';
   }
 }
