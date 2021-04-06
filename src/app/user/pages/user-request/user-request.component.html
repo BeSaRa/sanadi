@@ -184,9 +184,14 @@
             <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
+              <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
                      [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
-                     formControlName="dateOfBirth" class="form-control">
+                     formControlName="dateOfBirth" class="form-control">-->
+              <input class="form-control" angular-mydatepicker #dpDateOfBirth="angular-mydatepicker"
+                     name="dateOfBirth" formControlName="dateOfBirth" id="dateOfBirth" dateFix
+                     [options]="datepickerOptionsMap.dateOfBirth" autocomplete="off"
+                     (click)="dpDateOfBirth.toggleCalendar()"
+                     [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
             </div>
@@ -644,10 +649,15 @@
           <label for="creationDate" asteriskIfRequired="creationDate"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
-            <input theme="dp-material" [dpDayPicker]="dateConfig"
+            <!--<input theme="dp-material" [dpDayPicker]="dateConfig"
                    [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
                    id="creationDate"
-                   formControlName="creationDate" class="form-control">
+                   formControlName="creationDate" class="form-control">-->
+            <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
+                   name="creationDate" formControlName="creationDate" id="creationDate" dateFix
+                   [options]="datepickerOptionsMap.creationDate" autocomplete="off"
+                   (click)="dpCreationDate.toggleCalendar()"
+                   [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
           </div>
@@ -722,8 +732,13 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <!--<input id="statusDateModified" [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"
                    formControlName="statusDateModified" class="form-control" type="date">-->
-            <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
+            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
                    formControlName="statusDateModified" class="form-control"
+                   [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">-->
+            <input class="form-control" angular-mydatepicker #dpStatusDateModified="angular-mydatepicker"
+                   name="statusDateModified" formControlName="statusDateModified" id="statusDateModified" dateFix
+                   [options]="datepickerOptionsMap.statusDateModified" autocomplete="off"
+                   (click)="dpStatusDateModified.toggleCalendar()"
                    [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
             <app-field-error-message
               [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
@@ -798,8 +813,13 @@
               <div class="col-md-8 col-sm-12 mb-4">
                 <!--<input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
                        formControlName="approvalDate" class="form-control" type="date">-->
-                <input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
+                <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
                        formControlName="approvalDate" class="form-control"
+                       [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">-->
+                <input class="form-control" angular-mydatepicker #dpAidApprovalDate="angular-mydatepicker"
+                       name="approvalDate" formControlName="approvalDate" id="approvalDate" dateFix
+                       [options]="datepickerOptionsMap.aidApprovalDate" autocomplete="off"
+                       (click)="dpAidApprovalDate.toggleCalendar()"
                        [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
@@ -811,8 +831,13 @@
               <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
+                <!--<input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
                        formControlName="aidStartPayDate" class="form-control"
+                       [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">-->
+                <input class="form-control" angular-mydatepicker #dpAidStartPayDate="angular-mydatepicker"
+                       name="aidStartPayDate" formControlName="aidStartPayDate" id="aidStartPayDate" dateFix
+                       [options]="datepickerOptionsMap.aidPaymentDate" autocomplete="off"
+                       (click)="dpAidStartPayDate.toggleCalendar()"
                        [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
@@ -889,7 +914,7 @@
            [dataSource]="subventionAid">
       <ng-container cdkColumnDef="approvalDate">
         <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.approval_date}}</th>
-        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDate}} </td>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
       </ng-container>
       <ng-container cdkColumnDef="aidLookupId">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
@@ -905,7 +930,7 @@
       </ng-container>
       <ng-container cdkColumnDef="aidStartPayDate">
         <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
-        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDate}} </td>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
       </ng-container>
       <ng-container cdkColumnDef="aidAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
@@ -915,9 +940,14 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;">
           <div class="d-flex flex-row">
-            <button (click)="deleteAid(row , i , $event)" class="icon-btn"><i
-              class="mdi mdi-close-box"></i></button>
-            <button (click)="editAid(row , i, $event)" class="icon-btn"><i class="mdi mdi-pen"></i></button>
+            <button (click)="deleteAid(row , i , $event)" class="icon-btn text-primary"
+                    tooltip="{{langService.map.btn_delete}}">
+              <i class="mdi mdi-close-box"></i>
+            </button>
+            <button (click)="editAid(row , i, $event)" class="icon-btn text-primary"
+                    tooltip="{{langService.map.btn_edit}}">
+              <i class="mdi mdi-pen"></i>
+            </button>
           </div>
         </td>
       </ng-container>

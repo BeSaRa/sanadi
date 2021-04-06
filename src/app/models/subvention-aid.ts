@@ -5,14 +5,15 @@ import {FactoryService} from '../services/factory.service';
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
 import {Validators} from '@angular/forms';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 export class SubventionAid extends BaseModel<SubventionAid> {
   installementsCount: number = 0;
   periodicType!: number;
-  approvalDate!: string;
+  approvalDate!: IMyDateModel;
   aidAmount!: number;
   aidDescription!: string;
-  aidStartPayDate!: string;
+  aidStartPayDate!: IMyDateModel;
   aidLookupId!: number;
   subventionRequestId!: number;
   orgBranchId!: number;
@@ -25,6 +26,8 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   aidLookupInfo!: Partial<AdminResult>;
   periodicTypeInfo!: AdminResult;
   service: SubventionAidService;
+  approvalDateString: string | undefined;
+  aidStartPayDateString: string | undefined;
 
   constructor() {
     super();

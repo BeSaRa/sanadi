@@ -221,16 +221,17 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="registryDate" asteriskIfRequired="registryDate"
                    class="form-label">{{langService.map.first_registration_date}}</label>
-            <input theme="dp-material" [dpDayPicker]="dateConfig" id="registryDate"
+            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="registryDate"
                    formControlName="registryDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('basic.registryDate')">-->
+            <input class="form-control" angular-mydatepicker #dpRegistryDate="angular-mydatepicker"
+                   name="registryDate" formControlName="registryDate" id="registryDate" dateFix
+                   [options]="dpOptionsPast" autocomplete="off" (click)="dpRegistryDate.toggleCalendar()"
                    [ngClass]="fm.getStatusClass('basic.registryDate')">
             <app-field-error-message [control]="fm.getFormField('basic.registryDate')"></app-field-error-message>
           </div>
         </div>
       </div>
-
-
-
 
       <!--<div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
         <label for="orgNationality" asteriskIfRequired="orgNationality"
@@ -280,8 +281,12 @@
             <!--<input id="establishmentDate" type="date"
                    [ngClass]="fm.getStatusClass('advanced.establishmentDate')"
                    formControlName="establishmentDate" class="form-control">-->
-            <input theme="dp-material" [dpDayPicker]="dateConfig" id="establishmentDate"
+            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="establishmentDate"
                    formControlName="establishmentDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('advanced.establishmentDate')">-->
+            <input class="form-control" angular-mydatepicker #dpEstablishmentDate="angular-mydatepicker"
+                   name="establishmentDate" formControlName="establishmentDate" id="establishmentDate" dateFix
+                   [options]="dpOptionsNormal" autocomplete="off" (click)="dpEstablishmentDate.toggleCalendar()"
                    [ngClass]="fm.getStatusClass('advanced.establishmentDate')">
             <app-field-error-message
               [control]="fm.getFormField('advanced.establishmentDate')"></app-field-error-message>
@@ -291,8 +296,12 @@
             <!--<input id="budgetClosureDate" type="date"
                    [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')"
                    formControlName="budgetClosureDate" class="form-control">-->
-            <input theme="dp-material" [dpDayPicker]="dateConfig" id="budgetClosureDate"
+            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="budgetClosureDate"
                    formControlName="budgetClosureDate" class="form-control datepicker-field"
+                   [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')">-->
+            <input class="form-control" angular-mydatepicker #dpBudgetClosureDate="angular-mydatepicker"
+                   name="budgetClosureDate" formControlName="budgetClosureDate" id="budgetClosureDate" dateFix
+                   [options]="dpOptionsNormal" autocomplete="off" (click)="dpBudgetClosureDate.toggleCalendar()"
                    [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')">
             <app-field-error-message
               [control]="fm.getFormField('advanced.budgetClosureDate')"></app-field-error-message>

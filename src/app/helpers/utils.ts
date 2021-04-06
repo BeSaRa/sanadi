@@ -19,7 +19,8 @@ export {
   changeDateToDatepicker,
   changeDateFromDatepicker,
   getDatepickerOptions,
-  getDateStringFromDate
+  getDateStringFromDate,
+  getDatePickerOptionsClone
 };
 
 /**
@@ -218,21 +219,22 @@ function changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
 }
 
 function getDateStringFromDate(dateValue: any, format: string = ''): string {
-  if (!dateValue || typeof dateValue === 'string') {
+  if (!dateValue) {
     return dateValue;
+  }
+  const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
+  format = format || configService.CONFIG.DATEPICKER_FORMAT;
+
+  if (typeof dateValue === 'string') {
+    return dayjs(dateValue).format(format);
   }
 
   let date = dateValue;
   if (date.hasOwnProperty('singleDate')) {
     date = date.singleDate.hasOwnProperty('jsDate') ? date.singleDate.jsDate : date.singleDate;
   }
-
-  const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
-  format = format || configService.CONFIG.DATEPICKER_FORMAT;
-
   return dayjs(date).format(format);
 }
-
 
 function _getDatepickerDisableDate(customOptions: IDatepickerCustomOptions): Date {
   let disableDate = new Date(), skipDays = 1; //skipDays = 1 to ignore today when disabling
@@ -284,4 +286,8 @@ function getDatepickerOptions(customOptions: IDatepickerCustomOptions): IAngular
     };
   }
   return options;
+}
+
+function getDatePickerOptionsClone(datepickerOptions: IAngularMyDpOptions): IAngularMyDpOptions {
+  return JSON.parse(JSON.stringify(datepickerOptions));
 }

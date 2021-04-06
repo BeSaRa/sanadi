@@ -44,6 +44,9 @@ import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum
 import {formatDate} from '@angular/common';
 import {ReadModeService} from '../../../services/read-mode.service';
 import * as dayjs from 'dayjs';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-user-request',
@@ -94,14 +97,31 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'actions'
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
-  dateConfig: IDatePickerDirectiveConfig = {
+  /*dateConfig: IDatePickerDirectiveConfig = {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
     max: this.today
     // disableKeypress: true
   };
   dateConfigFuture: IDatePickerDirectiveConfig = {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT
+  };*/
+
+  datepickerOptionsMap: IKeyValue = {
+    dateOfBirth: getDatepickerOptions({disablePeriod: 'future'}),
+    creationDate: getDatepickerOptions({disablePeriod: 'future'}),
+    statusDateModified: getDatepickerOptions({disablePeriod: 'none'}),
+    aidApprovalDate: getDatepickerOptions({disablePeriod: 'none'}),
+    aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'})
   };
+
+  private datepickerFieldPathMap: IKeyValue = {
+    creationDate: 'requestInfoTab.creationDate',
+    requestDate: 'requestInfoTab.creationDate',
+    statusDate: 'requestStatusTab.statusDateModified',
+    aidApprovalDate: 'aidTab.0.approvalDate',
+    aidPaymentDate: 'aidTab.0.aidStartPayDate'
+  };
+
   aidPeriodicTypeSub!: Subscription;
   aidApprovalDateSub!: Subscription;
   readOnly = false;
@@ -711,6 +731,26 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _setPaymentDateValidations() {
+    const approvedDateValue = changeDateFromDatepicker(this.aidApprovalDate?.value);
+
+    let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
+    let minDate = changeDateFromDatepicker(creationDate?.value);
+    let minFieldName = 'creationDate';
+
+    if (approvedDateValue) {
+      if (dayjs(approvedDateValue).isAfter(dayjs(minDate))) {
+        minFieldName = 'aidApprovalDate';
+        minDate = approvedDateValue;
+      }
+    }
+
+    this.setRelatedMinDate(minFieldName, 'aidPaymentDate');
+    // @ts-ignore
+    this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(minDate)]);
+    this.aidPaymentDate?.updateValueAndValidity();
+  }
+
   private updateAidForm(aid: SubventionAid | undefined) {
     const aidArray = this.fm.getFormField('aidTab') as FormArray;
     aidArray.clear();
@@ -725,20 +765,33 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         });
       this.aidPeriodicType.updateValueAndValidity();
 
-      const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate')?.value;
-      if (requestCreationDate) {
-        this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDate)]);
-        this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDate)]);
+      const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate');
+      const requestCreationDateValue = changeDateFromDatepicker(requestCreationDate?.value);
+      if (requestCreationDate && requestCreationDateValue) {
+        this.setRelatedMinDate('creationDate', 'aidApprovalDate');
+        this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDateValue)]);
       }
+
+      this._setPaymentDateValidations();
+
       this.aidApprovalDateSub = this.aidApprovalDate?.valueChanges.pipe(
         takeUntil(this.destroy$)
       ).subscribe(value => {
-        let minDate = this.fm.getFormField('requestInfoTab.creationDate')?.value;
-        if (dayjs(value).isAfter(dayjs(minDate))) {
-          minDate = value;
+        this._setPaymentDateValidations();
+        /*const approvedDateValue = changeDateFromDatepicker(value);
+
+        let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
+        let minDate = changeDateFromDatepicker(creationDate?.value);
+        let minFieldName = 'creationDate';
+
+        if (dayjs(approvedDateValue).isAfter(dayjs(minDate))) {
+          minFieldName = 'aidApprovalDate';
+          minDate = approvedDateValue;
         }
+        this.setRelatedMinDate(minFieldName, 'aidPaymentDate');
+        // @ts-ignore
         this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(minDate)]);
-        this.aidPaymentDate?.updateValueAndValidity();
+        this.aidPaymentDate?.updateValueAndValidity();*/
       });
     } else {
       this.aidPeriodicTypeSub?.unsubscribe();
@@ -850,12 +903,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (this.currentRequest) {
+        const requestDate = changeDateFromDatepicker(value);
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
-        if (value) {
-          this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(value)]);
+        if (requestDate) {
+          this.setRelatedMinDate('creationDate', 'aidApprovalDate');
+          this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestDate)]);
           this.aidApprovalDate?.updateValueAndValidity();
 
-          this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(value)]);
+          this.setRelatedMinDate('creationDate', 'aidPaymentDate');
+          this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestDate)]);
           this.aidPaymentDate?.updateValueAndValidity();
         }
       }
@@ -874,11 +930,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           group.get('status')?.setValue(oldValue);
         }
         const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
-
+        const creationDate = changeDateFromDatepicker(requestInfoRequestDate?.value);
+        this.setRelatedMinDate('creationDate', 'statusDateModified');
         if (newValue === SubventionRequestStatus.APPROVED) {
-          group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(requestInfoRequestDate?.value)]);
+          group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(creationDate || '')]);
         } else {
-          group.get('statusDateModified')?.setValidators(CustomValidators.minDate(requestInfoRequestDate?.value));
+          group.get('statusDateModified')?.setValidators(CustomValidators.minDate(creationDate || ''));
         }
         group.get('statusDateModified')?.updateValueAndValidity();
       });
@@ -932,5 +989,26 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSameDate: boolean = false): void {
+    setTimeout(() => {
+      let toFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
+      const fromDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
+      if (!fromDate) {
+        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
+      } else {
+        const disableDate = new Date(fromDate);
+        if (!disableSameDate) {
+          disableDate.setDate(disableDate.getDate() - 1);
+        }
+        toFieldDateOptions.disableUntil = {
+          year: disableDate.getFullYear(),
+          month: disableDate.getMonth() + 1,
+          day: disableDate.getDate()
+        }
+      }
+      this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
+    }, 100);
   }
 }

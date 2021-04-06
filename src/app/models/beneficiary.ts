@@ -10,6 +10,7 @@ import {map} from 'rxjs/operators';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {Pair} from '../interfaces/pair';
 import {SubventionRequest} from './subvention-request';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -22,7 +23,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   residenceStatus!: number;
   residenceCountry!: number;
   gender!: number;
-  dateOfBirth!: string;
+  dateOfBirth!: IMyDateModel;
   educationLevel!: number;
   phoneNumber1!: string;
   phoneNumber2!: string;

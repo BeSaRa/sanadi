@@ -4,11 +4,12 @@ import {DatePipe, formatDate} from '@angular/common';
 import {AdminResult} from '../models/admin-result';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
 
 export class SubventionRequestInterceptor implements IModelInterceptor<SubventionRequest> {
   receive(model: SubventionRequest): SubventionRequest {
-    model.creationDate = model.creationDate ? formatDate(new Date(model.creationDate), 'yyyy-MM-dd', 'en-US') : '';
-    model.statusDateModified = model.statusDateModified ? formatDate(new Date(model.statusDateModified), 'yyyy-MM-dd', 'en-US') : '';
+    // model.creationDate = model.creationDate ? formatDate(new Date(model.creationDate), 'yyyy-MM-dd', 'en-US') : '';
+    // model.statusDateModified = model.statusDateModified ? formatDate(new Date(model.statusDateModified), 'yyyy-MM-dd', 'en-US') : '';
 
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
@@ -18,8 +19,11 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
 
     const config = FactoryService.getService<ConfigurationService>('ConfigurationService');
-    model.creationDateString = new DatePipe('en-US').transform(model.creationDate, config.CONFIG.DEFAULT_DATE_FORMAT) as string;
+    // model.creationDateString = new DatePipe('en-US').transform(model.creationDate, config.CONFIG.DEFAULT_DATE_FORMAT) as string;
 
+    model.creationDateString = getDateStringFromDate(model.creationDate);
+    model.creationDate = changeDateToDatepicker(model.creationDate);
+    model.statusDateModified = changeDateToDatepicker(model.statusDateModified);
     return model;
   }
 
@@ -35,7 +39,11 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
     delete model.searchFields;
     delete model.creationDateString;
     delete model.configService;
-    model.creationDate = (new Date(model.creationDate)).toISOString();
+    // model.creationDate = (new Date(model.creationDate)).toISOString();
+
+    model.creationDate = !model.creationDate ? model.creationDate : changeDateFromDatepicker(model.creationDate)?.toISOString();
+    model.statusDateModified = !model.statusDateModified ? model.statusDateModified : changeDateFromDatepicker(model.statusDateModified)?.toISOString();
+
     return model;
   }
 }

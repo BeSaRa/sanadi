@@ -17,6 +17,8 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {getDatepickerOptions} from '../../../helpers/utils';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -48,6 +50,9 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     format: this.configService.CONFIG.DATEPICKER_FORMAT,
     // disableKeypress: true
   };
+
+  dpOptionsPast: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'future'});
+  dpOptionsNormal: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'none'});
 
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgUnit>,
               private lookupService: LookupService,

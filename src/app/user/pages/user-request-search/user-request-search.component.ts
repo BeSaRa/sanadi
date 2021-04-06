@@ -15,13 +15,20 @@ import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-reque
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '../../../services/dialog.service';
-import {printBlobData} from '../../../helpers/utils';
+import {
+  changeDateFromDatepicker,
+  getDatepickerOptions,
+  getDatePickerOptionsClone,
+  printBlobData
+} from '../../../helpers/utils';
 import {Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ReadModeService} from '../../../services/read-mode.service';
+import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-user-request-search',
@@ -57,6 +64,28 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
     // disableKeypress: true
   };
+
+  datepickerOptionsMap: IKeyValue = {
+    creationDateFrom: getDatepickerOptions({disablePeriod: 'none'}),
+    creationDateTo: getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateFrom: getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateTo: getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedFrom: getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedTo: getDatepickerOptions({disablePeriod: 'none'})
+  }
+  private datepickerFieldPathMap: IKeyValue = {
+    creationDateFrom: 'advancedSearch.request.creationDateFrom',
+    creationDateTo: 'advancedSearch.request.creationDateTo',
+    statusDateFrom: 'advancedSearch.request.statusDateModifiedFrom',
+    statusDateTo: 'advancedSearch.request.statusDateModifiedTo',
+    statusDateModifiedFrom: 'advancedSearch.request.statusDateModifiedFrom',
+    statusDateModifiedTo: 'advancedSearch.request.statusDateModifiedTo',
+  };
+
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    this.setRelatedMinDate(fromFieldName, toFieldName);
+    this.setRelatedMaxDate(fromFieldName, toFieldName);
+  }
 
   constructor(public langService: LangService,
               private toastService: ToastService,
@@ -282,19 +311,25 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       ...simple,
       ...request,
       beneficiary: {...simple.beneficiary, ...beneficiary},
-      statusDateModifiedFrom: request.statusDateModifiedFrom ?
+      /*statusDateModifiedFrom: request.statusDateModifiedFrom ?
         dayjs(request.statusDateModifiedFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedFrom,
       statusDateModifiedTo: request.statusDateModifiedTo ?
-        dayjs(request.statusDateModifiedTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedTo
+        dayjs(request.statusDateModifiedTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedTo*/
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
-      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(request.creationDateFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
-      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(request.creationDateTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(changeDateFromDatepicker(request.creationDateFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(changeDateFromDatepicker(request.creationDateTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
     } else {
       this.latestCriteria.creationDateFrom = simple.creationDateFrom;
       this.latestCriteria.creationDateTo = simple.creationDateTo;
     }
+
+    if (request.statusDateModifiedFrom || request.statusDateModifiedTo) {
+      this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : dayjs(changeDateFromDatepicker(request.statusDateModifiedFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : dayjs(changeDateFromDatepicker(request.statusDateModifiedTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+    }
+
     return {...this.latestCriteria};
   }
 
@@ -336,5 +371,47 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     $event.preventDefault();
     this.readModeService.setReadOnly(request.requestId);
     this.router.navigate(['/home/main/request', request.requestId]).then();
+  }
+
+  setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
+    setTimeout(() => {
+      let toFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
+      const fromDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
+      if (!fromDate) {
+        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
+      } else {
+        const disableDate = new Date(fromDate);
+        if (!disableSelectedFromRelated) {
+          disableDate.setDate(disableDate.getDate() - 1);
+        }
+        toFieldDateOptions.disableUntil = {
+          year: disableDate.getFullYear(),
+          month: disableDate.getMonth() + 1,
+          day: disableDate.getDate()
+        }
+      }
+      this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
+    }, 100);
+  }
+
+  setRelatedMaxDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
+    setTimeout(() => {
+      let fromFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
+      const toDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
+      if (!toDate) {
+        fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
+      } else {
+        const disableDate = new Date(toDate);
+        if (!disableSelectedFromRelated) {
+          disableDate.setDate(disableDate.getDate() + 1);
+        }
+        fromFieldDateOptions.disableSince = {
+          year: disableDate.getFullYear(),
+          month: disableDate.getMonth() + 1,
+          day: disableDate.getDate()
+        }
+      }
+      this.datepickerOptionsMap[fromFieldName] = fromFieldDateOptions;
+    }, 100);
   }
 }

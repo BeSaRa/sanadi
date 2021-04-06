@@ -2,11 +2,19 @@ import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {SubventionAid} from '../models/subvention-aid';
 import {formatDate} from '@angular/common';
 import {AdminResult} from '../models/admin-result';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
 
 export class SubventionAidInterceptor implements IModelInterceptor<SubventionAid> {
   receive(model: SubventionAid): SubventionAid {
-    model.approvalDate = model.approvalDate ? formatDate(new Date(model.approvalDate), 'yyyy-MM-dd', 'en-US') : '';
-    model.aidStartPayDate = model.aidStartPayDate ? formatDate(new Date(model.aidStartPayDate), 'yyyy-MM-dd', 'en-US') : '';
+    /*model.approvalDate = model.approvalDate ? formatDate(new Date(model.approvalDate), 'yyyy-MM-dd', 'en-US') : '';
+    model.aidStartPayDate = model.aidStartPayDate ? formatDate(new Date(model.aidStartPayDate), 'yyyy-MM-dd', 'en-US') : '';*/
+
+    model.approvalDateString = model.approvalDate ? getDateStringFromDate(model.approvalDate) : '';
+    model.aidStartPayDateString = model.aidStartPayDate ? getDateStringFromDate(model.aidStartPayDate) : '';
+
+    model.approvalDate = changeDateToDatepicker(model.approvalDate);
+    model.aidStartPayDate = changeDateToDatepicker(model.aidStartPayDate);
+
     model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
     return model;
   }
@@ -17,8 +25,14 @@ export class SubventionAidInterceptor implements IModelInterceptor<SubventionAid
     delete model.enName;
     delete model.mainAidType;
     delete model.aidLookupInfo;
-    model.approvalDate = model.approvalDate ? (new Date(model.approvalDate)).toISOString() : '';
-    model.aidStartPayDate = model.aidStartPayDate ? (new Date(model.aidStartPayDate)).toISOString() : '';
+    delete model.approvalDateString;
+    delete model.aidStartPayDateString;
+    /*model.approvalDate = model.approvalDate ? (new Date(model.approvalDate)).toISOString() : '';
+    model.aidStartPayDate = model.aidStartPayDate ? (new Date(model.aidStartPayDate)).toISOString() : '';*/
+
+    model.approvalDate = !model.approvalDate ? '' : changeDateFromDatepicker(model.approvalDate)?.toISOString();
+    model.aidStartPayDate = !model.aidStartPayDate ? '' : changeDateFromDatepicker(model.aidStartPayDate)?.toISOString();
+
     return model;
   }
 

@@ -265,12 +265,18 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_from}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <!--<input type="date" formControlName="creationDateFrom" class="form-control" id="creationDateFrom">-->
-                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
+                        <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateFrom"
                                formControlName="creationDateFrom" class="form-control"
-                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">
+                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateFrom')">-->
+                        <input class="form-control" angular-mydatepicker #dpCreationDateFrom="angular-mydatepicker"
+                               name="creationDateFrom" formControlName="creationDateFrom" id="creationDateFrom" dateFix
+                               [options]="datepickerOptionsMap.creationDateFrom" autocomplete="off"
+                               (inputFieldChanged)="onDateChange($event, 'creationDateFrom', 'creationDateTo')"
+                               (click)="dpCreationDateFrom.toggleCalendar()"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.creationDateFrom')">
                         <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
                         <app-field-error-message
-                          [control]="fm.getFormField('advancedSearch.creationDates.creationDateFrom')"></app-field-error-message>
+                          [control]="fm.getFormField('advancedSearch.request.creationDateFrom')"></app-field-error-message>
                       </div>
                     </div>
                   </div>
@@ -280,12 +286,18 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.creation_date_to}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <!--<input type="date" formControlName="creationDateTo" class="form-control" id="creationDateTo">-->
-                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
+                        <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="creationDateTo"
                                formControlName="creationDateTo" class="form-control datepicker-field"
-                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">
+                               [ngClass]="fm.getStatusClass('advancedSearch.creationDates.creationDateTo')">-->
+                        <input class="form-control" angular-mydatepicker #dpCreationDateTo="angular-mydatepicker"
+                               name="creationDateTo" formControlName="creationDateTo" id="creationDateTo" dateFix
+                               [options]="datepickerOptionsMap.creationDateTo" autocomplete="off"
+                               (inputFieldChanged)="onDateChange($event, 'creationDateFrom', 'creationDateTo')"
+                               (click)="dpCreationDateTo.toggleCalendar()"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.creationDateTo')">
                         <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
                         <app-field-error-message
-                          [control]="fm.getFormField('advancedSearch.creationDates.creationDateTo')"></app-field-error-message>
+                          [control]="fm.getFormField('advancedSearch.request.creationDateTo')"></app-field-error-message>
                       </div>
                     </div>
                   </div>
@@ -297,8 +309,14 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_from}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <!--<input type="date" formControlName="statusDateModifiedFrom" class="form-control" id="statusDateFrom">-->
-                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
+                        <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateFrom"
                                formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">-->
+                        <input class="form-control" angular-mydatepicker #dpStatusDateFrom="angular-mydatepicker"
+                               name="statusDateFrom" formControlName="statusDateModifiedFrom" id="statusDateFrom" dateFix
+                               [options]="datepickerOptionsMap.statusDateModifiedFrom" autocomplete="off"
+                               (inputFieldChanged)="onDateChange($event, 'statusDateModifiedFrom', 'statusDateModifiedTo')"
+                               (click)="dpStatusDateFrom.toggleCalendar()"
                                [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">
                         <app-field-error-message
                           [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
@@ -311,8 +329,14 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date_to}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <!--<input type="date" formControlName="statusDateModifiedTo" class="form-control" id="statusDateTo">-->
-                        <input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
+                        <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateTo"
                                formControlName="statusDateModifiedTo" class="form-control datepicker-field"
+                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">-->
+                        <input class="form-control" angular-mydatepicker #dpStatusDateTo="angular-mydatepicker"
+                               name="statusDateTo" formControlName="statusDateModifiedTo" id="statusDateTo" dateFix
+                               [options]="datepickerOptionsMap.statusDateModifiedTo" autocomplete="off"
+                               (inputFieldChanged)="onDateChange($event, 'statusDateModifiedFrom', 'statusDateModifiedTo')"
+                               (click)="dpStatusDateTo.toggleCalendar()"
                                [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')">
                         <app-field-error-message
                           [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>

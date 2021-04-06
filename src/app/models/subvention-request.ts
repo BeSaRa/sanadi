@@ -8,7 +8,7 @@ import {SubventionAid} from './subvention-aid';
 import {Validators} from '@angular/forms';
 import {formatDate} from '@angular/common';
 import {AdminResult} from './admin-result';
-import {printBlobData} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, printBlobData} from '../helpers/utils';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
@@ -16,6 +16,7 @@ import {take} from 'rxjs/operators';
 import {SubventionRequestStatus} from '../enums/subvention-request-status';
 import * as dayjs from 'dayjs';
 import {ConfigurationService} from '../services/configuration.service';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -28,10 +29,10 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestSummary!: string;
   charityRefNo!: string;
   charitySerialNo!: string;
-  creationDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  creationDate: IMyDateModel = changeDateToDatepicker(new Date());// formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   approvalIndicator!: number;
   status: number = 2;
-  statusDateModified!: string;
+  statusDateModified!: IMyDateModel;
   requestNotes!: string;
   orgBranchId!: number;
   orgId!: number;
@@ -108,7 +109,8 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     const {status, statusDateModified, requestNotes} = this;
     return {
       status: control ? [status, CustomValidators.required] : status,
-      statusDateModified: control ? [statusDateModified ? statusDateModified : dayjs().format(this.configService.CONFIG.DATEPICKER_FORMAT), [CustomValidators.minDate(this.creationDate)]] : statusDateModified,
+      // @ts-ignore
+      statusDateModified: control ? [statusDateModified ? statusDateModified : changeDateToDatepicker(new Date()), [CustomValidators.minDate(changeDateFromDatepicker(this.creationDate))]] : statusDateModified,
       requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }
