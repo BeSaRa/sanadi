@@ -3,11 +3,9 @@
   <main class="flex-grow-1 align-self-stretch d-flex flex-column">
     <app-header [sidebar]="sidebar"></app-header>
     <div class="flex-grow-1 flex-shrink-1 container-fluid d-flex flex-column p-2" id="main-content">
-<!--      <ng-scrollbar class="home-scroll-component" [scrollAuditTime]="2000" [dir]="scrollDirection">-->
-        <div class="h-100 container-fluid p-3">
-          <router-outlet></router-outlet>
-        </div>
-<!--      </ng-scrollbar>-->
+      <div class="h-100 container-fluid p-3">
+        <router-outlet></router-outlet>
+      </div>
     </div>
     <app-footer class="d-none d-md-block"></app-footer>
   </main>

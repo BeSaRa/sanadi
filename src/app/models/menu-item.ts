@@ -45,6 +45,7 @@ export class MenuItem {
 
   isFontIcon(): boolean {
     return !this.isSvg;
+
   }
 
   preparePermissionList(): void {
