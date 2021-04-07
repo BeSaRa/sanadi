@@ -48,6 +48,7 @@ import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
+import {NavigationService} from '../../../services/navigation.service';
 
 @Component({
   selector: 'app-user-request',
@@ -141,6 +142,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
+              private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private fb: FormBuilder) {
 
@@ -896,7 +898,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   cancelRequest(): any {
-    return this.router.navigate(['.']);
+    return this.navigationService.goToBack();
   }
 
   private listenToRequestDateChange() {

@@ -18,10 +18,10 @@ import {DialogService} from '../../../services/dialog.service';
 import {
   changeDateFromDatepicker,
   getDatepickerOptions,
-  getDatePickerOptionsClone,
+  getDatePickerOptionsClone, isEmptyObject,
   printBlobData
 } from '../../../helpers/utils';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
@@ -51,6 +51,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private search$: Subject<any> = new Subject<any>();
   searchSubscription!: Subscription;
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
+  private latestCriteriaString: string = '';
+  private skipQueryParamSearch: boolean = true;
   requests: SubventionRequestAid[] = [];
 
   private idTypesValidationsMap: { [index: number]: any } = {
@@ -94,6 +96,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
               private router: Router,
+              private activatedRoute: ActivatedRoute,
               private readModeService: ReadModeService,
               private subventionRequestService: SubventionRequestService,
               public empService: EmployeeService) {
@@ -112,6 +115,19 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
     this.listenToSearch();
     this.setInitialValues();
+    this.listenToQueryParams();
+  }
+
+  listenToQueryParams(): void {
+    this.skipQueryParamSearch = false;
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (!this.skipQueryParamSearch) {
+        if (params && params.hasOwnProperty('criteria') && params.criteria.trim().length > 0) {
+          this.latestCriteriaString = params['criteria'];
+          this.searchByQueryString();
+        }
+      }
+    });
   }
 
   get getResultTabTitle(): string {
@@ -221,10 +237,24 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           }));
       }),
       tap((result: SubventionRequestAid[]) => {
+        this.latestCriteriaString = this.subventionRequestService._parseObjectToQueryString({...this.latestCriteria});
         return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
       }),
       takeUntil(this.destroy$),
     ).subscribe(result => this.requests = result);
+  }
+
+  private searchByQueryString(): void {
+    this.skipQueryParamSearch = true;
+    this.subventionRequestService.loadByCriteria(this.latestCriteriaString)
+      .pipe(
+        catchError(() => {
+          return of([]);
+        })
+      ).subscribe((result: SubventionRequestAid[]) => {
+      this.requests = result
+      return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+    });
   }
 
   onSearch(): void {
@@ -232,7 +262,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   reloadSearchResults() {
-    this.onSearch()
+    // this.onSearch()
+    this.searchByQueryString();
   }
 
   private clearSimpleSearch(): void {
@@ -251,7 +282,15 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   private goToResult(): void {
-    this.tabIndex$.next(1);
+    this.skipQueryParamSearch = true;
+    this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {criteria: this.latestCriteriaString}
+      }
+    ).then((result) => {
+      this.tabIndex$.next(1);
+    });
+
   }
 
   private getSimpleSearchValues(): Partial<ISubventionRequestCriteria> {
@@ -310,11 +349,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.latestCriteria = {
       ...simple,
       ...request,
-      beneficiary: {...simple.beneficiary, ...beneficiary},
-      /*statusDateModifiedFrom: request.statusDateModifiedFrom ?
-        dayjs(request.statusDateModifiedFrom).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedFrom,
-      statusDateModifiedTo: request.statusDateModifiedTo ?
-        dayjs(request.statusDateModifiedTo).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP) : request.statusDateModifiedTo*/
+      beneficiary: {...simple.beneficiary, ...beneficiary}
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
@@ -334,7 +369,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   printResult(): void {
-    this.subventionRequestService.loadByCriteriaAsBlob(this.latestCriteria).subscribe((data) => {
+    let criteria = isEmptyObject(this.latestCriteria) ? this.latestCriteriaString : this.latestCriteria;
+    this.subventionRequestService.loadByCriteriaAsBlob(criteria).subscribe((data) => {
       printBlobData(data, 'RequestByCriteriaSearchResult.pdf');
     });
   }

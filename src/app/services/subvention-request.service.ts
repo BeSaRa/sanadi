@@ -60,10 +60,15 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.interceptor.receive;
   }
 
-  loadByCriteriaAsBlob(criteria: any): Observable<Blob> {
-    let finalCriteria = {...criteria};
-    finalCriteria.lang = this.langService.getPrintingLanguage();
-    return this.http.get(this._getServiceURL() + '/criteria/export?' + this._parseObjectToQueryString(finalCriteria), {responseType: 'blob'});
+  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria> | string): Observable<Blob> {
+    let finalCriteriaString;
+    if (typeof criteria === 'string') {
+      finalCriteriaString = criteria;
+    } else {
+      finalCriteriaString = this._parseObjectToQueryString({...criteria});
+    }
+    finalCriteriaString = finalCriteriaString + '&lang=' + this.langService.getPrintingLanguage();
+    return this.http.get(this._getServiceURL() + '/criteria/export?' + finalCriteriaString, {responseType: 'blob'});
   }
 
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
@@ -78,7 +83,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.subventionAidService.loadByCriteria(criteria);
   }
 
-  loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
+  loadByCriteria(criteria: Partial<ISubventionRequestCriteria> | string): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByCriteria(criteria);
   }
 

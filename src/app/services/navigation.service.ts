@@ -30,6 +30,6 @@ export class NavigationService {
   }
 
   goToBack(): void {
-    this.router.navigate([this.previousPath]);
+    this.router.navigateByUrl(this.previousPath).then();
   }
 }
