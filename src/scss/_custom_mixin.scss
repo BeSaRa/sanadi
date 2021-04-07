@@ -19,10 +19,20 @@
 
   &::-webkit-scrollbar-thumb {
     background: $foreground-color;
+    border-radius: $size;
+    visibility: hidden;
   }
 
   &::-webkit-scrollbar-track {
     background: $background-color;
+    border-radius: $size;
+    visibility: hidden;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track {
+      visibility: visible;
+    }
   }
 
   // For Internet Explorer
@@ -30,4 +40,5 @@
     scrollbar-face-color: $foreground-color;
     scrollbar-track-color: $background-color;
   }
+
 }
