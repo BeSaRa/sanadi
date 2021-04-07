@@ -1,7 +1,6 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
-import {formatDate} from '@angular/common';
-import {changeDateFromDatepicker, changeDateToDatepicker} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
 
 function send(model: any): any {
   delete model.langService;
@@ -23,6 +22,7 @@ function send(model: any): any {
   delete model.residenceCountryInfo;
   delete model.residenceStatusInfo;
   delete model.benNationalityInfo;
+  delete model.dateOfBirthString;
   // model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
   model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
   model.benPrimaryIdNationality = model.benNationality;
@@ -48,7 +48,7 @@ function receive(model: Beneficiary): any {
   model.residenceStatusInfo = AdminResult.createInstance(model.residenceStatusInfo);
 
   //model.dateOfBirth = formatDate(new Date(model.dateOfBirth), 'yyyy-MM-dd', 'en-US');
-
+  model.dateOfBirthString = getDateStringFromDate(model.dateOfBirth);
   model.dateOfBirth = changeDateToDatepicker(model.dateOfBirth);
 
   return model;

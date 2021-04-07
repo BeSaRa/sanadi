@@ -84,6 +84,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   residenceCountryInfo!: AdminResult;
   residenceStatusInfo!: AdminResult;
   benNationalityInfo!: AdminResult;
+  dateOfBirthString: string | undefined;
 
   constructor() {
     super();
