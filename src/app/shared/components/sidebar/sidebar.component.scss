@@ -96,7 +96,7 @@
   }
 
   #search-item-btn {
-    left: 0;
+    left: 5px;
   }
 }
 
@@ -112,7 +112,7 @@
   }
 
   #search-item-btn {
-    right: 0;
+    right: 5px;
   }
 }
 
@@ -131,4 +131,8 @@
 
 .custom-icon-size {
   font-size: 30px;
+}
+
+#app-logo {
+  height: 64px;
 }
