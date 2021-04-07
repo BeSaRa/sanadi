@@ -1,27 +1,26 @@
 <ul class="sidebar-menu-list level-{{level}}">
   <ng-container *ngFor="let item of items | menuItemFilter : _searchText">
-    <li [@expendCollapse]="item.expend || _searchText.length ? 'expend' : 'collapse'"
-        *ngIf="empService.checkPermissions(item.getPermissions(), true)"
+    <li [class.px-2]="level > 1" [@expendCollapse]="item.expand || _searchText.length ? 'expend' : 'collapse'"
+        routerLinkActive="active"
+        [class.expanded]="item.expand" *ngIf="empService.checkPermissions(item.getPermissions(), true)"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
-      <div class="d-flex flex-row align-items-center justify-content-start">
-        <div class="sidebar-menu-icon d-flex justify-content-center align-items-center">
+      <a class="d-none" [routerLink]="item.path"></a>
+      <a href="#" [class.px-2]="level > 1" (click)="toggleCollapseOrNavigate(item , $event)"
+         class="d-flex flex-row align-items-center justify-content-center">
+        <div class="sidebar-menu-icon d-flex  flex-grow-0 justify-content-center align-items-center">
           <div *ngIf="!item.parent">
-            <a class="icon-link" href="#" (click)="toggleCollapseOrNavigate(item , $event)">
-              <div *ngIf="item.isSVGIcon()" class="sidebar-menu-item-svg">
-                <img alt="{{item.getName()}}" src="assets/images/icons/{{item.icon}}.svg">
-              </div>
-              <div *ngIf="item.isFontIcon()" class="sidebar-menu-item-font"><i
-                class="mdi {{item.icon}} text-primary"></i>
-              </div>
-            </a>
+            <div *ngIf="item.isSVGIcon()" [innerHTML]="item.safeSVG"
+                 class="sidebar-menu-item-svg d-flex flex-row align-items-center justify-content-center"></div>
+            <div *ngIf="item.isFontIcon()"
+                 class="sidebar-menu-item-font d-flex flex-row align-items-center justify-content-center">
+              <i class="mdi {{item.icon}}"></i>
+            </div>
           </div>
         </div>
-        <a href="#" (click)="toggleCollapseOrNavigate(item , $event)"
-           class="menu-item-title flex-grow-1 align-self-stretch d-flex align-items-center position-relative">
-          <span [innerHTML]="item.getName()|highlight:_searchText"></span>
-        </a>
-      </div>
+        <span class="flex-shrink-0 flex-grow-1 sidebar-menu-item-text text-truncate"
+              [innerHTML]="item.getName()|highlight:_searchText"></span>
+      </a>
       <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"
                                   [items]="item.children"></app-sidebar-menu-item-list>
     </li>

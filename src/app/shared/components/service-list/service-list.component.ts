@@ -20,6 +20,7 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   public property: 'arName' | 'enName' = 'arName';
   private langSubscription?: Subscription;
   iconBackground: string = 'url(assets/images/top-pattern.png)';
+  starsImage: string = 'url(assets/images/icons/stars.svg)';
 
   constructor(private langService: LangService,
               private  cd: ChangeDetectorRef,

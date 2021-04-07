@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
   animations: [
     trigger('expendCollapse', [
       state('collapse', style({
-        height: '50px'
+        height: '40px'
       })),
       state('expend', style({
         height: '!'
@@ -25,8 +25,9 @@ export class SidebarMenuItemListComponent implements OnInit {
   items: MenuItem[] = [];
   @Input()
   level!: number;
-
   _searchText: string = '';
+  currentRoute!: string;
+
   @Input()
   set searchText(value: string | null) {
     this._searchText = value ? value : '';

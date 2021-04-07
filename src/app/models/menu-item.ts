@@ -3,6 +3,7 @@ import {FactoryService} from '../services/factory.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {ConfigurationService} from '../services/configuration.service';
 import {IAppConfig} from '../interfaces/i-app-config';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 export class MenuItem {
   id!: number;
@@ -16,17 +17,21 @@ export class MenuItem {
   parent!: number;
   group: string = '';
   children: MenuItem[] = [];
-  expend: boolean = false;
+  expand: boolean = false;
   langService: LangService;
   configService: ConfigurationService;
   arName!: string;
   enName!: string;
   arSearchText!: string;
   enSearchText!: string;
+  svg?: string;
+  safeSVG?: SafeHtml;
+  private domSanitizer: DomSanitizer;
 
   constructor() {
     this.langService = FactoryService.getService('LangService');
     this.configService = FactoryService.getService('ConfigurationService');
+    this.domSanitizer = FactoryService.getService('DomSanitizer');
   }
 
   getName(): string {
@@ -50,7 +55,7 @@ export class MenuItem {
   }
 
   toggle(): void {
-    this.expend = !this.expend;
+    this.expand = !this.expand;
   }
 
   getLangKeyValues(): void {
@@ -66,5 +71,9 @@ export class MenuItem {
       this.arSearchText += item.arSearchText;
       this.enSearchText += item.enSearchText;
     });
+  }
+
+  sanitizeSVG(): void {
+    this.isSVGIcon() && this.svg ? (this.safeSVG = this.domSanitizer.bypassSecurityTrustHtml(this.svg)) : null;
   }
 }

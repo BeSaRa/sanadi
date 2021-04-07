@@ -4,6 +4,7 @@ export class MenuItemInterceptor {
   static receive(model: MenuItem): MenuItem {
     model.preparePermissionList();
     model.getLangKeyValues();
+    model.sanitizeSVG();
     return model;
   }
 

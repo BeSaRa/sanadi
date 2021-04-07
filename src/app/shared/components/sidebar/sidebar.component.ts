@@ -32,10 +32,10 @@ import {NavigationService} from '../../../services/navigation.service';
       state('hoverOut', style({
         width: '60px'
       })),
-      transition('opened <=> closed', animate('250ms ease-in-out')),
-      transition('hoverIn <=> hoverOut', animate('250ms ease-in-out')),
-      transition('hoverOut <=> opened', animate('250ms ease-in-out')),
-      transition('closed <=> hoverIn', animate('250ms ease-in-out')),
+      transition('opened <=> closed', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
+      transition('hoverIn <=> hoverOut', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
+      transition('hoverOut <=> opened', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
+      transition('closed <=> hoverIn', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
       transition('hoverIn <=> opened', animate(0))
     ])
   ]

@@ -5,6 +5,8 @@ import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {tap} from 'rxjs/operators';
 import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
+import {DomSanitizer} from '@angular/platform-browser';
+import {FactoryService} from './factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,9 @@ export class MenuItemService {
   parents!: MenuItem[];
   private children: Map<number, MenuItem[]> = new Map<number, MenuItem[]>();
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, private domSanitizer: DomSanitizer) {
+    FactoryService.registerService('MenuItemService', this);
+    FactoryService.registerService('DomSanitizer', domSanitizer);
   }
 
   @Generator(MenuItem, true, {property: '', interceptReceive: MenuItemInterceptor.receive})

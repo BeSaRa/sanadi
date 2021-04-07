@@ -1,4 +1,5 @@
 @import "src/scss/custom_variables";
+
 :host {
   display: flex;
   background-color: #F1F1F1;
@@ -39,6 +40,10 @@
     background-position: bottom center;
   }
 
+  &.center {
+    background-position: center center;
+  }
+
 }
 
 #top-fake-nav {
@@ -66,33 +71,54 @@
     display: none;
   }
 
-  #search-item-input {
-    visibility: hidden;
-  }
 }
 
 #search-item-btn {
   border: none;
   background-color: transparent;
   top: 0;
-  //margin-top: 23px;
   margin-top: 6px;
 }
 
+#search-item-input::placeholder {
+  color: white;
+}
+
 :host-context(html[dir="ltr"]) {
+  &.sidebar-opened:not(.going-to-close), &.going-to-open, &.sidebar-opened-hover {
+    #search-item-input {
+      padding-left: 40px;
+
+      &::placeholder {
+        color: $sidebar-gray;
+      }
+    }
+  }
+
   #search-item-btn {
-    right: 18px;
+    left: 0;
   }
 }
 
 :host-context(html[dir="rtl"]) {
+  &.sidebar-opened:not(.going-to-close), &.going-to-open, &.sidebar-opened-hover {
+    #search-item-input {
+      padding-right: 40px;
+
+      &::placeholder {
+        color: $sidebar-gray;
+      }
+    }
+  }
+
   #search-item-btn {
-    left: 18px;
+    right: 0;
   }
 }
 
 #menu-item-list {
   height: 0;
+  margin-top: 10px;
 }
 
 #sidebar-content-wrapper {
@@ -101,4 +127,8 @@
 
 #home-back-logout-items {
   color: $primary;
+}
+
+.custom-icon-size {
+  font-size: 30px;
 }
