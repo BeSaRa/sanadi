@@ -43,6 +43,9 @@ export class MenuItemService {
     this.getParentChildren(this.parents);
 
     this.parents.forEach(item => item.getChildrenText());
+    this.parents = this.parents.sort((a, b) => {
+      return a.itemOrder - b.itemOrder;
+    });
   }
 
   private addMenuItemToChildren(item: MenuItem): void {
@@ -72,6 +75,6 @@ export class MenuItemService {
   }
 
   getMenuByRouteGroup(routeGroupName: string): MenuItem[] {
-    return this.menuItems.filter(item => item.group === routeGroupName);
+    return this.menuItems.filter(item => item.group === routeGroupName).sort((a, b) => a.itemOrder - b.itemOrder);
   }
 }
