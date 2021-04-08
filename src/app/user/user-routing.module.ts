@@ -24,6 +24,7 @@ const routes: Routes = [
   {
     path: 'request/:id', component: UserRequestComponent,
     canActivate: [PermissionGuard],
+    canDeactivate: [CanDeactivateGuard],
     data: {permissionKey: 'EDIT_SUBVENTION_REQUEST'}
   },
   {
