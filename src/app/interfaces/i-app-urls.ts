@@ -29,6 +29,7 @@ export interface IAppUrls {
   EXT_FACEBOOK: string;
   EXT_TWITTER: string;
   EXT_RACA: string;
+  INTERNAL_AUTHENTICATE: string;
 
   [index: string]: string;
 }
