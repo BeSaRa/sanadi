@@ -8,7 +8,7 @@
          [dataSource]="aidList">
     <ng-container cdkColumnDef="approvalDate">
       <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.approval_date}}</th>
-      <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDate}} </td>
+      <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
     </ng-container>
     <ng-container cdkColumnDef="aidLookupId">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
@@ -24,7 +24,7 @@
     </ng-container>
     <ng-container cdkColumnDef="aidStartPayDate">
       <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
-      <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDate}} </td>
+      <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
     </ng-container>
     <ng-container cdkColumnDef="aidAmount">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
