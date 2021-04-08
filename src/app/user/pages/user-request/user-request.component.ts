@@ -1019,7 +1019,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
    * @description Check if user can navigate to other pages
    */
   canDeactivate(): CanNavigateOptions {
-    if (this.editMode || !this.form.dirty) {
+    if (!this.form.dirty) {
       return 'ALLOW';
     }
     return 'CONFIRM_UNSAVED_CHANGES';
