@@ -23,9 +23,11 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   add$ = new Subject<any>();
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
 
@@ -35,12 +37,14 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
     this.listenToReload();
     this.listenToAdd();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   listenToReload(): void {
@@ -51,7 +55,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
     ).subscribe((locals) => {
       this.localization = locals;
       this.localizationsClone = locals.slice();
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -104,6 +108,14 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.localization = this.localizationsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.localization = this.localizationsClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

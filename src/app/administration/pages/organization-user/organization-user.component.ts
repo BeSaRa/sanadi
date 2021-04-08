@@ -30,7 +30,9 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
@@ -116,6 +118,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.listenToReload();
     this.listenToAdd();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   add(): void {
@@ -203,7 +206,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       this.orgUsers = orgUsers;
       this.orgUsersClone = orgUsers;
       this.selectedRecords = [];
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -219,6 +222,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   search(searchText: string): void {
@@ -229,6 +233,14 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.orgUsers = this.orgUsersClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.orgUsers = this.orgUsersClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

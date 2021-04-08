@@ -27,12 +27,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   organizations: OrgUnit[] = [];
   organizationsClone: OrgUnit[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
@@ -106,12 +108,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   add(): void {
@@ -201,7 +205,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       this.organizations = orgUnits;
       this.organizationsClone = orgUnits;
       this.selectedRecords = [];
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -213,6 +217,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.organizations = this.organizationsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.organizations = this.organizationsClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

@@ -26,6 +26,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   branches: OrgBranch[] = [];
   branchesClone: OrgBranch[] = [];
 
@@ -34,6 +35,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
 
   selectedRecords: OrgBranch[] = [];
   /*actionsList: IGridAction[] = [
@@ -100,12 +102,14 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   add(): void {
@@ -198,7 +202,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       this.branches = branches;
       this.branchesClone = branches;
       this.selectedRecords = [];
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -210,6 +214,14 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.branches = this.branchesClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.branches = this.branchesClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

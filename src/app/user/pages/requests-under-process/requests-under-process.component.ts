@@ -17,7 +17,9 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   requests: SubventionRequest[] = [];
   requestsClone: SubventionRequest[] = [];
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
 
   constructor(private subventionRequestService: SubventionRequestService,
@@ -29,11 +31,13 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToSearch();
+    this.listenToInternalSearch();
     this.listenToReload();
   }
 
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   printRequest($event: MouseEvent, request: SubventionRequest): void {
@@ -77,6 +81,14 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     });
   }
 
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
+      this.requests = this.requestsClone.slice().filter((item) => {
+        return item.search(searchText);
+      });
+    });
+  }
+
   private listenToReload() {
     this.reload$.pipe(
       switchMap(() => {
@@ -86,7 +98,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     ).subscribe((requests) => {
       this.requests = requests;
       this.requestsClone = requests.slice();
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 }

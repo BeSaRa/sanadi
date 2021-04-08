@@ -18,7 +18,9 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
   userClick: typeof UserClickOn = UserClickOn;
   displayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'comments'];
   search$: Subject<string> = new Subject<string>();
+  internalSearch$: Subject<string> = new Subject<string>();
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
   logList: SubventionLog[];
   logListClone: SubventionLog[] = [];
   requestId: number;
@@ -33,10 +35,12 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   search(searchText: string): void {
@@ -54,6 +58,14 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.logList = this.logListClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.logList = this.logListClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

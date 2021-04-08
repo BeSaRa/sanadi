@@ -34,7 +34,9 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
 
   selectedRecords: AidLookup[] = [];
   /*actionsList: IGridAction[] = [
@@ -99,6 +101,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     this.listenToReload();
     this.listenToAdd();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   listenToAdd(): void {
@@ -117,7 +120,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       this.aidLookups = aidLookups;
       this.aidLookupsClone = aidLookups;
       this.selectedRecords = [];
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -214,6 +217,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   search(searchText: string): void {
@@ -224,6 +228,14 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.aidLookups = this.aidLookupsClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.aidLookups = this.aidLookupsClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });

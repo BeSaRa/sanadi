@@ -22,12 +22,14 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   customRoles: CustomRole[] = [];
   customRolesClone: CustomRole[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
   searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
 
   selectedRecords: CustomRole[] = [];
   actionsList: IGridAction[] = [
@@ -93,12 +95,14 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
     this.searchSubscription?.unsubscribe();
+    this.internalSearchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
     this.listenToSearch();
+    this.listenToInternalSearch();
   }
 
   add(): void {
@@ -188,7 +192,7 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       this.customRoles = roles;
       this.customRolesClone = roles;
       this.selectedRecords = [];
-      this.search$.next(this.search$.value);
+      this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -213,6 +217,14 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
     this.searchSubscription = this.search$.pipe(
       debounceTime(500)
     ).subscribe((searchText) => {
+      this.customRoles = this.customRolesClone.slice().filter((item) => {
+        return searchInObject(item, searchText);
+      });
+    });
+  }
+
+  private listenToInternalSearch(): void {
+    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
       this.customRoles = this.customRolesClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });
