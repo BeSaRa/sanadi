@@ -1,23 +1,27 @@
 <div class="container h-100">
   <div class="row align-items-center justify-content-around h-100">
-    <div class="col col-md-6 col-lg-4">
-      <div class="card shadow-sm p-2">
-        <div class="d-flex flex-column align-items-center justify-content-center">
-          <div class="row">
-            <img alt="Logo" id="logo-image" class="mx-auto d-block img-fluid"
-                 src="assets/images/sanady-logo.png">
-          </div>
-          <div>
-            <app-version></app-version>
-          </div>
-          <form autocomplete="off" [formGroup]="loginForm" action="#">
+    <div id="login-card" class="card shadow-sm p-2">
+      <div class="d-flex flex-column align-items-center justify-content-center">
+        <div class="row">
+          <img alt="Logo" id="logo-image" class="mx-auto d-block img-fluid"
+               src="assets/images/sanady-logo.png">
+        </div>
+        <div>
+          <app-version></app-version>
+        </div>
+        <tabs-list (onTabChange)="tabChanged($event)">
+          <tab [template]="loginFormInternalFrom" [title]="lang.map.authority_employee"></tab>
+          <tab [template]="loginExternalFrom" [title]="lang.map.charities_employee"></tab>
+        </tabs-list>
+        <ng-template #loginExternalFrom>
+          <form autocomplete="off" [formGroup]="loginFromExternal" action="#">
             <div class="d-flex flex-column">
               <div class="mb-3">
                 <label class="form-label" for="username">{{lang.map.lbl_username}}</label>
                 <div class="input-group shadow-sm">
                   <i class="input-group-text mdi mdi-account"></i>
                   <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
-                         [placeholder]="lang.map.lbl_enter_mobile_or_email"
+                         [placeholder]="lang.map.qatari_id_number"
                          class="form-control"
                          type="text">
                 </div>
@@ -31,28 +35,60 @@
                          id="password"
                          [type]="passwordFieldType">
                 </div>
-                <button type="button" id="view-password-btn"
+                <button type="button" class="view-password-btn"
                         tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
                         tabindex="-1" (click)="togglePasswordView($event)">
                   <i class="mdi {{icon}}"></i>
                 </button>
               </div>
               <div class="d-flex flex-row mt-3 mb-3">
-                <button tabindex="3" (click)="processLogin()" [disabled]="loginForm.invalid"
+                <button tabindex="3" (click)="processLogin()" [disabled]="loginFromExternal.invalid"
                         class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
+              </div>
+              <div class="d-flex flex-row align-items-center justify-content-center">
+                <img alt="tawtheeq logo" class="nas-logo" src="assets/images/tawtheeq.png">
               </div>
             </div>
           </form><!-- login form -->
-          <div>
-            <img alt="tawtheeq logo" class="nas-logo" src="assets/images/tawtheeq.png">
-          </div>
-          <div>
-            <a href="#" (click)="toggleLang($event)" class="text-decoration-none">
-              <span>{{lang.getCurrentLanguage().toggleTo}}</span>
-              <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>
-            </a>
-          </div>
-        </div>
+        </ng-template>
+        <ng-template #loginFormInternalFrom>
+          <form autocomplete="off" [formGroup]="loginFormInternal" action="#">
+            <div class="d-flex flex-column">
+              <div class="mb-3">
+                <label class="form-label" for="employeeName">{{lang.map.lbl_username}}</label>
+                <div class="input-group shadow-sm">
+                  <i class="input-group-text mdi mdi-account"></i>
+                  <input formControlName="userName" cdkTrapFocus tabindex="1" id="employeeName"
+                         [placeholder]="lang.map.lbl_username"
+                         class="form-control"
+                         type="text">
+                </div>
+              </div>
+              <div class="mb-3 position-relative">
+                <label for="userPassword" class="form-label">{{lang.map.lbl_password}}</label>
+                <div class="input-group shadow-sm">
+                  <i class="input-group-text mdi mdi-lock"></i>
+                  <input formControlName="userPassword" tabindex="2" class="form-control p-right"
+                         [placeholder]="lang.map.lbl_enter_your_password_here"
+                         id="userPassword"
+                         [type]="passwordFieldType">
+                </div>
+                <button type="button" class="view-password-btn"
+                        tooltip="{{passwordFieldType === 'password' ? lang.map.btn_show_password : lang.map.btn_hide_password}}"
+                        tabindex="-1" (click)="togglePasswordView($event)">
+                  <i class="mdi {{icon}}"></i>
+                </button>
+              </div>
+              <div class="d-flex flex-row mt-3 mb-3">
+                <button tabindex="3" (click)="processLogin()" [disabled]="loginFormInternal.invalid"
+                        class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
+              </div>
+              <div class="d-flex flex-row">
+                <div class="nas-logo"></div>
+              </div>
+            </div>
+          </form><!-- login form -->
+        </ng-template>
       </div>
     </div>
   </div>

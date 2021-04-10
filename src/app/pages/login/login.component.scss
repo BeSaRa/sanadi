@@ -7,7 +7,7 @@
   max-width: 250px;
 }
 
-#view-password-btn {
+.view-password-btn {
   background-color: transparent;
   position: absolute;
   border: none;
@@ -17,13 +17,19 @@
 }
 
 :host-context(html[dir="rtl"]) {
-  #view-password-btn {
+  .view-password-btn {
     right: auto;
     left: 2px;
   }
 }
+
 .nas-logo {
-  width: 60px !important;
+  height: 60px !important;
+}
+
+#login-card {
+  max-width: 100%;
+  width: 400px;
 }
 .lang-icon {
   width: 20px;

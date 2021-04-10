@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  authority_employee: string;
+  charities_employee: string;
   show_hide_sidebar: string;
   home: string;
   back: string;
