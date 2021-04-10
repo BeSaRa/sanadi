@@ -8,6 +8,8 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '../../services/toast.service';
 import {ECookieService} from '../../services/e-cookie.service';
+import {CustomHttpErrorResponse} from '../../models/custom-http-error-response';
+import {TabComponent} from '../../shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +19,11 @@ import {ECookieService} from '../../services/e-cookie.service';
 export class LoginComponent implements OnInit, OnDestroy {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
-  loginForm: FormGroup = {} as FormGroup;
+  loginFormInternal: FormGroup = {} as FormGroup;
   private destroy$: Subject<any> = new Subject<any>();
   private login$: Subject<any> = new Subject<any>();
+  loginFromExternal: FormGroup = {} as FormGroup;
+  isExternalLogin = false;
 
   constructor(public lang: LangService,
               private router: Router,
@@ -36,9 +40,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
+    this.loginFromExternal = this.fb.group({
       username: ['', CustomValidators.required],
       password: [''] // for now it is not required till we make full integration with NAS Services.
+    });
+    this.loginFormInternal = this.fb.group({
+      userName: ['', CustomValidators.required],
+      userPassword: ['', CustomValidators.required] // for now it is not required till we make full integration with NAS Services.
     });
     this.listenToLoginEvent();
   }
@@ -57,13 +65,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.login$.pipe(
       exhaustMap(() => {
         return this.authService
-          .login({qId: this.loginForm.get('username')?.value})
+          .login(this.isExternalLogin ? {qId: this.loginFromExternal.get('username')?.value} : this.loginFormInternal.value, this.isExternalLogin)
           .pipe(
             mapTo(true),
             tap(() => {
               this.toastService.success(this.lang.map.msg_login_success);
-            }, () => {
-              this.toastService.error(this.lang.map.msg_invalid_username_password);
+            }, (error: CustomHttpErrorResponse) => {
+              this.toastService.error(error.getError());
             }),
             catchError(() => {
               return of(false);
@@ -74,5 +82,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     ).subscribe((navigate) => {
       return navigate ? this.router.navigate(['/home']) : null;
     });
+  }
+
+  tabChanged(tab: TabComponent) {
+    this.isExternalLogin = tab.title !== this.lang.map.authority_employee;
   }
 }

@@ -14,9 +14,9 @@
     <div class="d-flex flex-row">
       <img alt="user avatar" id="user-image" src="assets/images/man.svg">
       <div id="user-info-details" class="mx-2">
-        <div id="user-name">{{employee?.getUser()?.getName()}}</div>
+        <div id="user-name">{{employee.getCurrentUserName()}}</div>
         <div
-          id="user-department">{{ employee?.getOrgUnit()?.getName() + ' - ' + employee?.getBranch()?.getName()}}</div>
+          id="user-department">{{employee.getCurrentUserDepartment()}}</div>
       </div>
     </div>
     <span class="flex-grow-1 align-self-stretch"></span>
