@@ -28,8 +28,14 @@ export class AuthService {
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  private _login(credentials: Partial<ICredentials>): Observable<ILoginData> {
+  private _externalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE, credentials);
+  }
+
+
+  @Generator(undefined, false, {property: 'rs'})
+  private _internalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
+    return this.http.post<ILoginData>(this.urlService.URLS.INTERNAL_AUTHENTICATE, credentials);
   }
 
   @Generator(undefined, false, {property: 'rs'})
@@ -37,8 +43,8 @@ export class AuthService {
     return this.http.post<ILoginData>(this.urlService.URLS.VALIDATE_TOKEN, {});
   }
 
-  login(credential: Partial<ICredentials>): Observable<ILoginData> {
-    return this._login(credential).pipe(tap((result) => {
+  private externalLogin(credential: Partial<ICredentials>): Observable<ILoginData> {
+    return this._externalLogin(credential).pipe(tap((result) => {
         this.isAuthenticatedTrigger$.next(result);
       }),
       catchError((error) => {
@@ -46,6 +52,21 @@ export class AuthService {
         return throwError(error);
       }),
     );
+  }
+
+  private internalLogin(credential: Partial<ICredentials>): Observable<ILoginData> {
+    return this._internalLogin(credential).pipe(tap((result) => {
+        this.isAuthenticatedTrigger$.next(result);
+      }),
+      catchError((error) => {
+        this.isAuthenticatedTrigger$.next(null);
+        return throwError(error);
+      }),
+    );
+  }
+
+  login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
+    return external ? this.externalLogin(credential) : this.internalLogin(credential);
   }
 
   logout(): Observable<boolean> {
@@ -62,7 +83,7 @@ export class AuthService {
         withLatestFrom(this.isAuthenticatedTrigger$),
         map(([isAuthenticated, loginData]) => {
           if (isAuthenticated && loginData) {
-            this.employeeService.setCurrentEmployeeData(loginData.orgUser, loginData.orgBranch, loginData.orgUnit, loginData.permissionSet);
+            this.employeeService.fillCurrentEmployeeData(loginData);
             this.tokenService.setToken(loginData.token);
           } else {
             this.employeeService.clear();

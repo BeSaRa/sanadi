@@ -2,6 +2,8 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {catchError, retry} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
+import {CustomHttpErrorResponse} from '../models/custom-http-error-response';
+import {AdminResult} from '../models/admin-result';
 
 @Injectable()
 export class BackendExceptionHandlerInterceptor implements HttpInterceptor {
@@ -9,7 +11,9 @@ export class BackendExceptionHandlerInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
-        return throwError(error);
+        const resError = Object.assign(new CustomHttpErrorResponse, error) as CustomHttpErrorResponse;
+        resError.error.eo = AdminResult.createInstance(resError.error.eo);
+        return throwError(resError);
       })
     );
   }
