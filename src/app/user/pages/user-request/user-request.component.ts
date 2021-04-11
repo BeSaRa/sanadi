@@ -4,7 +4,7 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -73,6 +73,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   addAid$: Subject<any> = new Subject<any>();
   currentRequest?: SubventionRequest;
   subventionAid: SubventionAid[] = [];
+  subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
   fm!: FormManager;
   form!: FormGroup;
   idNumbersChanges$: Subject<{ field: string, value: string }> = new Subject<{ field: string, value: string }>();
@@ -545,6 +546,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     ).subscribe((_) => {
       this.beneficiaryChanged$.next(beneficiary);
       this.subventionAid = aid;
+      this.subventionAidDataSource.next(this.subventionAid);
       this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
 
       if (!request.isUnderProcessing()) {
@@ -714,6 +716,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       this.toastService.success(message);
       this.subventionAid = this.subventionAid.slice();
+      this.subventionAidDataSource.next(this.subventionAid);
       this.aidChanged$.next(null);
     });
   }
@@ -841,6 +844,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               if (!this.subventionAid.length) {
                 this.aidChanged$.next(new SubventionAid());
               }
+              this.subventionAidDataSource.next(this.subventionAid);
             });
         }
       });

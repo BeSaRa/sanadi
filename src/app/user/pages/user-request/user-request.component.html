@@ -911,7 +911,7 @@
     <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
                      [clickOnNew$]="addAid$"></app-page-header>
     <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
-           [dataSource]="subventionAid">
+           [dataSource]="subventionAidDataSource">
       <ng-container cdkColumnDef="approvalDate">
         <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.approval_date}}</th>
         <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
