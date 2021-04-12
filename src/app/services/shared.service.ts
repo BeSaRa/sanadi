@@ -17,8 +17,10 @@ export class SharedService {
               private dialogService: DialogService) {
   }
 
-  mapBulkResponseMessages(selectedRecords: any[], key: string, resultMap: {[key: number]: boolean} | {[key: string]: boolean}): Observable<BulkResponseTypes> {
+  mapBulkResponseMessages(selectedRecords: any[], key: string, resultMap: { [key: number]: boolean } | { [key: string]: boolean }): Observable<BulkResponseTypes> {
     const failedRecords: any[] = [];
+    // @ts-ignore
+    resultMap = resultMap.hasOwnProperty('rs') ? resultMap.rs : resultMap;
     for (const item of selectedRecords) {
       // @ts-ignore
       if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
