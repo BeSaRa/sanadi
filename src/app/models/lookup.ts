@@ -59,6 +59,10 @@ export class Lookup extends BaseModel<Lookup> {
     return Number(this.category) === Number(LookupCategories.AID_LOOKUP_STATUS_CAT_ID) && this.lookupKey === 0;
   }
 
+  isRemovedSubRequestStatus(): boolean {
+    return Number(this.category) === Number(LookupCategories.SUB_REQUEST_STATUS_CAT_ID) && this.lookupKey === 0;
+  }
+
   isCancelledSubRequestStatus(): boolean {
     return Number(this.category) === Number(LookupCategories.SUB_REQUEST_STATUS_CAT_ID) && this.lookupKey === 4;
   }
