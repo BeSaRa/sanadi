@@ -716,7 +716,9 @@
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status"
                        [ngClass]="fm.getStatusClass('requestStatusTab.status')">
-              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus" [value]="option.lookupKey">
+              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
+                         [disabled]="option.isCancelledSubRequestStatus()"
+                         [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
