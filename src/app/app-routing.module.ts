@@ -22,13 +22,12 @@ const routes: Routes = [
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+      {path: 'e-services', loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule)}
       //{path: '**', redirectTo: '../error'}
     ]
   },
-  {path: 'error', component: ErrorPageComponent},
-  // {path: '**', redirectTo: 'error'}
+  {path: 'error', component: ErrorPageComponent}
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {enableTracing: false, useHash: true})],

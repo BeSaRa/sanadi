@@ -23,13 +23,15 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   starsImage: string = 'url(assets/images/icons/stars.svg)';
 
   constructor(private langService: LangService,
-              private  cd: ChangeDetectorRef,
+              private cd: ChangeDetectorRef,
               private router: Router,
               public empService: EmployeeService) {
   }
 
   ngOnInit(): void {
+    console.log('list', this.list);
     this.langSubscription = this.langService.onLanguageChange$.subscribe(() => {
+      console.log('list', this.list);
       this.cd.markForCheck();
     });
   }
