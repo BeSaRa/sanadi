@@ -11,7 +11,8 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
-import {generateHtmlList, searchInObject} from '../../../helpers/utils';
+import {searchInObject} from '../../../helpers/utils';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-custom-role',
@@ -87,7 +88,8 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private customRoleService: CustomRoleService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private sharedService: SharedService) {
   }
 
 
@@ -128,24 +130,6 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       });
   }
 
-  _mapBulkResponse(resultMap: any, key: string): void {
-    const failedRecords: CustomRole[] = [];
-    for (const item of this.selectedRecords) {
-      // @ts-ignore
-      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
-        failedRecords.push(item);
-      }
-    }
-    if (failedRecords.length === 0) {
-      this.toast.success(this.langService.map.msg_delete_success);
-    } else if (failedRecords.length === this.selectedRecords.length) {
-      this.toast.success(this.langService.map.msg_delete_fail);
-    } else {
-      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
-      this.dialogService.info(listHtml.outerHTML);
-    }
-  }
-
   deleteBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
@@ -156,9 +140,11 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
             return item.id;
           });
           const sub = this.customRoleService.deleteBulk(ids).subscribe((response) => {
-            this._mapBulkResponse(response, 'id');
-            this.reload$.next(null);
-            sub.unsubscribe();
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(()=> {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
           });
         }
       });

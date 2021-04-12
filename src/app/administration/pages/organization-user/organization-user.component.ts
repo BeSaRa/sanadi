@@ -11,10 +11,11 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {cloneDeep as _deepClone} from 'lodash';
-import {filterList, generateHtmlList, searchInObject} from '../../../helpers/utils';
+import {searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {EmployeeService} from '../../../services/employee.service';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-organization-user',
@@ -33,20 +34,17 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
   internalSearchSubscription!: Subscription;
-  xDeleteMessage = this.langService.map.lbl_organization + ', ' +
-    this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUser[] = [];
-  /*actionsList: IGridAction[] = [
+  actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
       callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
+        this.deactivateBulk($event);
       }
     }
-  ];*/
-  actionsList: IGridAction[] = [];
+  ];
 
   bindingKeys: IKeyValue = {
     arName: 'arName',
@@ -111,7 +109,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
               private toast: ToastService,
               public configService: ConfigurationService,
               public empService: EmployeeService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -132,10 +131,15 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
 
   delete(model: OrgUser, event: MouseEvent): void {
     event.preventDefault();
+    return;
+  }
+
+  deactivate(event: MouseEvent, model: OrgUser): void {
+    event.preventDefault();
     // @ts-ignore
-    this.dialogService.confirm(
-      this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users}) + '<br/>' +
-      this.langService.map.msg_confirm_delete_x.change({x: model.getName()}))
+    const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.user.toLowerCase()}) + '<br/>' +
+      this.langService.map.msg_confirm_delete_x.change({x: model.getName()})
+    this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.deactivate().subscribe(() => {
@@ -148,39 +152,23 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     });
   }
 
-  _mapBulkResponse(resultMap: any, key: string): void {
-    const failedRecords: OrgUser[] = [];
-    for (const item of this.selectedRecords) {
-      // @ts-ignore
-      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
-        failedRecords.push(item);
-      }
-    }
-    if (failedRecords.length === 0) {
-      this.toast.success(this.langService.map.msg_delete_success);
-    } else if (failedRecords.length === this.selectedRecords.length) {
-      this.toast.success(this.langService.map.msg_delete_fail);
-    } else {
-      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
-      this.dialogService.info(listHtml.outerHTML);
-    }
-  }
-
-  deleteBulk($event: MouseEvent): void {
+  deactivateBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
-      this.dialogService.confirm(
-        this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
-        this.langService.map.msg_confirm_delete_selected)
+      const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users.toLowerCase()}) + '<br/>' +
+        this.langService.map.msg_confirm_delete_selected;
+      this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.orgUserService.deleteBulk(ids).subscribe((response) => {
-            this._mapBulkResponse(response, 'id');
-            this.reload$.next(null);
-            sub.unsubscribe();
+          const sub = this.orgUserService.deactivateBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(() => {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
           });
         }
       });

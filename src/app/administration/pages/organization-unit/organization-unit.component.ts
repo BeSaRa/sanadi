@@ -13,10 +13,11 @@ import {LookupCategories} from '../../../enums/lookup-categories';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {generateHtmlList, searchInObject} from '../../../helpers/utils';
+import {searchInObject} from '../../../helpers/utils';
 import {cloneDeep as _deepClone} from 'lodash';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {EmployeeService} from '../../../services/employee.service';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-organization-unit',
@@ -40,16 +41,15 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
 
   selectedRecords: OrgUnit[] = [];
-  /*actionsList: IGridAction[] = [
+  actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
       callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
+        this.deactivateBulk($event);
       }
     }
-  ];*/
-  actionsList: IGridAction[] = [];
+  ];
 
   private _addSelected(record: OrgUnit): void {
     this.selectedRecords.push(_deepClone(record));
@@ -99,7 +99,8 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
               public lookupService: LookupService,
               private toast: ToastService,
               public empService: EmployeeService,
-              public configService: ConfigurationService) {
+              public configService: ConfigurationService,
+              private sharedService: SharedService) {
     this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
   }
 
@@ -127,9 +128,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
 
   delete(model: OrgUnit, event: MouseEvent): void {
     event.preventDefault();
-    const deleteMsg = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+    return;
+  }
+
+  deactivate(event: MouseEvent, model: OrgUnit): void {
+    event.preventDefault();
+    const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
       this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
-    this.dialogService.confirm(deleteMsg).onAfterClose$
+    this.dialogService.confirm(message).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const sub = model.deactivate().subscribe(() => {
@@ -141,37 +147,24 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       });
   }
 
-  _mapBulkResponse(resultMap: any, key: string): void {
-    const failedRecords: OrgUnit[] = [];
-    for (const item of this.selectedRecords) {
-      // @ts-ignore
-      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
-        failedRecords.push(item);
-      }
-    }
-    if (failedRecords.length === 0) {
-      this.toast.success(this.langService.map.msg_delete_success);
-    } else if (failedRecords.length === this.selectedRecords.length) {
-      this.toast.success(this.langService.map.msg_delete_fail);
-    } else {
-      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
-      this.dialogService.info(listHtml.outerHTML);
-    }
-  }
-
-  deleteBulk($event: MouseEvent): void {
+  deactivateBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
-      this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
+      const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
+        this.langService.map.msg_confirm_delete_selected;
+      this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.organizationUnitService.deleteBulk(ids).subscribe((response) => {
-            this._mapBulkResponse(response, 'id');
-            this.reload$.next(null);
-            sub.unsubscribe();
+
+          const sub = this.organizationUnitService.deactivateBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(() => {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
           });
         }
       });

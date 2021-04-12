@@ -80,6 +80,10 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 
+  deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
+    return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  }
+
   _getReceiveInterceptor(): any {
     return interceptOrganizationBranchReceive;
   }

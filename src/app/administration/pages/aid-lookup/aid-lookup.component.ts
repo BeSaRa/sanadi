@@ -16,6 +16,7 @@ import {ConfigurationService} from '../../../services/configuration.service';
 import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-aid-lookup',
@@ -39,16 +40,15 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   internalSearchSubscription!: Subscription;
 
   selectedRecords: AidLookup[] = [];
-  /*actionsList: IGridAction[] = [
+  actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
       callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
+        this.deactivateBulk($event);
       }
     }
-  ];*/
-  actionsList: IGridAction[] = [];
+  ];
 
   private _addSelected(record: AidLookup): void {
     this.selectedRecords.push(_deepClone(record));
@@ -93,7 +93,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   }
 
   constructor(public langService: LangService, private dialogService: DialogService,
-              public configService: ConfigurationService,
+              public configService: ConfigurationService, private sharedService: SharedService,
               public toast: ToastService, public aidLookupService: AidLookupService) {
   }
 
@@ -145,6 +145,11 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
 
   delete(aidLookup: AidLookup, $event: MouseEvent): void {
     $event.preventDefault();
+    return;
+  }
+
+  deactivate($event: MouseEvent, aidLookup: AidLookup): void {
+    $event.preventDefault();
     // @ts-ignore
     const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: aidLookup.aidCode}))
       .onAfterClose$
@@ -159,25 +164,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       });
   }
 
-  _mapBulkResponse(resultMap: any, key: string): void {
-    const failedRecords: AidLookup[] = [];
-    for (const item of this.selectedRecords) {
-      // @ts-ignore
-      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
-        failedRecords.push(item);
-      }
-    }
-    if (failedRecords.length === 0) {
-      this.toast.success(this.langService.map.msg_delete_success);
-    } else if (failedRecords.length === this.selectedRecords.length) {
-      this.toast.success(this.langService.map.msg_delete_fail);
-    } else {
-      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
-      this.dialogService.info(listHtml.outerHTML);
-    }
-  }
-
-  deleteBulk($event: MouseEvent): void {
+  deactivateBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
       this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
@@ -186,10 +173,12 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.aidLookupService.deleteBulk(ids).subscribe((response) => {
-            this._mapBulkResponse(response, 'id');
-            this.reload$.next(null);
-            sub.unsubscribe();
+          const sub = this.aidLookupService.deactivateBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(()=> {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
           });
         }
       });

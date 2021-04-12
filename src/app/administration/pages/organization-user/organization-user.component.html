@@ -57,7 +57,7 @@
           <td cdk-cell *cdkCellDef="let row">
             <div class="d-flex flex-row">
               <a href="#" *ngIf="empService.checkPermissions('ADMIN_DELETE_USER')"
-                 (click)="delete(row , $event)" tooltip="{{langService.map.btn_delete}}" class="icon-btn">
+                 (click)="deactivate($event, row)" tooltip="{{langService.map.btn_delete}}" class="icon-btn">
                 <i class="mdi mdi-close-box"></i>
               </a>
               <a href="#" *ngIf="empService.checkPermissions('ADMIN_EDIT_USER')"

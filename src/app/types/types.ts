@@ -9,3 +9,5 @@ export type customValidationTypes = 'ENG_NUM_ONLY' | 'ENG_NUM' | 'AR_NUM' | 'ENG
 export type searchFunctionType = (text: string) => boolean;
 
 export type CanNavigateOptions = 'ALLOW' | 'DISALLOW' | 'CONFIRM_UNSAVED_CHANGES';
+
+export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';

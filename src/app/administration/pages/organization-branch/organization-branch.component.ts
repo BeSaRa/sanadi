@@ -16,6 +16,7 @@ import {ConfigurationService} from '../../../services/configuration.service';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
 import {generateHtmlList, searchInObject} from '../../../helpers/utils';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-organization-branch',
@@ -38,16 +39,15 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
   internalSearchSubscription!: Subscription;
 
   selectedRecords: OrgBranch[] = [];
-  /*actionsList: IGridAction[] = [
+  actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
       callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
+        this.deactivateBulk($event);
       }
     }
-  ];*/
-  actionsList: IGridAction[] = [];
+  ];
 
   private _addSelected(record: OrgBranch): void {
     this.selectedRecords.push(_deepClone(record));
@@ -95,7 +95,8 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
               private dialogService: DialogService,
               private organizationBranchService: OrganizationBranchService,
               public lookupService: LookupService, public configService: ConfigurationService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private sharedService: SharedService) {
   }
 
   ngOnDestroy(): void {
@@ -121,9 +122,14 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
 
   delete(model: OrgBranch, event: MouseEvent): void {
     event.preventDefault();
-    const deleteMsg = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users}) + '<br/>' +
+    return;
+  }
+
+  deactivate(event: MouseEvent, model: OrgBranch): void {
+    event.preventDefault();
+    const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users}) + '<br/>' +
       this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
-    this.dialogService.confirm(deleteMsg).onAfterClose$
+    this.dialogService.confirm(message).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const sub = model.deactivate().subscribe(() => {
@@ -135,37 +141,23 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       });
   }
 
-  _mapBulkResponse(resultMap: any, key: string): void {
-    const failedRecords: OrgBranch[] = [];
-    for (const item of this.selectedRecords) {
-      // @ts-ignore
-      if (resultMap.hasOwnProperty(item[key]) && !resultMap[item[key]]) {
-        failedRecords.push(item);
-      }
-    }
-    if (failedRecords.length === 0) {
-      this.toast.success(this.langService.map.msg_delete_success);
-    } else if (failedRecords.length === this.selectedRecords.length) {
-      this.toast.success(this.langService.map.msg_delete_fail);
-    } else {
-      const listHtml = generateHtmlList(this.langService.map.msg_delete_success_except, failedRecords.map((item) => item.getName()));
-      this.dialogService.info(listHtml.outerHTML);
-    }
-  }
-
-  deleteBulk($event: MouseEvent): void {
+  deactivateBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
-      this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
+      const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users}) + '<br/>' +
+        this.langService.map.msg_confirm_delete_selected;
+      this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.organizationBranchService.deleteBulk(ids).subscribe((response) => {
-            this._mapBulkResponse(response, 'id');
-            this.reload$.next(null);
-            sub.unsubscribe();
+          const sub = this.organizationBranchService.deactivateBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(() => {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
           });
         }
       });
