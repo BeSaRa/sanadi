@@ -784,20 +784,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       ).subscribe(value => {
         this._setPaymentDateValidations();
-        /*const approvedDateValue = changeDateFromDatepicker(value);
-
-        let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
-        let minDate = changeDateFromDatepicker(creationDate?.value);
-        let minFieldName = 'creationDate';
-
-        if (dayjs(approvedDateValue).isAfter(dayjs(minDate))) {
-          minFieldName = 'aidApprovalDate';
-          minDate = approvedDateValue;
-        }
-        this.setRelatedMinDate(minFieldName, 'aidPaymentDate');
-        // @ts-ignore
-        this.aidPaymentDate?.setValidators([CustomValidators.required, CustomValidators.minDate(minDate)]);
-        this.aidPaymentDate?.updateValueAndValidity();*/
       });
     } else {
       this.aidPeriodicTypeSub?.unsubscribe();
