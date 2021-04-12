@@ -237,6 +237,9 @@
                 <td> {{aid.aidAmount | mask:'separator':','}} </td>
                 <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="table-actions">
                   <div class="d-flex flex-row">
+                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
+                      <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
+                    </a>
                     <a href="#" (click)="printRequest($event, request)"
                        tooltip="{{langService.map.print_request_form}}" class="icon-btn">
                       <i class="mdi mdi-printer"></i>
@@ -245,10 +248,10 @@
                        class="icon-btn">
                       <i class="mdi mdi-history"></i>
                     </a>
-                    <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                    <!--<a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
                        class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
-                    </a>
+                    </a>-->
                   </div>
                 </td>
               </tr>
@@ -264,6 +267,9 @@
                 <td></td>
                 <td class="table-actions">
                   <div class="d-flex flex-row">
+                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
+                      <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
+                    </a>
                     <a href="#" (click)="printRequest($event, request)"
                        tooltip="{{langService.map.print_request_form}}" class="icon-btn">
                       <i class="mdi mdi-printer"></i>
@@ -272,10 +278,10 @@
                        class="icon-btn">
                       <i class="mdi mdi-history"></i>
                     </a>
-                    <a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
+                    <!--<a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
                        class="icon-btn">
                       <i class="mdi mdi-heart-multiple"></i>
-                    </a>
+                    </a>-->
                   </div>
                 </td>
               </tr>
