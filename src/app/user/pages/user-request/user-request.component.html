@@ -670,7 +670,7 @@
           <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
+            <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
                    formControlName="requestedAidAmount"
                    id="requestedAidAmount" class="form-control"
                    mask="separator" thousandSeparator=",">
@@ -796,7 +796,7 @@
               <label for="aidAmount" asteriskIfRequired="aidAmount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input id="aidAmount" maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
+                <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
                        formControlName="aidAmount" class="form-control"
                        mask="separator" thousandSeparator=",">
                 <app-field-error-message

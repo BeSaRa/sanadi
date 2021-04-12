@@ -66,7 +66,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       id: control ? [id] : id,
       approvalDate: control ? [approvalDate, CustomValidators.required] : approvalDate,
       periodicType: control ? [periodicType, CustomValidators.required] : periodicType,
-      aidAmount: control ? [aidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : aidAmount,
+      aidAmount: control ? [aidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : aidAmount,
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
