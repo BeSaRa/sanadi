@@ -247,6 +247,12 @@ th.date-column, td.date-column {
   max-width: 110px;
 }
 
+td.table-actions {
+  button {
+    padding: 0;
+  }
+}
+
 .font-12 {
   font-size: 12px;
 }

@@ -21,7 +21,7 @@
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-          <td cdk-cell *cdkCellDef="let row">
+          <td cdk-cell *cdkCellDef="let row" class="table-actions">
             <div class="d-flex flex-row">
               <a href="#" *ngIf="empService.checkPermissions('ADMIN_EDIT_USER')"
                  (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">

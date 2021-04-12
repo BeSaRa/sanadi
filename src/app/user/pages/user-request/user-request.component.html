@@ -938,7 +938,7 @@
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; let i = index;">
+        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
             <button (click)="deleteAid(row , i , $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">

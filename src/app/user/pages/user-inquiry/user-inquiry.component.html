@@ -235,7 +235,7 @@
                     [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
                 <td> {{aid.aidLookupInfo.getName()}} </td>
                 <td> {{aid.aidAmount | mask:'separator':','}} </td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length">
+                <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="table-actions">
                   <div class="d-flex flex-row">
                     <a href="#" (click)="printRequest($event, request)"
                        tooltip="{{langService.map.print_request_form}}" class="icon-btn">
@@ -262,7 +262,7 @@
                 <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
                 <td></td>
                 <td></td>
-                <td>
+                <td class="table-actions">
                   <div class="d-flex flex-row">
                     <a href="#" (click)="printRequest($event, request)"
                        tooltip="{{langService.map.print_request_form}}" class="icon-btn">
