@@ -447,6 +447,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       if (!this.requestStatusTab.value) {
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
       }
+      this.form.markAsPristine({onlySelf: true});
     });
 
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
