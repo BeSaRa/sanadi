@@ -62,6 +62,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
   benCategory!: number;
   totalInstalments!: number;
   totalDebts!: number;
+  familyCount!: number;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -140,7 +141,8 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benSecIdNumber,
       benSecIdType,
       benNotes,
-      benCategory
+      benCategory,
+      familyCount
     } = this;
 
     return {
@@ -168,7 +170,8 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
       benSecIdType: control ? [benSecIdType] : benSecIdType,
       benNotes: control ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
-      benCategory: control ? [benCategory, CustomValidators.required] : benCategory
+      benCategory: control ? [benCategory, CustomValidators.required] : benCategory,
+      familyCount: control ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount
     };
   }
 

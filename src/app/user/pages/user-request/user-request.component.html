@@ -151,6 +151,19 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="employer" asteriskIfRequired="employeer"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
+                     formControlName="employeer"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
@@ -238,21 +251,6 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="employer" asteriskIfRequired="employeer"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                     formControlName="employeer"
-                     class="form-control" type="text">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
             <label for="educationLevel" asteriskIfRequired="educationLevel"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
@@ -276,6 +274,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
             <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
@@ -286,6 +286,19 @@
                      formControlName="benDependentsCount" class="form-control">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="mobile" asteriskIfRequired="familyCount"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.family_member_count}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="2" id="familyCount"
+                     [ngClass]="fm.getStatusClass('personalTab.familyCount')"
+                     formControlName="familyCount" class="form-control">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.familyCount')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -313,14 +326,6 @@
               </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.maritalStatus')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="false" class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label class="col-sm-12 col-md-4 col-form-label">{{langService.map.family_member_count}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input aria-label="family count" class="form-control" type="text">
             </div>
           </div>
         </div>
