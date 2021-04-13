@@ -29,7 +29,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestSummary!: string;
   charityRefNo!: string;
   charitySerialNo!: string;
-  creationDate: IMyDateModel = changeDateToDatepicker(new Date());// formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  creationDate: IMyDateModel = changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));// formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   approvalIndicator!: number;
   status: number = 2;
   statusDateModified!: IMyDateModel;

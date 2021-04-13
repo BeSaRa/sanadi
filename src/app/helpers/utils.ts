@@ -203,14 +203,11 @@ function searchInObject(objectToSearch: any, searchText: string = '', searchFiel
   });
 }
 
-function changeDateToDatepicker(dateValue: any, keepTime: boolean = false): IMyDateModel {
+function changeDateToDatepicker(dateValue: any): IMyDateModel {
   if (!dateValue) {
     return dateValue;
   }
-  const dateVal = new Date(dateValue);
-  if (!keepTime) {
-    dateVal.setHours(0, 0, 0, 0);
-  }
+  // return {isRange: false, singleDate: {formatted: dayjs(dateValue).format(dateFormat)}, dateRange: undefined};
   return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};
 }
 
