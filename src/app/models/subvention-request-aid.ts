@@ -28,7 +28,9 @@ export class SubventionRequestAid {
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',
     requestDate: 'creationDateString',
-    organization: text => this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
+    organization: (text) => {
+      return (this.orgInfo.getName() + ' - ' + this.orgBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
+    },
     requestStatus: text => this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
   aidCount: any = 0;
