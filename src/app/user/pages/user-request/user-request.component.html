@@ -40,7 +40,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="input-group has-validation">
               <input maxlength="11" formControlName="qid" id="qid" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)">
+                     [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
                       class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                 <i class="mdi mdi-close-circle text-primary"></i>
@@ -59,7 +60,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="input-group">
               <input maxlength="20" formControlName="gccId" id="gccId" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.gccId')" (keyup)="fieldChange($event)">
+                     [ngClass]="fm.getInvalidClass('idTypes.gccId')" (keyup)="fieldChange($event)"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
                       class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                 <i class="mdi mdi-close-circle text-primary"></i></button>
@@ -79,7 +81,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="input-group">
               <input maxlength="20" formControlName="visa" id="visa" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.visa')" (keyup)="fieldChange($event)">
+                     [ngClass]="fm.getInvalidClass('idTypes.visa')" (keyup)="fieldChange($event)"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
                       class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
                 <i class="mdi mdi-close-circle text-primary"></i>
@@ -243,7 +246,8 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
-                     formControlName="phoneNumber1" class="form-control" type="text">
+                     formControlName="phoneNumber1" class="form-control" type="text"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
             </div>
@@ -283,7 +287,8 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <input maxlength="2" id="sponsorsCount"
                      [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
-                     formControlName="benDependentsCount" class="form-control">
+                     formControlName="benDependentsCount" class="form-control"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
             </div>
@@ -296,7 +301,8 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <input maxlength="2" id="familyCount"
                      [ngClass]="fm.getStatusClass('personalTab.familyCount')"
-                     formControlName="familyCount" class="form-control">
+                     formControlName="familyCount" class="form-control"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.familyCount')"></app-field-error-message>
             </div>
@@ -434,7 +440,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
                    [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
-                   class="form-control" mask="separator" thousandSeparator=",">
+                   class="form-control" mask="separator" thousandSeparator=","
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
           </div>
@@ -448,9 +455,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
-                   formControlName="benExtraIncome"
-                   class="form-control" id="extraIncome"
-                   mask="separator" thousandSeparator=",">
+                   formControlName="benExtraIncome" class="form-control" id="extraIncome"
+                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
           </div>
@@ -476,9 +482,8 @@
           <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
-                   formControlName="totalDebts"
-                   class="form-control" type="text"
-                   mask="separator" thousandSeparator=",">
+                   formControlName="totalDebts" class="form-control" type="text"
+                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
           </div>
@@ -490,7 +495,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
-                   formControlName="totalInstalments" class="form-control" type="text">
+                   formControlName="totalInstalments" class="form-control" type="text"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
           </div>
@@ -505,7 +511,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                    formControlName="benHouseRent" class="form-control"
-                   mask="separator" thousandSeparator=",">
+                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
           </div>
@@ -547,7 +553,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                   class="form-control">
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
           </div>
@@ -561,8 +567,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
-                   formControlName="streetName"
-                   class="form-control" type="text">
+                   formControlName="streetName" class="form-control" type="text"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
           </div>
@@ -574,7 +580,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_number}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
-                   formControlName="buildingName" class="form-control" type="text">
+                   formControlName="buildingName" class="form-control" type="text"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
           </div>
@@ -587,7 +594,7 @@
           <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                   class="form-control" type="text">
+                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
           </div>
@@ -599,7 +606,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                   formControlName="homePhoneNumber" class="form-control" type="text">
+                   formControlName="homePhoneNumber" class="form-control" type="text"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
           </div>
@@ -676,9 +684,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
-                   formControlName="requestedAidAmount"
-                   id="requestedAidAmount" class="form-control"
-                   mask="separator" thousandSeparator=",">
+                   formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
+                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
           </div>
@@ -804,8 +811,8 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                       formControlName="aidAmount" class="form-control"
-                       mask="separator" thousandSeparator=",">
+                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=","
+                       [mask]="inputMaskPatterns.NUMBER_ONLY">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
               </div>
@@ -885,7 +892,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
-                       id="installementsCount"
+                       id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
                        formControlName="installementsCount" class="form-control">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>

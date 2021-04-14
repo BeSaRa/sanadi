@@ -148,7 +148,8 @@
     <div class="accordion" id="advancedSearchAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header" id="criteriaHeader">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#criteriaWrapper"
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#criteriaWrapper"
                   aria-expanded="true" aria-controls="criteriaWrapper">
             {{langService.map.advanced_search}}
           </button>
@@ -207,7 +208,8 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
-                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')">
+                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')"
+                               [mask]="inputMaskPatterns.NUMBER_ONLY">
                         <app-field-error-message
                           [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
                       </div>
@@ -313,7 +315,8 @@
                                formControlName="statusDateModifiedFrom" class="form-control datepicker-field"
                                [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')">-->
                         <input class="form-control" angular-mydatepicker #dpStatusDateFrom="angular-mydatepicker"
-                               name="statusDateFrom" formControlName="statusDateModifiedFrom" id="statusDateFrom" dateFix
+                               name="statusDateFrom" formControlName="statusDateModifiedFrom" id="statusDateFrom"
+                               dateFix
                                [options]="datepickerOptionsMap.statusDateModifiedFrom" autocomplete="off"
                                (inputFieldChanged)="onDateChange($event, 'statusDateModifiedFrom', 'statusDateModifiedTo')"
                                (click)="dpStatusDateFrom.toggleCalendar()"

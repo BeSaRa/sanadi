@@ -39,6 +39,8 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
   saveVisible = true;
   validateFieldsVisible = true;
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgBranch>,
               private lookupService: LookupService,
               private fb: FormBuilder,

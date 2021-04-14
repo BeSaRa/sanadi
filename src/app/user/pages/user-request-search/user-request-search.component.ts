@@ -67,6 +67,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     // disableKeypress: true
   };
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   datepickerOptionsMap: IKeyValue = {
     creationDateFrom: getDatepickerOptions({disablePeriod: 'none'}),
     creationDateTo: getDatepickerOptions({disablePeriod: 'none'}),

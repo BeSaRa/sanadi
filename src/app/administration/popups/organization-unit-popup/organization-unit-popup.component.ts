@@ -54,6 +54,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   dpOptionsPast: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'future'});
   dpOptionsNormal: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'none'});
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgUnit>,
               private lookupService: LookupService,
               private fb: FormBuilder,

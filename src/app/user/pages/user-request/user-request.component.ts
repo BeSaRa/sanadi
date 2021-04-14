@@ -117,6 +117,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'})
   };
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   private datepickerFieldPathMap: IKeyValue = {
     creationDate: 'requestInfoTab.creationDate',
     requestDate: 'requestInfoTab.creationDate',

@@ -43,6 +43,8 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
     childAids: {name: 'childAids'}
   };
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
               private toast: ToastService,
               private lookupService: LookupService,

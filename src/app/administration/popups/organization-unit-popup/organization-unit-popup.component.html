@@ -103,16 +103,14 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
                    class="form-label">{{langService.map.lbl_phone_1}}</label>
-            <input id="phoneNumber1"
-                   [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
-                   formControlName="phoneNumber1" class="form-control">
+            <input id="phoneNumber1" [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
+                   formControlName="phoneNumber1" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber1')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
-            <input id="phoneNumber2"
-                   [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
-                   formControlName="phoneNumber2" class="form-control">
+            <input id="phoneNumber2" [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
+                   formControlName="phoneNumber2" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber2')"></app-field-error-message>
           </div>
         </div>
@@ -178,9 +176,8 @@
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="poBoxNum" class="form-label">{{langService.map.lbl_po_box_num}}</label>
-            <input id="poBoxNum"
-                   [ngClass]="fm.getStatusClass('basic.poBoxNum')"
-                   formControlName="poBoxNum" class="form-control">
+            <input id="poBoxNum" [ngClass]="fm.getStatusClass('basic.poBoxNum')"
+                   formControlName="poBoxNum" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.poBoxNum')"></app-field-error-message>
           </div>
         </div>
@@ -188,17 +185,15 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="faxNumber" asteriskIfRequired="faxNumber"
                    class="form-label">{{langService.map.fax_number}}</label>
-            <input id="faxNumber"
-                   [ngClass]="fm.getStatusClass('basic.faxNumber')"
-                   formControlName="faxNumber" class="form-control">
+            <input id="faxNumber" [ngClass]="fm.getStatusClass('basic.faxNumber')"
+                   formControlName="faxNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.faxNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="hotLine" asteriskIfRequired="hotLine"
                    class="form-label">{{langService.map.hotline}}</label>
-            <input id="hotLine"
-                   [ngClass]="fm.getStatusClass('basic.hotLine')"
-                   formControlName="hotLine" class="form-control">
+            <input id="hotLine" [ngClass]="fm.getStatusClass('basic.hotLine')"
+                   formControlName="hotLine" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.hotLine')"></app-field-error-message>
           </div>
         </div>

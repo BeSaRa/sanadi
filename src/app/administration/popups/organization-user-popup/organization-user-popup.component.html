@@ -35,14 +35,14 @@
             <label for="empNum" asteriskIfRequired="empNum"
                    class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" [ngClass]="fm.getStatusClass('basic.empNum')" formControlName="empNum"
-                   class="form-control"/>
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
             <app-field-error-message [control]="fm.getFormField('basic.empNum')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="qid" asteriskIfRequired="qid"
                    class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" [ngClass]="fm.getStatusClass('basic.qid')" formControlName="qid"
-                   class="form-control"/>
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" >
             <app-field-error-message [control]="fm.getFormField('basic.qid')"></app-field-error-message>
           </div>
         </div>
@@ -51,14 +51,13 @@
             <label for="phoneNumber" asteriskIfRequired="phoneNumber"
                    class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" [ngClass]="fm.getStatusClass('basic.phoneNumber')" formControlName="phoneNumber"
-                   class="form-control"/>
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
             <input id="phoneExtension" [ngClass]="fm.getStatusClass('basic.phoneExtension')"
-                   formControlName="phoneExtension"
-                   class="form-control"/>
+                   formControlName="phoneExtension" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
             <app-field-error-message [control]="fm.getFormField('basic.phoneExtension')"></app-field-error-message>
           </div>
         </div>
@@ -66,8 +65,7 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="officialPhoneNumber" class="form-label">{{langService.map.lbl_official_phone_number}}</label>
             <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('basic.officialPhoneNumber')"
-                   formControlName="officialPhoneNumber"
-                   class="form-control"/>
+                   formControlName="officialPhoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
             <app-field-error-message [control]="fm.getFormField('basic.officialPhoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">

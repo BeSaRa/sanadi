@@ -54,17 +54,15 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
                    class="form-label">{{langService.map.lbl_phone_1}}</label>
-            <input id="phoneNumber1"
-                   [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
-                   formControlName="phoneNumber1" class="form-control">
+            <input id="phoneNumber1" [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
+                   formControlName="phoneNumber1" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber1')"></app-field-error-message>
           </div>
           <!--Phone Number 2-->
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
-            <input id="phoneNumber2"
-                   [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
-                   formControlName="phoneNumber2" class="form-control">
+            <input id="phoneNumber2" [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
+                   formControlName="phoneNumber2" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber2')"></app-field-error-message>
           </div>
         </div>

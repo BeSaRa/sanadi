@@ -33,6 +33,12 @@ const commonValidations = {
   phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)]
 };
 
+const inputMaskPatterns = {
+  NUMBER_ONLY: '0*',
+  SEPARATOR: 'separator',
+  THOUSAND_SEPARATOR: ','
+}
+
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},
   email: {key: 'err_invalid_email', replaceValues: null},
@@ -126,5 +132,6 @@ export const CustomValidators = {
   defaultLengths,
   commonValidations,
   maxDate,
-  minDate
+  minDate,
+  inputMaskPatterns
 };

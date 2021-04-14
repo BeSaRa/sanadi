@@ -61,6 +61,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   saveVisible = true;
   validateFieldsVisible = true;
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   static buildPermissionsByGroupId(permissions: Permission[]): any {
     return permissions.reduce((acc, current) => {
       if (!acc.hasOwnProperty(current.groupId)) {
