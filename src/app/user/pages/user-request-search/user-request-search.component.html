@@ -410,9 +410,6 @@
               <td>{{request.approvedAmount | mask:'separator': ','}}</td>
               <td class="table-actions">
                 <div class="d-flex flex-row">
-                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
-                    <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
-                  </a>
                   <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
                      class="icon-btn">
                     <i class="mdi mdi-printer"></i>
@@ -441,6 +438,9 @@
                           class="btn icon-btn text-primary">
                     <i class="mdi mdi-trash-can"></i>
                   </button>
+                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
+                    <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
+                  </a>
                 </div>
               </td>
             </tr>
