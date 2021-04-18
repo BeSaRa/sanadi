@@ -42,6 +42,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
   };
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(private fb: FormBuilder,
               public langService: LangService,

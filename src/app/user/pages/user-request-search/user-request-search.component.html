@@ -407,8 +407,8 @@
               <td>{{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}}</td>
               <td>{{request.orgUserInfo.getName()}}</td>
               <td>{{request.statusInfo.getName()}}</td>
-              <td>{{request.requestedAidAmount | mask:'separator':','}}</td>
-              <td>{{request.approvedAmount | mask:'separator': ','}}</td>
+              <td>{{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+              <td>{{request.approvedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
               <td class="date-column">{{request.statusDateModifiedString}}</td>
               <td class="table-actions">
                 <div class="d-flex flex-row">

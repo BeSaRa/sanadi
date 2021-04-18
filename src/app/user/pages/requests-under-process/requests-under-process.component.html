@@ -22,7 +22,7 @@
           <td class="date-column"> {{request.creationDateString}} </td>
           <td>{{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}} </td>
           <td> {{request.requestStatusInfo.getName()}} </td>
-          <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
+          <td> {{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
           <td class="table-actions">
             <div class="d-flex flex-row">
               <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"

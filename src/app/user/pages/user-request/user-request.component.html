@@ -440,8 +440,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
                    [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
-                   class="form-control" mask="separator" thousandSeparator=","
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
           </div>
@@ -456,7 +456,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
                    formControlName="benExtraIncome" class="form-control" id="extraIncome"
-                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
           </div>
@@ -483,7 +483,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
                    formControlName="totalDebts" class="form-control" type="text"
-                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
           </div>
@@ -511,7 +511,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                    formControlName="benHouseRent" class="form-control"
-                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
           </div>
@@ -685,7 +685,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
                    formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
-                   mask="separator" thousandSeparator="," [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
           </div>
@@ -811,8 +811,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=","
-                       [mask]="inputMaskPatterns.NUMBER_ONLY">
+                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=",">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
               </div>
@@ -948,7 +947,7 @@
       </ng-container>
       <ng-container cdkColumnDef="aidAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:'separator':','}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>

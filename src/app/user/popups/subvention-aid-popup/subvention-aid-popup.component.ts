@@ -6,6 +6,7 @@ import {SubventionAid} from '../../../models/subvention-aid';
 import {AidLookup} from '../../../models/aid-lookup';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
+import {CustomValidators} from '../../../validators/custom-validators';
 
 @Component({
   selector: 'app-subvention-aid-popup',
@@ -24,6 +25,7 @@ export class SubventionAidPopupComponent implements OnInit {
   ];
   periodicityLookups: Record<number, Lookup> = {};
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public aidList: SubventionAid[],
               public lookupService: LookupService,

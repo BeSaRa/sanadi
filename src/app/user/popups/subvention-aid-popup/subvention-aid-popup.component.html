@@ -28,7 +28,7 @@
     </ng-container>
     <ng-container cdkColumnDef="aidAmount">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:'separator':','}} </td>
+      <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
     </ng-container>
     <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
     <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
