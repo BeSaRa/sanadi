@@ -77,6 +77,7 @@ export interface ILanguageKeys {
   request_info: string;
   print: string;
   approved_aid_amount: string;
+  total_approved_amount: string;
   aid_status: string;
   aid_type: string;
   request_aid_amount: string;
@@ -230,6 +231,7 @@ export interface ILanguageKeys {
   user: string;
   action_type: string;
   action_time: string;
+  action_date: string;
   comments: string;
   logs: string;
   show_aids: string;

@@ -391,7 +391,7 @@
             <th>{{langService.map.request_status}}</th>
             <th>{{langService.map.request_type}}</th>
             <th>{{langService.map.request_aid_amount}}</th>
-            <th>{{langService.map.approved_aid_amount}}</th>
+            <th>{{langService.map.total_approved_amount}}</th>
             <th>{{langService.map.lbl_actions}}</th>
           </tr>
           </thead>
@@ -418,10 +418,6 @@
                      class="icon-btn">
                     <i class="mdi mdi-history"></i>
                   </a>
-                  <!--<a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-heart-multiple"></i>
-                  </a>-->
                   <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
                           [disabled]="request.notUnderProcess()"
                           (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"

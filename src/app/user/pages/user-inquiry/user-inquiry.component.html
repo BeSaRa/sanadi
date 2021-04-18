@@ -214,78 +214,37 @@
             <th>{{langService.map.request_number}}</th>
             <th class="date-column">{{langService.map.request_date}}</th>
             <th>{{langService.map.lbl_org_unit}}</th>
-            <th>{{langService.map.aid_status}}</th>
+            <th>{{langService.map.request_status}}</th>
             <th>{{langService.map.request_aid_amount}}</th>
-            <th>{{langService.map.aid_type}}</th>
-            <th>{{langService.map.approved_aid_amount}}</th>
+            <th>{{langService.map.total_approved_amount}}</th>
             <th>{{langService.map.lbl_actions}}</th>
           </tr>
           </thead>
           <tbody>
           <ng-container *ngFor="let request of requests;">
-            <div *ngIf="request.aids && request.aids.length > 0; then multiAidRow else noAidRow"></div>
-            <ng-template #multiAidRow>
-              <tr *ngFor="let aid of request.aids; let firstAid = first;">
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length"><span
-                  class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="date-column"> {{request.creationDate|date}} </td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.orgBranchInfo.getName()}} </td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length"> {{request.statusInfo.getName()}} </td>
-                <td *ngIf="firstAid"
-                    [rowSpan]="request.aids.length"> {{request.requestedAidAmount | mask:'separator':','}} </td>
-                <td> {{aid.aidLookupInfo.getName()}} </td>
-                <td> {{aid.aidAmount | mask:'separator':','}} </td>
-                <td *ngIf="firstAid" [rowSpan]="request.aids.length" class="table-actions">
-                  <div class="d-flex flex-row">
-                    <a href="#" (click)="printRequest($event, request)"
-                       tooltip="{{langService.map.print_request_form}}" class="icon-btn">
-                      <i class="mdi mdi-printer"></i>
-                    </a>
-                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-history"></i>
-                    </a>
-                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
-                      <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
-                    </a>
-                    <!--<a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-heart-multiple"></i>
-                    </a>-->
-                  </div>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template #noAidRow>
-              <tr>
-                <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-                <td class="date-column"> {{request.creationDate|date}} </td>
-                <td> {{request.orgBranchInfo.getName()}} </td>
-                <td> {{request.statusInfo.getName()}} </td>
-                <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
-                <td></td>
-                <td></td>
-                <td class="table-actions">
-                  <div class="d-flex flex-row">
-                    <a href="#" (click)="printRequest($event, request)"
-                       tooltip="{{langService.map.print_request_form}}" class="icon-btn">
-                      <i class="mdi mdi-printer"></i>
-                    </a>
-                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-history"></i>
-                    </a>
-                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
-                      <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
-                    </a>
-                    <!--<a href="#" (click)="request.showAid($event)" tooltip="{{langService.map.show_aids}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-heart-multiple"></i>
-                    </a>-->
-                  </div>
-                </td>
-              </tr>
-            </ng-template>
+            <tr>
+              <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
+              <td class="date-column"> {{request.creationDate|date}} </td>
+              <td> {{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}} </td>
+              <td> {{request.statusInfo.getName()}} </td>
+              <td> {{request.requestedAidAmount | mask:'separator':','}} </td>
+              <td> {{request.approvedAmount | mask:'separator': ','}} </td>
+              <td class="table-actions">
+                <div class="d-flex flex-row">
+                  <a href="#" (click)="printRequest($event, request)"
+                     tooltip="{{langService.map.print_request_form}}" class="icon-btn">
+                    <i class="mdi mdi-printer"></i>
+                  </a>
+                  <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                     class="icon-btn">
+                    <i class="mdi mdi-history"></i>
+                  </a>
+                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
+                    <span class="badge bg-primary" (click)="request.showAid($event)">{{request.aidCount}}</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
           </ng-container>
           </tbody>
         </table>
