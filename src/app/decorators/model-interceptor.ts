@@ -2,6 +2,7 @@ import {cloneDeep as deepClone, findIndex as _findIndex} from 'lodash';
 import {identity} from 'rxjs';
 import {SendInterceptorInterface} from './send-interceptor-interface';
 import {GeneralInterceptor} from '../model-interceptors/general-interceptor';
+import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
 
 // tslint:disable-next-line:typedef
 export function InitClassInterceptor(callback?: any) {
@@ -37,12 +38,17 @@ export function SendInterceptor(interceptorCallback?: any): any {
     // @ts-ignore
     // tslint:disable-next-line:typedef
     descriptor.value = function(...args) {
+      const self = this as unknown as Partial<BackendServiceModelInterface>;
       const newArgs = deepClone(args);
-      // @ts-ignore
-      if (typeof this._getSendInterceptor !== 'undefined') {
-        // @ts-ignore
-        interceptorCallback = this._getSendInterceptor() || identity;
+      if (typeof self._getSendInterceptor !== 'undefined') {
+        interceptorCallback = self._getSendInterceptor() || identity;
       }
+
+      if (typeof self._getInterceptor !== 'undefined') {
+        const interceptor = self._getInterceptor();
+        interceptorCallback = interceptor ? interceptor.send : identity;
+      }
+
 
       if (target.hasOwnProperty(metadataProperty)) {
         const params = target[metadataProperty] as any[];
