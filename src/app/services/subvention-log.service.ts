@@ -7,6 +7,7 @@ import {SubventionLogInterceptor} from '../model-interceptors/subvention-log-int
 import {UrlService} from './url.service';
 import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
+import {LangService} from './lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class SubventionLogService extends BackendGenericService<SubventionLog> {
   private interceptor: SubventionLogInterceptor = new SubventionLogInterceptor();
 
   constructor(public http: HttpClient,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private langService: LangService) {
     super();
     FactoryService.registerService('SubventionLogService', this);
   }
@@ -38,7 +40,7 @@ export class SubventionLogService extends BackendGenericService<SubventionLog> {
   }
 
   loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/export/' + requestId, {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/export/' + requestId + '?lang='+ this.langService.getPrintingLanguage(), {responseType: 'blob'});
   }
 
   @Generator(undefined, true)
