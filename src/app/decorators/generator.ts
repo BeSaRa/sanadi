@@ -2,8 +2,14 @@ import {map} from 'rxjs/operators';
 import {map as _map} from 'lodash';
 import {GeneratorInterface} from './generator-interface';
 import {GeneralInterceptor} from '../model-interceptors/general-interceptor';
+import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
+import {identity} from 'rxjs';
 
-function _generateModel(data: any, model: any, property?: string, receiveCallback?: any, instance?: any): any {
+function _generateModel(data: any,
+                        model: any,
+                        property?: string,
+                        receiveCallback?: any,
+                        instance?: Partial<BackendServiceModelInterface>): any {
   let finalData;
   if (instance && typeof instance._getModel !== 'undefined') {
     model = instance._getModel();
@@ -12,6 +18,12 @@ function _generateModel(data: any, model: any, property?: string, receiveCallbac
   if (instance && typeof instance._getReceiveInterceptor !== 'undefined' && !!instance._getReceiveInterceptor()) {
     receiveCallback = instance._getReceiveInterceptor();
   }
+
+  if (instance && typeof instance._getInterceptor !== 'undefined' && !!instance._getInterceptor()) {
+    const interceptor = instance._getInterceptor();
+    receiveCallback = interceptor ? interceptor.receive : identity;
+  }
+
 
   if (!property) {
     finalData = model ? Object.assign(new model(), data) : data;
