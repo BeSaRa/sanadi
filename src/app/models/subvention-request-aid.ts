@@ -19,11 +19,14 @@ export class SubventionRequestAid {
   aids!: SubventionApprovedAid[];
   aidLookupInfo!: AdminResult;
   orgBranchInfo!: AdminResult;
+  orgUserInfo!: AdminResult;
   orgInfo!: AdminResult;
   statusInfo!: AdminResult;
   private subventionRequestService: SubventionRequestService;
   creationDateString!: string;
   approvedAmount: number = 0;
+  statusDateModified: string | null = '';
+  statusDateModifiedString: string | null = '';
 
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',

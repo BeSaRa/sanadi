@@ -8,11 +8,13 @@ function send(model: any): any {
   delete model.creationDateString;
   delete model.aidCount;
   delete model.approvedAmount;
+  delete model.statusDateModifiedString;
   return model;
 }
 
 function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
   model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
+  model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
   model.orgInfo = AdminResult.createInstance(model.orgInfo);
   model.statusInfo = AdminResult.createInstance(model.statusInfo);
   model.aids = model.aids.map((aid) => {
@@ -25,6 +27,7 @@ function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
   });
   // @ts-ignore
   model.creationDateString = new DatePipe('en-US').transform(model.creationDate);
+  model.statusDateModifiedString = !model.statusDateModified ? '' : new DatePipe('en-US').transform(model.statusDateModified);
 
   return model;
 }

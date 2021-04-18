@@ -388,10 +388,11 @@
             <th>{{langService.map.request_number}}</th>
             <th class="date-column">{{langService.map.request_date}}</th>
             <th>{{langService.map.lbl_organization}}</th>
+            <th>{{langService.map.created_by}}</th>
             <th>{{langService.map.request_status}}</th>
-            <th>{{langService.map.request_type}}</th>
             <th>{{langService.map.request_aid_amount}}</th>
             <th>{{langService.map.total_approved_amount}}</th>
+            <th class="date-column">{{langService.map.lbl_status_date_modified}}</th>
             <th>{{langService.map.lbl_actions}}</th>
           </tr>
           </thead>
@@ -404,10 +405,11 @@
               </td>
               <td class="date-column">{{request.creationDateString}}</td>
               <td>{{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}}</td>
+              <td>{{request.orgUserInfo.getName()}}</td>
               <td>{{request.statusInfo.getName()}}</td>
-              <td></td>
               <td>{{request.requestedAidAmount | mask:'separator':','}}</td>
               <td>{{request.approvedAmount | mask:'separator': ','}}</td>
+              <td class="date-column">{{request.statusDateModifiedString}}</td>
               <td class="table-actions">
                 <div class="d-flex flex-row">
                   <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
