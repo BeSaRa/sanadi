@@ -32,7 +32,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   creationDate: IMyDateModel = changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));// formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   approvalIndicator!: number;
   status: number = 2;
-  statusDateModified!: IMyDateModel;
+  statusDateModified: IMyDateModel = changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));
   requestNotes!: string;
   orgBranchId!: number;
   orgId!: number;
@@ -112,7 +112,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return {
       status: control ? [status, CustomValidators.required] : status,
       // @ts-ignore
-      statusDateModified: control ? [statusDateModified ? statusDateModified : changeDateToDatepicker(new Date()), [CustomValidators.minDate(changeDateFromDatepicker(this.creationDate))]] : statusDateModified,
+      statusDateModified: control ? [statusDateModified ? statusDateModified : changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0)), [CustomValidators.minDate(changeDateFromDatepicker(this.creationDate))]] : statusDateModified,
       requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }
