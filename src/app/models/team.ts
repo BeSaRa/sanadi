@@ -1,4 +1,6 @@
-export class Team {
+import {Cloneable} from './cloneable';
+
+export class Team extends Cloneable<Team> {
   arName!: string;
   enName!: string;
   authName!: string;
