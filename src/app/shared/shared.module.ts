@@ -40,6 +40,7 @@ import {DateFixDirective} from './directives/date-fix.directive';
 import {AttachmentListComponent} from './components/attachment-list/attachment-list.component';
 import {TrimInputDirective} from './directives/trim-input.directive';
 
+import { ValidationClassesDirective } from './directives/validation-classes.directive';
 @NgModule({
   declarations: [
     FooterComponent,
@@ -70,7 +71,8 @@ import {TrimInputDirective} from './directives/trim-input.directive';
     HighlightPipe,
     DateFixDirective,
     AttachmentListComponent,
-    TrimInputDirective
+    TrimInputDirective,
+    ValidationClassesDirective
   ],
   imports: [
     CommonModule,
@@ -118,7 +120,8 @@ import {TrimInputDirective} from './directives/trim-input.directive';
     AngularMyDatePickerModule,
     DateFixDirective,
     AttachmentListComponent,
-    TrimInputDirective
+    TrimInputDirective,
+    ValidationClassesDirective
   ]
 })
 export class SharedModule {
