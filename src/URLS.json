@@ -28,5 +28,7 @@
   "EXT_INSTAGRAM": "https://www.instagram.com/racaqa/",
   "EXT_FACEBOOK": "https://web.facebook.com/RACAqa/",
   "EXT_TWITTER": "https://twitter.com/Racaqa",
-  "EXT_RACA": "https://www.raca.gov.qa"
+  "EXT_RACA": "https://www.raca.gov.qa",
+  "E_INQUIRY": "/inquiry",
+  "INTERNAL_DEPARTMENT": "admin/internal/department"
 }
