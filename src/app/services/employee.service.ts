@@ -171,4 +171,8 @@ export class EmployeeService {
   getInternalUserDepartment(): string {
     return this.getInternalDepartment()?.getName() + '';
   }
+
+  loggedIn(): boolean {
+    return !!this.orgUser || !!this.internalUser;
+  }
 }

@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Localization} from '../models/localization';
 import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
@@ -20,6 +20,10 @@ import {LangType, LocalizationMap} from '../types/types';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {ECookieService} from './e-cookie.service';
 import {ConfigurationService} from './configuration.service';
+import {EmployeeService} from './employee.service';
+import {AuthService} from './auth.service';
+import {Generator} from '../decorators/generator';
+import {ILoginData} from '../interfaces/i-login-data';
 
 
 @Injectable({
@@ -44,13 +48,15 @@ export class LangService extends BackendGenericService<Localization> {
   printingLanguage: { [index: string]: number } = {
     ar: 1,
     en: 2
-  }
+  };
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
               private dialogService: DialogService,
               private eCookieService: ECookieService,
               private configurationService: ConfigurationService,
+              private employeeService: EmployeeService,
+              private authService: AuthService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
@@ -85,7 +91,7 @@ export class LangService extends BackendGenericService<Localization> {
    * @private
    */
   private changeStyleHref(style: Styles): void {
-    this.linkElement.href = 'assets/style/'+style;
+    this.linkElement.href = 'assets/style/' + style;
   }
 
   private prepareCurrentLang(): ILanguageKeys {
@@ -124,9 +130,33 @@ export class LangService extends BackendGenericService<Localization> {
   /**
    * @description toggle the current language for the application [ar| en]
    */
-  toggleLanguage(): void {
-    const code = this.languageToggler[this.languageChange.value.code];
-    this.changeLanguage(this.languages[code]);
+  toggleLanguage(): Observable<Language> {
+    return new Observable((subscriber) => {
+      const code = this.languageToggler[this.languageChange.value.code];
+      const lang = this.languages[code];
+      let sub: Subscription;
+      if (this.employeeService.loggedIn()) {
+        sub = this._changeUserLanguage(code)
+          .subscribe((result) => {
+            this.authService.isAuthenticatedTrigger$.next(result);
+            this.changeLanguage(lang);
+            subscriber.next(lang);
+            subscriber.complete();
+          });
+      } else {
+        this.changeLanguage(lang);
+        subscriber.next(lang);
+        subscriber.complete();
+      }
+      return () => {
+        sub ? sub.unsubscribe() : null;
+      };
+    });
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  private _changeUserLanguage(code: string): Observable<ILoginData> {
+    return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE.replace('/nas/login', '') + '/lang/' + (code).toUpperCase(), undefined);
   }
 
   changeLanguageByCode(code: string): void {

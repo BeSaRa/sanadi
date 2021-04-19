@@ -14,7 +14,7 @@ export class AppComponent {
   title = 'sanadi';
 
   constructor(private langService: LangService,
-              public  loadingService: LoadingService,
+              public loadingService: LoadingService,
               private cacheService: CacheService,
               private navigationService: NavigationService,
               private appScrollService: AppRootScrollService) {
@@ -28,7 +28,9 @@ export class AppComponent {
   languageChangeDetection({ctrlKey, altKey, which, keyCode}: KeyboardEvent): void {
     if ((keyCode === 76 || which === 76) && ctrlKey && altKey) {
       // ctrl + alt + L
-      this.langService.toggleLanguage();
+      const sub = this.langService.toggleLanguage().subscribe(() => {
+        sub.unsubscribe();
+      });
     }
     if ((keyCode === 65 || which === 65) && ctrlKey && altKey) {
       const sub = this.langService.openCreateDialog().onAfterClose$.subscribe(_ => {
