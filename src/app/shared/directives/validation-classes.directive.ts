@@ -9,7 +9,7 @@ import {takeUntil} from 'rxjs/operators';
 export class ValidationClassesDirective implements OnInit, OnDestroy {
   @Input() isValid: string = 'is-valid';
   @Input() isInvalid: string = 'is-invalid';
-  private invalidOnly: boolean = false;
+  private invalidOnly: boolean = true;
 
   @Input()
   set onlyInvalid(value: boolean) {
