@@ -1,5 +1,5 @@
-import {Component, Input, HostBinding} from '@angular/core';
-import {AbstractControl} from '@angular/forms';
+import {Component, Input, HostBinding, Optional} from '@angular/core';
+import {AbstractControl, ControlContainer} from '@angular/forms';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {LangService} from '../../../services/lang.service';
 
@@ -12,16 +12,21 @@ export class FieldErrorMessageComponent {
   @Input() control: (AbstractControl | null | undefined);
   @Input() labelKey?: string;
   @Input() labelText?: string;
-
+  @Input() controlName?: string;
   @HostBinding('class') containerClass = 'invalid-feedback position-absolute';
 
-  constructor(private langService: LangService) {
+  constructor(private langService: LangService, @Optional() private parent: ControlContainer) {
   }
 
   get errorMessage(): (string | null) {
+    if (this.controlName && parent) {
+      this.control = this.parent.control?.get(this.controlName)!;
+    }
+
     if (!this.control) {
       return null;
     }
+
     let objValidationData;
     for (const errorName in this.control.errors) {
       if (this.control.errors.hasOwnProperty(errorName)) {
