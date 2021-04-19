@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  menu_inquiries_and_complaints: string;
+  save_as_draft: string;
+  request_body: string;
+  competent_dep: string;
+  subject: string;
+  full_name: string;
   authority_employee: string;
   charities_employee: string;
   show_hide_sidebar: string;
