@@ -133,6 +133,7 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       arName,
       benPrimaryIdNumber,
       benPrimaryIdType,
+      benPrimaryIdNationality,
       phoneNumber1,
       employeer,
       benDependentsCount,
@@ -140,12 +141,19 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       maritalStatus,
       benSecIdNumber,
       benSecIdType,
+      benSecIdNationality,
       benNotes,
       benCategory,
       familyCount
     } = this;
 
     return {
+      benPrimaryIdType: control ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
+      benPrimaryIdNumber: control ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
+      benPrimaryIdNationality: control ? [benPrimaryIdNationality, CustomValidators.required] : benPrimaryIdNationality,
+      benSecIdType: control ? [benSecIdType] : benSecIdType,
+      benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
+      benSecIdNationality: control ? [benSecIdNationality] : benSecIdNationality,
       benNationality: control ? [benNationality, CustomValidators.required] : benNationality,
       dateOfBirth: control ? [dateOfBirth, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : dateOfBirth,
       gender: control ? [gender, CustomValidators.required] : gender,
@@ -158,8 +166,6 @@ export class Beneficiary extends BaseModel<Beneficiary> {
         Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : arName,
-      benPrimaryIdNumber: control ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
-      benPrimaryIdType: control ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
       phoneNumber1: control ? [phoneNumber1, [CustomValidators.required,
         CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber1,
       employeer: control ? [employeer, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : employeer,
@@ -167,8 +173,6 @@ export class Beneficiary extends BaseModel<Beneficiary> {
         CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
       educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
       maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
-      benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
-      benSecIdType: control ? [benSecIdType] : benSecIdType,
       benNotes: control ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
       benCategory: control ? [benCategory, CustomValidators.required] : benCategory,
       familyCount: control ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount

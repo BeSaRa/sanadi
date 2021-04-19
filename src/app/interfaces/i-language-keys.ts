@@ -254,4 +254,7 @@ export interface ILanguageKeys {
   created_by: string;
   first_registration_date: string;
   msg_unsaved_changes_confirm: string;
+  beneficiary_primary_id: string;
+  beneficiary_secondary_id: string;
+  msg_invalid_search_criteria: string;
 }

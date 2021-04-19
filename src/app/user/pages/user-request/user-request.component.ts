@@ -35,7 +35,6 @@ import {Lookup} from '../../../models/lookup';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionAidService} from '../../../services/subvention-aid.service';
 import {StatusEnum} from '../../../enums/status.enum';
-import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
@@ -45,10 +44,16 @@ import {formatDate} from '@angular/common';
 import {ReadModeService} from '../../../services/read-mode.service';
 import * as dayjs from 'dayjs';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils';
+import {
+  changeDateFromDatepicker,
+  getDatepickerOptions,
+  getDatePickerOptionsClone,
+  isValidValue
+} from '../../../helpers/utils';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';
+import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -76,13 +81,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
   fm!: FormManager;
   form!: FormGroup;
-  idNumbersChanges$: Subject<{ field: string, value: string }> = new Subject<{ field: string, value: string }>();
-  idFieldsClearButtons: { [index: string]: boolean } = {
-    qid: false,
-    visa: false,
-    passport: false,
-    gccId: false
-  };
   aidLookups: AidLookup[] = [];
   subAidLookupsArray: AidLookup[] = [];
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
@@ -133,6 +131,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
 
+  idTypes: Lookup[] = this.lookup.listByCategory.BenIdType;
+
+  private idTypesValidationsMap: { [index: number]: any } = {
+    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
+    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
+    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
+  };
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -156,15 +162,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     beneficiary = beneficiary ? beneficiary : new Beneficiary();
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
-      idTypes: this.fb.group({
-        passport: [null, CustomValidators.commonValidations.passport],
-        visa: [null, [CustomValidators.number, CustomValidators.maxLength(20)]],
-        qid: [null, [CustomValidators.number,
-          CustomValidators.minLength(CustomValidators.defaultLengths.QID_MIN),
-          CustomValidators.maxLength(CustomValidators.defaultLengths.QID_MAX)
-        ]],
-        gccId: [null, [CustomValidators.number]]
-      }, {validators: CustomValidators.anyFieldsHasLength(['visa', 'qid', 'gccId'])}),
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
       incomeTab: this.fb.group(beneficiary.getEmployerFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
@@ -183,71 +180,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return group;
   }
 
-  private listenToIdNumberChange() {
-    this.idNumbersChanges$
-      .pipe(
-        takeUntil(this.destroy$),
-        tap(field => field.field === 'passport' ? this.updateSecondaryIdNumber(field) : null),
-        filter(field => field.field !== 'passport'),
-        distinctUntilChanged()
-      )
-      .subscribe((field) => {
-        if (field.value.length) {
-          this.disableOtherIdFieldsExcept(field.field);
-          this.setIbNumberAndIdTypeValues(field);
-        } else {
-          this.enableAllIdFields();
-        }
-      });
-  }
-
-  private setIbNumberAndIdTypeValues(field: { field: string, value: string }): void {
-    if (field.value) {
-      this.fm.getFormField('personalTab.benPrimaryIdNumber')?.setValue(field.value);
-      this.fm.getFormField('personalTab.benPrimaryIdType')?.setValue(this.idMap[field.field]);
-    } else {
-      this.fm.getFormField('personalTab.benPrimaryIdNumber')?.setValue(null);
-      this.fm.getFormField('personalTab.benPrimaryIdType')?.setValue(null);
-    }
-  }
-
-  private disableOtherIdFieldsExcept(fieldName: string): void {
-    ['qid', 'visa', 'gccId'].forEach(field => {
-      const fieldPath = 'idTypes.' + field;
-      field !== fieldName ? this.fm.getFormField(fieldPath)?.disable() : this.fm.getFormField(fieldPath)?.enable();
-      field !== fieldName ? this.idFieldsClearButtons[field] = false : this.idFieldsClearButtons[field] = true;
-    });
-  }
-
-  get idTypesFields(): FormGroup {
-    return this.fm.getFormField('idTypes') as FormGroup;
-  }
-
-  private enableAllIdFields(): void {
-    ['qid', 'visa', 'gccId'].forEach(field => {
-      const fieldPath = 'idTypes.' + field;
-      this.fm.getFormField(fieldPath)?.enable();
-      this.idFieldsClearButtons[field] = false;
-    });
-    this.setIbNumberAndIdTypeValues({
-      value: '',
-      field: ''
-    });
-  }
-
   private listenToBeneficiaryChange() {
     this.beneficiaryChanged$
       .pipe(takeUntil(this.destroy$))
       .subscribe((beneficiary) => {
         if (beneficiary instanceof Beneficiary) {
           this.currentBeneficiary = beneficiary;
-          this.updateIdsForms('passport', beneficiary.benSecIdNumber);
-          for (const key in this.idMap) {
-            if (this.idMap[key] === beneficiary.benPrimaryIdType) {
-              this.updateIdsForms('passport', beneficiary.benSecIdNumber);
-              this.updateIdsForms(key, beneficiary.benPrimaryIdNumber);
-            }
-          }
         } else {
           this.currentBeneficiary = undefined;
         }
@@ -293,15 +231,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.readOnly = false;
       }
     }
-  }
-
-  private updateIdsForms(key: string, value: string) {
-    const field = `idTypes.${key}`, control = this.fm.getFormField(field);
-    if (key !== 'passport') {
-      this.disableOtherIdFieldsExcept(key);
-    }
-    control?.setValue(value);
-    control?.updateValueAndValidity();
   }
 
   private updateSecondaryIdNumber(field: { field: string, value: string }): void {
@@ -445,7 +374,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       this.currentRequest = request.clone();
       this.editMode = true;
-      this.disableOtherIdFieldsExcept('none');
+
       if (!this.requestStatusTab.value) {
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
       }
@@ -494,7 +423,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    this.listenToIdNumberChange();
     this.listenToBeneficiaryChange();
     this.listenToRequestChange();
     this.listenToOccupationStatus();
@@ -504,6 +432,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToSaveAid();
     this.listenToAddAid();
     this.listenToNationalityChange();
+    this.listenToPrimaryIdTypeChange();
+    this.listenToSecondaryIdTypeChange();
 
     this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
       .pipe(take(1))
@@ -558,7 +488,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       this.requestChanged$.next(request);
       this.editMode = true;
-      this.disableOtherIdFieldsExcept('none');
     });
 
   }
@@ -577,24 +506,23 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.save$.next(null);
   }
 
-  getBeneficiaryData(fieldName: string, $event?: Event) {
+  getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
+    const idType = this.fm.getFormField('personalTab.benPrimaryIdType')?.value;
     const primaryNumber = this.fm.getFormField('personalTab.benPrimaryIdNumber')?.value;
-    const secondary = this.fm.getFormField('personalTab.benSecIdNumber')?.value;
-    const nationality = this.fm.getFormField('personalTab.benNationality')?.value;
+    const nationality = this.fm.getFormField('personalTab.benPrimaryIdNationality')?.value;
 
-    if (fieldName === 'passport' && !nationality) {
-      this.dialogService.info(this.langService.map.msg_select_nationality);
+    if (!primaryNumber || !idType || !nationality) {
+      this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
       return;
     }
+
 
     this.beneficiaryService
       .loadByCriteria({
         benPrimaryIdNumber: primaryNumber ? primaryNumber : undefined,
-        benPrimaryIdType: primaryNumber ? this.idMap[fieldName] : undefined,
-        benSecIdNumber: secondary ? secondary : undefined,
-        benSecIdType: secondary ? this.idMap['passport'] : undefined,
-        benSecIdNationality: secondary ? nationality : undefined
+        benPrimaryIdType: primaryNumber ? idType : undefined,
+        benPrimaryIdNationality: nationality ? nationality : undefined
       })
       .pipe(takeUntil(this.destroy$))
       .subscribe(list => {
@@ -609,31 +537,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       });
   }
 
-  clearField(fieldName: string) {
-    const field = this.fm.getFormField(`idTypes.${fieldName}`);
-    const passport = this.fm.getFormField(`idTypes.passport`);
-    field?.patchValue(null);
-    passport?.patchValue(null);
-    this.idFieldsClearButtons[fieldName] = false;
-    this.enableAllIdFields();
-    this.beneficiaryChanged$.next(null);
-  }
-
-  isActiveIdField(fieldName: string) {
-    return this.idFieldsClearButtons.hasOwnProperty(fieldName) && this.idFieldsClearButtons[fieldName];
-  }
-
-  fieldChange(event: KeyboardEvent): void {
+  disableEnter(event: KeyboardEvent): void {
     const element = event.target as HTMLInputElement;
     if (event.code === 'NumpadEnter' || event.code === 'Enter' && element.value.trim().length) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
-    this.idNumbersChanges$.next({
-      field: element.id,
-      value: (element.value + '').trim()
-    });
   }
 
   saveAid() {
@@ -973,7 +883,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           } else if (click === UserClickOn.NO) {
             this.beneficiaryChanged$.next(null);
             this.requestChanged$.next(null);
-            this.idTypesFields.reset();
+
             this.form.markAsUntouched();
             this.form.markAsPristine();
           } else {
@@ -1016,5 +926,78 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       return 'ALLOW';
     }
     return 'CONFIRM_UNSAVED_CHANGES';
+  }
+
+  isPrimaryIdTypeDisabled(optionValue: number): boolean {
+    return this.fm.getFormField('personalTab.benSecIdType')?.value === optionValue;
+  }
+
+  isSecondaryIdTypeDisabled(optionValue: number): boolean {
+    return this.fm.getFormField('personalTab.benPrimaryIdType')?.value === optionValue;
+  }
+
+  get primaryIdTypeField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdType') as FormControl;
+  }
+
+  get primaryIdNumberField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdNumber') as FormControl;
+  }
+
+  get primaryNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdNationality') as FormControl;
+  }
+
+  get secondaryIdTypeField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdType') as FormControl;
+  }
+
+  get secondaryIdNumberField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdNumber') as FormControl;
+  }
+
+  get secondaryNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
+  }
+
+  private listenToPrimaryIdTypeChange() {
+    this.primaryIdTypeField?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      this.primaryIdNumberField.setValue(null);
+      this.primaryIdNumberField.setValidators([CustomValidators.required].concat(this.idTypesValidationsMap[value]));
+      this.primaryIdNumberField.updateValueAndValidity();
+    });
+  }
+
+  private listenToSecondaryIdTypeChange() {
+    this.secondaryIdTypeField?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      let idValidators: any[] = [], nationalityValidators = null;
+      if (isValidValue(value)) {
+        idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
+
+        if (value === this.idMap.passport) {
+          nationalityValidators = [CustomValidators.required];
+        }
+      }
+
+      this.secondaryIdNumberField.setValue(null);
+      this.secondaryIdNumberField.setValidators(idValidators);
+      this.secondaryIdNumberField.updateValueAndValidity();
+
+      this.secondaryNationalityField.setValue('');
+      this.secondaryNationalityField.setValidators(nationalityValidators);
+      this.secondaryNationalityField.updateValueAndValidity();
+    });
+  }
+
+  beneficiaryPrimaryIdDisabled(): boolean {
+    return this.readOnly || this.editMode;
+  }
+
+  beneficiarySecondaryIdDisabled(): boolean {
+    return this.readOnly || (this.editMode && !!this.secondaryIdNumberField?.value)
   }
 }

@@ -33,127 +33,113 @@
   </fieldset>
   <!--  personal info Tab -->
   <ng-template #personalInfo>
-    <div formGroupName="idTypes" class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="qid" class="col-sm-12 col-md-4 col-form-label">{{langService.map.qatari_id_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group has-validation">
-              <input maxlength="11" formControlName="qid" id="qid" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.qid')" (keyup)="fieldChange($event)"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
-              <button tabindex="-1" type="button" *ngIf="isActiveIdField('qid')" (click)="clearField('qid')"
-                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                <i class="mdi mdi-close-circle text-primary"></i>
-              </button>
-              <button tabindex="-1" type="button"
-                      [disabled]="editMode || !isActiveIdField('qid') || fm.getFormField('idTypes.qid')?.invalid"
-                      (click)="getBeneficiaryData('qid')" class="input-group-text">
-                <i class="mdi mdi-account-search text-primary"></i>
-              </button>
-              <app-field-error-message [control]="fm.getFormField('idTypes.qid')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-column flex-md-row mb-0">
-          <label for="gccId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.gcc_id_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <input maxlength="20" formControlName="gccId" id="gccId" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.gccId')" (keyup)="fieldChange($event)"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
-              <button tabindex="-1" type="button" *ngIf="isActiveIdField('gccId')" (click)="clearField('gccId')"
-                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                <i class="mdi mdi-close-circle text-primary"></i></button>
-              <button tabindex="-1" type="button"
-                      [disabled]="editMode || !isActiveIdField('gccId') || fm.getFormField('idTypes.gccId')?.invalid"
-                      (click)="getBeneficiaryData('gccId')" class="input-group-text">
-                <i class="mdi mdi-account-search text-primary"></i>
-              </button>
-              <app-field-error-message [control]="fm.getFormField('idTypes.gccId')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="visa" class="col-sm-12 col-md-4 col-form-label">{{langService.map.visa_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <input maxlength="20" formControlName="visa" id="visa" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.visa')" (keyup)="fieldChange($event)"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
-              <button tabindex="-1" type="button" *ngIf="isActiveIdField('visa')" (click)="clearField('visa')"
-                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                <i class="mdi mdi-close-circle text-primary"></i>
-              </button>
-              <button tabindex="-1" type="button"
-                      [disabled]="editMode || !isActiveIdField('visa') || fm.getFormField('idTypes.visa')?.invalid"
-                      (click)="getBeneficiaryData('visa')" class="input-group-text">
-                <i class="mdi mdi-account-search text-primary"></i>
-              </button>
-              <app-field-error-message [control]="fm.getFormField('idTypes.visa')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-column flex-md-row mb-0">
-          <label for="passport"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.passport_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <input maxlength="20" formControlName="passport" id="passport" class="form-control" type="text"
-                     [ngClass]="fm.getInvalidClass('idTypes.passport')" (keyup)="fieldChange($event)">
-              <button tabindex="-1" type="button" *ngIf="isActiveIdField('passport')"
-                      (click)="clearField('passport')"
-                      class="input-group-text position-absolute border-0 bg-transparent top-0 end-100 z-index-1">
-                <i class="mdi mdi-close-circle text-primary"></i>
-              </button>
-              <button tabindex="-1" type="button"
-                      [disabled]="editMode || fm.getFormField('idTypes.passport')?.invalid"
-                      (click)="getBeneficiaryData('passport')" class="input-group-text">
-                <i class="mdi mdi-account-search text-primary"></i>
-              </button>
-              <app-field-error-message [control]="fm.getFormField('idTypes.passport')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="w-100 position-relative d-flex flex-row align-items-center justify-content-center mb-4">
-      <div class="d-flex flex-row align-items-center justify-content-center">
-        <div [ngClass]="fm.getInvalidClass('idTypes')"></div>
-        <app-field-error-message class="translate-middle-y"
-                                 [control]="fm.getFormField('idTypes')"></app-field-error-message>
-      </div>
-    </div>
-    <hr class="mb-4"/>
     <div formGroupName="personalTab">
+      <!--Primary Id-->
       <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12">
+          <h6 class="text-primary">{{langService.map.beneficiary_primary_id}}</h6>
           <div class="row d-flex flex-column flex-md-row">
-            <label for="nationality" asteriskIfRequired="benNationality"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select [ngClass]="fm.getStatusClass('personalTab.benNationality')" formControlName="benNationality"
-                      id="nationality" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.Nationality"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>-->
-              <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                         [readonly]="readOnly"
-                         placeholder="{{langService.map.select}}" id="nationality"
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benPrimaryIdType" class="form-label"
+                     asteriskIfRequired="benPrimaryIdType">{{langService.map.id_type}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
+                         [readonly]="readOnly || (editMode && primaryIdTypeField?.value)"
+                         placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benNationality"
-                         [ngClass]="fm.getStatusClass('personalTab.benNationality')">
+                         formControlName="benPrimaryIdType">
+                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                           [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benPrimaryIdType')"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benPrimaryIdNationality" class="form-label"
+                     asteriskIfRequired="benPrimaryIdNationality">{{langService.map.lbl_nationality}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
+                         [readonly]="readOnly"
+                         placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
+                         [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
+                         [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
                 <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
                   {{option.getName()}}
                 </ng-option>
               </ng-select>
               <app-field-error-message
-                [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
+                [control]="fm.getFormField('personalTab.benPrimaryIdNationality')"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benPrimaryIdNumber" class="form-label"
+                     asteriskIfRequired="benPrimaryIdNumber">{{langService.map.id_number}}</label>
+              <div class="input-group has-validation">
+                <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
+                       type="text" [ngClass]="fm.getInvalidClass('personalTab.benPrimaryIdNumber')"
+                       (keyup)="disableEnter($event)"
+                       [readOnly]="beneficiaryPrimaryIdDisabled()">
+                <button tabindex="-1" type="button"
+                        [disabled]="readOnly || editMode || primaryIdNumberField?.invalid || primaryNationalityField?.invalid"
+                        (click)="getBeneficiaryData($event)" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.benPrimaryIdNumber')"></app-field-error-message>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <!--Secondary Id-->
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <h6 class="text-primary">{{langService.map.beneficiary_secondary_id}}</h6>
+          <div class="row d-flex flex-column flex-md-row">
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benSecIdType" class="form-label"
+                     asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
+                         [readonly]="readOnly || (editMode && secondaryIdTypeField?.value)"
+                         placeholder="{{langService.map.select}}" id="benSecIdType"
+                         [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
+                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                           [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benSecIdNationality" class="form-label"
+                     asteriskIfRequired="benSecIdNationality">{{langService.map.lbl_nationality}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
+                         [readonly]="readOnly"
+                         placeholder="{{langService.map.select}}" id="benSecIdNationality"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="benSecIdNationality"
+                         [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
+                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benSecIdNationality')"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4">
+              <label for="benSecIdNumber" class="form-label"
+                     asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
+              <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
+                     [readOnly]="beneficiarySecondaryIdDisabled()"
+                     [ngClass]="fm.getInvalidClass('personalTab.benSecIdNumber')" (keyup)="disableEnter($event)">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benSecIdNumber')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="mt-0"/>
+      <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
             <label for="employer" asteriskIfRequired="employeer"
@@ -947,7 +933,8 @@
       </ng-container>
       <ng-container cdkColumnDef="aidAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>

@@ -1,6 +1,6 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate, isValidValue} from '../helpers/utils';
 
 function send(model: any): any {
   delete model.langService;
@@ -25,7 +25,15 @@ function send(model: any): any {
   delete model.dateOfBirthString;
   // model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
   model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
-  model.benPrimaryIdNationality = model.benNationality;
+
+  // internally assign primary nationality to beneficiary nationality
+  model.benNationality = model.benPrimaryIdNationality;
+
+  //if no secondary id type is selected, clear secondary id fields
+  if (!isValidValue(model.benSecIdType)) {
+    model.benSecIdNationality = null;
+    model.benSecIdNumber = null;
+  }
   return model;
 }
 
