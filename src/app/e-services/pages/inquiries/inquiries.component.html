@@ -1,1 +1,109 @@
-<p>inquiries works!</p>
+<div class="d-flex flex-column">
+  <div class="row mb-4">
+    <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_inquiries_and_complaints}}</h1></div>
+  </div>
+  <fieldset [formGroup]="from">
+    <div class="row mb-4">
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="category" for="category"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.subject}}</label>
+          <div class="col-md-8 col-sm-12 ng-select-wrapper">
+            <ng-select validationClasses="category" id="category" formControlName="category">
+              <ng-option [value]="category.lookupKey"
+                         *ngFor="let category of categories">{{category.getName()}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.competent_dep}}</label>
+          <div class="col-md-8 col-sm-12 ng-select-wrapper">
+            <ng-select (change)="onCompetentDepChange($event)" validationClasses="competentDepartmentID"
+                       formControlName="competentDepartmentID"
+                       id="competentDepartmentID">
+              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="fullName" for="fullName"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.full_name}}</label>
+          <div class="col-md-8 col-sm-12">
+            <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="mobileNo" for="mobileNo"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
+          <div class="col-md-8 col-sm-12">
+            <input id="mobileNo" validationClasses="mobileNo" formControlName="mobileNo" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="organization" for="organization"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_organization}}</label>
+          <div class="col-md-8 col-sm-12">
+            <input id="organization" validationClasses="organization" formControlName="organization"
+                   class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="occupation" for="occupation"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.occupation}}</label>
+          <div class="col-md-8 col-sm-12">
+            <input id="occupation" validationClasses="occupation" formControlName="occupation" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-6 col-sm-12">
+        <div class="row">
+          <label asteriskIfRequired="email" for="email"
+                 class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_email}}</label>
+          <div class="col-md-8 col-sm-12">
+            <input id="email" validationClasses="email" formControlName="email" class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <label asteriskIfRequired="requestBody" for="requestBody"
+             class="col-md-2 col-sm-12 col-form-label">{{lang.map.request_body}}</label>
+      <div class="col-md-10 col-sm-12">
+        <textarea rows="5" id="requestBody" validationClasses="requestBody" formControlName="requestBody"
+                  class="form-control"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <hr>
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <h4>Attachments</h4>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <h4>Recommendations</h4>
+    </div>
+  </div>
+  <div class="mb-4 d-flex align-items-center justify-content-center">
+    <button (click)="save.next(saveTypes.FINAL)" class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
+    <button (click)="save.next(saveTypes.DRAFT)"
+            class="btn btn-primary shadow-sm mx-3">{{lang.map.save_as_draft}}</button>
+    <button class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
+  </div>
+</div>
