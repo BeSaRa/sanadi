@@ -15,12 +15,6 @@ export interface ILanguageKeys {
   launch: string;
   request_has_been_saved_successfully: string;
   draft_was_saved_successfully: string;
-  menu_inquiries_and_complaints: string;
-  save_as_draft: string;
-  request_body: string;
-  competent_dep: string;
-  subject: string;
-  full_name: string;
   authority_employee: string;
   charities_employee: string;
   show_hide_sidebar: string;
