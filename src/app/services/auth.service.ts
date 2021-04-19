@@ -14,7 +14,7 @@ import {TokenService} from './token.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticatedTrigger$: BehaviorSubject<ILoginData | null> = new BehaviorSubject<ILoginData | null>(null);
+  isAuthenticatedTrigger$: BehaviorSubject<ILoginData | null> = new BehaviorSubject<ILoginData | null>(null);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedTrigger$
     .asObservable()
     .pipe(map(value => !!value));
