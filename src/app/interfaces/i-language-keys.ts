@@ -1,11 +1,17 @@
 export interface ILanguageKeys {
+  menu_inquiries_and_complaints: string;
+  save_as_draft: string;
+  request_body: string;
+  competent_dep: string;
+  subject: string;
+  full_name: string;
   authority_employee: string;
   charities_employee: string;
   show_hide_sidebar: string;
   home: string;
-  back : string;
+  back: string;
   btn_inquire: string;
-  btn_continue : string;
+  btn_continue: string;
   beneficiary_already_exists: string;
   msg_approved_request_without_one_aid_at_least: string;
   remove_provided_aid_first_to_change_request_status: string;
