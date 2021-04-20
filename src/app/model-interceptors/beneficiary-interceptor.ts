@@ -26,10 +26,7 @@ function send(model: any): any {
   // model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
   model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
 
-  // internally assign primary nationality to beneficiary nationality
-  model.benNationality = model.benPrimaryIdNationality;
-
-  //if no secondary id type is selected, clear secondary id fields
+  //if no secondary id type is selected, clear secondary id and nationality fields
   if (!isValidValue(model.benSecIdType)) {
     model.benSecIdNationality = null;
     model.benSecIdNumber = null;

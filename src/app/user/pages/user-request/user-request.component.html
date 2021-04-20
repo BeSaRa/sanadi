@@ -7,8 +7,7 @@
         class="h6 text-primary m-0 d-inline-block">{{langService.map.menu_provide_request}}</h1>
     <button [tooltip]="langService.map.print_request_form" *ngIf="currentRequest?.id"
             (click)="currentRequest?.printRequest('request.pdf' , $event)"
-            class="icon-btn text-primary"><i
-      class="mdi mdi-printer"></i></button>
+            class="icon-btn text-primary"><i class="mdi mdi-printer"></i></button>
   </div>
 </div>
 <form autocomplete="off" [formGroup]="form" id="form">
@@ -56,21 +55,6 @@
                 [control]="fm.getFormField('personalTab.benPrimaryIdType')"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benPrimaryIdNationality" class="form-label"
-                     asteriskIfRequired="benPrimaryIdNationality">{{langService.map.lbl_nationality}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
-                         [readonly]="readOnly"
-                         placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
-                         [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
-                         [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
-                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benPrimaryIdNationality')"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4">
               <label for="benPrimaryIdNumber" class="form-label"
                      asteriskIfRequired="benPrimaryIdNumber">{{langService.map.id_number}}</label>
               <div class="input-group has-validation">
@@ -86,6 +70,36 @@
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.benPrimaryIdNumber')"></app-field-error-message>
               </div>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4" *ngIf="displayPrimaryNationality">
+              <ng-container *ngIf="primaryNationalityListType === 'normal'">
+                <label for="benPrimaryIdNationality" class="form-label"
+                       asteriskIfRequired="benPrimaryIdNationality">{{langService.map.lbl_nationality}}</label>
+                <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
+                           [readonly]="readOnly"
+                           placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
+                           [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
+                           [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+              </ng-container>
+              <ng-container *ngIf="primaryNationalityListType === 'gulf'">
+                <label for="benPrimaryIdNationalityGulf" class="form-label"
+                       asteriskIfRequired="benPrimaryIdNationality">{{langService.map.country}}</label>
+                <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationalityGulf" [clearable]="false"
+                           [readonly]="readOnly"
+                           placeholder="{{langService.map.select}}" id="benPrimaryIdNationalityGulf"
+                           [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
+                           [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+              </ng-container>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.benPrimaryIdNationality')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -110,23 +124,6 @@
               </ng-select>
             </div>
             <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benSecIdNationality" class="form-label"
-                     asteriskIfRequired="benSecIdNationality">{{langService.map.lbl_nationality}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
-                         [readonly]="readOnly"
-                         placeholder="{{langService.map.select}}" id="benSecIdNationality"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benSecIdNationality"
-                         [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
-                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benSecIdNationality')"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4">
               <label for="benSecIdNumber" class="form-label"
                      asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
               <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
@@ -135,25 +132,44 @@
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benSecIdNumber')"></app-field-error-message>
             </div>
-          </div>
-        </div>
-      </div>
-      <hr class="mt-0"/>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="employer" asteriskIfRequired="employeer"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                     formControlName="employeer"
-                     class="form-control" type="text">
+            <div class="col-md-4 col-sm-12 mb-4" *ngIf="displaySecondaryNationality">
+              <ng-container *ngIf="secondaryNationalityListType === 'normal'">
+                <label for="benSecIdNationality" class="form-label"
+                       asteriskIfRequired="benSecIdNationality">{{langService.map.lbl_nationality}}</label>
+                <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
+                           [readonly]="readOnly"
+                           placeholder="{{langService.map.select}}" id="benSecIdNationality"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="benSecIdNationality"
+                           [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
+                  <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+              </ng-container>
+              <ng-container *ngIf="secondaryNationalityListType === 'gulf'">
+                <label for="benSecIdNationalityGulf" class="form-label"
+                       asteriskIfRequired="benSecIdNationality">{{langService.map.country}}</label>
+                <ng-select [selectOnTab]="true" labelForId="benSecIdNationalityGulf" [clearable]="false"
+                           [readonly]="readOnly"
+                           placeholder="{{langService.map.select}}" id="benSecIdNationalityGulf"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="benSecIdNationality"
+                           [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
+                  <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+              </ng-container>
               <app-field-error-message
-                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
+                [control]="fm.getFormField('personalTab.benSecIdNationality')"></app-field-error-message>
             </div>
           </div>
         </div>
       </div>
+      <hr class="mt-0"/>
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
@@ -236,21 +252,21 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="educationLevel" asteriskIfRequired="educationLevel"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
+            <label for="nationality" asteriskIfRequired="benNationality"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
+              <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                          [readonly]="readOnly"
-                         placeholder="{{langService.map.select}}" id="educationLevel"
+                         placeholder="{{langService.map.select}}" id="nationality"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="educationLevel"
-                         [ngClass]="fm.getStatusClass('personalTab.educationLevel')">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
+                         formControlName="benNationality"
+                         [ngClass]="fm.getStatusClass('personalTab.benNationality')">
+                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
                   {{option.getName()}}
                 </ng-option>
               </ng-select>
               <app-field-error-message
-                [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
+                [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -323,6 +339,41 @@
               </ng-select>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benCategory')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="educationLevel" asteriskIfRequired="educationLevel"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
+                         [readonly]="readOnly"
+                         placeholder="{{langService.map.select}}" id="educationLevel"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="educationLevel"
+                         [ngClass]="fm.getStatusClass('personalTab.educationLevel')">
+                <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="employer" asteriskIfRequired="employeer"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
+                     formControlName="employeer"
+                     class="form-control" type="text">
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
             </div>
           </div>
         </div>

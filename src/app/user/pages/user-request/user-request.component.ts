@@ -132,6 +132,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private validateStatus: boolean = true;
 
   idTypes: Lookup[] = this.lookup.listByCategory.BenIdType;
+  displayPrimaryNationality: boolean = false;
+  displaySecondaryNationality: boolean = false;
+  primaryNationalityListType: 'normal' | 'gulf' = 'normal';
+  secondaryNationalityListType: 'normal' | 'gulf' = 'normal';
+
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -276,6 +281,29 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         control?.setValidators([CustomValidators.pattern('ENG_AR_ONLY')]);
       }
       control?.updateValueAndValidity();
+    });
+
+
+    this.primaryNationalityField?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      map(value => Number(value))
+    ).subscribe((value) => {
+      if (this.primaryIdTypeField?.value === this.idMap.passport && isValidValue(this.primaryNationalityField?.value)) {
+        this.benNationalityField?.setValue(this.primaryNationalityField?.value);
+        this.benNationalityField?.updateValueAndValidity();
+      }
+    });
+
+    this.secondaryNationalityField?.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      map(value => Number(value))
+    ).subscribe((value) => {
+      if (this.secondaryIdTypeField?.value === this.idMap.passport && isValidValue(this.secondaryNationalityField?.value)) {
+        this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
+        this.benNationalityField?.updateValueAndValidity();
+      }
     });
   }
 
@@ -508,9 +536,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
-    const idType = this.fm.getFormField('personalTab.benPrimaryIdType')?.value;
-    const primaryNumber = this.fm.getFormField('personalTab.benPrimaryIdNumber')?.value;
-    const nationality = this.fm.getFormField('personalTab.benPrimaryIdNationality')?.value;
+    const idType = this.primaryIdTypeField?.value;
+    const primaryNumber = this.primaryIdNumberField?.value;
+    const nationality = this.primaryNationalityField?.value;
 
     if (!primaryNumber || !idType || !nationality) {
       this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
@@ -936,6 +964,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('personalTab.benPrimaryIdType')?.value === optionValue;
   }
 
+  get benNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benNationality') as FormControl;
+  }
+
   get primaryIdTypeField(): FormControl {
     return this.fm.getFormField('personalTab.benPrimaryIdType') as FormControl;
   }
@@ -960,13 +992,61 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
   }
 
+  private setNationalityVisibility(identification: string, idType: number): boolean {
+    if (!isValidValue(idType)) {
+      return false;
+    }
+    let visibility: boolean = (idType === this.idMap.passport || idType === this.idMap.gccId),
+      nationalityListType: ('normal' | 'gulf') = 'normal';
+    if (idType === this.idMap.gccId) {
+      nationalityListType = 'gulf';
+    }
+
+    if (identification.toLowerCase() === 'primary') {
+      this.displayPrimaryNationality = visibility;
+      this.primaryNationalityListType = nationalityListType;
+    } else {
+      this.displaySecondaryNationality = visibility;
+      this.secondaryNationalityListType = nationalityListType;
+    }
+    return visibility;
+  }
+
+  private getNationalityByIdType(idType: number): string | number {
+    if (!isValidValue(idType)) {
+      return '';
+    }
+    let nationalityValue: string | number = '';
+    if (idType === this.idMap.qid || idType === this.idMap.visa) {
+      nationalityValue = 1;
+    }
+    return nationalityValue;
+  }
+
+
   private listenToPrimaryIdTypeChange() {
     this.primaryIdTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
+      let idValidators: any[] = [CustomValidators.required], nationalityValidators = null;
+
+      if (isValidValue(value)) {
+        idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
+
+        if (value === this.idMap.passport || value === this.idMap.gccId) {
+          nationalityValidators = [CustomValidators.required];
+        }
+      }
+
       this.primaryIdNumberField.setValue(null);
-      this.primaryIdNumberField.setValidators([CustomValidators.required].concat(this.idTypesValidationsMap[value]));
+      this.primaryIdNumberField.setValidators(idValidators);
       this.primaryIdNumberField.updateValueAndValidity();
+
+      this.primaryNationalityField.setValue(this.getNationalityByIdType(value));
+      this.primaryNationalityField.setValidators(nationalityValidators);
+      this.primaryNationalityField.updateValueAndValidity();
+
+      this.setNationalityVisibility('primary', value);
     });
   }
 
@@ -975,10 +1055,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(value => {
       let idValidators: any[] = [], nationalityValidators = null;
+
       if (isValidValue(value)) {
         idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
 
-        if (value === this.idMap.passport) {
+        if (value === this.idMap.passport || value === this.idMap.gccId) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -987,9 +1068,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.secondaryIdNumberField.setValidators(idValidators);
       this.secondaryIdNumberField.updateValueAndValidity();
 
-      this.secondaryNationalityField.setValue('');
+      this.secondaryNationalityField.setValue(this.getNationalityByIdType(value));
       this.secondaryNationalityField.setValidators(nationalityValidators);
       this.secondaryNationalityField.updateValueAndValidity();
+
+      this.setNationalityVisibility('secondary', value);
     });
   }
 

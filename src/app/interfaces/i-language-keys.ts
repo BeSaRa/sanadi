@@ -258,4 +258,5 @@ export interface ILanguageKeys {
   beneficiary_secondary_id: string;
   msg_invalid_search_criteria: string;
   identification: string;
+  country: string;
 }

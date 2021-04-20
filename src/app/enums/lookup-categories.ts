@@ -25,6 +25,7 @@ export enum LookupCategories {
   ORG_USER_JOB_TITLE = 'OrgUserJobTitle',
   ORG_USER_STATUS = 'OrgUserStatus',
   AID_LOOKUP_STATUS = 'AidLookupStatus',
+  GULF_COUNTRIES = 'GulfCountries',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -51,7 +52,8 @@ export enum LookupCategories {
   SUB_AID_PERIODIC_TYPE_CAT_ID = '22',
   ORG_USER_JOB_TITLE_CAT_ID = '23',
   ORG_USER_STATUS_CAT_ID = '24',
-  AID_LOOKUP_STATUS_CAT_ID = '30'
+  AID_LOOKUP_STATUS_CAT_ID = '30',
+  GULF_COUNTRIES_CAT_ID = '35'
 }
 
 /*export enum LookupCategories {

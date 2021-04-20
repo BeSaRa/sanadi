@@ -33,6 +33,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   stringOperators: Lookup[] = this.lookupService.getStringOperators();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
+  gulfCountries: Lookup[] = this.lookupService.listByCategory.GulfCountries;
   displayIdCriteria: boolean = false;
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
@@ -56,7 +57,9 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       enName: this.langService.getEnglishLocalByKey('beneficiary_secondary_id'),
       lookupKey: 2
     })
-  ]
+  ];
+  nationalityVisible: boolean = false;
+  nationalityListType: 'normal' | 'gulf' = 'normal';
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -122,9 +125,19 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.fm.getFormField('searchById.idType')?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
+      let nationalityValidators = null;
+      if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID){
+        nationalityValidators = [CustomValidators.required];
+      }
+
       this.idNumberField.setValidators([CustomValidators.required].concat(this.idTypesValidationsMap[value]));
       this.idNumberField.updateValueAndValidity();
-      this.nationalityField.setValidators(value === BeneficiaryIdTypes.PASSPORT ? [CustomValidators.required] : null);
+
+      this.nationalityVisible = (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID);
+      this.nationalityListType = (value === BeneficiaryIdTypes.GCC_ID ? 'gulf' : 'normal');
+
+      this.nationalityField.setValue('');
+      this.nationalityField.setValidators(nationalityValidators);
       this.nationalityField.updateValueAndValidity();
     });
   }
@@ -149,15 +162,15 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     if (formValue.identification === 1) {
       beneficiary.benPrimaryIdType = formValue.idType;
       beneficiary.benPrimaryIdNumber = formValue.idNumber;
-      //if (formValue.idType === BeneficiaryIdTypes.PASSPORT) {
-      beneficiary.benPrimaryIdNationality = formValue.nationality;
-      //}
+      if (formValue.idType === BeneficiaryIdTypes.PASSPORT || formValue.idType === BeneficiaryIdTypes.GCC_ID) {
+        beneficiary.benPrimaryIdNationality = formValue.nationality;
+      }
     } else {
       beneficiary.benSecIdType = formValue.idType;
       beneficiary.benSecIdNumber = formValue.idNumber;
-      //if (formValue.idType === BeneficiaryIdTypes.PASSPORT) {
-      beneficiary.benSecIdNationality = formValue.nationality;
-      //}
+      if (formValue.idType === BeneficiaryIdTypes.PASSPORT || formValue.idType === BeneficiaryIdTypes.GCC_ID) {
+        beneficiary.benSecIdNationality = formValue.nationality;
+      }
     }
     return beneficiary;
   }

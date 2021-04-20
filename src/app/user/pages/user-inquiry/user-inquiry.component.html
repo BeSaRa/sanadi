@@ -93,19 +93,35 @@
         </div>
       </div>
       <div class="col flex-grow-1">
-        <div class="mb-4 ng-select-wrapper">
-          <label for="nationality" class="form-label"
-                 asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
-          <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                     placeholder="{{langService.map.select}}" id="nationality"
-                     [notFoundText]="langService.map.msg_not_found"
-                     formControlName="nationality"
-                     [ngClass]="fm.getStatusClass('searchById.nationality')">
-            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-            <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
-              {{option.getName()}}
-            </ng-option>
-          </ng-select>
+        <div class="mb-4 ng-select-wrapper" *ngIf="nationalityVisible">
+          <ng-container *ngIf="nationalityListType === 'normal'">
+            <label for="nationality" class="form-label"
+                   asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
+            <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="nationality"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="nationality"
+                       [ngClass]="fm.getStatusClass('searchById.nationality')">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+          </ng-container>
+          <ng-container *ngIf="nationalityListType === 'gulf'">
+            <label for="nationalityGulf" class="form-label"
+                   asteriskIfRequired="nationality">{{langService.map.country}}</label>
+            <ng-select [selectOnTab]="true" labelForId="nationalityGulf" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="nationalityGulf"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="nationality"
+                       [ngClass]="fm.getStatusClass('searchById.nationality')">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of gulfCountries" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+          </ng-container>
           <app-field-error-message
             [control]="fm.getFormField('searchById.nationality')"></app-field-error-message>
         </div>
