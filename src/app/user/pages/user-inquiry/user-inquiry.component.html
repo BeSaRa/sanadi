@@ -26,9 +26,6 @@
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="searchMethod">{{langService.map.search_method}}</label>
-          <!--<select formControlName="operator" class="form-select" id="searchMethod" name="idType">
-            <option [value]="option.lookupKey" *ngFor="let option of stringOperators">{{option.getName()}}</option>
-          </select>-->
           <ng-select [selectOnTab]="true" labelForId="searchMethod" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="searchMethod"
                      [notFoundText]="langService.map.msg_not_found"
@@ -72,9 +69,6 @@
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="idType" class="form-label" asteriskIfRequired="idType">{{langService.map.id_type}}</label>
-          <!--<select formControlName="benPrimaryIdType" class="form-select" id="idType" name="idType">
-            <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
-          </select>-->
           <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="idType"
                      [notFoundText]="langService.map.msg_not_found"
@@ -100,9 +94,6 @@
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="nationality" class="form-label" asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
-          <!--<select formControlName="benPrimaryIdNationality" id="nationality" class="form-select">
-            <option [ngValue]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</option>
-          </select>-->
           <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="nationality"
                      [notFoundText]="langService.map.msg_not_found"

@@ -79,13 +79,6 @@
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="userType" asteriskIfRequired="userType"
                    class="form-label">{{langService.map.lbl_user_type}}</label>
-            <!--<select id="userType" formControlName="userType"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.userType')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of userTypeList"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="userType" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="userType"
                        [notFoundText]="langService.map.msg_not_found"
@@ -101,13 +94,6 @@
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="jobTitle" asteriskIfRequired="jobTitle"
                    class="form-label">{{langService.map.lbl_job_title}}</label>
-            <!--<select id="jobTitle" formControlName="jobTitle"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.jobTitle')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of jobTitleList"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="jobTitle" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="jobTitle"
                        [notFoundText]="langService.map.msg_not_found"
@@ -124,13 +110,6 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="orgId" asteriskIfRequired="orgId" class="form-label">{{langService.map.lbl_org_unit}}</label>
-            <!--<select id="orgId" formControlName="orgId"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.orgId')" (change)="onOrgUnitChange()">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let ou of orgUnitList"
-                      [ngValue]="ou.id">{{ou.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgId"
                        [notFoundText]="langService.map.msg_not_found"
@@ -147,13 +126,6 @@
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="orgBranchId" asteriskIfRequired="orgBranchId"
                    class="form-label">{{langService.map.lbl_branch}}</label>
-            <!--<select id="orgBranchId" formControlName="orgBranchId"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.orgBranchId')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let branch of orgBranchList"
-                      [ngValue]="branch.id">{{branch.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="orgBranchId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgBranchId"
                        [notFoundText]="langService.map.msg_not_found"
@@ -171,14 +143,6 @@
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="status" asteriskIfRequired="status"
                    class="form-label">{{langService.map.lbl_status}}</label>
-            <!--<select id="status" formControlName="status"
-                    class="form-select"
-                    [ngClass]="fm.getStatusClass('basic.status')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let option of orgUserStatusList"
-                      [disabled]="option.isRetiredOrgUserStatus()"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="status"
                        [notFoundText]="langService.map.msg_not_found"
@@ -200,14 +164,6 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="customRoleId" class="form-label">{{langService.map.lbl_custom_role}}</label>
-            <!--<select id="customRoleId" formControlName="customRoleId"
-                    class="form-select" (change)="updatePermissionsByRole($event)"
-                    [ngClass]="fm.getStatusClass('permissions.customRoleId')">
-              <option value="">{{langService.map.lbl_none}}</option>
-              <option *ngFor="let role of customRoleList"
-                      [disabled]="!role.status"
-                      [ngValue]="role.id">{{role.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="customRoleId"
                        [notFoundText]="langService.map.msg_not_found"

@@ -29,9 +29,6 @@
           <div class="row">
             <label for="year" class="col-sm-12 col-md-4 col-form-label">{{langService.map.year}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select formControlName="year" class="form-select" id="year">
-                <option [ngValue]="year" *ngFor="let year of years">{{year}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="year" [clearable]="false"
                          placeholder="{{langService.map.select}}" id="year"
                          [notFoundText]="langService.map.msg_not_found"
@@ -50,10 +47,6 @@
             <div class="row">
               <label for="idType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <!--<select formControlName="benPrimaryIdType" class="form-select"
-                        id="idType">
-                  <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
-                </select>-->
                 <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="idType"
                            [notFoundText]="langService.map.msg_not_found"
@@ -83,10 +76,6 @@
               <label for="arMethod"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <!--<select formControlName="operator" class="form-select" id="arMethod">
-                  <option [ngValue]="stringOperationMap[option.lookupKey]"
-                          *ngFor="let option of stringOperators">{{option.getName()}}</option>
-                </select>-->
                 <ng-select [selectOnTab]="true" labelForId="arMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="arMethod"
                            [notFoundText]="langService.map.msg_not_found"
@@ -116,10 +105,6 @@
               <label for="enMethod"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.search_method}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <!--<select formControlName="operator" class="form-select" id="enMethod">
-                  <option [ngValue]="stringOperationMap[option.lookupKey]"
-                          *ngFor="let option of stringOperators">{{option.getName()}}</option>
-                </select>-->
                 <ng-select [selectOnTab]="true" labelForId="enMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="enMethod"
                            [notFoundText]="langService.map.msg_not_found"
@@ -165,10 +150,6 @@
                       <label for="nationality"
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <!--<select formControlName="benNationality" class="form-select" id="nationality">
-                          <option [ngValue]="option.lookupKey"
-                                  *ngFor="let option of nationalities">{{option.getName()}}</option>
-                        </select>-->
                         <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="nationality"
                                    [notFoundText]="langService.map.msg_not_found"
@@ -185,10 +166,6 @@
                       <label for="occuptionStatus"
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <!--<select formControlName="occuptionStatus" class="form-select" id="occuptionStatus">
-                          <option [ngValue]="option.lookupKey"
-                                  *ngFor="let option of employmentStatus">{{option.getName()}}</option>
-                        </select>-->
                         <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="occuptionStatus"
                                    [notFoundText]="langService.map.msg_not_found"
@@ -224,10 +201,6 @@
                       <label for="status"
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <!--<select formControlName="status" class="form-select" id="status">
-                          <option [ngValue]="option.lookupKey"
-                                  *ngFor="let option of requestsStatus">{{option.getName()}}</option>
-                        </select>-->
                         <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="status"
                                    [notFoundText]="langService.map.msg_not_found"
@@ -244,10 +217,6 @@
                       <label for="requestType"
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <!--<select formControlName="requestType" class="form-select" id="requestType">
-                          <option [ngValue]="option.lookupKey"
-                                  *ngFor="let option of requestTypes">{{option.getName()}}</option>
-                        </select>-->
                         <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="requestType"
                                    [notFoundText]="langService.map.msg_not_found"

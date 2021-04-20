@@ -204,11 +204,6 @@
             <label for="gender" asteriskIfRequired="gender"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select [ngClass]="fm.getStatusClass('personalTab.gender')" id="gender" formControlName="gender"
-                      class="form-select">
-                <option [value]="option.lookupKey"
-                        *ngFor="let option of lookup.listByCategory.Gender">{{option.getName()}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
                          [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="gender"
@@ -244,11 +239,6 @@
             <label for="educationLevel" asteriskIfRequired="educationLevel"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select [ngClass]="fm.getStatusClass('personalTab.educationLevel')" formControlName="educationLevel"
-                      id="educationLevel" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.BenEducationLevel"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
                          [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="educationLevel"
@@ -301,11 +291,6 @@
             <label for="maritalStatus" asteriskIfRequired="maritalStatus"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select [ngClass]="fm.getStatusClass('personalTab.maritalStatus')" id="maritalStatus"
-                      formControlName="maritalStatus" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.BenMaritialStatus"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
                          [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="maritalStatus"
@@ -326,11 +311,6 @@
             <label for="occupationStatus" asteriskIfRequired="benCategory"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <!--<select [ngClass]="fm.getStatusClass('personalTab.benCategory')" id="occupationStatus"
-                      formControlName="benCategory" class="form-select">
-                <option *ngFor="let option of lookup.listByCategory.BenCategory"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="occupationStatus" [clearable]="false"
                          [readonly]="readOnly"
                          placeholder="{{langService.map.select}}" id="occupationStatus"
@@ -370,12 +350,6 @@
           <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <!--<select [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')" formControlName="occuptionStatus"
-                    id="employmentStatus"
-                    class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="employmentStatus" [clearable]="false"
                        [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="employmentStatus"
@@ -513,11 +487,6 @@
           <label for="city" asteriskIfRequired="residenceCountry"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <!--<select id="city" [ngClass]="fm.getStatusClass('addressTab.residenceCountry')"
-                    formControlName="residenceCountry" class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.Countries"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
                        [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="city"
@@ -623,11 +592,6 @@
           <label for="requestType" asteriskIfRequired="requestType"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <!--<select [ngClass]="fm.getStatusClass('requestInfoTab.requestType')" formControlName="requestType"
-                    id="requestType" class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.SubRequestType"
-                      [ngValue]="option.lookupKey">{{option.getName()}}</option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
                        [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestType"
@@ -701,13 +665,6 @@
           <label for="requestStatus"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <!--<select [ngClass]="fm.getStatusClass('requestStatusTab.status')" id="requestStatus"
-                    formControlName="status" class="form-select">
-              <option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
-                      [ngValue]="option.lookupKey">
-                {{option.getName()}}
-              </option>
-            </select>-->
             <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
                        [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestStatus"
@@ -770,12 +727,6 @@
               <label for="aidType" asteriskIfRequired="aidLookupId"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <!--<select id="aidType" [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')"
-                        formControlName="aidLookupId"
-                        class="form-select">
-                  <option [ngValue]="option.id"
-                          *ngFor="let option of subAidLookupsArray">{{option.getName()}}</option>
-                </select>-->
                 <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
                            [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="aidType"
@@ -850,12 +801,6 @@
               <label asteriskIfRequired="periodicType" for="periodicType"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <!--<select [ngClass]="fm.getStatusClass('aidTab.0.periodicType')"
-                        formControlName="periodicType"
-                        id="periodicType" class="form-select">
-                  <option [ngValue]="option.lookupKey"
-                          *ngFor="let option of lookup.listByCategory.SubAidPeriodicType">{{option.getName()}}</option>
-                </select>-->
                 <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
                            [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="periodicType"

@@ -38,14 +38,6 @@
             </div>
             <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
               <label asteriskIfRequired="status" for="status" class="form-label">{{langService.map.lbl_status}}</label>
-              <!--<select id="status" formControlName="status"
-                      class="form-select"
-                      [ngClass]="fm.getStatusClass('basic.status')">
-                <option value="">{{langService.map.lbl_none}}</option>
-                <option *ngFor="let option of aidLookupStatusList"
-                        [disabled]="option.isRetiredAidLookupStatus()"
-                        [ngValue]="option.lookupKey">{{option.getName()}}</option>
-              </select>-->
               <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                          placeholder="{{langService.map.select}}" id="status"
                          [notFoundText]="langService.map.msg_not_found"
