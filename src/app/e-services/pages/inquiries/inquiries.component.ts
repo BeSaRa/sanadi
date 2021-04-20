@@ -75,6 +75,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
 
   private listenToSave(): void {
     const validFormSubmit$ = this.save.pipe(
+      filter(val => val === SaveTypes.FINAL || val === SaveTypes.COMMIT),
       tap(_ => (!this.from.valid ? this.displayInvalidFormMessage() : null)),
       filter(_ => this.from.valid),
     );
@@ -83,6 +84,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
       .pipe(filter(val => val === SaveTypes.FINAL), map(_ => this.from.value));
     const commitSave$ = validFormSubmit$
       .pipe(filter(val => val === SaveTypes.COMMIT), map(_ => this.from.value));
+
     const draftSave$ = this.save
       .pipe(filter(val => val === SaveTypes.DRAFT), map(_ => this.from.value));
 
