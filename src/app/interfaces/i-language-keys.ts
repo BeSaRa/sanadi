@@ -257,4 +257,5 @@ export interface ILanguageKeys {
   beneficiary_primary_id: string;
   beneficiary_secondary_id: string;
   msg_invalid_search_criteria: string;
+  identification: string;
 }

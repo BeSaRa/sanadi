@@ -56,44 +56,65 @@
     <div formGroupName="searchById" *ngIf="displayIdCriteria" class="row flex-sm-column flex-md-row">
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
-          <label for="idType">{{langService.map.id_type}}</label>
+          <label for="identification" class="form-label" asteriskIfRequired="identification">{{langService.map.identification}}</label>
+          <ng-select [selectOnTab]="true" labelForId="identification" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="identification"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="identification">
+            <ng-option *ngFor="let option of identifications" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message
+            [control]="fm.getFormField('searchById.identification')"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col flex-grow-1">
+        <div class="mb-4 ng-select-wrapper">
+          <label for="idType" class="form-label" asteriskIfRequired="idType">{{langService.map.id_type}}</label>
           <!--<select formControlName="benPrimaryIdType" class="form-select" id="idType" name="idType">
             <option [ngValue]="option.lookupKey" *ngFor="let option of idTypes">{{option.getName()}}</option>
           </select>-->
           <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="idType"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="benPrimaryIdType">
+                     formControlName="idType">
             <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
           </ng-select>
+          <app-field-error-message
+            [control]="fm.getFormField('searchById.idType')"></app-field-error-message>
         </div>
       </div>
       <div class="col flex-grow-1">
         <div class="mb-4 position-relative">
-          <label for="text">{{langService.map.id_number}}</label>
-          <input [ngClass]="fm.getInvalidClass('searchById.benPrimaryIdNumber')" type="text"
-                 formControlName="benPrimaryIdNumber" id="text" class="form-control"
-                 name="benPrimaryIdNumber">
+          <label for="text" class="form-label" asteriskIfRequired="idNumber">{{langService.map.id_number}}</label>
+          <input [ngClass]="fm.getInvalidClass('searchById.idNumber')" type="text"
+                 formControlName="idNumber" id="text" class="form-control"
+                 name="idNumber">
           <app-field-error-message
-            [control]="fm.getFormField('searchById.benPrimaryIdNumber')"></app-field-error-message>
+            [control]="fm.getFormField('searchById.idNumber')"></app-field-error-message>
         </div>
       </div>
-      <div *ngIf="displayNationality" class="col flex-grow-1">
+      <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
-          <label for="nationality">{{langService.map.lbl_nationality}}</label>
+          <label for="nationality" class="form-label" asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
           <!--<select formControlName="benPrimaryIdNationality" id="nationality" class="form-select">
             <option [ngValue]="option.lookupKey" *ngFor="let option of nationalities">{{option.getName()}}</option>
           </select>-->
           <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="nationality"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="benPrimaryIdNationality">
+                     formControlName="nationality"
+                     [ngClass]="fm.getStatusClass('searchById.nationality')">
+            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
             <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
           </ng-select>
+          <app-field-error-message
+            [control]="fm.getFormField('searchById.nationality')"></app-field-error-message>
         </div>
       </div>
     </div>

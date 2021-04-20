@@ -18,6 +18,7 @@ import {SubventionRequestAid} from '../../../models/subvention-request-aid';
 import {SubventionRequestAidService} from '../../../services/subvention-request-aid.service';
 import {SubventionRequestService} from '../../../services/subvention-request.service';
 import {printBlobData} from '../../../helpers/utils';
+import {AdminResult} from '../../../models/admin-result';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -33,7 +34,6 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   displayIdCriteria: boolean = false;
-  displayNationality: boolean = false;
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
   private idTypesValidationsMap: { [index: number]: any } = {
@@ -43,6 +43,20 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
   };
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  identifications = [
+    AdminResult.createInstance({
+      id: 1,
+      arName: this.langService.getArabicLocalByKey('beneficiary_primary_id'),
+      enName: this.langService.getEnglishLocalByKey('beneficiary_primary_id'),
+      lookupKey: 1
+    }),
+    AdminResult.createInstance({
+      id: 2,
+      arName: this.langService.getArabicLocalByKey('beneficiary_secondary_id'),
+      enName: this.langService.getEnglishLocalByKey('beneficiary_secondary_id'),
+      lookupKey: 2
+    })
+  ]
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -67,16 +81,17 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
     this.form = this.fb.group({
       inquiryType: [false, Validators.required],
       searchById: this.fb.group({
-        benPrimaryIdNationality: [1],
-        benPrimaryIdType: [1],
-        benPrimaryIdNumber: [null, this.idTypesValidationsMap[1]]
+        identification: [1, [CustomValidators.required]],
+        idType: [1, [CustomValidators.required]],
+        nationality: [1],
+        idNumber: [null, [CustomValidators.required].concat(this.idTypesValidationsMap[1])]
       }),
       searchByName: this.fb.group({
         operator: [1],
@@ -95,19 +110,22 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     });
   }
 
-  get primaryIdNumberField(): FormControl {
-    return this.fm.getFormField('searchById.benPrimaryIdNumber') as FormControl;
+  get idNumberField(): FormControl {
+    return this.fm.getFormField('searchById.idNumber') as FormControl;
+  }
+
+  get nationalityField(): FormControl {
+    return this.fm.getFormField('searchById.nationality') as FormControl;
   }
 
   private listenToIdTypeChange() {
-    this.fm.getFormField('searchById.benPrimaryIdType')?.valueChanges.pipe(
+    this.fm.getFormField('searchById.idType')?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      console.log('LOOKUP KEY: ', value);
-      // set validation for it if need.
-      this.primaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
-      this.primaryIdNumberField.updateValueAndValidity();
-      this.displayNationality = value === BeneficiaryIdTypes.PASSPORT;
+      this.idNumberField.setValidators([CustomValidators.required].concat(this.idTypesValidationsMap[value]));
+      this.idNumberField.updateValueAndValidity();
+      this.nationalityField.setValidators(value === BeneficiaryIdTypes.PASSPORT ? [CustomValidators.required] : null);
+      this.nationalityField.updateValueAndValidity();
     });
   }
 
@@ -126,10 +144,22 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
 
   private prepareSearchById(): Partial<IBeneficiaryCriteria> {
     let formValue = {...this.currentForm?.value};
-    if (formValue.benPrimaryIdType !== BeneficiaryIdTypes.PASSPORT) {
-      delete formValue.benPrimaryIdNationality;
+
+    let beneficiary = {} as Partial<IBeneficiaryCriteria>;
+    if (formValue.identification === 1) {
+      beneficiary.benPrimaryIdType = formValue.idType;
+      beneficiary.benPrimaryIdNumber = formValue.idNumber;
+      //if (formValue.idType === BeneficiaryIdTypes.PASSPORT) {
+      beneficiary.benPrimaryIdNationality = formValue.nationality;
+      //}
+    } else {
+      beneficiary.benSecIdType = formValue.idType;
+      beneficiary.benSecIdNumber = formValue.idNumber;
+      //if (formValue.idType === BeneficiaryIdTypes.PASSPORT) {
+      beneficiary.benSecIdNationality = formValue.nationality;
+      //}
     }
-    return formValue;
+    return beneficiary;
   }
 
   private getCurrentFormValue(): Partial<IBeneficiaryCriteria> {
@@ -157,7 +187,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   resetCurrentForm() {
     this.currentForm?.reset(
       this.displayIdCriteria ?
-        {benPrimaryIdType: this.currentForm?.controls.benPrimaryIdType.value}
+        {
+          idType: 1,
+          identification: 1,
+          nationality: 1
+        }
         : {operator: this.currentForm?.controls.operator.value}
     );
 
