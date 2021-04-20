@@ -1,4 +1,5 @@
 export enum SaveTypes {
   DRAFT,
-  FINAL
+  FINAL,
+  COMMIT
 }

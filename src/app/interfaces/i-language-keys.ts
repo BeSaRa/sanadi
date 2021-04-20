@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  launch: string;
+  request_has_been_saved_successfully: string;
+  draft_was_saved_successfully: string;
   menu_inquiries_and_complaints: string;
   save_as_draft: string;
   request_body: string;

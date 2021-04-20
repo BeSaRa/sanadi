@@ -13,7 +13,6 @@ export class EServicesComponent implements OnInit {
 
   constructor(private langService: LangService,
               private menuItemService: MenuItemService) {
-    console.log(this.menuItems);
   }
 
   ngOnInit(): void {
