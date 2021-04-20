@@ -381,8 +381,9 @@
               <td class="date-column">{{request.statusDateModifiedString}}</td>
               <td class="table-actions">
                 <div class="d-flex flex-row">
-                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn">
-                    <span class="badge bg-primary aid-badge" (click)="request.showAid($event)">{{request.aidCount}}</span>
+                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
+                     (click)="request.showAid($event)">
+                    <span class="badge bg-primary aid-badge">{{request.aidCount}}</span>
                   </a>
                   <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
                      class="icon-btn">
