@@ -20,6 +20,10 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
 
   abstract commentService: CommentService<S>;
 
+  ping(): void {
+    // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
+  }
+
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _create(@InterceptParam() model: Partial<T>): Observable<T> {
