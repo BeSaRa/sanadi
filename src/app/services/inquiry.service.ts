@@ -12,6 +12,7 @@ import {IModelInterceptor} from '../interfaces/i-model-interceptor';
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry, InquiryService> {
+  private interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
   commentService: CommentService<InquiryService> = new CommentService<InquiryService>(this);
 
   constructor(private urlService: UrlService,
@@ -30,6 +31,6 @@ export class InquiryService extends EServiceGenericService<Inquiry, InquiryServi
   }
 
   _getInterceptor(): Partial<IModelInterceptor<Inquiry>> {
-    return new InquiryInterceptor();
+    return this.interceptor;
   }
 }

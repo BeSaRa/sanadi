@@ -884,7 +884,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       this.aidApprovalDateSub = this.aidApprovalDate?.valueChanges.pipe(
         takeUntil(this.destroy$)
-      ).subscribe(value => {
+      ).subscribe(_ => {
         this._setPaymentDateValidations();
       });
     } else {

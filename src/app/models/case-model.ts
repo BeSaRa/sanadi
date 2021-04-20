@@ -41,5 +41,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T, S>, T extend
     return this.service.draft(this as unknown as T);
   }
 
+  canSaveAsDraft(): boolean {
+    return !this.caseStatus || this.caseStatus <= 1;
+
+  }
+
 
 }
