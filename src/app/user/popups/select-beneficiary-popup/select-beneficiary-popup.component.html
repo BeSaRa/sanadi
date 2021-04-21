@@ -21,6 +21,26 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_nationality}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.benNationalityInfo.getName()}} </td>
     </ng-container>
+    <ng-container cdkColumnDef="identification">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.identification}}</th>
+      <td cdk-cell *cdkCellDef="let row" class="ben-id-column">
+        <div class="d-flex flex-row">
+          <div class="px-1">
+            <span class="badge bg-primary" tooltip="{{langService.map.beneficiary_primary_id}}">P</span>
+          </div>
+          <div class="w-50">{{row.benPrimaryIdTypeInfo.getName()}}</div>
+          <div class="w-50">{{row.benPrimaryIdNumber}}</div>
+        </div>
+        <hr class="m-1" *ngIf="row.benSecIdNumber">
+        <div class="d-flex flex-row" *ngIf="row.benSecIdNumber">
+          <div class="px-1">
+            <span class="badge bg-primary" tooltip="{{langService.map.beneficiary_secondary_id}}">S</span>
+          </div>
+          <div class="w-50">{{row.benSecIdTypeInfo.getName()}}</div>
+          <div class="w-50">{{row.benSecIdNumber}}</div>
+        </div>
+      </td>
+    </ng-container>
     <ng-container cdkColumnDef="sponsors">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.sponsors_count}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.benDependentsCount}} </td>
@@ -29,9 +49,6 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
       <td cdk-cell *cdkCellDef="let row" class="table-actions">
         <div class="d-flex flex-row">
-          <!--<a href="#" (click)="selectBeneficiary(row , $event)" tooltip="{{langService.map.select}}" class="icon-btn">
-            <i class="mdi mdi-check-circle"></i>
-          </a>-->
           <button class="btn btn-primary"
                   (click)="selectBeneficiary(row , $event)">{{langService.map.select}}</button>
         </div>
