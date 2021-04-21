@@ -60,7 +60,7 @@
               <div class="input-group has-validation">
                 <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
                        type="text" [ngClass]="fm.getInvalidClass('personalTab.benPrimaryIdNumber')"
-                       (keyup)="disableEnter($event)"
+                       (keyup)="disableEnter($event)" maxlength="20"
                        [readOnly]="beneficiaryPrimaryIdDisabled()">
                 <button tabindex="-1" type="button"
                         [disabled]="readOnly || editMode || primaryIdNumberField?.invalid || primaryNationalityField?.invalid"
@@ -127,7 +127,7 @@
               <label for="benSecIdNumber" class="form-label"
                      asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
               <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
-                     [readOnly]="beneficiarySecondaryIdDisabled()"
+                     [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20"
                      [ngClass]="fm.getInvalidClass('personalTab.benSecIdNumber')" (keyup)="disableEnter($event)">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benSecIdNumber')"></app-field-error-message>

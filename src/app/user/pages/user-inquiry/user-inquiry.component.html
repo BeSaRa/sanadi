@@ -87,7 +87,7 @@
           <label for="text" class="form-label" asteriskIfRequired="idNumber">{{langService.map.id_number}}</label>
           <input [ngClass]="fm.getInvalidClass('searchById.idNumber')" type="text"
                  formControlName="idNumber" id="text" class="form-control"
-                 name="idNumber">
+                 name="idNumber" maxlength="20">
           <app-field-error-message
             [control]="fm.getFormField('searchById.idNumber')"></app-field-error-message>
         </div>
