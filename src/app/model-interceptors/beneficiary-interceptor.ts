@@ -51,6 +51,7 @@ function receive(model: Beneficiary): any {
   model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
   model.residenceCountryInfo = AdminResult.createInstance(model.residenceCountryInfo);
   model.residenceStatusInfo = AdminResult.createInstance(model.residenceStatusInfo);
+  model.benNationalityInfo = AdminResult.createInstance(model.benNationalityInfo);
 
   //model.dateOfBirth = formatDate(new Date(model.dateOfBirth), 'yyyy-MM-dd', 'en-US');
   model.dateOfBirthString = getDateStringFromDate(model.dateOfBirth);
