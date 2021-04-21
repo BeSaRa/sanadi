@@ -555,7 +555,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(list => {
         if (!list.length) {
-          return this.beneficiaryChanged$.next(null);
+          this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+          return;
+          // return this.beneficiaryChanged$.next(null);
         }
         list.length > 1 ? this.beneficiaryService.openSelectBeneficiaryDialog(list).onAfterClose$.subscribe((beneficiary) => {
           if (beneficiary instanceof Beneficiary) {
