@@ -65,8 +65,8 @@
                   <label for="group-id-{{checkBoxGroup.group.id}}"
                          class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
                 </div>
-                <div *ngFor="let row of checkBoxGroup.rows" class="d-flex flex-row">
-                  <div *ngFor="let permission of row" class="form-check flex-grow-1">
+                <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
+                  <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
                     <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
                            id="group-permission-id-{{permission.id}}"
                            (change)="onPermissionClicked($event , permission , checkBoxGroup)"
