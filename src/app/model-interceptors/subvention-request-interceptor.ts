@@ -23,6 +23,7 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
 
     model.creationDateString = getDateStringFromDate(model.creationDate);
     model.creationDate = changeDateToDatepicker(model.creationDate);
+    model.statusDateModifiedString = getDateStringFromDate(model.statusDateModified);
     model.statusDateModified = changeDateToDatepicker(model.statusDateModified);
     return model;
   }
@@ -38,6 +39,7 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
     delete model.requestTypeInfo;
     delete model.searchFields;
     delete model.creationDateString;
+    delete model.statusDateModifiedString;
     delete model.configService;
     // model.creationDate = (new Date(model.creationDate)).toISOString();
 

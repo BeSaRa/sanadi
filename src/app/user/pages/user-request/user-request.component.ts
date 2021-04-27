@@ -403,6 +403,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.currentRequest = request.clone();
       this.editMode = true;
 
+      this.allowCompletionField?.disable();
+
       if (!this.requestStatusTab.value) {
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
       }
@@ -516,6 +518,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       this.requestChanged$.next(request);
       this.editMode = true;
+      this.allowCompletionField?.disable();
     });
 
   }
@@ -1084,5 +1087,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   beneficiarySecondaryIdDisabled(): boolean {
     return this.readOnly || (this.editMode && !!this.secondaryIdNumberField?.value)
+  }
+
+  get allowCompletionField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
+  }
+
+  showAllowCompletion(): boolean {
+    return (!this.currentRequest) || !this.currentRequest.isPartial;
   }
 }

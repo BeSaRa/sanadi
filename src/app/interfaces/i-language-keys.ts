@@ -32,6 +32,7 @@ export interface ILanguageKeys {
   msg_login_success: string;
   msg_invalid_username_password: string;
   menu_under_process: string;
+  menu_partial_requests: string;
   main_aid_type: string;
   btn_reset: string;
   msg_request_has_been_added_successfully: string;
@@ -259,4 +260,13 @@ export interface ILanguageKeys {
   msg_invalid_search_criteria: string;
   identification: string;
   country: string;
+  supplement_amount_with_other_institutes: string;
+  request: string;
+  filter: string;
+  msg_confirm_reset_filter_select_action: string;
+  msg_confirm_clear_filter_criteria: string;
+  btn_reset_close: string;
+  btn_add_partial_request: string;
+  msg_confirm_create_partial_request: string;
+  clear_filter: string;
 }

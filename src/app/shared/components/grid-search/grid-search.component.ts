@@ -1,25 +1,40 @@
-import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {FormControl} from '@angular/forms';
+import {isEmptyObject, objectHasValue} from '../../../helpers/utils';
+import {FilterEventTypes} from '../../../types/types';
+import {DialogService} from '../../../services/dialog.service';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
 
 @Component({
   selector: 'app-grid-search',
   templateUrl: './grid-search.component.html',
   styleUrls: ['./grid-search.component.scss']
 })
-export class GridSearchComponent implements OnInit {
+export class GridSearchComponent implements OnInit, OnChanges {
   @HostBinding('class') containerClass = 'col-8';
   @Output() searchTextEvent = new EventEmitter<string>();
+  @Output('filterEvent') filterButtonEvent = new EventEmitter<FilterEventTypes>();
+
+  @Input() filterButton: boolean = false;
+  @Input() filterCriteria: any = {};
 
   searchText = new FormControl('');
+  filterIcon: 'mdi-filter' | 'mdi-filter-outline' = 'mdi-filter-outline';
 
   constructor(public langService: LangService,
-              private fb: FormBuilder) {
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.filterIcon = this.hasFilterCriteria() ? 'mdi-filter' : 'mdi-filter-outline';
+  }
+
+  hasFilterCriteria(): boolean {
+    return !isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
   }
 
   search($event: KeyboardEvent): void {
@@ -29,6 +44,24 @@ export class GridSearchComponent implements OnInit {
   clearSearch($event: MouseEvent): void {
     this.searchText.setValue('');
     this.searchTextEvent.emit(this.searchText.value);
+  }
+
+  openCriteriaDialog($event: MouseEvent): void {
+    $event.preventDefault();
+    this.filterButtonEvent.emit('OPEN');
+  }
+
+  clearFilter($event: MouseEvent): void {
+    $event.preventDefault();
+    this.dialogService.confirm(this.langService.map.msg_confirm_clear_filter_criteria, {
+      actionBtn: 'btn_reset',
+      cancelBtn: 'btn_cancel'
+    }).onAfterClose$
+      .subscribe((clickOn: UserClickOn) => {
+        if (clickOn === UserClickOn.YES) {
+          this.filterButtonEvent.emit('CLEAR');
+        }
+      })
   }
 
 }

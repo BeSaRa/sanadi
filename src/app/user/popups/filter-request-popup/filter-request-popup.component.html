@@ -1,0 +1,92 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1
+    class="h6 text-white">{{langService.map.filter}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content">
+  <form class="min-w400px" autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <label for="requestFullSerial"
+               class="form-label">{{langService.map.request_number}}</label>
+        <div class="mb-4 position-relative">
+          <input formControlName="requestFullSerial" id="requestFullSerial" type="text" class="form-control">
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <label for="requestYear" class="form-label">{{langService.map.year}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="requestYear" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="requestYear"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="requestYear">
+            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+            <ng-option *ngFor="let option of years" [value]="option">
+              {{option}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <label for="orgId" class="form-label">{{langService.map.lbl_organization}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="orgId"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="orgId">
+            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+            <ng-option *ngFor="let option of orgList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <label for="benCategory" class="form-label">{{langService.map.beneficiary_category}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="benCategory" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="benCategory"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="benCategory">
+            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+            <ng-option *ngFor="let option of lookupService.listByCategory.BenCategory" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <label for="gender" class="form-label">{{langService.map.gender}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="gender"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="gender">
+            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+            <ng-option *ngFor="let option of lookupService.listByCategory.Gender" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <label for="requestSummary" class="form-label">{{langService.map.request_summary}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <input formControlName="requestSummary" id="requestSummary" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button [disabled]="!hasFilterCriteria" (click)="filterRecords($event)"
+          class="btn btn-primary">{{langService.map.filter}}</button>
+  <button (click)="resetFilter($event)"
+          class="btn btn-primary">{{langService.map.btn_reset}}</button>
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
+</div>

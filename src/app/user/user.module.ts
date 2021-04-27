@@ -11,6 +11,9 @@ import {SubventionLogPopupComponent} from './popups/subvention-log-popup/subvent
 import {SubventionAidPopupComponent} from './popups/subvention-aid-popup/subvention-aid-popup.component';
 import {RequestsUnderProcessComponent} from './pages/requests-under-process/requests-under-process.component';
 import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component';
+import {PartialRequestComponent} from './pages/partial-requests/partial-request/partial-request.component';
+import {RequestDetailsPopupComponent} from './popups/request-details-popup/request-details-popup.component';
+import {FilterRequestPopupComponent} from './popups/filter-request-popup/filter-request-popup.component';
 
 
 @NgModule({
@@ -23,7 +26,10 @@ import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component
     SubventionLogPopupComponent,
     SubventionAidPopupComponent,
     RequestsUnderProcessComponent,
-    ReasonPopupComponent],
+    ReasonPopupComponent,
+    PartialRequestComponent,
+    RequestDetailsPopupComponent,
+    FilterRequestPopupComponent],
   imports: [
     SharedModule,
     UserRoutingModule

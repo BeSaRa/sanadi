@@ -11,3 +11,5 @@ export type searchFunctionType = (text: string) => boolean;
 export type CanNavigateOptions = 'ALLOW' | 'DISALLOW' | 'CONFIRM_UNSAVED_CHANGES';
 
 export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';
+
+export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';

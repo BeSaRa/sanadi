@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1
+    class="h6 text-white">{{langService.map.request}}{{requestDetails?.requestFullSerial ? ' - ' + requestDetails.requestFullSerial : '' }}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content min-w400px">
+  <div class="row">
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.serial_number}}</label>
+      <span class="form-control">{{requestDetails.requestFullSerial}}</span>
+    </div>
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.reason_of_request}}</label>
+      <span class="form-control">{{requestDetails.requestTypeInfo.getName()}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.request_date}}</label>
+      <span class="form-control">{{requestDetails.creationDateString}}</span>
+    </div>
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.request_aid_amount}}</label>
+      <span
+        class="form-control">{{requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.request_status}}</label>
+      <span class="form-control">{{requestDetails.requestStatusInfo.getName()}}</span>
+    </div>
+    <div class="col-sm-6 mb-4">
+      <label class="form-label">{{langService.map.status_date}}</label>
+      <span class="form-control">{{requestDetails.statusDateModifiedString}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 mb-4">
+      <label class="form-label">{{langService.map.request_summary}}</label>
+      <span class="form-control">{{requestDetails.requestSummary ? requestDetails.requestSummary : '&nbsp;'}}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 mb-4">
+      <label class="form-label">{{langService.map.notes}}</label>
+      <span class="form-control">{{requestDetails.requestNotes ? requestDetails.requestNotes : '&nbsp;'}}</span>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button class="btn btn-primary" *ngIf="data.allowAddPartialRequest"
+          (click)="addPartialRequest($event)">{{langService.map.btn_add_partial_request}}</button>
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
+</div>

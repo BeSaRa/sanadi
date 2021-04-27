@@ -7,6 +7,7 @@ import {UserRequestSearchComponent} from './pages/user-request-search/user-reque
 import {RequestsUnderProcessComponent} from './pages/requests-under-process/requests-under-process.component';
 import {PermissionGuard} from '../guards/permission-guard';
 import {CanDeactivateGuard} from '../guards/can-deactivate.guard';
+import {PartialRequestComponent} from './pages/partial-requests/partial-request/partial-request.component';
 
 const routes: Routes = [
   {path: '', component: UserHomeComponent},
@@ -26,6 +27,11 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     canDeactivate: [CanDeactivateGuard],
     data: {permissionKey: 'EDIT_SUBVENTION_REQUEST'}
+  },
+  {
+    path: 'partial-requests', component: PartialRequestComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'PARTIAL_SUBVENTION_REQUESTS_MAIL'}
   },
   {
     path: 'request-search', component: UserRequestSearchComponent,

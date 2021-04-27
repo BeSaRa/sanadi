@@ -8,6 +8,7 @@ import * as dayjs from 'dayjs';
 export {
   isValidValue,
   isEmptyObject,
+  objectHasValue,
   isValidAdminResult,
   generateModelAndCast,
   hasValidLength,
@@ -49,6 +50,15 @@ function isEmptyObject(objectToCheck: any): boolean {
     }
   }
   return true;
+}
+
+/**
+ * @description Check if object has any property with value
+ * @param objectToCheck
+ * Object to check for property values
+ */
+function objectHasValue(objectToCheck: any): boolean {
+  return Object.values(objectToCheck).some(value => isValidValue(value));
 }
 
 /**

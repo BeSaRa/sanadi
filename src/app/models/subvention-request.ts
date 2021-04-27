@@ -36,7 +36,14 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestNotes!: string;
   orgBranchId!: number;
   orgId!: number;
+  orgUserId!: number;
   benId!: number;
+  isPartial: boolean = false;
+  allowCompletion: boolean = false;
+  aidTotalPayedAmount: number = 0;
+  partialCreators: string = '';
+  requestParentId?: number;
+
   // not belongs to the Model
   service: SubventionRequestService;
   subventionRequestAidService: SubventionRequestAidService;
@@ -49,6 +56,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestStatusInfo!: AdminResult;
   requestTypeInfo!: AdminResult;
   creationDateString!: string;
+  statusDateModifiedString!: string;
 
 
   searchFields: { [key: string]: searchFunctionType | string } = {
@@ -98,12 +106,13 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   }
 
   getInfoFields(control: boolean = false): any {
-    const {requestType, creationDate, requestedAidAmount, requestSummary} = this;
+    const {requestType, creationDate, requestedAidAmount, requestSummary, allowCompletion} = this;
     return {
       requestType: control ? [requestType, CustomValidators.required] : requestType,
       creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
       requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : requestedAidAmount,
-      requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary
+      requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary,
+      allowCompletion: control ? [allowCompletion] : allowCompletion
     };
   }
 
@@ -136,6 +145,14 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   showAid($event: MouseEvent): void {
     $event.preventDefault();
     this.service.openAidDialog(this.id)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
+
+  showPartialRequestDetails($event: MouseEvent): void {
+    $event.preventDefault();
+    this.service.openPartialRequestDetailsDialog(this.id)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
@@ -184,5 +201,9 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
         sub.unsubscribe();
       };
     });
+  }
+
+  createPartialRequest(): Observable<SubventionRequest> {
+    return this.service.createPartialRequestById(this.id);
   }
 }
