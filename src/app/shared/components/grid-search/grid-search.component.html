@@ -6,7 +6,7 @@
          (click)="clearFilter($event)">{{langService.map.clear_filter}}</a>
       <button class="btn icon-btn text-primary" tooltip="{{langService.map.filter}}"
               (click)="openCriteriaDialog($event)">
-        <i class="mdi {{filterIcon}}"></i>
+        <i class="mdi {{hasFilterCriteria() ? 'mdi-filter' : 'mdi-filter-outline'}}"></i>
       </button>
     </div>
     <div *ngIf="!filterButton" class=" d-flex align-items-center justify-content-end position-relative">

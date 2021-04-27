@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostBinding, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {FormControl} from '@angular/forms';
 import {isEmptyObject, objectHasValue} from '../../../helpers/utils';
@@ -11,7 +11,7 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
   templateUrl: './grid-search.component.html',
   styleUrls: ['./grid-search.component.scss']
 })
-export class GridSearchComponent implements OnInit, OnChanges {
+export class GridSearchComponent implements OnInit {
   @HostBinding('class') containerClass = 'col-8';
   @Output() searchTextEvent = new EventEmitter<string>();
   @Output('filterEvent') filterButtonEvent = new EventEmitter<FilterEventTypes>();
@@ -20,17 +20,12 @@ export class GridSearchComponent implements OnInit, OnChanges {
   @Input() filterCriteria: any = {};
 
   searchText = new FormControl('');
-  filterIcon: 'mdi-filter' | 'mdi-filter-outline' = 'mdi-filter-outline';
 
   constructor(public langService: LangService,
               private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.filterIcon = this.hasFilterCriteria() ? 'mdi-filter' : 'mdi-filter-outline';
   }
 
   hasFilterCriteria(): boolean {
