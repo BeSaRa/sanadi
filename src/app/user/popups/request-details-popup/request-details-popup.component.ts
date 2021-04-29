@@ -8,6 +8,7 @@ import {IDialogData} from '../../../interfaces/i-dialog-data';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {Router} from '@angular/router';
 import {DialogService} from '../../../services/dialog.service';
+import {SubventionRequestService} from '../../../services/subvention-request.service';
 
 @Component({
   selector: 'app-request-details-popup',
@@ -24,6 +25,7 @@ export class RequestDetailsPopupComponent implements OnInit {
               public langService: LangService,
               private dialogService: DialogService,
               private dialogRef: DialogRef,
+              private subventionRequestService: SubventionRequestService,
               private router: Router) {
     this.requestDetails = this.data.requestData.clone();
   }
@@ -35,7 +37,7 @@ export class RequestDetailsPopupComponent implements OnInit {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        this.requestDetails.createPartialRequest()
+        this.subventionRequestService.createPartialRequestById(this.requestDetails.id)
           .subscribe(result => {
             this.dialogRef.close(true);
             this.router.navigate(['/home/main/request', result.id]).then();

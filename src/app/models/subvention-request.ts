@@ -150,14 +150,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
       });
   }
 
-  showPartialRequestDetails($event: MouseEvent): void {
-    $event.preventDefault();
-    this.service.openPartialRequestDetailsDialog(this.id)
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe();
-      });
-  }
-
 
   cancel(): Observable<boolean> {
     return new Observable((subscriber) => {
@@ -201,9 +193,5 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
         sub.unsubscribe();
       };
     });
-  }
-
-  createPartialRequest(): Observable<SubventionRequest> {
-    return this.service.createPartialRequestById(this.id);
   }
 }

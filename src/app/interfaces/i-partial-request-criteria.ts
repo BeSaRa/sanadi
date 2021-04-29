@@ -3,6 +3,6 @@ export interface IPartialRequestCriteria {
   requestFullSerial: string,
   requestYear: number,
   benCategory: number,
-  requestSummary: string,
+  requestType: string,
   gender: number
 }

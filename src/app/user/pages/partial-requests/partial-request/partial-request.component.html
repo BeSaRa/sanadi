@@ -5,40 +5,70 @@
 </div>
 <div class="mt-3">
   <div class="table-responsive">
-    <table class="table table-striped table-bordered caption-top">
-      <thead role="rowgroup">
-      <tr>
-        <th>{{langService.map.request_number}}</th>
-        <th class="date-column">{{langService.map.request_date}}</th>
-        <th>{{langService.map.lbl_organization}}</th>
-        <th>{{langService.map.request_status}}</th>
-        <th>{{langService.map.request_aid_amount}}</th>
-        <th>{{langService.map.lbl_actions}} </th>
-      </tr>
-      </thead>
-      <tbody>
-      <ng-container *ngFor="let request of partialRequests;">
-        <tr>
-          <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
-          <td class="date-column"> {{request.creationDateString}} </td>
-          <td>{{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}} </td>
-          <td> {{request.requestStatusInfo.getName()}} </td>
-          <td> {{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-          <td class="table-actions">
-            <div class="d-flex flex-row">
-              <button (click)="request.showPartialRequestDetails($event)" tooltip="{{langService.map.show_details}}"
-                      class="icon-btn text-primary">
-                <i class="mdi mdi-view-list"></i>
-              </button>
-              <button (click)="addPartialRequest($event, request)" tooltip="{{langService.map.btn_add_partial_request}}"
-                      class="icon-btn text-primary">
-                <i class="mdi mdi-plus"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
+    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="partialRequests">
+      <ng-container cdkColumnDef="requestNumber">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block">{{row.requestFullSerial}}</span></td>
       </ng-container>
-      </tbody>
+      <ng-container cdkColumnDef="creationDate">
+        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.request_date}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="creationYear">
+        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.year}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationYear}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="organization">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_organization}}</th>
+        <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}} - {{row.orgBranchInfo.getName()}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="benCategory">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.beneficiary_category}}</th>
+        <td cdk-cell *cdkCellDef="let row"><span>{{row.benCategoryInfo.getName()}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="gender">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.gender}}</th>
+        <td cdk-cell *cdkCellDef="let row"><span>{{row.genderInfo.getName()}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="requestType">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"><span>{{row.requestTypeInfo.getName()}}</span></td>
+      </ng-container>
+      <ng-container cdkColumnDef="estimatedValue">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.estimated_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="totalAidAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.total_aid_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="remainingAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.remaining_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <span>{{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="table-actions">
+          <div class="d-flex flex-row">
+            <button (click)="row.showPartialRequestDetails($event)" tooltip="{{langService.map.show_details}}"
+                    class="icon-btn text-primary">
+              <i class="mdi mdi-view-list"></i>
+            </button>
+            <button (click)="addPartialRequest($event, row)" tooltip="{{langService.map.btn_add_partial_request}}"
+                    class="icon-btn text-primary">
+              <i class="mdi mdi-plus"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>
 </div>

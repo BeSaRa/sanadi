@@ -31,6 +31,19 @@
     </div>
     <div class="row">
       <div class="col-sm-12 col-md-6">
+        <label for="orgId" class="form-label">{{langService.map.request_type}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="requestType"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="requestType">
+            <ng-option *ngFor="let option of lookupService.listByCategory.SubRequestType" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
         <label for="orgId" class="form-label">{{langService.map.lbl_organization}}</label>
         <div class="mb-4 ng-select-wrapper">
           <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
@@ -44,6 +57,8 @@
           </ng-select>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="benCategory" class="form-label">{{langService.map.beneficiary_category}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -58,8 +73,6 @@
           </ng-select>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="gender" class="form-label">{{langService.map.gender}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -72,12 +85,6 @@
               {{option.getName()}}
             </ng-option>
           </ng-select>
-        </div>
-      </div>
-      <div class="col-sm-12">
-        <label for="requestSummary" class="form-label">{{langService.map.request_summary}}</label>
-        <div class="mb-4 ng-select-wrapper">
-          <input formControlName="requestSummary" id="requestSummary" type="text" class="form-control">
         </div>
       </div>
     </div>

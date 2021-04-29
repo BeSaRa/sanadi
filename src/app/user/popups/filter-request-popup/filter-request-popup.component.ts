@@ -45,8 +45,8 @@ export class FilterRequestPopupComponent implements OnInit {
       requestYear: [this.criteria.requestYear],
       orgId: [this.criteria.orgId],
       benCategory: [this.criteria.benCategory],
-      requestSummary: [this.criteria.requestSummary],
-      gender: [this.criteria.gender]
+      requestType: [this.criteria.requestType],
+      gender: [this.criteria.gender],
     });
     this.fm = new FormManager(this.form, this.langService);
   }
@@ -71,7 +71,7 @@ export class FilterRequestPopupComponent implements OnInit {
           requestYear: null,
           orgId: null,
           benCategory: null,
-          requestSummary: null,
+          requestType: null,
           gender: null
         });
         if (click === UserClickOn.THIRD_BTN) {

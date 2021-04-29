@@ -21,18 +21,12 @@ import {DialogService} from './dialog.service';
 import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
 import {ReasonPopupComponent} from '../user/popups/reason-popup/reason-popup.component';
 import {LangService} from './lang.service';
-import {RequestDetailsPopupComponent} from '../user/popups/request-details-popup/request-details-popup.component';
-import {FilterRequestPopupComponent} from '../user/popups/filter-request-popup/filter-request-popup.component';
-import {IPartialRequestCriteria} from '../interfaces/i-partial-request-criteria';
-import {OrgUnit} from '../models/org-unit';
-import {OrganizationUnitService} from './organization-unit.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubventionRequestService extends BackendGenericService<SubventionRequest> {
   list!: SubventionRequest[];
-  private interceptor: SubventionRequestInterceptor = new SubventionRequestInterceptor();
 
   constructor(private urlService: UrlService,
               public http: HttpClient,
@@ -40,8 +34,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
               private subventionAidService: SubventionAidService,
               private subventionRequestAidService: SubventionRequestAidService,
               private subventionLogService: SubventionLogService,
-              private dialogService: DialogService,
-              private orgUnitService: OrganizationUnitService) {
+              private dialogService: DialogService) {
     super();
     FactoryService.registerService('SubventionRequestService', this);
   }
@@ -55,15 +48,19 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   _getSendInterceptor() {
-    return this.interceptor.send;
+    return SubventionRequestInterceptor.send;
   }
 
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST;
   }
 
+  _getPartialRequestServiceURL(): string {
+    return this.urlService.URLS.SUBVENTION_REQUEST_PARTIAL;
+  }
+
   _getReceiveInterceptor() {
-    return this.interceptor.receive;
+    return SubventionRequestInterceptor.receive;
   }
 
   loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria> | string): Observable<Blob> {
@@ -98,21 +95,6 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/active-requests');
   }
 
-  @Generator(undefined, true, {property: 'rs'})
-  loadPartialRequests(): Observable<SubventionRequest[]> {
-    return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/partial-requests/active');
-  }
-
-  @Generator(undefined, true, {property: 'rs'})
-  loadPartialRequestsByCriteria(criteria: Partial<IPartialRequestCriteria>): Observable<SubventionRequest[]> {
-    return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/partial-requests/criteria'  + this._generateQueryString(criteria));
-  }
-
-  @Generator(undefined, false, {property: 'rs'})
-  loadPartialRequestById(id: number): Observable<SubventionRequest> {
-    return this.http.get<SubventionRequest>(this._getServiceURL() + '/partial-requests/' + id);
-  }
-
   openLogDialog(requestId: number): Observable<DialogRef> {
     return this.subventionLogService.loadByRequestId(requestId)
       .pipe(
@@ -130,18 +112,6 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
       .pipe(
         switchMap((aidList: SubventionAid[]) => {
           return of(this.dialogService.show<SubventionAid[]>(SubventionAidPopupComponent, aidList));
-        })
-      );
-  }
-
-  openPartialRequestDetailsDialog(requestId: number): Observable<DialogRef> {
-    return this.loadPartialRequestById(requestId)
-      .pipe(
-        switchMap((requestData: SubventionRequest) => {
-          return of(this.dialogService.show(RequestDetailsPopupComponent, {
-            requestData,
-            allowAddPartialRequest: true
-          }));
         })
       );
   }
@@ -176,19 +146,13 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     });
   }
 
-  openFilterPartialRequestDialog(filterCriteria: Partial<IPartialRequestCriteria>): Observable<DialogRef> {
-    return this.orgUnitService.load().pipe(
-      switchMap((orgUnits: OrgUnit[]) => {
-        return of(this.dialogService.show(FilterRequestPopupComponent, {
-          criteria: filterCriteria,
-          orgUnits: orgUnits
-        }));
-      })
-    )
+  @Generator(undefined, false, {property: 'rs'})
+  loadPartialRequestById(id: number): Observable<SubventionRequest> {
+    return this.http.get<SubventionRequest>(this._getPartialRequestServiceURL() + '/' + id);
   }
 
   @Generator(undefined, false, {property: 'rs'})
   createPartialRequestById(id: number): Observable<SubventionRequest> {
-    return this.http.put<SubventionRequest>(this._getServiceURL() + '/partial-requests/create/' + id, {});
+    return this.http.put<SubventionRequest>(this._getPartialRequestServiceURL() + '/' + id, {});
   }
 }

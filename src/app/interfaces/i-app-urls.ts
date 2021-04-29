@@ -15,6 +15,7 @@ export interface IAppUrls {
   CACHE_SERVICE: string;
   BENEFICIARY: string;
   SUBVENTION_REQUEST: string;
+  SUBVENTION_REQUEST_PARTIAL: string;
   SUBVENTION_REQUEST_AID: string;
   SUBVENTION_AID: string;
   ORG_USER_PERMISSION: string;

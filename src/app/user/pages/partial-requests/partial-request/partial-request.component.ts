@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../../services/lang.service';
-import {SubventionRequest} from '../../../../models/subvention-request';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {CustomValidators} from '../../../../validators/custom-validators';
 import {switchMap} from 'rxjs/operators';
@@ -12,6 +11,8 @@ import {IPartialRequestCriteria} from '../../../../interfaces/i-partial-request-
 import {DialogRef} from '../../../../shared/models/dialog-ref';
 import {isEmptyObject, objectHasValue} from '../../../../helpers/utils';
 import {FilterEventTypes} from '../../../../types/types';
+import {SubventionRequestPartial} from '../../../../models/subvention-request-partial';
+import {SubventionRequestPartialService} from '../../../../services/subvention-request-partial.service';
 
 @Component({
   selector: 'app-partial-request',
@@ -19,16 +20,19 @@ import {FilterEventTypes} from '../../../../types/types';
   styleUrls: ['./partial-request.component.scss']
 })
 export class PartialRequestComponent implements OnInit, OnDestroy {
-  partialRequests: SubventionRequest[] = [];
-  partialRequestsClone: SubventionRequest[] = [];
+  partialRequests: SubventionRequestPartial[] = [];
+  partialRequestsClone: SubventionRequestPartial[] = [];
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   reloadSubscription!: Subscription;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterCriteria: Partial<IPartialRequestCriteria> = {};
+  displayedColumns: string[] = ['requestNumber', 'creationDate', 'creationYear', 'organization', 'benCategory',
+    'requestType', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private subventionRequestService: SubventionRequestService,
+              private subventionRequestPartialService: SubventionRequestPartialService,
               private router: Router) {
   }
 
@@ -44,11 +48,11 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
     return !isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
   }
 
-  private _loadPartialRequests(): Observable<SubventionRequest[]> {
+  private _loadPartialRequests(): Observable<SubventionRequestPartial[]> {
     if (!this.hasFilterCriteria()) {
-      return this.subventionRequestService.loadPartialRequests();
+      return this.subventionRequestPartialService.loadPartialRequests();
     } else {
-      return this.subventionRequestService.loadPartialRequestsByCriteria(this.filterCriteria);
+      return this.subventionRequestPartialService.loadPartialRequestsByCriteria(this.filterCriteria);
     }
   }
 
@@ -57,7 +61,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
       switchMap(() => {
         return this._loadPartialRequests();
       }),
-    ).subscribe((partialRequests: SubventionRequest[]) => {
+    ).subscribe((partialRequests: SubventionRequestPartial[]) => {
       this.partialRequests = partialRequests;
       this.partialRequestsClone = partialRequests.slice();
     });
@@ -68,7 +72,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
       this.filterCriteria = {};
       this.reload$.next(true);
     } else if (type === 'OPEN') {
-      const sub = this.subventionRequestService.openFilterPartialRequestDialog(this.filterCriteria)
+      const sub = this.subventionRequestPartialService.openFilterPartialRequestDialog(this.filterCriteria)
         .subscribe((dialog: DialogRef) => {
           dialog.onAfterClose$.subscribe((result: UserClickOn | Partial<IPartialRequestCriteria>) => {
             if (result === UserClickOn.CLOSE) {
@@ -82,11 +86,11 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPartialRequest($event: MouseEvent, request: SubventionRequest): void {
+  addPartialRequest($event: MouseEvent, request: SubventionRequestPartial): void {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        request.createPartialRequest()
+        this.subventionRequestService.createPartialRequestById(request.requestId)
           .subscribe(result => {
             this.router.navigate(['/home/main/request', result.id]).then();
           })

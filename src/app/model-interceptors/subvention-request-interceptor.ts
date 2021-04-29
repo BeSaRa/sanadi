@@ -6,8 +6,8 @@ import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
 
-export class SubventionRequestInterceptor implements IModelInterceptor<SubventionRequest> {
-  receive(model: SubventionRequest): SubventionRequest {
+export class SubventionRequestInterceptor {
+  static receive(model: SubventionRequest): SubventionRequest {
     // model.creationDate = model.creationDate ? formatDate(new Date(model.creationDate), 'yyyy-MM-dd', 'en-US') : '';
     // model.statusDateModified = model.statusDateModified ? formatDate(new Date(model.statusDateModified), 'yyyy-MM-dd', 'en-US') : '';
 
@@ -28,7 +28,7 @@ export class SubventionRequestInterceptor implements IModelInterceptor<Subventio
     return model;
   }
 
-  send(model: any | SubventionRequest): any {
+  static send(model: any | SubventionRequest): any {
     delete model.service;
     delete model.subventionRequestAidService;
     delete model.orgBranchInfo;

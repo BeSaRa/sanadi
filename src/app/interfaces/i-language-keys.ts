@@ -269,4 +269,7 @@ export interface ILanguageKeys {
   btn_add_partial_request: string;
   msg_confirm_create_partial_request: string;
   clear_filter: string;
+  estimated_amount: string;
+  remaining_amount: string;
+  total_aid_amount: string;
 }
