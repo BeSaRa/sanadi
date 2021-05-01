@@ -113,18 +113,39 @@ router-outlet {
 }
 
 .dialog-pan-class {
-  max-width: 80vw !important;
-  max-height: 100% !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  align-items: center;
 }
 
 app-dialog-container {
   display: block;
   width: 100%;
   height: 100%;
+
+  & > * {
+    display: block !important;
+
+    &.fullscreen {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+  }
+}
+
+.dialog-item {
+  display: flex !important;
+  flex-direction: column;
+
+  &.fullscreen {
+    .dialog-content {
+      max-height: 100%;
+      flex: 1 1 0;
+    }
+  }
 }
 
 .dialog-toolbar, .dialog-content, .dialog-actions {
-  margin: 0 -15px;
   padding: 15px;
 }
 

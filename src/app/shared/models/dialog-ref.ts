@@ -41,7 +41,11 @@ export class DialogRef {
   attacheComponentToContainer(): void {
     const compPortal = new ComponentPortal(this.component, null, this.injector);
     const compRef = this.containerRef?.instance.portalOutlet?.attachComponentPortal(compPortal);
-
+    try {
+      compRef?.location.nativeElement.classList.add('dialog-item');
+    } catch (e) {
+      console.log('I have a Problem in adding class dialog-item to the element', compRef?.location.nativeElement);
+    }
     if (this.predefinedDialogType) {
       const component: ComponentRef<PredefinedDialogComponent> = compRef as ComponentRef<PredefinedDialogComponent>;
       component.instance.type = this.predefinedDialogType;
