@@ -1,9 +1,10 @@
 :host {
   background-color: white;
-  min-height: inherit;
-  max-height: inherit;
+  min-height: 95%;
+  max-height: 100% !important;
+  max-width: 95% !important;
   overflow: hidden;
-  display: table;
+  display: inline;
   border-radius: 4px;
   box-sizing: border-box;
   outline: 0;

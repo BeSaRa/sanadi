@@ -123,8 +123,11 @@ app-dialog-container {
   width: 100%;
   height: 100%;
 
-  & > * {
-    display: block !important;
+  & > .dialog-item {
+    box-sizing: border-box;
+    display: flex !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
 
     &.fullscreen {
       width: 100vw !important;
