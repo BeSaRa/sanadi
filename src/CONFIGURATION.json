@@ -57,5 +57,8 @@
     ".png",
     ".docx",
     ".tiff"
+  ],
+  "ALLOWED_FILE_TYPES_TO_UPLOAD": [
+    "PDF"
   ]
 }

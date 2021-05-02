@@ -21,4 +21,5 @@ export interface IAppConfig {
   MANAGE_USER_PERMISSIONS_GROUP: string[];
   ORG_LOGO_EXTENSIONS: string[];
   ATTACHMENT_EXTENSIONS: string[];
+  ALLOWED_FILE_TYPES_TO_UPLOAD: string[];
 }
