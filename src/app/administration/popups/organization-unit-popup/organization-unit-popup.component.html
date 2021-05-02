@@ -412,7 +412,7 @@
               [control]="fm.getFormField('advanced.enBrief')"></app-field-error-message>
           </div>
         </div>
-        <div class="row" *ngIf="model.id">
+        <div class="row">
           <input type="file" #logoUploader [hidden]="true" (change)="onLogoSelected($event)"
                  [accept]="logoExtensions.join(',')">
           <div class="col-md-3 col-sm-12">
@@ -423,17 +423,12 @@
           </div>
           <div class="col-md-9 col-sm-12">
             <img *ngIf="logoPath" id="orgLogo" src="{{logoPath}}" alt="{{langService.map.logo}}"
-                 class="img-fit-contain"/>
-            <div *ngIf="logoFile" class="d-flex flex-row py-1">
-              <button class="btn btn-primary me-1"
-                      (click)="saveLogo($event)">
-                {{langService.map.btn_save}}
-              </button>
-              <button class="btn btn-primary"
-                      (click)="removeLogo($event)">
-                {{langService.map.btn_remove}}
-              </button>
-            </div>
+                 class="img-fit-contain mt-1"/>
+
+            <button *ngIf="logoFile" class="btn icon-btn text-primary m-0 align-top" tooltip="{{langService.map.btn_remove}}"
+                    (click)="removeLogo($event)">
+              <i class="mdi mdi-close"></i>
+            </button>
           </div>
         </div>
       </div>

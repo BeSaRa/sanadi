@@ -140,8 +140,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         registryCreator: [this.model.registryCreator],
         registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
         licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
-        natureOfBusiness: [this.model.natureOfBusiness, CustomValidators.required],
-        logo: [this.model.logo]
+        natureOfBusiness: [this.model.natureOfBusiness, CustomValidators.required]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
@@ -201,12 +200,23 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
       if (!orgUnit) {
         return;
       }
+
       const message = (this.operation === OperationTypes.CREATE)
         ? this.langService.map.msg_create_x_success
         : this.langService.map.msg_update_x_success;
-      this.toast.success(message.change({x: orgUnit.getName()}));
       this.model = orgUnit;
       this.operation = OperationTypes.UPDATE;
+
+      if (!this.logoFile) {
+        this.toast.success(message.change({x: orgUnit.getName()}));
+        return;
+      }
+
+      orgUnit.saveLogo(this.logoFile)
+        .subscribe((result: boolean) => {
+          this._clearLogoUploader();
+          this.toast.success(message.change({x: orgUnit.getName()}));
+        });
     });
   }
 
@@ -249,17 +259,6 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     $event.preventDefault();
     this.logoPath = '';
     this._clearLogoUploader();
-  }
-
-  saveLogo($event: MouseEvent): void {
-    if (!this.model.id || !this.logoFile) {
-      return;
-    }
-    this.model.saveLogo(this.logoFile)
-      .subscribe((result: boolean) => {
-        this._clearLogoUploader();
-        this.toast.success(this.langService.map.msg_update_x_success.change({x: this.langService.map.logo}));
-      });
   }
 
 }
