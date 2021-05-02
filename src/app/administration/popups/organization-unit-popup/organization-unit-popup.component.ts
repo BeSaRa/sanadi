@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
@@ -19,6 +19,8 @@ import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {getDatepickerOptions} from '../../../helpers/utils';
+import {FileStore} from '../../../models/file-store';
+import {DialogService} from '../../../services/dialog.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -36,7 +38,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   orgUnitStatusList: Lookup[];
   orgUnitsList: OrgUnit[];
   cityList: Lookup[];
-  // orgNationalityList: Lookup[];
+  licensingAuthorityList: Lookup[];
+  natureOfBusinessList: Lookup[];
   saveVisible = true;
   validateFieldsVisible = true;
 
@@ -55,12 +58,17 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   dpOptionsNormal: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'none'});
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  @ViewChild('logoUploader') logoUploader!: ElementRef;
+  logoPath: string = '';
+  logoFile: any;
+  logoExtensions: string[] = this.configService.CONFIG.ORG_LOGO_EXTENSIONS;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgUnit>,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUnit>,
               private lookupService: LookupService,
               private fb: FormBuilder,
               private toast: ToastService,
               public langService: LangService,
+              private dialogService: DialogService,
               private configService: ConfigurationService) {
     this.operation = data.operation;
     this.model = data.model;
@@ -68,7 +76,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
     this.cityList = lookupService.listByCategory.Countries;
-    // this.orgNationalityList = lookupService.getByCategory(LookupCategories.NATIONALITY);
+    this.licensingAuthorityList = lookupService.getByCategory(LookupCategories.LICENSING_AUTHORITY);
+    this.natureOfBusinessList = lookupService.getByCategory(LookupCategories.NATURE_OF_BUSINESS);
   }
 
   ngOnInit(): void {
@@ -90,6 +99,10 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
 
   get popupTitle(): string {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_unit : this.langService.map.lbl_edit_org_unit;
+  }
+
+  private _changeByteArrayToBase64(fileInfo: FileStore): string {
+    return 'data:' + fileInfo.mimeType + ';base64,' + fileInfo.fileContents;
   }
 
   private buildForm(): void {
@@ -125,12 +138,15 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         hotLine: [this.model.hotLine, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
         faxNumber: [this.model.faxNumber, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
         registryCreator: [this.model.registryCreator],
-        registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())]
+        registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
+        licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
+        natureOfBusiness: [this.model.natureOfBusiness, CustomValidators.required],
+        logo: [this.model.logo]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
           'address', 'buildingName', 'unitName', 'street', 'zone', 'city', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber', 'registryCreator',
-          'registryDate'
+          'registryDate', 'licensingAuthority', 'natureOfBusiness'
         ])
       }),
       advanced: this.fb.group({
@@ -142,11 +158,16 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         orgUnitAuditor: [this.model.orgUnitAuditor, [Validators.maxLength(350)]],
         linkToInternalSystem: [this.model.linkToInternalSystem, [Validators.maxLength(450)]],
         lawSubjectedName: [this.model.lawSubjectedName, [Validators.maxLength(450)]],
-        boardDirectorsPeriod: [this.model.boardDirectorsPeriod, [Validators.maxLength(350)]]
+        boardDirectorsPeriod: [this.model.boardDirectorsPeriod, [Validators.maxLength(350)]],
+        arabicBoardMembers: [this.model.arabicBoardMembers],
+        enBoardMembers: [this.model.enBoardMembers],
+        arabicBrief: [this.model.arabicBrief, [Validators.maxLength(2000)]],
+        enBrief: [this.model.enBrief, [Validators.maxLength(2000)]]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'unifiedEconomicRecord', 'webSite', 'establishmentDate', 'registryNumber', 'budgetClosureDate',
-          'orgUnitAuditor', 'linkToInternalSystem', 'lawSubjectedName', 'boardDirectorsPeriod'
+          'orgUnitAuditor', 'linkToInternalSystem', 'lawSubjectedName', 'boardDirectorsPeriod',
+          'arabicBoardMembers', 'enBoardMembers', 'arabicBrief', 'enBrief'
         ])
       })
     });
@@ -154,6 +175,10 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
 
     if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
+
+      if (this.model.logo) {
+        this.logoPath = this._changeByteArrayToBase64(this.model.logo);
+      }
     }
   }
 
@@ -184,4 +209,57 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
       this.operation = OperationTypes.UPDATE;
     });
   }
+
+  openFileBrowser($event: MouseEvent): void {
+    $event?.stopPropagation();
+    $event?.preventDefault();
+    this.logoUploader?.nativeElement.click();
+  }
+
+  onLogoSelected($event: Event): void {
+    let files = ($event.target as HTMLInputElement).files;
+    if (files && files[0]) {
+      const extension = files[0].name.getExtension().toLowerCase();
+      if (this.logoExtensions.indexOf(extension) === -1) {
+        this.dialogService.error(this.langService.map.msg_invalid_format_allowed_formats.change({formats: this.logoExtensions.join(', ')}));
+        this.logoPath = '';
+        this._clearLogoUploader();
+        return;
+      }
+
+      var reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+
+      reader.onload = (event) => {
+        // @ts-ignore
+        this.logoPath = event.target.result as string;
+        // @ts-ignore
+        this.logoFile = files[0];
+      };
+
+    }
+  }
+
+  private _clearLogoUploader(): void {
+    this.logoFile = null;
+    this.logoUploader.nativeElement.value = "";
+  }
+
+  removeLogo($event: MouseEvent): void {
+    $event.preventDefault();
+    this.logoPath = '';
+    this._clearLogoUploader();
+  }
+
+  saveLogo($event: MouseEvent): void {
+    if (!this.model.id || !this.logoFile) {
+      return;
+    }
+    this.model.saveLogo(this.logoFile)
+      .subscribe((result: boolean) => {
+        this._clearLogoUploader();
+        this.toast.success(this.langService.map.msg_update_x_success.change({x: this.langService.map.logo}));
+      });
+  }
+
 }

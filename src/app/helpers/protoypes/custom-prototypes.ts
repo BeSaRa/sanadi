@@ -18,3 +18,8 @@ String.prototype.change = function(): string {
   }
   return updatedText;
 };
+
+String.prototype.getExtension = function (): string {
+  const name: string = String(this);
+  return name.substring(name.lastIndexOf('.'));
+}

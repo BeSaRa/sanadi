@@ -275,4 +275,14 @@ export interface ILanguageKeys {
   total_aid_amount: string;
   action_date_from: string;
   action_date_to: string;
+  nature_of_business: string;
+  licensing_authority: string;
+  arabic_board_members: string;
+  english_board_members: string;
+  arabic_brief: string;
+  english_brief: string;
+  logo: string;
+  upload_logo: string;
+  btn_remove: string;
+  msg_invalid_format_allowed_formats: string;
 }

@@ -8,6 +8,7 @@ import {Lookup} from './lookup';
 import {LookupService} from '../services/lookup.service';
 import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
+import {FileStore} from './file-store';
 
 export class OrgUnit extends BaseModel<OrgUnit> {
   phoneNumber1: string | undefined;
@@ -38,6 +39,13 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   lawSubjectedName: string | undefined;
   boardDirectorsPeriod: string | undefined;
   city: number | undefined;
+  licensingAuthority!: number;
+  natureOfBusiness!: number;
+  arabicBrief: string | undefined;
+  enBrief: string | undefined;
+  arabicBoardMembers: string[] | undefined = [];
+  enBoardMembers: string[] | undefined = [];
+  logo: FileStore | undefined;
 
   service: OrganizationUnitService;
   langService: LangService;
@@ -94,6 +102,10 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   getOrgStatusLookup(): Lookup | null {
     // @ts-ignore
     return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
+  }
+
+  saveLogo(file: File): Observable<boolean> {
+    return this.service.updateLogo(this.id, file);
   }
 
 }

@@ -4,4 +4,5 @@ interface IChangeParams {
 
 interface String {
   change(model: IChangeParams): string;
+  getExtension(): string;
 }

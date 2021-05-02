@@ -15,6 +15,7 @@ import {
   interceptOrganizationUnitReceive
 } from '../model-interceptors/organization-unit-interceptor';
 import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
+import {Generator} from '../decorators/generator';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private  dialogService: DialogService) {
+              private dialogService: DialogService) {
     super();
     FactoryService.registerService('OrganizationUnitService', this);
   }
@@ -39,7 +40,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
+    return this.loadOrgUnitByIdComposite(modelId).pipe(
       switchMap((orgUnit: OrgUnit) => {
         return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
           model: orgUnit,
@@ -66,8 +67,19 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 
-  deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
-    return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
+    return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
+  }
+
+  updateLogo(id: number, file: File): Observable<boolean> {
+    var form = new FormData();
+    form.append('content', file);
+    return this.http.post<boolean>(this._getServiceURL() + '/banner-logo?id=' + id, form);
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  loadOrgUnitByIdComposite(id: number): Observable<OrgUnit> {
+    return this.http.get<OrgUnit>(this._getServiceURL() + '/' + id + '/composite');
   }
 
   _getModel(): any {

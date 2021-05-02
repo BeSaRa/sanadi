@@ -211,6 +211,38 @@
             <app-field-error-message [control]="fm.getFormField('basic.registryDate')"></app-field-error-message>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label for="natureOfBusiness" asteriskIfRequired="natureOfBusiness"
+                   class="form-label">{{langService.map.nature_of_business}}</label>
+            <ng-select [selectOnTab]="true" labelForId="natureOfBusiness" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="natureOfBusiness"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="natureOfBusiness"
+                       [ngClass]="fm.getStatusClass('basic.natureOfBusiness')">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of natureOfBusinessList" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message [control]="fm.getFormField('basic.natureOfBusiness')"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label for="licensingAuthority" asteriskIfRequired="licensingAuthority"
+                   class="form-label">{{langService.map.licensing_authority}}</label>
+            <ng-select [selectOnTab]="true" labelForId="natureOfBusiness" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="licensingAuthority"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="licensingAuthority"
+                       [ngClass]="fm.getStatusClass('basic.licensingAuthority')">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of licensingAuthorityList" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message [control]="fm.getFormField('basic.licensingAuthority')"></app-field-error-message>
+          </div>
+        </div>
       </div>
 
       <!--<div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
@@ -321,6 +353,87 @@
                    formControlName="boardDirectorsPeriod" class="form-control">
             <app-field-error-message
               [control]="fm.getFormField('advanced.boardDirectorsPeriod')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative ng-select-wrapper">
+            <label for="arabicBoardMembers" asteriskIfRequired="arabicBoardMembers"
+                   class="form-label">{{langService.map.arabic_board_members}}</label>
+            <ng-select [selectOnTab]="true" labelForId="arabicBoardMembers" [clearable]="false"
+                       id="arabicBoardMembers"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="arabicBoardMembers"
+                       [items]="fm.getFormField('advanced.arabicBoardMembers')?.value"
+                       [addTag]="true"
+                       [multiple]="true"
+                       [isOpen]="false"
+                       class="no-dropdown"
+                       [ngClass]="fm.getStatusClass('advanced.arabicBoardMembers')">
+            </ng-select>
+            <app-field-error-message
+              [control]="fm.getFormField('advanced.arabicBoardMembers')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative ng-select-wrapper">
+            <label for="enBoardMembers" asteriskIfRequired="enBoardMembers"
+                   class="form-label">{{langService.map.english_board_members}}</label>
+            <ng-select [selectOnTab]="true" labelForId="enBoardMembers" [clearable]="false"
+                       id="enBoardMembers"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="enBoardMembers"
+                       [items]="fm.getFormField('advanced.enBoardMembers')?.value"
+                       [addTag]="true"
+                       [multiple]="true"
+                       [isOpen]="false"
+                       class="no-dropdown"
+                       [ngClass]="fm.getStatusClass('advanced.enBoardMembers')">
+            </ng-select>
+            <app-field-error-message [control]="fm.getFormField('advanced.enBoardMembers')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="arabicBrief" class="form-label">{{langService.map.arabic_brief}}</label>
+            <textarea id="arabicBrief" cols="3"
+                      [ngClass]="fm.getStatusClass('advanced.arabicBrief')"
+                      formControlName="arabicBrief" class="form-control"></textarea>
+            <app-field-error-message
+              [control]="fm.getFormField('advanced.arabicBrief')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="enBrief" class="form-label">{{langService.map.english_brief}}</label>
+            <textarea id="enBrief" cols="3"
+                      [ngClass]="fm.getStatusClass('advanced.enBrief')"
+                      formControlName="enBrief" class="form-control"></textarea>
+            <app-field-error-message
+              [control]="fm.getFormField('advanced.enBrief')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row" *ngIf="model.id">
+          <input type="file" #logoUploader [hidden]="true" (change)="onLogoSelected($event)"
+                 [accept]="logoExtensions.join(',')">
+          <div class="col-md-3 col-sm-12">
+            <button class="btn btn-primary"
+                    (click)="openFileBrowser($event)">
+              {{langService.map.upload_logo}}
+            </button>
+          </div>
+          <div class="col-md-9 col-sm-12">
+            <img *ngIf="logoPath" id="orgLogo" src="{{logoPath}}" alt="{{langService.map.logo}}"
+                 class="img-fit-contain"/>
+            <div *ngIf="logoFile" class="d-flex flex-row py-1">
+              <button class="btn btn-primary me-1"
+                      (click)="saveLogo($event)">
+                {{langService.map.btn_save}}
+              </button>
+              <button class="btn btn-primary"
+                      (click)="removeLogo($event)">
+                {{langService.map.btn_remove}}
+              </button>
+            </div>
           </div>
         </div>
       </div>

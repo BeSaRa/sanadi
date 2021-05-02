@@ -266,6 +266,12 @@ ng-select {
     height: 38px !important;
   }
 
+  &.no-dropdown{
+    .ng-arrow-wrapper {
+      display: none;
+    }
+  }
+
   &.ng-select-disabled {
     .ng-select-container {
       background-color: #e9ecef !important;
@@ -297,4 +303,10 @@ ng-select {
 
 .aid-badge {
   min-width: 30px;
+}
+
+img {
+  .img-fit-contain {
+    object-fit: contain;
+  }
 }
