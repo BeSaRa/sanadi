@@ -33,6 +33,7 @@ export interface ILanguageKeys {
   msg_invalid_username_password: string;
   menu_under_process: string;
   menu_partial_requests: string;
+  menu_partial_request_reports: string;
   main_aid_type: string;
   btn_reset: string;
   msg_request_has_been_added_successfully: string;
@@ -272,4 +273,6 @@ export interface ILanguageKeys {
   estimated_amount: string;
   remaining_amount: string;
   total_aid_amount: string;
+  action_date_from: string;
+  action_date_to: string;
 }

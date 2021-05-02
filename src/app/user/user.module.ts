@@ -14,6 +14,7 @@ import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component
 import {PartialRequestComponent} from './pages/partial-requests/partial-request/partial-request.component';
 import {RequestDetailsPopupComponent} from './popups/request-details-popup/request-details-popup.component';
 import {FilterRequestPopupComponent} from './popups/filter-request-popup/filter-request-popup.component';
+import { PartialRequestReportsComponent } from './pages/partial-request-reports/partial-request-reports.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {FilterRequestPopupComponent} from './popups/filter-request-popup/filter-
     ReasonPopupComponent,
     PartialRequestComponent,
     RequestDetailsPopupComponent,
-    FilterRequestPopupComponent],
+    FilterRequestPopupComponent,
+    PartialRequestReportsComponent],
   imports: [
     SharedModule,
     UserRoutingModule

@@ -18,6 +18,7 @@
   "BENEFICIARY": "aids/beneficiary",
   "SUBVENTION_REQUEST": "aids/subvention-request",
   "SUBVENTION_REQUEST_PARTIAL": "aids/subvention-request/partial-requests",
+  "SUBVENTION_REQUEST_PARTIAL_LOG": "aids/subvention-request-log/partial-requests",
   "SUBVENTION_REQUEST_AID": "aids/subvention-request/sub-aids",
   "SUBVENTION_LOG": "aids/subvention-request-log",
   "SUBVENTION_AID": "/aids/subvention-aid",
