@@ -1,0 +1,21 @@
+@import "src/scss/custom_variables";
+
+.attachments {
+  list-style: none;
+}
+
+.attachment {
+  border-bottom: 1px dashed $custom-gray;
+}
+
+.attachment:nth-child(2n) {
+  background-color: tint-color($custom-gray, 90);
+}
+
+.attachment-icon, .attachment-title {
+  padding: 5px;
+}
+
+.attachment-link {
+  width: 0;
+}

@@ -1,0 +1,36 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.file_uploader}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content">
+  <div [formGroup]="form" class="d-flex flex-column">
+    <ng-container formArrayName="documents" *ngFor="let control of formArray.controls; let i = index;">
+      <div [formGroupName]="i" class="d-flex flex-row mb-4 attachment-row align-items-center">
+        <input class="form-control flex-shrink-1" formControlName="documentTitle"
+               placeholder="{{lang.map.document_title}}*">
+        <span class="mx-2"></span>
+        <div class="form-check form-switch">
+          <input [tooltip]="lang.map.published_status" class="form-check-input" type="checkbox"
+                 formControlName="isPublished" id="isPublished_{{i}}">
+        </div>
+        <span class="mx-2"></span>
+        <input #file id="file_{{i}}" accept="application/pdf" (change)="fileChange($event,i)" type="file"
+               class="visually-hidden">
+        <span class="mx-2"></span>
+        <label for="file_{{i}}" [class.btn-primary]="file.value" [class.btn-secondary]="!file.value"
+               [tooltip]="lang.map.upload_file" class="btn flex-shrink-0"><i class="mdi mdi-upload"></i></label>
+        <span class="mx-2"></span>
+        <button (click)="removeControl(i)" [tooltip]="lang.map.btn_delete" class="btn btn-secondary flex-shrink-0"><i
+          class="mdi mdi-close"></i>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+  <button (click)="addFormRow()"
+          class="btn btn-primary d-flex flex-grow-0 flex-row justify-content-center align-items-center">
+    <i class="mdi mdi-plus-box"></i>&nbsp;&nbsp;<span>{{lang.map.add_document_item}}</span></button>
+</div>
+<div class="dialog-actions">
+  <button (click)="uploadFiles()" class="btn btn-primary">{{lang.map.upload}}</button>
+</div>

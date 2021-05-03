@@ -7,6 +7,9 @@ import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {Generator} from '../decorators/generator';
 import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
+import {DocumentService} from '../services/document.service';
+import {DialogService} from '../services/dialog.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface, '_getModel' | '_getInterceptor'> {
@@ -17,8 +20,10 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
 
   abstract http: HttpClient;
-
+  abstract dialog: DialogService;
+  abstract domSanitizer: DomSanitizer;
   abstract commentService: CommentService<S>;
+  abstract documentService: DocumentService<S>;
 
   ping(): void {
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
@@ -100,16 +105,14 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
     return this.commentService.load(caseId);
   }
 
-  private _addDocument(caseId: string,
-                       document: Partial<FileNetDocument>,
-                       progressCallback?: (percentage: number) => void): void {
-
+  addDocument(caseId: string,
+              document: FileNetDocument,
+              progressCallback?: (percentage: number) => void): Observable<any> {
+    return this.documentService.addSingleDocument(caseId, document, progressCallback);
   }
 
-  addDocument(caseId: string,
-              document: Partial<FileNetDocument>,
-              progressCallback?: (percentage: number) => void): void {
-
+  addBulkDocuments(caseId: string, document: FileNetDocument, progressCallback?: (percentage: number) => void): Observable<any> {
+    return this.documentService.addSingleDocument(caseId, document, progressCallback);
   }
 
   getCaseActions(): void {
@@ -121,11 +124,6 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   }
 
   getCaseDetails(): void {
-
-  }
-
-
-  addBulkDocuments(): void {
 
   }
 

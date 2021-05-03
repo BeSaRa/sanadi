@@ -41,6 +41,10 @@ import {AttachmentListComponent} from './components/attachment-list/attachment-l
 import {TrimInputDirective} from './directives/trim-input.directive';
 
 import { ValidationClassesDirective } from './directives/validation-classes.directive';
+import { DocumentsComponent } from './components/documents/documents.component';
+import { ViewDocumentPopupComponent } from './popups/view-document-popup/view-document-popup.component';
+import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upload-document-popup.component';
+
 @NgModule({
   declarations: [
     FooterComponent,
@@ -72,7 +76,10 @@ import { ValidationClassesDirective } from './directives/validation-classes.dire
     DateFixDirective,
     AttachmentListComponent,
     TrimInputDirective,
-    ValidationClassesDirective
+    ValidationClassesDirective,
+    DocumentsComponent,
+    ViewDocumentPopupComponent,
+    UploadDocumentPopupComponent
   ],
   imports: [
     CommonModule,
@@ -121,7 +128,9 @@ import { ValidationClassesDirective } from './directives/validation-classes.dire
     DateFixDirective,
     AttachmentListComponent,
     TrimInputDirective,
-    ValidationClassesDirective
+    ValidationClassesDirective,
+    DocumentsComponent,
+    ViewDocumentPopupComponent
   ]
 })
 export class SharedModule {
