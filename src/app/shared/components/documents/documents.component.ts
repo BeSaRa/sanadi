@@ -120,6 +120,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   deleteSelectedFiles() {
+    if (!this.selectedDocuments.size) {
+      return;
+    }
     this.dialog
       .confirm(this.lang.map.msg_confirm_delete_selected)
       .onAfterClose$
@@ -128,6 +131,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
           this.service.deleteBulkDocument(Array.from(this.selectedDocuments.keys()))
             .subscribe(_ => {
               this.toast.success(this.lang.map.msg_delete_success);
+              this.selectedDocuments.forEach((item, key) => this.selectedDocuments.delete(key));
+              this.loadDocuments();
             });
         }
       });

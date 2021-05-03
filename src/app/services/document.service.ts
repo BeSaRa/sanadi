@@ -129,7 +129,7 @@ export class DocumentService<T extends {
   }
 
   deleteBulkDocument(documentIds: string[]) {
-    return this.service.http.request('DELETE', this.service._getServiceURL() + '/document/' + documentIds.join(',') + '/bulk', {
+    return this.service.http.request('DELETE', this.service._getServiceURL() + '/document/bulk', {
       body: documentIds
     });
   }
