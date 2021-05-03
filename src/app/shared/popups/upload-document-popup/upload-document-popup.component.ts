@@ -119,7 +119,7 @@ export class UploadDocumentPopupComponent implements OnInit {
       .subscribe({
         complete: () => {
           this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-          this.dialogRef.close();
+          this.dialogRef.close(this.documents);
         }
       });
   }
@@ -135,6 +135,6 @@ export class UploadDocumentPopupComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.documents);
   }
 }

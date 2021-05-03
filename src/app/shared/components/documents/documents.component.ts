@@ -142,8 +142,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.dialog.show(UploadDocumentPopupComponent, {
       caseId: this.caseId,
       service: this.service
-    }).onAfterClose$.subscribe(() => {
-      this.loadDocuments();
+    }).onAfterClose$.subscribe((list: FileNetDocument[]) => {
+      console.log(list);
+      if (list.length) {
+        this.loadDocuments();
+      }
     });
   }
 }
