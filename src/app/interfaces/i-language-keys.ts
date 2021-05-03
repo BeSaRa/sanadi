@@ -1,4 +1,16 @@
 export interface ILanguageKeys {
+  files_have_been_uploaded_successfully: string;
+  published_status: string;
+  msg_only_those_files_allowed_to_upload: string;
+  upload: string;
+  upload_file: string;
+  add_document_item: string;
+  file_uploader: string;
+  no_documents_to_show: string;
+  items_selected: string;
+  select_all: string;
+  attachments: string;
+  document_title: string;
   launch: string;
   request_has_been_saved_successfully: string;
   draft_was_saved_successfully: string;

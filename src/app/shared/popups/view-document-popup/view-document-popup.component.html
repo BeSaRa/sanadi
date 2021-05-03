@@ -1,0 +1,11 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-start">
+  <h1 class="h6 text-white">{{model.documentTitle}}</h1>
+  <span class="flex-grow-1"></span>
+  <button type="button" class="icon-btn btn-close-white"
+          tabindex="-1" (click)="fullscreen()" aria-label="fullscreen"><i class="mdi mdi-fullscreen"></i></button>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+</div>
+<div class="dialog-content document-viewer p-0 m-0">
+  <iframe #iframe [src]="blob.safeUrl" style="width: 100%;height: 100%;border: 0"></iframe>
+</div>

@@ -13,6 +13,7 @@ import {AbstractControl} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 import {anyFieldsHasLength} from './any-fields-has-length';
+import {documentValidator as attachment} from './document-validator';
 
 const defaultLengths = {
     MIN_LENGTH: 3,
@@ -137,5 +138,6 @@ export const CustomValidators = {
     maxDate,
     minDate,
     inputMaskPatterns,
-    validationPatterns
+    validationPatterns,
+  attachment
 };
