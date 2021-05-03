@@ -36,7 +36,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
   private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable();
 
   constructor(private http: HttpClient,
-              private service: InquiryService,
+              public service: InquiryService,
               private urlService: UrlService,
               private router: Router,
               private intDepService: InternalDepartmentService,
