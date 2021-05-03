@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  loading_viewer: string;
   files_have_been_uploaded_successfully: string;
   published_status: string;
   msg_only_those_files_allowed_to_upload: string;
