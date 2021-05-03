@@ -1,7 +1,7 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{lang.map.file_uploader}}</h1>
   <button type="button" class="btn-close btn-close-white"
-          tabindex="-1" dialogClose aria-label="Close"></button>
+          tabindex="-1" [dialogClose]="documents" aria-label="Close"></button>
 </div>
 <div class="dialog-content">
   <div [formGroup]="form" class="d-flex flex-column">
