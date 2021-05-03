@@ -33,7 +33,6 @@ export class UploadDocumentPopupComponent implements OnInit {
 
     this.caseId = data.caseId;
     this.service = data.service;
-    console.log(this.service);
   }
 
   ngOnInit(): void {
@@ -133,5 +132,9 @@ export class UploadDocumentPopupComponent implements OnInit {
         files: ctrl.get('files')?.value!
       });
     });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }
