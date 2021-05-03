@@ -3,6 +3,7 @@ import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {FileNetDocument} from '../../../models/file-net-document';
 import {BlobModel} from '../../../models/blob-model';
 import {DOCUMENT} from '@angular/common';
+import {LangService} from '../../../services/lang.service';
 
 @Component({
   selector: 'app-view-document-popup',
@@ -13,13 +14,19 @@ export class ViewDocumentPopupComponent implements OnInit, OnDestroy {
   model: FileNetDocument;
   blob: BlobModel;
   @ViewChild('iframe') iframe!: ElementRef<HTMLIFrameElement>;
+  show: boolean = false;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: { model: FileNetDocument, blob: BlobModel }, @Inject(DOCUMENT) private document: HTMLDocument) {
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: { model: FileNetDocument, blob: BlobModel },
+              @Inject(DOCUMENT) private document: HTMLDocument,
+              public lang: LangService) {
     this.model = data.model;
     this.blob = data.blob;
   }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.show = true;
+    }, 300);
   }
 
   fullscreen() {
