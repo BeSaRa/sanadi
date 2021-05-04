@@ -93,6 +93,10 @@ export class UploadDocumentPopupComponent implements OnInit {
       return;
     }
     this.prepareDocuments();
+    if (!this.caseId) {
+      this.dialogRef.close(this.documents);
+      return;
+    }
     this.saveUploadedDocuments();
   }
 
