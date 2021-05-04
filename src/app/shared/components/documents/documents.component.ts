@@ -220,7 +220,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     }
     const valueDone: Subject<any> = new Subject();
 
-    interval(500)
+    interval()
       .pipe(
         tap(index => {
           if (!files[index]) {

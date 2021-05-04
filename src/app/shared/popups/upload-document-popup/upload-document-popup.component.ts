@@ -106,7 +106,7 @@ export class UploadDocumentPopupComponent implements OnInit {
 
   private saveUploadedDocuments(): void {
     const valueDone: Subject<any> = new Subject();
-    interval(500)
+    interval()
       .pipe(
         tap(index => {
           if (!this.documents[index]) {
@@ -133,7 +133,8 @@ export class UploadDocumentPopupComponent implements OnInit {
       return (new FileNetDocument()).clone({
         documentTitle: ctrl.get('documentTitle')?.value!,
         isPublished: ctrl.get('isPublished')?.value!,
-        files: ctrl.get('files')?.value!
+        files: ctrl.get('files')?.value!,
+        mimeType: ctrl.get('files')?.value[0].type
       });
     });
   }
