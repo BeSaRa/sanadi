@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  recommendations: string;
   loading_viewer: string;
   files_have_been_uploaded_successfully: string;
   published_status: string;

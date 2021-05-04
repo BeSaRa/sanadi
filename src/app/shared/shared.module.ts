@@ -44,6 +44,8 @@ import { ValidationClassesDirective } from './directives/validation-classes.dire
 import { DocumentsComponent } from './components/documents/documents.component';
 import { ViewDocumentPopupComponent } from './popups/view-document-popup/view-document-popup.component';
 import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upload-document-popup.component';
+import { RecommendationsComponent } from './components/recommendations/recommendations.component';
+import { CommentsComponent } from './components/comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +81,9 @@ import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upl
     ValidationClassesDirective,
     DocumentsComponent,
     ViewDocumentPopupComponent,
-    UploadDocumentPopupComponent
+    UploadDocumentPopupComponent,
+    RecommendationsComponent,
+    CommentsComponent
   ],
   imports: [
     CommonModule,
