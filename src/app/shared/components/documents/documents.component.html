@@ -6,19 +6,19 @@
                   [tooltip]="lang.map.select_all"
                   class="form-check-input" type="checkbox"></div>
       <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate">
-        <span *ngIf="!selectedDocuments.size" class="h6 text-primary mx-1">{{lang.map.document_title}}</span>
-        <span *ngIf="selectedDocuments.size"
-              class="h6 text-primary mx-1">{{selectedDocuments.size}} {{lang.map.items_selected}}</span>
+        <span *ngIf="!selectedDocuments.length" class="h6 text-primary mx-1">{{lang.map.document_title}}</span>
+        <span *ngIf="selectedDocuments.length"
+              class="h6 text-primary mx-1">{{selectedDocuments.length}} {{lang.map.items_selected}}</span>
       </div>
       <div class="attachment-actions">
-        <span *ngIf="!selectedDocuments.size" class="h6 text-primary">{{lang.map.lbl_actions}}</span>
-        <button *ngIf="selectedDocuments.size" (click)="deleteSelectedFiles()" class="btn icon-btn"><i
+        <span *ngIf="!selectedDocuments.length" class="h6 text-primary">{{lang.map.lbl_actions}}</span>
+        <button *ngIf="selectedDocuments.length" (click)="deleteSelectedFiles()" class="btn icon-btn"><i
           class="mdi mdi-trash-can-outline text-primary"></i></button>
       </div>
     </li>
     <li class="attachment d-flex flex-row align-items-center" *ngFor="let doc of documents">
-      <div><input [id]="doc.id" (click)="toggleSelectedDocument($event)"
-                  [checked]="selectedDocuments.has(doc.id)" class="form-check-input" type="checkbox"></div>
+      <div><input [id]="doc.id" (click)="toggleSelectedDocument($event , doc)"
+                  [checked]="isDocumentSelected(doc)" class="form-check-input" type="checkbox"></div>
       <div class="attachment-link d-inline-flex flex-row align-items-center flex-grow-1 flex-shrink-1 text-primary">
         <div class="attachment-icon"><i class="mdi {{doc.getIcon()}}"></i></div>
         <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate"

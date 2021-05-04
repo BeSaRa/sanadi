@@ -5,11 +5,13 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {LookupService} from '../../../services/lookup.service';
 import {DocumentService} from '../../../services/document.service';
-import {map, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
+import {interval, Subject} from 'rxjs';
 import {LangService} from '../../../services/lang.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {UploadDocumentPopupComponent} from '../../popups/upload-document-popup/upload-document-popup.component';
+import {BlobModel} from '../../../models/blob-model';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-documents',
@@ -17,12 +19,24 @@ import {UploadDocumentPopupComponent} from '../../popups/upload-document-popup/u
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit, OnDestroy {
-  @Input() caseId: string = '{93A0A4F9-3649-C709-857B-78F3A1A00000}';
+  _caseId: string = '';
+  @Input()
+  set caseId(value: string) {
+    this._caseId = value;
+    if (value) {
+      this.uploadFileSilently();
+    }
+  };
+
+  get caseId(): string {
+    return this._caseId;
+  }
+
   @Output() afterUpload: EventEmitter<any> = new EventEmitter<any>();
   @Input() documents: FileNetDocument[] = [];
   @Input() service!: DocumentService<any>;
   documentTypes: Lookup[] = [];
-  selectedDocuments: Map<string, FileNetDocument> = new Map<string, FileNetDocument>();
+  selectedDocuments: FileNetDocument[] = [];
   // {93A0A4F9-3649-C709-857B-78F3A1A00000}
   private destroy$: Subject<any> = new Subject();
 
@@ -32,6 +46,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
               private renderer: Renderer2,
               private lookupService: LookupService,
               public lang: LangService,
+              private sanitizer: DomSanitizer,
               private toast: ToastService) {
 
   }
@@ -58,19 +73,37 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       if (userClick !== UserClickOn.YES) {
         return;
       }
-      this.service
-        .deleteDocument(file.id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(_ => {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
-          this.selectedDocuments.delete(file.id);
-          this.checkAndSetIndeterminate();
-          this.loadDocuments();
-        });
+      file.id ? this._deleteFileByApi(file) : this._deleteFileByClient(file);
     });
   }
 
-  private loadDocuments() {
+  private _deleteFileByClient(file: FileNetDocument): void {
+    this.documents.splice(this.documents.indexOf(file), 1);
+    this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
+    this.removeFileFromSelected(file);
+    this.checkAndSetIndeterminate();
+  }
+
+  private _deleteFileByApi(file: FileNetDocument): void {
+    this.service
+      .deleteDocument(file.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(_ => {
+        this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
+        this.removeFileFromSelected(file);
+        this.checkAndSetIndeterminate();
+        this.loadDocuments();
+      });
+  }
+
+  private removeFileFromSelected(file: FileNetDocument): void {
+    this.selectedDocuments.splice(this.selectedDocuments.indexOf(file), 1);
+  }
+
+  private loadDocuments(): void {
+    if (!this.caseId) {
+      return;
+    }
     this.service.loadDocuments(this.caseId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(documents => {
@@ -80,7 +113,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
 
   private checkAndSetIndeterminate() {
-    if (this.selectedDocuments.size && this.selectedDocuments.size !== this.documents.length) {
+    if (this.selectedDocuments.length && this.selectedDocuments.length !== this.documents.length) {
       this.renderer.setProperty(this.selectAllToggle.nativeElement, 'indeterminate', true);
     } else {
       this.renderer.setProperty(this.selectAllToggle.nativeElement, 'indeterminate', false);
@@ -89,6 +122,16 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   viewDocument(document: FileNetDocument, $event: Event): void {
     $event.preventDefault();
+    document.files ? this._viewDocumentByClient(document) : this._viewDocumentByAPI(document);
+  }
+
+
+  private _viewDocumentByClient(document: FileNetDocument) {
+    const blobModel = new BlobModel(document.files?.item(0) as Blob, this.sanitizer);
+    this.service.viewDocument(blobModel, document);
+  }
+
+  private _viewDocumentByAPI(document: FileNetDocument) {
     this.service.downloadDocument(document.id)
       .pipe(
         map(model => this.service.viewDocument(model, document))
@@ -96,31 +139,31 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  toggleSelectedDocument($event: MouseEvent): void {
+  toggleSelectedDocument($event: MouseEvent, file: FileNetDocument): void {
     const target = $event.target as HTMLInputElement;
     if (target.checked) {
-      this.selectedDocuments.set(target.id, this.documents.find(item => item.id === target.id)!);
+      this.selectedDocuments.push(file);
     } else {
-      this.selectedDocuments.delete(target.id);
+      this.removeFileFromSelected(file);
     }
     this.checkAndSetIndeterminate();
   }
 
   allSelected(): boolean {
-    return !!(this.documents.length && (this.documents.length === this.selectedDocuments.size));
+    return !!(this.documents.length && (this.documents.length === this.selectedDocuments.length));
   }
 
   toggleSelectAll($event: MouseEvent): void {
     const target = $event.target as HTMLInputElement;
     if (target.checked) {
-      this.documents.forEach(item => this.selectedDocuments.set(item.id, item));
+      this.documents.forEach(item => this.selectedDocuments.push(item));
     } else {
-      this.documents.forEach(item => this.selectedDocuments.delete(item.id));
+      this.documents.forEach(item => this.removeFileFromSelected(item));
     }
   }
 
   deleteSelectedFiles() {
-    if (!this.selectedDocuments.size) {
+    if (!this.selectedDocuments.length) {
       return;
     }
     this.dialog
@@ -128,14 +171,30 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       .onAfterClose$
       .subscribe((clicked: UserClickOn) => {
         if (clicked === UserClickOn.YES) {
-          this.service.deleteBulkDocument(Array.from(this.selectedDocuments.keys()))
-            .subscribe(_ => {
-              this.toast.success(this.lang.map.msg_delete_success);
-              this.selectedDocuments.forEach((item, key) => this.selectedDocuments.delete(key));
-              this.loadDocuments();
-            });
+          this.caseId ? this._deleteSelectedFilesByApi() : this._deleteSelectedFilesByClient();
         }
       });
+  }
+
+  private _deleteSelectedFilesByClient(): void {
+    this.documents = this.documents.filter(item => {
+      return this.selectedDocuments.indexOf(item) === -1;
+    });
+    this.toast.success(this.lang.map.msg_delete_success);
+    this.emptySelectedDocuments();
+  }
+
+  private _deleteSelectedFilesByApi(): void {
+    this.service.deleteBulkDocument(this.selectedDocuments.map(item => item.id))
+      .subscribe(_ => {
+        this.toast.success(this.lang.map.msg_delete_success);
+        this.emptySelectedDocuments();
+        this.loadDocuments();
+      });
+  }
+
+  private emptySelectedDocuments(): void {
+    this.selectedDocuments = [];
   }
 
   openUploadDialog(): void {
@@ -143,10 +202,44 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       caseId: this.caseId,
       service: this.service
     }).onAfterClose$.subscribe((list: FileNetDocument[]) => {
-      console.log(list);
-      if (list.length) {
-        this.loadDocuments();
+      if (list.length && !this.caseId) {
+        this.documents = this.documents.concat(list);
       }
+      this.loadDocuments();
     });
   }
+
+  isDocumentSelected(doc: FileNetDocument) {
+    return this.selectedDocuments.indexOf(doc) !== -1;
+  }
+
+  private uploadFileSilently(): void {
+    const files = this.documents.filter(item => !item.id);
+    if (!files.length || !this.caseId) {
+      return;
+    }
+    const valueDone: Subject<any> = new Subject();
+
+    interval(500)
+      .pipe(
+        tap(index => {
+          if (!files[index]) {
+            valueDone.next();
+            valueDone.complete();
+          }
+        }),
+        takeUntil(valueDone),
+        map(index => files[index]),
+        concatMap((doc: FileNetDocument) => {
+          return this.service.addSingleDocument(this.caseId, doc);
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.loadDocuments();
+        }
+      });
+  }
+
+
 }
