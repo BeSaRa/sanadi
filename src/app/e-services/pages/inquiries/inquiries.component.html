@@ -111,9 +111,13 @@
       </div>
       <app-documents #attachmentsCtrl [caseId]="model.id" [service]="service.documentService"></app-documents>
     </div>
-    <!--    <div class="col-md-6 col-sm-12">-->
-    <!--      <h4>Recommendations</h4>-->
-    <!--    </div>-->
+    <div class="col-md-6 col-sm-12">
+      <div class="d-flex flex-row align-items-center justify-content-start">
+        <h6 class="text-primary d-inline-block">{{lang.map.recommendations}}</h6>
+        <button class="d-inline-block text-primary icon-btn"><i
+          class="mdi mdi-plus-box"></i></button>
+      </div>
+    </div>
   </div>
   <div class="mb-3 d-flex align-items-center justify-content-center">
     <button (click)="save.next(saveTypes.FINAL)" [disabled]="from.invalid"
