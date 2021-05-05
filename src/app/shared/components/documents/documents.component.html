@@ -32,8 +32,11 @@
     </li>
     <li *ngIf="!documents.length" class="attachment d-flex flex-row align-items-center">
       <div></div>
-      <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate">
-        <span>{{lang.map.no_documents_to_show}}</span>
+      <div class="attachment-link d-inline-flex flex-row align-items-center flex-grow-1 flex-shrink-1 text-primary">
+        <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate">
+          <span>{{lang.map.no_documents_to_show}}</span>
+        </div>
+        <div class="attachment-icon invisible"><i class="mdi mdi-file-pdf-outline"></i></div>
       </div>
       <div class="attachment-actions"></div>
     </li>

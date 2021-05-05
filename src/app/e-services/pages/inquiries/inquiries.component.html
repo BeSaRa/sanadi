@@ -109,14 +109,15 @@
         <button (click)="attachmentsCtrl.openUploadDialog()" class="d-inline-block text-primary icon-btn"><i
           class="mdi mdi-plus-box"></i></button>
       </div>
-      <app-documents #attachmentsCtrl [caseId]="model.id" [service]="service.documentService"></app-documents>
+      <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
     </div>
     <div class="col-md-6 col-sm-12">
       <div class="d-flex flex-row align-items-center justify-content-start">
-        <h6 class="text-primary d-inline-block">{{lang.map.recommendations}}</h6>
-        <button class="d-inline-block text-primary icon-btn"><i
+        <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
+        <button (click)="commentsCtrl.openCommentDialog()" class="d-inline-block text-primary icon-btn"><i
           class="mdi mdi-plus-box"></i></button>
       </div>
+      <app-comments #commentsCtrl [service]="service.commentService"></app-comments>
     </div>
   </div>
   <div class="mb-3 d-flex align-items-center justify-content-center">

@@ -9,7 +9,7 @@ function _generateModel(data: any,
                         model: any,
                         property?: string,
                         receiveCallback?: any,
-                        instance?: Partial<BackendServiceModelInterface>): any {
+                        instance?: Partial<BackendServiceModelInterface<any>>): any {
   let finalData;
   if (instance && typeof instance._getModel !== 'undefined') {
     model = instance._getModel();

@@ -46,6 +46,7 @@ import { ViewDocumentPopupComponent } from './popups/view-document-popup/view-do
 import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upload-document-popup.component';
 import { RecommendationsComponent } from './components/recommendations/recommendations.component';
 import { CommentsComponent } from './components/comments/comments.component';
+import {CaseCommentPopupComponent} from './components/case-comment-popup/case-comment-popup.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { CommentsComponent } from './components/comments/comments.component';
     ViewDocumentPopupComponent,
     UploadDocumentPopupComponent,
     RecommendationsComponent,
-    CommentsComponent
+    CommentsComponent,
+    CaseCommentPopupComponent
   ],
   imports: [
     CommonModule,
@@ -134,7 +136,9 @@ import { CommentsComponent } from './components/comments/comments.component';
     TrimInputDirective,
     ValidationClassesDirective,
     DocumentsComponent,
-    ViewDocumentPopupComponent
+    ViewDocumentPopupComponent,
+    CaseCommentPopupComponent,
+    CommentsComponent
   ]
 })
 export class SharedModule {

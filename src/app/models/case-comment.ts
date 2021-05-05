@@ -1,5 +1,5 @@
 import {Annotation} from './annotation';
 
-export class Comment extends Annotation<Comment> {
+export class CaseComment extends Annotation<CaseComment> {
   CLASSNAME!: string;
 }
