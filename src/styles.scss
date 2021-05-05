@@ -162,7 +162,7 @@ app-dialog-container {
   max-height: 65vh;
   overflow: auto;
   max-width: 100%;
-  box-sizing: content-box;
+  box-sizing: border-box;
   min-width: 200px;
 
   &:not(.no-fixed-height) {
