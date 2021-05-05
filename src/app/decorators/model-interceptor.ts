@@ -38,7 +38,7 @@ export function SendInterceptor(interceptorCallback?: any): any {
     // @ts-ignore
     // tslint:disable-next-line:typedef
     descriptor.value = function(...args) {
-      const self = this as unknown as Partial<BackendServiceModelInterface>;
+      const self = this as unknown as Partial<BackendServiceModelInterface<any>>;
       const newArgs = deepClone(args);
       if (typeof self._getSendInterceptor !== 'undefined') {
         interceptorCallback = self._getSendInterceptor() || identity;

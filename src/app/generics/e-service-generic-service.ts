@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {FileNetDocument} from '../models/file-net-document';
-import {Comment} from '../models/comment';
+import {CaseComment} from '../models/case-comment';
 import {CommentService} from '../services/comment.service';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {Generator} from '../decorators/generator';
@@ -12,7 +12,7 @@ import {DialogService} from '../services/dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
-  implements Pick<BackendServiceModelInterface, '_getModel' | '_getInterceptor'> {
+  implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
   abstract _getModel(): any;
 
   abstract _getServiceURL(): string;
@@ -97,11 +97,11 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
     return this._search(model);
   }
 
-  addComment(caseId: string, comment: Partial<Comment>): Observable<boolean> {
+  addComment(caseId: string, comment: Partial<CaseComment>): Observable<CaseComment> {
     return this.commentService.create(caseId, comment);
   }
 
-  getComments(caseId: string): Observable<Comment[]> {
+  getComments(caseId: string): Observable<CaseComment[]> {
     return this.commentService.load(caseId);
   }
 

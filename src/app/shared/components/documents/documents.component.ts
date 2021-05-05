@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {FileNetDocument} from '../../../models/file-net-document';
 import {Lookup} from '../../../models/lookup';
 import {DialogService} from '../../../services/dialog.service';
@@ -21,18 +21,17 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class DocumentsComponent implements OnInit, OnDestroy {
   _caseId: string = '';
   @Input()
-  set caseId(value: string) {
-    this._caseId = value;
+  set caseId(value: string | undefined) {
+    this._caseId = value ? value : '';
     if (value) {
       this.uploadFileSilently();
     }
   };
 
-  get caseId(): string {
+  get caseId(): string | undefined {
     return this._caseId;
   }
 
-  @Output() afterUpload: EventEmitter<any> = new EventEmitter<any>();
   @Input() documents: FileNetDocument[] = [];
   @Input() service!: DocumentService<any>;
   documentTypes: Lookup[] = [];
@@ -231,7 +230,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
         takeUntil(valueDone),
         map(index => files[index]),
         concatMap((doc: FileNetDocument) => {
-          return this.service.addSingleDocument(this.caseId, doc);
+          return this.service.addSingleDocument(this._caseId, doc);
         })
       )
       .subscribe({
