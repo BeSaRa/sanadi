@@ -1,1 +1,28 @@
-<p>comments works!</p>
+<div class="row">
+  <ul class="comments d-flex flex-column">
+    <li class="comment d-flex flex-row align-items-center text-primary">
+      <!--      <div><input class="form-check-input" type="checkbox"></div>-->
+      <div class="comment-body header flex-shrink-1 flex-grow-1 text-truncate">
+        <span class="h6 mx-1">{{lang.map.comment}}</span>
+      </div>
+      <div class="comment-by">
+        <span class="h6 mx-1">{{lang.map.user}}</span>
+      </div>
+    </li>
+    <li *ngFor="let comment of comments" class="comment d-flex flex-row align-items-center">
+      <div class="comment-icon"><i class="mdi mdi-comment-text-multiple-outline text-primary"></i></div>
+      <div class="comment-body text-primary flex-shrink-1 flex-grow-1 text-truncate">
+        <a [title]="comment.text" (click)="showComment($event , comment )" href="#">{{comment.text}}</a>
+      </div>
+      <div [tooltip]="comment.creatorInfo.getName()" class="cursor-pointer comment-icon text-primary">
+        <i class="mdi mdi-comment-account-outline"></i>
+      </div>
+    </li>
+    <li *ngIf="!comments.length" class="comment d-flex flex-row align-items-center">
+      <div class="comment-body text-primary flex-shrink-1 flex-grow-1 text-truncate">
+        <span>{{lang.map.no_comments_to_show}}</span>
+      </div>
+      <div class="comment-icon invisible"><i class="mdi mdi-comment-text-multiple-outline"></i></div>
+    </li>
+  </ul>
+</div>

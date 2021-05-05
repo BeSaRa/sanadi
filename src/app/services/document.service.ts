@@ -17,7 +17,7 @@ export class DocumentService<T extends {
   _getServiceURL(): string,
   dialog: DialogService,
   domSanitizer: DomSanitizer
-}> implements Pick<BackendServiceModelInterface, '_getModel' | '_getInterceptor'> {
+}> implements Pick<BackendServiceModelInterface<FileNetDocument>, '_getModel' | '_getInterceptor'> {
   private interceptor = new FileNetDocumentInterceptor();
 
   constructor(private service: T) {

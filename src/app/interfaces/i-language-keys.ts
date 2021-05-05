@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  comment_has_been_saved_successfully: string;
+  type_your_comment: string;
+  add_comment: string;
+  no_comments_to_show: string;
+  comment: string;
   recommendations: string;
   loading_viewer: string;
   files_have_been_uploaded_successfully: string;
