@@ -34,7 +34,19 @@
   }
 
   .myDpSelector {
-    .myDpPrevBtn, .myDpNextBtn{
+    .myDpNextBtn {
+      margin-left: 10px;
+      margin-right: auto;
+
+      button {
+        transform: rotate(180deg);
+      }
+    }
+
+    .myDpPrevBtn {
+      margin-right: 10px;
+      margin-left: auto;
+
       button {
         transform: rotate(180deg);
       }
