@@ -10,7 +10,7 @@ import {SubventionRequestPartialLog} from '../../../models/subvention-request-pa
 import {SubventionRequestPartialLogService} from '../../../services/subvention-request-partial-log.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {
-  changeDateFromDatepicker,
+  changeDateFromDatepicker, changeDateToDatepicker,
   getDatepickerOptions,
   getDatePickerOptionsClone,
   isEmptyObject, printBlobData
@@ -26,6 +26,7 @@ import {OrganizationUnitService} from '../../../services/organization-unit.servi
 import {ReadModeService} from '../../../services/read-mode.service';
 import {Router} from '@angular/router';
 import {OrganizationUserService} from '../../../services/organization-user.service';
+import {CustomValidators} from '../../../validators/custom-validators';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -68,11 +69,12 @@ export class PartialRequestReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.listenToSearch();
+
     this._loadInitData()
       .subscribe(result => {
         this.orgUnitsList = result.orgUnits;
       });
-    this.listenToSearch();
   }
 
   ngOnDestroy(): void {
@@ -82,9 +84,7 @@ export class PartialRequestReportsComponent implements OnInit {
     this.searchSubscription?.unsubscribe();
   }
 
-  private _loadInitData(): Observable<{
-    orgUnits: OrgUnit[]
-  }> {
+  private _loadInitData(): Observable<{ orgUnits: OrgUnit[] }> {
     return forkJoin({
       orgUnits: this.organizationUnitService.load()
     });
@@ -94,14 +94,23 @@ export class PartialRequestReportsComponent implements OnInit {
     return this.langService.map.search_result + (!this.logRecords.length ? '' : ' (' + this.logRecords.length + ')');
   }
 
+  setInitValue() {
+    this.fromDateField.setValue(changeDateToDatepicker(new Date(dayjs().startOf('year').valueOf())));
+    this.fromDateField.updateValueAndValidity();
+    this.toDateField.setValue(changeDateToDatepicker(new Date(dayjs().endOf('year').valueOf())));
+    this.toDateField.updateValueAndValidity();
+  }
+
   private buildForm() {
     this.form = this.fb.group({
       orgId: [],
       orgUserId: [],
-      fromDate: [],
-      toDate: []
+      fromDate: [null, CustomValidators.required],
+      toDate: [null, CustomValidators.required]
     });
     this.fm = new FormManager(this.form, this.langService);
+
+    this.setInitValue();
   }
 
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -153,31 +162,49 @@ export class PartialRequestReportsComponent implements OnInit {
 
   private getSearchCriteria() {
     this.latestCriteria = {...this.form.value};
-    if (this.latestCriteria.fromDate || this.latestCriteria.toDate) {
-      // @ts-ignore
-      this.latestCriteria.fromDate = !this.latestCriteria.fromDate ? null : dayjs(changeDateFromDatepicker(this.latestCriteria.fromDate)).startOf('day').valueOf();
-      // @ts-ignore
-      this.latestCriteria.toDate = !this.latestCriteria.toDate ? null : dayjs(changeDateFromDatepicker(this.latestCriteria.toDate)).endOf('day').valueOf();
+    if (!this.latestCriteria.fromDate || !this.latestCriteria.toDate) {
+      return {};
     }
+
+    // @ts-ignore
+    this.latestCriteria.fromDate = dayjs(changeDateFromDatepicker(this.latestCriteria.fromDate)).startOf('day').valueOf();
+    // @ts-ignore
+    this.latestCriteria.toDate = dayjs(changeDateFromDatepicker(this.latestCriteria.toDate)).endOf('day').valueOf();
+
     return this.latestCriteria;
   }
 
   private listenToSearch(): void {
     this.searchSubscription = this.search$.pipe(
-      map(() => {
-        return this.getSearchCriteria();
+      map((isNewSearch) => {
+        if (isNewSearch) {
+          return this.getSearchCriteria();
+        }
+        return this.latestCriteria;
       }),
-      switchMap((criteria) => {
+      switchMap((criteria: Partial<ISubventionRequestPartialLogCriteria>) => {
+        if (isEmptyObject(criteria) || !criteria.fromDate || !criteria.toDate) {
+          return of({data: [], reason: 'INVALID_CRITERIA'});
+        }
         return this.subventionRequestPartialLogService.loadPartialRequestsLogsByCriteria(criteria)
-          .pipe(catchError(() => {
-            return of([]);
-          }));
+          .pipe(
+            map((result) => {
+              return {data: result, reason: ''};
+            }),
+            catchError(() => {
+              return of({data: [], reason: 'REQUEST_ERROR'});
+            })
+          );
       }),
-      tap((result: SubventionRequestPartialLog[]) => {
-        return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+      tap((result: IKeyValue) => {
+        if (result.reason === 'INVALID_CRITERIA') {
+          this.dialogService.info(this.langService.map.msg_invalid_search_criteria);
+        } else {
+          result.data.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+        }
       }),
       takeUntil(this.destroy$),
-    ).subscribe(result => this.logRecords = result);
+    ).subscribe(result => this.logRecords = result.data);
   }
 
   private goToResult(): void {
@@ -188,8 +215,13 @@ export class PartialRequestReportsComponent implements OnInit {
     this.search$.next(true);
   }
 
+  reloadSearchResults() {
+    this.search$.next(false);
+  }
+
   clearSearch(): void {
     this.form.reset();
+    this.setInitValue();
   }
 
   loadUsersByOrgUnit($event: MouseEvent): void {
@@ -211,6 +243,14 @@ export class PartialRequestReportsComponent implements OnInit {
 
   get orgUserField(): FormControl {
     return this.fm.getFormField('orgUserId') as FormControl;
+  }
+
+  get fromDateField(): FormControl {
+    return this.fm.getFormField('fromDate') as FormControl;
+  }
+
+  get toDateField(): FormControl {
+    return this.fm.getFormField('toDate') as FormControl;
   }
 
 }
