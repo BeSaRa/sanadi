@@ -32,4 +32,12 @@
   .table-responsive {
     padding-right: 1px;
   }
+
+  .myDpSelector {
+    .myDpPrevBtn, .myDpNextBtn{
+      button {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
