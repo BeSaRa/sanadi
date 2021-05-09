@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  save_as_draft: string;
+  request_body: string;
+  full_name: string;
+  competent_dep: string;
+  subject: string;
+  menu_inquiries_and_complaints: string;
   comment_has_been_saved_successfully: string;
   type_your_comment: string;
   add_comment: string;
