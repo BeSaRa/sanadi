@@ -37,7 +37,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   @Input() service!: DocumentService<any>;
   documentTypes: Lookup[] = [];
   selectedDocuments: FileNetDocument[] = [];
-  // {93A0A4F9-3649-C709-857B-78F3A1A00000}
   private destroy$: Subject<any> = new Subject();
 
   @ViewChild('selectAllToggle') selectAllToggle!: ElementRef<HTMLInputElement>;
