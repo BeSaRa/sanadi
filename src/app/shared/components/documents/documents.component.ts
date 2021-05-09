@@ -21,6 +21,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class DocumentsComponent implements OnInit, OnDestroy {
   _caseId: string = '';
   @Input()
+
   set caseId(value: string | undefined) {
     this._caseId = value ? value : '';
     if (value) {
