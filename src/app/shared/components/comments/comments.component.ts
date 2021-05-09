@@ -18,14 +18,14 @@ export class CommentsComponent implements OnInit {
   @Input() service!: CommentService<any>;
 
   @Input()
-  set caseId(value: string) {
-    this._caseId = value;
+  set caseId(value: string | undefined) {
+    this._caseId = value ? value : '';
     if (value) {
       this.addCommentsSilently();
     }
   }
 
-  get caseId(): string {
+  get caseId(): string | undefined {
     return this._caseId;
   }
 
@@ -83,7 +83,7 @@ export class CommentsComponent implements OnInit {
         takeUntil(valueDone),
         map(index => comments[index]),
         concatMap((comment: CaseComment) => {
-          return this.service.create(this.caseId, comment);
+          return this.service.create(this._caseId, comment);
         })
       )
       .subscribe({
