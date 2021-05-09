@@ -94,6 +94,7 @@ export class UploadDocumentPopupComponent implements OnInit {
     }
     this.prepareDocuments();
     if (!this.caseId) {
+      this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
       this.dialogRef.close(this.documents);
       return;
     }

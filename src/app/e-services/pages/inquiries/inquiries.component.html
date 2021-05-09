@@ -117,7 +117,7 @@
         <button (click)="commentsCtrl.openCommentDialog()" class="d-inline-block text-primary icon-btn"><i
           class="mdi mdi-plus-box"></i></button>
       </div>
-      <app-comments #commentsCtrl [service]="service.commentService"></app-comments>
+      <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>
     </div>
   </div>
   <div class="mb-3 d-flex align-items-center justify-content-center">

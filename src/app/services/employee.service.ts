@@ -175,4 +175,8 @@ export class EmployeeService {
   loggedIn(): boolean {
     return !!this.orgUser || !!this.internalUser;
   }
+
+  getCurrentUser(): InternalUser | OrgUser {
+    return this.isInternalUser() ? this.getInternalUser()! : this.getUser()!;
+  }
 }
