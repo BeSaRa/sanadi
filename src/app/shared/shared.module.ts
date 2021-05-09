@@ -45,8 +45,8 @@ import { DocumentsComponent } from './components/documents/documents.component';
 import { ViewDocumentPopupComponent } from './popups/view-document-popup/view-document-popup.component';
 import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upload-document-popup.component';
 import { RecommendationsComponent } from './components/recommendations/recommendations.component';
-import { CommentsComponent } from './components/comments/comments.component';
 import {CaseCommentPopupComponent} from './components/case-comment-popup/case-comment-popup.component';
+import {CommentsComponent} from './components/comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -80,11 +80,11 @@ import {CaseCommentPopupComponent} from './components/case-comment-popup/case-co
     AttachmentListComponent,
     TrimInputDirective,
     ValidationClassesDirective,
-    DocumentsComponent,
     ViewDocumentPopupComponent,
     UploadDocumentPopupComponent,
-    RecommendationsComponent,
+    DocumentsComponent,
     CommentsComponent,
+    RecommendationsComponent,
     CaseCommentPopupComponent
   ],
   imports: [
@@ -136,9 +136,9 @@ import {CaseCommentPopupComponent} from './components/case-comment-popup/case-co
     TrimInputDirective,
     ValidationClassesDirective,
     DocumentsComponent,
+    CommentsComponent,
     ViewDocumentPopupComponent,
-    CaseCommentPopupComponent,
-    CommentsComponent
+    CaseCommentPopupComponent
   ]
 })
 export class SharedModule {
