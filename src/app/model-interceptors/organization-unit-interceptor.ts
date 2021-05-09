@@ -33,10 +33,10 @@ export function interceptOrganizationUnitReceive(model: OrgUnit | any): (OrgUnit
   model.establishmentDate = changeDateToDatepicker(model.establishmentDate);
   model.budgetClosureDate = changeDateToDatepicker(model.budgetClosureDate);
 
-  if (isValidValue(model.arabicBoardMembers)) {
+  if (isValidValue(model.arabicBoardMembers) && typeof model.arabicBoardMembers === 'string') {
     model.arabicBoardMembers = JSON.parse(model.arabicBoardMembers);
   }
-  if (isValidValue(model.enBoardMembers)) {
+  if (isValidValue(model.enBoardMembers) && typeof model.arabicBoardMembers === 'string') {
     model.enBoardMembers = JSON.parse(model.enBoardMembers);
   }
   return model;
