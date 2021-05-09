@@ -7,6 +7,8 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../models/dialog-ref';
+import {AdminResult} from '../../../models/admin-result';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-case-comment-popup',
@@ -29,13 +31,13 @@ export class CaseCommentPopupComponent implements OnInit {
     public fb: FormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
+    private employeeService: EmployeeService
   ) {
     this.service = data.service;
     this.caseId = data.caseId;
   }
 
   ngOnInit(): void {
-    // this.service.create(this.caseId, (new CaseComment()).clone({text: 'Ahmed Mostafa Ibrahem Mohamed Ali'})).subscribe();
     this.buildForm();
   }
 
@@ -49,12 +51,23 @@ export class CaseCommentPopupComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.prepareComment();
     this.caseId ? this.saveCommentByApi() : this.saveCommentByClient();
+  }
+
+  private prepareComment(): void {
+    const employee = this.employeeService.getCurrentUser();
+    this.model = (new CaseComment()).clone({
+      text: this.comment, creatorInfo: AdminResult.createInstance({
+        arName: employee.arName,
+        enName: employee.enName
+      })
+    });
   }
 
   private saveCommentByApi(): void {
     this.service
-      .create(this.caseId, (new CaseComment()).clone({text: this.comment}))
+      .create(this.caseId, this.model!)
       .subscribe(comment => {
         this.toast.success(this.lang.map.comment_has_been_saved_successfully);
         this.dialogRef.close(comment);
@@ -62,6 +75,7 @@ export class CaseCommentPopupComponent implements OnInit {
   }
 
   private saveCommentByClient(): void {
-
+    this.toast.success(this.lang.map.comment_has_been_saved_successfully);
+    this.dialogRef.close(this.model);
   }
 }
