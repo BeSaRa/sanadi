@@ -25,4 +25,5 @@ export interface ILookupMap {
   GovOccuptionType: Lookup[];
   ResidenceStatus: Lookup[];
   GulfCountries: Lookup[];
+  WORK_FIELD: Lookup[];
 }

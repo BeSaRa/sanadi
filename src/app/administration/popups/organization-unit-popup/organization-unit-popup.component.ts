@@ -39,7 +39,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   orgUnitsList: OrgUnit[];
   cityList: Lookup[];
   licensingAuthorityList: Lookup[];
-  natureOfBusinessList: Lookup[];
+  workFieldList: Lookup[];
   saveVisible = true;
   validateFieldsVisible = true;
 
@@ -77,7 +77,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
     this.cityList = lookupService.listByCategory.Countries;
     this.licensingAuthorityList = lookupService.getByCategory(LookupCategories.LICENSING_AUTHORITY);
-    this.natureOfBusinessList = lookupService.getByCategory(LookupCategories.NATURE_OF_BUSINESS);
+    this.workFieldList = lookupService.getByCategory(LookupCategories.WORK_FIELD);
   }
 
   ngOnInit(): void {
@@ -140,12 +140,12 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         registryCreator: [this.model.registryCreator],
         registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
         licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
-        natureOfBusiness: [this.model.natureOfBusiness, CustomValidators.required]
+        workField: [this.model.workField, CustomValidators.required]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
           'address', 'buildingName', 'unitName', 'street', 'zone', 'city', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber', 'registryCreator',
-          'registryDate', 'licensingAuthority', 'natureOfBusiness'
+          'registryDate', 'licensingAuthority', 'workField'
         ])
       }),
       advanced: this.fb.group({

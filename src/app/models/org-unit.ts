@@ -40,7 +40,7 @@ export class OrgUnit extends BaseModel<OrgUnit> {
   boardDirectorsPeriod: string | undefined;
   city: number | undefined;
   licensingAuthority!: number;
-  natureOfBusiness!: number;
+  workField!: number;
   arabicBrief: string | undefined;
   enBrief: string | undefined;
   arabicBoardMembers: string[] | undefined = [];

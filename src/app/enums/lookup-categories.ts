@@ -27,7 +27,7 @@ export enum LookupCategories {
   AID_LOOKUP_STATUS = 'AidLookupStatus',
   GULF_COUNTRIES = 'GulfCountries',
   LICENSING_AUTHORITY = 'LICENSING_AUTHORITY',
-  NATURE_OF_BUSINESS = 'NATURE_OF_BUSINESS',
+  WORK_FIELD = 'WORK_FIELD',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -57,7 +57,7 @@ export enum LookupCategories {
   AID_LOOKUP_STATUS_CAT_ID = '30',
   GULF_COUNTRIES_CAT_ID = '35',
   LICENSING_AUTHORITY_CAT_ID = '37',
-  NATURE_OF_BUSINESS_CAT_ID = '38',
+  WORK_FIELD_CAT_ID = '38',
 }
 
 /*export enum LookupCategories {

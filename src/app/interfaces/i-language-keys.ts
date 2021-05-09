@@ -276,6 +276,7 @@ export interface ILanguageKeys {
   action_date_from: string;
   action_date_to: string;
   nature_of_business: string;
+  work_field: string;
   licensing_authority: string;
   arabic_board_members: string;
   english_board_members: string;
