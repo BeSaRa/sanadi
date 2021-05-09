@@ -286,4 +286,6 @@ export interface ILanguageKeys {
   upload_logo: string;
   btn_remove: string;
   msg_invalid_format_allowed_formats: string;
+  err_arabic_only: string;
+  err_english_only: string;
 }

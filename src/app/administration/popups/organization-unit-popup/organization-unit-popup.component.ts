@@ -1,6 +1,6 @@
 import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {OrgUnit} from '../../../models/org-unit';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
@@ -160,8 +160,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         boardDirectorsPeriod: [this.model.boardDirectorsPeriod, [Validators.maxLength(350)]],
         arabicBoardMembers: [this.model.arabicBoardMembers],
         enBoardMembers: [this.model.enBoardMembers],
-        arabicBrief: [this.model.arabicBrief, [Validators.maxLength(2000)]],
-        enBrief: [this.model.enBrief, [Validators.maxLength(2000)]]
+        arabicBrief: [this.model.arabicBrief, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(2000)]],
+        enBrief: [this.model.enBrief, [CustomValidators.pattern('ENG_NUM'), Validators.maxLength(2000)]]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'unifiedEconomicRecord', 'webSite', 'establishmentDate', 'registryNumber', 'budgetClosureDate',
@@ -259,6 +259,20 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     $event.preventDefault();
     this.logoPath = '';
     this._clearLogoUploader();
+  }
+
+  addArabicBoardMembers(name: string) {
+    if (!(CustomValidators.validationPatterns.AR_ONLY.test(name))) {
+      return null;
+    }
+    return name;
+  }
+
+  addEnglishBoardMembers(name: string) {
+    if (!(CustomValidators.validationPatterns.ENG_ONLY.test(name))) {
+      return null;
+    }
+    return name;
   }
 
 }

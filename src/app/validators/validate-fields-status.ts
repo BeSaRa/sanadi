@@ -5,7 +5,7 @@ import * as dayjs from 'dayjs';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 
-const validationPatterns: any = {
+export const validationPatterns: any = {
   ENG_NUM_ONLY: new RegExp(/^[a-zA-Z0-9]+$/),
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
   AR_NUM: new RegExp(/^[\u0621-\u064A0-9\u0660-\u0669\- ]+$/),
