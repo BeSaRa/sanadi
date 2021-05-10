@@ -288,4 +288,12 @@ export interface ILanguageKeys {
   msg_invalid_format_allowed_formats: string;
   err_arabic_only: string;
   err_english_only: string;
+  attachments: string;
+  attachment_type: string;
+  x_files_chosen: string;
+  msg_missing_attachment: string;
+  msg_save_success: string;
+  title: string;
+  modified_on: string;
+  btn_download: string;
 }

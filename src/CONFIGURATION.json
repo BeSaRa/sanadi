@@ -49,5 +49,13 @@
     ".png",
     ".jpg",
     ".jpeg"
+  ],
+  "ATTACHMENT_EXTENSIONS": [
+    ".pdf",
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".docx",
+    ".tiff"
   ]
 }

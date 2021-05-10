@@ -1,0 +1,106 @@
+<div *ngIf="!showForm">
+  <button class="btn btn-link outline-none" tooltip="{{langService.map.btn_add}}" (click)="addAttachment($event)">
+    <i class="mdi mdi-plus-box"></i>
+  </button>
+  <button class="btn btn-link" tooltip="{{langService.map.btn_reload}}" (click)="reload$.next()">
+    <i class="mdi mdi-reload"></i></button>
+</div>
+<div *ngIf="showForm">
+  <form autocomplete="off" [formGroup]="form" id="attachmentForm">
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label asteriskIfRequired="documentTitle" for="documentTitle"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.title}}</label>
+          <div class="col-md-8 col-sm-12 mb-4 position-relative">
+            <input maxlength="50" id="documentTitle" [ngClass]="fm.getStatusClass('documentTitle')"
+                   formControlName="documentTitle" class="form-control" type="text">
+            <app-field-error-message
+              [control]="fm.getFormField('documentTitle')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="flex-grow-1 px-2 d-flex flex-row">
+          <span class="pe-2">
+            <input type="file" #fileUploader [multiple]="multiUpload" [hidden]="true" (change)="onFileSelected($event)">
+            <button class="btn btn-primary" (click)="openFileBrowser($event)">
+              {{buttonText}}
+            </button>
+          </span>
+          <span>{{getUploadedFileName()}}</span>
+          <div *ngIf="attachedFiles && attachedFiles.length > 0">
+            <a href="#" (click)="removeAttachedFile($event)" tooltip="{{langService.map.btn_remove}}"
+               class="icon-btn">
+              <i class="mdi mdi-close-box"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <div class="row d-flex flex-column flex-md-row">
+          <label asteriskIfRequired="attachmentType" for="attachmentType"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.attachment_type}}</label>
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+            <ng-select [selectOnTab]="true" labelForId="attachmentType" [clearable]="false"
+                       [readonly]="readOnly"
+                       placeholder="{{langService.map.select}}" id="attachmentType"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="attachmentType"
+                       [ngClass]="fm.getStatusClass('attachmentType')">
+              <ng-option *ngFor="let option of lookupService.listByCategory.ATTACHMENT_TYPE" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message
+              [control]="fm.getFormField('attachmentType')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-center">
+      <button (click)="saveAttachment($event)" [disabled]="!isValidAttachment"
+              class="btn btn-primary m-2">{{langService.map.btn_save}}</button>
+      <button (click)="cancelAttachment($event)" class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
+    </div>
+  </form>
+</div>
+<div *ngIf="!showForm && showList">
+  <table class="table mt-3 table-striped table-bordered caption-top" cdk-table
+         [dataSource]="attachmentList">
+    <ng-container cdkColumnDef="documentTitle">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.title}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="attachmentType">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.attachment_type}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.attachmentTypeInfo.getName()}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="lastModified">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.modified_on}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.lastModifiedString}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="actions">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+      <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+        <div class="d-flex flex-row">
+          <button (click)="deleteAttachment($event, row)" class="icon-btn text-primary"
+                  tooltip="{{langService.map.btn_delete}}">
+            <i class="mdi mdi-close-box"></i>
+          </button>
+          <button (click)="editAttachment($event, row)" class="icon-btn text-primary"
+                  tooltip="{{langService.map.btn_edit}}">
+            <i class="mdi mdi-pen"></i>
+          </button>
+          <button (click)="row.downloadAttachment($event)" class="icon-btn text-primary"
+                  tooltip="{{langService.map.btn_download}}">
+            <i class="mdi mdi-download"></i>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

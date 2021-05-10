@@ -37,7 +37,8 @@ import {MenuItemFilterPipe} from './pipes/menu-item-filter.pipe';
 import {HighlightPipe} from './pipes/highlight.pipe';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {AngularMyDatePickerModule} from 'angular-mydatepicker';
-import { DateFixDirective } from './directives/date-fix.directive';
+import {DateFixDirective} from './directives/date-fix.directive';
+import {AttachmentListComponent} from './components/attachment-list/attachment-list.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { DateFixDirective } from './directives/date-fix.directive';
     SidebarMenuItemListComponent,
     MenuItemFilterPipe,
     HighlightPipe,
-    DateFixDirective
+    DateFixDirective,
+    AttachmentListComponent
   ],
   imports: [
     CommonModule,
@@ -115,7 +117,8 @@ import { DateFixDirective } from './directives/date-fix.directive';
     SidebarComponent,
     NgSelectModule,
     AngularMyDatePickerModule,
-    DateFixDirective
+    DateFixDirective,
+    AttachmentListComponent
   ]
 })
 export class SharedModule {

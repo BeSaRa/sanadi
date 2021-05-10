@@ -22,6 +22,7 @@
   "SUBVENTION_REQUEST_AID": "aids/subvention-request/sub-aids",
   "SUBVENTION_LOG": "aids/subvention-request-log",
   "SUBVENTION_AID": "/aids/subvention-aid",
+  "SANADI_ATTACHMENT": "/aids/sanadi-attachment",
   "EXT_YOUTUBE": "https://www.youtube.com/channel/UCP53uXuaKvH4A6lCblvggIg",
   "EXT_INSTAGRAM": "https://www.instagram.com/racaqa/",
   "EXT_FACEBOOK": "https://web.facebook.com/RACAqa/",
