@@ -4,6 +4,7 @@ import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-option
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import * as dayjs from 'dayjs';
+import {IAppConfig} from '../interfaces/i-app-config';
 
 export {
   isValidValue,
@@ -120,9 +121,14 @@ function printBlobData(data: Blob, fileName?: string): void {
     window.navigator.msSaveOrOpenBlob(data, fileName ?? 'sanadi-' + new Date().valueOf() + '.pdf');
   } else {
     const a: HTMLAnchorElement = document.createElement('a');
+    const url = URL.createObjectURL(data);
     a.href = URL.createObjectURL(data);
     a.target = '_blank';
     a.click();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 0)
   }
 }
 
@@ -228,22 +234,24 @@ function changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
   return dateValue.singleDate?.jsDate;
 }
 
-function getDateStringFromDate(dateValue: any, format: string = ''): string {
+function getDateStringFromDate(dateValue: any, format: (keyof IAppConfig) = {} as keyof IAppConfig): string {
   if (!dateValue) {
     return dateValue;
   }
   const configService = FactoryService.getService<ConfigurationService>('ConfigurationService');
-  format = format || configService.CONFIG.DATEPICKER_FORMAT;
+  let typeCastFormat = configService.CONFIG[format] || configService.CONFIG.DATEPICKER_FORMAT;
 
   if (typeof dateValue === 'string') {
-    return dayjs(dateValue).format(format);
+    // @ts-ignore
+    return dayjs(dateValue).format(typeCastFormat);
   }
 
   let date = dateValue;
   if (date.hasOwnProperty('singleDate')) {
     date = date.singleDate.hasOwnProperty('jsDate') ? date.singleDate.jsDate : date.singleDate;
   }
-  return dayjs(date).format(format);
+  // @ts-ignore
+  return dayjs(date).format(typeCastFormat);
 }
 
 function _getDatepickerDisableDate(customOptions: IDatepickerCustomOptions): Date {
