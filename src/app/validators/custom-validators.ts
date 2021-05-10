@@ -72,8 +72,10 @@ const errorKeys: IKeyValue = {
     AR_NUM: {key: 'err_arabic_num_only', replaceValues: null},
     ENG_ONLY: {key: 'err_english_only', replaceValues: null},
     AR_ONLY: {key: 'err_arabic_only', replaceValues: null},
-    ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
     ENG_NUM_ONLY: {key: 'err_english_num_only', replaceValues: null},
+    AR_NUM_ONLY: {key: 'err_arabic_num_only', replaceValues: null},
+    ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
+    ENG_AR_NUM_ONLY: {key: 'err_english_arabic_num_only', replaceValues: null},
     PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
     atLeastOneRequired: {
         key: 'at_least_one_field_should_be_filled',
