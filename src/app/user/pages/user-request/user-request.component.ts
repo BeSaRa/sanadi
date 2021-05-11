@@ -156,7 +156,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     address: {name: 'addressTab'},
     requestInfo: {name: 'requestInfoTab'},
     requestStatus: {name: 'requestStatusTab'},
-    aids: {name: 'aidsTab'}
+    aids: {name: 'aidsTab'},
+    attachments: {name: 'attachmentsTab'}
   };
   saveVisible: boolean = true;
   cancelVisible: boolean = true;
@@ -191,7 +192,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
-      aidTab: this.fb.array([])
+      aidTab: this.fb.array([]),
+      attachmentsTab: this.editMode ? this.fb.group([]) : null
     });
     this.fm = new FormManager(this.form, this.langService);
     this.listenToRequestDateChange();
@@ -1099,5 +1101,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.saveVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
     // this.cancelVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
     this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
+  }
+
+  updateAttachmentList(attachments: SanadiAttachment[]): void {
+    this.attachmentList = [];
+    this.attachmentList = attachments;
   }
 }

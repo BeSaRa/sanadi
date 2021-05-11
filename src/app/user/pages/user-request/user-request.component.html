@@ -27,6 +27,10 @@
       <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
            [hasError]="fm.getFieldInvalidStatus('aidTab')"
            [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+      <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id"
+           [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
+           [template]="attachmentsTabTemplate"
+           [title]="langService.map.attachments">{{langService.map.attachments}}</tab>
     </tabs-list>
   </fieldset>
   <!--  personal info Tab -->
@@ -960,6 +964,14 @@
       <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
     </table>
+  </ng-template>
+  <!-- Attachments Tab -->
+  <ng-template formGroupName="attachmentsTab" #attachmentsTabTemplate>
+    <app-attachment-list [request]="currentRequest"
+                         [attachmentList]="attachmentList"
+                         [readOnly]="readOnly || !!(currentRequest?.isPartial)"
+                         (updateList)="updateAttachmentList($event)"
+    ></app-attachment-list>
   </ng-template>
   <hr/>
   <div *ngIf="!aidFormArray.controls.length" class="d-flex flex-row justify-content-center">
