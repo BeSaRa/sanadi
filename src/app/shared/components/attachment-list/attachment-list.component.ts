@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 import {SubventionRequest} from '../../../models/subvention-request';
@@ -10,7 +10,7 @@ import {LookupService} from '../../../services/lookup.service';
 import {AttachmentService} from '../../../services/attachment.service';
 import {ToastService} from '../../../services/toast.service';
 import {catchError, switchMap} from 'rxjs/operators';
-import {of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {isValidValue} from '../../../helpers/utils';
@@ -28,8 +28,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     if (val)
       this._request = val;
   }
-
-  get request() : SubventionRequest| undefined {
+  get request(): SubventionRequest | undefined {
     return this._request;
   }
 
@@ -37,25 +36,21 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   @Input() attachmentList: SanadiAttachment[] = [];
   @Input() multiUpload: boolean = false;
   @Input() buttonKey: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-  @Input() showList: boolean = false;
+  @Input() showList: boolean = true;
 
-  @ViewChild('fileUploader') fileUploader!: ElementRef;
-
-  attachmentListClone: SanadiAttachment[];
-
+  @Output() updateList = new EventEmitter<SanadiAttachment[]>();
+  attachmentList$ = new BehaviorSubject<SanadiAttachment[]>([]);
   attachedFiles: any[] = [];
   showForm: boolean = false;
+  currentAttachment: any;
   allowedExtensions: string[] = this.configService.CONFIG.ATTACHMENT_EXTENSIONS;
+  reload$ = new Subject<any>();
+  reloadSubscription!: Subscription;
+  displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
 
   fm!: FormManager;
   form!: FormGroup;
-
-  currentAttachment: any;
-
-  reload$ = new Subject<any>();
-  reloadSubscription!: Subscription;
-
-  displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
+  @ViewChild('fileUploader') fileUploader!: ElementRef;
 
   constructor(public langService: LangService,
               private fb: FormBuilder,
@@ -64,8 +59,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
               private configService: ConfigurationService,
               public lookupService: LookupService,
               private attachmentService: AttachmentService) {
-
-    this.attachmentListClone = this.attachmentList.slice();
   }
 
   _checkRequiredInputs(): void {
@@ -77,6 +70,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._checkRequiredInputs();
     this.listenToReload();
+    this.attachmentList$.next(this.attachmentList);
   }
 
   ngOnDestroy(): void {
@@ -89,8 +83,8 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
         return this.attachmentService.loadByRequestId(this._request.id);
       })
     ).subscribe((attachments) => {
-      this.attachmentList = attachments;
-      this.attachmentListClone = attachments.slice();
+      this.attachmentList$.next(attachments);
+      this.updateList.emit(attachments);
     });
   }
 

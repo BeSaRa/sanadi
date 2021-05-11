@@ -70,7 +70,7 @@
 </div>
 <div *ngIf="!showForm && showList">
   <table class="table mt-3 table-striped table-bordered caption-top" cdk-table
-         [dataSource]="attachmentList">
+         [dataSource]="attachmentList$">
     <ng-container cdkColumnDef="documentTitle">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.title}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle}} </td>
