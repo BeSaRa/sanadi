@@ -31,7 +31,7 @@ export class AttachmentService extends BackendGenericService<SanadiAttachment> {
 
   @SendInterceptor()
   saveAttachment(@InterceptParam() attachmentData: SanadiAttachment, attachment: File): Observable<string> {
-    if (!attachmentData || isEmptyObject(attachmentData) || (!attachmentData.vsId && !attachment)) {
+    if (!attachmentData || (!attachmentData.vsId && !attachment)) {
       return of('MISSING_DATA');
     }
     let url = this._getServiceURL(), form = new FormData();

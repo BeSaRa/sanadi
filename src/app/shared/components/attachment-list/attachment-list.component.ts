@@ -22,7 +22,17 @@ import {DialogService} from '../../../services/dialog.service';
   styleUrls: ['./attachment-list.component.scss']
 })
 export class AttachmentListComponent implements OnInit, OnDestroy {
-  @Input() request!: SubventionRequest;
+  _request!: SubventionRequest;
+  @Input()
+  set request(val: SubventionRequest | undefined) {
+    if (val)
+      this._request = val;
+  }
+
+  get request() : SubventionRequest| undefined {
+    return this._request;
+  }
+
   @Input() readOnly: boolean = false;
   @Input() attachmentList: SanadiAttachment[] = [];
   @Input() multiUpload: boolean = false;
@@ -58,8 +68,14 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.attachmentListClone = this.attachmentList.slice();
   }
 
+  _checkRequiredInputs(): void {
+    if (!this._request) {
+      throw new Error('Missing attribute or value - request');
+    }
+  }
+
   ngOnInit(): void {
-    console.log(this.request);
+    this._checkRequiredInputs();
     this.listenToReload();
   }
 
@@ -70,7 +86,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.attachmentService.loadByRequestId(this.request.id);
+        return this.attachmentService.loadByRequestId(this._request.id);
       })
     ).subscribe((attachments) => {
       this.attachmentList = attachments;
@@ -81,8 +97,8 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   private buildForm(attachment?: SanadiAttachment) {
     if (!attachment) {
       attachment = new SanadiAttachment();
-      attachment.requestId = this.request.id;
-      attachment.requestFullSerial = this.request.requestFullSerial;
+      attachment.requestId = this._request.id;
+      attachment.requestFullSerial = this._request.requestFullSerial;
     }
     this.currentAttachment = attachment;
     this.form = this.fb.group({

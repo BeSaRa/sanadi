@@ -1,11 +1,12 @@
 <div *ngIf="!showForm">
-  <button class="btn btn-link outline-none" tooltip="{{langService.map.btn_add}}" (click)="addAttachment($event)">
+  <button *ngIf="!readOnly" class="btn btn-link outline-none" tooltip="{{langService.map.btn_add}}"
+          (click)="addAttachment($event)">
     <i class="mdi mdi-plus-box"></i>
   </button>
   <button class="btn btn-link" tooltip="{{langService.map.btn_reload}}" (click)="reload$.next()">
     <i class="mdi mdi-reload"></i></button>
 </div>
-<div *ngIf="showForm">
+<div *ngIf="showForm && !readOnly">
   <form autocomplete="off" [formGroup]="form" id="attachmentForm">
     <div class="row">
       <div class="col-sm-12 col-md-6">
@@ -23,7 +24,8 @@
       <div class="col-sm-12 col-md-6">
         <div class="flex-grow-1 px-2 d-flex flex-row">
           <span class="pe-2">
-            <input type="file" #fileUploader [multiple]="multiUpload" [hidden]="true" (change)="onFileSelected($event)">
+            <input type="file" #fileUploader [multiple]="multiUpload" [hidden]="true" (change)="onFileSelected($event)"
+                   [accept]="allowedExtensions.join(',')">
             <button class="btn btn-primary" (click)="openFileBrowser($event)">
               {{buttonText}}
             </button>
@@ -83,13 +85,13 @@
     </ng-container>
     <ng-container cdkColumnDef="actions">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-      <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+      <td cdk-cell *cdkCellDef="let row;" class="table-actions">
         <div class="d-flex flex-row">
-          <button (click)="deleteAttachment($event, row)" class="icon-btn text-primary"
+          <button *ngIf="!readOnly" (click)="deleteAttachment($event, row)" class="icon-btn text-primary"
                   tooltip="{{langService.map.btn_delete}}">
             <i class="mdi mdi-close-box"></i>
           </button>
-          <button (click)="editAttachment($event, row)" class="icon-btn text-primary"
+          <button *ngIf="!readOnly" (click)="editAttachment($event, row)" class="icon-btn text-primary"
                   tooltip="{{langService.map.btn_edit}}">
             <i class="mdi mdi-pen"></i>
           </button>
