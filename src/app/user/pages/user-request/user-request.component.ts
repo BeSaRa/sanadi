@@ -54,6 +54,10 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
+import {SubventionResponseService} from '../../../services/subvention-response.service';
+import {SubventionResponse} from '../../../models/subvention-response';
+import {SanadiAttachment} from '../../../models/sanadi-attachment';
+import {AttachmentService} from '../../../services/attachment.service';
 
 @Component({
   selector: 'app-user-request',
@@ -79,6 +83,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   currentRequest?: SubventionRequest;
   subventionAid: SubventionAid[] = [];
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
+  attachmentList: SanadiAttachment[] = [];
   fm!: FormManager;
   form!: FormGroup;
   aidLookups: AidLookup[] = [];
@@ -145,6 +150,18 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
   };
 
+  tabsData: IKeyValue = {
+    personal: {name: 'personalTab'},
+    income: {name: 'incomeTab'},
+    address: {name: 'addressTab'},
+    requestInfo: {name: 'requestInfoTab'},
+    requestStatus: {name: 'requestStatusTab'},
+    aids: {name: 'aidsTab'}
+  };
+  saveVisible: boolean = true;
+  cancelVisible: boolean = true;
+  validateFieldsVisible: boolean = true;
+
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -152,12 +169,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private configurationService: ConfigurationService,
               private toastService: ToastService,
               private subventionRequestService: SubventionRequestService,
+              private subventionResponseService: SubventionResponseService,
               private subventionAidService: SubventionAidService,
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
+              private attachmentService: AttachmentService, // to use in interceptor
               private fb: FormBuilder) {
 
   }
@@ -172,7 +191,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
-      aidTab: this.fb.array([]),
+      aidTab: this.fb.array([])
     });
     this.fm = new FormManager(this.form, this.langService);
     this.listenToRequestDateChange();
@@ -476,49 +495,28 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToRouteParams() {
-    let request: SubventionRequest, beneficiary: Beneficiary, aid: SubventionAid[];
-    const request$ = this.activeRoute
-      .params
-      .pipe(
-        filter(params => params.hasOwnProperty('id')),
-        pluck('id'),
-        switchMap((requestId: number) => {
-          return this.subventionRequestService.getById(requestId);
-        }),
-        tap(myRequest => request = myRequest)
-      );
-
-    const beneficiary$ = request$.pipe(
-      pluck('benId'),
-      switchMap((id: number) => {
-        return this.beneficiaryService.getById(id);
-      }),
-      tap(myBeneficiary => beneficiary = myBeneficiary),
-    );
-
-    beneficiary$.pipe(
-      switchMap(() => {
-        return request.loadRequestAids();
-      }),
-      tap(myAid => aid = myAid),
-      concatMap(() => {
-        return this.loadSubAidCategory().pipe(catchError(() => {
-          return of([]);
-        }));
-      }),
-    ).subscribe((_) => {
-      this.beneficiaryChanged$.next(beneficiary);
-      this.subventionAid = aid;
+    this.activeRoute.params.pipe(
+      filter(params => params.hasOwnProperty('id')),
+      pluck('id'),
+      switchMap((requestId: number) => {
+        return this.subventionResponseService.loadById(requestId);
+      })
+    ).subscribe((response: SubventionResponse) => {
+      this.beneficiaryChanged$.next(response.beneficiary);
+      this.subventionAid = response.aidList;
       this.subventionAidDataSource.next(this.subventionAid);
-      this.form.setControl('requestStatusTab', this.buildRequestStatusTab(request));
+      this.attachmentList = response.attachmentList;
+      this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
-      if (!request.isUnderProcessing()) {
-        this.readModeService.setReadOnly(request.id);
+      if (!response.request.isUnderProcessing()) {
+        this.readModeService.setReadOnly(response.request.id);
       }
 
-      this.requestChanged$.next(request);
+      this.requestChanged$.next(response.request);
       this.editMode = true;
       this.allowCompletionField?.disable();
+
+      this.loadSubAidCategory().subscribe();
     });
 
   }
@@ -1095,5 +1093,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   showAllowCompletion(): boolean {
     return (!this.currentRequest) || !this.currentRequest.isPartial;
+  }
+
+  setButtonsVisibility(tab: any): void {
+    this.saveVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
+    // this.cancelVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
+    this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
   }
 }

@@ -1,11 +1,10 @@
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {SubventionAid} from '../models/subvention-aid';
 import {formatDate} from '@angular/common';
 import {AdminResult} from '../models/admin-result';
 import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
 
-export class SubventionAidInterceptor implements IModelInterceptor<SubventionAid> {
-  receive(model: SubventionAid): SubventionAid {
+export class SubventionAidInterceptor {
+  static receive(model: SubventionAid): SubventionAid {
     /*model.approvalDate = model.approvalDate ? formatDate(new Date(model.approvalDate), 'yyyy-MM-dd', 'en-US') : '';
     model.aidStartPayDate = model.aidStartPayDate ? formatDate(new Date(model.aidStartPayDate), 'yyyy-MM-dd', 'en-US') : '';*/
 
@@ -19,7 +18,7 @@ export class SubventionAidInterceptor implements IModelInterceptor<SubventionAid
     return model;
   }
 
-  send(model: any): any {
+  static send(model: any): any {
     delete model.service;
     delete model.arName;
     delete model.enName;

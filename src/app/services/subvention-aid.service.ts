@@ -13,7 +13,6 @@ import {Observable} from 'rxjs';
 })
 export class SubventionAidService extends BackendGenericService<SubventionAid> {
   list!: SubventionAid[];
-  interceptor: SubventionAidInterceptor = new SubventionAidInterceptor();
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
@@ -25,11 +24,11 @@ export class SubventionAidService extends BackendGenericService<SubventionAid> {
   }
 
   _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
+    return SubventionAidInterceptor.receive;
   }
 
   _getSendInterceptor(): any {
-    return this.interceptor.send;
+    return SubventionAidInterceptor.send;
   }
 
   _getServiceURL(): string {

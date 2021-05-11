@@ -12,22 +12,21 @@
 </div>
 <form autocomplete="off" [formGroup]="form" id="form">
   <fieldset [disabled]="readOnly">
-    <tabs-list class="py-4">
-      <tab [hasError]="fm.getFieldInvalidStatus('personalTab')" [template]="personalInfo"
-           [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('incomeTab')" [template]="income"
-           [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('addressTab')" [template]="address"
-           [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
-      <tab [hasError]="fm.getFieldInvalidStatus('requestInfoTab')" [template]="requestInfo"
-           [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-      <tab *ngIf="!!currentRequest?.id" [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-           [template]="requestStatus"
-           [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
+    <tabs-list class="py-4" (onTabChange)="setButtonsVisibility($event)">
+      <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
+           [template]="personalInfo" [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
+      <tab [name]="tabsData.income.name" [hasError]="fm.getFieldInvalidStatus('incomeTab')"
+           [template]="income" [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
+      <tab [name]="tabsData.address.name" [hasError]="fm.getFieldInvalidStatus('addressTab')"
+           [template]="address" [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+      <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
+           [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+      <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id"
+           [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+           [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+      <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
            [hasError]="fm.getFieldInvalidStatus('aidTab')"
-           [template]="providedAid"
-           [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+           [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
     </tabs-list>
   </fieldset>
   <!--  personal info Tab -->
@@ -947,11 +946,11 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
-            <button (click)="deleteAid(row , i , $event)" class="icon-btn text-primary"
+            <button (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>
             </button>
-            <button (click)="editAid(row , i, $event)" class="icon-btn text-primary"
+            <button (click)="editAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_edit}}">
               <i class="mdi mdi-pen"></i>
             </button>
@@ -964,13 +963,12 @@
   </ng-template>
   <hr/>
   <div *ngIf="!aidFormArray.controls.length" class="d-flex flex-row justify-content-center">
-    <button [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
+    <button *ngIf="saveVisible" [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
-    <button type="button" (click)="cancelRequest()"
+    <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-    <button tabindex="-1" (click)="fm.displayFormValidity(fm.mainContentId)"
-            tooltip="{{langService.map.validate_fields}}"
-            class="btn btn-link">
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(fm.mainContentId)"
+            tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
       <i class="mdi mdi-information-outline text-info"></i>
     </button>
   </div>
