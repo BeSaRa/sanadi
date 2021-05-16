@@ -6,6 +6,7 @@ import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
 import {Validators} from '@angular/forms';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {isValidValue} from '../helpers/utils';
 
 export class SubventionAid extends BaseModel<SubventionAid> {
   installementsCount: number = 0;
@@ -32,6 +33,16 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   constructor() {
     super();
     this.service = FactoryService.getService('SubventionAidService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 
   create(): Observable<SubventionAid> {

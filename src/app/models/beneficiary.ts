@@ -11,6 +11,7 @@ import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {Pair} from '../interfaces/pair';
 import {SubventionRequest} from './subvention-request';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {isValidValue} from '../helpers/utils';
 
 export class Beneficiary extends BaseModel<Beneficiary> {
   benNationality!: number;
@@ -91,6 +92,16 @@ export class Beneficiary extends BaseModel<Beneficiary> {
     super();
     this.service = FactoryService.getService('BeneficiaryService');
     this.langService = FactoryService.getService('LangService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 
   create(): Observable<Beneficiary> {

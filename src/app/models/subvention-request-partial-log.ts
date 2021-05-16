@@ -1,6 +1,7 @@
 import {AdminResult} from './admin-result';
 import {SubventionRequestPartialLogService} from '../services/subvention-request-partial-log.service';
 import {FactoryService} from '../services/factory.service';
+import {isValidValue} from '../helpers/utils';
 
 export class SubventionRequestPartialLog {
   requestId!: number;
@@ -30,5 +31,15 @@ export class SubventionRequestPartialLog {
 
   constructor() {
     this.subventionRequestPartialLogService = FactoryService.getService('SubventionRequestPartialLogService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 }

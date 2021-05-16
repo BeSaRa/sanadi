@@ -20,7 +20,7 @@
       </ng-container>
       <ng-container cdkColumnDef="organization">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_organization}}</th>
-        <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}} - {{row.orgBranchInfo.getName()}}</span></td>
+        <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
       </ng-container>
       <ng-container cdkColumnDef="benCategory">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.beneficiary_category}}</th>

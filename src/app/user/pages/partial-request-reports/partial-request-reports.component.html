@@ -128,7 +128,7 @@
               <td>{{record.requestTypeInfo.getName()}}</td>
               <td>{{record.requestSummary}}</td>
               <td class="date-column">{{record.actionDateString}}</td>
-              <td>{{record.orgInfo.getName()}} - {{record.orgBranchInfo.getName()}}</td>
+              <td>{{record.orgAndBranchInfo?.getName()}}</td>
               <td>{{record.orgUserInfo.getName()}}</td>
             </tr>
           </ng-container>

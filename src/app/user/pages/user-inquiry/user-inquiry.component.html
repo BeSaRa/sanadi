@@ -255,7 +255,7 @@
             <tr>
               <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
               <td class="date-column"> {{request.creationDate|date}} </td>
-              <td> {{request.orgInfo.getName()}} - {{request.orgBranchInfo.getName()}} </td>
+              <td> {{request.orgAndBranchInfo?.getName()}} </td>
               <td> {{request.statusInfo.getName()}} </td>
               <td> {{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
               <td> {{request.approvedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>

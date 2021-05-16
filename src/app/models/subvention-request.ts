@@ -8,7 +8,7 @@ import {SubventionAid} from './subvention-aid';
 import {Validators} from '@angular/forms';
 import {formatDate} from '@angular/common';
 import {AdminResult} from './admin-result';
-import {changeDateFromDatepicker, changeDateToDatepicker, printBlobData} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, isValidValue, printBlobData} from '../helpers/utils';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
@@ -65,7 +65,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     requestDate: 'creationDateString',
     requestedAidAmount: 'requestedAidAmount',
     organization: (text) => {
-      return (this.orgInfo.getName() + ' - ' + this.orgBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
+      return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
     },
     requestStatusInfo: text => this.requestStatusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
@@ -76,6 +76,16 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     this.service = FactoryService.getService('SubventionRequestService');
     this.subventionRequestAidService = FactoryService.getService('SubventionRequestAidService');
     this.configService = FactoryService.getService('ConfigurationService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 
   create(): Observable<SubventionRequest> {

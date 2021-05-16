@@ -5,6 +5,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {SubventionRequestPartialService} from '../services/subvention-request-partial.service';
 import {BaseModel} from './base-model';
 import {SubventionRequestService} from '../services/subvention-request.service';
+import {isValidValue} from '../helpers/utils';
 
 export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial> {
 
@@ -37,6 +38,16 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
     super();
     this.subventionRequestPartialService = FactoryService.getService('SubventionRequestPartialService');
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 
   create(): Observable<SubventionRequestPartial> {

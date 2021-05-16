@@ -2,6 +2,7 @@ import {FactoryService} from '../services/factory.service';
 import {SubventionLogService} from '../services/subvention-log.service';
 import {AdminResult} from './admin-result';
 import {searchFunctionType} from '../types/types';
+import {isValidValue} from '../helpers/utils';
 
 
 export class SubventionLog {
@@ -51,5 +52,15 @@ export class SubventionLog {
 
   constructor() {
     this.service = FactoryService.getService('SubventionLogService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 }

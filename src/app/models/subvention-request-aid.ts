@@ -2,7 +2,7 @@ import {AdminResult} from './admin-result';
 import {SubventionApprovedAid} from './subvention-approved-aid';
 import {FactoryService} from '../services/factory.service';
 import {SubventionRequestService} from '../services/subvention-request.service';
-import {printBlobData} from '../helpers/utils';
+import {isValidValue, printBlobData} from '../helpers/utils';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {Observable} from 'rxjs';
@@ -32,7 +32,7 @@ export class SubventionRequestAid {
     requestNumber: 'requestFullSerial',
     requestDate: 'creationDateString',
     organization: (text) => {
-      return (this.orgInfo.getName() + ' - ' + this.orgBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
+      return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
     },
     requestStatus: text => this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
@@ -40,6 +40,16 @@ export class SubventionRequestAid {
 
   constructor() {
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');
+  }
+
+  get orgAndBranchInfo() {
+    if (!isValidValue(this.orgInfo.getName())) {
+      return new AdminResult();
+    }
+    return AdminResult.createInstance({
+      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
+      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
+    });
   }
 
   printRequest(fileName: string): void {
