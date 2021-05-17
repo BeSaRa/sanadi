@@ -17,6 +17,17 @@ export class TableComponent implements OnInit, OnDestroy {
   @Input()
   columns: string[] = [];
 
+  _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  @Input()
+  set filter(val: string) {
+    this._filter.next(val);
+  };
+
+  get filter(): string {
+    return this._filter.value;
+  }
+
   @Input()
   set data(value: any) {
     this.dataSourceChanged.next(this.service.createDataSource(value));
@@ -27,6 +38,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToDataSourceChange();
+    this.listenToFilterChange();
   }
 
   ngOnDestroy() {
@@ -42,4 +54,11 @@ export class TableComponent implements OnInit, OnDestroy {
       });
   }
 
+  private listenToFilterChange() {
+    this._filter.pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.dataSource.filter = value;
+        console.log('CHANGED');
+      });
+  }
 }
