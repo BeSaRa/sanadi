@@ -47,6 +47,10 @@ import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upl
 import { RecommendationsComponent } from './components/recommendations/recommendations.component';
 import {CaseCommentPopupComponent} from './components/case-comment-popup/case-comment-popup.component';
 import {CommentsComponent} from './components/comments/comments.component';
+import {TableComponent} from './components/table/table.component';
+import {SortableTableDirective} from './directives/sortable-table.directive';
+import {PaginatorComponent} from './components/paginator/paginator.component';
+import { SortableHeaderComponent } from './components/sortable-header/sortable-header.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +89,11 @@ import {CommentsComponent} from './components/comments/comments.component';
     DocumentsComponent,
     CommentsComponent,
     RecommendationsComponent,
-    CaseCommentPopupComponent
+    CaseCommentPopupComponent,
+    TableComponent,
+    SortableTableDirective,
+    PaginatorComponent,
+    SortableHeaderComponent
   ],
   imports: [
     CommonModule,
@@ -138,7 +146,10 @@ import {CommentsComponent} from './components/comments/comments.component';
     DocumentsComponent,
     CommentsComponent,
     ViewDocumentPopupComponent,
-    CaseCommentPopupComponent
+    CaseCommentPopupComponent,
+    TableComponent,
+    SortableTableDirective,
+    SortableHeaderComponent
   ]
 })
 export class SharedModule {
