@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  menu_user_inbox: string;
   save_as_draft: string;
   request_body: string;
   full_name: string;

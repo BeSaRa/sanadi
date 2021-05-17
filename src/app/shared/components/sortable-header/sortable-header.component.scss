@@ -1,0 +1,11 @@
+:host {
+  cursor: pointer;
+}
+
+.sortable-container {
+  position: relative;
+
+  & > * {
+    position: absolute;
+  }
+}
