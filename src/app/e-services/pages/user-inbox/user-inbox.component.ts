@@ -23,6 +23,7 @@ const ELEMENT_DATA = [
 export class UserInboxComponent implements OnInit {
   datasource = ELEMENT_DATA;
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  searchModel = '';
 
   constructor(public lang: LangService) {
   }
@@ -32,5 +33,10 @@ export class UserInboxComponent implements OnInit {
 
   sortBy($event: SortEvent) {
     console.log($event);
+  }
+
+  search($event: Event) {
+    let input = $event.target as HTMLInputElement;
+    this.searchModel = input.value;
   }
 }
