@@ -16,6 +16,8 @@ export class SortableTableDirective implements OnInit, OnDestroy {
   @Output()
   readonly sortChange: EventEmitter<SortEvent> = new EventEmitter<SortEvent>();
 
+  @Input() sortBack: boolean = false;
+
   set direction(val: string) {
     this._direction = val;
   }
