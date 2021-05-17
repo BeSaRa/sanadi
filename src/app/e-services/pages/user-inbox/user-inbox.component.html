@@ -3,7 +3,12 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <app-table #table sortableTable (sortChange)="sortBy($event)" [data]="datasource"
+    <input (input)="search($event)" class="form-control">
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [filter]="searchModel" (sortChange)="sortBy($event)" [data]="datasource"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
         <ng-container cdkColumnDef="position">
