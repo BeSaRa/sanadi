@@ -45,13 +45,15 @@
         <div class="row">
           <div class="col-sm-12 col-md-6">
             <div class="row">
-              <label for="idType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_type}}</label>
+              <label for="benPrimaryIdType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_primary_id}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
-                           placeholder="{{langService.map.select}}" id="idType"
+                <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
+                           placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="benPrimaryIdType">
-                  <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey">
+                  <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                  <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                             [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
@@ -60,12 +62,42 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row">
-              <label for="idNumber" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
+              <label for="benPrimaryIdNumber" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benPrimaryIdNumber')" id="idNumber"
+                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benPrimaryIdNumber')" id="benPrimaryIdNumber"
                        formControlName="benPrimaryIdNumber" type="text" class="form-control">
                 <app-field-error-message
                   [control]="fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="benSecIdType" class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_secondary_id}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
+                           placeholder="{{langService.map.select}}" id="benSecIdType"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="benSecIdType">
+                  <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                  <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                             [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row">
+              <label for="benSecIdNumber" class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benSecIdNumber')" id="benSecIdNumber"
+                       formControlName="benSecIdNumber" type="text" class="form-control">
+                <app-field-error-message
+                  [control]="fm.getFormField('simpleSearch.beneficiary.benSecIdNumber')"></app-field-error-message>
               </div>
             </div>
           </div>

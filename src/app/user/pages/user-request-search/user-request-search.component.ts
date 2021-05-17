@@ -146,6 +146,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         beneficiary: this.fb.group({
           benPrimaryIdType: [],
           benPrimaryIdNumber: [],
+          benSecIdType: [],
+          benSecIdNumber: [],
           arName: this.fb.group({
             value: [null, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
             operator: [StringOperator[StringOperator.CONTAINS]],
@@ -195,8 +197,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('simpleSearch.beneficiary.enName.operator') as FormControl;
   }
 
-  get idTypeField(): FormControl {
+  get primaryIdTypeField(): FormControl {
     return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdType') as FormControl;
+  }
+
+  get secondaryIdTypeField(): FormControl {
+    return this.fm.getFormField('simpleSearch.beneficiary.benSecIdType') as FormControl;
   }
 
   get yearField(): FormControl {
@@ -214,9 +220,20 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   get primaryIdNumberField(): FormControl {
     return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber') as FormControl;
   }
+  get secondaryIdNumberField(): FormControl {
+    return this.fm.getFormField('simpleSearch.beneficiary.benSecIdNumber') as FormControl;
+  }
+
+  isPrimaryIdTypeDisabled(optionValue: number): boolean {
+    return this.secondaryIdTypeField?.value === optionValue;
+  }
+
+  isSecondaryIdTypeDisabled(optionValue: number): boolean {
+    return this.primaryIdTypeField?.value === optionValue;
+  }
 
   private onIdTypeChange() {
-    this.idTypeField.valueChanges
+    this.primaryIdTypeField.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         // empty the idNumber
@@ -224,6 +241,16 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         // set validation for it if need.
         this.primaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
         this.primaryIdNumberField.updateValueAndValidity();
+      });
+
+    this.secondaryIdTypeField.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        // empty the idNumber
+        this.secondaryIdNumberField.setValue(null);
+        // set validation for it if need.
+        this.secondaryIdNumberField.setValidators(this.idTypesValidationsMap[value]);
+        this.secondaryIdNumberField.updateValueAndValidity();
       });
   }
 
@@ -315,10 +342,13 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       delete beneficiary.benPrimaryIdType;
     }
 
+    if (!beneficiary.benSecIdNumber) {
+      delete beneficiary.benSecIdType;
+    }
+
     if (!beneficiary.arName.value) {
       delete beneficiary.arName;
     }
-
 
     if (!beneficiary.enName.value) {
       delete beneficiary.enName;
@@ -335,7 +365,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private setInitialValues(): void {
     // set initial value for the year
     this.yearField.setValue(this.years[0]);
-    this.idTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
+    this.primaryIdTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
+    this.secondaryIdTypeField.setValue(null);
     this.arNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
     this.enNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
   }
