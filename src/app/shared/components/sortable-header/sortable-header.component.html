@@ -1,0 +1,6 @@
+<div (mouseover)="over()" (click)="sort()" class="d-flex flex-row">
+  <ng-content></ng-content>
+  <div *ngIf="isSorted()" class="sortable-container">
+    <div class="up-arrow"><i class="mdi {{_arrowDirection}}"></i></div>
+  </div>
+</div>
