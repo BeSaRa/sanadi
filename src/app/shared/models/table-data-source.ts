@@ -67,8 +67,7 @@ export class TableDataSource extends DataSource<any> {
     const sortChange = this.sort ? this._sort?.sortChange as Observable<SortEvent | null> : of(null);
     this._updatedDataSubscription = combineLatest([this._data, sortChange])
       .pipe(
-        map(([data]) => this._orderData(data)),
-        tap(val => console.log(val.map(item => item.position)))
+        map(([data]) => this._orderData(data))
       )
       .subscribe((data) => {
         this._renderData.next(data);
@@ -99,7 +98,8 @@ export class TableDataSource extends DataSource<any> {
   sortData(data: any[], sort: SortableTableDirective): any[] {
     const active = sort.active;
     const direction = sort.direction;
-    if (!active || direction == '') {
+
+    if (!active || direction == '' || sort.sortBack) {
       return data;
     }
 

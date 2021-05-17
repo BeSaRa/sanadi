@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
+import {SortEvent} from '../../../interfaces/sort-event';
 
 const ELEMENT_DATA = [
   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
@@ -29,4 +30,7 @@ export class UserInboxComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  sortBy($event: SortEvent) {
+    console.log($event);
+  }
 }
