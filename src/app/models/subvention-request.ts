@@ -41,7 +41,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   isPartial: boolean = false;
   allowCompletion: boolean = false;
   aidTotalPayedAmount: number = 0;
-  partialCreators: string = '';
   requestParentId?: number;
 
   // not belongs to the Model

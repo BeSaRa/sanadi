@@ -1001,7 +1001,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (this.currentRequest) {
-        debugger
         const requestDate = changeDateFromDatepicker(value);
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
         if (requestDate) {
