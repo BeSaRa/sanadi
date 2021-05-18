@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {SortEvent} from '../../../interfaces/sort-event';
+import {PageEvent} from '../../../interfaces/page-event';
 
 const ELEMENT_DATA = [
   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
@@ -38,5 +39,9 @@ export class UserInboxComponent implements OnInit {
   search($event: Event) {
     let input = $event.target as HTMLInputElement;
     this.searchModel = input.value;
+  }
+
+  log($event: PageEvent) {
+    console.log($event);
   }
 }

@@ -8,8 +8,7 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <app-table #table sortableTable [filter]="searchModel" (sortChange)="sortBy($event)" [data]="datasource"
-               [columns]="displayedColumns">
+    <app-table #table sortableTable [filter]="searchModel" [data]="datasource" [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
         <ng-container cdkColumnDef="position">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> position</th>
@@ -30,6 +29,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
       </table>
+      <app-paginator (pageChange)="log($event)" pageSize="100" length="700"></app-paginator>
     </app-table>
   </div>
 </div>

@@ -1,0 +1,22 @@
+.pagination-info {
+  margin: 0 10px;
+
+  & > span {
+    padding: 0.375rem 5px;
+  }
+
+  &-sm {
+    & > span {
+      padding: 0.25rem 4px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.pagination-goto {
+  max-width: 55px;
+  margin: 0 10px;
+}
+.pagination-item-per-page {
+  min-width: 70px;
+}
