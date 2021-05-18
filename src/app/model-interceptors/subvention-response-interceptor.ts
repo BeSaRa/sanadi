@@ -21,7 +21,14 @@ export class SubventionResponseInterceptor {
   }
 
   static send(model: any): any {
-
+    model.attachmentList = model.attachmentList.map((attachment: any) => {
+      return SanadiAttachmentInterceptor.send(attachment);
+    });
+    model.aidList = model.aidList.map((aid: SubventionAid) => {
+      return SubventionAidInterceptor.send(aid);
+    });
+    model.beneficiary = beneficiarySend(model.beneficiary);
+    model.request = SubventionRequestInterceptor.send(model.request);
     return model;
   }
 }

@@ -24,10 +24,11 @@
       <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id"
            [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
            [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()" *ngIf="!!currentRequest?.id"
+      <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
+           *ngIf="!!currentRequest?.id || currentRequest?.isPartial"
            [hasError]="fm.getFieldInvalidStatus('aidTab')"
            [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
-      <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id"
+      <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isPartial"
            [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
            [template]="attachmentsTabTemplate"
            [title]="langService.map.attachments">{{langService.map.attachments}}</tab>
@@ -695,7 +696,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6" *ngIf="showAllowCompletion()">
+      <div class="col-sm-12 col-md-6" *ngIf="!isCurrentRequestPartial">
         <div class="row d-flex flex-column flex-md-row">
           <div class="col-sm-12 mb-4">
             <div class="form-check form-switch">
@@ -793,7 +794,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="readOnly || isCurrentRequestPartial"
                            placeholder="{{langService.map.select}}" id="aidType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="aidLookupId"
@@ -809,13 +810,15 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="aidAmount" asteriskIfRequired="aidAmount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.amount}}</label>
+              <label for="aidSuggestedAmount" asteriskIfRequired="aidSuggestedAmount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.estimated_amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=",">
+                <input id="aidSuggestedAmount" maxlength="15"
+                       [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
+                       formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
+                       [readOnly]="readOnly || isCurrentRequestPartial">
                 <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -896,6 +899,20 @@
           </div>
         </div>
         <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="aidAmount" asteriskIfRequired="aidAmount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.given_amount}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
+                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=",">
+                <app-field-error-message
+                  [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
           <div class="col-sm-12">
             <div class="row d-flex flex-column flex-md-row">
               <label asteriskIfRequired="aidDescription" for="aidDescription"
@@ -918,7 +935,7 @@
       </div>
     </ng-container>
     <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
-                     [clickOnNew$]="addAid$"></app-page-header>
+                     [clickOnNew$]="addAid$" [addPermission]="!isCurrentRequestPartial"></app-page-header>
     <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
            [dataSource]="subventionAidDataSource">
       <ng-container cdkColumnDef="approvalDate">
@@ -928,6 +945,11 @@
       <ng-container cdkColumnDef="aidLookupId">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="estimatedAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.estimated_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="periodicType">
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
@@ -941,8 +963,8 @@
         <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
         <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="aidAmount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
+      <ng-container cdkColumnDef="givenAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.given_amount}}</th>
         <td cdk-cell
             *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
@@ -950,7 +972,8 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
-            <button (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
+            <button *ngIf="!isCurrentRequestPartial"
+                    (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>
             </button>

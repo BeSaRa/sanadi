@@ -45,6 +45,7 @@ export interface ILanguageKeys {
   status_date: string;
   btn_clear: string;
   amount: string;
+  given_amount: string;
   months_count: string;
   payment_date: string;
   payment_periodicity: string;
@@ -296,4 +297,7 @@ export interface ILanguageKeys {
   title: string;
   modified_on: string;
   btn_download: string;
+  msg_invalid_given_amount_one_time: string;
+  msg_invalid_given_amount_monthly: string;
+  msg_no_records_found: string;
 }

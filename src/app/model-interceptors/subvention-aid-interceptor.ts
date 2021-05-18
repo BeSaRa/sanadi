@@ -15,6 +15,10 @@ export class SubventionAidInterceptor {
     model.aidStartPayDate = changeDateToDatepicker(model.aidStartPayDate);
 
     model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
+    model.periodicTypeInfo = AdminResult.createInstance(model.periodicTypeInfo);
+    model.orgInfo = AdminResult.createInstance(model.orgInfo);
+    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
+    model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     return model;
   }
 
@@ -24,6 +28,10 @@ export class SubventionAidInterceptor {
     delete model.enName;
     delete model.mainAidType;
     delete model.aidLookupInfo;
+    delete model.periodicTypeInfo;
+    delete model.orgInfo;
+    delete model.orgBranchInfo;
+    delete model.orgUserInfo;
     delete model.approvalDateString;
     delete model.aidStartPayDateString;
     /*model.approvalDate = model.approvalDate ? (new Date(model.approvalDate)).toISOString() : '';

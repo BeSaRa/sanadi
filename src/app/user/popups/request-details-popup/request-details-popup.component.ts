@@ -9,6 +9,9 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 import {Router} from '@angular/router';
 import {DialogService} from '../../../services/dialog.service';
 import {SubventionRequestService} from '../../../services/subvention-request.service';
+import {SubventionAid} from '../../../models/subvention-aid';
+import {SubventionResponse} from '../../../models/subvention-response';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-request-details-popup',
@@ -17,17 +20,33 @@ import {SubventionRequestService} from '../../../services/subvention-request.ser
 })
 export class RequestDetailsPopupComponent implements OnInit {
   requestDetails!: SubventionRequest;
+  aidList!: SubventionAid[];
 
   userClick: typeof UserClickOn = UserClickOn;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: IDialogData<SubventionRequest>,
+  tabsData: IKeyValue = {
+    request: {name: 'request'},
+    aids: {name: 'aids'}
+  };
+  aidColumns = [
+    'approvalDate',
+    'aidLookupId',
+    'estimatedAmount',
+    'periodicType',
+    'installementsCount',
+    'aidStartPayDate',
+    'givenAmount'
+  ];
+
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: IDialogData<SubventionResponse>,
               public langService: LangService,
               private dialogService: DialogService,
               private dialogRef: DialogRef,
               private subventionRequestService: SubventionRequestService,
               private router: Router) {
-    this.requestDetails = this.data.requestData.clone();
+    this.requestDetails = this.data.subventionResponse.request.clone();
+    this.aidList = this.data.subventionResponse.aidList.slice();
   }
 
   ngOnInit(): void {
@@ -37,11 +56,8 @@ export class RequestDetailsPopupComponent implements OnInit {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        this.subventionRequestService.createPartialRequestById(this.requestDetails.id)
-          .subscribe(result => {
-            this.dialogRef.close(true);
-            this.router.navigate(['/home/main/request', result.id]).then();
-          });
+        this.dialogRef.close(true);
+        this.router.navigate(['/home/main/request/partial', this.requestDetails.id],).then();
       }
     })
   }

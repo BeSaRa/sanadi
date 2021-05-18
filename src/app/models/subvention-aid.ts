@@ -13,10 +13,13 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   periodicType!: number;
   approvalDate!: IMyDateModel;
   aidAmount!: number;
+  aidSuggestedAmount?: number;
+  aidTotalPayedAmount?: number;
   aidDescription!: string;
   aidStartPayDate!: IMyDateModel;
   aidLookupId!: number;
   subventionRequestId!: number;
+  subventionAidParentId?: number;
   orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
@@ -26,6 +29,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   orgUserInfo!: AdminResult;
   aidLookupInfo!: Partial<AdminResult>;
   periodicTypeInfo!: AdminResult;
+
   service: SubventionAidService;
   approvalDateString: string | undefined;
   aidStartPayDateString: string | undefined;
@@ -67,6 +71,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       approvalDate,
       periodicType,
       aidAmount,
+      aidSuggestedAmount,
       aidDescription,
       aidStartPayDate,
       aidLookupId,
@@ -78,6 +83,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       approvalDate: control ? [approvalDate, CustomValidators.required] : approvalDate,
       periodicType: control ? [periodicType, CustomValidators.required] : periodicType,
       aidAmount: control ? [aidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : aidAmount,
+      aidSuggestedAmount: control ? [aidSuggestedAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : aidSuggestedAmount,
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,

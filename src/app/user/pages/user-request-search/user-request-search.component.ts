@@ -450,6 +450,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
       } else {
         const disableDate = new Date(fromDate);
+        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
         if (!disableSelectedFromRelated) {
           disableDate.setDate(disableDate.getDate() - 1);
         }

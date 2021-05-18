@@ -4,50 +4,98 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
 </div>
-<div class="dialog-content min-w400px">
-  <div class="row">
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.serial_number}}</label>
-      <span class="form-control">{{requestDetails.requestFullSerial}}</span>
+<div class="dialog-content">
+  <tabs-list>
+    <tab [name]="tabsData.request.name" [template]="requestTemplate" [tabWidth]="'600px'"
+         [title]="langService.map.request">{{langService.map.request}}</tab>
+    <tab [name]="tabsData.aids.name" [template]="aidsTemplate" [tabWidth]="'600px'"
+         [title]="langService.map.aids">{{langService.map.aids}}</tab>
+  </tabs-list>
+  <ng-template #requestTemplate>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.serial_number}}</label>
+        <span class="form-control">{{requestDetails.requestFullSerial}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.reason_of_request}}</label>
+        <span class="form-control">{{requestDetails.requestTypeInfo.getName()}}</span>
+      </div>
     </div>
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.reason_of_request}}</label>
-      <span class="form-control">{{requestDetails.requestTypeInfo.getName()}}</span>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.request_date}}</label>
+        <span class="form-control">{{requestDetails.creationDateString}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.request_aid_amount}}</label>
+        <span
+          class="form-control">{{requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.request_date}}</label>
-      <span class="form-control">{{requestDetails.creationDateString}}</span>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.request_status}}</label>
+        <span class="form-control">{{requestDetails.requestStatusInfo.getName() || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.status_date}}</label>
+        <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
+      </div>
     </div>
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.request_aid_amount}}</label>
-      <span
-        class="form-control">{{requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <label class="form-label">{{langService.map.request_summary}}</label>
+        <span class="form-control">{{requestDetails.requestSummary || '&nbsp;'}}</span>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.request_status}}</label>
-      <span class="form-control">{{requestDetails.requestStatusInfo.getName() || '&nbsp;'}}</span>
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <label class="form-label">{{langService.map.notes}}</label>
+        <span class="form-control">{{requestDetails.requestNotes || '&nbsp;'}}</span>
+      </div>
     </div>
-    <div class="col-sm-6 mb-4">
-      <label class="form-label">{{langService.map.status_date}}</label>
-      <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 mb-4">
-      <label class="form-label">{{langService.map.request_summary}}</label>
-      <span class="form-control">{{requestDetails.requestSummary || '&nbsp;'}}</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 mb-4">
-      <label class="form-label">{{langService.map.notes}}</label>
-      <span class="form-control">{{requestDetails.requestNotes || '&nbsp;'}}</span>
-    </div>
-  </div>
+  </ng-template>
+  <ng-template #aidsTemplate>
+    <table class="table mt-3 table-striped table-bordered caption-top" cdk-table
+           [dataSource]="aidList">
+      <ng-container cdkColumnDef="approvalDate">
+        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.approval_date}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="aidLookupId">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="estimatedAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.estimated_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="periodicType">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo?.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="installementsCount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.number_of_installments}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="aidStartPayDate">
+        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="givenAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.given_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
+      <tr class="cdk-row" *cdkNoDataRow>
+        <td class="cdk-cell text-center" [colSpan]="aidColumns.length">{{langService.map.msg_no_records_found}}</td>
+      </tr>
+    </table>
+  </ng-template>
 </div>
 <div class="dialog-actions">
   <button class="btn btn-primary" *ngIf="data.allowAddPartialRequest"

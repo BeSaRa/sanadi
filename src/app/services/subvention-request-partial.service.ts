@@ -1,6 +1,4 @@
 import {Injectable} from '@angular/core';
-import {SubventionRequest} from '../models/subvention-request';
-import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {FactoryService} from './factory.service';
 import {SubventionRequestPartialInterceptor} from '../model-interceptors/subvention-request-partial-interceptor';
@@ -15,11 +13,11 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {switchMap} from 'rxjs/operators';
 import {RequestDetailsPopupComponent} from '../user/popups/request-details-popup/request-details-popup.component';
 import {DialogService} from './dialog.service';
-import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
 import {OrgUnit} from '../models/org-unit';
 import {FilterRequestPopupComponent} from '../user/popups/filter-request-popup/filter-request-popup.component';
 import {OrganizationUnitService} from './organization-unit.service';
-import {SubventionRequestService} from './subvention-request.service';
+import {SubventionResponseService} from './subvention-response.service';
+import {SubventionResponse} from '../models/subvention-response';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +50,6 @@ export class SubventionRequestPartialService extends BackendGenericService<Subve
     return SubventionRequestPartialInterceptor.receive;
   }
 
-
   @Generator(undefined, true, {property: 'rs'})
   loadPartialRequests(): Observable<SubventionRequestPartial[]> {
     return this.http.get<SubventionRequestPartial[]>(this._getServiceURL() + '/active');
@@ -69,12 +66,12 @@ export class SubventionRequestPartialService extends BackendGenericService<Subve
    * @param requestId
    */
   openPartialRequestDetailsDialog(requestId: number): Observable<DialogRef> {
-    const subventionRequestService = FactoryService.getService<SubventionRequestService>('SubventionRequestService');
-    return subventionRequestService.loadPartialRequestById(requestId)
+    const subventionResponseService = FactoryService.getService<SubventionResponseService>('SubventionResponseService');
+    return subventionResponseService.loadPartialRequestById(requestId)
       .pipe(
-        switchMap((requestData: SubventionRequest) => {
+        switchMap((response: SubventionResponse) => {
           return of(this.dialogService.show(RequestDetailsPopupComponent, {
-            requestData,
+            subventionResponse: response,
             allowAddPartialRequest: true
           }));
         })

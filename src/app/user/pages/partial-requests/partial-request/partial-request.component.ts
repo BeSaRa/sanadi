@@ -13,6 +13,8 @@ import {isEmptyObject, objectHasValue} from '../../../../helpers/utils';
 import {FilterEventTypes} from '../../../../types/types';
 import {SubventionRequestPartial} from '../../../../models/subvention-request-partial';
 import {SubventionRequestPartialService} from '../../../../services/subvention-request-partial.service';
+import {SubventionResponseService} from '../../../../services/subvention-response.service';
+import {BeneficiaryService} from '../../../../services/beneficiary.service';
 
 @Component({
   selector: 'app-partial-request',
@@ -32,7 +34,9 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   constructor(public langService: LangService,
               private dialogService: DialogService,
               private subventionRequestService: SubventionRequestService,
+              private subventionResponseService: SubventionResponseService, // for model/interceptor
               private subventionRequestPartialService: SubventionRequestPartialService,
+              private beneficiaryService: BeneficiaryService, // for model/interceptor
               private router: Router) {
   }
 
@@ -90,10 +94,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        this.subventionRequestService.createPartialRequestById(request.requestId)
-          .subscribe(result => {
-            this.router.navigate(['/home/main/request', result.id]).then();
-          })
+        this.router.navigate(['/home/main/request/partial', request.requestId],).then();
       }
     })
   }

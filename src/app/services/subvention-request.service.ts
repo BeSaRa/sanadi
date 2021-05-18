@@ -145,14 +145,4 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
       reason
     });
   }
-
-  @Generator(undefined, false, {property: 'rs'})
-  loadPartialRequestById(id: number): Observable<SubventionRequest> {
-    return this.http.get<SubventionRequest>(this._getPartialRequestServiceURL() + '/' + id);
-  }
-
-  @Generator(undefined, false, {property: 'rs'})
-  createPartialRequestById(id: number): Observable<SubventionRequest> {
-    return this.http.put<SubventionRequest>(this._getPartialRequestServiceURL() + '/create/' + id, {});
-  }
 }

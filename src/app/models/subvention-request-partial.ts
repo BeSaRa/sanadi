@@ -19,13 +19,13 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   statusInfo!: AdminResult;
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
-  requestedAidAmount?: number;
   benCategory!: number;
   gender!: number;
   requestType!: number;
   requestTypeInfo!: AdminResult;
   benCategoryInfo!: AdminResult;
   genderInfo!: AdminResult;
+  aidTotalSuggestedAmount?: number;
   aidTotalPayedAmount?: number;
   aidRemainingAmount?: number;
 

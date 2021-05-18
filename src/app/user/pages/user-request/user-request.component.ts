@@ -4,10 +4,9 @@ import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
-import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
-  concatMap,
   distinctUntilChanged,
   exhaustMap,
   filter,
@@ -67,6 +66,7 @@ import {AttachmentService} from '../../../services/attachment.service';
 export class UserRequestComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
+  private savePartial$: Subject<any> = new Subject<any>();
   private saveAid$: Subject<any> = new Subject<any>();
   private idMap: { [index: string]: number } = {
     qid: 1,
@@ -96,10 +96,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   aidColumns = [
     'approvalDate',
     'aidLookupId',
+    'estimatedAmount',
     'periodicType',
     'installementsCount',
     'aidStartPayDate',
-    'aidAmount',
+    'givenAmount',
     'actions'
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
@@ -142,7 +143,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   primaryNationalityListType: 'normal' | 'gulf' = 'normal';
   secondaryNationalityListType: 'normal' | 'gulf' = 'normal';
 
-
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
     [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
@@ -162,6 +162,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   saveVisible: boolean = true;
   cancelVisible: boolean = true;
   validateFieldsVisible: boolean = true;
+
+  routeParamTypes = {
+    normal: 'normal',
+    partial: 'partial'
+  };
+  currentParamType: string = this.routeParamTypes.normal;
 
   constructor(public langService: LangService,
               public lookup: LookupService,
@@ -341,6 +347,70 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     });
   }
 
+  private listenToSavePartialRequest() {
+    const formStatusPartial$ = this.savePartial$.pipe(
+      tap(val => console.log(val)),
+      map(() => this.fm.getForm()?.valid)
+    );
+
+    // filter invalidForm stream
+    const invalidFormPartial$ = formStatusPartial$.pipe(
+      filter(value => {
+        return value === false;
+      })
+    );
+
+    // filter valid form stream
+    const validFormPartial$ = formStatusPartial$.pipe(
+      filter(value => {
+        return value === true;
+      })
+    );
+
+    // prepare the beneficiary/request Models.
+    const requestWithBeneficiaryPartial$ = validFormPartial$.pipe(
+      map(() => {
+        return {
+          beneficiary: this.prepareBeneficiary(),
+          request: this.prepareRequest(),
+        };
+      })
+    );
+
+    requestWithBeneficiaryPartial$
+      .pipe(
+        switchMap((value) => {
+          let data: SubventionResponse = new SubventionResponse().clone({
+            request: value.request,
+            beneficiary: value.beneficiary,
+            aidList: this.subventionAid,
+            attachmentList: this.attachmentList
+          });
+          return this.subventionResponseService.savePartialRequest(data)
+            .pipe(catchError(() => {
+              console.log('save Partial Request Failed');
+              return of(null);
+            }));
+        })
+      ).subscribe((response) => {
+      if (!response) {
+        return;
+      }
+
+      this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: response.request.requestFullSerial}));
+      this.currentParamType = 'normal';
+      this.form.markAsPristine({onlySelf: true});
+      this.router.navigate(['/home/main/request/', response.request.id]).then();
+    });
+
+    // if we have invalid forms display dialog to tell the user that is something wrong happened.
+    invalidFormPartial$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.checkFormFieldsCallback();
+      });
+  }
+
   private listenToSaveModel() {
 
     const formAidValid$ = this.save$
@@ -480,6 +550,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToAidChange();
     this.listenToExtraIncome();
     this.listenToSaveModel();
+    this.listenToSavePartialRequest();
     this.listenToSaveAid();
     this.listenToAddAid();
     this.listenToNationalityChange();
@@ -497,30 +568,60 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToRouteParams() {
-    this.activeRoute.params.pipe(
-      filter(params => params.hasOwnProperty('id')),
-      pluck('id'),
-      switchMap((requestId: number) => {
-        return this.subventionResponseService.loadById(requestId);
-      })
-    ).subscribe((response: SubventionResponse) => {
-      this.beneficiaryChanged$.next(response.beneficiary);
-      this.subventionAid = response.aidList;
-      this.subventionAidDataSource.next(this.subventionAid);
-      this.attachmentList = response.attachmentList;
-      this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
+    const requestId$ = this.activeRoute.params
+        .pipe(
+          filter(params => params.hasOwnProperty('id')),
+          pluck('id'),
+          tap(val => {
+            this.currentParamType = this.routeParamTypes.normal;
+          })
+        ),
+      partialRequestId$ = this.activeRoute.params
+        .pipe(
+          filter(params => params.hasOwnProperty('partial-id')),
+          pluck('partial-id'),
+          tap(val => {
+            this.currentParamType = this.routeParamTypes.partial;
+          })
+        );
 
-      if (!response.request.isUnderProcessing()) {
-        this.readModeService.setReadOnly(response.request.id);
-      }
+    merge(requestId$, partialRequestId$)
+      .pipe(
+        switchMap((requestId: number) => {
+          if (this.currentParamType === this.routeParamTypes.normal) {
+            return this.subventionResponseService.loadById(requestId);
+          } else if (this.currentParamType === this.routeParamTypes.partial) {
+            return this.subventionResponseService.createPartialRequestById(requestId);
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe((response: SubventionResponse | null) => {
+        if (!response) {
+          return;
+        }
 
-      this.requestChanged$.next(response.request);
-      this.editMode = true;
-      this.allowCompletionField?.disable();
+        this.beneficiaryChanged$.next(response.beneficiary);
+        this.subventionAid = response.aidList;
+        this.subventionAidDataSource.next(this.subventionAid);
+        this.attachmentList = response.attachmentList;
 
-      this.loadSubAidCategory().subscribe();
-    });
+        if (this.currentParamType === this.routeParamTypes.partial) {
+          this.editMode = false;
+        } else if (this.currentParamType === this.routeParamTypes.normal) {
+          this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
+          if (!response.request.isUnderProcessing()) {
+            this.readModeService.setReadOnly(response.request.id);
+          }
+
+          this.editMode = true;
+          this.allowCompletionField?.disable();
+        }
+        this.requestChanged$.next(response.request);
+        this.loadSubAidCategory().subscribe();
+      });
   }
 
   ngOnDestroy() {
@@ -534,7 +635,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   saveModel() {
-    this.save$.next(null);
+    if (this.currentParamType === this.routeParamTypes.partial) {
+      this.savePartial$.next(null);
+    } else {
+      this.save$.next(null);
+    }
   }
 
   getBeneficiaryData($event?: Event) {
@@ -608,12 +713,46 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     aidArray.markAsPristine();
   }
 
+  private validateAidAmount(): 'VALID' | 'INVALID_ONE_TIME' | 'INVALID_MONTHLY' {
+    const aidPeriodicType = this.aidPeriodicType?.value,
+      givenAmount = this.aidGivenAmountField?.value,
+      estimatedAmount = this.aidEstimatedAmountField?.value,
+      numberOfInstallments = this.aidInstallmentsCount?.value,
+      subAidPeriodicType = {
+        monthly: 1,
+        oneTime: 2
+      };
+    if (aidPeriodicType === subAidPeriodicType.oneTime && (givenAmount > estimatedAmount)) {
+      return 'INVALID_ONE_TIME';
+    } else if (aidPeriodicType === subAidPeriodicType.monthly && (givenAmount * numberOfInstallments) > estimatedAmount) {
+      return 'INVALID_MONTHLY';
+    }
+    return 'VALID';
+  }
+
   private listenToSaveAid() {
     const aidForm$ = this.saveAid$.pipe(map(() => {
       return this.fm.getFormField('aidTab.0') as AbstractControl;
     }));
 
-    const validForm$ = aidForm$.pipe(filter((form) => form.valid));
+    const validForm$ = aidForm$.pipe(
+      filter((form) => form.valid),
+      map(_ => {
+        const aidAmountValidation = this.validateAidAmount(),
+          message = {
+            INVALID_MONTHLY: this.langService.map.msg_invalid_given_amount_monthly,
+            INVALID_ONE_TIME: this.langService.map.msg_invalid_given_amount_one_time,
+          };
+        if (aidAmountValidation !== 'VALID') {
+          this.dialogService
+            .error(message[aidAmountValidation])
+            .onAfterClose$
+            .subscribe();
+        }
+        return aidAmountValidation;
+      }),
+      filter((value: string) => value === 'VALID')
+    );
     const invalidForm$ = aidForm$.pipe(filter((form) => form.invalid));
     let parentValue = 0;
     invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -639,6 +778,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         });
       }),
       exhaustMap((aid) => {
+        if (!this.currentRequest || !this.currentRequest.id) {
+          return of(aid);
+        }
         return aid
           .save()
           .pipe(catchError(() => of(null)));
@@ -686,8 +828,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private _setPaymentDateValidations() {
     const approvedDateValue = changeDateFromDatepicker(this.aidApprovalDate?.value);
 
-    let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
-    let minDate = changeDateFromDatepicker(creationDate?.value);
+    // let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
+    let minDate = changeDateFromDatepicker(this.creationDateField?.value);
     let minFieldName = 'creationDate';
 
     if (approvedDateValue) {
@@ -706,6 +848,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private updateAidForm(aid: SubventionAid | undefined) {
     const aidArray = this.fm.getFormField('aidTab') as FormArray;
     aidArray.clear();
+
     if (aid) {
       aidArray.push(this.fb.group(aid.getAidFields(true)));
       this.loadSubAidCategory().subscribe();
@@ -717,9 +860,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         });
       this.aidPeriodicType.updateValueAndValidity();
 
-      const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate');
-      const requestCreationDateValue = changeDateFromDatepicker(requestCreationDate?.value);
-      if (requestCreationDate && requestCreationDateValue) {
+      // const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate');
+      const requestCreationDateValue = changeDateFromDatepicker(this.creationDateField?.value);
+      if (this.creationDateField && requestCreationDateValue) {
         this.setRelatedMinDate('creationDate', 'aidApprovalDate');
         this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestCreationDateValue)]);
       }
@@ -743,6 +886,22 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   get requestStatusTab(): FormGroup {
     return this.fm.getFormField('requestStatusTab') as FormGroup;
+  }
+
+  get creationDateField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.creationDate') as FormControl;
+  }
+
+  get aidTypeField(): FormControl {
+    return this.aidFormArray.get('0.aidLookupId') as FormControl;
+  }
+
+  get aidGivenAmountField(): FormControl {
+    return this.aidFormArray.get('0.aidAmount') as FormControl;
+  }
+
+  get aidEstimatedAmountField(): FormControl {
+    return this.aidFormArray.get('0.aidSuggestedAmount') as FormControl;
   }
 
   get aidInstallmentsCount(): FormControl {
@@ -784,9 +943,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   editAid(row: SubventionAid, index: number, $event: MouseEvent) {
     $event.preventDefault();
-    this.aidChanged$.next(row);
     this.hasEditAid = true;
     this.editAidIndex = index;
+    this.aidChanged$.next(row);
   }
 
   getLookup(lookupKey: number): Lookup {
@@ -838,10 +997,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToRequestDateChange() {
-    this.fm.getFormField('requestInfoTab.creationDate')?.valueChanges.pipe(
+    this.creationDateField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (this.currentRequest) {
+        debugger
         const requestDate = changeDateFromDatepicker(value);
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
         if (requestDate) {
@@ -868,8 +1028,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
           group.get('status')?.setValue(oldValue);
         }
-        const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
-        const creationDate = changeDateFromDatepicker(requestInfoRequestDate?.value);
+        // const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
+        const creationDate = changeDateFromDatepicker(this.creationDateField?.value);
         this.setRelatedMinDate('creationDate', 'statusDateModified');
         if (newValue === SubventionRequestStatus.APPROVED) {
           group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(creationDate || '')]);
@@ -914,11 +1074,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             this.validateStatus = false;
             this.save$.next();
           } else if (click === UserClickOn.NO) {
-            this.beneficiaryChanged$.next(null);
-            this.requestChanged$.next(null);
+            if (this.currentParamType === this.routeParamTypes.normal) {
+              this.beneficiaryChanged$.next(null);
+              this.requestChanged$.next(null);
 
-            this.form.markAsUntouched();
-            this.form.markAsPristine();
+              this.form.markAsUntouched();
+              this.form.markAsPristine();
+            }
           } else {
             const ben = this.prepareBeneficiary();
             this.router.navigate(['/home/main/inquiry', {
@@ -938,6 +1100,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
       } else {
         const disableDate = new Date(fromDate);
+        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
         if (!disableSameDate) {
           disableDate.setDate(disableDate.getDate() - 1);
         }
@@ -949,16 +1112,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
     }, 100);
-  }
-
-  /**
-   * @description Check if user can navigate to other pages
-   */
-  canDeactivate(): CanNavigateOptions {
-    if (!this.form.dirty) {
-      return 'ALLOW';
-    }
-    return 'CONFIRM_UNSAVED_CHANGES';
   }
 
   isPrimaryIdTypeDisabled(optionValue: number): boolean {
@@ -1093,18 +1246,33 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
   }
 
+  get isCurrentRequestPartial(): boolean {
+    return !this.currentRequest ? false : this.currentRequest.isPartial;
+  }
+
   showAllowCompletion(): boolean {
-    return (!this.currentRequest) || !this.currentRequest.isPartial;
+    return !this.isCurrentRequestPartial;
   }
 
   setButtonsVisibility(tab: any): void {
-    this.saveVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
-    // this.cancelVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
-    this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.attachments.name);
+    /*const tabsNotToShowSave = [this.tabsData.aids.name, this.tabsData.attachments.name];
+    const tabsNotToShowValidate = [this.tabsData.aids.name, this.tabsData.attachments.name];
+    this.saveVisible = !tab.name || (tabsNotToShowSave.indexOf(tab.name) === -1);
+    this.validateFieldsVisible = !tab.name || (tabsNotToShowValidate.indexOf(tab.name) === -1);*/
   }
 
   updateAttachmentList(attachments: SanadiAttachment[]): void {
     this.attachmentList = [];
     this.attachmentList = attachments;
+  }
+
+  /**
+   * @description Check if user can navigate to other pages
+   */
+  canDeactivate(): CanNavigateOptions {
+    if (!this.form.dirty) {
+      return 'ALLOW';
+    }
+    return 'CONFIRM_UNSAVED_CHANGES';
   }
 }
