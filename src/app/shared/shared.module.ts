@@ -149,7 +149,8 @@ import { SortableHeaderComponent } from './components/sortable-header/sortable-h
     CaseCommentPopupComponent,
     TableComponent,
     SortableTableDirective,
-    SortableHeaderComponent
+    SortableHeaderComponent,
+    PaginatorComponent
   ]
 })
 export class SharedModule {

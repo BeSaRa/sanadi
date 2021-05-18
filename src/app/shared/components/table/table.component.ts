@@ -58,7 +58,6 @@ export class TableComponent implements OnInit, OnDestroy {
     this._filter.pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.dataSource.filter = value;
-        console.log('CHANGED');
       });
   }
 }

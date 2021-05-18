@@ -1,1 +1,29 @@
-<p>paginator works!</p>
+<nav aria-label="paginator" class="d-flex flex-row justify-content-start">
+  <ul class="pagination" [ngClass]="{'pagination-sm': small}">
+    <!--    <li class="page-item"><a class="page-link" href="#">{{lang.map.pagination_previous}}</a></li>-->
+    <li [ngClass]="{active: isCurrentPage(page)}" *ngFor="let page of pages" class="page-item"><a class="page-link"
+                                                                                                  (click)="goToPage(page , $event)"
+                                                                                                  href="#">{{page}}</a>
+    </li>
+    <!--    <li class="page-item"><a class="page-link" href="#">{{lang.map.pagination_next}}</a></li>-->
+  </ul>
+  <div class="pagination-goto">
+    <!-- [tooltip]="lang.map.pagination_go_to_page" -->
+    <input mask="0*" (blur)="inputBlur()" (focus)="inputFocused($event)" [formControl]="goToControl"
+           [value]="currentPage" class="form-control"
+           [ngClass]="{'form-control-sm': small}">
+  </div>
+  <div class="pagination-item-per-page">
+    <!-- [tooltip]="lang.map.pagination_items_per_page" -->
+    <select [formControl]="itemsPerPageControl" class="form-select">
+      <option [ngValue]="item" *ngFor="let item of pagesList">{{item}}</option>
+    </select>
+  </div>
+  <div class="pagination-info mb-3 d-flex flex-row" [ngClass]="{'pagination-info-sm': small}">
+    <span>{{startFrom}}</span>
+    <span>-</span>
+    <span>{{endTo}}</span>
+    <span>{{lang.map.pagination_of}}</span>
+    <span>{{length}}</span>
+  </div>
+</nav>

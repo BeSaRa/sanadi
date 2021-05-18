@@ -79,8 +79,7 @@ export class TableDataSource extends DataSource<any> {
 
     const filterData$ = combineLatest([this._data, this._filter])
       .pipe(
-        map(([data]) => this._filterData(data)),
-        tap(val => console.log('FILTERD', val))
+        map(([data]) => this._filterData(data))
       );
 
     this._updatedDataSubscription = combineLatest([filterData$, sortChange$])

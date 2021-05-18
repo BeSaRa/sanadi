@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+  pagination_items_per_page: string;
+  pagination_go_to_page: string;
+  pagination_last: string;
+  pagination_first: string;
+  pagination_of: string;
+  pagination_next: string;
+  pagination_previous: string;
   menu_user_inbox: string;
   save_as_draft: string;
   request_body: string;
