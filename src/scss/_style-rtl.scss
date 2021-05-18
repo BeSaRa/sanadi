@@ -52,4 +52,22 @@
       }
     }
   }
+
+  .tooltip {
+    &.bs-tooltip-end {
+      .tooltip-arrow {
+        left: 0;
+        right: auto;
+        transform: translate(0px, 8px) rotate(180deg) !important;
+      }
+    }
+
+    &.bs-tooltip-start {
+      .tooltip-arrow {
+        right: 0;
+        left: auto;
+        transform: translate(0px, 8px) rotate(180deg) !important;
+      }
+    }
+  }
 }

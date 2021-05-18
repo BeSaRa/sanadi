@@ -13,6 +13,8 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this.toolTipModel = this.document.defaultView.bootstrap.Tooltip;
   }
 
+  @Input() placement: 'top' | 'bottom' | 'right' | 'left' = 'top';
+
   @Input()
   set tooltip(value) {
     this._tooltip = value;
@@ -29,6 +31,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this.ref = new this.toolTipModel(this.elementRef.nativeElement, {
       delay: 100,
       trigger: 'hover',
+      placement: this.placement,
       title: () => {
         return this.tooltip;
       }
