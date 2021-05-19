@@ -992,7 +992,7 @@
   <ng-template formGroupName="attachmentsTab" #attachmentsTabTemplate>
     <app-attachment-list [request]="currentRequest"
                          [attachmentList]="attachmentList"
-                         [readOnly]="readOnly || !!(currentRequest?.isPartial)"
+                         [readOnly]="readOnly || !!(currentRequest?.isNewPartialRequest())"
                          (updateList)="updateAttachmentList($event)"
     ></app-attachment-list>
   </ng-template>

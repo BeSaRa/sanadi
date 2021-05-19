@@ -3,7 +3,7 @@
           (click)="addAttachment($event)">
     <i class="mdi mdi-plus-box"></i>
   </button>
-  <button class="btn btn-link" tooltip="{{langService.map.btn_reload}}" (click)="reload$.next()">
+  <button *ngIf="allowReload" class="btn btn-link" tooltip="{{langService.map.btn_reload}}" (click)="reload$.next()">
     <i class="mdi mdi-reload"></i></button>
 </div>
 <div *ngIf="showForm && !readOnly">

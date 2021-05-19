@@ -107,6 +107,10 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return this.status === SubventionRequestStatus.UNDER_PROCESSING;
   }
 
+  isNewPartialRequest(): boolean {
+    return !this.id && this.isPartial;
+  }
+
   loadRequestAids(): Observable<SubventionAid[]> {
     return this.service.loadSubventionAidByCriteria({
       benId: this.benId,

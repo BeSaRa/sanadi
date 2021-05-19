@@ -61,6 +61,11 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
               private attachmentService: AttachmentService) {
   }
 
+  get allowReload(): boolean {
+    // if new request or new partial request, don't allow reload
+    return !(!this._request.id || this._request.isNewPartialRequest());
+  }
+
   _checkRequiredInputs(): void {
     if (!this._request) {
       throw new Error('Missing attribute or value - request');
