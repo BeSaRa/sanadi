@@ -23,7 +23,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   maxSize: number = 7;
 
 
-  private pageIndex: number = 0;
+  pageIndex: number = 0;
   private previousPageIndex: number | null = null;
 
   private initialized = false;
@@ -119,7 +119,6 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       } else {
         label = pageNumber;
       }
-      console.log('label', label);
       this.pages.push({
         label: label,
         page: pageNumber
@@ -167,7 +166,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
   get endTo(): number {
-    return (this.pageIndex + 1) * this.pageSize;
+    const number = (this.pageIndex + 1) * this.pageSize;
+    return number > this._length ? this._length : number;
   }
 
   private addPageSizeIfNotExists(pageSize: number) {

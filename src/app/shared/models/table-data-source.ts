@@ -1,9 +1,12 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject, combineLatest, isObservable, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, isObservable, merge, Observable, of, Subject, Subscription} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {SortableTableDirective} from '../directives/sortable-table.directive';
 import {SortEvent} from '../../interfaces/sort-event';
 import {_isNumberValue} from '@angular/cdk/coercion';
+import {PaginatorComponent} from '../components/paginator/paginator.component';
+import {Input} from '@angular/core';
+import {PageEvent} from '../../interfaces/page-event';
 
 export class TableDataSource extends DataSource<any> {
   _data: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
@@ -15,6 +18,28 @@ export class TableDataSource extends DataSource<any> {
   destroy$: Subject<any> = new Subject<any>();
 
   _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  private _paginator?: PaginatorComponent;
+  private paginatorSubscription?: Subscription;
+  private pageChange: BehaviorSubject<PageEvent | null> = new BehaviorSubject<PageEvent | null>(null);
+
+  private checking = this.pageChange.asObservable().subscribe(val => console.log(val));
+
+  @Input()
+  set paginator(val: PaginatorComponent | undefined) {
+    if (this._paginator) {
+      this.disposePaginatorSubscription();
+    }
+    this._paginator = val;
+    if (val) {
+      this.subscribeToPaginatorChanges();
+    }
+    this.updateDataChanges();
+  }
+
+  get paginator(): PaginatorComponent | undefined {
+    return this._paginator;
+  }
 
   get filter(): string {
     return this._filter.value;
@@ -57,9 +82,10 @@ export class TableDataSource extends DataSource<any> {
     return this._renderData.asObservable();
   }
 
-  disconnect(collectionViewer: CollectionViewer): void {
+  disconnect(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.disposePaginatorSubscription();
   }
 
   private prepareData(data: any) {
@@ -75,20 +101,15 @@ export class TableDataSource extends DataSource<any> {
 
 
   private updateDataChanges(): void {
-    const sortChange$ = this.sort ? this._sort?.sortChange as Observable<SortEvent | null> : of(null);
+    this._updatedDataSubscription?.unsubscribe();
+    const sortChanges = (this._sort ? this.sort?.sortChange : of(null)) as Observable<SortEvent | null>;
+    const filteredData$ = combineLatest([this._data, this._filter]).pipe(map(([data]) => this._filterData(data)));
+    const orderData$ = combineLatest([filteredData$, sortChanges]).pipe(map(([data]) => this._orderData(data)));
+    const pageData$ = combineLatest([orderData$, this.pageChange]).pipe(map(([data]) => this._pageData(data)));
+    this._updatedDataSubscription = pageData$.subscribe((data) => {
+      this._renderData.next(data);
+    });
 
-    const filterData$ = combineLatest([this._data, this._filter])
-      .pipe(
-        map(([data]) => this._filterData(data))
-      );
-
-    this._updatedDataSubscription = combineLatest([filterData$, sortChange$])
-      .pipe(
-        map(([data]) => this._orderData(data))
-      )
-      .subscribe((data) => {
-        this._renderData.next(data);
-      });
   }
 
   private _orderData(data: any[]): any[] {
@@ -193,5 +214,24 @@ export class TableDataSource extends DataSource<any> {
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     return dataStr.indexOf(transformedFilter) != -1;
+  }
+
+  private _pageData(data: any[]): any[] {
+    if (!this._paginator) {
+      return data;
+    }
+    const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+    return data.slice().slice(startIndex, (startIndex + this._paginator.pageSize));
+  }
+
+  private subscribeToPaginatorChanges() {
+    this.paginatorSubscription = this._paginator?.pageChange.subscribe((change: PageEvent) => {
+      this.pageChange.next(change);
+      this.updateDataChanges();
+    });
+  }
+
+  private disposePaginatorSubscription() {
+    this.paginatorSubscription?.unsubscribe();
   }
 }

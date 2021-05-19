@@ -1,7 +1,6 @@
-import {Directive, EventEmitter, Input, OnDestroy, OnInit, Optional, Output} from '@angular/core';
+import {Directive, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {SortEvent} from '../../interfaces/sort-event';
 import {SortableHeaderComponent} from '../components/sortable-header/sortable-header.component';
-import {TableComponent} from '../components/table/table.component';
 
 @Directive({
   selector: '[sortableTable]'
@@ -26,16 +25,16 @@ export class SortableTableDirective implements OnInit, OnDestroy {
     return this._direction;
   }
 
-  constructor(@Optional() private table: TableComponent) {
+  constructor() {
 
   }
 
 
   ngOnInit(): void {
-    if (!this.table) {
-      throw  Error('there is No TableComponent');
-    }
-    this.table.dataSource.sort = this;
+    this.sortChange.emit({
+      direction: this.direction,
+      active: this.active
+    });
   }
 
   registerColumn(column: SortableHeaderComponent): void {
@@ -51,9 +50,9 @@ export class SortableTableDirective implements OnInit, OnDestroy {
   }
 
   sort(column: SortableHeaderComponent): void {
-    if (this.active !== column.id) {
-      this.active = column.id;
-      this.direction = column.start || this.start;
+    if (this.active !== column?.id) {
+      this.active = column?.id ?? '';
+      this.direction = column?.start || this.start;
     } else {
       this.direction = this.getNextSortDirection(column.start || this.start);
     }
