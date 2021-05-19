@@ -29,7 +29,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
       </table>
-      <app-paginator (pageChange)="log($event)" pageSize="100" length="700"></app-paginator>
+      <app-paginator (pageChange)="log($event)" [pageSize]="10" [length]="100"></app-paginator>
     </app-table>
   </div>
 </div>
