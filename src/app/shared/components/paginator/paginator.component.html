@@ -1,11 +1,14 @@
 <nav aria-label="paginator" class="d-flex flex-row justify-content-start">
   <ul class="pagination" [ngClass]="{'pagination-sm': small}">
-    <!--    <li class="page-item"><a class="page-link" href="#">{{lang.map.pagination_previous}}</a></li>-->
-    <li [ngClass]="{active: isCurrentPage(page)}" *ngFor="let page of pages" class="page-item"><a class="page-link"
-                                                                                                  (click)="goToPage(page , $event)"
-                                                                                                  href="#">{{page}}</a>
+    <li [ngClass]="{disabled: !hasPrev()}" class="page-item">
+      <button [disabled]="!hasPrev()" (click)="goToPrev()" class="page-link">{{lang.map.pagination_previous}}</button>
     </li>
-    <!--    <li class="page-item"><a class="page-link" href="#">{{lang.map.pagination_next}}</a></li>-->
+    <li [ngClass]="{active: isCurrentPage(page)}" *ngFor="let page of pages" class="page-item">
+      <button class="page-link" (click)="goToPage(page)">{{page.label}}</button>
+    </li>
+    <li [ngClass]="{disabled: !hasNext()}" class="page-item">
+      <button [disabled]="!hasNext()" (click)="goToNext()" class="page-link">{{lang.map.pagination_next}}</button>
+    </li>
   </ul>
   <div class="pagination-goto">
     <!-- [tooltip]="lang.map.pagination_go_to_page" -->
