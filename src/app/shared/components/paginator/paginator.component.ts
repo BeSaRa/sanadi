@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {range as _range} from 'lodash';
 import {debounceTime, distinctUntilChanged, filter, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {PageEvent} from '../../../interfaces/page-event';
@@ -18,8 +17,9 @@ export class PaginatorComponent implements OnInit, OnDestroy {
 
   _pagesList: number[] = [10, 20, 30, 50];
 
-  pages: number[] = [];
+  pages: any[] = [];
 
+  @Input()
   maxSize: number = 7;
 
 
@@ -37,6 +37,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
 
   itemsPerPageControl!: FormControl;
   goToControl!: FormControl;
+  totalPages: number = 0;
 
   @Input()
   set pageSize(value: number) {
@@ -92,12 +93,39 @@ export class PaginatorComponent implements OnInit, OnDestroy {
 
   private updatePaginationStatus() {
     this.addPageSizeIfNotExists(this.pageSize);
-    this.generatePages();
+    this.generatePages(this.currentPage);
     this.cd.markForCheck();
   }
 
-  private generatePages() {
-    this.pages = _range(1, (Math.ceil(this.length / this.pageSize) + 1));
+  private generatePages(currentPage: number) {
+    this.pages = [];
+    this.totalPages = Math.max(Math.ceil(this.length / this.pageSize), 1);
+    const halfPages = Math.ceil(this.maxSize / 2);
+
+    const isStart = currentPage < halfPages;
+    const isEnd = (this.totalPages - halfPages) < currentPage;
+    const isMiddle = !isStart && !isEnd;
+
+    let ellipsesNeeded = this.maxSize < this.totalPages;
+    let i = 1;
+
+    while (i <= this.maxSize && i <= this.totalPages) {
+      let label;
+      let pageNumber = this.calculatePageNumber(i);
+      let openingEllipsesNeeded = (i === 2 && (isMiddle || isEnd));
+      let closingEllipsesNeeded = (i === this.maxSize - 1 && (isMiddle || isStart));
+      if (ellipsesNeeded && (openingEllipsesNeeded || closingEllipsesNeeded)) {
+        label = '...';
+      } else {
+        label = pageNumber;
+      }
+      console.log('label', label);
+      this.pages.push({
+        label: label,
+        page: pageNumber
+      });
+      i++;
+    }
   }
 
   private listenToLanguageChanges() {
@@ -112,11 +140,12 @@ export class PaginatorComponent implements OnInit, OnDestroy {
     return this.pageIndex + 1;
   }
 
-  goToPage(page: number, $event?: MouseEvent) {
-    $event?.preventDefault();
+  goToPage(page: any) {
     this.previousPageIndex = this.pageIndex;
-    this.pageIndex = (page - 1);
+    this.pageIndex = (page.page - 1);
+    this.goToControl.patchValue(page.page, {emitEvent: false});
     this.emitPaginationChange(this.previousPageIndex);
+    this.updatePaginationStatus();
   }
 
 
@@ -129,8 +158,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
     });
   }
 
-  isCurrentPage(page: number) {
-    return this.currentPage === page;
+  isCurrentPage(page: any) {
+    return this.currentPage === page.page;
   }
 
   get startFrom(): number {
@@ -151,12 +180,11 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       .pipe(
         filter(val => !!val),
         debounceTime(500),
-        distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
       .subscribe((value) => {
         if (this.isValidGoToPage(value)) {
-          this.goToPage(value);
+          this.goToPage({page: value});
         } else {
           this.goToControl.patchValue(this.currentPage, {
             emitEvent: false
@@ -193,5 +221,40 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.pageSize = value;
       });
+  }
+
+  private calculatePageNumber(i: number) {
+    let halfWay = Math.ceil(this.maxSize / 2);
+    if (i === this.maxSize) {
+      return this.totalPages;
+    } else if (i === 1) {
+      return i;
+    } else if (this.maxSize < this.totalPages) {
+      if (this.totalPages - halfWay < this.currentPage) {
+        return this.totalPages - this.maxSize + i;
+      } else if (halfWay < this.currentPage) {
+        return this.currentPage - halfWay + i;
+      } else {
+        return i;
+      }
+    } else {
+      return i;
+    }
+  }
+
+  hasPrev(): boolean {
+    return this.currentPage > 1;
+  }
+
+  hasNext(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
+  goToPrev(): void {
+    this.goToPage({page: this.currentPage - 1});
+  }
+
+  goToNext(): void {
+    this.goToPage({page: this.currentPage + 1});
   }
 }

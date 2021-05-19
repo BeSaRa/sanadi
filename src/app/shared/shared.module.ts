@@ -50,7 +50,7 @@ import {CommentsComponent} from './components/comments/comments.component';
 import {TableComponent} from './components/table/table.component';
 import {SortableTableDirective} from './directives/sortable-table.directive';
 import {PaginatorComponent} from './components/paginator/paginator.component';
-import { SortableHeaderComponent } from './components/sortable-header/sortable-header.component';
+import {SortableHeaderComponent} from './components/sortable-header/sortable-header.component';
 
 @NgModule({
   declarations: [
