@@ -39,6 +39,8 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   @Input() showList: boolean = true;
 
   @Output() updateList = new EventEmitter<SanadiAttachment[]>();
+  @Output() onFormToggle = new EventEmitter<boolean>();
+
   attachmentList$ = new BehaviorSubject<SanadiAttachment[]>([]);
   attachedFiles: any[] = [];
   showForm: boolean = false;
@@ -101,7 +103,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     }
     this.currentAttachment = attachment;
     this.form = this.fb.group({
-      documentTitle: [attachment.documentTitle, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('ENG_AR_NUM_ONLY')]],
+      documentTitle: [attachment.documentTitle, [CustomValidators.required, CustomValidators.maxLength(100), CustomValidators.pattern('ENG_AR_NUM_ONLY')]],
       attachmentType: [attachment.attachmentType, CustomValidators.required],
       requestId: [attachment.requestId, CustomValidators.required],
       requestFullSerial: [attachment.requestFullSerial, CustomValidators.required],
@@ -213,12 +215,14 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   private setDisplayForm(attachment?: SanadiAttachment) {
     this.showForm = true;
     this.buildForm(attachment);
+    this.onFormToggle.emit(true);
   }
 
   cancelAttachment($event?: MouseEvent) {
     $event?.preventDefault();
     this.form.reset();
     this.showForm = false;
+    this.onFormToggle.emit(false);
     this.setAttachedFiles(null);
     this.currentAttachment = null;
   }

@@ -168,6 +168,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     partial: 'partial'
   };
   currentParamType: string = this.routeParamTypes.normal;
+  isAttachmentFormVisible: boolean = false;
 
   constructor(public langService: LangService,
               public lookup: LookupService,
