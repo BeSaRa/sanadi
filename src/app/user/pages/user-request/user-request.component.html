@@ -117,7 +117,7 @@
               <label for="benSecIdType" class="form-label"
                      asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
-                         [readonly]="readOnly || (editMode && secondaryIdTypeField?.value)"
+                         [readonly]="beneficiarySecondaryIdDisabled()"
                          placeholder="{{langService.map.select}}" id="benSecIdType"
                          [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
                 <ng-option value="">{{langService.map.lbl_none}}</ng-option>
@@ -794,7 +794,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
-                           [readonly]="readOnly || isCurrentRequestPartial"
+                           [readonly]="readOnly || !!(currentRequest?.isNewPartialRequest())"
                            placeholder="{{langService.map.select}}" id="aidType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="aidLookupId"
@@ -816,7 +816,7 @@
                 <input id="aidSuggestedAmount" maxlength="15"
                        [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
                        formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
-                       [readOnly]="readOnly || isCurrentRequestPartial">
+                       [readOnly]="readOnly || !!(currentRequest?.isNewPartialRequest())">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
               </div>
@@ -935,7 +935,7 @@
       </div>
     </ng-container>
     <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
-                     [clickOnNew$]="addAid$" [addPermission]="!isCurrentRequestPartial"></app-page-header>
+                     [clickOnNew$]="addAid$" [addPermission]="!currentRequest?.isNewPartialRequest()"></app-page-header>
     <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
            [dataSource]="subventionAidDataSource">
       <ng-container cdkColumnDef="approvalDate">
@@ -972,7 +972,7 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
-            <button *ngIf="!isCurrentRequestPartial"
+            <button *ngIf="!currentRequest?.isNewPartialRequest()"
                     (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>

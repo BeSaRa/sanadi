@@ -188,6 +188,46 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   }
 
+  get pageTitle(): string {
+    return this.currentRequest?.id ?
+      (this.langService.map.request_number + ' : ' + this.currentRequest.requestFullSerial) :
+      this.langService.map.menu_provide_request;
+  }
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.listenToBeneficiaryChange();
+    this.listenToRequestChange();
+    this.listenToOccupationStatus();
+    this.listenToAidChange();
+    this.listenToExtraIncome();
+    this.listenToSaveModel();
+    this.listenToSavePartialRequest();
+    this.listenToSaveAid();
+    this.listenToAddAid();
+    this.listenToNationalityChange();
+    this.listenToPrimaryIdTypeChange();
+    this.listenToSecondaryIdTypeChange();
+
+    this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
+      .pipe(take(1))
+      .subscribe((lookups) => {
+        this.aidLookups = lookups;
+      });
+
+    this.preparePeriodicityLookups();
+    this.listenToRouteParams();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+    // empty read mode request
+    if (this.currentRequest?.id) {
+      this.readModeService.deleteReadOnly(this.currentRequest.id);
+    }
+  }
 
   private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
     beneficiary = beneficiary ? beneficiary : new Beneficiary();
@@ -536,37 +576,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.currentRequest = (new SubventionRequest()).clone(request);
   }
 
-  get pageTitle(): string {
-    return this.currentRequest?.id ?
-      (this.langService.map.request_number + ' : ' + this.currentRequest.requestFullSerial) :
-      this.langService.map.menu_provide_request;
-  }
-
-  ngOnInit(): void {
-    this.buildForm();
-    this.listenToBeneficiaryChange();
-    this.listenToRequestChange();
-    this.listenToOccupationStatus();
-    this.listenToAidChange();
-    this.listenToExtraIncome();
-    this.listenToSaveModel();
-    this.listenToSavePartialRequest();
-    this.listenToSaveAid();
-    this.listenToAddAid();
-    this.listenToNationalityChange();
-    this.listenToPrimaryIdTypeChange();
-    this.listenToSecondaryIdTypeChange();
-
-    this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
-      .pipe(take(1))
-      .subscribe((lookups) => {
-        this.aidLookups = lookups;
-      });
-
-    this.preparePeriodicityLookups();
-    this.listenToRouteParams();
-  }
-
   private listenToRouteParams() {
     const requestId$ = this.activeRoute.params
         .pipe(
@@ -622,16 +631,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.requestChanged$.next(response.request);
         this.loadSubAidCategory().subscribe();
       });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-    // empty read mode request
-    if (this.currentRequest?.id) {
-      this.readModeService.deleteReadOnly(this.currentRequest.id);
-    }
   }
 
   saveModel() {
@@ -722,9 +721,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         monthly: 1,
         oneTime: 2
       };
-    if (aidPeriodicType === subAidPeriodicType.oneTime && (givenAmount > estimatedAmount)) {
+    if (aidPeriodicType === subAidPeriodicType.oneTime && (Number(givenAmount) > Number(estimatedAmount))) {
       return 'INVALID_ONE_TIME';
-    } else if (aidPeriodicType === subAidPeriodicType.monthly && (givenAmount * numberOfInstallments) > estimatedAmount) {
+    } else if (aidPeriodicType === subAidPeriodicType.monthly && (Number(givenAmount) * Number(numberOfInstallments)) > Number(estimatedAmount)) {
       return 'INVALID_MONTHLY';
     }
     return 'VALID';
@@ -1234,11 +1233,19 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   beneficiaryPrimaryIdDisabled(): boolean {
-    return this.readOnly || this.editMode;
+    return this.readOnly || this.editMode || !!(this.currentRequest?.isNewPartialRequest());
   }
 
   beneficiarySecondaryIdDisabled(): boolean {
-    return this.readOnly || (this.editMode && !!this.secondaryIdNumberField?.value)
+    if (this.readOnly) {
+      return true;
+    } else if (!!(this.currentRequest?.isNewPartialRequest())) {
+      return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
+    } else if (!this.editMode) {
+      return false;
+    } else {
+      return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
+    }
   }
 
   get allowCompletionField(): FormControl {
