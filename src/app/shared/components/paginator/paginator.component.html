@@ -1,4 +1,4 @@
-<nav aria-label="paginator" class="d-flex flex-row justify-content-start">
+<nav aria-label="paginator" class="d-flex flex-row justify-content-end">
   <ul class="pagination" [ngClass]="{'pagination-sm': small}">
     <li [ngClass]="{disabled: !hasPrev()}" class="page-item">
       <button [disabled]="!hasPrev()" (click)="goToPrev()" class="page-link">{{lang.map.pagination_previous}}</button>
@@ -18,7 +18,7 @@
   </div>
   <div class="pagination-item-per-page">
     <!-- [tooltip]="lang.map.pagination_items_per_page" -->
-    <select [formControl]="itemsPerPageControl" class="form-select">
+    <select [formControl]="itemsPerPageControl" class="form-select" [ngClass]="{'form-select-sm': small}">
       <option [ngValue]="item" *ngFor="let item of pagesList">{{item}}</option>
     </select>
   </div>
