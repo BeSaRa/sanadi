@@ -102,7 +102,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
     this.totalPages = Math.max(Math.ceil(this.length / this.pageSize), 1);
     const halfPages = Math.ceil(this.maxSize / 2);
 
-    const isStart = currentPage < halfPages;
+    const isStart = currentPage <= halfPages;
     const isEnd = (this.totalPages - halfPages) < currentPage;
     const isMiddle = !isStart && !isEnd;
 
@@ -220,7 +220,22 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.pageSize = value;
+        const currentPage = this.outOfBoundCorrection();
+        if (currentPage !== this.currentPage) {
+          this.updatePaginationStatus();
+          this.goToPage({page: currentPage});
+        }
       });
+  }
+
+  private outOfBoundCorrection(): number {
+    const totalPages = Math.ceil(this.length / this.pageSize);
+    if (totalPages < this.currentPage && 0 < totalPages) {
+      return totalPages;
+    } else if (this.currentPage < 1) {
+      return 1;
+    }
+    return this.currentPage;
   }
 
   private calculatePageNumber(i: number) {
