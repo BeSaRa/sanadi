@@ -28,6 +28,7 @@ export interface IAppUrls {
   EXT_INSTAGRAM: string;
   EXT_FACEBOOK: string;
   EXT_TWITTER: string;
+  EXT_RACA: string;
 
   [index: string]: string;
 }
