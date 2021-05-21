@@ -14,19 +14,14 @@ import {CustomValidators} from '../../../validators/custom-validators';
 })
 export class PaginatorComponent implements OnInit, OnDestroy {
   _pageSize: number = 10;
-
   _pagesList: number[] = [10, 20, 30, 50];
-
   pages: any[] = [];
-
   @Input()
   maxSize: number = 7;
 
 
   pageIndex: number = 0;
   private previousPageIndex: number | null = null;
-
-  private initialized = false;
   private _length: number = 0;
   private destroy$: Subject<any> = new Subject<any>();
 
@@ -42,9 +37,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   @Input()
   set pageSize(value: number) {
     this._pageSize = Number(value);
-    if (this.initialized) {
-      this.updatePaginationStatus();
-    }
+    this.updatePaginationStatus();
   };
 
   get pageSize(): number {
@@ -63,9 +56,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   @Input()
   set length(val: number) {
     this._length = Number(val);
-    if (this.initialized) {
-      this.updatePaginationStatus();
-    }
+    this.updatePaginationStatus();
   }
 
   get length(): number {
@@ -73,7 +64,6 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
   constructor(public lang: LangService, private cd: ChangeDetectorRef) {
-
   }
 
   ngOnDestroy(): void {
@@ -85,15 +75,19 @@ export class PaginatorComponent implements OnInit, OnDestroy {
     this.itemsPerPageControl = new FormControl(this.pageSize);
     this.goToControl = new FormControl(1, CustomValidators.number);
     this.updatePaginationStatus();
+    this.emitPaginationChange(this.previousPageIndex);
     this.listenToLanguageChanges();
     this.listenToGoToControl();
     this.listenToItemsPerPageControl();
-    this.initialized = true;
   }
 
   private updatePaginationStatus() {
     this.addPageSizeIfNotExists(this.pageSize);
     this.generatePages(this.currentPage);
+    const currentPage = this.outOfBoundCorrection();
+    if (currentPage !== this.currentPage) {
+      this.goToPage({page: currentPage});
+    }
     this.cd.markForCheck();
   }
 
@@ -148,7 +142,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
 
-  emitPaginationChange(previousPageIndex: number): void {
+  emitPaginationChange(previousPageIndex: number | null): void {
     this.pageChange.emit({
       previousPageIndex,
       pageIndex: this.pageIndex,
@@ -223,7 +217,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
         const currentPage = this.outOfBoundCorrection();
         if (currentPage !== this.currentPage) {
           this.updatePaginationStatus();
-          this.goToPage({page: currentPage});
+        } else {
+          this.cd.markForCheck();
         }
       });
   }
