@@ -19,6 +19,9 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   @Input()
   maxSize: number = 7;
 
+  @Input()
+  backend: boolean = false;
+
 
   pageIndex: number = 0;
   private previousPageIndex: number | null = null;
