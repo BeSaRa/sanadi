@@ -1,6 +1,7 @@
 import {Directive, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {SortEvent} from '../../interfaces/sort-event';
 import {SortableHeaderComponent} from '../components/sortable-header/sortable-header.component';
+import {BehaviorSubject} from 'rxjs';
 
 @Directive({
   selector: '[sortableTable]'
@@ -14,8 +15,9 @@ export class SortableTableDirective implements OnInit, OnDestroy {
 
   @Output()
   readonly sortChange: EventEmitter<SortEvent> = new EventEmitter<SortEvent>();
-
   @Input() sortBack: boolean = false;
+
+  initialized: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   set direction(val: string) {
     this._direction = val;
@@ -26,7 +28,6 @@ export class SortableTableDirective implements OnInit, OnDestroy {
   }
 
   constructor() {
-
   }
 
 

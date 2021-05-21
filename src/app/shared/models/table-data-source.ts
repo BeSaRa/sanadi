@@ -1,11 +1,10 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject, combineLatest, isObservable, merge, Observable, of, Subject, Subscription} from 'rxjs';
-import {map, takeUntil, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {SortableTableDirective} from '../directives/sortable-table.directive';
 import {SortEvent} from '../../interfaces/sort-event';
 import {_isNumberValue} from '@angular/cdk/coercion';
 import {PaginatorComponent} from '../components/paginator/paginator.component';
-import {Input} from '@angular/core';
 import {PageEvent} from '../../interfaces/page-event';
 
 export class TableDataSource extends DataSource<any> {
@@ -20,20 +19,9 @@ export class TableDataSource extends DataSource<any> {
   _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   private _paginator?: PaginatorComponent;
-  private paginatorSubscription?: Subscription;
-  private pageChange: BehaviorSubject<PageEvent | null> = new BehaviorSubject<PageEvent | null>(null);
 
-  private checking = this.pageChange.asObservable().subscribe(val => console.log(val));
-
-  @Input()
   set paginator(val: PaginatorComponent | undefined) {
-    if (this._paginator) {
-      this.disposePaginatorSubscription();
-    }
     this._paginator = val;
-    if (val) {
-      this.subscribeToPaginatorChanges();
-    }
     this.updateDataChanges();
   }
 
@@ -47,7 +35,6 @@ export class TableDataSource extends DataSource<any> {
 
   set filter(value: string) {
     this._filter.next(value);
-    this.updateDataChanges();
   }
 
   _sort: SortableTableDirective | null = null;
@@ -60,7 +47,6 @@ export class TableDataSource extends DataSource<any> {
 
   set sort(sort: SortableTableDirective | null) {
     this._sort = sort;
-    this.updateDataChanges();
   }
 
   get data(): any[] {
@@ -75,41 +61,41 @@ export class TableDataSource extends DataSource<any> {
   constructor(_data: any) {
     super();
     this.prepareData(_data);
-    this.updateDataChanges();
   }
 
   connect(collectionViewer: CollectionViewer): Observable<any[]> {
+    if (!this._updatedDataSubscription) {
+      this.updateDataChanges();
+    }
     return this._renderData.asObservable();
   }
 
   disconnect(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.disposePaginatorSubscription();
   }
 
   private prepareData(data: any) {
-    if (isObservable(data)) {
-      data.pipe(
-        takeUntil(this.destroy$),
-        tap((val: any) => this._data.next(val))
-      ).subscribe();
-    } else {
-      this._data.next(data);
-    }
+    this._data.next(data);
   }
 
 
   private updateDataChanges(): void {
-    this._updatedDataSubscription?.unsubscribe();
-    const sortChanges = (this._sort ? this.sort?.sortChange : of(null)) as Observable<SortEvent | null>;
-    const filteredData$ = combineLatest([this._data, this._filter]).pipe(map(([data]) => this._filterData(data)));
-    const orderData$ = combineLatest([filteredData$, sortChanges]).pipe(map(([data]) => this._orderData(data)));
-    const pageData$ = combineLatest([orderData$, this.pageChange]).pipe(map(([data]) => this._pageData(data)));
-    this._updatedDataSubscription = pageData$.subscribe((data) => {
-      this._renderData.next(data);
-    });
+    const sortChanges$ = (this._sort ? merge(this._sort.sortChange, this._sort.initialized) : of(null)) as Observable<SortEvent | null>;
+    const pageChanges$ = (this._paginator ? this._paginator.pageChange : of(null)) as Observable<PageEvent | null>;
 
+    const filterData$ = combineLatest([this._data, this._filter]).pipe(map(([data]) => this._filterData(data)));
+
+    const orderData$ = combineLatest([filterData$, sortChanges$]).pipe(map(([data]) => this._orderData(data)));
+    const pageData$ = combineLatest([orderData$, pageChanges$]).pipe(map(([data]) => this._pageData(data)));
+
+    pageChanges$.subscribe((val) => {
+      console.log('pageData$', val);
+    });
+    this._updatedDataSubscription?.unsubscribe();
+    this._updatedDataSubscription = pageData$.subscribe((val) => {
+      this._renderData.next(val);
+    });
   }
 
   private _orderData(data: any[]): any[] {
@@ -183,10 +169,11 @@ export class TableDataSource extends DataSource<any> {
   };
 
   private _filterData(data: any[]): any[] {
-    if (this.filter === null || this.filter === '') {
-      return data;
+    this.filteredData = this.filter === null || this.filter === '' ? data : data.filter(item => this.filterPredicate(item, this.filter));
+    if (this.paginator) {
+      this.paginator.length = this.filteredData.length;
     }
-    return data.filter(item => this.filterPredicate(item, this.filter));
+    return this.filteredData;
   }
 
   /**
@@ -222,16 +209,5 @@ export class TableDataSource extends DataSource<any> {
     }
     const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
     return data.slice().slice(startIndex, (startIndex + this._paginator.pageSize));
-  }
-
-  private subscribeToPaginatorChanges() {
-    this.paginatorSubscription = this._paginator?.pageChange.subscribe((change: PageEvent) => {
-      this.pageChange.next(change);
-      this.updateDataChanges();
-    });
-  }
-
-  private disposePaginatorSubscription() {
-    this.paginatorSubscription?.unsubscribe();
   }
 }

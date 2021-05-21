@@ -22,7 +22,7 @@ const ELEMENT_DATA = [
   styleUrls: ['./user-inbox.component.scss']
 })
 export class UserInboxComponent implements OnInit {
-  datasource = ELEMENT_DATA;
+  datasource: any = ELEMENT_DATA;
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   searchModel = '';
 

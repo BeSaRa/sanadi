@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, Optional} from '@angular/core';
 import {TableService} from '../../../services/table.service';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, isObservable, Observable, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {TableDataSource} from '../../models/table-data-source';
 import {PaginatorComponent} from '../paginator/paginator.component';
@@ -13,7 +13,7 @@ import {SortableTableDirective} from '../../directives/sortable-table.directive'
   providers: [TableService]
 })
 export class TableComponent implements OnInit, OnDestroy {
-  private dataSourceChanged: BehaviorSubject<TableDataSource> = new BehaviorSubject<TableDataSource>(this.service.createDataSource([]));
+  private datasourceAssigned$: BehaviorSubject<TableDataSource> = new BehaviorSubject<TableDataSource>(this.service.createDataSource([]));
   dataSource!: TableDataSource;
   private destroy$: Subject<any> = new Subject();
   @Input()
@@ -22,6 +22,7 @@ export class TableComponent implements OnInit, OnDestroy {
   _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   _paginator?: PaginatorComponent;
+  private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
   @Input()
   set filter(val: string) {
@@ -34,7 +35,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
   @Input()
   set data(value: any) {
-    this.dataSourceChanged.next(this.service.createDataSource(value));
+    this.dataChange.next(value);
   };
 
   @Input()
@@ -49,12 +50,14 @@ export class TableComponent implements OnInit, OnDestroy {
     return this._paginator;
   }
 
-  constructor(private service: TableService, @Optional() private sortable: SortableTableDirective) {
+  constructor(private service: TableService,
+              @Optional() private sortable: SortableTableDirective) {
   }
 
   ngOnInit(): void {
-    this.listenToDataSourceChange();
+    this.datasourceAssigned();
     this.listenToFilterChange();
+    this.listenToDataChanged();
   }
 
   ngOnDestroy() {
@@ -62,17 +65,17 @@ export class TableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  listenToDataSourceChange(): void {
-    this.dataSourceChanged
+  datasourceAssigned(): void {
+    this.datasourceAssigned$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datasource) => {
         if (this.dataSource) {
           this.dataSource.disconnect();
         }
         this.dataSource = datasource;
-        this.dataSource.paginator = this.paginator;
         this.dataSource.filter = this.filter;
         this.dataSource.sort = this.sortable;
+        this.dataSource.paginator = this.paginator;
       });
   }
 
@@ -80,6 +83,19 @@ export class TableComponent implements OnInit, OnDestroy {
     this._filter.pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.dataSource.filter = value;
+      });
+  }
+
+  private listenToDataChanged() {
+    let oldSub: Subscription;
+    this.dataChange.pipe(takeUntil(this.destroy$))
+      .subscribe((value: Observable<any> | any[]) => {
+        if (isObservable(value)) {
+          oldSub?.unsubscribe();
+          oldSub = value.pipe(takeUntil(this.destroy$)).subscribe((data: any[]) => this.dataSource.data = data);
+        } else {
+          this.dataSource.data = value;
+        }
       });
   }
 }
