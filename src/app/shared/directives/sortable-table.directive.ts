@@ -15,7 +15,7 @@ export class SortableTableDirective implements OnInit, OnDestroy {
 
   @Output()
   readonly sortChange: EventEmitter<SortEvent> = new EventEmitter<SortEvent>();
-  @Input() sortBack: boolean = false;
+  @Input() backend: boolean = false;
 
   initialized: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 

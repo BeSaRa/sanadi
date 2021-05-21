@@ -89,9 +89,6 @@ export class TableDataSource extends DataSource<any> {
     const orderData$ = combineLatest([filterData$, sortChanges$]).pipe(map(([data]) => this._orderData(data)));
     const pageData$ = combineLatest([orderData$, pageChanges$]).pipe(map(([data]) => this._pageData(data)));
 
-    pageChanges$.subscribe((val) => {
-      console.log('pageData$', val);
-    });
     this._updatedDataSubscription?.unsubscribe();
     this._updatedDataSubscription = pageData$.subscribe((val) => {
       this._renderData.next(val);
@@ -123,7 +120,7 @@ export class TableDataSource extends DataSource<any> {
     const active = sort.active;
     const direction = sort.direction;
 
-    if (!active || direction == '' || sort.sortBack) {
+    if (!active || direction == '' || sort.backend) {
       return data;
     }
 
@@ -170,7 +167,7 @@ export class TableDataSource extends DataSource<any> {
 
   private _filterData(data: any[]): any[] {
     this.filteredData = this.filter === null || this.filter === '' ? data : data.filter(item => this.filterPredicate(item, this.filter));
-    if (this.paginator) {
+    if (this.paginator && !this._paginator?.backend) {
       this.paginator.length = this.filteredData.length;
     }
     return this.filteredData;
@@ -204,7 +201,7 @@ export class TableDataSource extends DataSource<any> {
   }
 
   private _pageData(data: any[]): any[] {
-    if (!this._paginator) {
+    if (!this._paginator || (this._paginator && this._paginator.backend)) {
       return data;
     }
     const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
