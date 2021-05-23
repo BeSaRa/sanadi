@@ -1299,6 +1299,17 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }
   }
 
+  saveButtonEnabled(): boolean {
+    if (this.currentRequest?.isNewPartialRequest()) {
+      return this.form.valid;
+    } else {
+      if (this.readOnly) {
+        return false;
+      }
+      return this.form.valid;
+    }
+  }
+
   /**
    * @description Check if user can navigate to other pages
    */

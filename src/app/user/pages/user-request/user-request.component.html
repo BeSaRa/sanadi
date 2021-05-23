@@ -1073,7 +1073,7 @@
   </ng-template>
   <hr/>
   <div *ngIf="!aidFormArray.controls.length && !isAttachmentFormVisible" class="d-flex flex-row justify-content-center">
-    <button *ngIf="saveVisible" [disabled]="this.form.invalid || this.readOnly" type="button" (click)="saveModel()"
+    <button *ngIf="saveVisible" [disabled]="!saveButtonEnabled()" type="button" (click)="saveModel()"
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
