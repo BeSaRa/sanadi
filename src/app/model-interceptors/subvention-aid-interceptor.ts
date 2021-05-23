@@ -1,7 +1,7 @@
 import {SubventionAid} from '../models/subvention-aid';
 import {formatDate} from '@angular/common';
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 
 export class SubventionAidInterceptor {
   static receive(model: SubventionAid): SubventionAid {

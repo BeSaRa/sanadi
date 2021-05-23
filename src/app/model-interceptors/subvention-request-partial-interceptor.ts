@@ -1,5 +1,5 @@
 import {AdminResult} from '../models/admin-result';
-import {getDateStringFromDate} from '../helpers/utils';
+import {getDateStringFromDate} from '../helpers/utils-date';
 import {SubventionRequestPartial} from '../models/subvention-request-partial';
 
 export class SubventionRequestPartialInterceptor {

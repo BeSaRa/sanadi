@@ -1,6 +1,7 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate, isValidValue} from '../helpers/utils';
+import {isValidValue} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 
 function send(model: any): any {
   delete model.langService;

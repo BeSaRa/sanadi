@@ -1,4 +1,4 @@
-import {getDateStringFromDate} from '../helpers/utils';
+import {getDateStringFromDate} from '../helpers/utils-date';
 import {AdminResult} from '../models/admin-result';
 
 export class SanadiAttachmentInterceptor {

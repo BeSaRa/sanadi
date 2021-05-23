@@ -43,12 +43,12 @@ import {formatDate} from '@angular/common';
 import {ReadModeService} from '../../../services/read-mode.service';
 import * as dayjs from 'dayjs';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {isValidValue} from '../../../helpers/utils';
 import {
   changeDateFromDatepicker,
   getDatepickerOptions,
-  getDatePickerOptionsClone,
-  isValidValue
-} from '../../../helpers/utils';
+  getDatePickerOptionsClone
+} from '../../../helpers/utils-date';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';

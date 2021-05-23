@@ -1,7 +1,8 @@
 import {FactoryService} from '../services/factory.service';
 import {DatePipe, formatDate} from '@angular/common';
 import {OrgUnit} from '../models/org-unit';
-import {changeDateFromDatepicker, changeDateToDatepicker, isValidValue} from '../helpers/utils';
+import {isValidValue} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker} from '../helpers/utils-date';
 import {ConfigurationService} from '../services/configuration.service';
 
 export function interceptOrganizationUnit(model: OrgUnit | any): (OrgUnit | any) {

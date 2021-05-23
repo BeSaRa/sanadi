@@ -18,7 +18,7 @@ import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {getDatepickerOptions} from '../../../helpers/utils';
+import {getDatepickerOptions} from '../../../helpers/utils-date';
 import {FileStore} from '../../../models/file-store';
 import {DialogService} from '../../../services/dialog.service';
 

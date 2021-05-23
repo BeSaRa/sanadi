@@ -1,5 +1,5 @@
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, getDateStringFromDate} from '../helpers/utils';
+import {changeDateFromDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 import {SubventionRequestPartialLog} from '../models/subvention-request-partial-log';
 
 export class SubventionRequestPartialLogInterceptor {

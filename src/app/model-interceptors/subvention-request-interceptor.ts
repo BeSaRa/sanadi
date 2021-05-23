@@ -4,7 +4,7 @@ import {DatePipe, formatDate} from '@angular/common';
 import {AdminResult} from '../models/admin-result';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 
 export class SubventionRequestInterceptor {
   static receive(model: SubventionRequest): SubventionRequest {

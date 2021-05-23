@@ -15,12 +15,12 @@ import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-reque
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '../../../services/dialog.service';
+import {isEmptyObject, printBlobData} from '../../../helpers/utils';
 import {
   changeDateFromDatepicker,
   getDatepickerOptions,
-  getDatePickerOptionsClone, isEmptyObject,
-  printBlobData
-} from '../../../helpers/utils';
+  getDatePickerOptionsClone
+} from '../../../helpers/utils-date';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
@@ -220,6 +220,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   get primaryIdNumberField(): FormControl {
     return this.fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber') as FormControl;
   }
+
   get secondaryIdNumberField(): FormControl {
     return this.fm.getFormField('simpleSearch.beneficiary.benSecIdNumber') as FormControl;
   }
