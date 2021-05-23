@@ -10,6 +10,7 @@ import {isEmptyObject, objectHasValue} from '../../../helpers/utils';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {DialogService} from '../../../services/dialog.service';
 import {OrgUnit} from '../../../models/org-unit';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-filter-request-popup',
@@ -30,7 +31,8 @@ export class FilterRequestPopupComponent implements OnInit {
               public langService: LangService,
               public lookupService: LookupService,
               private dialogService: DialogService,
-              private configurationService: ConfigurationService) {
+              private configurationService: ConfigurationService,
+              public empService: EmployeeService) {
     this.criteria = data.criteria;
     this.orgList = data.orgUnits;
   }
