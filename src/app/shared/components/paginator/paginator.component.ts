@@ -137,6 +137,9 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
   goToPage(page: any) {
+    if (this.pageIndex === page.page - 1) {
+      return;
+    }
     this.previousPageIndex = this.pageIndex;
     this.pageIndex = (page.page - 1);
     this.goToControl.patchValue(page.page, {emitEvent: false});
@@ -217,12 +220,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.pageSize = value;
-        const currentPage = this.outOfBoundCorrection();
-        if (currentPage !== this.currentPage) {
-          this.updatePaginationStatus();
-        } else {
-          this.cd.markForCheck();
-        }
+        this.updatePaginationStatus();
+        this.emitPaginationChange(this.previousPageIndex);
       });
   }
 
