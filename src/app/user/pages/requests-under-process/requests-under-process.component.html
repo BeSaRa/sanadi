@@ -18,7 +18,11 @@
       <tbody>
       <ng-container *ngFor="let request of requests;">
         <tr>
-          <td><span class="dir-ltr d-inline-block"> {{request.requestFullSerial}} </span></td>
+          <td class="d-flex flex-row">
+            <span class="dir-ltr d-inline-block flex-grow-1"> {{request.requestFullSerial}} </span>
+            <i class="mdi mdi-file-hidden text-primary" *ngIf="request.isPartial"
+               tooltip="{{langService.map.partial_request}}"></i>
+          </td>
           <td class="date-column"> {{request.creationDateString}} </td>
           <td>{{request.orgAndBranchInfo.getName()}} </td>
           <td> {{request.requestStatusInfo.getName()}} </td>

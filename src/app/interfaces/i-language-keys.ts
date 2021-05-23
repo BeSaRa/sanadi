@@ -301,4 +301,5 @@ export interface ILanguageKeys {
   msg_invalid_given_amount_monthly: string;
   msg_no_records_found: string;
   lbl_raca: string;
+  partial_request: string;
 }
