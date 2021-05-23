@@ -257,6 +257,11 @@ td.table-actions {
   font-size: 12px;
 }
 
+div.input-disabled {
+  background-color: #e9ecef;
+  height: 38px;
+}
+
 .ng-select-wrapper {
   position: relative !important
 }
@@ -266,7 +271,7 @@ ng-select {
     height: 38px !important;
   }
 
-  &.no-dropdown{
+  &.no-dropdown {
     .ng-arrow-wrapper {
       display: none;
     }

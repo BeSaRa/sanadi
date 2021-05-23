@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
@@ -115,10 +115,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   datepickerOptionsMap: IKeyValue = {
     dateOfBirth: getDatepickerOptions({disablePeriod: 'future'}),
+    dateOfBirthReadOnly: getDatepickerOptions({disablePeriod: 'future', readonly: true}),
     creationDate: getDatepickerOptions({disablePeriod: 'future'}),
+    creationDateReadOnly: getDatepickerOptions({disablePeriod: 'future', readonly: true}),
     statusDateModified: getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true}),
     aidApprovalDate: getDatepickerOptions({disablePeriod: 'none'}),
-    aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'})
+    aidApprovalDateReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true}),
+    aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'}),
+    aidPaymentDateReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true})
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -170,6 +175,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   currentParamType: string = this.routeParamTypes.normal;
   isAttachmentFormVisible: boolean = false;
 
+  @ViewChild('creationDate') creationDateControlRef!: ElementRef;
+
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -182,6 +189,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
+              private renderer: Renderer2,
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
@@ -299,6 +307,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       if (request.id) {
         this.readOnly = this.readModeService.isReadOnly(request.id);
+        this.fm.displayFormValidity();
+      } else if (request.isNewPartialRequest()) {
+        this.readOnly = true;
         this.fm.displayFormValidity();
       } else {
         this.readOnly = false;
@@ -617,18 +628,22 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.subventionAidDataSource.next(this.subventionAid);
         this.attachmentList = response.attachmentList;
 
-        if (this.currentParamType === this.routeParamTypes.partial) {
-          this.editMode = false;
-        } else if (this.currentParamType === this.routeParamTypes.normal) {
-          this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
+        this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
+        if (this.currentParamType === this.routeParamTypes.partial) {
+          response.request.statusDateModified = response.request.creationDate;
+          response.request.statusDateModifiedString = response.request.creationDateString;
+          this.editMode = false;
+          this.readModeService.setReadOnly(response.request.id);
+        } else {
           if (!response.request.isUnderProcessing()) {
             this.readModeService.setReadOnly(response.request.id);
           }
-
           this.editMode = true;
-          this.allowCompletionField?.disable();
         }
+
+        this.allowCompletionField?.disable();
+
         this.requestChanged$.next(response.request);
         this.loadSubAidCategory().subscribe();
       });
@@ -830,6 +845,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
     // let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
     let minDate = changeDateFromDatepicker(this.creationDateField?.value);
+    if (minDate) {
+      minDate.setHours(0, 0, 0, 0);
+    }
     let minFieldName = 'creationDate';
 
     if (approvedDateValue) {
@@ -1001,9 +1019,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (this.currentRequest) {
-        const requestDate = changeDateFromDatepicker(value);
         this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
+        const requestDate = changeDateFromDatepicker(value);
         if (requestDate) {
+          requestDate.setHours(0, 0, 0, 0);
           this.setRelatedMinDate('creationDate', 'aidApprovalDate');
           this.aidApprovalDate?.setValidators([CustomValidators.required, CustomValidators.minDate(requestDate)]);
           this.aidApprovalDate?.updateValueAndValidity();
@@ -1027,9 +1046,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
           group.get('status')?.setValue(oldValue);
         }
-        // const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
-        const creationDate = changeDateFromDatepicker(this.creationDateField?.value);
         this.setRelatedMinDate('creationDate', 'statusDateModified');
+        // const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
+        let creationDate = changeDateFromDatepicker(this.creationDateField?.value);
+        if (creationDate) {
+          creationDate.setHours(0, 0, 0, 0);
+        }
         if (newValue === SubventionRequestStatus.APPROVED) {
           group.get('statusDateModified')?.setValidators([CustomValidators.required, CustomValidators.minDate(creationDate || '')]);
         } else {
@@ -1234,14 +1256,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   beneficiaryPrimaryIdDisabled(): boolean {
-    return this.readOnly || this.editMode || !!(this.currentRequest?.isNewPartialRequest());
+    return this.readOnly || this.editMode;
   }
 
   beneficiarySecondaryIdDisabled(): boolean {
     if (this.readOnly) {
       return true;
-    } else if (!!(this.currentRequest?.isNewPartialRequest())) {
-      return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
     } else if (!this.editMode) {
       return false;
     } else {
@@ -1257,10 +1277,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return !this.currentRequest ? false : this.currentRequest.isPartial;
   }
 
-  showAllowCompletion(): boolean {
-    return !this.isCurrentRequestPartial;
-  }
-
   setButtonsVisibility(tab: any): void {
     /*const tabsNotToShowSave = [this.tabsData.aids.name, this.tabsData.attachments.name];
     const tabsNotToShowValidate = [this.tabsData.aids.name, this.tabsData.attachments.name];
@@ -1271,6 +1287,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   updateAttachmentList(attachments: SanadiAttachment[]): void {
     this.attachmentList = [];
     this.attachmentList = attachments;
+  }
+
+  toggleElementDisabled(elementRef: ElementRef, setDisabled: boolean): void {
+    if (setDisabled) {
+      this.renderer.setAttribute(elementRef.nativeElement, 'disabled', 'disabled');
+    } else {
+      this.renderer.removeAttribute(elementRef.nativeElement, 'disabled');
+      this.renderer.removeClass(elementRef.nativeElement, 'disabled');
+      this.renderer.removeClass(elementRef.nativeElement, ':disabled');
+    }
   }
 
   /**

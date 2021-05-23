@@ -28,6 +28,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     if (val)
       this._request = val;
   }
+
   get request(): SubventionRequest | undefined {
     return this._request;
   }
@@ -49,7 +50,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   reload$ = new Subject<any>();
   reloadSubscription!: Subscription;
   displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
-
+  editIndex: number = -1;
   fm!: FormManager;
   form!: FormGroup;
   @ViewChild('fileUploader') fileUploader!: ElementRef;
@@ -63,17 +64,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
               private attachmentService: AttachmentService) {
   }
 
-  get allowReload(): boolean {
-    // if new request or new partial request, don't allow reload
-    return !(!this._request.id || this._request.isNewPartialRequest());
-  }
-
-  _checkRequiredInputs(): void {
-    if (!this._request) {
-      throw new Error('Missing attribute or value - request');
-    }
-  }
-
   ngOnInit(): void {
     this._checkRequiredInputs();
     this.listenToReload();
@@ -84,14 +74,68 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.reloadSubscription?.unsubscribe();
   }
 
+  get allowReload(): boolean {
+    if (!this._request.id) {
+      return false;
+    } else {
+      return !this.readOnly;
+    }
+    /* // if new request or new partial request, don't allow reload
+     return !(!this._request.id || this._request.isNewPartialRequest());*/
+  }
+
+  allowAdd(): boolean {
+    if (!this._request.id) {
+      return false;
+    } else {
+      return !this.readOnly;
+    }
+    /*if (!this.readOnly) {
+      return true;
+    } else {
+      return this._request.isNewPartialRequest();
+    }*/
+  }
+
+  allowEdit(attachment: SanadiAttachment): boolean {
+    if (!attachment.vsId) {
+      return true;
+    } else {
+      if (this._request.isNewPartialRequest()) {
+        return !attachment.vsId;
+      } else {
+        return !this.readOnly;
+      }
+    }
+  }
+
+  allowDelete(attachment: SanadiAttachment): boolean {
+    if (!attachment.vsId) {
+      return true;
+    } else {
+      if (this._request.isNewPartialRequest()) {
+        return !attachment.vsId;
+      } else {
+        return !this.readOnly;
+      }
+    }
+  }
+
+  _checkRequiredInputs(): void {
+    if (!this._request) {
+      throw new Error('Missing attribute or value - request');
+    }
+  }
+
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
         return this.attachmentService.loadByRequestId(this._request.id);
       })
     ).subscribe((attachments) => {
-      this.attachmentList$.next(attachments);
-      this.updateList.emit(attachments);
+      this.attachmentList = attachments;
+      this.attachmentList$.next(this.attachmentList);
+      this.updateList.emit(this.attachmentList);
     });
   }
 
@@ -101,13 +145,13 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       attachment.requestId = this._request.id;
       attachment.requestFullSerial = this._request.requestFullSerial;
     }
+
     this.currentAttachment = attachment;
     this.form = this.fb.group({
       documentTitle: [attachment.documentTitle, [CustomValidators.required, CustomValidators.maxLength(100), CustomValidators.pattern('ENG_AR_NUM_ONLY')]],
       attachmentType: [attachment.attachmentType, CustomValidators.required],
-      requestId: [attachment.requestId, CustomValidators.required],
-      requestFullSerial: [attachment.requestFullSerial, CustomValidators.required],
-      vsId: [attachment.vsId]
+      requestId: [attachment.requestId],
+      requestFullSerial: [attachment.requestFullSerial]
     });
     this.fm = new FormManager(this.form, this.langService);
   }
@@ -116,19 +160,15 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     return this.langService.map[this.buttonKey] || this.langService.map.select;
   }
 
-  get attachmentVsIdField(): FormControl {
-    return this.fm.getFormField('vsId') as FormControl
-  }
-
   get isNewAttachment(): boolean {
-    return isValidValue(this.attachmentVsIdField?.value);
+    return this.currentAttachment && !this.currentAttachment.vsId;
   }
 
   get isValidAttachment(): boolean {
     if (this.isNewAttachment) {
-      return this.form.valid;
+      return this.form.valid && (this.attachedFiles && this.attachedFiles.length > 0);
     }
-    return this.form.valid && (this.attachedFiles && this.attachedFiles.length > 0);
+    return this.form.valid;
   }
 
   openFileBrowser($event: MouseEvent): void {
@@ -192,18 +232,26 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.setDisplayForm();
   }
 
-  editAttachment($event: MouseEvent, attachment: SanadiAttachment) {
+  editAttachment($event: MouseEvent, attachment: SanadiAttachment, index: number) {
     $event.preventDefault();
+    this.editIndex = index;
     this.setDisplayForm(attachment);
   }
 
-  deleteAttachment($event: MouseEvent, attachment: SanadiAttachment) {
+  deleteAttachment($event: MouseEvent, attachment: SanadiAttachment, index: number) {
     $event.preventDefault();
     const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: attachment.getName()}))
       .onAfterClose$
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
+          if (!this._request.id) {
+            this.attachmentList.splice(index, 1);
+            this.attachmentList$.next(this.attachmentList);
+            this.updateList.emit(this.attachmentList);
+            this.toast.success(this.langService.map.msg_delete_x_success.change({x: attachment.getName()}));
+            return;
+          }
           attachment.deleteByVsId().subscribe(() => {
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: attachment.getName()}));
             this.reload$.next(null);
@@ -225,16 +273,31 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.onFormToggle.emit(false);
     this.setAttachedFiles(null);
     this.currentAttachment = null;
+    this.editIndex = -1;
   }
 
   saveAttachment($event: MouseEvent) {
-    if (!this.isNewAttachment && (!this.attachedFiles || this.attachedFiles.length === 0)) {
+    if (this.isNewAttachment && (!this.attachedFiles || this.attachedFiles.length === 0)) {
       this.toast.info(this.langService.map.msg_missing_attachment);
       return;
     }
     let data = (new SanadiAttachment()).clone(this.currentAttachment) as SanadiAttachment;
     data.documentTitle = this.form.value.documentTitle;
     data.attachmentType = this.form.value.attachmentType;
+
+    if (!this._request.id) {
+      if (this.isNewAttachment) {
+        this.attachmentList.push(data);
+      } else {
+        this.attachmentList.splice(this.editIndex, 1, data);
+      }
+      this.attachmentList$.next(this.attachmentList);
+      this.updateList.emit(this.attachmentList);
+      this.toast.success(this.langService.map.msg_save_success);
+      this.cancelAttachment();
+      return;
+    }
+
 
     this.attachmentService.saveAttachment(data, this.attachedFiles[0])
       .pipe(catchError(() => {

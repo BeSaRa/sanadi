@@ -11,29 +11,28 @@
   </div>
 </div>
 <form autocomplete="off" [formGroup]="form" id="form">
-  <fieldset [disabled]="readOnly">
-    <tabs-list class="py-4" (onTabChange)="setButtonsVisibility($event)">
-      <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
-           [template]="personalInfo" [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-      <tab [name]="tabsData.income.name" [hasError]="fm.getFieldInvalidStatus('incomeTab')"
-           [template]="income" [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-      <tab [name]="tabsData.address.name" [hasError]="fm.getFieldInvalidStatus('addressTab')"
-           [template]="address" [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
-      <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
-           [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
-      <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id"
-           [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-           [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
-      <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
-           *ngIf="!!currentRequest?.id || currentRequest?.isPartial"
-           [hasError]="fm.getFieldInvalidStatus('aidTab')"
-           [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
-      <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isPartial"
-           [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
-           [template]="attachmentsTabTemplate"
-           [title]="langService.map.attachments">{{langService.map.attachments}}</tab>
-    </tabs-list>
-  </fieldset>
+
+  <tabs-list class="py-4" (onTabChange)="setButtonsVisibility($event)">
+    <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
+         [template]="personalInfo" [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
+    <tab [name]="tabsData.income.name" [hasError]="fm.getFieldInvalidStatus('incomeTab')"
+         [template]="income" [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
+    <tab [name]="tabsData.address.name" [hasError]="fm.getFieldInvalidStatus('addressTab')"
+         [template]="address" [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+    <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
+         [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+    <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+         [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+         [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+    <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
+         *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+         [hasError]="fm.getFieldInvalidStatus('aidTab')"
+         [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+    <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+         [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
+         [template]="attachmentsTabTemplate"
+         [title]="langService.map.attachments">{{langService.map.attachments}}</tab>
+  </tabs-list>
   <!--  personal info Tab -->
   <ng-template #personalInfo>
     <div formGroupName="personalTab">
@@ -46,7 +45,7 @@
               <label for="benPrimaryIdType" class="form-label"
                      asteriskIfRequired="benPrimaryIdType">{{langService.map.id_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
-                         [readonly]="readOnly || (editMode && primaryIdTypeField?.value)"
+                         [readonly]="beneficiaryPrimaryIdDisabled()"
                          placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="benPrimaryIdType">
@@ -181,7 +180,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
-                     class="form-control" type="text">
+                     class="form-control" type="text" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
             </div>
@@ -193,7 +192,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
-                     class="form-control" type="text">
+                     class="form-control" type="text" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
             </div>
@@ -202,7 +201,19 @@
       </div>
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
+          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
+            <label for="dateOfBirthReadOnly" asteriskIfRequired="dateOfBirth"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <div class="form-control input-disabled" formControlName="dateOfBirth"
+                   id="dateOfBirthReadOnly" [options]="datepickerOptionsMap.dateOfBirthReadOnly"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
+              </div>
+              <app-field-error-message
+                [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
+            </div>
+          </div>
+          <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
             <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
@@ -248,7 +259,7 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
                      formControlName="phoneNumber1" class="form-control" type="text"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
             </div>
@@ -284,7 +295,7 @@
               <input maxlength="2" id="sponsorsCount"
                      [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
                      formControlName="benDependentsCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
             </div>
@@ -298,7 +309,7 @@
               <input maxlength="2" id="familyCount"
                      [ngClass]="fm.getStatusClass('personalTab.familyCount')"
                      formControlName="familyCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.familyCount')"></app-field-error-message>
             </div>
@@ -374,8 +385,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                     formControlName="employeer"
-                     class="form-control" type="text">
+                     formControlName="employeer" class="form-control" type="text" [readOnly]="readOnly">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
             </div>
@@ -388,7 +398,8 @@
             <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
             <div class="col-md-10 col-sm-12">
                     <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
-                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"></textarea>
+                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"
+                              [readOnly]="readOnly"></textarea>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
             </div>
@@ -426,8 +437,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')"
-                   formControlName="occuption"
-                   class="form-control" type="text">
+                   formControlName="occuption" class="form-control" type="text" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
           </div>
@@ -441,8 +451,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')"
-                   formControlName="employeerAddress"
-                   id="workplace" class="form-control" type="text">
+                   formControlName="employeerAddress" id="workplace" class="form-control" type="text"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
           </div>
@@ -456,7 +466,8 @@
             <input id="monthlyIncome" maxlength="20" formControlName="benIncome"
                    [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
                    class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
-                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
           </div>
@@ -471,7 +482,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
                    formControlName="benExtraIncome" class="form-control" id="extraIncome"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
           </div>
@@ -483,8 +495,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
-                   formControlName="benExtraIncomeSource"
-                   id="extraIncomeSource" class="form-control" type="text">
+                   formControlName="benExtraIncomeSource" id="extraIncomeSource" class="form-control" type="text"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
           </div>
@@ -498,7 +510,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
                    formControlName="totalDebts" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
           </div>
@@ -511,7 +524,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
                    formControlName="totalInstalments" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
           </div>
@@ -526,7 +539,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                    formControlName="benHouseRent" class="form-control"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
           </div>
@@ -563,7 +577,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
           </div>
@@ -578,7 +592,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
                    formControlName="streetName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
           </div>
@@ -591,7 +605,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
                    formControlName="buildingName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
           </div>
@@ -604,7 +618,7 @@
           <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
           </div>
@@ -617,7 +631,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
                    formControlName="homePhoneNumber" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
           </div>
@@ -630,8 +644,9 @@
           <label for="addressDescription"
                  class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_address}}</label>
           <div class="col-md-10 col-sm-12">
-                  <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
-                            formControlName="addressDescription" rows="5" class="form-control"></textarea>
+            <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
+                      formControlName="addressDescription" rows="5" class="form-control"
+                      [readOnly]="readOnly"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
           </div>
@@ -663,7 +678,19 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
+        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
+          <label for="creationDateReadOnly" asteriskIfRequired="creationDate"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="form-control input-disabled" formControlName="creationDate"
+                 id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDateReadOnly"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
+            </div>
+            <app-field-error-message
+              [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
           <label for="creationDate" asteriskIfRequired="creationDate"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
@@ -674,7 +701,7 @@
             <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
                    name="creationDate" formControlName="creationDate" id="creationDate" dateFix
                    [options]="datepickerOptionsMap.creationDate" autocomplete="off"
-                   (click)="dpCreationDate.toggleCalendar()"
+                   (click)="dpCreationDate.toggleCalendar()" #creationDate
                    [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
@@ -690,7 +717,8 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
                    formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   [readOnly]="readOnly">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
           </div>
@@ -715,7 +743,8 @@
                  class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
           <div class="col-md-10 col-sm-12">
                   <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
-                            formControlName="requestSummary" rows="5" class="form-control"></textarea>
+                            formControlName="requestSummary" rows="5" class="form-control"
+                            [readOnly]="readOnly"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
           </div>
@@ -732,7 +761,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
-                       [readonly]="readOnly"
+                       [readonly]="readOnly && !(currentRequest?.isNewPartialRequest())"
                        placeholder="{{langService.map.select}}" id="requestStatus"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status"
@@ -749,7 +778,20 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
+        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+          <label for="statusDateModifiedReadOnly" asteriskIfRequired="statusDateModified"
+                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
+          <div class="col-md-8 col-sm-12 mb-4">
+            <div class="form-control input-disabled" formControlName="statusDateModified"
+                 id="statusDateModifiedReadOnly" [options]="datepickerOptionsMap.statusDateModifiedReadOnly"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+            </div>
+            <app-field-error-message
+              [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row d-flex flex-column flex-md-row"
+             *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
           <label for="statusDateModified" asteriskIfRequired="statusDateModified"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
@@ -774,8 +816,9 @@
         <div class="row d-flex flex-column flex-md-row">
           <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
           <div class="col-md-10 col-sm-12">
-                  <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
-                            formControlName="requestNotes" rows="5" class="form-control"></textarea>
+            <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
+                      formControlName="requestNotes" rows="5" class="form-control"
+                      [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
           </div>
@@ -825,7 +868,19 @@
         </div>
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+              <label asteriskIfRequired="approvalDate" for="approvalDateReadOnly"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <div class="form-control input-disabled" formControlName="approvalDate"
+                     id="approvalDateReadOnly" [options]="datepickerOptionsMap.aidApprovalDateReadOnly"
+                     angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
               <label asteriskIfRequired="approvalDate" for="approvalDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -845,7 +900,19 @@
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+              <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDateReadOnly"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <div class="form-control input-disabled" formControlName="aidStartPayDate"
+                     id="aidStartPayDateReadOnly" [options]="datepickerOptionsMap.aidPaymentDateReadOnly"
+                     angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
               <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -870,12 +937,13 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="readOnly && !(currentRequest?.isNewPartialRequest())"
                            placeholder="{{langService.map.select}}" id="periodicType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="periodicType"
                            [ngClass]="fm.getStatusClass('aidTab.0.periodicType')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType" [value]="option.lookupKey">
+                  <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType"
+                             [value]="option.lookupKey">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
@@ -891,7 +959,8 @@
               <div class="col-md-8 col-sm-12 mb-4">
                 <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
                        id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                       formControlName="installementsCount" class="form-control">
+                       formControlName="installementsCount" class="form-control"
+                       [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
               </div>
@@ -905,7 +974,9 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.given_amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                       formControlName="aidAmount" class="form-control" mask="separator" thousandSeparator=",">
+                       formControlName="aidAmount" class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
+                       [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                       [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
               </div>
@@ -919,7 +990,8 @@
                      class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
               <div class="col-md-10 col-sm-12">
                     <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
-                              formControlName="aidDescription" rows="3" class="form-control"></textarea>
+                              formControlName="aidDescription" rows="3" class="form-control"
+                              [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())"></textarea>
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
               </div>
@@ -935,7 +1007,8 @@
       </div>
     </ng-container>
     <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
-                     [clickOnNew$]="addAid$" [addPermission]="!currentRequest?.isNewPartialRequest()"></app-page-header>
+                     [clickOnNew$]="addAid$"
+                     [addPermission]="!readOnly && !currentRequest?.isNewPartialRequest()"></app-page-header>
     <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
            [dataSource]="subventionAidDataSource">
       <ng-container cdkColumnDef="approvalDate">
@@ -972,12 +1045,13 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
-            <button *ngIf="!currentRequest?.isNewPartialRequest()"
+            <button *ngIf="!readOnly && !currentRequest?.isNewPartialRequest()"
                     (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>
             </button>
             <button (click)="editAid(row, i, $event)" class="icon-btn text-primary"
+                    [disabled]="readOnly && !(currentRequest?.isNewPartialRequest())"
                     tooltip="{{langService.map.btn_edit}}">
               <i class="mdi mdi-pen"></i>
             </button>

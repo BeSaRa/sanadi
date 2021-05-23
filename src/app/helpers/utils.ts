@@ -303,6 +303,9 @@ function getDatepickerOptions(customOptions: IDatepickerCustomOptions): IAngular
       day: disableDate.getDate()
     };
   }
+  if (customOptions.readonly) {
+    options.divHostElement = {enabled: true, placeholder: ''}
+  }
   return options;
 }
 
