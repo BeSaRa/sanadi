@@ -139,6 +139,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   aidPeriodicTypeSub!: Subscription;
   aidApprovalDateSub!: Subscription;
   readOnly = false;
+  isPartialRequest: boolean = false;
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
 
@@ -305,14 +306,15 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       requestStatus?.patchValue(request.getStatusFields());
       requestInfo?.patchValue(request.getInfoFields());
 
-      if (request.id) {
-        this.readOnly = this.readModeService.isReadOnly(request.id);
-        this.fm.displayFormValidity();
-      } else if (request.isNewPartialRequest()) {
-        this.readOnly = true;
+      if (request.isPartial) {
         this.fm.displayFormValidity();
       } else {
-        this.readOnly = false;
+        if (request.id) {
+          this.readOnly = this.readModeService.isReadOnly(request.id);
+          this.fm.displayFormValidity();
+        } else {
+          this.readOnly = false;
+        }
       }
     }
   }
@@ -630,11 +632,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
 
+        this.isPartialRequest = response.request.isPartial;
+
         if (this.currentParamType === this.routeParamTypes.partial) {
           response.request.statusDateModified = response.request.creationDate;
           response.request.statusDateModifiedString = response.request.creationDateString;
           this.editMode = false;
-          this.readModeService.setReadOnly(response.request.id);
         } else {
           if (!response.request.isUnderProcessing()) {
             this.readModeService.setReadOnly(response.request.id);
@@ -1256,7 +1259,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   beneficiaryPrimaryIdDisabled(): boolean {
-    return this.readOnly || this.editMode;
+    return this.isPartialRequest || this.readOnly || this.editMode;
   }
 
   beneficiarySecondaryIdDisabled(): boolean {
@@ -1300,7 +1303,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   saveButtonEnabled(): boolean {
-    if (this.currentRequest?.isNewPartialRequest()) {
+    if (this.isPartialRequest) {
       return this.form.valid;
     } else {
       if (this.readOnly) {

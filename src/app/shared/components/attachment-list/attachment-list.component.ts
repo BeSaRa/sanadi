@@ -90,11 +90,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     } else {
       return !this.readOnly;
     }
-    /*if (!this.readOnly) {
-      return true;
-    } else {
-      return this._request.isNewPartialRequest();
-    }*/
   }
 
   allowEdit(attachment: SanadiAttachment): boolean {

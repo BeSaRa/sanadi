@@ -180,7 +180,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
-                     class="form-control" type="text" [readOnly]="readOnly">
+                     class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
             </div>
@@ -192,7 +192,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
-                     class="form-control" type="text" [readOnly]="readOnly">
+                     class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
             </div>
@@ -201,7 +201,7 @@
       </div>
       <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
+          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly || isPartialRequest">
             <label for="dateOfBirthReadOnly" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
@@ -213,7 +213,7 @@
                 [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
             </div>
           </div>
-          <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
+          <div class="row d-flex flex-column flex-md-row" *ngIf="!(readOnly || isPartialRequest)">
             <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
@@ -236,7 +236,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
               <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
-                         [readonly]="readOnly"
+                         [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="gender"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="gender"
@@ -259,7 +259,7 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
                      formControlName="phoneNumber1" class="form-control" type="text"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
             </div>
@@ -271,7 +271,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
               <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                         [readonly]="readOnly"
+                         [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="nationality"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="benNationality"
@@ -295,7 +295,7 @@
               <input maxlength="2" id="sponsorsCount"
                      [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
                      formControlName="benDependentsCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
             </div>
@@ -309,7 +309,7 @@
               <input maxlength="2" id="familyCount"
                      [ngClass]="fm.getStatusClass('personalTab.familyCount')"
                      formControlName="familyCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.familyCount')"></app-field-error-message>
             </div>
@@ -323,7 +323,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
               <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
-                         [readonly]="readOnly"
+                         [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="maritalStatus"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="maritalStatus"
@@ -343,7 +343,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
               <ng-select [selectOnTab]="true" labelForId="occupationStatus" [clearable]="false"
-                         [readonly]="readOnly"
+                         [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="occupationStatus"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="benCategory"
@@ -365,7 +365,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
               <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
-                         [readonly]="readOnly"
+                         [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="educationLevel"
                          [notFoundText]="langService.map.msg_not_found"
                          formControlName="educationLevel"
@@ -385,7 +385,8 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                     formControlName="employeer" class="form-control" type="text" [readOnly]="readOnly">
+                     formControlName="employeer" class="form-control" type="text"
+                     [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
             </div>
@@ -399,7 +400,7 @@
             <div class="col-md-10 col-sm-12">
                     <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
                               [ngClass]="fm.getStatusClass('personalTab.benNotes')"
-                              [readOnly]="readOnly"></textarea>
+                              [readOnly]="readOnly || isPartialRequest"></textarea>
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
             </div>
@@ -417,7 +418,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="employmentStatus" [clearable]="false"
-                       [readonly]="readOnly"
+                       [readonly]="readOnly || isPartialRequest"
                        placeholder="{{langService.map.select}}" id="employmentStatus"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="occuptionStatus"
@@ -437,7 +438,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.occuption')"
-                   formControlName="occuption" class="form-control" type="text" [readOnly]="readOnly">
+                   formControlName="occuption" class="form-control" type="text"
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.occuption')"></app-field-error-message>
           </div>
@@ -452,7 +454,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="512" [ngClass]="fm.getStatusClass('incomeTab.employeerAddress')"
                    formControlName="employeerAddress" id="workplace" class="form-control" type="text"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.employeerAddress')"></app-field-error-message>
           </div>
@@ -467,7 +469,7 @@
                    [ngClass]="fm.getStatusClass('incomeTab.benIncome')"
                    class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
                    [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
           </div>
@@ -483,7 +485,7 @@
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
                    formControlName="benExtraIncome" class="form-control" id="extraIncome"
                    [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
           </div>
@@ -496,7 +498,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
                    formControlName="benExtraIncomeSource" id="extraIncomeSource" class="form-control" type="text"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
           </div>
@@ -511,7 +513,7 @@
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
                    formControlName="totalDebts" class="form-control" type="text"
                    [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
           </div>
@@ -524,7 +526,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
                    formControlName="totalInstalments" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
           </div>
@@ -540,7 +542,7 @@
             <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
                    formControlName="benHouseRent" class="form-control"
                    [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
           </div>
@@ -557,7 +559,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
-                       [readonly]="readOnly"
+                       [readonly]="readOnly || isPartialRequest"
                        placeholder="{{langService.map.select}}" id="city"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="residenceCountry"
@@ -577,7 +579,8 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
           </div>
@@ -592,7 +595,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
                    formControlName="streetName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
           </div>
@@ -605,7 +608,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
                    formControlName="buildingName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
           </div>
@@ -618,7 +621,8 @@
           <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
           </div>
@@ -631,7 +635,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
                    formControlName="homePhoneNumber" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly">
+                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
           </div>
@@ -646,7 +650,7 @@
           <div class="col-md-10 col-sm-12">
             <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
                       formControlName="addressDescription" rows="5" class="form-control"
-                      [readOnly]="readOnly"></textarea>
+                      [readOnly]="readOnly || isPartialRequest"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
           </div>
@@ -654,7 +658,7 @@
       </div>
     </div>
   </ng-template>
-  <!-- request Info Tab-->
+  <!-- request Info Tab -->
   <ng-template formGroupName="requestInfoTab" #requestInfo>
     <div class="row d-flex flex-row">
       <div class="col-sm-12 col-md-6">
@@ -663,7 +667,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
-                       [readonly]="readOnly"
+                       [readonly]="readOnly || isPartialRequest"
                        placeholder="{{langService.map.select}}" id="requestType"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="requestType"
@@ -718,13 +722,13 @@
             <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
                    formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
                    [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly">
+                   [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6" *ngIf="!isCurrentRequestPartial">
+      <div class="col-sm-12 col-md-6" *ngIf="!isPartialRequest">
         <div class="row d-flex flex-column flex-md-row">
           <div class="col-sm-12 mb-4">
             <div class="form-check form-switch">
@@ -744,7 +748,7 @@
           <div class="col-md-10 col-sm-12">
                   <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
                             formControlName="requestSummary" rows="5" class="form-control"
-                            [readOnly]="readOnly"></textarea>
+                            [readOnly]="readOnly || isPartialRequest"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
           </div>
@@ -761,7 +765,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
-                       [readonly]="readOnly && !(currentRequest?.isNewPartialRequest())"
+                       [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestStatus"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status"
@@ -778,7 +782,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
           <label for="statusDateModifiedReadOnly" asteriskIfRequired="statusDateModified"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
@@ -790,8 +794,7 @@
               [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-column flex-md-row"
-             *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
+        <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
           <label for="statusDateModified" asteriskIfRequired="statusDateModified"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
@@ -818,7 +821,7 @@
           <div class="col-md-10 col-sm-12">
             <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
                       formControlName="requestNotes" rows="5" class="form-control"
-                      [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())"></textarea>
+                      [readOnly]="readOnly"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
           </div>
@@ -837,7 +840,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
-                           [readonly]="readOnly || !!(currentRequest?.isNewPartialRequest())"
+                           [readonly]="readOnly || isPartialRequest"
                            placeholder="{{langService.map.select}}" id="aidType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="aidLookupId"
@@ -859,7 +862,7 @@
                 <input id="aidSuggestedAmount" maxlength="15"
                        [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
                        formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
-                       [readOnly]="readOnly || !!(currentRequest?.isNewPartialRequest())">
+                       [readOnly]="readOnly || isPartialRequest">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
               </div>
@@ -868,7 +871,7 @@
         </div>
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
               <label asteriskIfRequired="approvalDate" for="approvalDateReadOnly"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -880,7 +883,7 @@
                 </div>
               </div>
             </div>
-            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
               <label asteriskIfRequired="approvalDate" for="approvalDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -900,7 +903,7 @@
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly && !(currentRequest?.isNewPartialRequest())">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
               <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDateReadOnly"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -912,7 +915,7 @@
                 </div>
               </div>
             </div>
-            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly || (readOnly && !!(currentRequest?.isNewPartialRequest()))">
+            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
               <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -937,7 +940,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
-                           [readonly]="readOnly && !(currentRequest?.isNewPartialRequest())"
+                           [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="periodicType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="periodicType"
@@ -960,7 +963,7 @@
                 <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
                        id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
                        formControlName="installementsCount" class="form-control"
-                       [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())">
+                       [readOnly]="readOnly">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
               </div>
@@ -976,7 +979,7 @@
                 <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
                        formControlName="aidAmount" class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
                        [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                       [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())">
+                       [readOnly]="readOnly">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
               </div>
@@ -991,7 +994,7 @@
               <div class="col-md-10 col-sm-12">
                     <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
                               formControlName="aidDescription" rows="3" class="form-control"
-                              [readOnly]="readOnly && !(currentRequest?.isNewPartialRequest())"></textarea>
+                              [readOnly]="readOnly"></textarea>
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
               </div>
@@ -1008,7 +1011,7 @@
     </ng-container>
     <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
                      [clickOnNew$]="addAid$"
-                     [addPermission]="!readOnly && !currentRequest?.isNewPartialRequest()"></app-page-header>
+                     [addPermission]="!readOnly && !isPartialRequest"></app-page-header>
     <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
            [dataSource]="subventionAidDataSource">
       <ng-container cdkColumnDef="approvalDate">
@@ -1045,13 +1048,13 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
           <div class="d-flex flex-row">
-            <button *ngIf="!readOnly && !currentRequest?.isNewPartialRequest()"
+            <button *ngIf="!readOnly && !isPartialRequest"
                     (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
                     tooltip="{{langService.map.btn_delete}}">
               <i class="mdi mdi-close-box"></i>
             </button>
             <button (click)="editAid(row, i, $event)" class="icon-btn text-primary"
-                    [disabled]="readOnly && !(currentRequest?.isNewPartialRequest())"
+                    [disabled]="readOnly"
                     tooltip="{{langService.map.btn_edit}}">
               <i class="mdi mdi-pen"></i>
             </button>
@@ -1066,7 +1069,7 @@
   <ng-template formGroupName="attachmentsTab" #attachmentsTabTemplate>
     <app-attachment-list [request]="currentRequest"
                          [attachmentList]="attachmentList"
-                         [readOnly]="readOnly || !!(currentRequest?.isNewPartialRequest())"
+                         [readOnly]="readOnly"
                          (updateList)="updateAttachmentList($event)"
                          (onFormToggle)="isAttachmentFormVisible = $event"
     ></app-attachment-list>
