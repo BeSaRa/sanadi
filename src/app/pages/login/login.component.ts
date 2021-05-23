@@ -25,6 +25,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginFromExternal: FormGroup = {} as FormGroup;
   isExternalLogin = false;
 
+  background: string = 'url(assets/images/login-background.png)';
+
   constructor(public lang: LangService,
               private router: Router,
               private fb: FormBuilder,
