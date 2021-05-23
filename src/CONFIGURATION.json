@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.2-rc#2",
+  "VERSION": "v1.2-rc#3",
   "ENVIRONMENTS_URLS": {
     "STAGING": "http://100.100.3.220:9080/sanadi-services/api/",
     "TEST": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
@@ -7,7 +7,7 @@
     "RACA": "http://eblaepm.no-ip.org:9090/sanadi-services/api/",
     "BAW": "http://100.100.15.102:9080/sanadi-services/api/"
   },
-  "BASE_ENVIRONMENT": "STAGING",
+  "BASE_ENVIRONMENT": "TEST",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
