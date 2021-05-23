@@ -23,6 +23,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  displayedColumns: string[] = ['requestSerial', 'requestDate', 'organization', 'requestStatus', 'requestAmount', 'actions'];
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
