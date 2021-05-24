@@ -3,12 +3,13 @@ import {TaskDetails} from './task-details';
 import {FileNetModel} from './FileNetModel';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {Observable} from 'rxjs';
+import {CaseStatus} from '../enums/case-status.enum';
 
 export abstract class CaseModel<S extends EServiceGenericService<T, S>, T extends FileNetModel<T>> extends FileNetModel<T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;
-  caseStatus!: number;
+  caseStatus!: CaseStatus;
   caseIdentifier!: string;
   caseType!: number;
   taskDetails!: TaskDetails;
@@ -41,10 +42,23 @@ export abstract class CaseModel<S extends EServiceGenericService<T, S>, T extend
     return this.service.draft(this as unknown as T);
   }
 
-  canSaveAsDraft(): boolean {
-    return !this.caseStatus || this.caseStatus <= 1;
-
+  start(): Observable<boolean> {
+    return this.service.start(this.id);
   }
 
+  canDraft(): boolean {
+    return !this.caseStatus || this.caseStatus <= CaseStatus.DRAFT;
+  }
 
+  canSave(): boolean {
+    return this.caseStatus === CaseStatus.CREATED;
+  }
+
+  canCommit(): boolean {
+    return this.caseStatus === CaseStatus.DRAFT;
+  }
+
+  canStart(): boolean {
+    return this.caseStatus < CaseStatus.STARTED && this.caseStatus === CaseStatus.CREATED;
+  }
 }
