@@ -30,8 +30,12 @@ function isValidValue(value: any): boolean {
 }
 
 function hasValidLength(value: any): boolean {
-  // non-strict comparison is intentional, to check for both `null` and `undefined` values
-  return value != null && typeof value.length === 'number';
+  if (!isValidValue(value)) {
+    return false;
+  } else if (typeof value === 'string' || typeof value === 'number') {
+    return true;
+  }
+  return typeof value.length === 'number';
 }
 
 /**

@@ -42,13 +42,16 @@ export function maxlengthValidator(maxLength: number): ValidatorFn {
     if (!isValidValue(control.value) || !hasValidLength(control.value)) {
       return null;
     }
-    let isInvalid: boolean;
+    let isInvalid: boolean, valueLength: number;
     if (typeof control.value === 'string') {
-      isInvalid = (control.value.trim().length > maxLength);
+      valueLength = control.value.trim().length;
+    } else if (typeof control.value === 'number') {
+      valueLength = ('' + control.value).trim().length;
     } else {
-      isInvalid = (control.value.length > maxLength);
+      valueLength = control.value.length;
     }
-    return isInvalid ? {maxlength: {requiredLength: maxLength, actualLength: control.value.length}} : null;
+    isInvalid = (valueLength > maxLength);
+    return isInvalid ? {maxlength: {requiredLength: maxLength, actualLength: valueLength}} : null;
   };
 }
 
@@ -62,13 +65,16 @@ export function minlengthValidator(minLength: number): ValidatorFn {
       // don't validate values without `length` property
       return null;
     }
-    let isInvalid: boolean;
+    let isInvalid: boolean, valueLength: number;
     if (typeof control.value === 'string') {
-      isInvalid = (control.value.trim().length < minLength);
+      valueLength = control.value.trim().length;
+    } else if (typeof control.value === 'number') {
+      valueLength = ('' + control.value).trim().length;
     } else {
-      isInvalid = (control.value.length < minLength);
+      valueLength = control.value.length;
     }
-    return isInvalid ? {minlength: {requiredLength: minLength, actualLength: control.value.length}} : null;
+    isInvalid = (valueLength < minLength);
+    return isInvalid ? {minlength: {requiredLength: minLength, actualLength: valueLength}} : null;
   };
 }
 

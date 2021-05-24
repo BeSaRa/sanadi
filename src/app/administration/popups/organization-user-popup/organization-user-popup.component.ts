@@ -125,8 +125,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
         qid: [this.model.qid, [CustomValidators.required, CustomValidators.number,
-          Validators.minLength(CustomValidators.defaultLengths.QID_MIN),
-          Validators.maxLength(CustomValidators.defaultLengths.QID_MAX)
+          CustomValidators.minLength(CustomValidators.defaultLengths.QID_MIN),
+          CustomValidators.maxLength(CustomValidators.defaultLengths.QID_MAX)
         ]],
         empNum: [this.model.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
         phoneNumber: [this.model.phoneNumber, [
