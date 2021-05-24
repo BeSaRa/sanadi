@@ -30,5 +30,6 @@
   "EXT_TWITTER": "https://twitter.com/Racaqa",
   "EXT_RACA": "https://www.raca.gov.qa",
   "E_INQUIRY": "/inquiry",
+  "USER_INBOX": "/inbox/user",
   "INTERNAL_DEPARTMENT": "admin/internal/department"
 }

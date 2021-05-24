@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  request_has_been_sent_successfully: string;
+  service_type: string;
   pagination_items_per_page: string;
   pagination_go_to_page: string;
   pagination_last: string;

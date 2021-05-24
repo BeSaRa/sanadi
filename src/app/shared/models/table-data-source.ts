@@ -54,7 +54,9 @@ export class TableDataSource extends DataSource<any> {
   }
 
   set data(val: any[]) {
-    this._data.next(val);
+    if (val !== null) {
+      this._data.next(val);
+    }
   }
 
 
