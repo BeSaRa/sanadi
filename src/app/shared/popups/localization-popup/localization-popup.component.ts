@@ -12,6 +12,7 @@ import {CustomValidators} from '../../../validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {DialogRef} from '../../models/dialog-ref';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-localization-popup',
@@ -30,7 +31,8 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Localization>,
               private toast: ToastService,
               private dialogRef: DialogRef,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.operation = data.operation;
   }
@@ -72,12 +74,15 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
           const localization = (new Localization()).clone({...this.model, ...this.form.value});
-          return localization.save().pipe(catchError(() => {
-            return of(undefined);
-          }));
+          return localization.save().pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            })
+          );
         }))
-      .subscribe((local) => {
-        if (typeof local === 'undefined') {
+      .subscribe((local: Localization | null) => {
+        if (!local) {
           return;
         }
         const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;

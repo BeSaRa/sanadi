@@ -27,6 +27,7 @@ import {OrganizationUserPermissionService} from '../../../services/organization-
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {EmployeeService} from '../../../services/employee.service';
 import {AuthService} from '../../../services/auth.service';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -81,7 +82,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               private employeeService: EmployeeService,
               private authService: AuthService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.operation = data.operation;
     this.customRoleList = data.customRoleList;
@@ -168,18 +170,38 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       exhaustMap(() => {
         const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
         return orgUser.save()
-          .pipe(mergeMap((savedUser: OrgUser) => {
-            return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
-              .pipe(map(() => {
-                return savedUser;
-              }));
-          }));
+          .pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            }),
+            switchMap((savedUser: OrgUser | null) => {
+              if (!savedUser) {
+                return of(savedUser);
+              }
+              return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
+                .pipe(
+                  catchError((err) => {
+                    this.exceptionHandlerService.handle(err);
+                    return of(null);
+                  }),
+                  map(() => {
+                    return savedUser;
+                  })
+                );
+            }));
       }),
       switchMap((user) => {
+        if (!user) {
+          return of(user);
+        }
         return this.employeeService.isCurrentEmployee(user) ? this.authService.validateToken()
           .pipe(catchError(error => of(user)), map(_ => user)) : of(user);
       }),
     ).subscribe((user) => {
+      if (!user) {
+        return;
+      }
       const message = (this.operation === OperationTypes.CREATE)
         ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       // @ts-ignore

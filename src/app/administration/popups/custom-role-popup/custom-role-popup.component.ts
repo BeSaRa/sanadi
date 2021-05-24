@@ -11,7 +11,7 @@ import {LookupService} from '../../../services/lookup.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {combineLatest, of, Subject} from 'rxjs';
 import {PermissionService} from '../../../services/permission.service';
-import {exhaustMap, take, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, take, takeUntil} from 'rxjs/operators';
 import {Permission} from '../../../models/permission';
 import {CheckGroup} from '../../../models/check-group';
 import {CustomRolePermission} from '../../../models/custom-role-permission';
@@ -20,6 +20,7 @@ import {ToastService} from '../../../services/toast.service';
 import {CustomRolePermissionService} from '../../../services/custom-role-permission.service';
 import {Lookup} from '../../../models/lookup';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -49,7 +50,8 @@ export class CustomRolePopupComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private customRolePermissionService: CustomRolePermissionService,
               private permissionService: PermissionService,
-              public langService: LangService) {
+              public langService: LangService,
+              private exceptionHandlerService: ExceptionHandlerService) {
 
     this.operation = data.operation;
     this.model = data.model;
@@ -121,9 +123,16 @@ export class CustomRolePopupComponent implements OnInit, OnDestroy {
         exhaustMap(() => {
           const customRole = extender<CustomRole>(CustomRole, {...this.model, ...this.fm.getFormField('basic')?.value});
           customRole.setPermissionSet(this.selectedPermissions);
-          return customRole.save();
+          return customRole.save().pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            }));
         }))
-      .subscribe(customRole => {
+      .subscribe((customRole: CustomRole | null) => {
+        if (!customRole){
+          return;
+        }
         const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
         // @ts-ignore
         this.toast.success(message.change({x: customRole.getName()}));

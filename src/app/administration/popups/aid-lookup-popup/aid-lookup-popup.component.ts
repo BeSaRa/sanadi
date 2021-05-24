@@ -10,13 +10,14 @@ import {ToastService} from '../../../services/toast.service';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {AidTypes} from '../../../enums/aid-types.enum';
-import {Subject} from 'rxjs';
-import {exhaustMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {Lookup} from '../../../models/lookup';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {LookupService} from '../../../services/lookup.service';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -50,7 +51,8 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               public langService: LangService,
               private dialogRef: DialogRef,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.parentId = data.parentId;
     this.operation = data.operation;
@@ -113,9 +115,17 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       exhaustMap(() => {
         const aidLookup = extender<AidLookup>(AidLookup, {...this.model, ...this.fm.getFormField('basic')?.value});
-        return aidLookup.save();
+        return aidLookup.save().pipe(
+          catchError((err) => {
+            this.exceptionHandlerService.handle(err);
+            return of(null);
+          })
+        );
       }),
-    ).subscribe(aid => {
+    ).subscribe((aid: AidLookup | null) => {
+      if (!aid) {
+        return;
+      }
       const message = this.operation === OperationTypes.CREATE
         ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
       this.toast.success(message.change({x: aid.aidCode}));

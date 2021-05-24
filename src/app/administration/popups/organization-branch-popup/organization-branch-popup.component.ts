@@ -14,8 +14,9 @@ import {LangService} from '../../../services/lang.service';
 import {LookupCategories} from '../../../enums/lookup-categories';
 import {extender} from '../../../helpers/extender';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {Subject} from 'rxjs';
-import {exhaustMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-organization-branch-popup',
@@ -41,11 +42,12 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN)  data: IDialogData<OrgBranch>,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgBranch>,
               private lookupService: LookupService,
               private fb: FormBuilder,
               private toast: ToastService,
-              public langService: LangService) {
+              public langService: LangService,
+              private exceptionHandlerService: ExceptionHandlerService) {
     this.operation = data.operation;
     this.model = data.model;
     this.orgUnit = data.orgUnit;
@@ -115,9 +117,16 @@ export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         exhaustMap(() => {
           const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getFormField('basic')?.value});
-          return orgBranch.save();
+          return orgBranch.save().pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            }));
         }))
-      .subscribe(orgBranch => {
+      .subscribe((orgBranch: OrgBranch | null) => {
+        if (!orgBranch) {
+          return;
+        }
         const message = (this.operation === OperationTypes.CREATE)
           ? this.langService.map.msg_create_x_success
           : this.langService.map.msg_update_x_success;

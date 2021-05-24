@@ -21,6 +21,7 @@ import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {getDatepickerOptions} from '../../../helpers/utils-date';
 import {FileStore} from '../../../models/file-store';
 import {DialogService} from '../../../services/dialog.service';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -69,7 +70,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               public langService: LangService,
               private dialogService: DialogService,
-              private configService: ConfigurationService) {
+              private configService: ConfigurationService,
+              private exceptionHandlerService: ExceptionHandlerService) {
     this.operation = data.operation;
     this.model = data.model;
     this.orgUnitsList = data.orgUnitsList;
@@ -192,7 +194,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         const orgUnit = extender<OrgUnit>(OrgUnit,
           {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.advanced});
         return orgUnit.save().pipe(
-          catchError(() => {
+          catchError((err) => {
+            this.exceptionHandlerService.handle(err);
             return of(null);
           }));
       })
@@ -213,7 +216,16 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
       }
 
       orgUnit.saveLogo(this.logoFile)
-        .subscribe((result: boolean) => {
+        .pipe(
+          catchError((err) => {
+            this.exceptionHandlerService.handle(err);
+            return of(null);
+          })
+        )
+        .subscribe((result: boolean | null) => {
+          if (!result) {
+            return;
+          }
           this._clearLogoUploader();
           this.toast.success(message.change({x: orgUnit.getName()}));
         });
