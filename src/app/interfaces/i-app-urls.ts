@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  USER_INBOX: string;
   PERMISSIONS: string;
   BASE_URL: string;
   LOGIN_INFO: string;

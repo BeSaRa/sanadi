@@ -6,7 +6,6 @@ import {ErrorPageComponent} from './shared/components/error-page/error-page.comp
 import {AuthGuard} from './guards/auth-guard';
 import {GuestGuard} from './guards/guest-guard';
 import {PermissionGuard} from './guards/permission-guard';
-import {UserInboxComponent} from './e-services/pages/user-inbox/user-inbox.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -24,7 +23,7 @@ const routes: Routes = [
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       {path: 'e-services', loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule)},
-      {path: 'user-inbox', component: UserInboxComponent}
+      {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)}
       //{path: '**', redirectTo: '../error'}
     ]
   },

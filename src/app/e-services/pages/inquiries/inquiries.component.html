@@ -3,7 +3,7 @@
     <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_inquiries_and_complaints}}</h1></div>
   </div>
   <fieldset>
-    <form [formGroup]="from" autocomplete="off">
+    <form [formGroup]="form" autocomplete="off">
       <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
           <div class="row">
@@ -121,12 +121,12 @@
     </div>
   </div>
   <div class="mb-3 d-flex align-items-center justify-content-center">
-    <button (click)="save.next(saveTypes.FINAL)" [disabled]="from.invalid"
+    <button (click)="save.next(saveTypes.FINAL)" [disabled]="form.invalid"
             class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
-    <button [disabled]="!model?.canSaveAsDraft()" (click)="save.next(saveTypes.DRAFT)"
-            class="btn btn-primary shadow-sm mx-3">{{lang.map.save_as_draft}}</button>
-    <button [disabled]="from.invalid" (click)="save.next(saveTypes.COMMIT)"
-            class="btn btn-primary shadow-sm">{{lang.map.launch}}</button>
-    <button class="btn btn-secondary mx-3 shadow-sm">{{lang.map.btn_cancel}}</button>
+    <!--    <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"-->
+    <!--            class="btn btn-primary shadow-sm mx-3">{{lang.map.save_as_draft}}</button>-->
+    <button (click)="launch()" [disabled]="form.invalid || !model?.canStart()"
+            class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
+    <button class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
   </div>
 </div>

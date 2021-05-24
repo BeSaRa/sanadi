@@ -26,7 +26,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
-  from!: FormGroup;
+  form!: FormGroup;
   categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
   save: Subject<SaveTypes> = new Subject();
   saveTypes: typeof SaveTypes = SaveTypes;
@@ -69,24 +69,24 @@ export class InquiriesComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     const inquiry = new Inquiry();
-    this.from = this.fb.group(inquiry.getFormFields(true));
-    this.fm = new FormManager(this.from, this.lang);
+    this.form = this.fb.group(inquiry.getFormFields(true));
+    this.fm = new FormManager(this.form, this.lang);
   }
 
   private listenToSave(): void {
     const validFormSubmit$ = this.save.pipe(
       filter(val => val === SaveTypes.FINAL || val === SaveTypes.COMMIT),
-      tap(_ => (!this.from.valid ? this.displayInvalidFormMessage() : null)),
-      filter(_ => this.from.valid),
+      tap(_ => (!this.form.valid ? this.displayInvalidFormMessage() : null)),
+      filter(_ => this.form.valid),
     );
 
     const finalSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.FINAL), map(_ => this.from.value));
+      .pipe(filter(val => val === SaveTypes.FINAL), map(_ => this.form.value));
     const commitSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.COMMIT), map(_ => this.from.value));
+      .pipe(filter(val => val === SaveTypes.COMMIT), map(_ => this.form.value));
 
     const draftSave$ = this.save
-      .pipe(filter(val => val === SaveTypes.DRAFT), map(_ => this.from.value));
+      .pipe(filter(val => val === SaveTypes.DRAFT), map(_ => this.form.value));
 
     this.listenToDraftSave(draftSave$);
     this.listenToFinalSave(finalSave$);
@@ -145,12 +145,12 @@ export class InquiriesComponent implements OnInit, OnDestroy {
         tap((item) => this.model = item),
       )
       .subscribe((model) => {
-        model ? this.updateFromFields(model) : this.from.reset();
+        model ? this.updateFromFields(model) : this.form.reset();
       });
   }
 
   private updateFromFields(model: Inquiry): void {
-    this.from.patchValue(model.getFormFields());
+    this.form.patchValue(model.getFormFields());
   }
 
   private saveDraftMessage(): void {
@@ -159,5 +159,11 @@ export class InquiriesComponent implements OnInit, OnDestroy {
 
   private saveMessage(): void {
     this.toast.success(this.lang.map.request_has_been_saved_successfully);
+  }
+
+  launch() {
+    this.model?.start().subscribe(_ => {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
+    });
   }
 }

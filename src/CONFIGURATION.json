@@ -7,7 +7,7 @@
     "RACA": "http://eblaepm.no-ip.org:9090/sanadi-services/api/",
     "BAW": "http://100.100.15.102:9080/sanadi-services/api/"
   },
-  "BASE_ENVIRONMENT": "STAGING",
+  "BASE_ENVIRONMENT": "BAW",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
