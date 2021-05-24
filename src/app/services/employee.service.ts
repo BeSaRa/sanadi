@@ -54,7 +54,8 @@ export class EmployeeService {
   }
 
   private preparePermissionMap() {
-    this.permissions?.map(permission => this.permissionMap?.set(permission.permissionKey.toLowerCase(), permission));
+    this.permissionMap.clear();
+    this.permissions?.map(permission => this.permissionMap.set(permission.permissionKey.toLowerCase(), permission));
   }
 
   /**
