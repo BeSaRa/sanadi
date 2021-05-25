@@ -4,7 +4,7 @@
     <!--  Inquiry Types  -->
     <div class="row">
       <div class="col mb-4">
-        <div class="form-check form-check-inline">
+        <div class="form-check form-check-inline" *ngIf="searchByNameAllowed">
           <input formControlName="inquiryType" [value]="false" class="form-check-input" type="radio"
                  name="inquiryType" id="inquiryByName" [readOnly]="readonlyForm">
           <label class="form-check-label" for="inquiryByName">
@@ -21,7 +21,7 @@
       </div>
     </div>
     <!-- Search By Name -->
-    <div formGroupName="searchByName" *ngIf="!displayIdCriteria" class="row">
+    <div formGroupName="searchByName" *ngIf="!displayIdCriteria && searchByNameAllowed" class="row">
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="searchMethod">{{langService.map.search_method}}</label>

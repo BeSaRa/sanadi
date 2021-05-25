@@ -21,6 +21,7 @@ import {isValidValue, printBlobData} from '../../../helpers/utils';
 import {AdminResult} from '../../../models/admin-result';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -68,6 +69,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   nationalityListType: 'normal' | 'gulf' = 'normal';
   readonlyForm: boolean = false;
   routeParams: IKeyValue = {};
+  searchByNameAllowed: boolean = false;
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -76,7 +78,9 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               private subventionRequestService: SubventionRequestService,
               private subventionRequestAidService: SubventionRequestAidService,
               private beneficiaryService: BeneficiaryService,
-              private activeRoute: ActivatedRoute) {
+              private activeRoute: ActivatedRoute,
+              private empService: EmployeeService) {
+    this.searchByNameAllowed = empService.checkPermissions('BEN_SEARCH_NAME');
   }
 
   ngOnInit(): void {
@@ -99,7 +103,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
 
   private buildPageForm(): void {
     this.form = this.fb.group({
-      inquiryType: [false, Validators.required],
+      inquiryType: [!this.searchByNameAllowed, Validators.required],
       searchById: this.fb.group({
         identification: [1, [CustomValidators.required]],
         idType: [1, [CustomValidators.required]],
