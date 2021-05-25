@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  CLAIM_BULK:string;
   TEAMS_INBOX: string;
   USER_INBOX: string;
   PERMISSIONS: string;

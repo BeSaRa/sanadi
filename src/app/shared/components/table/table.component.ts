@@ -24,9 +24,11 @@ export class TableComponent implements OnInit, OnDestroy {
   _paginator?: PaginatorComponent;
   private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
+  _filterCallback?: ((data: any, filter: string) => boolean);
+
   @Input()
   set filterCallback(callback: ((data: any, filter: string) => boolean)) {
-    this.dataSource.filterPredicate = callback;
+    this._filterCallback = callback;
   };
 
   @Input()
@@ -81,6 +83,9 @@ export class TableComponent implements OnInit, OnDestroy {
         this.dataSource.filter = this.filter;
         this.dataSource.sort = this.sortable;
         this.dataSource.paginator = this.paginator;
+        if (this._filterCallback) {
+          this.dataSource.filterPredicate = this._filterCallback;
+        }
       });
   }
 
