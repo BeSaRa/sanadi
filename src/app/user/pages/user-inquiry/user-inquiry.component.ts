@@ -268,6 +268,12 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
         this.beneficiary = undefined;
         this.requests = [];
       });
+    } else if (beneficiaries.length === 1) {
+      return this.subventionRequestAidService.loadByBeneficiaryId(beneficiaries[0].id)
+        .subscribe((requestsResult) => {
+          this.beneficiary = beneficiaries[0];
+          this.requests = requestsResult;
+        });
     }
 
     this.beneficiaryService
