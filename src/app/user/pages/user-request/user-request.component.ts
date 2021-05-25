@@ -314,6 +314,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
+          if (this.readOnly){
+            this.allowCompletionField?.disable();
+          }
           this.fm.displayFormValidity();
         } else {
           this.readOnly = false;
@@ -551,7 +554,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.currentRequest = request.clone();
       this.editMode = true;
 
-      this.allowCompletionField?.disable();
+      if (!this.currentRequest.isUnderProcessing()) {
+        this.allowCompletionField?.disable();
+      }
 
       if (!this.requestStatusTab.value) {
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
@@ -654,8 +659,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           }
           this.editMode = true;
         }
-
-        this.allowCompletionField?.disable();
 
         this.requestChanged$.next(response.request);
         this.loadSubAidCategory().subscribe();
