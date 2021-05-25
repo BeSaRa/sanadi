@@ -60,7 +60,9 @@
                     class="icon-btn text-primary">
               <i class="mdi mdi-view-list"></i>
             </button>
-            <button (click)="addPartialRequest($event, row)" tooltip="{{langService.map.btn_add_partial_request}}"
+            <button *ngIf="empService.checkPermissions('SUBVENTION_ADD')"
+                    (click)="addPartialRequest($event, row)"
+                    tooltip="{{langService.map.btn_add_partial_request}}"
                     class="icon-btn text-primary">
               <i class="mdi mdi-plus"></i>
             </button>

@@ -57,6 +57,7 @@ import {SubventionResponseService} from '../../../services/subvention-response.s
 import {SubventionResponse} from '../../../models/subvention-response';
 import {SanadiAttachment} from '../../../models/sanadi-attachment';
 import {AttachmentService} from '../../../services/attachment.service';
+import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 
 @Component({
   selector: 'app-user-request',
@@ -194,7 +195,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private exceptionHandlerService: ExceptionHandlerService) {
 
   }
 
@@ -614,7 +616,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           if (this.currentParamType === this.routeParamTypes.normal) {
             return this.subventionResponseService.loadById(requestId);
           } else if (this.currentParamType === this.routeParamTypes.partial) {
-            return this.subventionResponseService.createPartialRequestById(requestId);
+            return this.subventionResponseService.createPartialRequestById(requestId)
+              .pipe(
+                catchError((err) => {
+                  this.currentParamType = this.routeParamTypes.normal;
+                  this.exceptionHandlerService.handle(err);
+                  return of(null);
+                })
+              );
           } else {
             return of(null);
           }

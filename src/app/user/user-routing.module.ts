@@ -33,7 +33,7 @@ const routes: Routes = [
     path: 'request/partial/:partial-id', component: UserRequestComponent,
     canActivate: [PermissionGuard],
     canDeactivate: [CanDeactivateGuard],
-    data: {permissionKey: 'EDIT_SUBVENTION_REQUEST'}
+    data: {permissionKey: 'SUBVENTION_ADD'}
   },
   {
     path: 'partial-requests', component: PartialRequestComponent,

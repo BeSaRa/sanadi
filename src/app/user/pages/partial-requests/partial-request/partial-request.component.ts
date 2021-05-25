@@ -15,6 +15,7 @@ import {SubventionRequestPartial} from '../../../../models/subvention-request-pa
 import {SubventionRequestPartialService} from '../../../../services/subvention-request-partial.service';
 import {SubventionResponseService} from '../../../../services/subvention-response.service';
 import {BeneficiaryService} from '../../../../services/beneficiary.service';
+import {EmployeeService} from '../../../../services/employee.service';
 
 @Component({
   selector: 'app-partial-request',
@@ -37,7 +38,8 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
               private subventionResponseService: SubventionResponseService, // for model/interceptor
               private subventionRequestPartialService: SubventionRequestPartialService,
               private beneficiaryService: BeneficiaryService, // for model/interceptor
-              private router: Router) {
+              private router: Router,
+              public empService: EmployeeService) {
   }
 
   ngOnInit(): void {
