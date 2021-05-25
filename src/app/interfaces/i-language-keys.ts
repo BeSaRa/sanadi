@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  something_went_wrong_while_taking_action: string;
+  task_have_been_claimed_successfully: string;
+  no_records_to_display: string;
+  claim: string;
   due_date: string;
   creation_date: string;
   menu_team_inbox: string;

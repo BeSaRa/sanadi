@@ -1,23 +1,22 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {QueryResultSet} from '../models/query-result-set';
 import {LangService} from '../services/lang.service';
-import {switchMap, takeUntil, tap} from 'rxjs/operators';
-import {SortEvent} from '../interfaces/sort-event';
-import {PageEvent} from '../interfaces/page-event';
-import {TeamInboxService} from '../services/team-inbox.service';
+import {switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {Team} from '../models/team';
 import {EmployeeService} from '../services/employee.service';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {FormControl} from '@angular/forms';
-import {TableComponent} from '../shared/components/table/table.component';
 import {EServiceListService} from '../services/e-service-list.service';
+import {QueryResult} from '../models/query-result';
+import {InboxService} from '../services/inbox.service';
+import {ToastService} from '../services/toast.service';
 
 @Component({
   selector: 'team-inbox',
   templateUrl: './team-inbox.component.html',
   styleUrls: ['./team-inbox.component.scss']
 })
-export class TeamInboxComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
@@ -25,17 +24,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy, AfterViewInit {
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();
-  @ViewChild(TableComponent)
-  table!: TableComponent;
+
 
   constructor(public lang: LangService,
-              private service: TeamInboxService,
+              private toast: ToastService,
+              private inboxService: InboxService,
               public eService: EServiceListService,
               public employee: EmployeeService) {
-  }
-
-  ngAfterViewInit(): void {
-    console.log('    this.table;', this.table);
   }
 
   ngOnDestroy(): void {
@@ -51,33 +46,20 @@ export class TeamInboxComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.hasSelectedInbox()) {
       return of(null);
     }
-    return this.service.load(this.inboxChange$.value!)
+    return this.inboxService.loadTeamInbox(this.inboxChange$.value!)
       .pipe(tap(val => console.log(val.items)))
       .pipe(tap(result => this.queryResultSet = result));
   }
 
   ngOnInit(): void {
-    this.reloadDepartmentInboxOfFirstTeam();
+    this.reloadDefaultTeam();
     this.selectControl.patchValue(this.inboxChange$.value);
     this.listenToInboxChange();
     this.listenToSelectControl();
   }
 
-  reloadDepartmentInboxOfFirstTeam(): void {
+  reloadDefaultTeam(): void {
     this.inboxChange$.next(this.employee.getInternalDepartment()?.mainTeam.id || this.employee.teams[0].id || null);
-  }
-
-  sortBy($event: SortEvent) {
-    console.log($event);
-  }
-
-  search($event: Event) {
-    let input = $event.target as HTMLInputElement;
-    this.searchModel = input.value;
-  }
-
-  log($event: PageEvent) {
-    console.log($event);
   }
 
   private listenToInboxChange() {
@@ -103,8 +85,16 @@ export class TeamInboxComponent implements OnInit, OnDestroy, AfterViewInit {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  sortDate(a: string, b: string): number {
-    console.log(a, b);
-    return 1;
+  claim(item: QueryResult) {
+    item.claim()
+      .pipe(take(1))
+      .subscribe((val) => {
+        this.reloadSelectedInbox();
+        if (val.failedOperations) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.task_have_been_claimed_successfully);
+      });
   }
 }

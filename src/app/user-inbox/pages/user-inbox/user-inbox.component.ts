@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {SortEvent} from '../../../interfaces/sort-event';
 import {PageEvent} from '../../../interfaces/page-event';
-import {UserInboxService} from '../../../services/user-inbox.service';
+import {InboxService} from '../../../services/inbox.service';
 import {QueryResultSet} from '../../../models/query-result-set';
 import {tap} from 'rxjs/operators';
 
@@ -16,12 +16,12 @@ export class UserInboxComponent implements OnInit {
   displayedColumns: string[] = ['BD_FULL_SERIAL', 'name', 'weight', 'actions'];
   searchModel = '';
 
-  constructor(public lang: LangService, private inboxService: UserInboxService) {
-    this.inboxService.load();
+  constructor(public lang: LangService, private inboxService: InboxService) {
+
   }
 
   reload(): void {
-    this.inboxService.load().pipe(tap(result => console.log(result.items))).subscribe(result => this.queryResultSet = result);
+    this.inboxService.loadUserInbox().pipe(tap(result => console.log(result.items))).subscribe(result => this.queryResultSet = result);
   }
 
   ngOnInit(): void {
