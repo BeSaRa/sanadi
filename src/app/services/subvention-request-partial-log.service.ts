@@ -42,12 +42,12 @@ export class SubventionRequestPartialLogService extends BackendGenericService<Su
   }
 
   @Generator(undefined, true, {property: 'rs'})
-  loadPartialRequestsLogsByCriteria(criteria: Partial<ISubventionRequestPartialLogCriteria>): Observable<SubventionRequestPartialLog[]> {
+  loadByCriteria(criteria: Partial<ISubventionRequestPartialLogCriteria>): Observable<SubventionRequestPartialLog[]> {
     return this.http.post<SubventionRequestPartialLog[]>(this._getServiceURL() + '/search', criteria);
   }
 
   @Generator(undefined, true, {property: 'rs'})
-  loadPartialRequestsLogsByCriteriaAsBlob(criteria: Partial<ISubventionRequestPartialLogCriteria>): Observable<Blob> {
-    return this.http.post(this._getServiceURL() + '/search', criteria, {responseType: 'blob'});
+  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestPartialLogCriteria>): Observable<Blob> {
+    return this.http.post(this._getServiceURL() + '/search/export?lang=' + this.langService.getPrintingLanguage(), criteria, {responseType: 'blob'});
   }
 }

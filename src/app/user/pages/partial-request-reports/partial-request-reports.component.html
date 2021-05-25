@@ -100,6 +100,12 @@
                 (click)="reloadSearchResults()">
           <i class="mdi mdi-reload"></i></button>
       </div>
+      <div class="col-6 d-flex align-items-center justify-content-end">
+        <button class="btn btn-link outline-none"
+                tooltip="{{langService.map.print}}"
+                (click)="printResult($event)">
+          <i class="mdi mdi-printer"></i></button>
+      </div>
     </div>
     <div class="row">
       <div class="table-responsive">

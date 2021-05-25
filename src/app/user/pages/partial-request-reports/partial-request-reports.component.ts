@@ -9,7 +9,7 @@ import {catchError, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SubventionRequestPartialLog} from '../../../models/subvention-request-partial-log';
 import {SubventionRequestPartialLogService} from '../../../services/subvention-request-partial-log.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
-import {isEmptyObject} from '../../../helpers/utils';
+import {isEmptyObject, printBlobData} from '../../../helpers/utils';
 import {
   changeDateFromDatepicker,
   changeDateToDatepicker,
@@ -188,7 +188,7 @@ export class PartialRequestReportsComponent implements OnInit {
         if (isEmptyObject(criteria) || !criteria.fromDate || !criteria.toDate) {
           return of({data: [], reason: 'INVALID_CRITERIA'});
         }
-        return this.subventionRequestPartialLogService.loadPartialRequestsLogsByCriteria(criteria)
+        return this.subventionRequestPartialLogService.loadByCriteria(criteria)
           .pipe(
             map((result) => {
               return {data: result, reason: ''};
@@ -237,6 +237,13 @@ export class PartialRequestReportsComponent implements OnInit {
       .subscribe((result: OrgUser[]) => {
         return this.orgUsersList = result;
       })
+  }
+
+  printResult($event: MouseEvent): void {
+    this.subventionRequestPartialLogService.loadByCriteriaAsBlob(this.latestCriteria)
+      .subscribe((data) => {
+        printBlobData(data, 'PartialRequestLogsByCriteriaSearchResult.pdf');
+      });
   }
 
   get orgUnitField(): FormControl {
