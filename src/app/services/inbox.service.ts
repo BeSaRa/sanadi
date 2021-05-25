@@ -7,14 +7,26 @@ import {Generator} from '../decorators/generator';
 import {QueryResultSetInterceptor} from '../model-interceptors/query-result-set-interceptor';
 import {FactoryService} from './factory.service';
 import {IBulkResult} from '../interfaces/ibulk-result';
+import {InquiryService} from './inquiry.service';
+import {EServiceGenericService} from '../generics/e-service-generic-service';
+import {DialogService} from './dialog.service';
+import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InboxService {
+  services: Map<number, any> = new Map<number, any>();
 
-  constructor(private http: HttpClient, private urlService: UrlService) {
+  constructor(private http: HttpClient,
+              private dialog: DialogService,
+              private inquiryService: InquiryService,
+              private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
+
+    // register all e-services that we need.
+    this.services.set(1, this.inquiryService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
@@ -47,4 +59,11 @@ export class InboxService {
   claimBulk(taskIds: string[]): Observable<IBulkResult> {
     return this._claimBulk(taskIds);
   }
+
+  openDocumentDialog(caseId: string, caseType: number): DialogRef {
+    const service = this.services.get(caseType) as EServiceGenericService<any, any>;
+    return this.dialog.show(DocumentsPopupComponent, {service, caseId});
+  }
+
+
 }

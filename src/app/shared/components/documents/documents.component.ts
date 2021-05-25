@@ -99,7 +99,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this.selectedDocuments.splice(this.selectedDocuments.indexOf(file), 1);
   }
 
-  private loadDocuments(): void {
+  loadDocuments(): void {
     if (!this.caseId) {
       return;
     }

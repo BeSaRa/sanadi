@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  manage_attachments: string;
   something_went_wrong_while_taking_action: string;
   task_have_been_claimed_successfully: string;
   no_records_to_display: string;

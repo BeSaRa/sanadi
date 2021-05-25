@@ -97,4 +97,8 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         this.toast.success(this.lang.map.task_have_been_claimed_successfully);
       });
   }
+
+  openAttachmentsDialog(item: QueryResult) {
+    item.manageAttachments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  }
 }
