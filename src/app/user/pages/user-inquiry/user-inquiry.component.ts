@@ -6,7 +6,7 @@ import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {forkJoin, of, Subject} from 'rxjs';
-import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, filter, mergeMap, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
@@ -17,8 +17,10 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {SubventionRequestAid} from '../../../models/subvention-request-aid';
 import {SubventionRequestAidService} from '../../../services/subvention-request-aid.service';
 import {SubventionRequestService} from '../../../services/subvention-request.service';
-import {printBlobData} from '../../../helpers/utils';
+import {isValidValue, printBlobData} from '../../../helpers/utils';
 import {AdminResult} from '../../../models/admin-result';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {IKeyValue} from '../../../interfaces/i-key-value';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -44,22 +46,28 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
   };
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  identificationMap = {
+    primary: 1,
+    secondary: 2
+  }
   identifications = [
     AdminResult.createInstance({
       id: 1,
       arName: this.langService.getArabicLocalByKey('beneficiary_primary_id'),
       enName: this.langService.getEnglishLocalByKey('beneficiary_primary_id'),
-      lookupKey: 1
+      lookupKey: this.identificationMap.primary
     }),
     AdminResult.createInstance({
       id: 2,
       arName: this.langService.getArabicLocalByKey('beneficiary_secondary_id'),
       enName: this.langService.getEnglishLocalByKey('beneficiary_secondary_id'),
-      lookupKey: 2
+      lookupKey: this.identificationMap.secondary
     })
   ];
   nationalityVisible: boolean = false;
   nationalityListType: 'normal' | 'gulf' = 'normal';
+  readonlyForm: boolean = false;
+  routeParams: IKeyValue = {};
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -67,7 +75,8 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               public lookupService: LookupService,
               private subventionRequestService: SubventionRequestService,
               private subventionRequestAidService: SubventionRequestAidService,
-              private beneficiaryService: BeneficiaryService) {
+              private beneficiaryService: BeneficiaryService,
+              private activeRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -75,6 +84,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.listenToInquiryTypeChange();
     this.listenToIdTypeChange();
     this.listenToSearch();
+    this.listenToRouteParams();
   }
 
   ngOnDestroy(): void {
@@ -105,12 +115,47 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.fm = new FormManager(this.form, this.langService);
   }
 
+  private listenToRouteParams(): void {
+    this.activeRoute.paramMap.pipe(
+      filter(params => params.keys.length > 0),
+      tap((params: ParamMap) => {
+        // @ts-ignore
+        this.routeParams = params.params;
+        if (this.routeParams.idNumber) {
+          this.readonlyForm = true;
+          this.inquiryTypeField?.setValue(true);  // set inquiry type to search by id
+          this.identificationField?.setValue(this.identificationMap.primary); // set identification to primary
+          this.idNumberField?.setValue(this.routeParams.idNumber); // set number
+          this.idTypeField?.setValue(Number(this.routeParams.idType)); // set id type from request params
+        }
+      }),
+      switchMap((params) => {
+        if (this.routeParams.idNumber) {
+          this.search();
+        }
+        return of(params);
+      })
+    ).subscribe();
+  }
+
   private listenToInquiryTypeChange() {
-    this.fm.getFormField('inquiryType')?.valueChanges.pipe(
+    this.inquiryTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
       this.displayIdCriteria = value;
     });
+  }
+
+  get inquiryTypeField(): FormControl {
+    return this.fm.getFormField('inquiryType') as FormControl;
+  }
+
+  get identificationField(): FormControl {
+    return this.fm.getFormField('searchById.identification') as FormControl;
+  }
+
+  get idTypeField(): FormControl {
+    return this.fm.getFormField('searchById.idType') as FormControl;
   }
 
   get idNumberField(): FormControl {
@@ -122,11 +167,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   private listenToIdTypeChange() {
-    this.fm.getFormField('searchById.idType')?.valueChanges.pipe(
+    this.idTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
       let nationalityValidators = null;
-      if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID){
+      if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
         nationalityValidators = [CustomValidators.required];
       }
 
@@ -136,7 +181,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       this.nationalityVisible = (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID);
       this.nationalityListType = (value === BeneficiaryIdTypes.GCC_ID ? 'gulf' : 'normal');
 
-      this.nationalityField.setValue('');
+      let nationality = null;
+      if (this.readonlyForm && this.routeParams.hasOwnProperty('nationality') && isValidValue(this.routeParams.nationality)) {
+        nationality = Number(this.routeParams.nationality);
+      }
+      this.nationalityField.setValue(nationality);
       this.nationalityField.setValidators(nationalityValidators);
       this.nationalityField.updateValueAndValidity();
     });
@@ -159,7 +208,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     let formValue = {...this.currentForm?.value};
 
     let beneficiary = {} as Partial<IBeneficiaryCriteria>;
-    if (formValue.identification === 1) {
+    if (formValue.identification === this.identificationMap.primary) {
       beneficiary.benPrimaryIdType = formValue.idType;
       beneficiary.benPrimaryIdNumber = formValue.idNumber;
       if (formValue.idType === BeneficiaryIdTypes.PASSPORT || formValue.idType === BeneficiaryIdTypes.GCC_ID) {
@@ -202,7 +251,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       this.displayIdCriteria ?
         {
           idType: 1,
-          identification: 1,
+          identification: this.identificationMap.primary,
           nationality: 1
         }
         : {operator: this.currentForm?.controls.operator.value}

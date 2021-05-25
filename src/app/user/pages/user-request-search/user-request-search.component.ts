@@ -436,6 +436,14 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       });
   }
 
+  getRelatedBeneficiaryData(request: SubventionRequestAid) {
+    this.router.navigate(['/home/main/inquiry', {
+      idType: request.benPrimaryIdType,
+      idNumber: request.benPrimaryIdNumber,
+      nationality: request.benPrimaryIdNationality
+    }]).then();
+  }
+
   showRequestDetails(request: SubventionRequestAid, $event: MouseEvent) {
     // start read mode request
     $event.preventDefault();

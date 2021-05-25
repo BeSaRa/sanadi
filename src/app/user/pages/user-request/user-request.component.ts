@@ -1109,7 +1109,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             const ben = this.prepareBeneficiary();
             this.router.navigate(['/home/main/inquiry', {
               idNumber: ben.benPrimaryIdNumber,
-              idType: ben.benPrimaryIdType
+              idType: ben.benPrimaryIdType,
+              nationality: ben.benPrimaryIdNationality
             }]).then();
           }
         });

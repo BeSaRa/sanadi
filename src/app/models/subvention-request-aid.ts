@@ -27,6 +27,9 @@ export class SubventionRequestAid {
   approvedAmount: number = 0;
   statusDateModified: string | null = '';
   statusDateModifiedString: string | null = '';
+  benPrimaryIdType!: number;
+  benPrimaryIdNumber!: string;
+  benPrimaryIdNationality!: number;
 
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',

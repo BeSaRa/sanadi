@@ -1,4 +1,4 @@
-<fieldset class="mb-4">
+<fieldset class="mb-4" [disabled]="readonlyForm">
   <legend><span class="h6 text-primary">{{langService.map.menu_inquiries}}</span></legend>
   <form [formGroup]="form" autocomplete="off" action="#">
     <!--  Inquiry Types  -->
@@ -6,15 +6,14 @@
       <div class="col mb-4">
         <div class="form-check form-check-inline">
           <input formControlName="inquiryType" [value]="false" class="form-check-input" type="radio"
-                 name="inquiryType"
-                 id="inquiryByName">
+                 name="inquiryType" id="inquiryByName" [readOnly]="readonlyForm">
           <label class="form-check-label" for="inquiryByName">
             {{langService.map.inquiry_by_name}}
           </label>
         </div>
         <div class="form-check form-check-inline">
-          <input formControlName="inquiryType" [value]="true" class="form-check-input" type="radio" name="inquiryType"
-                 id="inquiryById">
+          <input formControlName="inquiryType" [value]="true" class="form-check-input" type="radio"
+                 name="inquiryType" id="inquiryById" [readOnly]="readonlyForm">
           <label class="form-check-label" for="inquiryById">
             {{langService.map.inquiry_by_id}}
           </label>
@@ -27,6 +26,7 @@
         <div class="mb-4 ng-select-wrapper">
           <label for="searchMethod">{{langService.map.search_method}}</label>
           <ng-select [selectOnTab]="true" labelForId="searchMethod" [clearable]="false"
+                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="searchMethod"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="operator">
@@ -39,13 +39,13 @@
       <div class="col flex-grow-1">
         <div class="mb-4">
           <label for="arName">{{langService.map.arabic_name}}</label>
-          <input type="text" formControlName="arName" id="arName" class="form-control">
+          <input type="text" formControlName="arName" id="arName" class="form-control" [readOnly]="readonlyForm">
         </div>
       </div>
       <div class="col flex-grow-1">
         <div class="mb-4">
           <label for="enName">{{langService.map.english_name}}</label>
-          <input type="text" formControlName="enName" id="enName" class="form-control" name="enName">
+          <input type="text" formControlName="enName" id="enName" class="form-control" name="enName" [readOnly]="readonlyForm">
         </div>
       </div>
     </div>
@@ -56,6 +56,7 @@
           <label for="identification" class="form-label"
                  asteriskIfRequired="identification">{{langService.map.identification}}</label>
           <ng-select [selectOnTab]="true" labelForId="identification" [clearable]="false"
+                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="identification"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="identification">
@@ -71,6 +72,7 @@
         <div class="mb-4 ng-select-wrapper">
           <label for="idType" class="form-label" asteriskIfRequired="idType">{{langService.map.id_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
+                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="idType"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="idType">
@@ -87,7 +89,7 @@
           <label for="text" class="form-label" asteriskIfRequired="idNumber">{{langService.map.id_number}}</label>
           <input [ngClass]="fm.getInvalidClass('searchById.idNumber')" type="text"
                  formControlName="idNumber" id="text" class="form-control"
-                 name="idNumber" maxlength="20">
+                 name="idNumber" maxlength="20" [readonly]="readonlyForm">
           <app-field-error-message
             [control]="fm.getFormField('searchById.idNumber')"></app-field-error-message>
         </div>
@@ -98,6 +100,7 @@
             <label for="nationality" class="form-label"
                    asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
             <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                       [readonly]="readonlyForm"
                        placeholder="{{langService.map.select}}" id="nationality"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="nationality"
@@ -112,6 +115,7 @@
             <label for="nationalityGulf" class="form-label"
                    asteriskIfRequired="nationality">{{langService.map.country}}</label>
             <ng-select [selectOnTab]="true" labelForId="nationalityGulf" [clearable]="false"
+                       [readonly]="readonlyForm"
                        placeholder="{{langService.map.select}}" id="nationalityGulf"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="nationality"
@@ -130,9 +134,9 @@
     <!-- Form Button -->
     <div class="row">
       <div class="col d-flex flex-row justify-content-start">
-        <button (click)="search()" [disabled]="currentForm?.invalid"
+        <button (click)="search()" [disabled]="currentForm?.invalid || readonlyForm"
                 class="btn shadow-sm btn-primary">{{langService.map.lbl_search}}</button>
-        <button (click)="resetCurrentForm()"
+        <button (click)="resetCurrentForm()" [disabled]="readonlyForm"
                 class="btn shadow-sm btn-secondary mx-3">{{langService.map.btn_clear}}</button>
       </div>
     </div>
