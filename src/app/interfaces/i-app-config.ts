@@ -22,4 +22,5 @@ export interface IAppConfig {
   ORG_LOGO_EXTENSIONS: string[];
   ATTACHMENT_EXTENSIONS: string[];
   ALLOWED_FILE_TYPES_TO_UPLOAD: string[];
+  E_SERVICES_LIST: Record<number, string>;
 }

@@ -1,0 +1,50 @@
+<div class="row mb-3">
+  <div class="col">
+    <div class="d-flex flex-row justify-content-start align-items-center">
+      <h1 class="h6 text-primary">{{lang.map.menu_team_inbox}}</h1>
+      <div>
+        <button [tooltip]="lang.map.btn_reload" (click)="reloadSelectedInbox()" class="btn text-primary icon-btn"><i
+          class="mdi mdi-reload"></i>
+        </button>
+      </div>
+      <div>
+        <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
+          <option [ngValue]="team.id" *ngFor="let team of employee.teams">{{team.getName()}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator" [filter]="searchModel"
+               [data]="queryResultSet?.items"
+               [columns]="displayedColumns">
+      <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="BD_FULL_SERIAL">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.BD_FULL_SERIAL}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="PI_CREATE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.PI_CREATE|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="PI_DUE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="BD_CASE_TYPE">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{eService.getServiceName(row.BD_CASE_TYPE)}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.symbol}} </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+      </table>
+      <app-paginator #paginator [length]="(queryResultSet?.totalCount || 0)"></app-paginator>
+    </app-table>
+  </div>
+</div>

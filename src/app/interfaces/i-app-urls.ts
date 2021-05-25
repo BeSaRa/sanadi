@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  TEAMS_INBOX: string;
   USER_INBOX: string;
   PERMISSIONS: string;
   BASE_URL: string;

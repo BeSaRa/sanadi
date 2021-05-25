@@ -25,6 +25,11 @@ export class TableComponent implements OnInit, OnDestroy {
   private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
   @Input()
+  set filterCallback(callback: ((data: any, filter: string) => boolean)) {
+    this.dataSource.filterPredicate = callback;
+  };
+
+  @Input()
   set filter(val: string) {
     this._filter.next(val);
   };
