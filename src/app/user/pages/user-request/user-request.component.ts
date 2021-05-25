@@ -102,6 +102,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'installementsCount',
     'aidStartPayDate',
     'givenAmount',
+    'remainingAmount',
     'actions'
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');

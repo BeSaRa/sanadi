@@ -89,6 +89,11 @@
         <td cdk-cell
             *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="remainingAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.remaining_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+      </ng-container>
       <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
       <tr class="cdk-row" *cdkNoDataRow>

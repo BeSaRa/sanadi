@@ -36,7 +36,8 @@ export class RequestDetailsPopupComponent implements OnInit {
     'periodicType',
     'installementsCount',
     'aidStartPayDate',
-    'givenAmount'
+    'givenAmount',
+    'remainingAmount'
   ];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: IDialogData<SubventionResponse>,
