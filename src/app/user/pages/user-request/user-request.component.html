@@ -220,13 +220,16 @@
               <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
                      [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
                      formControlName="dateOfBirth" class="form-control">-->
-              <input class="form-control" angular-mydatepicker #dpDateOfBirth="angular-mydatepicker"
-                     name="dateOfBirth" formControlName="dateOfBirth" id="dateOfBirth" dateFix
-                     [options]="datepickerOptionsMap.dateOfBirth" autocomplete="off"
-                     (click)="dpDateOfBirth.toggleCalendar()"
-                     [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
+              <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <input class="form-control" angular-mydatepicker #dpDateOfBirth="angular-mydatepicker"
+                       name="dateOfBirth" formControlName="dateOfBirth" id="dateOfBirth" dateFix
+                       [options]="datepickerOptionsMap.dateOfBirth" autocomplete="off"
+                       (click)="dpDateOfBirth.toggleCalendar()"
+                       [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
+              </div>
             </div>
           </div>
         </div>
@@ -702,13 +705,16 @@
                    [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
                    id="creationDate"
                    formControlName="creationDate" class="form-control">-->
-            <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
-                   name="creationDate" formControlName="creationDate" id="creationDate" dateFix
-                   [options]="datepickerOptionsMap.creationDate" autocomplete="off"
-                   (click)="dpCreationDate.toggleCalendar()" #creationDate
-                   [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
-            <app-field-error-message
-              [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
+                     name="creationDate" formControlName="creationDate" id="creationDate" dateFix
+                     [options]="datepickerOptionsMap.creationDate" autocomplete="off"
+                     (click)="dpCreationDate.toggleCalendar()" #creationDate
+                     [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
@@ -803,13 +809,16 @@
             <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
                    formControlName="statusDateModified" class="form-control"
                    [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">-->
-            <input class="form-control" angular-mydatepicker #dpStatusDateModified="angular-mydatepicker"
-                   name="statusDateModified" formControlName="statusDateModified" id="statusDateModified" dateFix
-                   [options]="datepickerOptionsMap.statusDateModified" autocomplete="off"
-                   (click)="dpStatusDateModified.toggleCalendar()"
-                   [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
-            <app-field-error-message
-              [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <input class="form-control" angular-mydatepicker #dpStatusDateModified="angular-mydatepicker"
+                     name="statusDateModified" formControlName="statusDateModified" id="statusDateModified" dateFix
+                     [options]="datepickerOptionsMap.statusDateModified" autocomplete="off"
+                     (click)="dpStatusDateModified.toggleCalendar()"
+                     [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+              <app-field-error-message
+                [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
@@ -892,13 +901,16 @@
                 <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
                        formControlName="approvalDate" class="form-control"
                        [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">-->
-                <input class="form-control" angular-mydatepicker #dpAidApprovalDate="angular-mydatepicker"
-                       name="approvalDate" formControlName="approvalDate" id="approvalDate" dateFix
-                       [options]="datepickerOptionsMap.aidApprovalDate" autocomplete="off"
-                       (click)="dpAidApprovalDate.toggleCalendar()"
-                       [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
+                <div class="input-group">
+                  <i class="input-group-text mdi mdi-calendar"></i>
+                  <input class="form-control" angular-mydatepicker #dpAidApprovalDate="angular-mydatepicker"
+                         name="approvalDate" formControlName="approvalDate" id="approvalDate" dateFix
+                         [options]="datepickerOptionsMap.aidApprovalDate" autocomplete="off"
+                         (click)="dpAidApprovalDate.toggleCalendar()"
+                         [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>
@@ -922,13 +934,16 @@
                 <!--<input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
                        formControlName="aidStartPayDate" class="form-control"
                        [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">-->
-                <input class="form-control" angular-mydatepicker #dpAidStartPayDate="angular-mydatepicker"
-                       name="aidStartPayDate" formControlName="aidStartPayDate" id="aidStartPayDate" dateFix
-                       [options]="datepickerOptionsMap.aidPaymentDate" autocomplete="off"
-                       (click)="dpAidStartPayDate.toggleCalendar()"
-                       [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
+                <div class="input-group">
+                  <i class="input-group-text mdi mdi-calendar"></i>
+                  <input class="form-control" angular-mydatepicker #dpAidStartPayDate="angular-mydatepicker"
+                         name="aidStartPayDate" formControlName="aidStartPayDate" id="aidStartPayDate" dateFix
+                         [options]="datepickerOptionsMap.aidPaymentDate" autocomplete="off"
+                         (click)="dpAidStartPayDate.toggleCalendar()"
+                         [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
+                  <app-field-error-message
+                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
+                </div>
               </div>
             </div>
           </div>

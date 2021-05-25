@@ -54,13 +54,16 @@
           <label for="fromDate" class="col-sm-12 col-md-4 col-form-label"
                  asteriskIfRequired="fromDate">{{langService.map.action_date_from}}</label>
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
-            <input class="form-control" angular-mydatepicker #dpFromDate="angular-mydatepicker"
-                   name="fromDate" formControlName="fromDate" id="fromDate" dateFix
-                   [options]="datepickerOptionsMap.fromDate" autocomplete="off"
-                   (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
-                   (click)="dpFromDate.toggleCalendar()">
-            <app-field-error-message
-              [control]="fm.getFormField('fromDate')"></app-field-error-message>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <input class="form-control" angular-mydatepicker #dpFromDate="angular-mydatepicker"
+                     name="fromDate" formControlName="fromDate" id="fromDate" dateFix
+                     [options]="datepickerOptionsMap.fromDate" autocomplete="off"
+                     (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
+                     (click)="dpFromDate.toggleCalendar()">
+              <app-field-error-message
+                [control]="fm.getFormField('fromDate')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
@@ -69,13 +72,16 @@
           <label for="toDate" class="col-sm-12 col-md-4 col-form-label"
                  asteriskIfRequired="toDate">{{langService.map.action_date_to}}</label>
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
-            <input class="form-control" angular-mydatepicker #dpToDate="angular-mydatepicker"
-                   name="toDate" formControlName="toDate" id="toDate" dateFix
-                   [options]="datepickerOptionsMap.toDate" autocomplete="off"
-                   (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
-                   (click)="dpToDate.toggleCalendar()">
-            <app-field-error-message
-              [control]="fm.getFormField('toDate')"></app-field-error-message>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <input class="form-control" angular-mydatepicker #dpToDate="angular-mydatepicker"
+                     name="toDate" formControlName="toDate" id="toDate" dateFix
+                     [options]="datepickerOptionsMap.toDate" autocomplete="off"
+                     (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
+                     (click)="dpToDate.toggleCalendar()">
+              <app-field-error-message
+                [control]="fm.getFormField('toDate')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
