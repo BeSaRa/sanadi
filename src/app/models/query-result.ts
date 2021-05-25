@@ -1,5 +1,9 @@
 import {TaskState} from '../enums/task-state';
 import {Cloneable} from './cloneable';
+import {InboxService} from '../services/inbox.service';
+import {FactoryService} from '../services/factory.service';
+import {Observable} from 'rxjs';
+import {IBulkResult} from '../interfaces/ibulk-result';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -39,4 +43,14 @@ export class QueryResult extends Cloneable<QueryResult> {
   PI_DUE!: string;
   PI_CREATE!: string;
   RESPONSES!: string [];
+  service!: InboxService;
+
+  constructor() {
+    super();
+    this.service = FactoryService.getService('InboxService');
+  }
+
+  claim() : Observable<IBulkResult> {
+    return this.service.claimBulk([this.TKIID]);
+  }
 }

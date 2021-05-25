@@ -32,5 +32,6 @@
   "E_INQUIRY": "/inquiry",
   "USER_INBOX": "/inbox/user",
   "TEAMS_INBOX": "/inbox/team",
+  "CLAIM_BULK": "/inbox/task/claim/bulk",
   "INTERNAL_DEPARTMENT": "admin/internal/department"
 }
