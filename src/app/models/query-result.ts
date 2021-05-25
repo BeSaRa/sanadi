@@ -4,6 +4,7 @@ import {InboxService} from '../services/inbox.service';
 import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
 import {IBulkResult} from '../interfaces/ibulk-result';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -50,7 +51,11 @@ export class QueryResult extends Cloneable<QueryResult> {
     this.service = FactoryService.getService('InboxService');
   }
 
-  claim() : Observable<IBulkResult> {
+  claim(): Observable<IBulkResult> {
     return this.service.claimBulk([this.TKIID]);
+  }
+
+  manageAttachments(): DialogRef {
+    return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 }
