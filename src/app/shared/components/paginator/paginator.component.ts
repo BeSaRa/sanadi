@@ -162,7 +162,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
   get startFrom(): number {
-    return (this.pageIndex * this.pageSize) + 1;
+    return this._length === 0 ? 0 : (this.pageIndex * this.pageSize) + 1;
   }
 
   get endTo(): number {
