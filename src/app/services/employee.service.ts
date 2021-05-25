@@ -9,6 +9,7 @@ import {ILoginData} from '../interfaces/i-login-data';
 import {UserTypes} from '../enums/user-types.enum';
 import {InternalUser} from '../models/internal-user';
 import {InternalDepartment} from '../models/internal-department';
+import {Team} from '../models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +20,22 @@ export class EmployeeService {
   private orgUser?: OrgUser;
   private internalUser?: InternalUser;
   private internalDepartment?: InternalDepartment;
-  private internalDepartments?: InternalDepartment[];
   private permissions?: Permission[];
   private permissionMap: Map<string, Permission> = new Map<string, Permission>();
   private type!: UserTypes;
+
+  public internalDepartments?: InternalDepartment[];
+  public teams: Team[] = [];
 
   constructor() {
     FactoryService.registerService('EmployeeService', this);
   }
 
 
-  setExternalUserData(orgUser: any, orgBranch: any, orgUnit: any, permissions: Permission[]): void {
-    this.orgUser = (new OrgUser()).clone(orgUser);
-    this.orgBranch = (new OrgBranch()).clone(orgBranch);
-    this.orgUnit = (new OrgUnit()).clone(orgUnit);
-    this.permissions = permissions.map(permission => (new Permission()).clone(permission));
-    this.preparePermissionMap();
+  setExternalUserData(loginData: ILoginData): void {
+    this.orgUser = (new OrgUser()).clone(loginData.orgUser);
+    this.orgBranch = (new OrgBranch()).clone(loginData.orgBranch);
+    this.orgUnit = (new OrgUnit()).clone(loginData.orgUnit);
   }
 
   clear(): void {
@@ -46,6 +47,7 @@ export class EmployeeService {
     this.internalDepartment = undefined;
     this.internalDepartments = undefined;
     this.permissionMap.clear();
+    this.teams = [];
   }
 
   getUser(): OrgUser | undefined {
@@ -121,23 +123,22 @@ export class EmployeeService {
   }
 
   fillCurrentEmployeeData(loginData: ILoginData) {
-    if (loginData.type === UserTypes.EXTERNAL) {
-      this.setExternalUserData(loginData.orgUser, loginData.orgBranch, loginData.orgUnit, loginData.permissionSet);
-    } else {
-      this.setInternalUserData(loginData.internalUser, loginData.internalDepartment, loginData.internalDepartments, loginData.permissionSet);
-    }
     this.type = loginData.type;
+    this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
+    this.teams = loginData.teams.map(item => (new Team()).clone(item));
+    this.setUserData(loginData);
+    this.preparePermissionMap();
   }
 
-  private setInternalUserData(orgUser: InternalUser,
-                              department: InternalDepartment,
-                              internalDepartments: InternalDepartment[],
-                              permissionSet: Permission[]) {
-    this.internalUser = (new InternalUser()).clone(orgUser);
-    this.internalDepartment = (new InternalDepartment()).clone(department);
-    this.internalDepartments = internalDepartments.map(item => (new InternalDepartment()).clone(item));
-    this.permissions = permissionSet.map(permission => (new Permission()).clone(permission));
-    this.preparePermissionMap();
+  private setUserData(loginData: ILoginData) {
+    this.type === UserTypes.EXTERNAL ? this.setExternalUserData(loginData) : this.setInternalUserData(loginData);
+  }
+
+  private setInternalUserData(loginData: ILoginData) {
+    loginData.internalDepartment.mainTeam = new Team().clone(loginData.internalDepartment.mainTeam);
+    this.internalUser = (new InternalUser()).clone(loginData.internalUser);
+    this.internalDepartment = (new InternalDepartment()).clone(loginData.internalDepartment);
+    this.internalDepartments = loginData.internalDepartments.map(item => (new InternalDepartment()).clone(item));
   }
 
   isExternalUser(): boolean {

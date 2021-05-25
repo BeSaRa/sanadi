@@ -10,12 +10,22 @@ import {LangService} from './lang.service';
 })
 export class CacheService {
 
-  constructor(private http: HttpClient, private urlService: UrlService, private toastService: ToastService, private langService: LangService) {
+  constructor(private http: HttpClient,
+              private urlService: UrlService,
+              private toastService: ToastService,
+              private langService: LangService) {
   }
 
-  refreshCache(): any {
+  _refreshCache(): any {
     return this.http.get(this.urlService.URLS.CACHE_SERVICE).pipe(tap(_ => {
       this.toastService.success(this.langService.map.msg_update_cache_success);
     }));
   }
+
+  refreshCache(): void {
+    const refreshSub = this._refreshCache().subscribe(() => {
+      refreshSub.unsubscribe();
+    });
+  }
+
 }

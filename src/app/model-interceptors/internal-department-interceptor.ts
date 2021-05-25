@@ -3,7 +3,7 @@ import {Team} from '../models/team';
 
 export class InternalDepartmentInterceptor {
   static receive(model: InternalDepartment): InternalDepartment {
-    model.bawRole = (new Team()).clone(model.bawRole);
+    model.mainTeam = (new Team()).clone(model.mainTeam);
     return model;
   }
 

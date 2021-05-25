@@ -129,7 +129,7 @@ export class InquiriesComponent implements OnInit, OnDestroy {
   }
 
   setAuthName(dep: InternalDepartment | null): void {
-    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.bawRole.authName : null);
+    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
   }
 
   private displayInvalidFormMessage(): void {

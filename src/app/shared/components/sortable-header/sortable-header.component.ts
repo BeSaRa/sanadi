@@ -15,6 +15,10 @@ export class SortableHeaderComponent implements OnInit, OnDestroy {
   start?: string = 'asc';
   id!: string;
   _arrowDirection: string = '';
+  @Input()
+  sortCallback?: (a: any, b: any) => number;
+  @Input()
+  sortParamAsFullItem: boolean = false;
 
   arrowDirections: { [index: string]: string } = {
     asc: 'mdi-arrow-up',

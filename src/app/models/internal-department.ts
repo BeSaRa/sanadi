@@ -7,7 +7,7 @@ import {FactoryService} from '../services/factory.service';
 
 export class InternalDepartment extends BaseModel<InternalDepartment> {
   arName!: string;
-  bawRole!: Team;
+  mainTeam!: Team;
   code!: string;
   createdBy!: any;
   createdOn!: any;
