@@ -177,6 +177,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   };
   currentParamType: string = this.routeParamTypes.normal;
   isAttachmentFormVisible: boolean = false;
+  skipConfirmUnsavedChanges: boolean = false;
 
   @ViewChild('creationDate') creationDateControlRef!: ElementRef;
 
@@ -314,7 +315,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
-          if (this.readOnly){
+          if (this.readOnly) {
             this.allowCompletionField?.disable();
           }
           this.fm.displayFormValidity();
@@ -1119,6 +1120,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               this.form.markAsPristine();
             }
           } else {
+            this.skipConfirmUnsavedChanges = true;
             const ben = this.prepareBeneficiary();
             this.router.navigate(['/home/main/inquiry', {
               idNumber: ben.benPrimaryIdNumber,
@@ -1331,7 +1333,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
    * @description Check if user can navigate to other pages
    */
   canDeactivate(): CanNavigateOptions {
-    if (!this.form.dirty) {
+    if (this.skipConfirmUnsavedChanges || !this.form.dirty) {
       return 'ALLOW';
     }
     return 'CONFIRM_UNSAVED_CHANGES';
