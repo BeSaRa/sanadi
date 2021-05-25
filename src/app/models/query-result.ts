@@ -1,6 +1,7 @@
 import {TaskState} from '../enums/task-state';
+import {Cloneable} from './cloneable';
 
-export class QueryResult {
+export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
   IS_AT_RISK!: boolean;
   PRIORITY!: 30;
@@ -37,4 +38,5 @@ export class QueryResult {
   PI_PARENT_CASE_ID!: string;
   PI_DUE!: string;
   PI_CREATE!: string;
+  RESPONSES!: string [];
 }

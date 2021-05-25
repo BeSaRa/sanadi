@@ -170,7 +170,7 @@ export class LangService extends BackendGenericService<Localization> {
     }
   }
 
-  private getLocalByKey(key: keyof ILanguageKeys): Localization {
+  getLocalByKey(key: keyof ILanguageKeys): Localization {
     return this.localizationMap[key] || {};
   }
 

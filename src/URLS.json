@@ -31,5 +31,6 @@
   "EXT_RACA": "https://www.raca.gov.qa",
   "E_INQUIRY": "/inquiry",
   "USER_INBOX": "/inbox/user",
+  "TEAMS_INBOX": "/inbox/team",
   "INTERNAL_DEPARTMENT": "admin/internal/department"
 }

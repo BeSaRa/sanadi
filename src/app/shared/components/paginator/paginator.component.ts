@@ -31,7 +31,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   @Output()
   pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
-  @Input() small: boolean = false;
+  @Input() small: boolean = true;
 
   itemsPerPageControl!: FormControl;
   goToControl!: FormControl;

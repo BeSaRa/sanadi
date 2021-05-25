@@ -118,10 +118,10 @@ export class TableDataSource extends DataSource<any> {
     return value;
   }
 
-  sortData(data: any[], sort: SortableTableDirective): any[] {
+  sortData: ((data: any[], sort: SortableTableDirective) => any[]) = (data: any[], sort: SortableTableDirective): any[] => {
     const active = sort.active;
     const direction = sort.direction;
-
+    const activeColumn = this.sort?.getActiveColumn();
     if (!active || direction == '' || sort.backend) {
       return data;
     }
@@ -150,6 +150,15 @@ export class TableDataSource extends DataSource<any> {
       // This avoids inconsistent results when comparing values to undefined/null.
       // If neither value exists, return 0 (equal).
       let comparatorResult = 0;
+
+      if (activeColumn && activeColumn.sortCallback) {
+        const paramA = activeColumn.sortParamAsFullItem ? a : valueA;
+        const paramB = activeColumn.sortParamAsFullItem ? b : valueB;
+        comparatorResult = activeColumn.sortCallback(paramA, paramB) || comparatorResult;
+        return comparatorResult * (direction == 'asc' ? 1 : -1);
+      }
+
+
       if (valueA != null && valueB != null) {
         // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
         if (valueA > valueB) {
@@ -185,7 +194,7 @@ export class TableDataSource extends DataSource<any> {
    * @param filter Filter string that has been set on the data source.
    * @returns Whether the filter matches against the data
    */
-  filterPredicate(data: any, filter: string): boolean {
+  filterPredicate: ((data: any, filter: string) => boolean) = (data: any, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
     const dataStr = Object.keys(data).reduce((currentTerm: string, key: string) => {
       // Use an obscure Unicode character to delimit the words in the concatenated string.
@@ -200,7 +209,7 @@ export class TableDataSource extends DataSource<any> {
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     return dataStr.indexOf(transformedFilter) != -1;
-  }
+  };
 
   private _pageData(data: any[]): any[] {
     if (!this._paginator || (this._paginator && this._paginator.backend)) {

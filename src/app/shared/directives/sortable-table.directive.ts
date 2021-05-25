@@ -64,6 +64,10 @@ export class SortableTableDirective implements OnInit, OnDestroy {
     });
   }
 
+  getActiveColumn(): SortableHeaderComponent | undefined {
+    return this.active ? this.sortableColumns.get(this.active) : undefined;
+  }
+
 
   private getNextSortDirection(sortStart: string): string {
     let directions = ['asc', 'desc'];

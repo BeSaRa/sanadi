@@ -23,11 +23,13 @@ const routes: Routes = [
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       {path: 'e-services', loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule)},
-      {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)}
+      {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
+      {path: 'team-inbox', loadChildren: () => import('./team-inbox/team-inbox.module').then(m => m.TeamInboxModule)}
       //{path: '**', redirectTo: '../error'}
     ]
   },
-  {path: 'error', component: ErrorPageComponent}
+  {path: 'error', component: ErrorPageComponent},
+
 ];
 
 @NgModule({

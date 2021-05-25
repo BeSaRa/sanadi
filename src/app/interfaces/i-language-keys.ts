@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  due_date: string;
+  creation_date: string;
+  menu_team_inbox: string;
+  menu_department_inbox: string;
   request_has_been_sent_successfully: string;
   service_type: string;
   pagination_items_per_page: string;

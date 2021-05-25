@@ -60,5 +60,8 @@
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
-  ]
+  ],
+  "E_SERVICES_LIST": {
+    "1": "menu_inquiries_and_complaints"
+  }
 }
