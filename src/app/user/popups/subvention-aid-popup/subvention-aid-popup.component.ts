@@ -18,10 +18,12 @@ export class SubventionAidPopupComponent implements OnInit {
   displayedColumns = [
     'approvalDate',
     'aidLookupId',
+    'estimatedAmount',
     'periodicType',
     'installementsCount',
     'aidStartPayDate',
-    'aidAmount'
+    'givenAmount',
+    'remainingAmount'
   ];
   periodicityLookups: Record<number, Lookup> = {};
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;

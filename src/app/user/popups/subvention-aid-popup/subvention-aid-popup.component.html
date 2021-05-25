@@ -14,6 +14,10 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo.getName()}} </td>
     </ng-container>
+    <ng-container cdkColumnDef="estimatedAmount">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.estimated_amount}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+    </ng-container>
     <ng-container cdkColumnDef="periodicType">
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
@@ -26,9 +30,13 @@
       <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
       <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
     </ng-container>
-    <ng-container cdkColumnDef="aidAmount">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_aid_amount}}</th>
+    <ng-container cdkColumnDef="givenAmount">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.given_amount}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="remainingAmount">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.remaining_amount}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
     </ng-container>
     <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
     <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
