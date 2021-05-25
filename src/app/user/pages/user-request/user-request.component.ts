@@ -58,6 +58,7 @@ import {SubventionResponse} from '../../../models/subvention-response';
 import {SanadiAttachment} from '../../../models/sanadi-attachment';
 import {AttachmentService} from '../../../services/attachment.service';
 import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {AidTypes} from '../../../enums/aid-types.enum';
 
 @Component({
   selector: 'app-user-request',
@@ -87,7 +88,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   attachmentList: SanadiAttachment[] = [];
   fm!: FormManager;
   form!: FormGroup;
-  aidLookups: AidLookup[] = [];
   subAidLookupsArray: AidLookup[] = [];
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
   periodicityLookups: Record<number, Lookup> = {};
@@ -222,13 +222,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToNationalityChange();
     this.listenToPrimaryIdTypeChange();
     this.listenToSecondaryIdTypeChange();
-
-    this.aidLookupService.loadByCriteria({status: StatusEnum.ACTIVE, aidType: 2})
-      .pipe(take(1))
-      .subscribe((lookups) => {
-        this.aidLookups = lookups;
-      });
-
     this.preparePeriodicityLookups();
     this.listenToRouteParams();
   }
@@ -999,11 +992,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private loadSubAidCategory() {
-    // thanks to khaled he saved my life here for ever thanks again.
     this.subAidLookupsArray = [];
     return this.aidLookupService
       .loadByCriteria({
-        aidType: 3,
+        aidType: AidTypes.SUB_CATEGORY,
         status: StatusEnum.ACTIVE
       })
       .pipe(
