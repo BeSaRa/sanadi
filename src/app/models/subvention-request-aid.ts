@@ -30,6 +30,7 @@ export class SubventionRequestAid {
   benPrimaryIdType!: number;
   benPrimaryIdNumber!: string;
   benPrimaryIdNationality!: number;
+  isPartial: boolean = false;
 
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',
