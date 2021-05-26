@@ -29,6 +29,10 @@ import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ReadModeService} from '../../../services/read-mode.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {AidTypes} from '../../../enums/aid-types.enum';
+import {StatusEnum} from '../../../enums/status.enum';
+import {AidLookup} from '../../../models/aid-lookup';
+import {AidLookupService} from '../../../services/aid-lookup.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -54,6 +58,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private latestCriteriaString: string = '';
   private skipQueryParamSearch: boolean = true;
   requests: SubventionRequestAid[] = [];
+  subAidLookupsArray: AidLookup[] = [];
+  subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -101,7 +107,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private readModeService: ReadModeService,
               private subventionRequestService: SubventionRequestService,
-              public empService: EmployeeService) {
+              public empService: EmployeeService,
+              private aidLookupService: AidLookupService) {
   }
 
   ngOnDestroy(): void {
@@ -113,6 +120,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadSubAidCategory().subscribe();
     this.onIdTypeChange();
 
     this.listenToSearch();
@@ -175,7 +183,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           phoneNumber1: [null, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
           benNationality: [],
           occuptionStatus: []
-        })
+        }),
+        aidLookupId: []
       })
     });
     this.fm = new FormManager(this.form, this.langService);
@@ -380,10 +389,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     let simple = this.getSimpleSearchValues();
     let beneficiary = this.fm.getFormField('advancedSearch.beneficiary')?.value;
     let request = this.fm.getFormField('advancedSearch.request')?.value;
+    let aidLookupId = this.fm.getFormField('advancedSearch.aidLookupId')?.value;
     this.latestCriteria = {
       ...simple,
       ...request,
-      beneficiary: {...simple.beneficiary, ...beneficiary}
+      beneficiary: {...simple.beneficiary, ...beneficiary},
+      aidLookupId
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
@@ -400,6 +411,21 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     }
 
     return {...this.latestCriteria};
+  }
+
+  private loadSubAidCategory() {
+    this.subAidLookupsArray = [];
+    return this.aidLookupService
+      .loadByCriteria({
+        aidType: AidTypes.SUB_CATEGORY,
+        status: StatusEnum.ACTIVE
+      })
+      .pipe(
+        take(1),
+        tap(list => {
+          this.subAidLookupsArray = list;
+        })
+      );
   }
 
   printResult(): void {

@@ -180,8 +180,8 @@
              data-bs-parent="#advancedSearchAccordion">
           <div class="accordion-body">
             <div formGroupName="advancedSearch" id="advanced-search">
-              <div formGroupName="beneficiary">
-                <div class="row">
+              <div>
+                <div class="row" formGroupName="beneficiary">
                   <div class="col-sm-12 col-md-6">
                     <div class="row">
                       <label for="nationality"
@@ -216,7 +216,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-sm-12 col-md-6">
+                  <div class="col-sm-12 col-md-6" formGroupName="beneficiary">
                     <div class="row">
                       <label for="phoneNumber1"
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
@@ -226,6 +226,25 @@
                                [mask]="inputMaskPatterns.NUMBER_ONLY">
                         <app-field-error-message
                           [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <div class="row">
+                      <label for="aidLookupId"
+                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
+                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                        <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                                   placeholder="{{langService.map.select}}" id="aidLookupId"
+                                   [notFoundText]="langService.map.msg_not_found"
+                                   formControlName="aidLookupId"
+                                   [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
+                          <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
+                            {{option.getName()}}
+                          </ng-option>
+                        </ng-select>
+                        <app-field-error-message
+                          [control]="fm.getFormField('advancedSearch.aidLookupId')"></app-field-error-message>
                       </div>
                     </div>
                   </div>
