@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {InboxService} from '../../../services/inbox.service';
 import {QueryResultSet} from '../../../models/query-result-set';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {EServiceListService} from '../../../services/e-service-list.service';
 import {QueryResult} from '../../../models/query-result';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -30,7 +30,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     this.reloadInbox$
       .pipe(
         switchMap(_ => this.inboxService.loadUserInbox()),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
+        tap(items => console.log(items))
       )
       .subscribe((value) => {
         this.queryResultSet = value;

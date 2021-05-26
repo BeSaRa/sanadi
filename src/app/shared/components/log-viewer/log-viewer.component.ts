@@ -2,10 +2,9 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActionLogService} from '../../../services/action-log.service';
 import {Subject} from 'rxjs';
 import {ActionRegistry} from '../../../models/action-registry';
-import {concatMap, take, takeUntil, tap} from 'rxjs/operators';
+import {concatMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
 import {AdminResult} from '../../../models/admin-result';
-import {BlobModel} from '../../../models/blob-model';
 
 @Component({
   selector: 'log-viewer',
@@ -46,9 +45,5 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  print() {
-    this.service.exportActions(this.caseId).pipe(take(1)).subscribe((blob: BlobModel) => window.open(blob.url));
   }
 }
