@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActionLogService} from '../../../services/action-log.service';
 import {Subject} from 'rxjs';
 import {ActionRegistry} from '../../../models/action-registry';
-import {takeUntil, tap} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input()
   service!: ActionLogService<any>;
 
-  displayedColumns: string[] = ['user','action','addedOn','time'];
+  displayedColumns: string[] = ['user', 'action', 'addedOn', 'time'];
 
   constructor(public lang: LangService) {
 
@@ -33,7 +33,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   load(): void {
     this.service.load(this.caseId)
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap(items => console.log(items)))
+      // .pipe(tap(items => console.log(items)))
       .subscribe(logs => this.logs = logs);
   }
 
