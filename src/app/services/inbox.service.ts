@@ -81,4 +81,9 @@ export class InboxService {
     return service.actionLogService.exportActions(caseId);
   }
 
+  exportModel(caseId: string, caseType: number): Observable<BlobModel> {
+    const service = this.getService(caseType);
+    return service.exportModel(caseId);
+  }
+
 }
