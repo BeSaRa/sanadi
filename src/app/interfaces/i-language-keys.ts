@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  item_location: string;
   send_to_user: string;
   send_to_competent_dep: string;
   manage_attachments: string;
