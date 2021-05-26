@@ -1,0 +1,25 @@
+<div class="table-responsive">
+  <app-table #table [paginator]="paginator" [data]="logs">
+    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="action">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.actionInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="user">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.user}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.userFromInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="addedOn">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_date}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.addedOn|date}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="time">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_time}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.time}} </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <app-paginator #paginator [length]="logs.length"></app-paginator>
+  </app-table>
+</div>

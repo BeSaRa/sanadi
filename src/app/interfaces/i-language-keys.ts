@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  send_to_user: string;
+  send_to_competent_dep: string;
   manage_attachments: string;
   something_went_wrong_while_taking_action: string;
   task_have_been_claimed_successfully: string;

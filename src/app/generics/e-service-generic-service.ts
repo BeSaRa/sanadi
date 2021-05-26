@@ -10,6 +10,8 @@ import {BackendServiceModelInterface} from '../interfaces/backend-service-model-
 import {DocumentService} from '../services/document.service';
 import {DialogService} from '../services/dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ActionLogService} from '../services/action-log.service';
+import {BlobModel} from '../models/blob-model';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -24,6 +26,7 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   abstract domSanitizer: DomSanitizer;
   abstract commentService: CommentService<S>;
   abstract documentService: DocumentService<S>;
+  abstract actionLogService: ActionLogService<S>;
 
   ping(): void {
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
@@ -137,8 +140,8 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   getCaseRecommendations(): void {
   }
 
-  exportCaseActions(): void {
-
+  exportActions(caseId: string): Observable<BlobModel> {
+    return this.actionLogService.exportActions(caseId);
   }
 
   downloadDocument(): void {

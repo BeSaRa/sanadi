@@ -52,6 +52,8 @@ import {SortableTableDirective} from './directives/sortable-table.directive';
 import {PaginatorComponent} from './components/paginator/paginator.component';
 import {SortableHeaderComponent} from './components/sortable-header/sortable-header.component';
 import { DocumentsPopupComponent } from './popups/documents-popup/documents-popup.component';
+import { ActionRegistryPopupComponent } from './popups/action-registry-popup/action-registry-popup.component';
+import { LogViewerComponent } from './components/log-viewer/log-viewer.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,9 @@ import { DocumentsPopupComponent } from './popups/documents-popup/documents-popu
     SortableTableDirective,
     PaginatorComponent,
     SortableHeaderComponent,
-    DocumentsPopupComponent
+    DocumentsPopupComponent,
+    ActionRegistryPopupComponent,
+    LogViewerComponent
   ],
   imports: [
     CommonModule,
