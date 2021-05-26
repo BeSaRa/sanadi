@@ -5,6 +5,7 @@ import {takeUntil} from 'rxjs/operators';
 import {TableDataSource} from '../../models/table-data-source';
 import {PaginatorComponent} from '../paginator/paginator.component';
 import {SortableTableDirective} from '../../directives/sortable-table.directive';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-table',
@@ -14,15 +15,22 @@ import {SortableTableDirective} from '../../directives/sortable-table.directive'
 })
 export class TableComponent implements OnInit, OnDestroy {
   private datasourceAssigned$: BehaviorSubject<TableDataSource> = new BehaviorSubject<TableDataSource>(this.service.createDataSource([]));
-  dataSource!: TableDataSource;
   private destroy$: Subject<any> = new Subject();
+  private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
+
+  dataSource!: TableDataSource;
   @Input()
   columns: string[] = [];
+  @Input()
+  selectable: boolean = false;
+  @Input()
+  multiSelect: boolean = true;
+
+  selection!: SelectionModel<any>;
 
   _filter: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   _paginator?: PaginatorComponent;
-  private dataChange: BehaviorSubject<any> = new BehaviorSubject<any>([]);
 
   _filterCallback?: ((data: any, filter: string) => boolean);
 
@@ -62,6 +70,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.generateSelectionModel();
     this.datasourceAssigned();
     this.listenToFilterChange();
     this.listenToDataChanged();
@@ -70,6 +79,19 @@ export class TableComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  toggleAll(): void {
+    const allSelected = this.allSelected();
+    if (allSelected) {
+      this.selection.clear();
+    } else {
+      this.dataSource.data.forEach(item => this.selection.select(item));
+    }
+  }
+
+  allSelected() {
+    return this.selection.selected.length === this.dataSource.data.length;
   }
 
   private datasourceAssigned(): void {
@@ -107,5 +129,11 @@ export class TableComponent implements OnInit, OnDestroy {
           this.dataSource.data = value;
         }
       });
+  }
+
+  private generateSelectionModel() {
+    if (this.selectable) {
+      this.selection = new SelectionModel<any>(this.multiSelect);
+    }
   }
 }
