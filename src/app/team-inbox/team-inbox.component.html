@@ -53,7 +53,7 @@
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-          <td cdk-cell *cdkCellDef="let row">
+          <td cdk-cell class="table-actions" *cdkCellDef="let row">
             <button (click)="showLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
               <i class="mdi mdi-view-list-outline"></i></button>
             <button (click)="claim(row)" [tooltip]="lang.map.claim" class="btn text-primary icon-btn">
