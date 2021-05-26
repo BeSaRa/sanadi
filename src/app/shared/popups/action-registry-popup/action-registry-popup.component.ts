@@ -2,6 +2,8 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {EServiceGenericService} from '../../../generics/e-service-generic-service';
+import {take} from 'rxjs/operators';
+import {BlobModel} from '../../../models/blob-model';
 
 @Component({
   selector: 'action-registry-popup',
@@ -16,6 +18,10 @@ export class ActionRegistryPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  print() {
+    this.data.service.exportActions(this.data.caseId).pipe(take(1)).subscribe((blob: BlobModel) => window.open(blob.url));
   }
 
 }

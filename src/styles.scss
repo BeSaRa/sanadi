@@ -179,7 +179,7 @@ app-dialog-container {
     margin-left: 10px;
   }
 
-  .btn {
+  .btn:not(.btn-link) {
     min-width: 80px;
   }
 }
