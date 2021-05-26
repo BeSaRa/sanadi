@@ -67,5 +67,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T, S>, T extend
     return this.service.exportActions(this.id);
   }
 
+  exportModel(): Observable<BlobModel> {
+    return this.service.exportModel(this.id);
+  }
 
 }
