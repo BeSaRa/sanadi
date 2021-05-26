@@ -9,6 +9,8 @@ import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {map} from 'rxjs/operators';
 import {BlobModel} from '../models/blob-model';
+import {AdminResult} from '../models/admin-result';
+import {IDefaultResponse} from '../interfaces/idefault-response';
 
 export class ActionLogService<T extends {
   http: HttpClient,
@@ -40,9 +42,16 @@ export class ActionLogService<T extends {
   }
 
   exportActions(caseId: string): Observable<BlobModel> {
-    return this.service.http.get(this.service._getServiceURL() + '/' + caseId + '/actions/export', {
-      observe: 'body',
-      responseType: 'blob'
-    }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));
+    return this.service.http
+      .get(this.service._getServiceURL() + '/' + caseId + '/actions/export', {
+        observe: 'body',
+        responseType: 'blob'
+      }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));
+  }
+
+  loadCaseLocation(caseId: string): Observable<AdminResult[]> {
+    return this.service.http
+      .get<IDefaultResponse<AdminResult[]>>(this.service._getServiceURL() + '/' + caseId + '/assigned-to')
+      .pipe(map((response) => response.rs.map(item => AdminResult.createInstance(item))));
   }
 }

@@ -2,8 +2,10 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActionLogService} from '../../../services/action-log.service';
 import {Subject} from 'rxjs';
 import {ActionRegistry} from '../../../models/action-registry';
-import {takeUntil} from 'rxjs/operators';
+import {concatMap, take, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
+import {AdminResult} from '../../../models/admin-result';
+import {BlobModel} from '../../../models/blob-model';
 
 @Component({
   selector: 'log-viewer',
@@ -12,6 +14,7 @@ import {LangService} from '../../../services/lang.service';
 })
 export class LogViewerComponent implements OnInit, OnDestroy {
   logs: ActionRegistry[] = [];
+  locations: AdminResult[] = [];
   destroy$: Subject<any> = new Subject<any>();
 
   @Input()
@@ -21,9 +24,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   service!: ActionLogService<any>;
 
   displayedColumns: string[] = ['user', 'action', 'addedOn', 'time'];
+  displayLocationColumns: string[] = ['location'];
 
   constructor(public lang: LangService) {
-
   }
 
   ngOnInit(): void {
@@ -32,9 +35,12 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.service.load(this.caseId)
-      .pipe(takeUntil(this.destroy$))
-      // .pipe(tap(items => console.log(items)))
-      .subscribe(logs => this.logs = logs);
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(logs => this.logs = logs),
+        concatMap(() => this.service.loadCaseLocation(this.caseId))
+      )
+      .subscribe(locations => this.locations = locations);
   }
 
   ngOnDestroy(): void {
@@ -42,4 +48,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  print() {
+    this.service.exportActions(this.caseId).pipe(take(1)).subscribe((blob: BlobModel) => window.open(blob.url));
+  }
 }
