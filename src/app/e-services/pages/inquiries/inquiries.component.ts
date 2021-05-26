@@ -16,6 +16,7 @@ import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {Router} from '@angular/router';
 import {InquiryService} from '../../../services/inquiry.service';
+import {CaseStatus} from '../../../enums/case-status.enum';
 
 @Component({
   selector: 'app-inquiries',
@@ -163,6 +164,9 @@ export class InquiriesComponent implements OnInit, OnDestroy {
 
   launch() {
     this.model?.start().subscribe(_ => {
+      if (this.model) {
+        this.model.caseStatus = CaseStatus.STARTED;
+      }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
     });
   }

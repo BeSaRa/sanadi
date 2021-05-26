@@ -72,7 +72,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  datasourceAssigned(): void {
+  private datasourceAssigned(): void {
     this.datasourceAssigned$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datasource) => {
