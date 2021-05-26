@@ -347,3 +347,7 @@ img {
     object-fit: contain;
   }
 }
+
+td.td-checkbox, th.td-checkbox {
+  width: 32px !important;
+}
