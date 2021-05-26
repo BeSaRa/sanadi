@@ -210,6 +210,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
+    this.listenToRequestDateChange();
     this.listenToBeneficiaryChange();
     this.listenToRequestChange();
     this.listenToOccupationStatus();
@@ -249,7 +250,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       attachmentsTab: this.editMode ? this.fb.group([]) : null
     });
     this.fm = new FormManager(this.form, this.langService);
-    this.listenToRequestDateChange();
   }
 
   private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
