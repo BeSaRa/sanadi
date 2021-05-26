@@ -54,6 +54,7 @@ import {SortableHeaderComponent} from './components/sortable-header/sortable-hea
 import { DocumentsPopupComponent } from './popups/documents-popup/documents-popup.component';
 import { ActionRegistryPopupComponent } from './popups/action-registry-popup/action-registry-popup.component';
 import { LogViewerComponent } from './components/log-viewer/log-viewer.component';
+import { IndeterminateDirective } from './directives/indeterminate.directive';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { LogViewerComponent } from './components/log-viewer/log-viewer.component
     SortableHeaderComponent,
     DocumentsPopupComponent,
     ActionRegistryPopupComponent,
-    LogViewerComponent
+    LogViewerComponent,
+    IndeterminateDirective
   ],
   imports: [
     CommonModule,

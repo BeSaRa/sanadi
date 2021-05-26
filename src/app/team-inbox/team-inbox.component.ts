@@ -19,7 +19,7 @@ import {ToastService} from '../services/toast.service';
 export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
+  displayedColumns: string[] = ['select', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
   searchModel = '';
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
