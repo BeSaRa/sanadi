@@ -1,4 +1,8 @@
 <div class="dialog-content no-fixed-height">
+  <div class="predefined-dialog-close-icon position-relative d-flex justify-content-end">
+    <button *ngIf="config.showCloseIcon" type="button" class="btn-close position-absolute"
+            tabindex="-1" [dialogClose]="userClickOn.CLOSE" aria-label="Close"></button>
+  </div>
   <div class="predefined-dialog-icon d-flex align-items-center justify-content-center"><i
     class="mdi {{typeList[type].icon}} {{typeList[type].textClass}}"></i></div>
   <div [innerHTML]="data"

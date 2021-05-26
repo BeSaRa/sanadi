@@ -6,4 +6,6 @@ export interface IDialogPredefinedConfig extends IDialogConfig {
   actionBtn: keyof ILanguageKeys;
   cancelBtn: keyof ILanguageKeys;
   thirdBtn: keyof ILanguageKeys;
+
+  showCloseIcon?: boolean;
 }
