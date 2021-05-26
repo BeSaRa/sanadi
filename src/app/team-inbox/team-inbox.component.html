@@ -22,7 +22,7 @@
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
         <ng-container cdkColumnDef="select">
-          <th cdk-header-cell *cdkHeaderCellDef>
+          <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
             <input type="checkbox"
                    [indeterminate]="table.selection.hasValue() && !table.allSelected()"
                    (change)="$event ? table.toggleAll() : null"
