@@ -12,6 +12,7 @@ import {DialogService} from '../services/dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActionLogService} from '../services/action-log.service';
 import {BlobModel} from '../models/blob-model';
+import {map} from 'rxjs/operators';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -149,8 +150,11 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
     //Download document as PDF.
   }
 
-  exportModel(): void {
-    //GET/inquiry/model/export/{caseId}
+  exportModel(caseId: string): Observable<BlobModel> {
+    return this.http.get(this._getServiceURL() + '/model/' + caseId + '/export/', {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
   }
 
   exportSearch(): void {
