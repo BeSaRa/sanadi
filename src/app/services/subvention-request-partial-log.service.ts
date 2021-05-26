@@ -46,7 +46,6 @@ export class SubventionRequestPartialLogService extends BackendGenericService<Su
     return this.http.post<SubventionRequestPartialLog[]>(this._getServiceURL() + '/search', criteria);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
   loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestPartialLogCriteria>): Observable<Blob> {
     return this.http.post(this._getServiceURL() + '/search/export?lang=' + this.langService.getPrintingLanguage(), criteria, {responseType: 'blob'});
   }
