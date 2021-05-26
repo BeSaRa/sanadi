@@ -75,4 +75,12 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
       this.users = users;
     });
   }
+
+  showAuditLogs($event: MouseEvent, user: OrgUser): void {
+    $event.preventDefault();
+    user.showAuditLogs($event)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
 }

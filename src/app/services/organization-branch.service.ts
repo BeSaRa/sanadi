@@ -17,6 +17,7 @@ import {switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
 import {OrgUnit} from '../models/org-unit';
+import {AuditLogService} from './audit-log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private  dialogService: DialogService) {
+              private  dialogService: DialogService,
+              private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationBranchService', this);
   }
@@ -82,6 +84,10 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
 
   deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
     return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  }
+
+  openAuditLogsById(id: number):Observable<DialogRef> {
+    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 
   _getReceiveInterceptor(): any {

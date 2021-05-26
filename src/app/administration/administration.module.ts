@@ -16,12 +16,13 @@ import {OrganizationBranchComponent} from './pages/organization-branch/organizat
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
 import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
 import {OrganizationBranchUserComponent} from './pages/organization-branch-user/organization-branch-user.component';
+import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

@@ -9,6 +9,7 @@ import {LookupService} from '../services/lookup.service';
 import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {FileStore} from './file-store';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 export class OrgUnit extends BaseModel<OrgUnit> {
   phoneNumber1: string | undefined;
@@ -106,6 +107,10 @@ export class OrgUnit extends BaseModel<OrgUnit> {
 
   saveLogo(file: File): Observable<boolean> {
     return this.service.updateLogo(this.id, file);
+  }
+
+  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+    return this.service.openAuditLogsById(this.id);
   }
 
 }

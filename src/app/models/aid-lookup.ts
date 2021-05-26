@@ -6,6 +6,7 @@ import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {Lookup} from './lookup';
 import {searchFunctionType} from '../types/types';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 export class AidLookup extends BaseModel<AidLookup> {
   aidCode!: string;
@@ -58,5 +59,9 @@ export class AidLookup extends BaseModel<AidLookup> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+    return this.service.openAuditLogsById(this.id);
   }
 }

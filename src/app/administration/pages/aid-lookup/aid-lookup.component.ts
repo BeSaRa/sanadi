@@ -230,4 +230,12 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       });
     });
   }
+
+  showAuditLogs($event: MouseEvent, aidLookup: AidLookup): void {
+    $event.preventDefault();
+    aidLookup.showAuditLogs($event)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
 }

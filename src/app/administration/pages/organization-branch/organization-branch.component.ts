@@ -220,4 +220,12 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
     });
   }
 
+  showAuditLogs($event: MouseEvent, branch: OrgBranch): void {
+    $event.preventDefault();
+    branch.showAuditLogs($event)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
+
 }

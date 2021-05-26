@@ -22,6 +22,7 @@ import {OrgUnit} from '../models/org-unit';
 import {PermissionService} from './permission.service';
 import {OrganizationUserPermissionService} from './organization-user-permission.service';
 import {OrgUserPermission} from '../models/org-user-permission';
+import {AuditLogService} from './audit-log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
               private customRoleService: CustomRoleService,
               private organizationUnitService: OrganizationUnitService,
               private permissionService: PermissionService,
-              private orgUserPermissionService: OrganizationUserPermissionService) {
+              private orgUserPermissionService: OrganizationUserPermissionService,
+              private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationUserService', this);
   }
@@ -132,7 +134,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
    */
   @Generator(OrgUser, true, {property: 'rs', interceptReceive: interceptReceiveOrganizationUser})
   loadComposite(): Observable<OrgUser[]> {
-    return this.http.get<OrgUser[]>(this.urlService.URLS.ORG_USER + '/composite');
+    return this.http.get<OrgUser[]>(this._getServiceURL() + '/composite');
   }
 
   /**
@@ -143,8 +145,12 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 
-    return this.http.get<OrgUser[]>(this.urlService.URLS.ORG_USER + '/criteria', {
+    return this.http.get<OrgUser[]>(this._getServiceURL() + '/criteria', {
       params: queryParams
     });
+  }
+
+  openAuditLogsById(id: number):Observable<DialogRef> {
+    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 }

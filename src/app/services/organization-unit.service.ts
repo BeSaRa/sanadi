@@ -16,6 +16,7 @@ import {
 } from '../model-interceptors/organization-unit-interceptor';
 import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
 import {Generator} from '../decorators/generator';
+import {AuditLogService} from './audit-log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationUnitService', this);
   }
@@ -49,18 +51,6 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
         }));
       })
     );
-
-    /*return forkJoin({
-      record: this.getById(modelId),
-      branches: this.orgBranchService.loadByCriteria({orgId: modelId})
-    }).pipe(switchMap((result: IKeyValue) => {
-        return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
-          model: result.record,
-          branches: result.branches,
-          operation: OperationTypes.UPDATE
-        }));
-      })
-    );*/
   }
 
   deactivate(id: number): Observable<boolean> {
@@ -80,6 +70,10 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   @Generator(undefined, false, {property: 'rs'})
   loadOrgUnitByIdComposite(id: number): Observable<OrgUnit> {
     return this.http.get<OrgUnit>(this._getServiceURL() + '/' + id + '/composite');
+  }
+
+  openAuditLogsById(id: number):Observable<DialogRef> {
+    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 
   _getModel(): any {

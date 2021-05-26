@@ -12,6 +12,7 @@ import {Lookup} from './lookup';
 import {LookupCategories} from '../enums/lookup-categories';
 import {LookupService} from '../services/lookup.service';
 import {searchFunctionType} from '../types/types';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 export class OrgUser extends BaseModel<OrgUser> {
   email: string | undefined;
@@ -83,5 +84,9 @@ export class OrgUser extends BaseModel<OrgUser> {
   getOrgUserStatusLookup(): Lookup | null {
     // @ts-ignore
     return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_USER_STATUS);
+  }
+
+  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+    return this.service.openAuditLogsById(this.id);
   }
 }

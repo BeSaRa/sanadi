@@ -14,7 +14,7 @@ import {AidLookupPopupComponent} from '../administration/popups/aid-lookup-popup
 import {interceptSendAidLookup, interceptReceiveAidLookup} from '../model-interceptors/aid-lookup-interceptor';
 import {Generator} from '../decorators/generator';
 import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
-import {AidTypes} from '../enums/aid-types.enum';
+import {AuditLogService} from './audit-log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,10 @@ import {AidTypes} from '../enums/aid-types.enum';
 export class AidLookupService extends BackendGenericService<AidLookup> {
   list!: AidLookup[];
 
-  constructor(public http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              private dialogService: DialogService,
+              private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('AidLookupService', this);
   }
@@ -67,8 +70,8 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 
-  deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
-    return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
+    return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
 
   _getModel(): any {
@@ -103,5 +106,9 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
 
   _getReceiveInterceptor(): any {
     return interceptReceiveAidLookup;
+  }
+
+  openAuditLogsById(id: number):Observable<DialogRef> {
+    return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 }

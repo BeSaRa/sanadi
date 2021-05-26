@@ -223,4 +223,12 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       });
     });
   }
+
+  showAuditLogs($event: MouseEvent, organization: OrgUnit): void {
+    $event.preventDefault();
+    organization.showAuditLogs($event)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
+  }
 }
