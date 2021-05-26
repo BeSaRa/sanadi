@@ -170,12 +170,12 @@ export class Beneficiary extends BaseModel<Beneficiary> {
       gender: control ? [gender, CustomValidators.required] : gender,
       enName: control ? [enName, [CustomValidators.required,
         CustomValidators.pattern('ENG_ONLY'),
-        Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
       arName: control ? [arName, [CustomValidators.required,
         CustomValidators.pattern('AR_ONLY'),
-        Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : arName,
       phoneNumber1: control ? [phoneNumber1, [CustomValidators.required,
         CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber1,

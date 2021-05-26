@@ -63,7 +63,7 @@
               <div class="input-group has-validation">
                 <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
                        type="text" [ngClass]="fm.getInvalidClass('personalTab.benPrimaryIdNumber')"
-                       (keyup)="disableEnter($event)" maxlength="20"
+                       (keyup)="disableEnter($event)" maxlength="20" trimInput
                        [readOnly]="beneficiaryPrimaryIdDisabled()">
                 <button tabindex="-1" type="button"
                         [disabled]="readOnly || editMode || primaryIdNumberField?.invalid || primaryNationalityField?.invalid"
@@ -130,7 +130,7 @@
               <label for="benSecIdNumber" class="form-label"
                      asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
               <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
-                     [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20"
+                     [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20" trimInput
                      [ngClass]="fm.getInvalidClass('personalTab.benSecIdNumber')" (keyup)="disableEnter($event)">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.benSecIdNumber')"></app-field-error-message>
@@ -180,7 +180,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
-                     class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+                     trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
             </div>
@@ -192,7 +192,7 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
               <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
-                     class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+                     trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
             </div>
