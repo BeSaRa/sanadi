@@ -1,43 +1,60 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {SortEvent} from '../../../interfaces/sort-event';
-import {PageEvent} from '../../../interfaces/page-event';
 import {InboxService} from '../../../services/inbox.service';
 import {QueryResultSet} from '../../../models/query-result-set';
-import {tap} from 'rxjs/operators';
+import {switchMap, takeUntil} from 'rxjs/operators';
+import {EServiceListService} from '../../../services/e-service-list.service';
+import {QueryResult} from '../../../models/query-result';
+import {BehaviorSubject, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-user-inbox',
   templateUrl: './user-inbox.component.html',
   styleUrls: ['./user-inbox.component.scss']
 })
-export class UserInboxComponent implements OnInit {
+export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'name', 'weight', 'actions'];
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
   searchModel = '';
+  reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private destroy$: Subject<any> = new Subject<any>();
 
-  constructor(public lang: LangService, private inboxService: InboxService) {
+  constructor(public lang: LangService,
+              public eService: EServiceListService,
+              private inboxService: InboxService) {
 
   }
 
-  reload(): void {
-    this.inboxService.loadUserInbox().pipe(tap(result => console.log(result.items))).subscribe(result => this.queryResultSet = result);
+
+  private listenToReload() {
+    this.reloadInbox$
+      .pipe(
+        switchMap(_ => this.inboxService.loadUserInbox()),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((value) => {
+        this.queryResultSet = value;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
-    this.reload();
+    this.listenToReload();
   }
 
-  sortBy($event: SortEvent) {
-    console.log($event);
+  openAttachmentsDialog(item: QueryResult) {
+    item.manageAttachments()
+      .onAfterClose$
+      .subscribe(() => this.reloadInbox$.next(null));
   }
 
-  search($event: Event) {
-    let input = $event.target as HTMLInputElement;
-    this.searchModel = input.value;
-  }
-
-  log($event: PageEvent) {
-    console.log($event);
+  showLogs(item: QueryResult) {
+    item.showLogs()
+      .onAfterClose$
+      .subscribe(() => this.reloadInbox$.next(null));
   }
 }
