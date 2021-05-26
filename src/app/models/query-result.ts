@@ -5,6 +5,7 @@ import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
 import {IBulkResult} from '../interfaces/ibulk-result';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {BlobModel} from './blob-model';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -57,5 +58,13 @@ export class QueryResult extends Cloneable<QueryResult> {
 
   manageAttachments(): DialogRef {
     return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+  }
+
+  showLogs(): DialogRef {
+    return this.service.openLogsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+  }
+
+  exportActions(): Observable<BlobModel> {
+    return this.service.exportActions(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 }

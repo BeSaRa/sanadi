@@ -101,4 +101,8 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   openAttachmentsDialog(item: QueryResult) {
     item.manageAttachments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
+
+  showLogs(item: QueryResult) {
+    item.showLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  }
 }

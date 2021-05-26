@@ -1,0 +1,14 @@
+<div class="bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.logs}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div style="width:600px" class="dialog-content">
+  <log-viewer [caseId]="data.caseId" [service]="data.service.actionLogService"></log-viewer>
+</div>
+<div class="dialog-actions">
+  <button (click)="print()" [tooltip]="lang.map.print" class="btn btn-link"><i class="mdi mdi-printer text-primary"></i>
+  </button>
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

@@ -12,6 +12,8 @@ import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {DialogService} from './dialog.service';
 import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
+import {BlobModel} from '../models/blob-model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,14 +58,27 @@ export class InboxService {
     return this.http.post<IBulkResult>(this.urlService.URLS.CLAIM_BULK, taskIds);
   }
 
+  private getService(serviceNumber: number): EServiceGenericService<any, any> {
+    return this.services.get(serviceNumber) as EServiceGenericService<any, any>;
+  }
+
   claimBulk(taskIds: string[]): Observable<IBulkResult> {
     return this._claimBulk(taskIds);
   }
 
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
-    const service = this.services.get(caseType) as EServiceGenericService<any, any>;
+    const service = this.getService(caseType);
     return this.dialog.show(DocumentsPopupComponent, {service, caseId});
   }
 
+  openLogsDialog(caseId: string, caseType: number): DialogRef {
+    const service = this.getService(caseType);
+    return this.dialog.show(ActionRegistryPopupComponent, {service, caseId});
+  }
+
+  exportActions(caseId: string, caseType: number): Observable<BlobModel> {
+    const service = this.getService(caseType);
+    return service.actionLogService.exportActions(caseId);
+  }
 
 }
