@@ -39,6 +39,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {AngularMyDatePickerModule} from 'angular-mydatepicker';
 import {DateFixDirective} from './directives/date-fix.directive';
 import {AttachmentListComponent} from './components/attachment-list/attachment-list.component';
+import {TrimInputDirective} from './directives/trim-input.directive';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import {AttachmentListComponent} from './components/attachment-list/attachment-l
     MenuItemFilterPipe,
     HighlightPipe,
     DateFixDirective,
-    AttachmentListComponent
+    AttachmentListComponent,
+    TrimInputDirective
   ],
   imports: [
     CommonModule,
@@ -118,7 +120,8 @@ import {AttachmentListComponent} from './components/attachment-list/attachment-l
     NgSelectModule,
     AngularMyDatePickerModule,
     DateFixDirective,
-    AttachmentListComponent
+    AttachmentListComponent,
+    TrimInputDirective
   ]
 })
 export class SharedModule {
