@@ -303,4 +303,6 @@ export interface ILanguageKeys {
   lbl_raca: string;
   partial_request: string;
   inquire_beneficiary: string;
+  user_organization: string;
+  ip_address: string;
 }

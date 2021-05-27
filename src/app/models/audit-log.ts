@@ -18,6 +18,7 @@ export class AuditLog {
 
   // extra properties
   statusDateModifiedString!: string;
+  updatedOnString!: string;
 
   get orgAndBranchInfo() {
     if (!isValidValue(this.orgInfo.getName())) {

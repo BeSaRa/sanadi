@@ -11,11 +11,13 @@ export class AuditLogInterceptor {
     model.operationInfo = AdminResult.createInstance(model.operationInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.statusDateModifiedString = getDateStringFromDate(model.statusDateModified);
+    model.updatedOnString = getDateStringFromDate(model.updatedOn);
     return model;
   }
 
   static send(model: any): any {
     delete model.statusDateModifiedString;
+    delete model.updatedOnString;
     return model;
   }
 }

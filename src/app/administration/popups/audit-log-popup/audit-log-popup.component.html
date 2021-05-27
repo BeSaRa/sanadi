@@ -9,21 +9,21 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo.getName()}} </td>
     </ng-container>
-    <ng-container cdkColumnDef="organization">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_organization}}</th>
+    <ng-container cdkColumnDef="userOrganization">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user_organization}}</th>
       <td cdk-cell *cdkCellDef="let row"> {{row.orgAndBranchInfo.getName()}} </td>
     </ng-container>
-    <ng-container cdkColumnDef="operation">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.action_type}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.operationInfo.getName()}} </td>
+    <ng-container cdkColumnDef="qid">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_qid}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.qId}} </td>
     </ng-container>
-    <ng-container cdkColumnDef="status">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_status}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
+    <ng-container cdkColumnDef="ipAddress">
+      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.ip_address}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.clientIP}} </td>
     </ng-container>
-    <ng-container cdkColumnDef="statusDateModified">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_status_date_modified}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.statusDateModifiedString}} </td>
+    <ng-container cdkColumnDef="actionDate">
+      <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_date}}</th>
+      <td cdk-cell *cdkCellDef="let row"  class="date-column"> {{row.updatedOnString}} </td>
     </ng-container>
     <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
     <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
