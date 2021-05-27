@@ -105,4 +105,12 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   showLogs(item: QueryResult) {
     item.showLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
+
+  sendToUser(item: QueryResult): void {
+    item.sendToUser().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  sendToDepartment(item: QueryResult): void {
+    item.sendToDepartment().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
 }

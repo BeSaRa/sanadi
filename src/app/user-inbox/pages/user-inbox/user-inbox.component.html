@@ -40,10 +40,10 @@
             <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.manage_attachments"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-paperclip"></i></button>
-            <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.send_to_competent_dep"
+            <button (click)="sendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-send-circle"></i></button>
-            <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.send_to_user"
+            <button (click)="sendToUser(row)" [tooltip]="lang.map.send_to_user"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-account-arrow-right"></i></button>
           </td>

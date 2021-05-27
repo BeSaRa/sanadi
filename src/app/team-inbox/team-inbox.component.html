@@ -61,10 +61,10 @@
             <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.manage_attachments"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-paperclip"></i></button>
-            <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.send_to_competent_dep"
+            <button (click)="sendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-send-circle"></i></button>
-            <button (click)="openAttachmentsDialog(row)" [tooltip]="lang.map.send_to_user"
+            <button (click)="sendToUser(row)" [tooltip]="lang.map.send_to_user"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-account-arrow-right"></i></button>
           </td>
@@ -72,7 +72,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
         <tr *cdkNoDataRow>
-          <td colspan="5">{{lang.map.no_records_to_display}}</td>
+          <td colspan="6">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
       <app-paginator #paginator [length]="(queryResultSet?.totalCount || 0)"></app-paginator>
