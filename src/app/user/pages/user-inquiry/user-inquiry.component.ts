@@ -41,7 +41,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   nationalitiesLookup: Record<number, Lookup> = {} as Record<number, Lookup>;
   gulfCountries: Lookup[] = this.lookupService.listByCategory.GulfCountries;
   gulfCountriesLookup: Record<number, Lookup> = {} as Record<number, Lookup>;
-  displayIdCriteria: boolean = false;
+  displayIdCriteria: boolean = false; // true = search by id, false = search by name
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
   private idTypesValidationsMap: { [index: number]: any } = {
@@ -89,6 +89,9 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               private empService: EmployeeService,
               private eCookieService: ECookieService) {
     this.searchByNamePermission = empService.checkPermissions('BEN_SEARCH_NAME');
+    if (!this.searchByNamePermission){
+      this.displayIdCriteria = true;
+    }
     this.prepareLookups();
   }
 
