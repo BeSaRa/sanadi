@@ -9,7 +9,7 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_number}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <div class="d-flex flex-row">
-            <span class="dir-ltr d-inline-block flex-grow-1"> {{row.requestFullSerial}} </span>
+            <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
             <i class="mdi mdi-file-hidden text-primary" *ngIf="row.isPartial"
                tooltip="{{langService.map.partial_request}}"></i>
           </div>
