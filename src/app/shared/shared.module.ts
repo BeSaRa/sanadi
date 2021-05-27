@@ -55,6 +55,7 @@ import { DocumentsPopupComponent } from './popups/documents-popup/documents-popu
 import { ActionRegistryPopupComponent } from './popups/action-registry-popup/action-registry-popup.component';
 import { LogViewerComponent } from './components/log-viewer/log-viewer.component';
 import { IndeterminateDirective } from './directives/indeterminate.directive';
+import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { IndeterminateDirective } from './directives/indeterminate.directive';
     DocumentsPopupComponent,
     ActionRegistryPopupComponent,
     LogViewerComponent,
-    IndeterminateDirective
+    IndeterminateDirective,
+    SendToComponent
   ],
   imports: [
     CommonModule,
@@ -158,7 +160,8 @@ import { IndeterminateDirective } from './directives/indeterminate.directive';
     TableComponent,
     SortableTableDirective,
     SortableHeaderComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    IndeterminateDirective
   ]
 })
 export class SharedModule {

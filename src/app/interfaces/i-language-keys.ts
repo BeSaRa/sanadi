@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  sent_successfully: string;
+  select_department: string;
+  send: string;
+  select_user: string;
   item_location: string;
   send_to_user: string;
   send_to_competent_dep: string;
