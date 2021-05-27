@@ -1269,12 +1269,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   beneficiarySecondaryIdDisabled(): boolean {
-    if (this.readOnly) {
-      return true;
-    } else if (!this.editMode) {
-      return false;
-    } else {
+    if (this.isPartialRequest){
       return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
+    } else {
+      if (this.readOnly) {
+        return true;
+      } else if (!this.editMode) {
+        return false;
+      } else {
+        return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
+      }
     }
   }
 
