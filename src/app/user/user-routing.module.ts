@@ -9,13 +9,27 @@ import {PermissionGuard} from '../guards/permission-guard';
 import {CanDeactivateGuard} from '../guards/can-deactivate.guard';
 import {PartialRequestComponent} from './pages/partial-requests/partial-request/partial-request.component';
 import {PartialRequestReportsComponent} from './pages/partial-request-reports/partial-request-reports.component';
+import {CookieGuard} from '../guards/cookie.guard';
+import {isEmptyObject, isValidValue, objectHasValue} from '../helpers/utils';
 
 const routes: Routes = [
   {path: '', component: UserHomeComponent},
   {
-    path: 'inquiry', component: UserInquiryComponent,
+    path: 'inquiries', component: UserInquiryComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'BEN_SEARCH'}
+    data: {permissionKey: 'BEN_SEARCH', routeName: 'inquiries'},
+  },
+  {
+    path: 'inquiry', component: UserInquiryComponent,
+    canActivate: [PermissionGuard, CookieGuard],
+    data: {
+      permissionKey: 'SUBVENTION_AID_SEARCH',
+      routeName: 'inquiry',
+      cookieKey: 'b_i_d',
+      validateCookie: (value: any) => {
+        return !(!isValidValue(value) || isEmptyObject(value) || !objectHasValue(value) || !value.idNumber);
+      }
+    }
   },
   {
     path: 'request', component: UserRequestComponent,

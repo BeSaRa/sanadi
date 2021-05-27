@@ -1,19 +1,19 @@
-<fieldset class="mb-4" [disabled]="readonlyForm">
+<fieldset class="mb-4">
   <legend><span class="h6 text-primary">{{langService.map.menu_inquiries}}</span></legend>
-  <form [formGroup]="form" autocomplete="off" action="#">
-    <!--  Inquiry Types  -->
+  <form [formGroup]="form" *ngIf="isNormalBenSearch" autocomplete="off" action="#">
+    <!-- Inquiry Types -->
     <div class="row">
       <div class="col mb-4">
-        <div class="form-check form-check-inline" *ngIf="searchByNameAllowed">
+        <div class="form-check form-check-inline" *ngIf="searchByNamePermission">
           <input formControlName="inquiryType" [value]="false" class="form-check-input" type="radio"
-                 name="inquiryType" id="inquiryByName" [readOnly]="readonlyForm">
+                 name="inquiryType" id="inquiryByName">
           <label class="form-check-label" for="inquiryByName">
             {{langService.map.inquiry_by_name}}
           </label>
         </div>
         <div class="form-check form-check-inline">
           <input formControlName="inquiryType" [value]="true" class="form-check-input" type="radio"
-                 name="inquiryType" id="inquiryById" [readOnly]="readonlyForm">
+                 name="inquiryType" id="inquiryById">
           <label class="form-check-label" for="inquiryById">
             {{langService.map.inquiry_by_id}}
           </label>
@@ -21,12 +21,11 @@
       </div>
     </div>
     <!-- Search By Name -->
-    <div formGroupName="searchByName" *ngIf="!displayIdCriteria && searchByNameAllowed" class="row">
+    <div formGroupName="searchByName" *ngIf="!displayIdCriteria && searchByNamePermission" class="row">
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="searchMethod">{{langService.map.search_method}}</label>
           <ng-select [selectOnTab]="true" labelForId="searchMethod" [clearable]="false"
-                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="searchMethod"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="operator">
@@ -39,24 +38,23 @@
       <div class="col flex-grow-1">
         <div class="mb-4">
           <label for="arName">{{langService.map.arabic_name}}</label>
-          <input type="text" formControlName="arName" id="arName" class="form-control" [readOnly]="readonlyForm">
+          <input type="text" formControlName="arName" id="arName" class="form-control">
         </div>
       </div>
       <div class="col flex-grow-1">
         <div class="mb-4">
           <label for="enName">{{langService.map.english_name}}</label>
-          <input type="text" formControlName="enName" id="enName" class="form-control" name="enName" [readOnly]="readonlyForm">
+          <input type="text" formControlName="enName" id="enName" class="form-control" name="enName">
         </div>
       </div>
     </div>
-    <!-- Search By Id  -->
+    <!-- Search By Id -->
     <div formGroupName="searchById" *ngIf="displayIdCriteria" class="row flex-sm-column flex-md-row">
       <div class="col flex-grow-1">
         <div class="mb-4 ng-select-wrapper">
           <label for="identification" class="form-label"
                  asteriskIfRequired="identification">{{langService.map.identification}}</label>
           <ng-select [selectOnTab]="true" labelForId="identification" [clearable]="false"
-                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="identification"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="identification">
@@ -72,7 +70,6 @@
         <div class="mb-4 ng-select-wrapper">
           <label for="idType" class="form-label" asteriskIfRequired="idType">{{langService.map.id_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
-                     [readonly]="readonlyForm"
                      placeholder="{{langService.map.select}}" id="idType"
                      [notFoundText]="langService.map.msg_not_found"
                      formControlName="idType">
@@ -89,7 +86,7 @@
           <label for="text" class="form-label" asteriskIfRequired="idNumber">{{langService.map.id_number}}</label>
           <input [ngClass]="fm.getInvalidClass('searchById.idNumber')" type="text"
                  formControlName="idNumber" id="text" class="form-control"
-                 name="idNumber" maxlength="20" [readonly]="readonlyForm">
+                 name="idNumber" maxlength="20">
           <app-field-error-message
             [control]="fm.getFormField('searchById.idNumber')"></app-field-error-message>
         </div>
@@ -100,7 +97,6 @@
             <label for="nationality" class="form-label"
                    asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
             <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                       [readonly]="readonlyForm"
                        placeholder="{{langService.map.select}}" id="nationality"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="nationality"
@@ -115,7 +111,6 @@
             <label for="nationalityGulf" class="form-label"
                    asteriskIfRequired="nationality">{{langService.map.country}}</label>
             <ng-select [selectOnTab]="true" labelForId="nationalityGulf" [clearable]="false"
-                       [readonly]="readonlyForm"
                        placeholder="{{langService.map.select}}" id="nationalityGulf"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="nationality"
@@ -134,14 +129,54 @@
     <!-- Form Button -->
     <div class="row">
       <div class="col d-flex flex-row justify-content-start">
-        <button (click)="search()" [disabled]="currentForm?.invalid || readonlyForm"
+        <button (click)="search()" [disabled]="currentForm?.invalid"
                 class="btn shadow-sm btn-primary">{{langService.map.lbl_search}}</button>
-        <button (click)="resetCurrentForm()" [disabled]="readonlyForm"
+        <button (click)="resetCurrentForm()"
                 class="btn shadow-sm btn-secondary mx-3">{{langService.map.btn_clear}}</button>
       </div>
     </div>
   </form>
+
+  <div [formGroup]="form" *ngIf="isBenSearchFromRequest">
+    <div formGroupName="searchById" class="row flex-sm-column flex-md-row">
+      <div class="col flex-grow-1">
+        <div class="mb-4 ng-select-wrapper">
+          <label for="identification" class="form-label"
+                 asteriskIfRequired="identification">{{langService.map.identification}}</label>
+          <span
+            class="form-control input-disabled">{{identificationsLookup[identificationField?.value].getName() || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="col flex-grow-1">
+        <div class="mb-4 ng-select-wrapper">
+          <label for="idType" class="form-label" asteriskIfRequired="idType">{{langService.map.id_type}}</label>
+          <span class="form-control input-disabled">{{idTypesLookup[idTypeField?.value].getName() || 'nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="col flex-grow-1">
+        <div class="mb-4 position-relative">
+          <label for="text" class="form-label" asteriskIfRequired="idNumber">{{langService.map.id_number}}</label>
+          <span class="form-control input-disabled">{{idNumberField?.value || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="col flex-grow-1">
+        <div class="mb-4 ng-select-wrapper" *ngIf="nationalityVisible">
+          <ng-container *ngIf="nationalityListType === 'normal'">
+            <label for="nationality" class="form-label"
+                   asteriskIfRequired="nationality">{{langService.map.lbl_nationality}}</label>
+            <span class="form-control">{{nationalitiesLookup[nationalityField?.value] || '&nbsp;'}}</span>
+          </ng-container>
+          <ng-container *ngIf="nationalityListType === 'gulf'">
+            <label for="nationalityGulf" class="form-label"
+                   asteriskIfRequired="nationality">{{langService.map.country}}</label>
+            <span class="form-control">{{gulfCountriesLookup[nationalityField?.value] || '&nbsp;'}}</span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </fieldset>
+
 <div *ngIf="!!beneficiary" class="row">
   <div class="col-12">
     <div><h1 class="h6 text-primary">{{langService.map.personal_info}}</h1></div>

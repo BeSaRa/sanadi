@@ -33,6 +33,7 @@ import {AidTypes} from '../../../enums/aid-types.enum';
 import {StatusEnum} from '../../../enums/status.enum';
 import {AidLookup} from '../../../models/aid-lookup';
 import {AidLookupService} from '../../../services/aid-lookup.service';
+import {ECookieService} from '../../../services/e-cookie.service';
 
 @Component({
   selector: 'app-user-request-search',
@@ -108,7 +109,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
               private readModeService: ReadModeService,
               private subventionRequestService: SubventionRequestService,
               public empService: EmployeeService,
-              private aidLookupService: AidLookupService) {
+              private aidLookupService: AidLookupService,
+              private eCookieService: ECookieService) {
   }
 
   ngOnDestroy(): void {
@@ -463,11 +465,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   getRelatedBeneficiaryData(request: SubventionRequestAid) {
-    this.router.navigate(['/home/main/inquiry', {
+    this.eCookieService.putEObject('b_i_d', {
       idType: request.benPrimaryIdType,
       idNumber: request.benPrimaryIdNumber,
       nationality: request.benPrimaryIdNationality
-    }]).then();
+    });
+    this.router.navigate(['/home/main/inquiry']).then();
   }
 
   showRequestDetails(request: SubventionRequestAid, $event: MouseEvent) {

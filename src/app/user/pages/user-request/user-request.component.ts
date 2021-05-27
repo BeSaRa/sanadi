@@ -44,11 +44,7 @@ import {ReadModeService} from '../../../services/read-mode.service';
 import * as dayjs from 'dayjs';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {isValidValue} from '../../../helpers/utils';
-import {
-  changeDateFromDatepicker,
-  getDatepickerOptions,
-  getDatePickerOptionsClone
-} from '../../../helpers/utils-date';
+import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils-date';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';
@@ -59,6 +55,7 @@ import {SanadiAttachment} from '../../../models/sanadi-attachment';
 import {AttachmentService} from '../../../services/attachment.service';
 import {ExceptionHandlerService} from '../../../services/exception-handler.service';
 import {AidTypes} from '../../../enums/aid-types.enum';
+import {ECookieService} from '../../../services/e-cookie.service';
 
 @Component({
   selector: 'app-user-request',
@@ -198,7 +195,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
               private fb: FormBuilder,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              private exceptionHandlerService: ExceptionHandlerService,
+              private eCookieService: ECookieService) {
 
   }
 
@@ -1095,15 +1093,21 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
         actionBtn: 'btn_continue',
         thirdBtn: 'btn_inquire',
-        cancelBtn: 'btn_cancel'
+        cancelBtn: 'btn_clear',
+        showCloseIcon: true
       })
         .onAfterClose$
         .pipe(take(1))
         .subscribe((click: UserClickOn) => {
+          if (!isValidValue(click) || UserClickOn.CLOSE) {
+            return;
+          }
           if (click === UserClickOn.YES) {
+            // continue
             this.validateStatus = false;
             this.save$.next();
           } else if (click === UserClickOn.NO) {
+            // clear
             if (this.currentParamType === this.routeParamTypes.normal) {
               this.beneficiaryChanged$.next(null);
               this.requestChanged$.next(null);
@@ -1111,14 +1115,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               this.form.markAsUntouched();
               this.form.markAsPristine();
             }
-          } else {
+          } else if (click === UserClickOn.THIRD_BTN) {
+            // inquire
             this.skipConfirmUnsavedChanges = true;
             const ben = this.prepareBeneficiary();
-            this.router.navigate(['/home/main/inquiry', {
-              idNumber: ben.benPrimaryIdNumber,
+            this.eCookieService.putEObject('b_i_d', {
               idType: ben.benPrimaryIdType,
+              idNumber: ben.benPrimaryIdNumber,
               nationality: ben.benPrimaryIdNationality
-            }]).then();
+            });
+            this.router.navigate(['/home/main/inquiry']).then();
           }
         });
     }

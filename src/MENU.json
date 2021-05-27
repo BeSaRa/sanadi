@@ -15,7 +15,7 @@
   {
     "id": 2,
     "langKey": "menu_inquiries",
-    "path": "/home/main/inquiry",
+    "path": "/home/main/inquiries",
     "icon": "inquires",
     "isSvg": true,
     "permission": "BEN_SEARCH",

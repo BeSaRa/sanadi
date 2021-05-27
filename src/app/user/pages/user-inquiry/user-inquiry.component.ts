@@ -22,6 +22,7 @@ import {AdminResult} from '../../../models/admin-result';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {EmployeeService} from '../../../services/employee.service';
+import {ECookieService} from '../../../services/e-cookie.service';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -35,8 +36,11 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   fm!: FormManager;
   stringOperators: Lookup[] = this.lookupService.getStringOperators();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
+  idTypesLookup: Record<number, Lookup> = {} as Record<number, Lookup>;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
+  nationalitiesLookup: Record<number, Lookup> = {} as Record<number, Lookup>;
   gulfCountries: Lookup[] = this.lookupService.listByCategory.GulfCountries;
+  gulfCountriesLookup: Record<number, Lookup> = {} as Record<number, Lookup>;
   displayIdCriteria: boolean = false;
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
@@ -51,7 +55,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     primary: 1,
     secondary: 2
   }
-  identifications = [
+  identifications: AdminResult[] = [
     AdminResult.createInstance({
       id: 1,
       arName: this.langService.getArabicLocalByKey('beneficiary_primary_id'),
@@ -65,11 +69,14 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       lookupKey: this.identificationMap.secondary
     })
   ];
+  identificationsLookup: Record<number, AdminResult> = {} as Record<number, AdminResult>;
   nationalityVisible: boolean = false;
   nationalityListType: 'normal' | 'gulf' = 'normal';
-  readonlyForm: boolean = false;
+
   routeParams: IKeyValue = {};
-  searchByNameAllowed: boolean = false;
+  isNormalBenSearch: boolean = false;
+  isBenSearchFromRequest: boolean = false;
+  searchByNamePermission: boolean = false;
 
   constructor(private fb: FormBuilder,
               public langService: LangService,
@@ -79,8 +86,10 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
               private subventionRequestAidService: SubventionRequestAidService,
               private beneficiaryService: BeneficiaryService,
               private activeRoute: ActivatedRoute,
-              private empService: EmployeeService) {
-    this.searchByNameAllowed = empService.checkPermissions('BEN_SEARCH_NAME');
+              private empService: EmployeeService,
+              private eCookieService: ECookieService) {
+    this.searchByNamePermission = empService.checkPermissions('BEN_SEARCH_NAME');
+    this.prepareLookups();
   }
 
   ngOnInit(): void {
@@ -88,7 +97,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.listenToInquiryTypeChange();
     this.listenToIdTypeChange();
     this.listenToSearch();
-    this.listenToRouteParams();
+    this.listenToCookies();
   }
 
   ngOnDestroy(): void {
@@ -97,13 +106,28 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
+  private prepareLookups(): void {
+    this.idTypesLookup = this.idTypes.reduce((acc, item) => {
+      return {...acc, [item.lookupKey]: item};
+    }, this.idTypesLookup);
+    this.nationalitiesLookup = this.nationalities.reduce((acc, item) => {
+      return {...acc, [item.lookupKey]: item};
+    }, this.nationalitiesLookup);
+    this.gulfCountriesLookup = this.gulfCountries.reduce((acc, item) => {
+      return {...acc, [item.lookupKey]: item};
+    }, this.gulfCountriesLookup);
+    this.identificationsLookup = this.identifications.reduce((acc, item) => {
+      return {...acc, [item.lookupKey!]: item};
+    }, this.identificationsLookup);
+  }
+
   get currentForm(): FormGroup | null {
     return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
     this.form = this.fb.group({
-      inquiryType: [!this.searchByNameAllowed, Validators.required],
+      inquiryType: [!this.searchByNamePermission, Validators.required],
       searchById: this.fb.group({
         identification: [1, [CustomValidators.required]],
         idType: [1, [CustomValidators.required]],
@@ -119,27 +143,23 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.fm = new FormManager(this.form, this.langService);
   }
 
-  private listenToRouteParams(): void {
-    this.activeRoute.paramMap.pipe(
-      filter(params => params.keys.length > 0),
-      tap((params: ParamMap) => {
-        // @ts-ignore
-        this.routeParams = params.params;
-        if (this.routeParams.idNumber) {
-          this.readonlyForm = true;
-          this.inquiryTypeField?.setValue(true);  // set inquiry type to search by id
-          this.identificationField?.setValue(this.identificationMap.primary); // set identification to primary
-          this.idNumberField?.setValue(this.routeParams.idNumber); // set number
-          this.idTypeField?.setValue(Number(this.routeParams.idType)); // set id type from request params
-        }
-      }),
-      switchMap((params) => {
-        if (this.routeParams.idNumber) {
-          this.search();
-        }
-        return of(params);
-      })
-    ).subscribe();
+  private listenToCookies(): void {
+    this.routeParams = this.eCookieService.getEObject(this.activeRoute.snapshot.data.cookieKey) as IKeyValue;
+    this.eCookieService.removeE(this.activeRoute.snapshot.data.cookieKey);
+
+    const routeName = this._getRouteName(this.activeRoute).toLowerCase();
+    if (routeName === 'inquiries') {
+      this.isNormalBenSearch = true;
+      this.isBenSearchFromRequest = false;
+    } else if (routeName === 'inquiry') {
+      this.isNormalBenSearch = false;
+      this.isBenSearchFromRequest = true;
+      this.inquiryTypeField?.setValue(true);  // set inquiry type to search by id
+      this.identificationField?.setValue(this.identificationMap.primary); // set identification to primary
+      this.idNumberField?.setValue(this.routeParams.idNumber); // set number
+      this.idTypeField?.setValue(Number(this.routeParams.idType)); // set id type from request params
+      this.search();
+    }
   }
 
   private listenToInquiryTypeChange() {
@@ -186,7 +206,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       this.nationalityListType = (value === BeneficiaryIdTypes.GCC_ID ? 'gulf' : 'normal');
 
       let nationality = null;
-      if (this.readonlyForm && this.routeParams.hasOwnProperty('nationality') && isValidValue(this.routeParams.nationality)) {
+      if (this.isBenSearchFromRequest && this.routeParams.hasOwnProperty('nationality') && isValidValue(this.routeParams.nationality)) {
         nationality = Number(this.routeParams.nationality);
       }
       this.nationalityField.setValue(nationality);
@@ -248,6 +268,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
 
   search() {
     this.search$.next(this.currentForm?.value);
+    this.routeParams = {};
   }
 
   resetCurrentForm() {
@@ -309,5 +330,13 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   printRequest($event: MouseEvent, request: SubventionRequestAid): void {
     $event.preventDefault();
     request.printRequest('InquiryByIdSearchResult.pdf');
+  }
+
+  private _getRouteName(route: ActivatedRoute): string {
+    let routeName = '';
+    if (route && route.hasOwnProperty('snapshot') && route.snapshot.hasOwnProperty('data')) {
+      routeName = route.snapshot.data.routeName;
+    }
+    return routeName;
   }
 }
