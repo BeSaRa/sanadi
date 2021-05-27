@@ -15,7 +15,6 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {getDatepickerOptions} from '../../../helpers/utils-date';
@@ -48,11 +47,6 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     basic: {name: 'basic'},
     advanced: {name: 'advanced'},
     branches: {name: 'branches'}
-  };
-
-  dateConfig: IDatePickerDirectiveConfig = {
-    format: this.configService.CONFIG.DATEPICKER_FORMAT,
-    // disableKeypress: true
   };
 
   dpOptionsPast: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'future'});

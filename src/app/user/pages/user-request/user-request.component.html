@@ -217,9 +217,6 @@
             <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="dateOfBirth"
-                     [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"
-                     formControlName="dateOfBirth" class="form-control">-->
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <input class="form-control" angular-mydatepicker #dpDateOfBirth="angular-mydatepicker"
@@ -701,10 +698,6 @@
           <label for="creationDate" asteriskIfRequired="creationDate"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
-            <!--<input theme="dp-material" [dpDayPicker]="dateConfig"
-                   [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"
-                   id="creationDate"
-                   formControlName="creationDate" class="form-control">-->
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
@@ -804,11 +797,6 @@
           <label for="statusDateModified" asteriskIfRequired="statusDateModified"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
-            <!--<input id="statusDateModified" [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"
-                   formControlName="statusDateModified" class="form-control" type="date">-->
-            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="statusDateModified"
-                   formControlName="statusDateModified" class="form-control"
-                   [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">-->
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <input class="form-control" angular-mydatepicker #dpStatusDateModified="angular-mydatepicker"
@@ -896,11 +884,6 @@
               <label asteriskIfRequired="approvalDate" for="approvalDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <!--<input id="approvalDate" [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"
-                       formControlName="approvalDate" class="form-control" type="date">-->
-                <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="approvalDate"
-                       formControlName="approvalDate" class="form-control"
-                       [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">-->
                 <div class="input-group">
                   <i class="input-group-text mdi mdi-calendar"></i>
                   <input class="form-control" angular-mydatepicker #dpAidApprovalDate="angular-mydatepicker"
@@ -931,9 +914,6 @@
               <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <!--<input theme="dp-material" [dpDayPicker]="dateConfigFuture" id="aidStartPayDate"
-                       formControlName="aidStartPayDate" class="form-control"
-                       [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">-->
                 <div class="input-group">
                   <i class="input-group-text mdi mdi-calendar"></i>
                   <input class="form-control" angular-mydatepicker #dpAidStartPayDate="angular-mydatepicker"

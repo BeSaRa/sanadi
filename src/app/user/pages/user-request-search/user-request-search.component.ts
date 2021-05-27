@@ -25,7 +25,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
-import {IDatePickerDirectiveConfig} from 'ng2-date-picker';
 import {ReadModeService} from '../../../services/read-mode.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {IKeyValue} from '../../../interfaces/i-key-value';
@@ -67,11 +66,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
     [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId
-  };
-
-  dateConfig: IDatePickerDirectiveConfig = {
-    format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
-    // disableKeypress: true
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;

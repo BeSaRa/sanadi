@@ -103,14 +103,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     'actions'
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
-  /*dateConfig: IDatePickerDirectiveConfig = {
-    format: this.configurationService.CONFIG.DATEPICKER_FORMAT,
-    max: this.today
-    // disableKeypress: true
-  };
-  dateConfigFuture: IDatePickerDirectiveConfig = {
-    format: this.configurationService.CONFIG.DATEPICKER_FORMAT
-  };*/
 
   datepickerOptionsMap: IKeyValue = {
     dateOfBirth: getDatepickerOptions({disablePeriod: 'future'}),

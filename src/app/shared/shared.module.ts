@@ -24,7 +24,6 @@ import {TooltipDirective} from './directives/tooltip.directive';
 import {TabsListComponent} from './components/tabs/tabs-list.component';
 import {TabComponent} from './components/tab/tab.component';
 import {GridSearchComponent} from './components/grid-search/grid-search.component';
-import {DpDatePickerModule} from 'ng2-date-picker';
 import {AsteriskIfRequiredDirective} from './directives/asterisk-if-required.directive';
 import {LoadingComponent} from './components/loading/loading.component';
 import {VersionComponent} from './components/version/version.component';
@@ -81,7 +80,6 @@ import {TrimInputDirective} from './directives/trim-input.directive';
     A11yModule,
     CdkTableModule,
     ReactiveFormsModule,
-    DpDatePickerModule,
     NgxMaskModule.forRoot(),
     NgScrollbarModule,
     NgSelectModule,
@@ -95,7 +93,6 @@ import {TrimInputDirective} from './directives/trim-input.directive';
     PortalModule,
     A11yModule,
     CdkTableModule,
-    DpDatePickerModule,
     ReactiveFormsModule,
     FooterComponent,
     HeaderComponent,

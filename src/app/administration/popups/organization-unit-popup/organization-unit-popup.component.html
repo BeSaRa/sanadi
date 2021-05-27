@@ -201,9 +201,6 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="registryDate" asteriskIfRequired="registryDate"
                    class="form-label">{{langService.map.first_registration_date}}</label>
-            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="registryDate"
-                   formControlName="registryDate" class="form-control datepicker-field"
-                   [ngClass]="fm.getStatusClass('basic.registryDate')">-->
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <input class="form-control" angular-mydatepicker #dpRegistryDate="angular-mydatepicker"
@@ -286,12 +283,6 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="establishmentDate" class="form-label">{{langService.map.establishment_date}}</label>
-            <!--<input id="establishmentDate" type="date"
-                   [ngClass]="fm.getStatusClass('advanced.establishmentDate')"
-                   formControlName="establishmentDate" class="form-control">-->
-            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="establishmentDate"
-                   formControlName="establishmentDate" class="form-control datepicker-field"
-                   [ngClass]="fm.getStatusClass('advanced.establishmentDate')">-->
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <input class="form-control" angular-mydatepicker #dpEstablishmentDate="angular-mydatepicker"
@@ -304,12 +295,6 @@
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="budgetClosureDate" class="form-label">{{langService.map.budget_closure_date}}</label>
-            <!--<input id="budgetClosureDate" type="date"
-                   [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')"
-                   formControlName="budgetClosureDate" class="form-control">-->
-            <!--<input theme="dp-material" [dpDayPicker]="dateConfig" id="budgetClosureDate"
-                   formControlName="budgetClosureDate" class="form-control datepicker-field"
-                   [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')">-->
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <input class="form-control" angular-mydatepicker #dpBudgetClosureDate="angular-mydatepicker"
