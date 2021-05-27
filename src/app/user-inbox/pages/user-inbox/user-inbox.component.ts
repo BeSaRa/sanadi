@@ -47,15 +47,19 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     this.listenToReload();
   }
 
-  openAttachmentsDialog(item: QueryResult) {
-    item.manageAttachments()
-      .onAfterClose$
-      .subscribe(() => this.reloadInbox$.next(null));
+  openAttachmentsDialog(item: QueryResult): void {
+    item.manageAttachments().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
   }
 
-  showLogs(item: QueryResult) {
-    item.showLogs()
-      .onAfterClose$
-      .subscribe(() => this.reloadInbox$.next(null));
+  showLogs(item: QueryResult): void {
+    item.showLogs().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  sendToUser(item: QueryResult): void {
+    item.sendToUser().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  sendToDepartment(item: QueryResult): void {
+    item.sendToDepartment().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
   }
 }

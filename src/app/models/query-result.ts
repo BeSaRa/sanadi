@@ -71,4 +71,12 @@ export class QueryResult extends Cloneable<QueryResult> {
   exportModel(): Observable<BlobModel> {
     return this.service.exportModel(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
+
+  sendToUser(): DialogRef {
+    return this.service.sendToUser(this.TKIID, this.BD_CASE_TYPE);
+  }
+
+  sendToDepartment(): DialogRef {
+    return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE);
+  }
 }

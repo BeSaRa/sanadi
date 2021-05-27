@@ -14,6 +14,8 @@ import {DocumentsPopupComponent} from '../shared/popups/documents-popup/document
 import {DialogRef} from '../shared/models/dialog-ref';
 import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
 import {BlobModel} from '../models/blob-model';
+import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
+import {IWFResponse} from '../interfaces/i-w-f-response';
 
 @Injectable({
   providedIn: 'root'
@@ -86,4 +88,21 @@ export class InboxService {
     return service.exportModel(caseId);
   }
 
+  sendTaskTo(taskId: string, info: Partial<IWFResponse>, url: string): Observable<any> {
+    return this.http.post(url + '/task/' + taskId + '/complete', info);
+  }
+
+  private openSendToDialog(taskId: string, sendToUser: boolean = true, service: EServiceGenericService<any, any>): DialogRef {
+    return this.dialog.show(SendToComponent, {inboxService: this, taskId: taskId, sendToUser, service});
+  }
+
+  sendToUser(taskId: string, caseType: number): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, true, service);
+  }
+
+  sendToDepartment(taskId: string, caseType: number): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, false, service);
+  }
 }
