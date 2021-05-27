@@ -1091,7 +1091,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         .onAfterClose$
         .pipe(take(1))
         .subscribe((click: UserClickOn) => {
-          if (!isValidValue(click) || UserClickOn.CLOSE) {
+          if (!isValidValue(click) || click === UserClickOn.CLOSE) {
             return;
           }
           if (click === UserClickOn.YES) {
