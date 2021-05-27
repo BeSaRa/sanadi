@@ -32,6 +32,13 @@ function send(model: any): any {
     model.benSecIdNationality = null;
     model.benSecIdNumber = null;
   }
+
+  // trim the arName, enName, primary id number, secondary id number
+  model.arName = !!model.arName ? ('' + model.arName).trim() : model.arName;
+  model.enName = !!model.enName ? ('' + model.enName).trim() : model.enName;
+  model.benPrimaryIdNumber = !!model.benPrimaryIdNumber ? ('' + model.benPrimaryIdNumber).trim() : model.benPrimaryIdNumber;
+  model.benSecIdNumber = !!model.benSecIdNumber ? ('' + model.benSecIdNumber).trim() : model.benSecIdNumber;
+
   return model;
 }
 
