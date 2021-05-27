@@ -430,8 +430,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             attachmentList: this.attachmentList
           });
           return this.subventionResponseService.savePartialRequest(data)
-            .pipe(catchError(() => {
-              console.log('save Partial Request Failed');
+            .pipe(catchError((err) => {
+              this.exceptionHandlerService.handle(err);
               return of(null);
             }));
         })
@@ -443,6 +443,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: response.request.requestFullSerial}));
       this.currentParamType = 'normal';
       this.form.markAsPristine({onlySelf: true});
+      this.skipConfirmUnsavedChanges = true;
       this.router.navigate(['/home/main/request/', response.request.id]).then();
     });
 
@@ -519,8 +520,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           return value[1].request;
         }),
         exhaustMap((request: SubventionRequest) => {
-          return request.save().pipe(catchError(() => {
-            console.log('save Request Failed');
+          return request.save().pipe(catchError((err) => {
+            this.exceptionHandlerService.handle(err);
             return of(null);
           }));
         })
@@ -1268,7 +1269,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   beneficiarySecondaryIdDisabled(): boolean {
-    if (this.isPartialRequest){
+    if (this.isPartialRequest) {
       return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
     } else {
       if (this.readOnly) {
