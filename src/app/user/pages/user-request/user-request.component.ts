@@ -236,8 +236,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
-      aidTab: this.fb.array([]),
-      attachmentsTab: this.editMode ? this.fb.group([]) : null
+      aidTab: this.fb.array([])
     });
     this.fm = new FormManager(this.form, this.langService);
   }
