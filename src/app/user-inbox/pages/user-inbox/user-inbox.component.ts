@@ -52,7 +52,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   showLogs(item: QueryResult): void {
-    item.showLogs().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+    item.viewLogs().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
   }
 
   sendToUser(item: QueryResult): void {

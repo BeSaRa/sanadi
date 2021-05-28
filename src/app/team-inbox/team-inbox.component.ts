@@ -10,6 +10,8 @@ import {EServiceListService} from '../services/e-service-list.service';
 import {QueryResult} from '../models/query-result';
 import {InboxService} from '../services/inbox.service';
 import {ToastService} from '../services/toast.service';
+import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '../enums/wfresponse-type.enum';
 
 @Component({
   selector: 'team-inbox',
@@ -24,7 +26,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();
-
+  actions: IMenuItem[] = [];
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -56,6 +58,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.selectControl.patchValue(this.inboxChange$.value);
     this.listenToInboxChange();
     this.listenToSelectControl();
+    this.buildGridActions();
   }
 
   reloadDefaultTeam(): void {
@@ -85,7 +88,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  claim(item: QueryResult) {
+  actionClaim(item: QueryResult) {
     item.claim()
       .pipe(take(1))
       .subscribe((val) => {
@@ -98,19 +101,86 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       });
   }
 
-  openAttachmentsDialog(item: QueryResult) {
+  actionManageAttachments(item: QueryResult) {
     item.manageAttachments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
-  showLogs(item: QueryResult) {
-    item.showLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  actionViewLogs(item: QueryResult) {
+    item.viewLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
-  sendToUser(item: QueryResult): void {
+  actionSendToUser(item: QueryResult): void {
     item.sendToUser().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
   }
 
-  sendToDepartment(item: QueryResult): void {
+  actionSendToDepartment(item: QueryResult): void {
     item.sendToDepartment().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  actionComplete(item: QueryResult): void {
+    item.complete().subscribe((val) => {
+      console.log(val);
+      this.reloadSelectedInbox();
+    });
+  }
+
+  private buildGridActions() {
+    this.actions = [
+      // view logs
+      {
+        icon: 'mdi-view-list-outline',
+        label: 'logs',
+        onClick: (item: QueryResult) => this.actionViewLogs(item)
+      },
+      // claim
+      {
+        icon: 'mdi-hand-right',
+        label: 'claim',
+        onClick: (item: QueryResult) => {
+          this.actionClaim(item);
+        }
+      },
+      // manage attachments
+      {
+        icon: 'mdi-paperclip',
+        label: 'manage_attachments',
+        onClick: (item: QueryResult) => {
+          this.actionManageAttachments(item);
+        }
+      },
+      // send to department
+      {
+        icon: 'mdi-send-circle',
+        label: 'send_to_competent_dep',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionSendToDepartment(item);
+        }
+      },
+      // send to user
+      {
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_user',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionSendToUser(item);
+        }
+      },
+      // complete
+      {
+        icon: 'mdi-check-circle',
+        label: 'send_to_user',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionComplete(item);
+        }
+      }
+    ];
   }
 }

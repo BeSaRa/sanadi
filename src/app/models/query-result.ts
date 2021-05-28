@@ -60,7 +60,7 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
-  showLogs(): DialogRef {
+  viewLogs(): DialogRef {
     return this.service.openLogsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
@@ -78,5 +78,9 @@ export class QueryResult extends Cloneable<QueryResult> {
 
   sendToDepartment(): DialogRef {
     return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE);
+  }
+
+  complete() {
+    return this.service.complete(this.TKIID, this.BD_CASE_TYPE);
   }
 }
