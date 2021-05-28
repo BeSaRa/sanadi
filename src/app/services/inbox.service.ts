@@ -16,6 +16,8 @@ import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-pop
 import {BlobModel} from '../models/blob-model';
 import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
 import {IWFResponse} from '../interfaces/i-w-f-response';
+import {IDefaultResponse} from '../interfaces/idefault-response';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -88,11 +90,12 @@ export class InboxService {
     return service.exportModel(caseId);
   }
 
-  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<any> {
-    return this.http.post<boolean>(service._getServiceURL() + '/task/' + taskId + '/complete', info);
+  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/complete', info)
+      .pipe(map(response => response.rs));
   }
 
-  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<any> {
+  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<boolean> {
     return this.takeActionOnTask(taskId, info, service);
   }
 
