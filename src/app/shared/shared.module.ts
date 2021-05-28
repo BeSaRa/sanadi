@@ -56,6 +56,7 @@ import { ActionRegistryPopupComponent } from './popups/action-registry-popup/act
 import { LogViewerComponent } from './components/log-viewer/log-viewer.component';
 import { IndeterminateDirective } from './directives/indeterminate.directive';
 import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
+import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
   ],
   imports: [
     CommonModule,
+    ContextMenuModule,
     RouterModule.forChild([]),
     OverlayModule,
     PortalModule,
@@ -119,6 +121,7 @@ import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
     AngularMyDatePickerModule
   ],
   exports: [
+    ContextMenuModule,
     NgScrollbarModule,
     CommonModule,
     OverlayModule,
