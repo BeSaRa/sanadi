@@ -88,8 +88,12 @@ export class InboxService {
     return service.exportModel(caseId);
   }
 
-  sendTaskTo(taskId: string, info: Partial<IWFResponse>, url: string): Observable<any> {
-    return this.http.post(url + '/task/' + taskId + '/complete', info);
+  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<any> {
+    return this.http.post<boolean>(service._getServiceURL() + '/task/' + taskId + '/complete', info);
+  }
+
+  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<any> {
+    return this.takeActionOnTask(taskId, info, service);
   }
 
   private openSendToDialog(taskId: string, sendToUser: boolean = true, service: EServiceGenericService<any, any>): DialogRef {
@@ -104,5 +108,10 @@ export class InboxService {
   sendToDepartment(taskId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, false, service);
+  }
+
+  complete(taskId: string, caseType: number): Observable<boolean> {
+    const service = this.getService(caseType);
+    return this.takeActionOnTask(taskId, {}, service);
   }
 }

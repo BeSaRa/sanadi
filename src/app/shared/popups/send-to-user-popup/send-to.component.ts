@@ -89,12 +89,14 @@ export class SendToComponent implements OnInit, OnDestroy {
       this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
       return;
     }
+
     const id: number = this.group.get(this.data.sendToUser ? 'user' : 'department')?.value!;
+
     this.data.inboxService.sendTaskTo(this.data.taskId, {
       comment: this.group.get('comment')?.value,
       selectedResponse: this.data.sendToUser ? WFResponseType.TO_USER : WFResponseType.TO_COMPETENT_DEPARTMENT,
       [this.data.sendToUser ? 'generalUserId' : 'competentDeptId']: id
-    }, this.data.service._getServiceURL())
+    }, this.data.service)
       .pipe(take(1))
       .subscribe(() => {
         this.toast.success(this.lang.map.sent_successfully);
