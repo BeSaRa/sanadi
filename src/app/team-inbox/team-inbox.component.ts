@@ -118,10 +118,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionComplete(item: QueryResult): void {
-    item.complete().subscribe((val) => {
-      console.log(val);
-      this.reloadSelectedInbox();
-    });
+    item.complete().subscribe(_ => this.reloadSelectedInbox());
   }
 
   private buildGridActions() {
@@ -173,9 +170,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       // complete
       {
         icon: 'mdi-check-circle',
-        label: 'send_to_user',
+        label: 'task_complete',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
+          return !item.RESPONSES.length;
         },
         onClick: (item: QueryResult) => {
           this.actionComplete(item);
