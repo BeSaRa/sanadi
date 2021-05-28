@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  task_complete_successfully: string;
+  task_complete: string;
   sent_successfully: string;
   select_department: string;
   send: string;
