@@ -105,6 +105,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     item.manageAttachments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
+  actionManageRecommendations(item: QueryResult) {
+    item.manageRecommendations().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  }
+
   actionViewLogs(item: QueryResult) {
     item.viewLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
@@ -248,6 +252,15 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult) => {
           this.actionClose(item);
+        }
+      },
+      // recommendations
+      {
+        type: 'action',
+        icon: 'mdi-star-settings',
+        label: 'manage_recommendations',
+        onClick: (item: QueryResult) => {
+          this.actionManageRecommendations(item);
         }
       }
     ];

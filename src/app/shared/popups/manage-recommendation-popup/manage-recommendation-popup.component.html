@@ -1,0 +1,20 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.manage_recommendations}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" style="width: 600px">
+  <div class="d-flex flex-row align-items-center justify-content-start">
+    <h6 class="text-primary d-inline-block">{{lang.map.recommendations}}</h6>
+    <button (click)="component.openRecommendationDialog()" class="d-inline-block text-primary icon-btn"><i
+      class="mdi mdi-plus-box"></i></button>
+    <button (click)="component.loadRecommendations()" class="d-inline-block text-primary icon-btn"><i
+      class="mdi mdi-reload"></i></button>
+  </div>
+  <app-recommendations [caseId]="data.caseId" [service]="data.service.recommendationService"
+                       #component></app-recommendations>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>
