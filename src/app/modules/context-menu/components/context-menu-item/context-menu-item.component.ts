@@ -123,11 +123,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         const width: number = this.document.defaultView?.innerWidth!;
         const height: number = this.document.defaultView?.innerHeight!;
 
-        const x = (this.event.x + size.width) >= width ? (this.event.x - size.width) : this.event.x;
+        const isRTL: () => boolean = () => this.overlayRef.hostElement.dir === 'rtl';
+        const elCrossedOver: () => boolean = () => isRTL() ? (this.event!.x - size.width <= 0) : (this.event!.x + size.width >= width);
+        const x = elCrossedOver() ? (isRTL() ? this.event.x + size.width : this.event.x - size.width) : this.event.x;
         const y = (this.event.y + size.height) >= height ? (this.event.y - size.height) : this.event.y;
-
         let transformYOrigin: string = (this.event.y + size.height) >= height ? 'bottom' : 'top';
-        let transformXOrigin: string = (this.event.x + size.width) >= width ? 'right' : 'left';
+        let transformXOrigin: string = elCrossedOver() ? 'right' : 'left';
 
         let transformClass: string = transformYOrigin + '-' + transformXOrigin;
         list.classList.add('scale-0');

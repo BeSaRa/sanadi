@@ -30,6 +30,18 @@
   }
 }
 
+html[dir="rtl"] {
+  .context-menu-item-list {
+    &.top-left {
+      transform-origin: top right;
+    }
+
+    &.top-right {
+      transform-origin: top left;
+    }
+  }
+}
+
 .context-menu-item {
   color: #495057;
 }
