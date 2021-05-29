@@ -32,6 +32,6 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button (click)="send()" class="btn btn-primary">{{lang.map.send}}</button>
+  <button (click)="done$.next()" class="btn btn-primary">{{lang.map.send}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

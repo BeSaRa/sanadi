@@ -57,6 +57,7 @@ import { LogViewerComponent } from './components/log-viewer/log-viewer.component
 import { IndeterminateDirective } from './directives/indeterminate.directive';
 import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
 import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
+import { ActionWithCommentPopupComponent } from './popups/action-with-comment-popup/action-with-comment-popup.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
     ActionRegistryPopupComponent,
     LogViewerComponent,
     IndeterminateDirective,
-    SendToComponent
+    SendToComponent,
+    ActionWithCommentPopupComponent
   ],
   imports: [
     CommonModule,
