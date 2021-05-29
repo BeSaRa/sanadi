@@ -21,7 +21,7 @@ import {WFResponseType} from '../enums/wfresponse-type.enum';
 export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  displayedColumns: string[] = ['select', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
+  displayedColumns: string[] = ['select', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE'];
   searchModel = '';
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
