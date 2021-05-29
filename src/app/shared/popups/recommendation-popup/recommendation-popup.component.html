@@ -1,0 +1,19 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="text-white h6">{{lang.map.add_recommendation}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content min-w400px no-fixed-height">
+  <div [formGroup]="form" class="row">
+    <div class="col-12 mb-4 position-relative">
+      <textarea validationClasses="text" rows="4" id="text" class="form-control" formControlName="text"
+                [placeholder]="lang.map.type_your_recommendation"></textarea>
+      <app-field-error-message controlName="text"></app-field-error-message>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button [disabled]="form.invalid" (click)="saveRecommendation()"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

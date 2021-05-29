@@ -19,11 +19,11 @@ import {InquiryService} from '../../../services/inquiry.service';
 import {CaseStatus} from '../../../enums/case-status.enum';
 
 @Component({
-  selector: 'app-inquiries',
-  templateUrl: './inquiries.component.html',
-  styleUrls: ['./inquiries.component.scss']
+  selector: 'inquiry-component',
+  templateUrl: './inquiry.component.html',
+  styleUrls: ['./inquiry.component.scss']
 })
-export class InquiriesComponent implements OnInit, OnDestroy {
+export class InquiryComponent implements OnInit, OnDestroy {
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;

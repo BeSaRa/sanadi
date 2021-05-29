@@ -5,7 +5,7 @@ import {LangService} from '../../../services/lang.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {CaseComment} from '../../../models/case-comment';
 import {DialogService} from '../../../services/dialog.service';
-import {CaseCommentPopupComponent} from '../case-comment-popup/case-comment-popup.component';
+import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-comment-popup.component';
 
 @Component({
   selector: 'app-comments',

@@ -39,25 +39,25 @@ import {AngularMyDatePickerModule} from 'angular-mydatepicker';
 import {DateFixDirective} from './directives/date-fix.directive';
 import {AttachmentListComponent} from './components/attachment-list/attachment-list.component';
 import {TrimInputDirective} from './directives/trim-input.directive';
-
-import { ValidationClassesDirective } from './directives/validation-classes.directive';
-import { DocumentsComponent } from './components/documents/documents.component';
-import { ViewDocumentPopupComponent } from './popups/view-document-popup/view-document-popup.component';
-import { UploadDocumentPopupComponent } from './popups/upload-document-popup/upload-document-popup.component';
-import { RecommendationsComponent } from './components/recommendations/recommendations.component';
-import {CaseCommentPopupComponent} from './components/case-comment-popup/case-comment-popup.component';
+import {ValidationClassesDirective} from './directives/validation-classes.directive';
+import {DocumentsComponent} from './components/documents/documents.component';
+import {ViewDocumentPopupComponent} from './popups/view-document-popup/view-document-popup.component';
+import {UploadDocumentPopupComponent} from './popups/upload-document-popup/upload-document-popup.component';
+import {RecommendationsComponent} from './components/recommendations/recommendations.component';
+import {CaseCommentPopupComponent} from './popups/case-comment-popup/case-comment-popup.component';
 import {CommentsComponent} from './components/comments/comments.component';
 import {TableComponent} from './components/table/table.component';
 import {SortableTableDirective} from './directives/sortable-table.directive';
 import {PaginatorComponent} from './components/paginator/paginator.component';
 import {SortableHeaderComponent} from './components/sortable-header/sortable-header.component';
-import { DocumentsPopupComponent } from './popups/documents-popup/documents-popup.component';
-import { ActionRegistryPopupComponent } from './popups/action-registry-popup/action-registry-popup.component';
-import { LogViewerComponent } from './components/log-viewer/log-viewer.component';
-import { IndeterminateDirective } from './directives/indeterminate.directive';
-import { SendToComponent } from './popups/send-to-user-popup/send-to.component';
+import {DocumentsPopupComponent} from './popups/documents-popup/documents-popup.component';
+import {ActionRegistryPopupComponent} from './popups/action-registry-popup/action-registry-popup.component';
+import {LogViewerComponent} from './components/log-viewer/log-viewer.component';
+import {IndeterminateDirective} from './directives/indeterminate.directive';
+import {SendToComponent} from './popups/send-to-user-popup/send-to.component';
 import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
-import { ActionWithCommentPopupComponent } from './popups/action-with-comment-popup/action-with-comment-popup.component';
+import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
+import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +106,8 @@ import { ActionWithCommentPopupComponent } from './popups/action-with-comment-po
     LogViewerComponent,
     IndeterminateDirective,
     SendToComponent,
-    ActionWithCommentPopupComponent
+    ActionWithCommentPopupComponent,
+    RecommendationPopupComponent
   ],
   imports: [
     CommonModule,
@@ -166,7 +167,8 @@ import { ActionWithCommentPopupComponent } from './popups/action-with-comment-po
     SortableTableDirective,
     SortableHeaderComponent,
     PaginatorComponent,
-    IndeterminateDirective
+    IndeterminateDirective,
+    RecommendationsComponent
   ]
 })
 export class SharedModule {
