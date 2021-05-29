@@ -39,7 +39,7 @@ export class CommentsComponent implements OnInit {
     this.loadComments();
   }
 
-  private loadComments(): void {
+  loadComments(): void {
     if (!this._caseId) {
       return;
     }
