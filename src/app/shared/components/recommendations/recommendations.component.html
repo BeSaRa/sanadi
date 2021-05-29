@@ -10,7 +10,7 @@
       </div>
     </li>
     <li *ngFor="let recommendation of recommendations" class="comment d-flex flex-row align-items-center">
-      <div class="comment-icon"><i class="mdi mdi-comment-text-multiple-outline text-primary"></i></div>
+      <div class="comment-icon"><i class="mdi mdi-star-settings text-primary"></i></div>
       <div class="comment-body text-primary flex-shrink-1 flex-grow-1 text-truncate">
         <a [title]="recommendation.text" (click)="showRecommendation($event , recommendation )"
            href="#">{{recommendation.text}}</a>

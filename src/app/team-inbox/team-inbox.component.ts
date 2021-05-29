@@ -109,6 +109,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     item.manageRecommendations().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
+  actionManageComments(item: QueryResult) {
+    item.manageComments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  }
+
   actionViewLogs(item: QueryResult) {
     item.viewLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
@@ -150,18 +154,6 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         label: 'logs',
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
-      {
-        type: 'divider'
-      },
-      // claim
-      {
-        type: 'action',
-        icon: 'mdi-hand-right',
-        label: 'claim',
-        onClick: (item: QueryResult) => {
-          this.actionClaim(item);
-        }
-      },
       // manage attachments
       {
         type: 'action',
@@ -171,7 +163,26 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
           this.actionManageAttachments(item);
         }
       },
+      // recommendations
+      {
+        type: 'action',
+        icon: 'mdi-star-settings',
+        label: 'manage_recommendations',
+        onClick: (item: QueryResult) => {
+          this.actionManageRecommendations(item);
+        }
+      },
+      // comments
+      {
+        type: 'action',
+        icon: 'mdi-comment-text-multiple-outline',
+        label: 'manage_comments',
+        onClick: (item: QueryResult) => {
+          this.actionManageComments(item);
+        }
+      },
       // send to department
+      {type: 'divider'},
       {
         type: 'action',
         icon: 'mdi-send-circle',
@@ -243,6 +254,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
           this.actionReject(item);
         }
       },
+      //close
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
@@ -252,15 +264,6 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult) => {
           this.actionClose(item);
-        }
-      },
-      // recommendations
-      {
-        type: 'action',
-        icon: 'mdi-star-settings',
-        label: 'manage_recommendations',
-        onClick: (item: QueryResult) => {
-          this.actionManageRecommendations(item);
         }
       }
     ];
