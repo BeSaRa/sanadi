@@ -1,0 +1,17 @@
+@import "src/scss/custom_variables";
+
+.comment {
+  border-bottom: 1px dashed $custom-gray;
+}
+
+.comment:nth-child(2n) {
+  background-color: tint-color($custom-gray, 90);
+}
+
+.comment-body, .comment-icon, .comment-by {
+  padding: 5px;
+}
+
+.comment-body.header {
+  padding: 5px 0;
+}

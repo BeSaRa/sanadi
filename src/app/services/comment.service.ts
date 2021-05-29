@@ -7,7 +7,8 @@ import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {CaseCommentInterceptor} from '../model-interceptors/case-comment-interceptor';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 
-export class CommentService<T extends { http: HttpClient, _getServiceURL(): string }> implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
+export class CommentService<T extends { http: HttpClient, _getServiceURL(): string }>
+  implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
   interceptor: CaseCommentInterceptor = new CaseCommentInterceptor();
 
   constructor(private service: T) {
@@ -25,22 +26,22 @@ export class CommentService<T extends { http: HttpClient, _getServiceURL(): stri
 
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
-  private _create(caseId: string, @InterceptParam() comment: Partial<CaseComment>): Observable<CaseComment> {
-    return this.service.http.post<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', comment);
+  private _create(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
+    return this.service.http.post<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', model);
   }
 
-  create(caseId: string, @InterceptParam() comment: Partial<CaseComment>): Observable<CaseComment> {
-    return this._create(caseId, comment);
+  create(caseId: string, model: Partial<CaseComment>): Observable<CaseComment> {
+    return this._create(caseId, model);
   }
 
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
-  private _update(caseId: string, @InterceptParam() comment: Partial<CaseComment>): Observable<CaseComment> {
-    return this.service.http.put<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', comment);
+  private _update(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
+    return this.service.http.put<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', model);
   }
 
-  update(caseId: string, comment: Partial<CaseComment>): Observable<CaseComment> {
-    return this._update(caseId, comment);
+  update(caseId: string, model: Partial<CaseComment>): Observable<CaseComment> {
+    return this._update(caseId, model);
   }
 
   @Generator(undefined, true, {property: 'rs'})

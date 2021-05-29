@@ -4,11 +4,12 @@ import {CommonModule} from '@angular/common';
 import {EServicesRoutingModule} from './e-services-routing.module';
 import {EServicesComponent} from './e-services.component';
 import {SharedModule} from '../shared/shared.module';
-import { InquiriesComponent } from './pages/inquiries/inquiries.component';
+import { InquiryComponent } from './pages/inquiry/inquiry.component';
+import { InquiryContainerComponent } from './pages/inquiry-container/inquiry-container.component';
 
 
 @NgModule({
-  declarations: [EServicesComponent, InquiriesComponent],
+  declarations: [EServicesComponent, InquiryComponent, InquiryContainerComponent],
   imports: [
     CommonModule,
     SharedModule,
