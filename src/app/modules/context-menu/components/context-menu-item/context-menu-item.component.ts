@@ -117,7 +117,8 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         this.overlayRef.detach();
         this.menuRef = this.overlayRef.attach(new TemplatePortal(this.template, this.viewContainerRef));
 
-        const size: DOMRect = this.menuRef.rootNodes[0].firstChild.getBoundingClientRect();
+        const list = this.menuRef.rootNodes[0].firstChild as HTMLUListElement;
+        const size: DOMRect = list.getBoundingClientRect();
 
         const width: number = this.document.defaultView?.innerWidth!;
         const height: number = this.document.defaultView?.innerHeight!;
@@ -125,8 +126,17 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         const x = (this.event.x + size.width) >= width ? (this.event.x - size.width) : this.event.x;
         const y = (this.event.y + size.height) >= height ? (this.event.y - size.height) : this.event.y;
 
+        let transformYOrigin: string = (this.event.y + size.height) >= height ? 'bottom' : 'top';
+        let transformXOrigin: string = (this.event.x + size.width) >= width ? 'right' : 'left';
+
+        let transformClass: string = transformYOrigin + '-' + transformXOrigin;
+        list.classList.add('scale-0');
         this.menuRef.rootNodes[0].style.left = x + 'px';
         this.menuRef.rootNodes[0].style.top = y + 'px';
+        setTimeout(() => {
+          list.classList.add('transition');
+          list.classList.add(transformClass);
+        }, 10);
       });
   }
 

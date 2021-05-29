@@ -1,6 +1,6 @@
 <ng-template>
   <div class="position-fixed">
-    <ul class="dropdown-menu show shadow-sm">
+    <ul class="dropdown-menu show shadow-sm context-menu-item-list">
       <ng-container *ngFor="let action of filteredAction">
         <li *ngIf="isAction(action)">
           <a (click)="onClick($event , action)"
