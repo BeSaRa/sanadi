@@ -130,7 +130,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
         onClick: (item: QueryResult) => {
-          this.actionManageRecommendations(item);
+          this.actionManageComments(item);
         }
       },
       {type: 'divider'},
