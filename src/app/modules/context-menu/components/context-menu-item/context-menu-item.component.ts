@@ -1,6 +1,6 @@
 import {
   Component,
-  EmbeddedViewRef,
+  EmbeddedViewRef, Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -17,6 +17,7 @@ import {filter, map, takeUntil} from 'rxjs/operators';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {LangService} from '../../../../services/lang.service';
 import {Language} from '../../../../models/language';
+import {DOCUMENT} from '@angular/common';
 
 @Component({
   selector: 'context-menu-item',
@@ -56,6 +57,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   constructor(private overlay: Overlay,
               private lang: LangService,
+              @Inject(DOCUMENT) private document: HTMLDocument,
               private viewContainerRef: ViewContainerRef) {
 
   }
@@ -113,8 +115,17 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         this.event = data.$event;
         this.overlayRef.detach();
         this.menuRef = this.overlayRef.attach(new TemplatePortal(this.template, this.viewContainerRef));
-        this.menuRef.rootNodes[0].style.left = this.event.x + 'px';
-        this.menuRef.rootNodes[0].style.top = this.event.y + 'px';
+
+        const size: DOMRect = this.menuRef.rootNodes[0].firstChild.getBoundingClientRect();
+
+        const width: number = this.document.defaultView?.innerWidth!;
+        const height: number = this.document.defaultView?.innerHeight!;
+
+        const x = (this.event.x + size.width) >= width ? (this.event.x - size.width) : this.event.x;
+        const y = (this.event.y + size.height) >= height ? (this.event.y - size.height) : this.event.y;
+
+        this.menuRef.rootNodes[0].style.left = x + 'px';
+        this.menuRef.rootNodes[0].style.top = y + 'px';
       });
   }
 
