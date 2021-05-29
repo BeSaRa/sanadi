@@ -121,7 +121,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       // complete
       {
         type: 'action',
-        icon: 'mdi-check-circle',
+        icon: 'mdi-book-check',
         label: 'task_complete',
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
