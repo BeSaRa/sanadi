@@ -57,6 +57,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     item.manageAttachments().onAfterClose$.subscribe(() => this.reloadInbox$.next(null));
   }
 
+  actionManageRecommendations(item: QueryResult) {
+    item.manageRecommendations().onAfterClose$.subscribe(() => this.reloadInbox$.next(null));
+  }
+
   actionViewLogs(item: QueryResult) {
     item.viewLogs().onAfterClose$.subscribe(() => this.reloadInbox$.next(null));
   }
@@ -179,6 +183,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionReject(item);
         }
       },
+      //close
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
@@ -188,6 +193,15 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult) => {
           this.actionClose(item);
+        }
+      },
+      // recommendations
+      {
+        type: 'action',
+        icon: 'mdi-star-settings',
+        label: 'manage_recommendations',
+        onClick: (item: QueryResult) => {
+          this.actionManageRecommendations(item);
         }
       }
     ];

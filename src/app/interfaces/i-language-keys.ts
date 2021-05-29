@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  manage_recommendations: string;
   no_recommendations_to_show: string;
   recommendation: string;
   process_has_been_done_successfully: string;
