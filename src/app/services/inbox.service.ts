@@ -22,6 +22,7 @@ import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {QueryResult} from '../models/query-result';
 import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +83,11 @@ export class InboxService {
   openRecommendationDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
     return this.dialog.show(ManageRecommendationPopupComponent, {service, caseId});
+  }
+
+  openCommentsDialog(caseId: string, caseType: number): DialogRef {
+    const service = this.getService(caseType);
+    return this.dialog.show(ManageCommentPopupComponent, {service, caseId});
   }
 
 
