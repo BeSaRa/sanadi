@@ -39,7 +39,7 @@ export class RecommendationsComponent implements OnInit {
     this.loadRecommendations();
   }
 
-  private loadRecommendations(): void {
+  loadRecommendations(): void {
     if (!this._caseId) {
       return;
     }

@@ -61,6 +61,10 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
+  manageRecommendations(): DialogRef {
+    return this.service.openRecommendationDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+  }
+
   viewLogs(): DialogRef {
     return this.service.openLogsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
@@ -103,6 +107,6 @@ export class QueryResult extends Cloneable<QueryResult> {
   }
 
   reject(claimBefore: boolean = false): DialogRef {
-    return this.actionOnTask(WFResponseType.REJECT , claimBefore);
+    return this.actionOnTask(WFResponseType.REJECT, claimBefore);
   }
 }
