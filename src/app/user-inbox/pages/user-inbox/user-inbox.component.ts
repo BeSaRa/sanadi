@@ -17,7 +17,7 @@ import {ToastService} from '../../../services/toast.service';
 })
 export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'actions'];
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE'];
   searchModel = '';
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private destroy$: Subject<any> = new Subject<any>();
