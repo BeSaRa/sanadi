@@ -1,0 +1,13 @@
+<div class="d-flex flex-column">
+  <div class="row mb-3">
+    <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_inquiries_and_complaints}}</h1></div>
+  </div>
+  <inquiry-component #ctrl></inquiry-component>
+  <div class="mb-3 d-flex align-items-center justify-content-center">
+    <button (click)="ctrl.save.next(ctrl.saveTypes.FINAL)" [disabled]="ctrl.form.invalid"
+            class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
+    <button (click)="ctrl.launch()" [disabled]="ctrl.form.invalid || !ctrl.model?.canStart()"
+            class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
+    <button class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
+  </div>
+</div>

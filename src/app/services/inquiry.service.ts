@@ -11,6 +11,7 @@ import {DocumentService} from './document.service';
 import {DialogService} from './dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActionLogService} from './action-log.service';
+import {RecommendationService} from './recommendation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class InquiryService extends EServiceGenericService<Inquiry, InquiryServi
   documentService: DocumentService<InquiryService> = new DocumentService<InquiryService>(this);
   commentService: CommentService<InquiryService> = new CommentService<InquiryService>(this);
   actionLogService: ActionLogService<InquiryService> = new ActionLogService<InquiryService>(this);
+  recommendationService: RecommendationService<InquiryService> = new RecommendationService<InquiryService>(this);
 
   constructor(private urlService: UrlService,
               public dialog: DialogService,

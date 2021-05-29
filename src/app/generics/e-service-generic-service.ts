@@ -13,6 +13,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {ActionLogService} from '../services/action-log.service';
 import {BlobModel} from '../models/blob-model';
 import {map} from 'rxjs/operators';
+import {RecommendationService} from '../services/recommendation.service';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -26,6 +27,7 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
   abstract commentService: CommentService<S>;
+  abstract recommendationService: RecommendationService<S>;
   abstract documentService: DocumentService<S>;
   abstract actionLogService: ActionLogService<S>;
 

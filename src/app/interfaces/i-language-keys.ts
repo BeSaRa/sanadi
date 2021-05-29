@@ -1,10 +1,12 @@
 export interface ILanguageKeys {
+  no_recommendations_to_show: string;
+  recommendation: string;
   process_has_been_done_successfully: string;
   return_task: string;
   close_task: string;
   reject_task: string;
   approve_task: string;
-  complete_task : string;
+  complete_task: string;
   task_complete: string;
   task_complete_successfully: string;
   sent_successfully: string;
@@ -39,9 +41,12 @@ export interface ILanguageKeys {
   competent_dep: string;
   subject: string;
   menu_inquiries_and_complaints: string;
+  recommendation_has_been_saved_successfully: string;
   comment_has_been_saved_successfully: string;
+  type_your_recommendation: string;
   type_your_comment: string;
   add_comment: string;
+  add_recommendation: string;
   no_comments_to_show: string;
   comment: string;
   recommendations: string;
