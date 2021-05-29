@@ -1,6 +1,12 @@
 export interface ILanguageKeys {
-  task_complete_successfully: string;
+  process_has_been_done_successfully: string;
+  return_task: string;
+  close_task: string;
+  reject_task: string;
+  approve_task: string;
+  complete_task : string;
   task_complete: string;
+  task_complete_successfully: string;
   sent_successfully: string;
   select_department: string;
   send: string;

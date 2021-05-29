@@ -110,15 +110,31 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToUser(item: QueryResult): void {
-    item.sendToUser().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+    item.sendToUser(true).onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
   actionSendToDepartment(item: QueryResult): void {
-    item.sendToDepartment().onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+    item.sendToDepartment(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
   }
 
   actionComplete(item: QueryResult): void {
-    item.complete().subscribe(_ => this.reloadSelectedInbox());
+    item.complete(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  actionApprove(item: QueryResult): void {
+    item.approve(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  actionClose(item: QueryResult): void {
+    item.close(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  actionReject(item: QueryResult): void {
+    item.reject(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  }
+
+  actionReturn(item: QueryResult): void {
+    item.return(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
   }
 
   private buildGridActions() {
@@ -185,6 +201,53 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult) => {
           this.actionComplete(item);
+        }
+      },
+      // approve
+      {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'approve_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionApprove(item);
+        }
+      },
+      // return
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'return_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionReturn(item);
+        }
+      },
+      // reject
+      {
+        type: 'action',
+        icon: 'mdi-book-remove-outline',
+        label: 'reject_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionReject(item);
+        }
+      },
+      {
+        type: 'action',
+        icon: 'mdi-close-circle-outline',
+        label: 'close_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionClose(item);
         }
       }
     ];

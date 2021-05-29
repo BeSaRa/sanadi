@@ -18,6 +18,9 @@ import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.compo
 import {IWFResponse} from '../interfaces/i-w-f-response';
 import {IDefaultResponse} from '../interfaces/idefault-response';
 import {map} from 'rxjs/operators';
+import {WFResponseType} from '../enums/wfresponse-type.enum';
+import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
+import {QueryResult} from '../models/query-result';
 
 @Injectable({
   providedIn: 'root'
@@ -99,22 +102,46 @@ export class InboxService {
     return this.takeActionOnTask(taskId, info, service);
   }
 
-  private openSendToDialog(taskId: string, sendToUser: boolean = true, service: EServiceGenericService<any, any>): DialogRef {
-    return this.dialog.show(SendToComponent, {inboxService: this, taskId: taskId, sendToUser, service});
+  private openSendToDialog(taskId: string, sendToUser: boolean = true,
+                           service: EServiceGenericService<any, any>,
+                           claimBefore: boolean = false,
+                           task?: QueryResult): DialogRef {
+
+    return this.dialog.show(SendToComponent,
+      {
+        inboxService: this,
+        taskId: taskId,
+        sendToUser,
+        service,
+        claimBefore,
+        task
+      });
   }
 
-  sendToUser(taskId: string, caseType: number): DialogRef {
+  sendToUser(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToDialog(taskId, true, service);
+    return this.openSendToDialog(taskId, true, service, claimBefore, task);
   }
 
-  sendToDepartment(taskId: string, caseType: number): DialogRef {
+  sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToDialog(taskId, false, service);
+    return this.openSendToDialog(taskId, false, service, claimBefore, task);
   }
 
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);
     return this.takeActionOnTask(taskId, {}, service);
+  }
+
+  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.dialog.show(ActionWithCommentPopupComponent, {
+      service,
+      inboxService: this,
+      taskId,
+      actionType,
+      claimBefore,
+      task
+    });
   }
 }

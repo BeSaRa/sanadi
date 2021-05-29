@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {IBulkResult} from '../interfaces/ibulk-result';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {BlobModel} from './blob-model';
+import {WFResponseType} from '../enums/wfresponse-type.enum';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -72,15 +73,36 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.service.exportModel(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
-  sendToUser(): DialogRef {
-    return this.service.sendToUser(this.TKIID, this.BD_CASE_TYPE);
+  sendToUser(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToUser(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
-  sendToDepartment(): DialogRef {
-    return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE);
+  sendToDepartment(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
-  complete() {
-    return this.service.complete(this.TKIID, this.BD_CASE_TYPE);
+  private actionOnTask(actionType: WFResponseType, claimBefore: boolean = false): DialogRef {
+    return this.service.takeActionWithComment(this.TKIID, this.BD_CASE_TYPE, actionType, claimBefore, this);
+  }
+
+
+  complete(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.COMPLETE, claimBefore);
+  }
+
+  approve(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.APPROVE, claimBefore);
+  }
+
+  return(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.RETURN, claimBefore);
+  }
+
+  close(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.CLOSE, claimBefore);
+  }
+
+  reject(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.REJECT , claimBefore);
   }
 }
