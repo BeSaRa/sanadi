@@ -65,6 +65,10 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.service.openRecommendationDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
+  manageComments(): DialogRef {
+    return this.service.openCommentsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+  }
+
   viewLogs(): DialogRef {
     return this.service.openLogsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }

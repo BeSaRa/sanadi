@@ -59,6 +59,7 @@ import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
 import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
 import { ManageRecommendationPopupComponent } from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manage-comment-popup.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { ManageRecommendationPopupComponent } from './popups/manage-recommendati
     SendToComponent,
     ActionWithCommentPopupComponent,
     RecommendationPopupComponent,
-    ManageRecommendationPopupComponent
+    ManageRecommendationPopupComponent,
+    ManageCommentPopupComponent
   ],
   imports: [
     CommonModule,
