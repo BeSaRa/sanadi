@@ -1,22 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {UrlService} from '../../../services/url.service';
-import {LangService} from '../../../services/lang.service';
-import {InternalDepartmentService} from '../../../services/internal-department.service';
-import {InternalDepartment} from '../../../models/internal-department';
+import {UrlService} from '../../../../services/url.service';
+import {LangService} from '../../../../services/lang.service';
+import {InternalDepartmentService} from '../../../../services/internal-department.service';
+import {InternalDepartment} from '../../../../models/internal-department';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {filter, map, takeUntil, tap} from 'rxjs/operators';
-import {FormManager} from '../../../models/form-manager';
+import {FormManager} from '../../../../models/form-manager';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Inquiry} from '../../../models/inquiry';
-import {LookupService} from '../../../services/lookup.service';
-import {Lookup} from '../../../models/lookup';
-import {SaveTypes} from '../../../enums/save-types';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
+import {Inquiry} from '../../../../models/inquiry';
+import {LookupService} from '../../../../services/lookup.service';
+import {Lookup} from '../../../../models/lookup';
+import {SaveTypes} from '../../../../enums/save-types';
+import {DialogService} from '../../../../services/dialog.service';
+import {ToastService} from '../../../../services/toast.service';
 import {Router} from '@angular/router';
-import {InquiryService} from '../../../services/inquiry.service';
-import {CaseStatus} from '../../../enums/case-status.enum';
+import {InquiryService} from '../../../../services/inquiry.service';
+import {CaseStatus} from '../../../../enums/case-status.enum';
 
 @Component({
   selector: 'inquiry-component',

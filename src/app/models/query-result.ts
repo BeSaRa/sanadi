@@ -70,7 +70,7 @@ export class QueryResult extends Cloneable<QueryResult> {
   }
 
   viewLogs(): DialogRef {
-    return this.service.openLogsDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+    return this.service.openActionLogs(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
 
   exportActions(): Observable<BlobModel> {

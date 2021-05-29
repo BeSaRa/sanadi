@@ -10,9 +10,7 @@ import {IBulkResult} from '../interfaces/ibulk-result';
 import {InquiryService} from './inquiry.service';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {DialogService} from './dialog.service';
-import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
 import {BlobModel} from '../models/blob-model';
 import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
 import {IWFResponse} from '../interfaces/i-w-f-response';
@@ -21,8 +19,6 @@ import {map} from 'rxjs/operators';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {QueryResult} from '../models/query-result';
-import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
-import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -77,28 +73,28 @@ export class InboxService {
 
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
-    return this.dialog.show(DocumentsPopupComponent, {service, caseId});
+    return service.openDocumentDialog(caseId);
   }
 
   openRecommendationDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
-    return this.dialog.show(ManageRecommendationPopupComponent, {service, caseId});
+    return service.openRecommendationDialog(caseId);
   }
 
   openCommentsDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
-    return this.dialog.show(ManageCommentPopupComponent, {service, caseId});
+    return service.openCommentsDialog(caseId);
   }
 
 
-  openLogsDialog(caseId: string, caseType: number): DialogRef {
+  openActionLogs(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
-    return this.dialog.show(ActionRegistryPopupComponent, {service, caseId});
+    return service.openActionLogs(caseId);
   }
 
   exportActions(caseId: string, caseType: number): Observable<BlobModel> {
     const service = this.getService(caseType);
-    return service.actionLogService.exportActions(caseId);
+    return service.exportActions(caseId);
   }
 
   exportModel(caseId: string, caseType: number): Observable<BlobModel> {
