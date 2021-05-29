@@ -14,6 +14,11 @@ import {ActionLogService} from '../services/action-log.service';
 import {BlobModel} from '../models/blob-model';
 import {map} from 'rxjs/operators';
 import {RecommendationService} from '../services/recommendation.service';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
+import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
+import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -145,6 +150,22 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
 
   exportActions(caseId: string): Observable<BlobModel> {
     return this.actionLogService.exportActions(caseId);
+  }
+
+  openActionLogs(caseId: string): DialogRef {
+    return this.dialog.show(ActionRegistryPopupComponent, {service: this, caseId});
+  }
+
+  openCommentsDialog(caseId: string): DialogRef {
+    return this.dialog.show(ManageCommentPopupComponent, {service: this, caseId});
+  }
+
+  openRecommendationDialog(caseId: string): DialogRef {
+    return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId});
+  }
+
+  openDocumentDialog(caseId: string): DialogRef {
+    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId});
   }
 
   downloadDocument(): void {
