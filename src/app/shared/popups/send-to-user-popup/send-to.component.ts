@@ -7,15 +7,16 @@ import {TeamService} from '../../../services/team.service';
 import {InternalUser} from '../../../models/internal-user';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {CustomValidators} from '../../../validators/custom-validators';
-import {take, takeUntil} from 'rxjs/operators';
+import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
 import {InternalDepartmentService} from '../../../services/internal-department.service';
-import {Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {InternalDepartment} from '../../../models/internal-department';
 import {EServiceGenericService} from '../../../generics/e-service-generic-service';
 import {WFResponseType} from '../../../enums/wfresponse-type.enum';
 import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {DialogRef} from '../../models/dialog-ref';
+import {QueryResult} from '../../../models/query-result';
 
 @Component({
   selector: 'send-to-user-popup',
@@ -26,6 +27,7 @@ export class SendToComponent implements OnInit, OnDestroy {
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
   group!: FormGroup;
+  done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(
@@ -34,7 +36,9 @@ export class SendToComponent implements OnInit, OnDestroy {
       inboxService: InboxService,
       taskId: string,
       sendToUser: boolean,
-      service: EServiceGenericService<any, any>
+      service: EServiceGenericService<any, any>,
+      claimBefore: boolean,
+      task: QueryResult
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -53,6 +57,7 @@ export class SendToComponent implements OnInit, OnDestroy {
     } else {
       this.loadDepartments();
     }
+    this.listenToSave();
   }
 
   ngOnDestroy(): void {
@@ -84,14 +89,8 @@ export class SendToComponent implements OnInit, OnDestroy {
   }
 
 
-  send(): void {
-    if (this.group.invalid) {
-      this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-      return;
-    }
-
+  private send(): void {
     const id: number = this.group.get(this.data.sendToUser ? 'user' : 'department')?.value!;
-
     this.data.inboxService.sendTaskTo(this.data.taskId, {
       comment: this.group.get('comment')?.value,
       selectedResponse: this.data.sendToUser ? WFResponseType.TO_USER : WFResponseType.TO_COMPETENT_DEPARTMENT,
@@ -104,4 +103,15 @@ export class SendToComponent implements OnInit, OnDestroy {
       });
   }
 
+  private listenToSave() {
+    const send$ = this.done$.pipe(takeUntil(this.destroy$));
+    // when form fail
+    send$.pipe(filter(_ => this.group.invalid))
+      .subscribe(() => this.dialog.error(this.lang.map.msg_all_required_fields_are_filled));
+    // if form success
+    send$
+      .pipe(filter(_ => this.group.valid))
+      .pipe(switchMap(_ => this.data.claimBefore ? this.data.task.claim() : of(null)))
+      .subscribe(() => this.send());
+  }
 }

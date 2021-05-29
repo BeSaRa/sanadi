@@ -39,10 +39,14 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_time}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.time}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="comment">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
+        </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
         <tr *cdkNoDataRow>
-          <td colspan="4">{{lang.map.no_records_to_display}}</td>
+          <td colspan="5">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
       <app-paginator #paginator [length]="logs.length"></app-paginator>

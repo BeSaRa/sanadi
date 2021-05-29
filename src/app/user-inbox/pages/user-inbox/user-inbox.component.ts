@@ -70,10 +70,23 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   actionComplete(item: QueryResult): void {
-    item.complete().subscribe(_ => {
-      this.toast.success(this.lang.map.task_complete_successfully);
-      this.reloadInbox$.next(null);
-    });
+    item.complete().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  actionApprove(item: QueryResult): void {
+    item.approve().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  actionClose(item: QueryResult): void {
+    item.close().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  actionReject(item: QueryResult): void {
+    item.reject().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  }
+
+  actionReturn(item: QueryResult): void {
+    item.return().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
   }
 
   private buildGridActions() {
@@ -128,6 +141,53 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult) => {
           this.actionComplete(item);
+        }
+      },
+      // approve
+      {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'approve_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionApprove(item);
+        }
+      },
+      // return
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'return_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionReturn(item);
+        }
+      },
+      // reject
+      {
+        type: 'action',
+        icon: 'mdi-book-remove-outline',
+        label: 'reject_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionReject(item);
+        }
+      },
+      {
+        type: 'action',
+        icon: 'mdi-close-circle-outline',
+        label: 'close_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
+        },
+        onClick: (item: QueryResult) => {
+          this.actionClose(item);
         }
       }
     ];
