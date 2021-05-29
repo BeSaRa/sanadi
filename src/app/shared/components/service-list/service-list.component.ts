@@ -29,9 +29,7 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('list', this.list);
     this.langSubscription = this.langService.onLanguageChange$.subscribe(() => {
-      console.log('list', this.list);
       this.cd.markForCheck();
     });
   }
