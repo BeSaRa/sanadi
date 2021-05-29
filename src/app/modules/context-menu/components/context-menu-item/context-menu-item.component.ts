@@ -18,6 +18,7 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {LangService} from '../../../../services/lang.service';
 import {Language} from '../../../../models/language';
 import {DOCUMENT} from '@angular/common';
+import {ILanguageKeys} from '../../../../interfaces/i-language-keys';
 
 @Component({
   selector: 'context-menu-item',
@@ -130,7 +131,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   }
 
   displayLabel(action: IMenuItem): string {
-    return typeof action.label === 'function' ? action.label(this.item) : this.lang.map[action.label];
+    return typeof action.label === 'function' ? action.label(this.item) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
   }
 
   private listenToBackdropClick() {
@@ -154,7 +155,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   onClick(event: MouseEvent, action: IMenuItem) {
     event.preventDefault();
-    action.onClick(this.item);
+    action.onClick && action.onClick(this.item);
     this.close();
   }
 
@@ -164,5 +165,13 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
       .subscribe((lang: Language) => {
         this.overlayRef.setDirection(lang.direction);
       });
+  }
+
+  isAction(action: IMenuItem): boolean {
+    return action.type === 'action';
+  }
+
+  isDivider(action: IMenuItem): boolean {
+    return action.type === 'divider';
   }
 }

@@ -125,12 +125,17 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.actions = [
       // view logs
       {
+        type: 'action',
         icon: 'mdi-view-list-outline',
         label: 'logs',
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
+      {
+        type: 'divider'
+      },
       // claim
       {
+        type: 'action',
         icon: 'mdi-hand-right',
         label: 'claim',
         onClick: (item: QueryResult) => {
@@ -139,6 +144,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       },
       // manage attachments
       {
+        type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
         onClick: (item: QueryResult) => {
@@ -147,6 +153,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       },
       // send to department
       {
+        type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         show: (item: QueryResult) => {
@@ -158,6 +165,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       },
       // send to user
       {
+        type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         show: (item: QueryResult) => {
@@ -169,6 +177,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       },
       // complete
       {
+        type: 'action',
         icon: 'mdi-check-circle',
         label: 'task_complete',
         show: (item: QueryResult) => {

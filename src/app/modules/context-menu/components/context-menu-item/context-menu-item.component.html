@@ -1,13 +1,19 @@
 <ng-template>
   <div class="position-fixed">
     <ul class="dropdown-menu show shadow-sm">
-      <li *ngFor="let action of filteredAction">
-        <a (click)="onClick($event , action)"
-           class="dropdown-item context-menu-item d-flex align-items-center justify-content-start px-2" href="#">
-          <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i><span
-          class="mx-1">{{displayLabel(action)}}</span>
-        </a>
-      </li>
+      <ng-container *ngFor="let action of filteredAction">
+        <li *ngIf="isAction(action)">
+          <a (click)="onClick($event , action)"
+             class="dropdown-item context-menu-item d-flex align-items-center justify-content-start px-2" href="#">
+            <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i>
+            <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
+            <span class="mx-3">{{displayLabel(action)}}</span>
+          </a>
+        </li>
+        <li *ngIf="isDivider(action)">
+          <hr class="dropdown-divider">
+        </li>
+      </ng-container>
     </ul>
   </div>
 </ng-template>
