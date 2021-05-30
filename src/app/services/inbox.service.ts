@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Observable} from 'rxjs';
@@ -29,9 +29,9 @@ export class InboxService {
   constructor(private http: HttpClient,
               private dialog: DialogService,
               private inquiryService: InquiryService,
+              private cfr: ComponentFactoryResolver,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
-
     // register all e-services that we need.
     this.services.set(1, this.inquiryService);
   }
@@ -63,7 +63,7 @@ export class InboxService {
     return this.http.post<IBulkResult>(this.urlService.URLS.CLAIM_BULK, taskIds);
   }
 
-  private getService(serviceNumber: number): EServiceGenericService<any, any> {
+  getService(serviceNumber: number): EServiceGenericService<any, any> {
     return this.services.get(serviceNumber) as EServiceGenericService<any, any>;
   }
 
@@ -140,6 +140,10 @@ export class InboxService {
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);
     return this.takeActionOnTask(taskId, {}, service);
+  }
+
+  getCFR(): ComponentFactoryResolver {
+    return this.cfr;
   }
 
   takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult): DialogRef {

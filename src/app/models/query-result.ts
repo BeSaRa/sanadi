@@ -7,6 +7,12 @@ import {IBulkResult} from '../interfaces/ibulk-result';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {BlobModel} from './blob-model';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
+import {delay, map, take, tap} from 'rxjs/operators';
+import {DialogService} from '../services/dialog.service';
+import {ComponentType} from '@angular/cdk/overlay';
+import {DynamicComponentService} from '../services/dynamic-component.service';
+import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import {IESComponent} from '../interfaces/iescomponent';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -46,11 +52,14 @@ export class QueryResult extends Cloneable<QueryResult> {
   PI_DUE!: string;
   PI_CREATE!: string;
   RESPONSES!: string [];
+
   service!: InboxService;
+  dialog!: DialogService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('InboxService');
+    this.dialog = FactoryService.getService('DialogService');
   }
 
   claim(): Observable<IBulkResult> {
@@ -112,5 +121,34 @@ export class QueryResult extends Cloneable<QueryResult> {
 
   reject(claimBefore: boolean = false): DialogRef {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
+  }
+
+  open(claimBefore: boolean = false): Observable<DialogRef> {
+    const service = this.service.getService(this.BD_CASE_TYPE);
+    const componentName = service.getCaseComponentName();
+    const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
+    const cfr = this.service.getCFR();
+    const factory = cfr.resolveComponentFactory(component);
+    let model: any;
+    return service.getTask(this.TKIID)
+      .pipe(
+        tap(task => model = task),
+        map(_ => this.dialog.show(CaseViewerPopupComponent, service.serviceKey)),
+        tap(ref => {
+          const instance = ref.instance as unknown as CaseViewerPopupComponent;
+          instance.viewInit
+            .pipe(
+              take(1),
+              delay(0)
+            )
+            .subscribe(() => {
+              instance.container.clear();
+              const componentRef = instance.container.createComponent(factory);
+              const comInstance = componentRef.instance as unknown as IESComponent;
+              comInstance.outModel = model;
+              instance.component = comInstance;
+            });
+        })
+      );
   }
 }

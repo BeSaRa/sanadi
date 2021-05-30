@@ -145,8 +145,19 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     item.return(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
   }
 
+  actionOpen(item: QueryResult) {
+    item.open().pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
+  }
+
   private buildGridActions() {
     this.actions = [
+      // open
+      {
+        type: 'action',
+        icon: 'mdi-eye',
+        label: 'open_task',
+        onClick: (item: QueryResult) => this.actionOpen(item)
+      },
       // view logs
       {
         type: 'action',
