@@ -146,7 +146,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: QueryResult) {
-    item.open().pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
+    item.open(this.actions).pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
   }
 
   private buildGridActions() {
@@ -156,6 +156,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
+        data: {hideFromViewer: true},
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
       // view logs
@@ -170,6 +171,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
+        data: {hideFromViewer: true},
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);
         }
@@ -179,6 +181,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
+        data: {hideFromViewer: true},
         onClick: (item: QueryResult) => {
           this.actionManageRecommendations(item);
         }
@@ -188,6 +191,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
+        data: {hideFromViewer: true},
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);
         }
@@ -198,6 +202,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
         },
@@ -210,6 +215,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
         },
@@ -222,6 +228,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-check',
         label: 'task_complete',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
         },
@@ -234,6 +241,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'approve_task',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
         },
@@ -246,6 +254,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'return_task',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
         },
@@ -258,6 +267,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
         },
@@ -270,6 +280,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
+        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
         },
