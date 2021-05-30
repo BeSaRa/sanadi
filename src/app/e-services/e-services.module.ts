@@ -9,7 +9,11 @@ import { InquiryContainerComponent } from './pages/inquiry-container/inquiry-con
 
 
 @NgModule({
-  declarations: [EServicesComponent, InquiryComponent, InquiryContainerComponent],
+  declarations: [
+    EServicesComponent,
+    InquiryComponent,
+    InquiryContainerComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
