@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {CaseComment} from '../../../models/case-comment';
 import {interval, Subject} from 'rxjs';
 import {DialogService} from '../../../services/dialog.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {RecommendationService} from '../../../services/recommendation.service';
 import {RecommendationPopupComponent} from '../../popups/recommendation-popup/recommendation-popup.component';
+import {Recommendation} from '../../../models/recommendation';
 
 @Component({
   selector: 'app-recommendations',
@@ -14,7 +14,7 @@ import {RecommendationPopupComponent} from '../../popups/recommendation-popup/re
 })
 export class RecommendationsComponent implements OnInit {
   _caseId: string = '';
-  recommendations: CaseComment[] = [];
+  recommendations: Recommendation[] = [];
   @Input() service!: RecommendationService<any>;
 
   @Input()
@@ -45,7 +45,7 @@ export class RecommendationsComponent implements OnInit {
     }
     this.service.load(this._caseId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(comments => this.recommendations = comments);
+      .subscribe(recommendations => this.recommendations = recommendations.reverse());
   }
 
   openRecommendationDialog(): void {
@@ -53,37 +53,37 @@ export class RecommendationsComponent implements OnInit {
       service: this.service,
       caseId: this._caseId
     }).onAfterClose$
-      .subscribe((comment) => {
-        if (comment && !this.caseId) {
-          this.recommendations = this.recommendations.concat(comment);
+      .subscribe((recommendation) => {
+        if (recommendation && !this.caseId) {
+          this.recommendations = this.recommendations.concat(recommendation);
         }
         this.loadRecommendations();
       });
   }
 
-  showRecommendation($event: MouseEvent, comment: CaseComment) {
+  showRecommendation($event: MouseEvent, recommendation: Recommendation) {
     $event.preventDefault();
-    this.dialog.success(comment.text, {hideIcon: true, actionBtn: 'btn_close'});
+    this.dialog.success(recommendation.text, {hideIcon: true, actionBtn: 'btn_close'});
   }
 
   private addRecommendationsSilently() {
-    const comments = this.recommendations.filter(item => !item.id);
-    if (!comments.length || !this.caseId) {
+    const recommendations = this.recommendations.filter(item => !item.id);
+    if (!recommendations.length || !this.caseId) {
       return;
     }
     const valueDone: Subject<any> = new Subject();
     interval()
       .pipe(
         tap(index => {
-          if (!comments[index]) {
+          if (!recommendations[index]) {
             valueDone.next();
             valueDone.complete();
           }
         }),
         takeUntil(valueDone),
-        map(index => comments[index]),
-        concatMap((comment: CaseComment) => {
-          return this.service.create(this._caseId, comment);
+        map(index => recommendations[index]),
+        concatMap((recommendation: Recommendation) => {
+          return this.service.create(this._caseId, recommendation);
         })
       )
       .subscribe({
