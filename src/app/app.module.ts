@@ -28,6 +28,7 @@ import {CookieModule} from 'ngx-cookie';
 import {TokenService} from './services/token.service';
 import {AuthService} from './services/auth.service';
 import {MenuItemService} from './services/menu-item.service';
+import {DynamicComponentService} from './services/dynamic-component.service';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ export class AppModule {
         config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE)
       })
         .toPromise().then((latest) => {
+          new DynamicComponentService();// just to make sure that service constructed and register all dynamic components
           configurationService.setConfigurations(latest.config);
           urlService.prepareUrls(latest.urls);
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {

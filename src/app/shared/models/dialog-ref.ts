@@ -18,6 +18,7 @@ export class DialogRef {
   closeSubscription: Subscription | undefined;
   private afterCloseSub: Subject<any> = new Subject<any>();
   onAfterClose$: Observable<any> = this.afterCloseSub.asObservable();
+  instance!: ComponentType<any>;
 
   constructor(private overLayRef: OverlayRef,
               private langService: LangService,
@@ -50,7 +51,7 @@ export class DialogRef {
       const component: ComponentRef<PredefinedDialogComponent> = compRef as ComponentRef<PredefinedDialogComponent>;
       component.instance.type = this.predefinedDialogType;
     }
-
+    this.instance = compRef?.instance;
   }
 
   watchLanguage(): void {

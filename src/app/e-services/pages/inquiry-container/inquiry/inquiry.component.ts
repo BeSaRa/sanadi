@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {LangService} from '../../../../services/lang.service';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
@@ -15,22 +15,34 @@ import {DialogService} from '../../../../services/dialog.service';
 import {ToastService} from '../../../../services/toast.service';
 import {InquiryService} from '../../../../services/inquiry.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
+import {IESComponent} from '../../../../interfaces/iescomponent';
 
 @Component({
   selector: 'inquiry-component',
   templateUrl: './inquiry.component.html',
   styleUrls: ['./inquiry.component.scss']
 })
-export class InquiryComponent implements OnInit, OnDestroy {
+export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
   form!: FormGroup;
   categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
-  save: Subject<SaveTypes> = new Subject();
+  save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
   editMode: boolean = false;
   model?: Inquiry;
+  private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
+
+  @Input()
+  set outModel(model: Inquiry) {
+    this.outModelChange$.next(model);
+  }
+
+  get outModel(): Inquiry {
+    return this.outModelChange$.value;
+  }
+
   private changeModel: BehaviorSubject<Inquiry | undefined> = new BehaviorSubject<Inquiry | undefined>(new Inquiry());
   private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable();
 
@@ -50,6 +62,7 @@ export class InquiryComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.listenToSave();
     this.listenToModelChange();
+    this.listenToOutModelChange();
   }
 
   ngOnDestroy(): void {
@@ -165,5 +178,16 @@ export class InquiryComponent implements OnInit, OnDestroy {
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
     });
+  }
+
+  private listenToOutModelChange() {
+    this.outModelChange$
+      .pipe(
+        filter(model => !!model),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((model) => {
+        this.changeModel.next(model);
+      });
   }
 }

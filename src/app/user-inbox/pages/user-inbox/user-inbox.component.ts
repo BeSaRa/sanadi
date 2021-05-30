@@ -97,8 +97,22 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     item.return().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
   }
 
+
+  actionOpen(item: QueryResult) {
+    item.open().pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadInbox$.next(null));
+  }
+
   private buildGridActions() {
+
+
     this.actions = [
+      // open
+      {
+        type: 'action',
+        icon: 'mdi-eye',
+        label: 'open_task',
+        onClick: (item: QueryResult) => this.actionOpen(item)
+      },
       // view logs
       {
         type: 'action',

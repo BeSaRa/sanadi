@@ -1,4 +1,6 @@
-export class TaskDetails {
+import {Cloneable} from './cloneable';
+
+export class TaskDetails extends Cloneable<TaskDetails> {
   tkiid!: string;
   isAtRisk!: string;
   priority!: number;
