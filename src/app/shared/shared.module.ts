@@ -60,6 +60,7 @@ import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popu
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
 import { ManageRecommendationPopupComponent } from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manage-comment-popup.component';
+import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer-popup.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,8 @@ import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manag
     ActionWithCommentPopupComponent,
     RecommendationPopupComponent,
     ManageRecommendationPopupComponent,
-    ManageCommentPopupComponent
+    ManageCommentPopupComponent,
+    CaseViewerPopupComponent
   ],
   imports: [
     CommonModule,

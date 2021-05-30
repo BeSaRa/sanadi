@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {UrlService} from './url.service';
 import {Inquiry} from '../models/inquiry';
@@ -12,24 +12,32 @@ import {DialogService} from './dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActionLogService} from './action-log.service';
 import {RecommendationService} from './recommendation.service';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry, InquiryService> {
-  private interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
+  interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
   documentService: DocumentService<InquiryService> = new DocumentService<InquiryService>(this);
   commentService: CommentService<InquiryService> = new CommentService<InquiryService>(this);
   actionLogService: ActionLogService<InquiryService> = new ActionLogService<InquiryService>(this);
   recommendationService: RecommendationService<InquiryService> = new RecommendationService<InquiryService>(this);
 
+  serviceKey: keyof ILanguageKeys = 'menu_inquiries_and_complaints';
+
   constructor(private urlService: UrlService,
               public dialog: DialogService,
+              public cfr: ComponentFactoryResolver,
               public domSanitizer: DomSanitizer,
               public http: HttpClient) {
     super();
     // register service
     FactoryService.registerService('InquiryService', this);
+  }
+
+  getCaseComponentName(): string {
+    return 'InquiryComponent';
   }
 
   _getServiceURL(): string {

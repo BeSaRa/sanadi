@@ -1,0 +1,14 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map[data]}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" style="width: 90vw">
+  <ng-template #template></ng-template>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="component?.save?.next(saveTypes.FINAL)" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>
+

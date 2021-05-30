@@ -19,6 +19,8 @@ import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-pop
 import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
 import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {ComponentFactoryResolver} from '@angular/core';
 
 export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -28,6 +30,8 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
 
   abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
 
+  abstract getCaseComponentName(): string;
+
   abstract http: HttpClient;
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
@@ -35,6 +39,13 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   abstract recommendationService: RecommendationService<S>;
   abstract documentService: DocumentService<S>;
   abstract actionLogService: ActionLogService<S>;
+  abstract interceptor: IModelInterceptor<T>;
+  abstract serviceKey: keyof ILanguageKeys;
+  abstract cfr: ComponentFactoryResolver;
+
+  getCFR(): ComponentFactoryResolver {
+    return this.cfr;
+  }
 
   ping(): void {
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
@@ -184,8 +195,14 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
 
   }
 
-  getTask(): void {
+  @Generator(undefined, false, {property: 'rs'})
+  private _getTask(taskId: string): Observable<T> {
+    return this.http.get<T>(this._getServiceURL() + '/task/' + taskId);
+  }
 
+
+  getTask(taskId: string): Observable<T> {
+    return this._getTask(taskId);
   }
 
   claimTask(): void {

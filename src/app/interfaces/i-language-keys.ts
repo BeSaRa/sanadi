@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  open_task: string
   manage_comments: string;
   manage_recommendations: string;
   no_recommendations_to_show: string;
