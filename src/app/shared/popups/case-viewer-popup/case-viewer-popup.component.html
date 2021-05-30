@@ -1,5 +1,5 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{lang.map[data]}}</h1>
+  <h1 class="h6 text-white">{{lang.map[data.key]}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
@@ -7,6 +7,11 @@
   <ng-template #template></ng-template>
 </div>
 <div class="dialog-actions">
+  <button (click)="takeAction(action)" *ngFor="let action of actions" [tooltip]="displayLabel(action)"
+          class="btn btn-outline-light icon-btn">
+    <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i>
+    <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
+  </button>
   <div class="flex-grow-1"></div>
   <button (click)="component?.save?.next(saveTypes.FINAL)" class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>

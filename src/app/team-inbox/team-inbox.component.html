@@ -37,7 +37,7 @@
         </ng-container>
         <ng-container cdkColumnDef="BD_FULL_SERIAL">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.BD_FULL_SERIAL}} </td>
+          <td cdk-cell *cdkCellDef="let row"> <a href="#" (click)="$event.preventDefault(); actionOpen(row)">{{row.BD_FULL_SERIAL}}</a></td>
         </ng-container>
         <ng-container cdkColumnDef="PI_CREATE">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>

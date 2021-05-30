@@ -13,6 +13,7 @@ import {ComponentType} from '@angular/cdk/overlay';
 import {DynamicComponentService} from '../services/dynamic-component.service';
 import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
 import {IESComponent} from '../interfaces/iescomponent';
+import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -123,7 +124,7 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
   }
 
-  open(claimBefore: boolean = false): Observable<DialogRef> {
+  open(actions: IMenuItem[] = []): Observable<DialogRef> {
     const service = this.service.getService(this.BD_CASE_TYPE);
     const componentName = service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
@@ -133,7 +134,7 @@ export class QueryResult extends Cloneable<QueryResult> {
     return service.getTask(this.TKIID)
       .pipe(
         tap(task => model = task),
-        map(_ => this.dialog.show(CaseViewerPopupComponent, service.serviceKey)),
+        map(_ => this.dialog.show(CaseViewerPopupComponent, {key: service.serviceKey, model: this, actions})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit
