@@ -7,6 +7,7 @@ import {SubventionResponseInterceptor} from '../model-interceptors/subvention-re
 import {Generator} from '../decorators/generator';
 import {Observable} from 'rxjs';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import {AttachmentService} from './attachment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 export class SubventionResponseService {
 
   constructor(public http: HttpClient,
-              private urlService: UrlService) {
+              private attachmentService: AttachmentService, // to use in interceptor
+              private urlService: UrlService,) {
     FactoryService.registerService('SubventionResponseService', this);
   }
 
