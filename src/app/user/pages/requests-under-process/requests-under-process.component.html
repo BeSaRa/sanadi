@@ -6,8 +6,8 @@
   <div class="table-responsive">
     <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="requests">
       <ng-container cdkColumnDef="requestSerial">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.request_number}}</th>
-        <td cdk-cell *cdkCellDef="let row">
+        <th cdk-header-cell *cdkHeaderCellDef class="serial-column"> {{langService.map.request_number}}</th>
+        <td cdk-cell *cdkCellDef="let row" class="serial-column">
           <div class="d-flex flex-row">
             <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
             <i class="mdi mdi-file-hidden text-primary" *ngIf="row.isPartial"

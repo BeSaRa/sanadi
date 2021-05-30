@@ -189,9 +189,11 @@ button.icon-btn {
   width: 400px;
   max-width: 100%;
 }
+
 .w600px {
   width: 600px;
 }
+
 .w800px {
   width: 800px;
 }
@@ -251,6 +253,10 @@ mark {
 th.date-column, td.date-column {
   width: 110px;
   max-width: 110px;
+}
+
+th.serial-column, td.serial-column {
+  width: 170px;
 }
 
 td.table-actions {
