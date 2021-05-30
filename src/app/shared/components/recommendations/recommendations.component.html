@@ -16,14 +16,14 @@
            href="#">{{recommendation.text}}</a>
       </div>
       <div [tooltip]="recommendation.creatorInfo.getName()" class="cursor-pointer comment-icon text-primary">
-        <i class="mdi mdi-comment-account-outline"></i>
+        <i class="mdi mdi-account-star"></i>
       </div>
     </li>
     <li *ngIf="!recommendations.length" class="comment d-flex flex-row align-items-center">
       <div class="comment-body text-primary flex-shrink-1 flex-grow-1 text-truncate">
         <span>{{lang.map.no_recommendations_to_show}}</span>
       </div>
-      <div class="comment-icon invisible"><i class="mdi mdi-comment-text-multiple-outline"></i></div>
+      <div class="comment-icon invisible"><i class="mdi mdi-account-star"></i></div>
     </li>
   </ul>
 </div>
