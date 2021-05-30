@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {UrlService} from '../../../../services/url.service';
 import {LangService} from '../../../../services/lang.service';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
 import {InternalDepartment} from '../../../../models/internal-department';
@@ -14,7 +13,6 @@ import {Lookup} from '../../../../models/lookup';
 import {SaveTypes} from '../../../../enums/save-types';
 import {DialogService} from '../../../../services/dialog.service';
 import {ToastService} from '../../../../services/toast.service';
-import {Router} from '@angular/router';
 import {InquiryService} from '../../../../services/inquiry.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
 
@@ -38,8 +36,6 @@ export class InquiryComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient,
               public service: InquiryService,
-              private urlService: UrlService,
-              private router: Router,
               private intDepService: InternalDepartmentService,
               private fb: FormBuilder,
               private dialog: DialogService,
