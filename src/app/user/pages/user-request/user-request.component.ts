@@ -1264,19 +1264,29 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     });
   }
 
-  beneficiaryPrimaryIdDisabled(): boolean {
-    return this.isPartialRequest || this.readOnly || this.editMode;
+  beneficiaryPrimaryIdDisabled(nationality: boolean = false): boolean {
+    if (this.isPartialRequest) {
+      return true;
+    } else {
+      if (nationality) {
+        return this.readOnly;
+      }
+      return this.readOnly || this.editMode;
+    }
   }
 
-  beneficiarySecondaryIdDisabled(): boolean {
+  beneficiarySecondaryIdDisabled(nationality: boolean = false): boolean {
     if (this.isPartialRequest) {
       return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
     } else {
-      if (this.readOnly) {
-        return true;
-      } else if (!this.editMode) {
-        return false;
+      if (nationality) {
+        return this.readOnly;
       } else {
+        if (this.readOnly) {
+          return true;
+        } else if (!this.editMode) {
+          return false;
+        }
         return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
       }
     }

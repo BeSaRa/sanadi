@@ -79,7 +79,7 @@
                 <label for="benPrimaryIdNationality" class="form-label"
                        asteriskIfRequired="benPrimaryIdNationality">{{langService.map.lbl_nationality}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="beneficiaryPrimaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
                            [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
@@ -92,7 +92,7 @@
                 <label for="benPrimaryIdNationalityGulf" class="form-label"
                        asteriskIfRequired="benPrimaryIdNationality">{{langService.map.country}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationalityGulf" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="beneficiaryPrimaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
                            [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
@@ -140,7 +140,7 @@
                 <label for="benSecIdNationality" class="form-label"
                        asteriskIfRequired="benSecIdNationality">{{langService.map.lbl_nationality}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="beneficiarySecondaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benSecIdNationality"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="benSecIdNationality"
@@ -155,7 +155,7 @@
                 <label for="benSecIdNationalityGulf" class="form-label"
                        asteriskIfRequired="benSecIdNationality">{{langService.map.country}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benSecIdNationalityGulf" [clearable]="false"
-                           [readonly]="readOnly"
+                           [readonly]="beneficiarySecondaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benSecIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="benSecIdNationality"
