@@ -12,7 +12,7 @@ import {LangService} from '../../../services/lang.service';
 })
 export class AuditLogPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
-  displayedColumns: string[] = ['user', 'userOrganization', 'qid', 'ipAddress', 'actionDate'];
+  displayedColumns: string[] = ['user', 'userOrganization', 'qid', 'ipAddress', 'actionType', 'actionDate'];
   logList: AuditLog[];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AuditLog[]>,
