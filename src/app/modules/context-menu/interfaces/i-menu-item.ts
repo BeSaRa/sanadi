@@ -2,10 +2,10 @@ import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
 export interface IMenuItem {
   type: 'action' | 'divider';
-  onClick?: (item?: any) => void;
+  onClick?: (item?: any, ...params: any) => void;
   data?: {
     hideFromViewer?: boolean,
-    closeViewerAfterClick?: boolean
+    [index: string]: any
   };
   label?: keyof ILanguageKeys | ((item?: any) => string);
   icon?: string;
