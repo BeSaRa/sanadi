@@ -59,7 +59,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private skipQueryParamSearch: boolean = true;
   requests: SubventionRequestAid[] = [];
   subAidLookupsArray: AidLookup[] = [];
-  subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,

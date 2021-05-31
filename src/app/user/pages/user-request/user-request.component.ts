@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {LookupService} from '../../../services/lookup.service';
 import {DialogService} from '../../../services/dialog.service';
@@ -44,7 +44,11 @@ import {ReadModeService} from '../../../services/read-mode.service';
 import * as dayjs from 'dayjs';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {isValidValue} from '../../../helpers/utils';
-import {changeDateFromDatepicker, getDatepickerOptions, getDatePickerOptionsClone} from '../../../helpers/utils-date';
+import {
+  changeDateFromDatepicker,
+  getDatepickerOptions,
+  getDatePickerOptionsClone
+} from '../../../helpers/utils-date';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {CanNavigateOptions} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';
@@ -106,23 +110,19 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   datepickerOptionsMap: IKeyValue = {
     dateOfBirth: getDatepickerOptions({disablePeriod: 'future'}),
-    dateOfBirthReadOnly: getDatepickerOptions({disablePeriod: 'future', readonly: true}),
     creationDate: getDatepickerOptions({disablePeriod: 'future'}),
-    creationDateReadOnly: getDatepickerOptions({disablePeriod: 'future', readonly: true}),
     statusDateModified: getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true}),
     aidApprovalDate: getDatepickerOptions({disablePeriod: 'none'}),
-    aidApprovalDateReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true}),
-    aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'}),
-    aidPaymentDateReadOnly: getDatepickerOptions({disablePeriod: 'none', readonly: true})
+    aidPaymentDate: getDatepickerOptions({disablePeriod: 'none'})
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  private datepickerFieldPathMap: IKeyValue = {
+  datepickerFieldPathMap: IKeyValue = {
+    dateOfBirth: 'personalTab.dateOfBirth',
     creationDate: 'requestInfoTab.creationDate',
     requestDate: 'requestInfoTab.creationDate',
-    statusDate: 'requestStatusTab.statusDateModified',
+    statusDateModified: 'requestStatusTab.statusDateModified',
     aidApprovalDate: 'aidTab.0.approvalDate',
     aidPaymentDate: 'aidTab.0.aidStartPayDate'
   };
@@ -168,8 +168,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   isAttachmentFormVisible: boolean = false;
   skipConfirmUnsavedChanges: boolean = false;
 
-  @ViewChild('creationDate') creationDateControlRef!: ElementRef;
-
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -182,7 +180,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
-              private renderer: Renderer2,
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
@@ -843,7 +840,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private _setPaymentDateValidations() {
     const approvedDateValue = changeDateFromDatepicker(this.aidApprovalDate?.value);
 
-    // let creationDate = this.fm.getFormField('requestInfoTab.creationDate');
     let minDate = changeDateFromDatepicker(this.creationDateField?.value);
     if (minDate) {
       minDate.setHours(0, 0, 0, 0);
@@ -878,7 +874,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         });
       this.aidPeriodicType.updateValueAndValidity();
 
-      // const requestCreationDate = this.fm.getFormField('requestInfoTab.creationDate');
       const requestCreationDateValue = changeDateFromDatepicker(this.creationDateField?.value);
       if (this.creationDateField && requestCreationDateValue) {
         this.setRelatedMinDate('creationDate', 'aidApprovalDate');
@@ -1310,16 +1305,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   updateAttachmentList(attachments: SanadiAttachment[]): void {
     this.attachmentList = [];
     this.attachmentList = attachments;
-  }
-
-  toggleElementDisabled(elementRef: ElementRef, setDisabled: boolean): void {
-    if (setDisabled) {
-      this.renderer.setAttribute(elementRef.nativeElement, 'disabled', 'disabled');
-    } else {
-      this.renderer.removeAttribute(elementRef.nativeElement, 'disabled');
-      this.renderer.removeClass(elementRef.nativeElement, 'disabled');
-      this.renderer.removeClass(elementRef.nativeElement, ':disabled');
-    }
   }
 
   saveButtonEnabled(): boolean {

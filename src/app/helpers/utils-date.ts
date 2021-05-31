@@ -77,7 +77,8 @@ function getDatepickerOptions(customOptions: IDatepickerCustomOptions): IAngular
   let options: IAngularMyDpOptions = {
     dateRange: false,
     dateFormat: format.toLowerCase(),
-    inputFieldValidation: false
+    inputFieldValidation: false,
+    divHostElement: {enabled: true, placeholder: ''}
   };
   if (customOptions.disablePeriod === 'none') {
     return options;
@@ -95,9 +96,6 @@ function getDatepickerOptions(customOptions: IDatepickerCustomOptions): IAngular
       month: disableDate.getMonth() + 1,
       day: disableDate.getDate()
     };
-  }
-  if (customOptions.readonly) {
-    options.divHostElement = {enabled: true, placeholder: ''}
   }
   return options;
 }

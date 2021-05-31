@@ -49,8 +49,12 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     branches: {name: 'branches'}
   };
 
-  dpOptionsPast: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'future'});
-  dpOptionsNormal: IAngularMyDpOptions = getDatepickerOptions({disablePeriod: 'none'});
+  datepickerOptionsMap: IKeyValue = {
+    registryDate: getDatepickerOptions({disablePeriod: 'future'}),
+    establishmentDate: getDatepickerOptions({disablePeriod: 'none'}),
+    budgetClosureDate: getDatepickerOptions({disablePeriod: 'none'})
+  };
+
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   @ViewChild('logoUploader') logoUploader!: ElementRef;

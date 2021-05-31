@@ -205,12 +205,15 @@
             <label for="dateOfBirthReadOnly" asteriskIfRequired="dateOfBirth"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
             <div class="col-md-8 col-sm-12 mb-4">
-              <div class="form-control input-disabled" formControlName="dateOfBirth"
-                   id="dateOfBirthReadOnly" [options]="datepickerOptionsMap.dateOfBirthReadOnly"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
+              <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control input-disabled" formControlName="dateOfBirth"
+                     id="dateOfBirthReadOnly" [options]="datepickerOptionsMap.dateOfBirth"
+                     angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
+                </div>
+                <app-field-error-message
+                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
               </div>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
             </div>
           </div>
           <div class="row d-flex flex-column flex-md-row" *ngIf="!(readOnly || isPartialRequest)">
@@ -219,11 +222,10 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
-                <input class="form-control" angular-mydatepicker #dpDateOfBirth="angular-mydatepicker"
-                       name="dateOfBirth" formControlName="dateOfBirth" id="dateOfBirth" dateFix
-                       [options]="datepickerOptionsMap.dateOfBirth" autocomplete="off"
-                       (click)="dpDateOfBirth.toggleCalendar()"
-                       [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
+                <div class="form-control" formControlName="dateOfBirth"
+                     id="dateOfBirth" [options]="datepickerOptionsMap.dateOfBirth"
+                     (click)="dpDateOfBirth.toggleCalendar()" #dpDateOfBirth="angular-mydatepicker"
+                     angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"></div>
                 <app-field-error-message
                   [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
               </div>
@@ -687,7 +689,7 @@
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="form-control input-disabled" formControlName="creationDate"
-                 id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDateReadOnly"
+                 id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDate"
                  angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
             </div>
             <app-field-error-message
@@ -700,11 +702,10 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpCreationDate="angular-mydatepicker"
-                     name="creationDate" formControlName="creationDate" id="creationDate" dateFix
-                     [options]="datepickerOptionsMap.creationDate" autocomplete="off"
-                     (click)="dpCreationDate.toggleCalendar()" #creationDate
-                     [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
+              <div class="form-control" formControlName="creationDate"
+                   id="creationDate" [options]="datepickerOptionsMap.creationDate"
+                   (click)="dpCreationDate.toggleCalendar()" #dpCreationDate="angular-mydatepicker"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
             </div>
@@ -785,12 +786,15 @@
           <label for="statusDateModifiedReadOnly" asteriskIfRequired="statusDateModified"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
           <div class="col-md-8 col-sm-12 mb-4">
-            <div class="form-control input-disabled" formControlName="statusDateModified"
-                 id="statusDateModifiedReadOnly" [options]="datepickerOptionsMap.statusDateModifiedReadOnly"
-                 angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control input-disabled" formControlName="statusDateModified"
+                   id="statusDateModifiedReadOnly" [options]="datepickerOptionsMap.statusDateModified"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+              </div>
+              <app-field-error-message
+                [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
             </div>
-            <app-field-error-message
-              [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
           </div>
         </div>
         <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
@@ -799,11 +803,10 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpStatusDateModified="angular-mydatepicker"
-                     name="statusDateModified" formControlName="statusDateModified" id="statusDateModified" dateFix
-                     [options]="datepickerOptionsMap.statusDateModified" autocomplete="off"
-                     (click)="dpStatusDateModified.toggleCalendar()"
-                     [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
+              <div class="form-control" formControlName="statusDateModified"
+                   id="statusDateModified" [options]="datepickerOptionsMap.statusDateModified"
+                   (click)="dpStatusDateModified.toggleCalendar()" #dpStatusDateModified="angular-mydatepicker"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
             </div>
@@ -873,7 +876,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <div class="form-control input-disabled" formControlName="approvalDate"
-                     id="approvalDateReadOnly" [options]="datepickerOptionsMap.aidApprovalDateReadOnly"
+                     id="approvalDateReadOnly" [options]="datepickerOptionsMap.aidApprovalDate"
                      angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
@@ -886,11 +889,10 @@
               <div class="col-md-8 col-sm-12 mb-4">
                 <div class="input-group">
                   <i class="input-group-text mdi mdi-calendar"></i>
-                  <input class="form-control" angular-mydatepicker #dpAidApprovalDate="angular-mydatepicker"
-                         name="approvalDate" formControlName="approvalDate" id="approvalDate" dateFix
-                         [options]="datepickerOptionsMap.aidApprovalDate" autocomplete="off"
-                         (click)="dpAidApprovalDate.toggleCalendar()"
-                         [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
+                  <div class="form-control" formControlName="approvalDate"
+                       id="approvalDate" [options]="datepickerOptionsMap.aidApprovalDate"
+                       (click)="dpAidApprovalDate.toggleCalendar()" #dpAidApprovalDate="angular-mydatepicker"
+                       angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"></div>
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
                 </div>
@@ -903,7 +905,7 @@
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
                 <div class="form-control input-disabled" formControlName="aidStartPayDate"
-                     id="aidStartPayDateReadOnly" [options]="datepickerOptionsMap.aidPaymentDateReadOnly"
+                     id="aidStartPayDateReadOnly" [options]="datepickerOptionsMap.aidPaymentDate"
                      angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
@@ -916,11 +918,10 @@
               <div class="col-md-8 col-sm-12 mb-4">
                 <div class="input-group">
                   <i class="input-group-text mdi mdi-calendar"></i>
-                  <input class="form-control" angular-mydatepicker #dpAidStartPayDate="angular-mydatepicker"
-                         name="aidStartPayDate" formControlName="aidStartPayDate" id="aidStartPayDate" dateFix
-                         [options]="datepickerOptionsMap.aidPaymentDate" autocomplete="off"
-                         (click)="dpAidStartPayDate.toggleCalendar()"
-                         [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
+                  <div class="form-control" formControlName="aidStartPayDate"
+                       id="aidStartPayDate" [options]="datepickerOptionsMap.aidPaymentDate"
+                       (click)="dpAidStartPayDate.toggleCalendar()" #dpAidStartPayDate="angular-mydatepicker"
+                       angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')"></div>
                   <app-field-error-message
                     [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
                 </div>

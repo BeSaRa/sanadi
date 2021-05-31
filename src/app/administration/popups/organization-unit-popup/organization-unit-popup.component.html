@@ -203,10 +203,10 @@
                    class="form-label">{{langService.map.first_registration_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpRegistryDate="angular-mydatepicker"
-                     name="registryDate" formControlName="registryDate" id="registryDate" dateFix
-                     [options]="dpOptionsPast" autocomplete="off" (click)="dpRegistryDate.toggleCalendar()"
-                     [ngClass]="fm.getStatusClass('basic.registryDate')">
+              <div class="form-control" formControlName="registryDate"
+                   id="registryDate" [options]="datepickerOptionsMap.registryDate"
+                   (click)="dpRegistryDate.toggleCalendar()" #dpRegistryDate="angular-mydatepicker"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('basic.registryDate')"></div>
               <app-field-error-message [control]="fm.getFormField('basic.registryDate')"></app-field-error-message>
             </div>
           </div>
@@ -285,10 +285,10 @@
             <label for="establishmentDate" class="form-label">{{langService.map.establishment_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpEstablishmentDate="angular-mydatepicker"
-                     name="establishmentDate" formControlName="establishmentDate" id="establishmentDate" dateFix
-                     [options]="dpOptionsNormal" autocomplete="off" (click)="dpEstablishmentDate.toggleCalendar()"
-                     [ngClass]="fm.getStatusClass('advanced.establishmentDate')">
+              <div class="form-control" formControlName="establishmentDate"
+                   id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
+                   (click)="dpEstablishmentDate.toggleCalendar()" #dpEstablishmentDate="angular-mydatepicker"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('advanced.establishmentDate')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('advanced.establishmentDate')"></app-field-error-message>
             </div>
@@ -297,10 +297,10 @@
             <label for="budgetClosureDate" class="form-label">{{langService.map.budget_closure_date}}</label>
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpBudgetClosureDate="angular-mydatepicker"
-                     name="budgetClosureDate" formControlName="budgetClosureDate" id="budgetClosureDate" dateFix
-                     [options]="dpOptionsNormal" autocomplete="off" (click)="dpBudgetClosureDate.toggleCalendar()"
-                     [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')">
+              <div class="form-control" formControlName="budgetClosureDate"
+                   id="budgetClosureDate" [options]="datepickerOptionsMap.budgetClosureDate"
+                   (click)="dpBudgetClosureDate.toggleCalendar()" #dpBudgetClosureDate="angular-mydatepicker"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('advanced.budgetClosureDate')"></app-field-error-message>
             </div>

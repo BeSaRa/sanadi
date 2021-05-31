@@ -56,11 +56,11 @@
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpFromDate="angular-mydatepicker"
-                     name="fromDate" formControlName="fromDate" id="fromDate" dateFix
-                     [options]="datepickerOptionsMap.fromDate" autocomplete="off"
-                     (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
-                     (click)="dpFromDate.toggleCalendar()">
+              <div class="form-control" formControlName="fromDate"
+                   id="fromDate" [options]="datepickerOptionsMap.fromDate"
+                   (click)="dpFromDate.toggleCalendar()" #dpFromDate="angular-mydatepicker"
+                   angular-mydatepicker
+                   (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('fromDate')"></app-field-error-message>
             </div>
@@ -74,11 +74,11 @@
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <input class="form-control" angular-mydatepicker #dpToDate="angular-mydatepicker"
-                     name="toDate" formControlName="toDate" id="toDate" dateFix
-                     [options]="datepickerOptionsMap.toDate" autocomplete="off"
-                     (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"
-                     (click)="dpToDate.toggleCalendar()">
+              <div class="form-control" formControlName="toDate"
+                   id="toDate" [options]="datepickerOptionsMap.toDate"
+                   (click)="dpToDate.toggleCalendar()" #dpToDate="angular-mydatepicker"
+                   angular-mydatepicker
+                   (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"></div>
               <app-field-error-message
                 [control]="fm.getFormField('toDate')"></app-field-error-message>
             </div>
