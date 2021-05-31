@@ -9,6 +9,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {WFResponseType} from '../../../enums/wfresponse-type.enum';
 import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '../../../services/toast.service';
+import {DialogRef} from '../../../shared/models/dialog-ref';
 
 @Component({
   selector: 'app-user-inbox',
@@ -69,32 +70,53 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     item.viewLogs().onAfterClose$.subscribe(() => this.reloadInbox$.next(null));
   }
 
-  actionSendToUser(item: QueryResult): void {
-    item.sendToUser().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToUser().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionSendToDepartment(item: QueryResult): void {
-    item.sendToDepartment().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToDepartment().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionComplete(item: QueryResult): void {
-    item.complete().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.complete().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionApprove(item: QueryResult): void {
-    item.approve().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.approve().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionClose(item: QueryResult): void {
-    item.close().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.close().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionReject(item: QueryResult): void {
-    item.reject().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.reject().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
-  actionReturn(item: QueryResult): void {
-    item.return().onAfterClose$.subscribe(_ => this.reloadInbox$.next(null));
+  actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.return().onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
   }
 
 
@@ -104,8 +126,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   private buildGridActions() {
-
-
     this.actions = [
       // open
       {
@@ -158,12 +178,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionSendToDepartment(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToDepartment(item, viewDialogRef);
         }
       },
       // send to user
@@ -171,12 +190,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionSendToUser(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToUser(item, viewDialogRef);
         }
       },
       // complete
@@ -184,12 +202,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-check',
         label: 'task_complete',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
         },
-        onClick: (item: QueryResult) => {
-          this.actionComplete(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionComplete(item, viewDialogRef);
         }
       },
       // approve
@@ -197,12 +214,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'approve_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionApprove(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionApprove(item, viewDialogRef);
         }
       },
       // return
@@ -210,12 +226,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'return_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionReturn(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionReturn(item, viewDialogRef);
         }
       },
       // reject
@@ -223,12 +238,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionReject(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionReject(item, viewDialogRef);
         }
       },
       //close
@@ -236,12 +250,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionClose(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionClose(item, viewDialogRef);
         }
       }
     ];

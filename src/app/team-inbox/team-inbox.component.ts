@@ -12,6 +12,7 @@ import {InboxService} from '../services/inbox.service';
 import {ToastService} from '../services/toast.service';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 @Component({
   selector: 'team-inbox',
@@ -117,32 +118,53 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     item.viewLogs().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
-  actionSendToUser(item: QueryResult): void {
-    item.sendToUser(true).onAfterClose$.subscribe(() => this.reloadSelectedInbox());
+  actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToUser(true).onAfterClose$.subscribe(() => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionSendToDepartment(item: QueryResult): void {
-    item.sendToDepartment(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToDepartment(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionComplete(item: QueryResult): void {
-    item.complete(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.complete(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionApprove(item: QueryResult): void {
-    item.approve(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.approve(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionClose(item: QueryResult): void {
-    item.close(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.close(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionReject(item: QueryResult): void {
-    item.reject(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.reject(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
-  actionReturn(item: QueryResult): void {
-    item.return(true).onAfterClose$.subscribe(_ => this.reloadSelectedInbox());
+  actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.return(true).onAfterClose$.subscribe(_ => {
+      viewDialogRef?.close();
+      this.reloadSelectedInbox();
+    });
   }
 
   actionOpen(item: QueryResult) {
@@ -202,12 +224,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionSendToDepartment(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToDepartment(item, viewDialogRef);
         }
       },
       // send to user
@@ -215,12 +236,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionSendToUser(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToUser(item, viewDialogRef);
         }
       },
       // complete
@@ -228,12 +248,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-check',
         label: 'task_complete',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
         },
-        onClick: (item: QueryResult) => {
-          this.actionComplete(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionComplete(item, viewDialogRef);
         }
       },
       // approve
@@ -241,12 +260,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'approve_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionApprove(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionApprove(item, viewDialogRef);
         }
       },
       // return
@@ -254,12 +272,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'return_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionReturn(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionReturn(item, viewDialogRef);
         }
       },
       // reject
@@ -267,12 +284,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionReject(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionReject(item, viewDialogRef);
         }
       },
       //close
@@ -280,12 +296,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
-        data: {closeViewerAfterClick: true},
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
         },
-        onClick: (item: QueryResult) => {
-          this.actionClose(item);
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionClose(item, viewDialogRef);
         }
       }
     ];
