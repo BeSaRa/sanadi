@@ -23,9 +23,12 @@ export class PredefinedDialogComponent implements OnInit {
   };
   userClickOn = UserClickOn;
   langService: LangService = {} as LangService;
+  data: string;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: string,
               @Inject(DIALOG_CONFIG_TOKEN) public config: IDialogPredefinedConfig) {
+
+    this.data = (data + '').replace(new RegExp(/\n/, 'g'), '<br />');
   }
 
   ngOnInit(): void {
