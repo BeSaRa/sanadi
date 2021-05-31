@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, Inject, NgZone, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {Subject} from 'rxjs';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
@@ -7,6 +7,7 @@ import {IESComponent} from '../../../interfaces/iescomponent';
 import {SaveTypes} from '../../../enums/save-types';
 import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {DialogRef} from '../../models/dialog-ref';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -19,8 +20,20 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   container!: ViewContainerRef;
 
   viewInit: Subject<any> = new Subject<any>();
+  _component!: IESComponent;
 
-  component?: IESComponent;
+  set component(component: IESComponent) {
+    this.zone.onStable
+      .pipe(take(1))
+      .subscribe(() => {
+        this._component = component;
+      });
+  }
+
+  get component(): IESComponent {
+    return this._component;
+  }
+
   saveTypes: typeof SaveTypes = SaveTypes;
   actions: IMenuItem[] = [];
 
@@ -32,6 +45,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
                 model: any,
                 actions: IMenuItem[]
               },
+              private zone: NgZone,
               private dialogRef: DialogRef,
               public lang: LangService) {
 
