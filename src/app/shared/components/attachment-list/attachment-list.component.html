@@ -67,43 +67,47 @@
     </div>
   </form>
 </div>
-<div *ngIf="!showForm && showList">
-  <table class="table mt-3 table-striped table-bordered caption-top" cdk-table
-         [dataSource]="attachmentList$">
-    <ng-container cdkColumnDef="documentTitle">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.title}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle}} </td>
-    </ng-container>
-    <ng-container cdkColumnDef="attachmentType">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.attachment_type}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.attachmentTypeInfo.getName()}} </td>
-    </ng-container>
-    <ng-container cdkColumnDef="lastModified">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.modified_on}}</th>
-      <td cdk-cell *cdkCellDef="let row"> {{row.lastModifiedString}} </td>
-    </ng-container>
-    <ng-container cdkColumnDef="actions">
-      <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-      <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-        <div class="d-flex flex-row">
-          <button *ngIf="allowDelete(row)"
-                  (click)="deleteAttachment($event, row, i)" class="icon-btn text-primary"
-                  tooltip="{{langService.map.btn_delete}}">
-            <i class="mdi mdi-close-box"></i>
-          </button>
-          <button *ngIf="allowEdit(row)"
-                  (click)="editAttachment($event, row, i)" class="icon-btn text-primary"
-                  tooltip="{{langService.map.btn_edit}}">
-            <i class="mdi mdi-pen"></i>
-          </button>
-          <button (click)="row.downloadAttachment($event)" class="icon-btn text-primary"
-                  tooltip="{{langService.map.btn_download}}">
-            <i class="mdi mdi-download"></i>
-          </button>
-        </div>
-      </td>
-    </ng-container>
-    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+<div *ngIf="!showForm && showList" class="row pt-3">
+  <div class="col-12">
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered caption-top" cdk-table
+             [dataSource]="attachmentList$">
+        <ng-container cdkColumnDef="documentTitle">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.title}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="attachmentType">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.attachment_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.attachmentTypeInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="lastModified">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.modified_on}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.lastModifiedString}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="actions">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+          <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+            <div class="d-flex flex-row">
+              <button *ngIf="allowDelete(row)"
+                      (click)="deleteAttachment($event, row, i)" class="icon-btn text-primary"
+                      tooltip="{{langService.map.btn_delete}}">
+                <i class="mdi mdi-close-box"></i>
+              </button>
+              <button *ngIf="allowEdit(row)"
+                      (click)="editAttachment($event, row, i)" class="icon-btn text-primary"
+                      tooltip="{{langService.map.btn_edit}}">
+                <i class="mdi mdi-pen"></i>
+              </button>
+              <button (click)="row.downloadAttachment($event)" class="icon-btn text-primary"
+                      tooltip="{{langService.map.btn_download}}">
+                <i class="mdi mdi-download"></i>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
 </div>

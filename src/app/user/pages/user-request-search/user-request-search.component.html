@@ -401,80 +401,82 @@
       </div>
     </div>
     <div class="row">
-      <div class="table-responsive">
-        <table class="table table-striped table-bordered caption-top">
-          <thead role="rowgroup">
-          <tr>
-            <th class="serial-column">{{langService.map.request_number}}</th>
-            <th class="date-column">{{langService.map.request_date}}</th>
-            <th>{{langService.map.lbl_organization}}</th>
-            <th>{{langService.map.created_by}}</th>
-            <th>{{langService.map.request_status}}</th>
-            <th>{{langService.map.request_aid_amount}}</th>
-            <th>{{langService.map.total_approved_amount}}</th>
-            <th class="date-column">{{langService.map.lbl_status_date_modified}}</th>
-            <th>{{langService.map.lbl_actions}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <ng-container *ngFor="let request of requests;">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered caption-top">
+            <thead role="rowgroup">
             <tr>
-              <td class="serial-column">
-                <div class="d-flex flex-row">
-                  <a href="#" (click)="showRequestDetails(request , $event)"
-                     class="dir-ltr d-inline-block flex-grow-1 text-start"> {{request.requestFullSerial}} </a>
-                  <i class="mdi mdi-file-hidden text-primary" *ngIf="request.isPartial"
-                     tooltip="{{langService.map.partial_request}}"></i>
-                </div>
-              </td>
-              <td class="date-column">{{request.creationDateString}}</td>
-              <td>{{request.orgAndBranchInfo?.getName()}}</td>
-              <td>{{request.orgUserInfo.getName()}}</td>
-              <td>{{request.statusInfo.getName()}}</td>
-              <td>{{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-              <td>{{request.approvedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-              <td class="date-column">{{request.statusDateModifiedString}}</td>
-              <td class="table-actions">
-                <div class="d-flex flex-row">
-                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
-                     (click)="request.showAid($event)">
-                    <span class="badge bg-primary aid-badge">{{request.aidCount}}</span>
-                  </a>
-                  <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-printer"></i>
-                  </a>
-                  <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-history"></i>
-                  </a>
-                  <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                          [disabled]="request.notUnderProcess()"
-                          (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                          class="btn icon-btn text-primary">
-                    <i class="mdi mdi-book-edit"></i>
-                  </button>
-                  <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                          (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
-                          [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
-                    <i class="mdi mdi-book-cancel"></i>
-                  </button>
-                  <button *ngIf="!request.notUnderProcess()"
-                          (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
-                          class="btn icon-btn text-primary">
-                    <i class="mdi mdi-trash-can"></i>
-                  </button>
-                  <button *ngIf="empService.checkPermissions('SUBVENTION_AID_SEARCH')"
-                          (click)="getRelatedBeneficiaryData(request)" tooltip="{{langService.map.inquire_beneficiary}}"
-                          class="btn icon-btn text-primary">
-                    <i class="mdi mdi-account-search"></i>
-                  </button>
-                </div>
-              </td>
+              <th class="serial-column">{{langService.map.request_number}}</th>
+              <th class="date-column">{{langService.map.request_date}}</th>
+              <th>{{langService.map.lbl_organization}}</th>
+              <th>{{langService.map.created_by}}</th>
+              <th>{{langService.map.request_status}}</th>
+              <th>{{langService.map.request_aid_amount}}</th>
+              <th>{{langService.map.total_approved_amount}}</th>
+              <th class="date-column">{{langService.map.lbl_status_date_modified}}</th>
+              <th>{{langService.map.lbl_actions}}</th>
             </tr>
-          </ng-container>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let request of requests;">
+              <tr>
+                <td class="serial-column">
+                  <div class="d-flex flex-row">
+                    <a href="#" (click)="showRequestDetails(request , $event)"
+                       class="dir-ltr d-inline-block flex-grow-1 text-start"> {{request.requestFullSerial}} </a>
+                    <i class="mdi mdi-file-hidden text-primary" *ngIf="request.isPartial"
+                       tooltip="{{langService.map.partial_request}}"></i>
+                  </div>
+                </td>
+                <td class="date-column">{{request.creationDateString}}</td>
+                <td>{{request.orgAndBranchInfo?.getName()}}</td>
+                <td>{{request.orgUserInfo.getName()}}</td>
+                <td>{{request.statusInfo.getName()}}</td>
+                <td>{{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+                <td>{{request.approvedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+                <td class="date-column">{{request.statusDateModifiedString}}</td>
+                <td class="table-actions">
+                  <div class="d-flex flex-row">
+                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
+                       (click)="request.showAid($event)">
+                      <span class="badge bg-primary aid-badge">{{request.aidCount}}</span>
+                    </a>
+                    <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-printer"></i>
+                    </a>
+                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
+                       class="icon-btn">
+                      <i class="mdi mdi-history"></i>
+                    </a>
+                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                            [disabled]="request.notUnderProcess()"
+                            (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
+                            class="btn icon-btn text-primary">
+                      <i class="mdi mdi-book-edit"></i>
+                    </button>
+                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
+                            (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
+                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
+                      <i class="mdi mdi-book-cancel"></i>
+                    </button>
+                    <button *ngIf="!request.notUnderProcess()"
+                            (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
+                            class="btn icon-btn text-primary">
+                      <i class="mdi mdi-trash-can"></i>
+                    </button>
+                    <button *ngIf="empService.checkPermissions('SUBVENTION_AID_SEARCH')"
+                            (click)="getRelatedBeneficiaryData(request)" tooltip="{{langService.map.inquire_beneficiary}}"
+                            class="btn icon-btn text-primary">
+                      <i class="mdi mdi-account-search"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

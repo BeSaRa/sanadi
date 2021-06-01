@@ -114,42 +114,44 @@
       </div>
     </div>
     <div class="row">
-      <div class="table-responsive">
-        <table class="table table-striped table-bordered caption-top">
-          <thead role="rowgroup">
-          <tr>
-            <th class="serial-column">{{langService.map.request_number}}</th>
-            <th class="date-column">{{langService.map.request_date}}</th>
-            <th>{{langService.map.beneficiary_category}}</th>
-            <th>{{langService.map.reason_of_request}}</th>
-            <th>{{langService.map.request_summary}}</th>
-            <th>{{langService.map.action_type}}</th>
-            <th class="date-column">{{langService.map.action_date}}</th>
-            <th>{{langService.map.user_organization}}</th>
-            <th>{{langService.map.user}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <ng-container *ngFor="let record of logRecords;">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered caption-top">
+            <thead role="rowgroup">
             <tr>
-              <td class="serial-column">
-                <div class="d-flex flex-row">
-                  <a href="#" (click)="$event.preventDefault()"
-                     class="dir-ltr d-inline-block text-decoration-none flex-grow-1 text-start"> {{record.requestFullSerial}} </a>
-                </div>
-              </td>
-              <td class="date-column">{{record.creationDateString}}</td>
-              <td>{{record.benCategoryInfo.getName()}}</td>
-              <td>{{record.requestTypeInfo.getName()}}</td>
-              <td>{{record.requestSummary}}</td>
-              <td>{{record.actionTypeInfo.getName()}}</td>
-              <td class="date-column">{{record.actionDateString}}</td>
-              <td>{{record.orgAndBranchInfo?.getName()}}</td>
-              <td>{{record.orgUserInfo.getName()}}</td>
+              <th class="serial-column">{{langService.map.request_number}}</th>
+              <th class="date-column">{{langService.map.request_date}}</th>
+              <th>{{langService.map.beneficiary_category}}</th>
+              <th>{{langService.map.reason_of_request}}</th>
+              <th>{{langService.map.request_summary}}</th>
+              <th>{{langService.map.action_type}}</th>
+              <th class="date-column">{{langService.map.action_date}}</th>
+              <th>{{langService.map.user_organization}}</th>
+              <th>{{langService.map.user}}</th>
             </tr>
-          </ng-container>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let record of logRecords;">
+              <tr>
+                <td class="serial-column">
+                  <div class="d-flex flex-row">
+                    <a href="#" (click)="$event.preventDefault()"
+                       class="dir-ltr d-inline-block text-decoration-none flex-grow-1 text-start"> {{record.requestFullSerial}} </a>
+                  </div>
+                </td>
+                <td class="date-column">{{record.creationDateString}}</td>
+                <td>{{record.benCategoryInfo.getName()}}</td>
+                <td>{{record.requestTypeInfo.getName()}}</td>
+                <td>{{record.requestSummary}}</td>
+                <td>{{record.actionTypeInfo.getName()}}</td>
+                <td class="date-column">{{record.actionDateString}}</td>
+                <td>{{record.orgAndBranchInfo?.getName()}}</td>
+                <td>{{record.orgUserInfo.getName()}}</td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
