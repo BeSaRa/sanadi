@@ -1,5 +1,5 @@
 export interface IDefaultResponse<T> {
-  cont : number;
+  count : number;
   rs: T;
   sc : number;
 }
