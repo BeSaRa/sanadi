@@ -61,6 +61,7 @@ import {RecommendationPopupComponent} from './popups/recommendation-popup/recomm
 import { ManageRecommendationPopupComponent } from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manage-comment-popup.component';
 import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer-popup.component';
+import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
 
 @NgModule({
   declarations: [
@@ -113,7 +114,8 @@ import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer
     RecommendationPopupComponent,
     ManageRecommendationPopupComponent,
     ManageCommentPopupComponent,
-    CaseViewerPopupComponent
+    CaseViewerPopupComponent,
+    LocalizationKeyExistsDirective
   ],
   imports: [
     CommonModule,
@@ -174,7 +176,8 @@ import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer
     SortableHeaderComponent,
     PaginatorComponent,
     IndeterminateDirective,
-    RecommendationsComponent
+    RecommendationsComponent,
+    LocalizationKeyExistsDirective
   ]
 })
 export class SharedModule {

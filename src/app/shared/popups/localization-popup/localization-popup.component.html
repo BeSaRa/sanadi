@@ -8,8 +8,9 @@
         [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 mb-4 position-relative">
-        <label asteriskIfRequired="localizationKey" for="localizationKey" class="form-label">{{langService.map.lbl_localization_key}}</label>
-        <input id="localizationKey"
+        <label asteriskIfRequired="localizationKey" for="localizationKey"
+               class="form-label">{{langService.map.lbl_localization_key}}</label>
+        <input localizationKeyExists id="localizationKey"
                [ngClass]="fm.getStatusClass('localizationKey')"
                formControlName="localizationKey" class="form-control">
         <app-field-error-message [control]="fm.getFormField('localizationKey')"></app-field-error-message>
@@ -34,10 +35,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
+  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
+          class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveModel()" class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
