@@ -1,6 +1,6 @@
 {
   "LANGUAGE": "admin/localization",
-  "AUTHENTICATE": "auth/login",
+  "AUTHENTICATE": "auth/nas/login",
   "VALIDATE_TOKEN": "/auth/validate-token",
   "LOGIN_INFO": "auth/login/info",
   "CUSTOM_ROLE": "admin/org-user-custom-role",
