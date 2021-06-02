@@ -25,7 +25,8 @@ export class SubventionAidPopupComponent implements OnInit {
     'periodicType',
     'installementsCount',
     'aidStartPayDate',
-    'givenAmount'
+    'givenAmount',
+    'totalAidAmount'
   ];
   periodicityLookups: Record<number, Lookup> = {};
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
