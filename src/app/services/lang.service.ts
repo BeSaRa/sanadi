@@ -7,7 +7,7 @@ import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, map} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
@@ -24,6 +24,7 @@ import {EmployeeService} from './employee.service';
 import {AuthService} from './auth.service';
 import {Generator} from '../decorators/generator';
 import {ILoginData} from '../interfaces/i-login-data';
+import {IDefaultResponse} from '../interfaces/idefault-response';
 
 
 @Injectable({
@@ -226,5 +227,13 @@ export class LangService extends BackendGenericService<Localization> {
   }
 
   _getReceiveInterceptor(): any {
+  }
+
+  getLocalizationByKey(key: string): Observable<boolean> {
+    return this.http
+      .get<IDefaultResponse<Localization[]>>(this.urlService.URLS.LANGUAGE + '/like/key/localizationKey/val/' + key)
+      .pipe(map(response => {
+        return !!response.count;
+      }));
   }
 }
