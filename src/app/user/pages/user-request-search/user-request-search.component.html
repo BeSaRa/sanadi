@@ -411,6 +411,7 @@
               <th>{{langService.map.lbl_organization}}</th>
               <th>{{langService.map.created_by}}</th>
               <th>{{langService.map.request_status}}</th>
+              <th>{{langService.map.estimated_amount}}</th>
               <th>{{langService.map.request_aid_amount}}</th>
               <th>{{langService.map.total_approved_amount}}</th>
               <th class="date-column">{{langService.map.lbl_status_date_modified}}</th>
@@ -432,6 +433,7 @@
                 <td>{{request.orgAndBranchInfo?.getName()}}</td>
                 <td>{{request.orgUserInfo.getName()}}</td>
                 <td>{{request.statusInfo.getName()}}</td>
+                <td>{{request.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
                 <td>{{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
                 <td>{{request.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
                 <td class="date-column">{{request.statusDateModifiedString}}</td>
