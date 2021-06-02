@@ -156,9 +156,9 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
       });
   }
 
-  showAid($event: MouseEvent): void {
+  showAids($event: MouseEvent): void {
     $event.preventDefault();
-    this.service.openAidDialog(this.id)
+    this.service.openAidDialog(this.id, this.isPartial)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

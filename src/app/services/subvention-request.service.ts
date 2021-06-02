@@ -107,11 +107,15 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
       );
   }
 
-  openAidDialog(requestId: number): Observable<DialogRef> {
+  openAidDialog(requestId: number, isPartial: boolean): Observable<DialogRef> {
     return this.loadSubventionAidByCriteria({requestId})
       .pipe(
         switchMap((aidList: SubventionAid[]) => {
-          return of(this.dialogService.show<SubventionAid[]>(SubventionAidPopupComponent, aidList));
+          return of(this.dialogService.show<{aidList: SubventionAid[], isPartial: boolean}>(SubventionAidPopupComponent, {
+              aidList,
+              isPartial
+            })
+          );
         })
       );
   }

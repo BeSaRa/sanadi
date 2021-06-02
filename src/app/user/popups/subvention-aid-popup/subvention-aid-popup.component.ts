@@ -14,6 +14,9 @@ import {CustomValidators} from '../../../validators/custom-validators';
   styleUrls: ['./subvention-aid-popup.component.scss']
 })
 export class SubventionAidPopupComponent implements OnInit {
+  aidList: SubventionAid[] = [];
+  isPartialRequest: boolean = false;
+
   userClick: typeof UserClickOn = UserClickOn;
   displayedColumns = [
     'approvalDate',
@@ -22,16 +25,21 @@ export class SubventionAidPopupComponent implements OnInit {
     'periodicType',
     'installementsCount',
     'aidStartPayDate',
-    'givenAmount',
-    'remainingAmount'
+    'givenAmount'
   ];
   periodicityLookups: Record<number, Lookup> = {};
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public aidList: SubventionAid[],
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: { aidList: SubventionAid[], isPartial: boolean },
               public lookupService: LookupService,
               public langService: LangService) {
+    this.aidList = data.aidList;
+    this.isPartialRequest = data.isPartial;
+    //remainingAmount (show if not partial request)
+    if (!data.isPartial) {
+      this.displayedColumns.push('remainingAmount');
+    }
   }
 
   ngOnInit(): void {

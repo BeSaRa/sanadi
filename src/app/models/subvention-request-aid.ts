@@ -84,9 +84,9 @@ export class SubventionRequestAid {
       });
   }
 
-  showAid($event: MouseEvent): void {
+  showAids($event: MouseEvent): void {
     $event.preventDefault();
-    this.subventionRequestService.openAidDialog(this.requestId)
+    this.subventionRequestService.openAidDialog(this.requestId, this.isPartial)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
