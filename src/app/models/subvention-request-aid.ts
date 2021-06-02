@@ -13,24 +13,37 @@ import {SubventionRequestStatus} from '../enums/subvention-request-status';
 export class SubventionRequestAid {
   requestId!: number;
   requestedAidAmount!: number;
+  aidSuggestedAmount!: number;
+  aidTotalPayedAmount!: number;
   charityRefNo!: string;
   creationDate!: string;
   requestFullSerial!: string;
   aids!: SubventionApprovedAid[];
+  aidLookupId?: number;
   aidLookupInfo!: AdminResult;
+  aidId?: number;
+  orgBranchId!: number;
   orgBranchInfo!: AdminResult;
+  orgUserId!: number;
   orgUserInfo!: AdminResult;
+  orgId!: number;
   orgInfo!: AdminResult;
+  status!: number;
   statusInfo!: AdminResult;
-  private subventionRequestService: SubventionRequestService;
-  creationDateString!: string;
-  approvedAmount: number = 0;
   statusDateModified: string | null = '';
-  statusDateModifiedString: string | null = '';
   benPrimaryIdType!: number;
   benPrimaryIdNumber!: string;
   benPrimaryIdNationality!: number;
   isPartial: boolean = false;
+  installementsCount!: number;
+  aidPayedAmount!: number;
+  aidAmount!: number;
+
+
+  // extra properties
+  private subventionRequestService: SubventionRequestService;
+  creationDateString!: string;
+  statusDateModifiedString: string | null = '';
 
   underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
     requestNumber: 'requestFullSerial',

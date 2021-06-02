@@ -7,7 +7,6 @@ function send(model: any): any {
   delete model.underProcessingSearchFields;
   delete model.creationDateString;
   delete model.aidCount;
-  delete model.approvedAmount;
   delete model.statusDateModifiedString;
   return model;
 }
@@ -19,7 +18,6 @@ function receive(model: SubventionRequestAid): (SubventionRequestAid | any) {
   model.statusInfo = AdminResult.createInstance(model.statusInfo);
   model.aids = model.aids.map((aid) => {
     aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
-    model.approvedAmount += aid.aidAmount;
     if (aid.aidAmount) {
       model.aidCount += 1;
     }

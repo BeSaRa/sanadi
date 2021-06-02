@@ -303,7 +303,7 @@
               <td> {{request.orgAndBranchInfo?.getName()}} </td>
               <td> {{request.statusInfo.getName()}} </td>
               <td> {{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-              <td> {{request.approvedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              <td> {{request.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
               <td class="table-actions">
                 <div class="d-flex flex-row">
                   <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
