@@ -13,7 +13,7 @@ import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {LocalizationPopupComponent} from '../shared/popups/localization-popup/localization-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {interceptLocalization} from '../model-interceptors/localization-interceptor';
+import {LocalizationInterceptor} from '../model-interceptors/localization-interceptor';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {LangType, LocalizationMap} from '../types/types';
@@ -188,7 +188,7 @@ export class LangService extends BackendGenericService<Localization> {
   }
 
   _getSendInterceptor(): any {
-    return interceptLocalization;
+    return LocalizationInterceptor.send;
   }
 
   _getServiceURL(): string {

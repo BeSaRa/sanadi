@@ -10,10 +10,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {switchMap} from 'rxjs/operators';
-import {
-  interceptOrganizationUnit,
-  interceptOrganizationUnitReceive
-} from '../model-interceptors/organization-unit-interceptor';
+import {OrganizationUnitInterceptor} from '../model-interceptors/organization-unit-interceptor';
 import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
 import {Generator} from '../decorators/generator';
 import {AuditLogService} from './audit-log.service';
@@ -44,6 +41,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   openUpdateDialog(modelId: number): Observable<DialogRef> {
     return this.loadOrgUnitByIdComposite(modelId).pipe(
       switchMap((orgUnit: OrgUnit) => {
+        debugger
         return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
           model: orgUnit,
           operation: OperationTypes.UPDATE,
@@ -67,12 +65,12 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     return this.http.post<boolean>(this._getServiceURL() + '/banner-logo?id=' + id, form);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false)
   loadOrgUnitByIdComposite(id: number): Observable<OrgUnit> {
     return this.http.get<OrgUnit>(this._getServiceURL() + '/' + id + '/composite');
   }
 
-  openAuditLogsById(id: number):Observable<DialogRef> {
+  openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 
@@ -81,7 +79,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   _getSendInterceptor(): any {
-    return interceptOrganizationUnit;
+    return OrganizationUnitInterceptor.send;
   }
 
   _getServiceURL(): string {
@@ -89,6 +87,6 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   _getReceiveInterceptor(): any {
-    return interceptOrganizationUnitReceive;
+    return OrganizationUnitInterceptor.receive;
   }
 }

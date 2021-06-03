@@ -4,7 +4,7 @@ import {SanadiAttachmentInterceptor} from './sanadi-attachment-interceptor';
 import {SubventionAidInterceptor} from './subvention-aid-interceptor';
 import {Beneficiary} from '../models/beneficiary';
 import {SubventionRequest} from '../models/subvention-request';
-import {send as beneficiarySend, receive as beneficiaryReceive} from './beneficiary-interceptor';
+import {BeneficiaryInterceptor} from './beneficiary-interceptor';
 import {SubventionRequestInterceptor} from './subvention-request-interceptor';
 
 export class SubventionResponseInterceptor {
@@ -15,7 +15,7 @@ export class SubventionResponseInterceptor {
     model.aidList = model.aidList.map((aid: SubventionAid) => {
       return SubventionAidInterceptor.receive((new SubventionAid().clone(aid)));
     });
-    model.beneficiary = beneficiaryReceive(new Beneficiary().clone(model.beneficiary));
+    model.beneficiary = BeneficiaryInterceptor.receive(new Beneficiary().clone(model.beneficiary));
     model.request = SubventionRequestInterceptor.receive(new SubventionRequest().clone(model.request));
     return model;
   }
@@ -27,7 +27,7 @@ export class SubventionResponseInterceptor {
     model.aidList = model.aidList.map((aid: SubventionAid) => {
       return SubventionAidInterceptor.send(aid);
     });
-    model.beneficiary = beneficiarySend(model.beneficiary);
+    model.beneficiary = BeneficiaryInterceptor.send(model.beneficiary);
     model.request = SubventionRequestInterceptor.send(model.request);
     return model;
   }

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {OrgUserPermission} from '../models/org-user-permission';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {HttpClient} from '@angular/common/http';
-import {interceptReceiveOrgUserPermission} from '../model-interceptors/org-user-permission-interceptor';
+import {OrgUserPermissionInterceptor} from '../model-interceptors/org-user-permission-interceptor';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 
@@ -20,7 +20,7 @@ export class OrganizationUserPermissionService extends BackendGenericService<Org
     FactoryService.registerService('OrganizationUserPermissionService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true)
   loadByUserId(userId: number): Observable<OrgUserPermission[]> {
     return this.http.get<OrgUserPermission[]>(this._getServiceURL() + '/org-user-id/' + userId);
   }
@@ -34,7 +34,7 @@ export class OrganizationUserPermissionService extends BackendGenericService<Org
   }
 
   _getReceiveInterceptor(): any {
-    return interceptReceiveOrgUserPermission;
+    return OrgUserPermissionInterceptor.receive;
   }
 
   _getSendInterceptor(): any {

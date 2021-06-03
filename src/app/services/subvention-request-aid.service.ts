@@ -5,9 +5,9 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Observable} from 'rxjs';
 import {Generator} from '../decorators/generator';
-import * as interceptor from '../model-interceptors/subvertion-request-aid-interceptor';
 import {FactoryService} from './factory.service';
 import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
+import {SubventionRequestAidInterceptor} from '../model-interceptors/subvention-request-aid-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +53,7 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
   }
 
   _getSendInterceptor() {
-    return interceptor.send;
+    return SubventionRequestAidInterceptor.send;
   }
 
   _getServiceURL(): string {
@@ -61,6 +61,6 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
   }
 
   _getReceiveInterceptor() {
-    return interceptor.receive;
+    return SubventionRequestAidInterceptor.receive;
   }
 }

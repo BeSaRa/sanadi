@@ -4,7 +4,7 @@ import {OrgUser} from '../models/org-user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
-import {interceptOrganizationUser, interceptReceiveOrganizationUser} from '../model-interceptors/org-user-interceptor';
+import {OrgUserInterceptor} from '../model-interceptors/org-user-interceptor';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
@@ -72,6 +72,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   openUpdateDialog(modelId: number): Observable<DialogRef> {
     return this._loadInitData(modelId).pipe(
       switchMap((result) => {
+        debugger
         return this.getById(modelId).pipe(
           switchMap((orgUser: OrgUser) => {
             return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
@@ -91,8 +92,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 
-  deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
-    return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
+    return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
 
   _getModel(): any {
@@ -100,7 +101,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   }
 
   _getSendInterceptor(): any {
-    return interceptOrganizationUser;
+    return OrgUserInterceptor.send;
+    // return interceptOrganizationUser;
   }
 
   _getServiceURL(): string {
@@ -108,7 +110,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   }
 
   _getReceiveInterceptor(): any {
-    return interceptReceiveOrganizationUser;
+    return OrgUserInterceptor.receive;
+    // return interceptReceiveOrganizationUser;
   }
 
 
@@ -132,7 +135,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   /**
    * @description Loads the organization users list with composite(Info) properties
    */
-  @Generator(OrgUser, true, {property: 'rs', interceptReceive: interceptReceiveOrganizationUser})
+  @Generator(undefined, true)
   loadComposite(): Observable<OrgUser[]> {
     return this.http.get<OrgUser[]>(this._getServiceURL() + '/composite');
   }
@@ -141,7 +144,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
    * @description Loads the organization users list by criteria
    * @param criteria: IOrgUserCriteria
    */
-  @Generator(OrgUser, true)
+  @Generator(undefined, true)
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 
@@ -150,7 +153,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
     });
   }
 
-  openAuditLogsById(id: number):Observable<DialogRef> {
+  openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 }

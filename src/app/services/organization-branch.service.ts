@@ -4,10 +4,7 @@ import {OrgBranch} from '../models/org-branch';
 import {FactoryService} from './factory.service';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {
-  interceptOrganizationBranch,
-  interceptOrganizationBranchReceive
-} from '../model-interceptors/organization-branch-interceptor';
+import {OrganizationBranchInterceptor} from '../model-interceptors/organization-branch-interceptor';
 import {Observable, of} from 'rxjs';
 import {Generator} from '../decorators/generator';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -27,7 +24,7 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private  dialogService: DialogService,
+              private dialogService: DialogService,
               private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationBranchService', this);
@@ -38,7 +35,11 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
   }
 
   _getSendInterceptor(): any {
-    return interceptOrganizationBranch;
+    return OrganizationBranchInterceptor.send;
+  }
+
+  _getReceiveInterceptor(): any {
+    return OrganizationBranchInterceptor.receive;
   }
 
   _getServiceURL(): string {
@@ -82,15 +83,11 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 
-  deactivateBulk(ids: number[]): Observable<{[key: number]: boolean}> {
-    return this.http.put<{[key: number]: boolean}>(this._getServiceURL() + '/bulk/de-activate', ids);
+  deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
+    return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
 
-  openAuditLogsById(id: number):Observable<DialogRef> {
+  openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
-  }
-
-  _getReceiveInterceptor(): any {
-    return interceptOrganizationBranchReceive;
   }
 }

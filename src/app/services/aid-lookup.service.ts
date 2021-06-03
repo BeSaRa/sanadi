@@ -11,7 +11,7 @@ import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {DialogService} from './dialog.service';
 import {AidLookupPopupComponent} from '../administration/popups/aid-lookup-popup/aid-lookup-popup.component';
-import {interceptSendAidLookup, interceptReceiveAidLookup} from '../model-interceptors/aid-lookup-interceptor';
+import {AidLookupInterceptor} from '../model-interceptors/aid-lookup-interceptor';
 import {Generator} from '../decorators/generator';
 import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
 import {AuditLogService} from './audit-log.service';
@@ -79,7 +79,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   _getSendInterceptor(): any {
-    return interceptSendAidLookup;
+    return AidLookupInterceptor.send;
   }
 
   _getServiceURL(): string {
@@ -105,7 +105,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   _getReceiveInterceptor(): any {
-    return interceptReceiveAidLookup;
+    return AidLookupInterceptor.receive;
   }
 
   openAuditLogsById(id: number):Observable<DialogRef> {

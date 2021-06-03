@@ -5,7 +5,7 @@ import {FactoryService} from './factory.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Observable} from 'rxjs';
-import * as interceptor from '../model-interceptors/beneficiary-interceptor';
+import {BeneficiaryInterceptor} from '../model-interceptors/beneficiary-interceptor';
 import {Generator} from '../decorators/generator';
 import {IBeneficiaryCriteria} from '../interfaces/i-beneficiary-criteria';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -37,6 +37,7 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   loadByCriteria(criteria: Partial<IBeneficiaryCriteria>): Observable<Beneficiary[]> {
+    debugger
     return this._loadByCriteria(criteria);
   }
 
@@ -55,7 +56,7 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   _getSendInterceptor() {
-    return interceptor.send;
+    return BeneficiaryInterceptor.send;
   }
 
   _getServiceURL(): string {
@@ -63,7 +64,7 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   _getReceiveInterceptor() {
-    return interceptor.receive;
+    return BeneficiaryInterceptor.receive;
   }
 
   openSelectBeneficiaryDialog(list: Beneficiary[]): DialogRef {

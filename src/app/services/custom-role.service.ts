@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Observable, of, Subject} from 'rxjs';
 import {CustomRole} from '../models/custom-role';
-import {interceptCustomRole} from '../model-interceptors/custom-role-interceptor';
+import {CustomRoleInterceptor} from '../model-interceptors/custom-role-interceptor';
 import {FactoryService} from './factory.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
@@ -55,7 +55,7 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   }
 
   _getSendInterceptor(): any {
-    return interceptCustomRole;
+    return CustomRoleInterceptor.send;
   }
 
   _getServiceURL(): string {
