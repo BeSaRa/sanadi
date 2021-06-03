@@ -8,6 +8,7 @@ import {InquiryComponent} from './pages/inquiry-container/inquiry/inquiry.compon
 import {InquiryContainerComponent} from './pages/inquiry-container/inquiry-container.component';
 import {ConsultationContainerComponent} from './pages/consultation-container/consultation-container.component';
 import {ConsultationComponent} from './pages/consultation-container/consultation/consultation.component';
+import { InternationalCooperationContainerComponent } from './pages/international-cooperation-container/international-cooperation-container.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {ConsultationComponent} from './pages/consultation-container/consultation
     InquiryComponent,
     InquiryContainerComponent,
     ConsultationContainerComponent,
-    ConsultationComponent
+    ConsultationComponent,
+    InternationalCooperationContainerComponent
   ],
   imports: [
     CommonModule,
