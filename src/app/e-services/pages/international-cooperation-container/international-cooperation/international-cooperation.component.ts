@@ -21,7 +21,7 @@ import {InternationalCooperationService} from '../../../../services/internationa
   styleUrls: ['./international-cooperation.component.scss']
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent {
-  countries: Lookup[] = [];
+  countries: Lookup[] = this.lookupService.listByCategory.Countries;
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
   form!: FormGroup;
