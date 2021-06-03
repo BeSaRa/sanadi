@@ -9,6 +9,7 @@ import {InquiryContainerComponent} from './pages/inquiry-container/inquiry-conta
 import {ConsultationContainerComponent} from './pages/consultation-container/consultation-container.component';
 import {ConsultationComponent} from './pages/consultation-container/consultation/consultation.component';
 import { InternationalCooperationContainerComponent } from './pages/international-cooperation-container/international-cooperation-container.component';
+import { InternationalCooperationComponent } from './pages/international-cooperation-container/international-cooperation/international-cooperation.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { InternationalCooperationContainerComponent } from './pages/internationa
     InquiryContainerComponent,
     ConsultationContainerComponent,
     ConsultationComponent,
-    InternationalCooperationContainerComponent
+    InternationalCooperationContainerComponent,
+    InternationalCooperationComponent
   ],
   imports: [
     CommonModule,

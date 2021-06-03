@@ -37,6 +37,7 @@ export interface IAppUrls {
   INTERNAL_AUTHENTICATE: string;
   E_INQUIRY: string;
   E_CONSULTATION: string;
+  E_INTERNATIONAL_COOPERATION: string;
   INTERNAL_DEPARTMENT: string;
 
   [index: string]: string;

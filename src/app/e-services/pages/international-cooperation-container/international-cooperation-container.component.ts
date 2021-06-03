@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {LangService} from '../../../services/lang.service';
 
 @Component({
   selector: 'international-cooperation-container',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InternationalCooperationContainerComponent implements OnInit {
 
-  constructor() { }
+  constructor(public  lang: LangService) { }
 
   ngOnInit(): void {
   }
