@@ -20,6 +20,7 @@ import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {QueryResult} from '../models/query-result';
 import {ConsultationService} from './consultation.service';
+import {InternationalCooperationService} from './international-cooperation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +32,14 @@ export class InboxService {
               private dialog: DialogService,
               private inquiryService: InquiryService,
               private consultationService: ConsultationService,
+              private internationalCooperationService: InternationalCooperationService,
               private cfr: ComponentFactoryResolver,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(1, this.inquiryService);
     this.services.set(2, this.consultationService);
+    this.services.set(3, this.internationalCooperationService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

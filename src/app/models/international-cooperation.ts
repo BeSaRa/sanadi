@@ -18,25 +18,29 @@ export class InternationalCooperation extends CaseModel<InternationalCooperation
     this.service = FactoryService.getService('InternationalCooperationService');
   }
 
-  getFormFields(control: boolean = false): any {
+  getFormFields(controls: boolean = false): any {
     const {
       country,
       email,
       fullName,
       mobileNo,
       organization,
-      requestBody
+      requestBody,
+      competentDepartmentID,
+      competentDepartmentAuthName
     } = this;
 
     return {
-      country: control ? [country, [CustomValidators.required]] : country,
-      email: control ? [email, [CustomValidators.required, Validators.email]] : email,
-      fullName: control ? [fullName, [CustomValidators.required,
+      country: controls ? [country, [CustomValidators.required]] : country,
+      email: controls ? [email, [CustomValidators.required, Validators.email]] : email,
+      fullName: controls ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(4),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
-      mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number]] : mobileNo,
-      organization: control ? [organization, []] : organization,
-      requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody
+      mobileNo: controls ? [mobileNo, [CustomValidators.number]] : mobileNo,
+      organization: controls ? [organization, []] : organization,
+      requestBody: controls ? [requestBody, [CustomValidators.required]] : requestBody,
+      competentDepartmentID: controls ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
+      competentDepartmentAuthName: controls ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
     };
   }
 }
