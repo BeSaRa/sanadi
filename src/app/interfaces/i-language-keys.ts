@@ -274,6 +274,7 @@ export interface ILanguageKeys {
   estimated_amount: string;
   remaining_amount: string;
   total_aid_amount: string;
+  total_paid_amount: string;
   action_date_from: string;
   action_date_to: string;
   nature_of_business: string;

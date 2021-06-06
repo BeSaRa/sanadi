@@ -16,6 +16,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
   aidSuggestedAmount?: number;
   aidTotalPayedAmount?: number;
   aidRemainingAmount?: number;
+  aidPayedAmount?: number;
   aidDescription!: string;
   aidStartPayDate!: IMyDateModel;
   aidLookupId!: number;

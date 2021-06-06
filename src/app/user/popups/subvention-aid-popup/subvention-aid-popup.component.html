@@ -38,8 +38,8 @@
             <td cdk-cell *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
           </ng-container>
           <ng-container cdkColumnDef="totalAidAmount">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.total_aid_amount}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.total_paid_amount}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.aidPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
           </ng-container>
           <ng-container cdkColumnDef="remainingAmount">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.remaining_amount}}</th>
