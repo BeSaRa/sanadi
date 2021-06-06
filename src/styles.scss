@@ -141,7 +141,8 @@ app-dialog-container {
 
   &.fullscreen {
     .dialog-content {
-      max-height: 100%;
+      width: 100% !important;
+      max-height: 100% !important;
       flex: 1 1 0;
     }
   }
@@ -247,9 +248,6 @@ button.icon-btn {
   z-index: 1;
 }
 
-dp-date-picker {
-  position: absolute !important;
-}
 
 .loading-overlay {
   position: fixed;
@@ -350,4 +348,17 @@ img {
 
 td.td-checkbox, th.td-checkbox {
   width: 32px !important;
+}
+
+.btn-fullscreen {
+  opacity: 0.5;
+  color: #000;
+
+  &:hover {
+    opacity: 0.75;
+  }
+
+  &:focus {
+    opacity: 1;
+  }
 }
