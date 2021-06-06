@@ -63,6 +63,7 @@
   ],
   "E_SERVICES_LIST": {
     "1": "menu_inquiries_and_complaints",
-    "2": "menu_consultations"
+    "2": "menu_consultations",
+    "3": "menu_international_cooperation"
   }
 }

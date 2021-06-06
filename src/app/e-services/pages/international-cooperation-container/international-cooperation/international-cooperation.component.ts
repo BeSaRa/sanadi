@@ -14,6 +14,8 @@ import {CaseStatus} from '../../../../enums/case-status.enum';
 import {IESComponent} from '../../../../interfaces/iescomponent';
 import {InternationalCooperation} from '../../../../models/international-cooperation';
 import {InternationalCooperationService} from '../../../../services/international-cooperation.service';
+import {InternalDepartmentService} from '../../../../services/internal-department.service';
+import {InternalDepartment} from '../../../../models/internal-department';
 
 @Component({
   selector: 'international-cooperation',
@@ -22,6 +24,7 @@ import {InternationalCooperationService} from '../../../../services/internationa
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent {
   countries: Lookup[] = this.lookupService.listByCategory.Countries;
+  departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
   form!: FormGroup;
@@ -44,6 +47,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable();
 
   constructor(private http: HttpClient,
+              public intDepService: InternalDepartmentService,
               public service: InternationalCooperationService,
               private fb: FormBuilder,
               private dialog: DialogService,
@@ -54,6 +58,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
 
   ngOnInit(): void {
     this.service.ping();
+    this.loadDepartments();
     this.buildForm();
     this.listenToSave();
     this.listenToModelChange();
@@ -70,6 +75,12 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     const internationalCooperation = new InternationalCooperation();
     this.form = this.fb.group(internationalCooperation.getFormFields(true));
     this.fm = new FormManager(this.form, this.lang);
+  }
+
+  private loadDepartments(): void {
+    this.intDepService.loadDepartments()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps);
   }
 
   private listenToSave(): void {
@@ -120,6 +131,15 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       model.commit().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
         .subscribe((model) => this.changeModel.next(model));
     });
+  }
+
+  onCompetentDepChange(depId: number): void {
+    const dep = this.departments.find(item => item.id === depId);
+    dep ? this.setAuthName(dep) : this.setAuthName(null);
+  }
+
+  setAuthName(dep: InternalDepartment | null): void {
+    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
   }
 
   private displayInvalidFormMessage(): void {
