@@ -1,6 +1,6 @@
 import {SubventionRequestAid} from '../models/subvention-request-aid';
 import {AdminResult} from '../models/admin-result';
-import {DatePipe} from '@angular/common';
+import {getDateStringFromDate} from '../helpers/utils-date';
 
 export class SubventionRequestAidInterceptor {
   static receive(model: SubventionRequestAid): SubventionRequestAid {
@@ -15,9 +15,8 @@ export class SubventionRequestAidInterceptor {
       }
       return aid;
     });
-    // @ts-ignore
-    model.creationDateString = new DatePipe('en-US').transform(model.creationDate);
-    model.statusDateModifiedString = !model.statusDateModified ? '' : new DatePipe('en-US').transform(model.statusDateModified);
+    model.creationDateString = model.creationDate ? getDateStringFromDate(model.creationDate, 'DEFAULT_DATE_FORMAT') : '';
+    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
 
     return model;
   }

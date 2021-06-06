@@ -1,8 +1,7 @@
 import {OrgUser} from '../models/org-user';
 import {generateModelAndCast, isValidAdminResult} from '../helpers/utils';
 import {AdminResult} from '../models/admin-result';
-import {FactoryService} from '../services/factory.service';
-import {DatePipe} from '@angular/common';
+import {getDateStringFromDate} from '../helpers/utils-date';
 
 export class OrgUserInterceptor {
   static receive(model: OrgUser | any): (OrgUser | any) {
@@ -12,13 +11,7 @@ export class OrgUserInterceptor {
     model.orgUnitInfo = isValidAdminResult(model.orgUnitInfo) ? generateModelAndCast(AdminResult, model.orgUnitInfo) : model.orgUnitInfo;
     model.statusInfo = isValidAdminResult(model.statusInfo) ? generateModelAndCast(AdminResult, model.statusInfo) : model.statusInfo;
     model.userTypeInfo = isValidAdminResult(model.userTypeInfo) ? generateModelAndCast(AdminResult, model.userTypeInfo) : model.userTypeInfo;
-
-    model.statusDateModifiedString = '';
-    if (model.statusDateModified) {
-      const configurationService = FactoryService.getService('ConfigurationService');
-      // @ts-ignore
-      model.statusDateModifiedString = new DatePipe('en-US').transform(model.statusDateModified, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
-    }
+    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     return model;
   }
 

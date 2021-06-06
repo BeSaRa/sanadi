@@ -1,19 +1,10 @@
-import {FactoryService} from '../services/factory.service';
-import {DatePipe, formatDate} from '@angular/common';
 import {OrgUnit} from '../models/org-unit';
 import {hasValidLength, isValidValue} from '../helpers/utils';
-import {changeDateFromDatepicker, changeDateToDatepicker} from '../helpers/utils-date';
-import {ConfigurationService} from '../services/configuration.service';
+import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 
 export class OrganizationUnitInterceptor {
   static receive(model: OrgUnit | any): (OrgUnit | any) {
-    model.statusDateModifiedString = '';
-    if (model.statusDateModified) {
-      const configurationService = FactoryService.getService<ConfigurationService>('ConfigurationService');
-      model.statusDateModifiedString = new DatePipe('en-US').transform(model.statusDateModified, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
-    }
-    // model.registryDate = model.registryDate ? formatDate(new Date(model.registryDate), 'yyyy-MM-dd', 'en-US') : model.registryDate;
-
+    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     model.registryDate = changeDateToDatepicker(model.registryDate);
     model.establishmentDate = changeDateToDatepicker(model.establishmentDate);
     model.budgetClosureDate = changeDateToDatepicker(model.budgetClosureDate);

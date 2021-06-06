@@ -1,9 +1,7 @@
 import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {SubventionLog} from '../models/subvention-log';
 import {AdminResult} from '../models/admin-result';
-import {DatePipe} from '@angular/common';
-import {ConfigurationService} from '../services/configuration.service';
-import {FactoryService} from '../services/factory.service';
+import {getDateStringFromDate} from '../helpers/utils-date';
 
 export class SubventionLogInterceptor implements IModelInterceptor<SubventionLog> {
   constructor() {
@@ -17,10 +15,7 @@ export class SubventionLogInterceptor implements IModelInterceptor<SubventionLog
     model.actionTypeInfo = AdminResult.createInstance(model.actionTypeInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.requestStatusInfo = model.requestStatusInfo ? AdminResult.createInstance(model.requestStatusInfo) : undefined;
-
-    const configurationService = FactoryService.getService('ConfigurationService');
-    // @ts-ignore
-    model.actionTimeString = new DatePipe('en-US').transform(model.actionTime, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
+    model.actionTimeString = model.actionTime ? getDateStringFromDate(model.actionTime, 'DEFAULT_DATE_FORMAT') : '';
     return model;
   }
 

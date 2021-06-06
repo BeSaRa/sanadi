@@ -1,15 +1,9 @@
 import {OrgBranch} from '../models/org-branch';
-import {FactoryService} from '../services/factory.service';
-import {DatePipe} from '@angular/common';
+import {getDateStringFromDate} from '../helpers/utils-date';
 
 export class OrganizationBranchInterceptor {
   static receive(model: OrgBranch | any): (OrgBranch | any) {
-    model.statusDateModifiedString = '';
-    if (model.statusDateModified) {
-      const configurationService = FactoryService.getService('ConfigurationService');
-      // @ts-ignore
-      model.statusDateModifiedString = new DatePipe('en-US').transform(model.statusDateModified, configurationService.CONFIG.DEFAULT_DATE_FORMAT);
-    }
+    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     return model;
   }
 
