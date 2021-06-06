@@ -16,11 +16,10 @@ import {CustomValidators} from '../../../validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {getDatepickerOptions} from '../../../helpers/utils-date';
 import {FileStore} from '../../../models/file-store';
 import {DialogService} from '../../../services/dialog.service';
 import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {DateUtils} from '../../../helpers/date-utils';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -50,9 +49,9 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   };
 
   datepickerOptionsMap: IKeyValue = {
-    registryDate: getDatepickerOptions({disablePeriod: 'future'}),
-    establishmentDate: getDatepickerOptions({disablePeriod: 'none'}),
-    budgetClosureDate: getDatepickerOptions({disablePeriod: 'none'})
+    registryDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    budgetClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
 

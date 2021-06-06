@@ -1,6 +1,6 @@
 import {SubventionRequestAid} from '../models/subvention-request-aid';
 import {AdminResult} from '../models/admin-result';
-import {getDateStringFromDate} from '../helpers/utils-date';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SubventionRequestAidInterceptor {
   static receive(model: SubventionRequestAid): SubventionRequestAid {
@@ -15,8 +15,8 @@ export class SubventionRequestAidInterceptor {
       }
       return aid;
     });
-    model.creationDateString = model.creationDate ? getDateStringFromDate(model.creationDate, 'DEFAULT_DATE_FORMAT') : '';
-    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
+    model.creationDateString = model.creationDate ? DateUtils.getDateStringFromDate(model.creationDate, 'DEFAULT_DATE_FORMAT') : '';
+    model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
 
     return model;
   }

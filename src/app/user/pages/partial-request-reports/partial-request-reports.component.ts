@@ -10,12 +10,6 @@ import {SubventionRequestPartialLog} from '../../../models/subvention-request-pa
 import {SubventionRequestPartialLogService} from '../../../services/subvention-request-partial-log.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {isEmptyObject, printBlobData} from '../../../helpers/utils';
-import {
-  changeDateFromDatepicker,
-  changeDateToDatepicker,
-  getDatepickerOptions,
-  getDatePickerOptionsClone
-} from '../../../helpers/utils-date';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {DialogService} from '../../../services/dialog.service';
 import {ISubventionRequestPartialLogCriteria} from '../../../interfaces/i-subvention-request-partial-log-criteria';
@@ -28,6 +22,7 @@ import {ReadModeService} from '../../../services/read-mode.service';
 import {Router} from '@angular/router';
 import {OrganizationUserService} from '../../../services/organization-user.service';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {DateUtils} from '../../../helpers/date-utils';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -45,8 +40,8 @@ export class PartialRequestReportsComponent implements OnInit {
 
   logRecords: SubventionRequestPartialLog[] = [];
   datepickerOptionsMap: IKeyValue = {
-    fromDate: getDatepickerOptions({disablePeriod: 'none'}),
-    toDate: getDatepickerOptions({disablePeriod: 'none'})
+    fromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
   private datepickerFieldPathMap: IKeyValue = {
     fromDate: 'fromDate',
@@ -96,9 +91,9 @@ export class PartialRequestReportsComponent implements OnInit {
   }
 
   setInitValue() {
-    this.fromDateField.setValue(changeDateToDatepicker(new Date(dayjs().startOf('year').valueOf())));
+    this.fromDateField.setValue(DateUtils.changeDateToDatepicker(new Date(dayjs().startOf('year').valueOf())));
     this.fromDateField.updateValueAndValidity();
-    this.toDateField.setValue(changeDateToDatepicker(new Date(dayjs().endOf('year').valueOf())));
+    this.toDateField.setValue(DateUtils.changeDateToDatepicker(new Date(dayjs().endOf('year').valueOf())));
     this.toDateField.updateValueAndValidity();
   }
 
@@ -121,8 +116,8 @@ export class PartialRequestReportsComponent implements OnInit {
 
   setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
     setTimeout(() => {
-      let toFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
-      const fromDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
+      let toFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
+      const fromDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
       if (!fromDate) {
         toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
       } else {
@@ -143,8 +138,8 @@ export class PartialRequestReportsComponent implements OnInit {
 
   setRelatedMaxDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
     setTimeout(() => {
-      let fromFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
-      const toDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
+      let fromFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
+      const toDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
       if (!toDate) {
         fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
       } else {
@@ -169,9 +164,9 @@ export class PartialRequestReportsComponent implements OnInit {
     }
 
     // @ts-ignore
-    this.latestCriteria.fromDate = dayjs(changeDateFromDatepicker(this.latestCriteria.fromDate)).startOf('day').valueOf();
+    this.latestCriteria.fromDate = dayjs(DateUtils.changeDateFromDatepicker(this.latestCriteria.fromDate)).startOf('day').valueOf();
     // @ts-ignore
-    this.latestCriteria.toDate = dayjs(changeDateFromDatepicker(this.latestCriteria.toDate)).endOf('day').valueOf();
+    this.latestCriteria.toDate = dayjs(DateUtils.changeDateFromDatepicker(this.latestCriteria.toDate)).endOf('day').valueOf();
 
     return this.latestCriteria;
   }

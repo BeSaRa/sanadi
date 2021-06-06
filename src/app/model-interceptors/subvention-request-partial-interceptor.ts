@@ -1,6 +1,6 @@
 import {AdminResult} from '../models/admin-result';
-import {getDateStringFromDate} from '../helpers/utils-date';
 import {SubventionRequestPartial} from '../models/subvention-request-partial';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SubventionRequestPartialInterceptor {
   static receive(model: SubventionRequestPartial): SubventionRequestPartial {
@@ -11,7 +11,7 @@ export class SubventionRequestPartialInterceptor {
     model.genderInfo = AdminResult.createInstance(model.genderInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
 
-    model.creationDateString = getDateStringFromDate(model.creationDate);
+    model.creationDateString = DateUtils.getDateStringFromDate(model.creationDate);
     return model;
   }
 

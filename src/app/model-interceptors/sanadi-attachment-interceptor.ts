@@ -1,9 +1,9 @@
-import {getDateStringFromDate} from '../helpers/utils-date';
 import {AdminResult} from '../models/admin-result';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SanadiAttachmentInterceptor {
   static receive(model: any): any {
-    model.lastModifiedString = getDateStringFromDate(model.lastModified);
+    model.lastModifiedString = DateUtils.getDateStringFromDate(model.lastModified);
     model.attachmentTypeInfo = AdminResult.createInstance(model.attachmentTypeInfo);
     return model;
   }

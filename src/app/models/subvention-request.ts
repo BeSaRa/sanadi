@@ -6,18 +6,16 @@ import {SubventionRequestAidService} from '../services/subvention-request-aid.se
 import {CustomValidators} from '../validators/custom-validators';
 import {SubventionAid} from './subvention-aid';
 import {Validators} from '@angular/forms';
-import {formatDate} from '@angular/common';
 import {AdminResult} from './admin-result';
 import {isValidValue, printBlobData} from '../helpers/utils';
-import {changeDateFromDatepicker, changeDateToDatepicker} from '../helpers/utils-date';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
 import {SubventionRequestStatus} from '../enums/subvention-request-status';
-import * as dayjs from 'dayjs';
 import {ConfigurationService} from '../services/configuration.service';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SubventionRequest extends BaseModel<SubventionRequest> {
   id!: number;
@@ -30,10 +28,10 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
   requestSummary!: string;
   charityRefNo!: string;
   charitySerialNo!: string;
-  creationDate: IMyDateModel = changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));// formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  creationDate: IMyDateModel = DateUtils.changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));
   approvalIndicator!: number;
   status: number = 2;
-  statusDateModified: IMyDateModel = changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));
+  statusDateModified: IMyDateModel = DateUtils.changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));
   requestNotes!: string;
   orgBranchId!: number;
   orgId!: number;
@@ -135,7 +133,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     return {
       status: control ? [status, CustomValidators.required] : status,
       // @ts-ignore
-      statusDateModified: control ? [statusDateModified ? statusDateModified : changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0)), [CustomValidators.minDate(changeDateFromDatepicker(this.creationDate))]] : statusDateModified,
+      statusDateModified: control ? [statusDateModified ? statusDateModified : DateUtils.changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0)), [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(this.creationDate))]] : statusDateModified,
       requestNotes: control ? [requestNotes, [Validators.maxLength(1000)]] : requestNotes
     };
   }

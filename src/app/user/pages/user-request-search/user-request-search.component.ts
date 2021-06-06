@@ -16,12 +16,7 @@ import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '../../../services/dialog.service';
 import {isEmptyObject, printBlobData} from '../../../helpers/utils';
-import {
-  changeDateFromDatepicker,
-  getDatepickerOptions,
-  getDatePickerOptionsClone
-} from '../../../helpers/utils-date';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
@@ -33,6 +28,7 @@ import {StatusEnum} from '../../../enums/status.enum';
 import {AidLookup} from '../../../models/aid-lookup';
 import {AidLookupService} from '../../../services/aid-lookup.service';
 import {ECookieService} from '../../../services/e-cookie.service';
+import {DateUtils} from '../../../helpers/date-utils';
 
 @Component({
   selector: 'app-user-request-search',
@@ -70,12 +66,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   datepickerOptionsMap: IKeyValue = {
-    creationDateFrom: getDatepickerOptions({disablePeriod: 'none'}),
-    creationDateTo: getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateFrom: getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateTo: getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedFrom: getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedTo: getDatepickerOptions({disablePeriod: 'none'})
+    creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   }
   private datepickerFieldPathMap: IKeyValue = {
     creationDateFrom: 'advancedSearch.request.creationDateFrom',
@@ -393,16 +389,16 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
-      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(changeDateFromDatepicker(request.creationDateFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
-      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(changeDateFromDatepicker(request.creationDateTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
     } else {
       this.latestCriteria.creationDateFrom = simple.creationDateFrom;
       this.latestCriteria.creationDateTo = simple.creationDateTo;
     }
 
     if (request.statusDateModifiedFrom || request.statusDateModifiedTo) {
-      this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : dayjs(changeDateFromDatepicker(request.statusDateModifiedFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
-      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : dayjs(changeDateFromDatepicker(request.statusDateModifiedTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+      this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
     }
 
     return {...this.latestCriteria};
@@ -475,8 +471,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
     setTimeout(() => {
-      let toFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
-      const fromDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
+      let toFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
+      const fromDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
       if (!fromDate) {
         toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
       } else {
@@ -497,8 +493,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   setRelatedMaxDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
     setTimeout(() => {
-      let fromFieldDateOptions: IAngularMyDpOptions = getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
-      const toDate = changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
+      let fromFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
+      const toDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
       if (!toDate) {
         fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
       } else {

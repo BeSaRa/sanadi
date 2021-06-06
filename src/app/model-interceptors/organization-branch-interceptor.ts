@@ -1,9 +1,9 @@
 import {OrgBranch} from '../models/org-branch';
-import {getDateStringFromDate} from '../helpers/utils-date';
+import {DateUtils} from '../helpers/date-utils';
 
 export class OrganizationBranchInterceptor {
   static receive(model: OrgBranch | any): (OrgBranch | any) {
-    model.statusDateModifiedString = model.statusDateModified ? getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
+    model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     return model;
   }
 

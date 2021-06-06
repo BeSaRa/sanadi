@@ -1,6 +1,6 @@
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, getDateStringFromDate} from '../helpers/utils-date';
 import {SubventionRequestPartialLog} from '../models/subvention-request-partial-log';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SubventionRequestPartialLogInterceptor {
   static receive(model: SubventionRequestPartialLog): SubventionRequestPartialLog {
@@ -11,8 +11,8 @@ export class SubventionRequestPartialLogInterceptor {
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.benCategoryInfo = AdminResult.createInstance(model.benCategoryInfo);
 
-    model.creationDateString = getDateStringFromDate(model.creationDate);
-    model.actionDateString = getDateStringFromDate(model.actionTime);
+    model.creationDateString = DateUtils.getDateStringFromDate(model.creationDate);
+    model.actionDateString = DateUtils.getDateStringFromDate(model.actionTime);
     return model;
   }
 
@@ -26,7 +26,7 @@ export class SubventionRequestPartialLogInterceptor {
     delete model.creationDateString;
     delete model.actionDateString;
 
-    model.creationDate = !model.creationDate ? model.creationDate : changeDateFromDatepicker(model.creationDate)?.toISOString();
+    model.creationDate = !model.creationDate ? model.creationDate : DateUtils.changeDateFromDatepicker(model.creationDate)?.toISOString();
 
     return model;
   }

@@ -1,7 +1,7 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
 import {isValidValue} from '../helpers/utils';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
+import {DateUtils} from '../helpers/date-utils';
 
 export class BeneficiaryInterceptor {
   static receive(model: Beneficiary): Beneficiary {
@@ -23,9 +23,8 @@ export class BeneficiaryInterceptor {
     model.residenceStatusInfo = AdminResult.createInstance(model.residenceStatusInfo);
     model.benNationalityInfo = AdminResult.createInstance(model.benNationalityInfo);
 
-    //model.dateOfBirth = formatDate(new Date(model.dateOfBirth), 'yyyy-MM-dd', 'en-US');
-    model.dateOfBirthString = getDateStringFromDate(model.dateOfBirth);
-    model.dateOfBirth = changeDateToDatepicker(model.dateOfBirth);
+    model.dateOfBirthString = DateUtils.getDateStringFromDate(model.dateOfBirth);
+    model.dateOfBirth = DateUtils.changeDateToDatepicker(model.dateOfBirth);
 
     return model;
   }
@@ -52,7 +51,7 @@ export class BeneficiaryInterceptor {
     delete model.benNationalityInfo;
     delete model.dateOfBirthString;
     // model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
-    model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
+    model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : DateUtils.changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
 
     //if no secondary id type is selected, clear secondary id and nationality fields
     if (!isValidValue(model.benSecIdType)) {

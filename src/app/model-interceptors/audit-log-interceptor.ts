@@ -1,6 +1,6 @@
 import {AuditLog} from '../models/audit-log';
 import {AdminResult} from '../models/admin-result';
-import {getDateStringFromDate} from '../helpers/utils-date';
+import {DateUtils} from '../helpers/date-utils';
 
 export class AuditLogInterceptor {
 
@@ -10,8 +10,8 @@ export class AuditLogInterceptor {
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.operationInfo = AdminResult.createInstance(model.operationInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
-    model.statusDateModifiedString = getDateStringFromDate(model.statusDateModified);
-    model.updatedOnString = getDateStringFromDate(model.updatedOn);
+    model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified);
+    model.updatedOnString = DateUtils.getDateStringFromDate(model.updatedOn);
     return model;
   }
 

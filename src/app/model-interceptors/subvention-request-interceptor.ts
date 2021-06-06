@@ -1,6 +1,6 @@
 import {SubventionRequest} from '../models/subvention-request';
 import {AdminResult} from '../models/admin-result';
-import {changeDateFromDatepicker, changeDateToDatepicker, getDateStringFromDate} from '../helpers/utils-date';
+import {DateUtils} from '../helpers/date-utils';
 
 export class SubventionRequestInterceptor {
   static receive(model: SubventionRequest): SubventionRequest {
@@ -11,10 +11,10 @@ export class SubventionRequestInterceptor {
     model.requestStatusInfo = AdminResult.createInstance(model.requestStatusInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
 
-    model.creationDateString = getDateStringFromDate(model.creationDate);
-    model.creationDate = changeDateToDatepicker(model.creationDate);
-    model.statusDateModifiedString = getDateStringFromDate(model.statusDateModified);
-    model.statusDateModified = changeDateToDatepicker(model.statusDateModified);
+    model.creationDateString = DateUtils.getDateStringFromDate(model.creationDate);
+    model.creationDate = DateUtils.changeDateToDatepicker(model.creationDate);
+    model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified);
+    model.statusDateModified = DateUtils.changeDateToDatepicker(model.statusDateModified);
     return model;
   }
 
@@ -32,8 +32,8 @@ export class SubventionRequestInterceptor {
     delete model.statusDateModifiedString;
     delete model.configService;
 
-    model.creationDate = !model.creationDate ? model.creationDate : changeDateFromDatepicker(model.creationDate)?.toISOString();
-    model.statusDateModified = !model.statusDateModified ? model.statusDateModified : changeDateFromDatepicker(model.statusDateModified)?.toISOString();
+    model.creationDate = !model.creationDate ? model.creationDate : DateUtils.changeDateFromDatepicker(model.creationDate)?.toISOString();
+    model.statusDateModified = !model.statusDateModified ? model.statusDateModified : DateUtils.changeDateFromDatepicker(model.statusDateModified)?.toISOString();
 
     return model;
   }
