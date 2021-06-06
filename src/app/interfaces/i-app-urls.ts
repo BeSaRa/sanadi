@@ -36,6 +36,7 @@ export interface IAppUrls {
   EXT_RACA: string;
   INTERNAL_AUTHENTICATE: string;
   E_INQUIRY: string;
+  E_CONSULTATION: string;
   INTERNAL_DEPARTMENT: string;
 
   [index: string]: string;

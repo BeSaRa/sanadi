@@ -45,6 +45,7 @@ export interface ILanguageKeys {
   competent_dep: string;
   subject: string;
   menu_inquiries_and_complaints: string;
+  menu_consultations: string;
   recommendation_has_been_saved_successfully: string;
   comment_has_been_saved_successfully: string;
   type_your_recommendation: string;
@@ -378,4 +379,5 @@ export interface ILanguageKeys {
   inquire_beneficiary: string;
   user_organization: string;
   ip_address: string;
+  consulting_type: string;
 }

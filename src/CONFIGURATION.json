@@ -62,6 +62,7 @@
     "PDF"
   ],
   "E_SERVICES_LIST": {
-    "1": "menu_inquiries_and_complaints"
+    "1": "menu_inquiries_and_complaints",
+    "2": "menu_consultations"
   }
 }

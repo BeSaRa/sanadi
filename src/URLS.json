@@ -30,6 +30,7 @@
   "EXT_TWITTER": "https://twitter.com/Racaqa",
   "EXT_RACA": "https://www.raca.gov.qa",
   "E_INQUIRY": "/inquiry",
+  "E_CONSULTATION": "/consultation",
   "USER_INBOX": "/inbox/user",
   "TEAMS_INBOX": "/inbox/team",
   "CLAIM_BULK": "/inbox/task/claim/bulk",
