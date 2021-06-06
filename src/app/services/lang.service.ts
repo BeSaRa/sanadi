@@ -7,7 +7,7 @@ import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
-import {switchMap, map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
@@ -231,9 +231,9 @@ export class LangService extends BackendGenericService<Localization> {
 
   getLocalizationByKey(key: string): Observable<boolean> {
     return this.http
-      .get<IDefaultResponse<Localization[]>>(this.urlService.URLS.LANGUAGE + '/like/key/localizationKey/val/' + key)
+      .get<IDefaultResponse<boolean>>(this.urlService.URLS.LANGUAGE + '/exists/' + key)
       .pipe(map(response => {
-        return !!response.count;
+        return response.rs;
       }));
   }
 }
