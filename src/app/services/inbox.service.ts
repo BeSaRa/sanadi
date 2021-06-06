@@ -19,6 +19,7 @@ import {map} from 'rxjs/operators';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {QueryResult} from '../models/query-result';
+import {ConsultationService} from './consultation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +30,13 @@ export class InboxService {
   constructor(private http: HttpClient,
               private dialog: DialogService,
               private inquiryService: InquiryService,
+              private consultationService: ConsultationService,
               private cfr: ComponentFactoryResolver,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(1, this.inquiryService);
+    this.services.set(2, this.consultationService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

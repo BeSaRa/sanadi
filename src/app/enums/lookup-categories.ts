@@ -29,6 +29,7 @@ export enum LookupCategories {
   LICENSING_AUTHORITY = 'LICENSING_AUTHORITY',
   WORK_FIELD = 'WORK_FIELD',
   ATTACHMENT_TYPE = 'ATTACHMENT_TYPE',
+  CONSULTATION_CATEGORY = 'ConsultationCategory',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -60,6 +61,7 @@ export enum LookupCategories {
   LICENSING_AUTHORITY_CAT_ID = '37',
   WORK_FIELD_CAT_ID = '38',
   ATTACHMENT_TYPE_CAT_ID = '39',
+  CONSULTATION_CATEGORY_CAT_ID = '102'
 }
 
 /*export enum LookupCategories {
