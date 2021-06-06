@@ -62,6 +62,7 @@ import { ManageRecommendationPopupComponent } from './popups/manage-recommendati
 import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manage-comment-popup.component';
 import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer-popup.component';
 import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
+import { FullscreenBtnDirective } from './directives/fullscreen-btn.directive';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import {LocalizationKeyExistsDirective} from '../validators/localization-key-exi
     ManageRecommendationPopupComponent,
     ManageCommentPopupComponent,
     CaseViewerPopupComponent,
-    LocalizationKeyExistsDirective
+    LocalizationKeyExistsDirective,
+    FullscreenBtnDirective
   ],
   imports: [
     CommonModule,

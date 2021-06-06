@@ -1,7 +1,7 @@
 import {OverlayRef} from '@angular/cdk/overlay/overlay-ref';
 import {LangService} from '../../services/lang.service';
 import {Observable, Subject, Subscription} from 'rxjs';
-import {ComponentRef, Injector} from '@angular/core';
+import {ComponentRef, Injector, Renderer2} from '@angular/core';
 import {DialogContainerComponent} from '../components/dialog-container/dialog-container.component';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {DIALOG_CONFIG_TOKEN, DIALOG_DATA_TOKEN} from '../tokens/tokens';
@@ -19,13 +19,17 @@ export class DialogRef {
   private afterCloseSub: Subject<any> = new Subject<any>();
   onAfterClose$: Observable<any> = this.afterCloseSub.asObservable();
   instance!: ComponentType<any>;
+  private renderer2!: Renderer2;
+  private componentRef!: ComponentRef<any>;
+  fullscreen: boolean = false;
 
   constructor(private overLayRef: OverlayRef,
               private langService: LangService,
               private parentInjector: Injector,
               private component: ComponentType<any>,
               private data?: any,
-              private dialogConfig?: IDialogConfig, private predefinedDialogType?: keyof ITypeDialogList) {
+              private dialogConfig?: IDialogConfig,
+              private predefinedDialogType?: keyof ITypeDialogList) {
     this.watchLanguage();
     this.startShowDialog();
   }
@@ -35,23 +39,30 @@ export class DialogRef {
     this.injector = this.createInjector(this.data, this);
     const containerPortal = new ComponentPortal(DialogContainerComponent, null, this.injector);
     this.containerRef = this.overLayRef.attach(containerPortal);
+    this.renderer2 = this.containerRef.instance.renderer2;
     this.subscribeDependOnConfig();
     this.attacheComponentToContainer();
   }
 
   attacheComponentToContainer(): void {
     const compPortal = new ComponentPortal(this.component, null, this.injector);
-    const compRef = this.containerRef?.instance.portalOutlet?.attachComponentPortal(compPortal);
+    this.componentRef = this.containerRef?.instance.portalOutlet?.attachComponentPortal(compPortal) as ComponentRef<any>;
+
+    if (this.dialogConfig?.fullscreen) {
+      this.fullscreen = true;
+    }
+    this.addRemoveFullscreenClass();
+
     try {
-      compRef?.location.nativeElement.classList.add('dialog-item');
+      this.componentRef?.location.nativeElement.classList.add('dialog-item');
     } catch (e) {
-      console.log('I have a Problem in adding class dialog-item to the element', compRef?.location.nativeElement);
+      console.log('I have a Problem in adding class dialog-item to the element', this.componentRef?.location.nativeElement);
     }
     if (this.predefinedDialogType) {
-      const component: ComponentRef<PredefinedDialogComponent> = compRef as ComponentRef<PredefinedDialogComponent>;
+      const component: ComponentRef<PredefinedDialogComponent> = this.componentRef as ComponentRef<PredefinedDialogComponent>;
       component.instance.type = this.predefinedDialogType;
     }
-    this.instance = compRef?.instance;
+    this.instance = this.componentRef?.instance;
   }
 
   watchLanguage(): void {
@@ -101,5 +112,15 @@ export class DialogRef {
       ],
       parent: this.parentInjector
     });
+  }
+
+  private addRemoveFullscreenClass() {
+    const element = this.componentRef.location.nativeElement;
+    this.fullscreen ? this.renderer2.addClass(element, 'fullscreen') : this.renderer2.removeClass(element, 'fullscreen');
+  }
+
+  toggleFullscreen(): void {
+    this.fullscreen = !this.fullscreen;
+    this.addRemoveFullscreenClass();
   }
 }

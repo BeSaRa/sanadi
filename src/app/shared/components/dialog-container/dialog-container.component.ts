@@ -1,4 +1,16 @@
-import {Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {ConfigurableFocusTrapFactory} from '@angular/cdk/a11y';
@@ -30,6 +42,7 @@ export class DialogContainerComponent implements OnInit, OnDestroy {
   private focusTrap: ConfigurableFocusTrap | undefined;
 
   constructor(private element: ElementRef,
+              public renderer2: Renderer2,
               private focusTrapFactory: ConfigurableFocusTrapFactory,
               @Inject(DOCUMENT) private document: HTMLDocument) {
   }

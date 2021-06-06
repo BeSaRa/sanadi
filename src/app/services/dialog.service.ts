@@ -14,7 +14,8 @@ import {IDialogPredefinedConfig} from '../interfaces/i-dialog-predefined-config'
 export class DialogService {
   langService: LangService = {} as LangService;
 
-  constructor(private overlay: Overlay, private injector: Injector) {
+  constructor(private overlay: Overlay,
+              private injector: Injector) {
     FactoryService.registerService('DialogService', this);
     const timeoutId = setTimeout(() => {
       this.langService = FactoryService.getService('LangService');
