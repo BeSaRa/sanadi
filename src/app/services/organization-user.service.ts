@@ -72,7 +72,6 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   openUpdateDialog(modelId: number): Observable<DialogRef> {
     return this._loadInitData(modelId).pipe(
       switchMap((result) => {
-        debugger
         return this.getById(modelId).pipe(
           switchMap((orgUser: OrgUser) => {
             return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {

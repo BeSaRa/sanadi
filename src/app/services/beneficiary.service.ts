@@ -37,7 +37,6 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   loadByCriteria(criteria: Partial<IBeneficiaryCriteria>): Observable<Beneficiary[]> {
-    debugger
     return this._loadByCriteria(criteria);
   }
 

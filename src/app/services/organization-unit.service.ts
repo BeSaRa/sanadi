@@ -41,7 +41,6 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   openUpdateDialog(modelId: number): Observable<DialogRef> {
     return this.loadOrgUnitByIdComposite(modelId).pipe(
       switchMap((orgUnit: OrgUnit) => {
-        debugger
         return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
           model: orgUnit,
           operation: OperationTypes.UPDATE,
