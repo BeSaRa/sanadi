@@ -99,7 +99,7 @@ export class SendToComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(() => {
         this.toast.success(this.lang.map.sent_successfully);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       });
   }
 
