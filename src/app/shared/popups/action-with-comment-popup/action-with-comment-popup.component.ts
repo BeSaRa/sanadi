@@ -61,7 +61,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
         this.data.service)
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       });
   }
 

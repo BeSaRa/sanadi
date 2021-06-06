@@ -71,50 +71,50 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToUser().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.sendToUser().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToDepartment().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.sendToDepartment().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.complete().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.complete().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.approve().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.approve().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.close().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.close().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.reject().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.reject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.return().onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.return().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
   }
@@ -122,7 +122,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   actionOpen(item: QueryResult) {
     item.open(this.actions)
-      .pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadInbox$.next(null));
+      .pipe(switchMap(ref => ref.onAfterClose$))
+      .subscribe(() => this.reloadInbox$.next(null));
   }
 
   private buildGridActions() {
