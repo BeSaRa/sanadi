@@ -29,6 +29,9 @@ import {TokenService} from './services/token.service';
 import {AuthService} from './services/auth.service';
 import {MenuItemService} from './services/menu-item.service';
 import {DynamicComponentService} from './services/dynamic-component.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import {DynamicComponentService} from './services/dynamic-component.service';
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormlyModule.forRoot({ extras: { lazyRender: true } }),
+    FormlyBootstrapModule
   ],
   providers: [
     {provide: ErrorHandler, useClass: GeneralErrorHandler},
