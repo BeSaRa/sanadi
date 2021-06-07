@@ -14,6 +14,8 @@ interface ValidatorsInterface {
   selector: '[asteriskIfRequired]'
 })
 export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
+  @Input()
+  control!: AbstractControl;
   private _controlName!: string;
   readonly _parentControl!: ControlContainer;
   private destroy$: Subject<any> = new Subject();
@@ -24,16 +26,14 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   ];
   readonly element: HTMLElement;
 
-  get control(): AbstractControl {
-    return this._parentControl.control?.get(this._controlName) as AbstractControl;
+  get formControl(): AbstractControl {
+    return this.control ? this.control : this._parentControl.control?.get(this._controlName) as AbstractControl;
   }
 
   private valueOrValidityChanged$!: Observable<any>;
 
-  @Input() set asteriskIfRequired(value: string) {
-    if (!value) {
-      throw new Error('Please Fill asteriskIfRequired Value');
-    }
+  @Input()
+  set asteriskIfRequired(value: string) {
     this._controlName = value;
   };
 
@@ -42,7 +42,7 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   }
 
   constructor(@Optional() @Host() @SkipSelf() parent: ControlContainer,
-              @Inject(DOCUMENT) private  document: Document,
+              @Inject(DOCUMENT) private document: Document,
               elementRef: ElementRef) {
     this._parentControl = parent;
     this.element = elementRef.nativeElement;
@@ -56,12 +56,16 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.element.appendChild(this.requiredElement);
-    this.valueOrValidityChanged$ = this.control.valueChanges.pipe(debounceTime(200));
-
-    if (!this._parentControl) {
-      throw new Error('this controller has no parent from Group Controller');
+    if (!this._controlName && !this.control) {
+      console.info(this.element);
+      throw new Error('Please Provide Form control name or [formControl]');
     }
+    if (this._controlName && !this._parentControl) {
+      console.info(this.element);
+      throw new Error('Please provide form group as parent for this control ' + this._controlName);
+    }
+    this.element.appendChild(this.requiredElement);
+    this.valueOrValidityChanged$ = this.formControl.valueChanges.pipe(debounceTime(200));
 
     this.applyAsteriskIfExists();
     this.valueOrValidityChanged$.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -70,7 +74,7 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   }
 
   controlHasRequiredValidator(): boolean {
-    const control = <AbstractControl & ValidatorsInterface> this.control;
+    const control = <AbstractControl & ValidatorsInterface> this.formControl;
     if (control._rawValidators === null) {
       return false;
     } else if (control._rawValidators instanceof Array) {
