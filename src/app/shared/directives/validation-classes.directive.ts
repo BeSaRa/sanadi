@@ -10,6 +10,8 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
   @Input() isValid: string = 'is-valid';
   @Input() isInvalid: string = 'is-invalid';
   private invalidOnly: boolean = true;
+  @Input()
+  control!: AbstractControl;
 
   @Input()
   set onlyInvalid(value: boolean) {
@@ -19,8 +21,8 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
   @Input() validationClasses!: string;
   destroy$: Subject<any> = new Subject<any>();
 
-  get control(): AbstractControl {
-    return this.parent.control?.get(this.validationClasses) as AbstractControl;
+  get formControl(): AbstractControl {
+    return (this.control ? this.control : this.parent.control?.get(this.validationClasses)) as AbstractControl;
   }
 
   constructor(private element: ElementRef,
@@ -30,11 +32,12 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    if (!this.validationClasses) {
+    if (!this.validationClasses && !this.control) {
       console.log(this.element.nativeElement);
       throw Error('PLEASE PROVIDE control name for given element');
     }
-    this.control
+
+    this.formControl
       .statusChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(_ => {
@@ -55,7 +58,7 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
   }
 
   private applyControlInvalidClass(): void {
-    const isInvalid = this.control.invalid && (this.control.touched || this.control.dirty);
+    const isInvalid = this.formControl.invalid && (this.formControl.touched || this.formControl.dirty);
     if (isInvalid) {
       this.renderer.addClass(this.element.nativeElement, this.isInvalid);
     } else {
@@ -67,7 +70,7 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
     if (this.invalidOnly) {
       return;
     }
-    const isValid = this.control.valid && (this.control.touched || this.control.dirty);
+    const isValid = this.formControl.valid && (this.formControl.touched || this.formControl.dirty);
 
     if (isValid) {
       this.renderer.addClass(this.element.nativeElement, this.isValid);
