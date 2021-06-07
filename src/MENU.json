@@ -232,5 +232,18 @@
     "group": "e-services",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 19,
+    "langKey": "menu_service_search",
+    "path": "/home/services-search",
+    "icon": "mdi-text-box-search-outline",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 5,
+    "svg": null
   }
 ]
