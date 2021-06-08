@@ -7,11 +7,10 @@ import {Generator} from '../decorators/generator';
 import {Observable} from 'rxjs';
 import {RecommendationInterceptor} from '../model-interceptors/recommendation-interceptor';
 
-export class RecommendationService<T extends { http: HttpClient, _getServiceURL(): string }>
-  implements Pick<BackendServiceModelInterface<Recommendation>, '_getInterceptor' | '_getModel'> {
+export class RecommendationService implements Pick<BackendServiceModelInterface<Recommendation>, '_getInterceptor' | '_getModel'> {
   interceptor: RecommendationInterceptor = new RecommendationInterceptor();
 
-  constructor(private service: T) {
+  constructor(private service: { http: HttpClient, _getServiceURL(): string }) {
   }
 
 

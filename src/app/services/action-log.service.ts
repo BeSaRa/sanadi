@@ -12,15 +12,15 @@ import {BlobModel} from '../models/blob-model';
 import {AdminResult} from '../models/admin-result';
 import {IDefaultResponse} from '../interfaces/idefault-response';
 
-export class ActionLogService<T extends {
-  http: HttpClient,
-  _getServiceURL(): string,
-  dialog: DialogService,
-  domSanitizer: DomSanitizer
-}> implements Pick<BackendServiceModelInterface<ActionRegistry>, '_getModel' | '_getInterceptor'> {
+export class ActionLogService implements Pick<BackendServiceModelInterface<ActionRegistry>, '_getModel' | '_getInterceptor'> {
   interceptor: ActionRegistryInterceptor = new ActionRegistryInterceptor();
 
-  constructor(private service: T) {
+  constructor(private service: {
+    http: HttpClient,
+    _getServiceURL(): string,
+    dialog: DialogService,
+    domSanitizer: DomSanitizer
+  }) {
   }
 
   _getInterceptor(): Partial<IModelInterceptor<ActionRegistry>> {

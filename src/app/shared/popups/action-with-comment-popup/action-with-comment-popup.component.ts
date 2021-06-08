@@ -25,7 +25,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN) private data: {
-      service: EServiceGenericService<any, any>,
+      service: EServiceGenericService<any>,
       inboxService: InboxService,
       actionType: WFResponseType,
       taskId: string,

@@ -7,11 +7,10 @@ import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {CaseCommentInterceptor} from '../model-interceptors/case-comment-interceptor';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 
-export class CommentService<T extends { http: HttpClient, _getServiceURL(): string }>
-  implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
+export class CommentService implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
   interceptor: CaseCommentInterceptor = new CaseCommentInterceptor();
 
-  constructor(private service: T) {
+  constructor(private service: { http: HttpClient, _getServiceURL(): string }) {
   }
 
 

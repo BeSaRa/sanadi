@@ -12,15 +12,15 @@ import {DialogService} from './dialog.service';
 import {ViewDocumentPopupComponent} from '../shared/popups/view-document-popup/view-document-popup.component';
 import {DomSanitizer} from '@angular/platform-browser';
 
-export class DocumentService<T extends {
-  http: HttpClient,
-  _getServiceURL(): string,
-  dialog: DialogService,
-  domSanitizer: DomSanitizer
-}> implements Pick<BackendServiceModelInterface<FileNetDocument>, '_getModel' | '_getInterceptor'> {
+export class DocumentService implements Pick<BackendServiceModelInterface<FileNetDocument>, '_getModel' | '_getInterceptor'> {
   private interceptor = new FileNetDocumentInterceptor();
 
-  constructor(private service: T) {
+  constructor(private service: {
+    http: HttpClient,
+    _getServiceURL(): string,
+    dialog: DialogService,
+    domSanitizer: DomSanitizer
+  }) {
 
   }
 

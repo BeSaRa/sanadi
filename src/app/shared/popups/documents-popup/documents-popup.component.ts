@@ -12,7 +12,7 @@ export class DocumentsPopupComponent implements OnInit {
 
   constructor(public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN)
-              public data: { service: EServiceGenericService<any, any>, caseId: string }) {
+              public data: { service: EServiceGenericService<any>, caseId: string }) {
 
   }
 

@@ -22,7 +22,7 @@ import {DocumentsPopupComponent} from '../shared/popups/documents-popup/document
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {ComponentFactoryResolver} from '@angular/core';
 
-export abstract class EServiceGenericService<T extends { id: string }, S extends EServiceGenericService<T, S>>
+export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
   abstract _getModel(): any;
 
@@ -35,10 +35,10 @@ export abstract class EServiceGenericService<T extends { id: string }, S extends
   abstract http: HttpClient;
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
-  abstract commentService: CommentService<S>;
-  abstract recommendationService: RecommendationService<S>;
-  abstract documentService: DocumentService<S>;
-  abstract actionLogService: ActionLogService<S>;
+  abstract commentService: CommentService;
+  abstract recommendationService: RecommendationService;
+  abstract documentService: DocumentService;
+  abstract actionLogService: ActionLogService;
   abstract interceptor: IModelInterceptor<T>;
   abstract serviceKey: keyof ILanguageKeys;
   abstract cfr: ComponentFactoryResolver;

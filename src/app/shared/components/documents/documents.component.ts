@@ -34,7 +34,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   @Input() documents: FileNetDocument[] = [];
-  @Input() service!: DocumentService<any>;
+  @Input() service!: DocumentService;
   documentTypes: Lookup[] = [];
   selectedDocuments: FileNetDocument[] = [];
   private destroy$: Subject<any> = new Subject();

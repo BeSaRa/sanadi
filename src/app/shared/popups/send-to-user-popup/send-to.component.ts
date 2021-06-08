@@ -36,7 +36,7 @@ export class SendToComponent implements OnInit, OnDestroy {
       inboxService: InboxService,
       taskId: string,
       sendToUser: boolean,
-      service: EServiceGenericService<any, any>,
+      service: EServiceGenericService<any>,
       claimBefore: boolean,
       task: QueryResult
     },
