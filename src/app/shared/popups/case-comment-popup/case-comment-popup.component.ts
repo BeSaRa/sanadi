@@ -17,7 +17,7 @@ import {EmployeeService} from '../../../services/employee.service';
 })
 export class CaseCommentPopupComponent implements OnInit {
   model?: CaseComment;
-  service: CommentService<any>;
+  service: CommentService;
   caseId: string;
   form!: FormGroup;
 
@@ -26,7 +26,7 @@ export class CaseCommentPopupComponent implements OnInit {
   };
 
   constructor(
-    @Inject(DIALOG_DATA_TOKEN) data: { comment: CaseComment, caseId: string, service: CommentService<any> },
+    @Inject(DIALOG_DATA_TOKEN) data: { comment: CaseComment, caseId: string, service: CommentService},
     public lang: LangService,
     public fb: FormBuilder,
     private dialogRef: DialogRef,

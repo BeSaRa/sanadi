@@ -15,7 +15,7 @@ import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-co
 export class CommentsComponent implements OnInit {
   _caseId: string = '';
   comments: CaseComment[] = [];
-  @Input() service!: CommentService<any>;
+  @Input() service!: CommentService;
 
   @Input()
   set caseId(value: string | undefined) {

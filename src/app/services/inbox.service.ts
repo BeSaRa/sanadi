@@ -69,8 +69,8 @@ export class InboxService {
     return this.http.post<IBulkResult>(this.urlService.URLS.CLAIM_BULK, taskIds);
   }
 
-  getService(serviceNumber: number): EServiceGenericService<any, any> {
-    return this.services.get(serviceNumber) as EServiceGenericService<any, any>;
+  getService(serviceNumber: number): EServiceGenericService<any> {
+    return this.services.get(serviceNumber) as EServiceGenericService<any>;
   }
 
   claimBulk(taskIds: string[]): Observable<IBulkResult> {
@@ -108,17 +108,17 @@ export class InboxService {
     return service.exportModel(caseId);
   }
 
-  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<boolean> {
+  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any>): Observable<boolean> {
     return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/complete', info)
       .pipe(map(response => response.rs));
   }
 
-  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any, any>): Observable<boolean> {
+  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any>): Observable<boolean> {
     return this.takeActionOnTask(taskId, info, service);
   }
 
   private openSendToDialog(taskId: string, sendToUser: boolean = true,
-                           service: EServiceGenericService<any, any>,
+                           service: EServiceGenericService<any>,
                            claimBefore: boolean = false,
                            task?: QueryResult): DialogRef {
 

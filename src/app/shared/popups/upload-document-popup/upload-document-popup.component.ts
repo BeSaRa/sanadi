@@ -21,9 +21,9 @@ export class UploadDocumentPopupComponent implements OnInit {
   caseId: string;
   documents: FileNetDocument[] = [];
   form!: FormGroup;
-  service: DocumentService<any>;
+  service: DocumentService;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService<any> },
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService },
               public lang: LangService,
               private dialog: DialogService,
               private dialogRef: DialogRef,

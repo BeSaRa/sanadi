@@ -15,7 +15,7 @@ import {Recommendation} from '../../../models/recommendation';
 export class RecommendationsComponent implements OnInit {
   _caseId: string = '';
   recommendations: Recommendation[] = [];
-  @Input() service!: RecommendationService<any>;
+  @Input() service!: RecommendationService;
 
   @Input()
   set caseId(value: string | undefined) {

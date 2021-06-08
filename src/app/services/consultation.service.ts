@@ -17,12 +17,12 @@ import {FactoryService} from './factory.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ConsultationService extends EServiceGenericService<Consultation, ConsultationService> {
+export class ConsultationService extends EServiceGenericService<Consultation> {
   interceptor: IModelInterceptor<Consultation> = new ConsultationInterceptor();
-  actionLogService: ActionLogService<ConsultationService> = new ActionLogService<ConsultationService>(this);
-  commentService: CommentService<ConsultationService> = new CommentService<ConsultationService>(this);
-  documentService: DocumentService<ConsultationService> = new DocumentService<ConsultationService>(this);
-  recommendationService: RecommendationService<ConsultationService> = new RecommendationService<ConsultationService>(this);
+  actionLogService: ActionLogService = new ActionLogService(this);
+  commentService: CommentService = new CommentService(this);
+  documentService: DocumentService = new DocumentService(this);
+  recommendationService: RecommendationService = new RecommendationService(this);
   serviceKey: keyof ILanguageKeys = 'menu_consultations';
 
   constructor(private urlService: UrlService,

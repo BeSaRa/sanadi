@@ -17,12 +17,12 @@ import {ILanguageKeys} from '../interfaces/i-language-keys';
 @Injectable({
   providedIn: 'root'
 })
-export class InquiryService extends EServiceGenericService<Inquiry, InquiryService> {
+export class InquiryService extends EServiceGenericService<Inquiry> {
   interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
-  documentService: DocumentService<InquiryService> = new DocumentService<InquiryService>(this);
-  commentService: CommentService<InquiryService> = new CommentService<InquiryService>(this);
-  actionLogService: ActionLogService<InquiryService> = new ActionLogService<InquiryService>(this);
-  recommendationService: RecommendationService<InquiryService> = new RecommendationService<InquiryService>(this);
+  documentService: DocumentService = new DocumentService(this);
+  commentService: CommentService = new CommentService(this);
+  actionLogService: ActionLogService = new ActionLogService(this);
+  recommendationService: RecommendationService = new RecommendationService(this);
 
   serviceKey: keyof ILanguageKeys = 'menu_inquiries_and_complaints';
 

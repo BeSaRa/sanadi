@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import {CaseStatus} from '../enums/case-status.enum';
 import {BlobModel} from './blob-model';
 
-export abstract class CaseModel<S extends EServiceGenericService<T, S>, T extends FileNetModel<T>> extends FileNetModel<T> {
+export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;

@@ -20,7 +20,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   caseId: string = '';
 
   @Input()
-  service!: ActionLogService<any>;
+  service!: ActionLogService;
 
   displayedColumns: string[] = ['user', 'action', 'addedOn', 'time','comment'];
   displayLocationColumns: string[] = ['location'];

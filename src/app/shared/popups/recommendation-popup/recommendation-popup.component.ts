@@ -17,7 +17,7 @@ import {RecommendationService} from '../../../services/recommendation.service';
 })
 export class RecommendationPopupComponent implements OnInit {
   model?: Recommendation;
-  service: RecommendationService<any>;
+  service: RecommendationService;
   caseId: string;
   form!: FormGroup;
 
@@ -26,7 +26,7 @@ export class RecommendationPopupComponent implements OnInit {
   };
 
   constructor(
-    @Inject(DIALOG_DATA_TOKEN) data: { comment: Recommendation, caseId: string, service: RecommendationService<any> },
+    @Inject(DIALOG_DATA_TOKEN) data: { comment: Recommendation, caseId: string, service: RecommendationService },
     public lang: LangService,
     public fb: FormBuilder,
     private dialogRef: DialogRef,
