@@ -55,11 +55,6 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
               private toast: ToastService,
               public lang: LangService) {
 
-    this.service.search((new Inquiry().clone({
-      serial: 86
-    }))).subscribe((result) => {
-      console.log(result);
-    });
   }
 
   ngOnInit(): void {
