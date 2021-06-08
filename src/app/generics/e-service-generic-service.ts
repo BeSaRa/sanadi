@@ -21,6 +21,7 @@ import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recomm
 import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {ComponentFactoryResolver} from '@angular/core';
+import {SearchService} from '../services/search.service';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -30,7 +31,10 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
 
+  abstract getSearchCriteriaModel<S extends T>(): T;
+
   abstract getCaseComponentName(): string;
+
 
   abstract http: HttpClient;
   abstract dialog: DialogService;
@@ -39,6 +43,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   abstract recommendationService: RecommendationService;
   abstract documentService: DocumentService;
   abstract actionLogService: ActionLogService;
+  abstract searchService: SearchService;
   abstract interceptor: IModelInterceptor<T>;
   abstract serviceKey: keyof ILanguageKeys;
   abstract cfr: ComponentFactoryResolver;
@@ -111,12 +116,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this._getById(caseId);
   }
 
-  private _search(model: Partial<T>): Observable<T[]> {
-    return this.http.post<T[]>(this._getServiceURL() + '/search', model);
-  }
-
   search(model: Partial<T>): Observable<T[]> {
-    return this._search(model);
+    return this.searchService.search(model);
   }
 
   addComment(caseId: string, comment: Partial<CaseComment>): Observable<CaseComment> {

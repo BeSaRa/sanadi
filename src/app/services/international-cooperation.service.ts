@@ -13,6 +13,8 @@ import {DialogService} from './dialog.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import {HttpClient} from '@angular/common/http';
 import {FactoryService} from './factory.service';
+import {SearchService} from './search.service';
+import {InternationalCooperationSearchCriteria} from '../models/international-cooperation-search-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +25,10 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
   commentService: CommentService = new CommentService(this);
   actionLogService: ActionLogService = new ActionLogService(this);
   recommendationService: RecommendationService = new RecommendationService(this);
+  searchService: SearchService = new SearchService(this);
 
   serviceKey: keyof ILanguageKeys = 'menu_international_cooperation';
+
   constructor(private urlService: UrlService,
               public dialog: DialogService,
               public cfr: ComponentFactoryResolver,
@@ -49,5 +53,9 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
 
   _getInterceptor(): Partial<IModelInterceptor<InternationalCooperation>> {
     return this.interceptor;
+  }
+
+  getSearchCriteriaModel<S extends InternationalCooperation>(): InternationalCooperation {
+    return new InternationalCooperationSearchCriteria();
   }
 }
