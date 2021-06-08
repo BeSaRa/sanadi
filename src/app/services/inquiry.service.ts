@@ -13,6 +13,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {ActionLogService} from './action-log.service';
 import {RecommendationService} from './recommendation.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {SearchService} from './search.service';
+import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,7 @@ export class InquiryService extends EServiceGenericService<Inquiry> {
   commentService: CommentService = new CommentService(this);
   actionLogService: ActionLogService = new ActionLogService(this);
   recommendationService: RecommendationService = new RecommendationService(this);
-
+  searchService: SearchService = new SearchService(this);
   serviceKey: keyof ILanguageKeys = 'menu_inquiries_and_complaints';
 
   constructor(private urlService: UrlService,
@@ -50,5 +52,9 @@ export class InquiryService extends EServiceGenericService<Inquiry> {
 
   _getInterceptor(): Partial<IModelInterceptor<Inquiry>> {
     return this.interceptor;
+  }
+
+  getSearchCriteriaModel<S extends Inquiry>(): Inquiry {
+    return new InquirySearchCriteria();
   }
 }

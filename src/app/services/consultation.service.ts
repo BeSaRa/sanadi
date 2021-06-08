@@ -13,6 +13,8 @@ import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {UrlService} from './url.service';
 import {ConsultationInterceptor} from '../model-interceptors/consultation-interceptor';
 import {FactoryService} from './factory.service';
+import {SearchService} from './search.service';
+import {ConsultationSearchCriteria} from '../models/consultation-search-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,7 @@ export class ConsultationService extends EServiceGenericService<Consultation> {
   commentService: CommentService = new CommentService(this);
   documentService: DocumentService = new DocumentService(this);
   recommendationService: RecommendationService = new RecommendationService(this);
+  searchService: SearchService = new SearchService(this);
   serviceKey: keyof ILanguageKeys = 'menu_consultations';
 
   constructor(private urlService: UrlService,
@@ -49,6 +52,10 @@ export class ConsultationService extends EServiceGenericService<Consultation> {
 
   _getServiceURL(): string {
     return this.urlService.URLS.E_CONSULTATION;
+  }
+
+  getSearchCriteriaModel<S extends Consultation>(): Consultation {
+    return new ConsultationSearchCriteria();
   }
 
 }
