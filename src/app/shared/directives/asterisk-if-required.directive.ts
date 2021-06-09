@@ -75,6 +75,13 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
 
   controlHasRequiredValidator(): boolean {
     const control = <AbstractControl & ValidatorsInterface> this.formControl;
+
+    // workaround to work withFormly fields
+    const formlyControl = control as unknown as { _fields: any[] };
+    if (formlyControl._fields) {
+      return formlyControl._fields[0].templateOptions.required;
+    }
+
     if (control._rawValidators === null) {
       return false;
     } else if (control._rawValidators instanceof Array) {

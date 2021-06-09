@@ -71,4 +71,15 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.exportModel(this.id);
   }
 
+  criteriaHasValues(): boolean {
+    return !!Object.keys(this.filterSearchFields()).length;
+  }
+
+  filterSearchFields(): any {
+    const self = this as unknown as any;
+    return Object.keys(this).filter((key) => !!self[key]).reduce((acc, current) => {
+      return current === 'service' ? acc : {...acc, [current]: self[current]};
+    }, {});
+  }
+
 }

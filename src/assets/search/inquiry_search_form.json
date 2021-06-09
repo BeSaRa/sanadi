@@ -1,0 +1,77 @@
+[
+  {
+    "fields": [
+      {
+        "key": "fullName",
+        "type": "input",
+        "label": "full_name",
+        "validations": {
+          "required": false
+        }
+      },
+      {
+        "key": "email",
+        "type": "input",
+        "label": "lbl_email",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "mobileNo",
+        "type": "input",
+        "label": "lbl_phone",
+        "validations": {
+          "required": false
+        }
+      },
+      {
+        "key": "serial",
+        "type": "input",
+        "label": "serial_number",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "organization",
+        "type": "input",
+        "label": "lbl_organization",
+        "validations": {
+          "required": false
+        }
+      },
+      {
+        "key": "occupation",
+        "type": "input",
+        "label": "occupation",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "requestBody",
+        "type": "textarea",
+        "label": "request_body",
+        "templateOptions": {
+          "rows": 4
+        },
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  }
+]

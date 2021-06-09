@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  menu_service_search: string;
   menu_international_cooperation: string;
   open_task: string
   manage_comments: string;
