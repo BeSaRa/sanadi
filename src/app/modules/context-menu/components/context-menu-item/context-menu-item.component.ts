@@ -1,6 +1,7 @@
 import {
   Component,
-  EmbeddedViewRef, Inject,
+  EmbeddedViewRef,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -47,11 +48,20 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   prevent?: (() => boolean) | boolean;
 
   @Input()
+  debug: boolean = false;
+
+  @Input()
   set actions(val: IMenuItem[]) {
+    this.debugInfo(() => {
+      console.log('action list assigned to the context menu', val);
+    });
     this.itemsChange.next(val);
   };
 
   get actions(): IMenuItem[] {
+    this.debugInfo(() => {
+      console.log('actions assigned', this.itemsChange.value);
+    });
     return this.itemsChange.value;
   }
 
@@ -77,17 +87,33 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     this.listenToLanguageChange();
   }
 
+  private debugInfo(callback: () => void) {
+    if (this.debug) {
+      callback();
+    }
+  }
+
   open($event: MouseEvent, item?: any): void {
     $event.preventDefault();
 
+    this.debugInfo(() => {
+      console.log('Open Event fired');
+      console.log({$event, item});
+    });
+
     if (typeof this.prevent !== 'undefined') {
       if (typeof this.prevent === 'function' && this.prevent()) {
+        this.debugInfo(() => {
+          console.log('prevent Callback returned true , context menu won\'t open');
+        });
         return;
       } else if (this.prevent) {
+        this.debugInfo(() => {
+          console.log('prevent variable has value true , context menu won\'t open');
+        });
         return;
       }
     }
-
     this.open$.next({$event: $event, item: item});
   }
 
@@ -108,7 +134,13 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         ...value
       })))
       .subscribe((data) => {
+        this.debugInfo(() => {
+          console.log('actions after filter', data.actions);
+        });
         if (!data.actions.length) {
+          this.debugInfo(() => {
+            console.log('actions has 0 length after filter', data.actions);
+          });
           return;
         }
         this.filteredAction = data.actions;
@@ -154,6 +186,9 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
           return !!(!this.overlayRef.hostElement.contains(element) && this.menuRef);
         }))
       .subscribe(_ => {
+        this.debugInfo(() => {
+          console.log('menu is going to close now');
+        });
         this.close();
       });
   }
@@ -162,6 +197,9 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     this.menuRef?.detach();
     this.overlayRef.detach();
     this.menuRef = undefined;
+    this.debugInfo(() => {
+      console.log('menu closed and ref undefined');
+    });
   }
 
   onClick(event: MouseEvent, action: IMenuItem) {
