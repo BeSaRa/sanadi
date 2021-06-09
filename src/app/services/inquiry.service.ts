@@ -20,6 +20,7 @@ import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry> {
+  jsonSearchFile: string = 'inquiry_search_form.json';
   interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
   documentService: DocumentService = new DocumentService(this);
   commentService: CommentService = new CommentService(this);

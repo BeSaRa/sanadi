@@ -1,0 +1,9 @@
+<div class="row">
+  <label asteriskIfRequired [control]="formControl" [for]="id"
+         class="col-md-2 col-sm-12 col-form-label">{{lang.map[labelKey]}}</label>
+  <div class="col-md-10 mb-3 position-relative col-sm-12">
+    <ng-container #fieldComponent></ng-container>
+    <div [class.is-invalid]="showError"></div>
+    <app-field-error-message [control]="formControl"></app-field-error-message>
+  </div>
+</div>

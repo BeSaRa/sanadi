@@ -20,6 +20,7 @@ import {ConsultationSearchCriteria} from '../models/consultation-search-criteria
   providedIn: 'root'
 })
 export class ConsultationService extends EServiceGenericService<Consultation> {
+  jsonSearchFile: string = '';
   interceptor: IModelInterceptor<Consultation> = new ConsultationInterceptor();
   actionLogService: ActionLogService = new ActionLogService(this);
   commentService: CommentService = new CommentService(this);

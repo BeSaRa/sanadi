@@ -20,6 +20,7 @@ import {InternationalCooperationSearchCriteria} from '../models/international-co
   providedIn: 'root'
 })
 export class InternationalCooperationService extends EServiceGenericService<InternationalCooperation> {
+  jsonSearchFile: string = '';
   interceptor: IModelInterceptor<InternationalCooperation> = new InternationalCooperationInterceptor();
   documentService: DocumentService = new DocumentService(this);
   commentService: CommentService = new CommentService(this);

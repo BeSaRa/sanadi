@@ -6,12 +6,12 @@ import {Validators} from '@angular/forms';
 
 export class Inquiry extends CaseModel<InquiryService, Inquiry> {
   category!: number;
-  email: string = '';
-  fullName: string = '';
-  mobileNo: string = '';
-  occupation: string = '';
-  organization: string = '';
-  requestBody: string = '';
+  email!: string;
+  fullName!: string;
+  mobileNo!: string;
+  occupation!: string;
+  organization!: string;
+  requestBody!: string;
 
   service: InquiryService;
 

@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {FileNetDocument} from '../models/file-net-document';
 import {CaseComment} from '../models/case-comment';
 import {CommentService} from '../services/comment.service';
@@ -22,6 +22,9 @@ import {DocumentsPopupComponent} from '../shared/popups/documents-popup/document
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {ComponentFactoryResolver} from '@angular/core';
 import {SearchService} from '../services/search.service';
+import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
+import {IFormRowGroup} from '../interfaces/iform-row-group';
+import {IFormField} from '../interfaces/iform-field';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -35,6 +38,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   abstract getCaseComponentName(): string;
 
+  abstract jsonSearchFile: string;
 
   abstract http: HttpClient;
   abstract dialog: DialogService;
@@ -122,6 +126,11 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   addComment(caseId: string, comment: Partial<CaseComment>): Observable<CaseComment> {
     return this.commentService.create(caseId, comment);
+  }
+
+  loadSearchFields(): Observable<FormlyFieldConfig[]> {
+    return this.jsonSearchFile ? this.http.get<IFormRowGroup[]>('assets/search/' + this.jsonSearchFile)
+      .pipe(map((rows: IFormRowGroup[]) => this.castFormlyFields(rows))) : of([]);
   }
 
   getComments(caseId: string): Observable<CaseComment[]> {
@@ -214,4 +223,27 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   }
 
+  private castFormlyFields(rows: IFormRowGroup[]): FormlyFieldConfig[] {
+    return rows.map(row => this.generateFormRow(row));
+  }
+
+  private generateFormRow(row: IFormRowGroup): FormlyFieldConfig {
+    return {
+      fieldGroupClassName: 'row mb-3 formly-row',
+      fieldGroup: row.fields?.map(field => EServiceGenericService.generateFormField(field, row)),
+    };
+  }
+
+  private static generateFormField(field: IFormField, row: IFormRowGroup): FormlyFieldConfig {
+    return {
+      key: field.key,
+      type: field.type,
+      templateOptions: {
+        label: field.label,
+        required: field.validations?.required,
+        rows: field.templateOptions?.rows
+      },
+      wrappers: [(row.fields && row.fields?.length === 1 ? 'col-md-2-10' : 'col-md-4-8')]
+    };
+  }
 }
