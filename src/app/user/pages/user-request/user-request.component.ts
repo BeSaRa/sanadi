@@ -163,6 +163,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   isAttachmentFormVisible: boolean = false;
   skipConfirmUnsavedChanges: boolean = false;
 
+  saveActions = {
+    validateAndSave: 'validateAndSave',
+    directSave: 'save',
+    saveAndInquire: 'saveAndInquire',
+    partialSave: 'partialSave'
+  };
+
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -448,10 +455,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToSaveModel() {
-
+    let saveType: string = '';
     const formAidValid$ = this.save$
       .pipe(
-        tap(val => console.log(val)),
+        tap(val => {
+          saveType = val;
+        }),
         tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
         filter(_ => this.validRequestStatus()),
         share()
@@ -538,6 +547,17 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
       }
       this.form.markAsPristine({onlySelf: true});
+
+      if (saveType === this.saveActions.saveAndInquire) {
+        this.skipConfirmUnsavedChanges = true;
+        const ben = this.prepareBeneficiary();
+        this.eCookieService.putEObject('b_i_d', {
+          idType: ben.benPrimaryIdType,
+          idNumber: ben.benPrimaryIdNumber,
+          nationality: ben.benPrimaryIdNationality
+        });
+        this.router.navigate(['/home/main/inquiry']).then();
+      }
     });
 
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
@@ -643,9 +663,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   saveModel() {
     if (this.currentParamType === this.routeParamTypes.partial) {
-      this.savePartial$.next(null);
+      this.savePartial$.next(this.saveActions.partialSave);
     } else {
-      this.save$.next(null);
+      this.save$.next(this.saveActions.validateAndSave);
     }
   }
 
@@ -1074,7 +1094,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (value.first === BeneficiarySaveStatus.EXISTING) {
       this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
         actionBtn: 'btn_continue',
-        thirdBtn: 'btn_inquire',
+        thirdBtn: 'btn_save_and_inquire',
         cancelBtn: 'btn_clear',
         showCloseIcon: true
       })
@@ -1087,7 +1107,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           if (click === UserClickOn.YES) {
             // continue
             this.validateStatus = false;
-            this.save$.next();
+            this.save$.next(this.saveActions.directSave);
           } else if (click === UserClickOn.NO) {
             // clear
             if (this.currentParamType === this.routeParamTypes.normal) {
@@ -1098,15 +1118,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               this.form.markAsPristine();
             }
           } else if (click === UserClickOn.THIRD_BTN) {
-            // inquire
-            this.skipConfirmUnsavedChanges = true;
-            const ben = this.prepareBeneficiary();
-            this.eCookieService.putEObject('b_i_d', {
-              idType: ben.benPrimaryIdType,
-              idNumber: ben.benPrimaryIdNumber,
-              nationality: ben.benPrimaryIdNationality
-            });
-            this.router.navigate(['/home/main/inquiry']).then();
+            // save and inquire
+            this.validateStatus = false;
+            this.save$.next(this.saveActions.saveAndInquire);
           }
         });
     }

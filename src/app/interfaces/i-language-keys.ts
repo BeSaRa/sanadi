@@ -1,9 +1,10 @@
 export interface ILanguageKeys {
   show_hide_sidebar: string;
   home: string;
-  back : string;
+  back: string;
   btn_inquire: string;
-  btn_continue : string;
+  btn_save_and_inquire: string;
+  btn_continue: string;
   beneficiary_already_exists: string;
   msg_approved_request_without_one_aid_at_least: string;
   remove_provided_aid_first_to_change_request_status: string;
