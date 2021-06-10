@@ -17,13 +17,11 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
   @Input() addPermission = true;
 
   isReloadAvailable = false;
-  isAddAvailable = false;
 
   constructor(public langService: LangService) {
   }
 
   ngOnInit(): void {
-    this.isAddAvailable = this.addPermission && !isEmptyObject(this.clickOnNew$);
     this.isReloadAvailable = !isEmptyObject(this.clickOnReload$);
   }
 
@@ -35,5 +33,10 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
       this.clickOnNew$.complete();
     }
   }
+
+  get isAddAvailable(): boolean {
+    return this.addPermission && !isEmptyObject(this.clickOnNew$)
+  }
+
 
 }

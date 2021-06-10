@@ -165,7 +165,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   saveActions = {
     validateAndSave: 'validateAndSave',
-    directSave: 'save',
+    skipValidateAndSave: 'skipValidateAndSave',
     saveAndInquire: 'saveAndInquire',
     partialSave: 'partialSave'
   };
@@ -541,6 +541,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
       if (!this.currentRequest.isUnderProcessing()) {
         this.allowCompletionField?.disable();
+        this.readModeService.setReadOnly(this.currentRequest.id);
       }
 
       if (!this.requestStatusTab.value) {
@@ -548,7 +549,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       this.form.markAsPristine({onlySelf: true});
 
-      if (saveType === this.saveActions.saveAndInquire) {
+      if (saveType === this.saveActions.validateAndSave) {
+        this.requestChanged$.next(this.currentRequest);
+      } else if (saveType === this.saveActions.saveAndInquire) {
         this.skipConfirmUnsavedChanges = true;
         const ben = this.prepareBeneficiary();
         this.eCookieService.putEObject('b_i_d', {
@@ -1107,7 +1110,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           if (click === UserClickOn.YES) {
             // continue
             this.validateStatus = false;
-            this.save$.next(this.saveActions.directSave);
+            this.save$.next(this.saveActions.skipValidateAndSave);
           } else if (click === UserClickOn.NO) {
             // clear
             if (this.currentParamType === this.routeParamTypes.normal) {
@@ -1325,6 +1328,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
       return this.form.valid;
     }
+  }
+
+  addAidAllowed(): boolean {
+    return !this.readOnly && !this.isPartialRequest;
   }
 
   /**
