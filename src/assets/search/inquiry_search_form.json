@@ -2,6 +2,57 @@
   {
     "fields": [
       {
+        "type": "selectField",
+        "label": "subject",
+        "key": "category",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.InquiryCategory",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "type": "selectField",
+        "label": "competent_dep",
+        "key": "competentDepartmentID",
+        "selectOptions": {
+          "options": [],
+          "loader": "internalDepartmentService.loadDepartments",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
         "key": "fullName",
         "type": "input",
         "label": "full_name",

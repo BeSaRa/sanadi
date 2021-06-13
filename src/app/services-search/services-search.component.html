@@ -3,21 +3,21 @@
     <div class="d-flex align-items-center justify-content-start">
       <h1 class="h6 text-primary">{{lang.map.menu_service_search}}</h1>
       <div>
-        <button [tooltip]="lang.map.btn_reload" class="btn text-primary icon-btn"><i
+        <button (click)="search$.next()" [tooltip]="lang.map.btn_reload" class="btn text-primary icon-btn"><i
           class="mdi mdi-reload"></i>
         </button>
       </div>
       <div>
         <select [formControl]="serviceControl" class="form-select mx-4">
           <option [ngValue]="service"
-                  *ngFor="let service of serviceNumbers">{{eService.services.get(service).getName()}}</option>
+                  *ngFor="let service of serviceNumbers">{{getServiceName(service)}}</option>
         </select>
       </div>
     </div>
   </div>
 </div>
 <div class="row">
-  <tabs-list>
+  <tabs-list [tabByIndex$]="tabIndex$">
     <tab [title]="lang.map.search_criteria" [template]="formCriteria"></tab>
     <tab [title]="lang.map.search_result" [template]="searchResult"></tab>
   </tabs-list>
@@ -25,9 +25,53 @@
     <form autocomplete="off" [formGroup]="form">
       <formly-form [form]="form" [fields]="fields"></formly-form>
     </form>
-    <button class="btn mb-4 btn-primary shadow shadow-sm" (click)="search()">{{lang.map.lbl_search}}</button>
+    <button class="btn mb-4 btn-primary shadow shadow-sm"
+            (click)="search$.next()">{{lang.map.lbl_search}}</button>
   </ng-template>
   <ng-template #searchResult>
-
+    <div class="col-12">
+      <app-table #table sortableTable [paginator]="paginator"
+                 [data]="results"
+                 [columns]="searchColumns">
+        <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="fullSerial">
+            <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <a href="#" (click)="$event.preventDefault(); actionOpen(row)">{{row.fullSerial}}</a>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="caseStatus">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <!--              <i [tooltip]="" class="text-primary" [class]="row.getStatusIcon()"></i>-->
+              <span>{{row.caseStatusInfo.getName()}}</span>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="fullName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="organization">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organization}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="createdOn">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="creatorInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo.getName()}} </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="6">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator [length]="results.length"></app-paginator>
+      </app-table>
+    </div>
   </ng-template>
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
 </div>

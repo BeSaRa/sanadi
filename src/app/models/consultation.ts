@@ -5,13 +5,13 @@ import {CustomValidators} from '../validators/custom-validators';
 import {Validators} from '@angular/forms';
 
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
+  caseType: number = 2;
   category!: number;
   email: string = '';
   fullName: string = '';
   mobileNo: string = '';
   organizationId!: number;
   requestBody: string = '';
-  notes: string = '';
 
   service: ConsultationService;
 

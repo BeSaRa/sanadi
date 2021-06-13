@@ -1,0 +1,29 @@
+import {Injectable} from '@angular/core';
+import {DynamicComponentService} from './dynamic-component.service';
+import {InquiryComponent} from '../e-services/pages/inquiry-container/inquiry/inquiry.component';
+import {ConsultationComponent} from '../e-services/pages/consultation-container/consultation/consultation.component';
+import {InternationalCooperationComponent} from '../e-services/pages/international-cooperation-container/international-cooperation/international-cooperation.component';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AutoRegisterService {
+
+  constructor() {
+    this.ngOnInit();
+  }
+
+  private ngOnInit(): void {
+    new DynamicComponentService(() => {
+      // any Dynamic Components will be register here.
+      DynamicComponentService.registerComponent('InquiryComponent', InquiryComponent);
+      DynamicComponentService.registerComponent('ConsultationComponent', ConsultationComponent);
+      DynamicComponentService.registerComponent('InternationalCooperationComponent', InternationalCooperationComponent);
+
+    });// just to make sure that service constructed and register all dynamic components
+  }
+
+  ping(): void {
+    console.log('auto register service started');
+  }
+}

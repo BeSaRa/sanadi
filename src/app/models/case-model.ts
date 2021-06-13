@@ -5,6 +5,13 @@ import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {Observable} from 'rxjs';
 import {CaseStatus} from '../enums/case-status.enum';
 import {BlobModel} from './blob-model';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
+import {ComponentType} from '@angular/cdk/overlay';
+import {DynamicComponentService} from '../services/dynamic-component.service';
+import {delay, map, take, tap} from 'rxjs/operators';
+import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import {IESComponent} from '../interfaces/iescomponent';
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> {
   serial!: number;
@@ -75,11 +82,60 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return !!Object.keys(this.filterSearchFields()).length;
   }
 
-  filterSearchFields(): any {
+  filterSearchFields(): Partial<CaseModel<any, any>> {
     const self = this as unknown as any;
     return Object.keys(this).filter((key) => !!self[key]).reduce((acc, current) => {
-      return current === 'service' ? acc : {...acc, [current]: self[current]};
+      return (current === 'service' || current === 'caseType') ? acc : {...acc, [current]: self[current]};
     }, {});
   }
+
+  viewLogs(): DialogRef {
+    return this.service.openActionLogs(this.id);
+  }
+
+  manageAttachments(): DialogRef {
+    return this.service.openDocumentDialog(this.id);
+  }
+
+  manageRecommendations(): DialogRef {
+    return this.service.openRecommendationDialog(this.id);
+  }
+
+  manageComments(): DialogRef {
+    return this.service.openCommentsDialog(this.id);
+  }
+
+  open(actions?: IMenuItem[]): Observable<DialogRef> {
+    const componentName = this.service.getCaseComponentName();
+    const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
+    const cfr = this.service.getCFR();
+    const factory = cfr.resolveComponentFactory(component);
+    let model: any;
+    return this.service.getById(this.id)
+      .pipe(
+        tap(task => model = task),
+        map(_ => this.service.dialog.show(CaseViewerPopupComponent, {key: this.service.serviceKey, model: model, actions})),
+        tap(ref => {
+          const instance = ref.instance as unknown as CaseViewerPopupComponent;
+          instance.viewInit
+            .pipe(
+              take(1),
+              delay(0)
+            )
+            .subscribe(() => {
+              instance.container.clear();
+              const componentRef = instance.container.createComponent(factory);
+              const comInstance = componentRef.instance as unknown as IESComponent;
+              comInstance.outModel = model;
+              instance.component = comInstance;
+            });
+        })
+      );
+  }
+
+  getStatusIcon(): string {
+    return this.service.getStatusIcon(this.caseStatus);
+  }
+
 
 }

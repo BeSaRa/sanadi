@@ -5,6 +5,7 @@ import {Validators} from '@angular/forms';
 import {InternationalCooperationService} from '../services/international-cooperation.service';
 
 export class InternationalCooperation extends CaseModel<InternationalCooperationService, InternationalCooperation> {
+  caseType: number = 3;
   country!: string;
   email: string = '';
   fullName: string = '';
