@@ -103,6 +103,13 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
 
+  exportSearchResult(): void {
+    const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields();
+    this.selectedService
+      .exportSearch(criteria)
+      .subscribe((blob) => window.open(blob.url));
+  }
+
   private buildGridActions() {
     this.actions = [
       // open

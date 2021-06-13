@@ -30,6 +30,12 @@
   </ng-template>
   <ng-template #searchResult>
     <div class="col-12">
+      <div class="d-flex flex-row justify-content-end">
+        <button [tooltip]="lang.map.print" (click)="exportSearchResult()" class="btn text-primary icon-btn"><i
+          class="mdi mdi-printer"></i>
+        </button>
+      </div>
+      <br/>
       <app-table #table sortableTable [paginator]="paginator"
                  [data]="results"
                  [columns]="searchColumns">

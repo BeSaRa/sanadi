@@ -209,8 +209,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
   }
 
-  exportSearch(): void {
-
+  exportSearch(criteria: Partial<T>): Observable<BlobModel> {
+    return this.searchService.exportSearch(criteria);
   }
 
   @Generator(undefined, false, {property: 'rs'})
