@@ -8,12 +8,15 @@ import {AdminResult} from '../models/admin-result';
 })
 export class ExceptionHandlerService {
 
-  constructor(private dialogService: DialogService) {
+  constructor(private dialog: DialogService) {
   }
 
   handle(error: HttpErrorResponse): void {
+    if (error.status === 401) {
+      return;
+    }
     error.error.eo = AdminResult.createInstance(error.error.eo);
     // for now we will log it to console but later we will agreed with backend-team about the errorHandler for each code.
-    this.dialogService.error(error.error.eo.getName() ? error.error.eo.getName() : (error.error.ec + ' : ' + error.error.ms));
+    this.dialog.error(error.error.eo.getName() ? (error.error.ec + '<br />' + error.error.eo.getName()) : (error.error.ec + '<br />' + error.error.ms));
   }
 }
