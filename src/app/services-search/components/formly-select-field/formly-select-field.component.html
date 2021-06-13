@@ -3,5 +3,5 @@
            [notFoundText]="lang.map.msg_not_found"
            [formControl]="control"
            validationClasses [onlyInvalid]="true" [control]="formControl">
-  <ng-option [value]="option[bindValue]" *ngFor="let option of to.options|async">{{option[bindLabel]}}</ng-option>
+  <ng-option [value]="option[bindValue]" *ngFor="let option of selectOptions|async">{{option[bindLabel]}}</ng-option>
 </ng-select>
