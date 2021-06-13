@@ -152,4 +152,8 @@ export class QueryResult extends Cloneable<QueryResult> {
         })
       );
   }
+
+  getStatusIcon(): string {
+    return this.service.getService(this.BD_CASE_TYPE).getStatusIcon(this.BD_CASE_STATUS);
+  }
 }

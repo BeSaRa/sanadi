@@ -4,6 +4,19 @@
       <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
           <div class="row">
+            <label asteriskIfRequired="category" for="category"
+                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.consulting_type}}</label>
+            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
+              <ng-select validationClasses="category" id="category" formControlName="category">
+                <ng-option [value]="category.lookupKey"
+                           *ngFor="let category of categories">{{category.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="category"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
             <label asteriskIfRequired="organizationId" for="organizationId"
                    class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_organization}}</label>
             <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
@@ -15,6 +28,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
           <div class="row">
             <label asteriskIfRequired="fullName" for="fullName"
@@ -22,18 +37,6 @@
             <div class="col-md-8 mb-3 position-relative col-sm-12">
               <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control">
               <app-field-error-message controlName="fullName"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="mobileNo" for="mobileNo"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="mobileNo" validationClasses="mobileNo" formControlName="mobileNo" class="form-control">
-              <app-field-error-message controlName="mobileNo"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -51,14 +54,11 @@
       <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
           <div class="row">
-            <label asteriskIfRequired="category" for="category"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.consulting_type}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select validationClasses="category" id="category" formControlName="category">
-                <ng-option [value]="category.lookupKey"
-                           *ngFor="let category of categories">{{category.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="category"></app-field-error-message>
+            <label asteriskIfRequired="mobileNo" for="mobileNo"
+                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
+            <div class="col-md-8 mb-3 position-relative col-sm-12">
+              <input id="mobileNo" validationClasses="mobileNo" formControlName="mobileNo" class="form-control">
+              <app-field-error-message controlName="mobileNo"></app-field-error-message>
             </div>
           </div>
         </div>

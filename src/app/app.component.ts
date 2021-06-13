@@ -4,6 +4,7 @@ import {AppRootScrollService} from './services/app-root-scroll.service';
 import {LoadingService} from './services/loading.service';
 import {CacheService} from './services/cache.service';
 import {NavigationService} from './services/navigation.service';
+import {AutoRegisterService} from './services/auto-register.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ export class AppComponent {
   title = 'sanadi';
 
   constructor(private langService: LangService,
+              private autoRegister : AutoRegisterService,
               public loadingService: LoadingService,
               private cacheService: CacheService,
               private navigationService: NavigationService,

@@ -5,6 +5,7 @@ import {FactoryService} from '../services/factory.service';
 import {Validators} from '@angular/forms';
 
 export class Inquiry extends CaseModel<InquiryService, Inquiry> {
+  caseType: number = 1;
   category!: number;
   email!: string;
   fullName!: string;

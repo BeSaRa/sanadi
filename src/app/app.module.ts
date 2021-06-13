@@ -28,7 +28,6 @@ import {CookieModule} from 'ngx-cookie';
 import {TokenService} from './services/token.service';
 import {AuthService} from './services/auth.service';
 import {MenuItemService} from './services/menu-item.service';
-import {DynamicComponentService} from './services/dynamic-component.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormlyModule} from '@ngx-formly/core';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
@@ -47,7 +46,7 @@ import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormlyModule.forRoot({ extras: { lazyRender: true } }),
+    FormlyModule.forRoot({extras: {lazyRender: true}}),
     FormlyBootstrapModule
   ],
   providers: [
@@ -98,7 +97,6 @@ export class AppModule {
         config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE)
       })
         .toPromise().then((latest) => {
-          new DynamicComponentService();// just to make sure that service constructed and register all dynamic components
           configurationService.setConfigurations(latest.config);
           urlService.prepareUrls(latest.urls);
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {

@@ -15,11 +15,20 @@ import {HttpClient} from '@angular/common/http';
 import {FactoryService} from './factory.service';
 import {SearchService} from './search.service';
 import {InternationalCooperationSearchCriteria} from '../models/international-cooperation-search-criteria';
+import {CaseStatus} from '../enums/case-status.enum';
+import {DynamicOptionsService} from './dynamic-options.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InternationalCooperationService extends EServiceGenericService<InternationalCooperation> {
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'name', 'caseStatus', 'organization', 'creatorInfo'];
+  caseStatusIconMap: Map<number, string> = new Map<number, string>([
+    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
+    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+  ]);
   jsonSearchFile: string = '';
   interceptor: IModelInterceptor<InternationalCooperation> = new InternationalCooperationInterceptor();
   documentService: DocumentService = new DocumentService(this);
@@ -34,6 +43,7 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
               public dialog: DialogService,
               public cfr: ComponentFactoryResolver,
               public domSanitizer: DomSanitizer,
+              public dynamicService: DynamicOptionsService,
               public http: HttpClient) {
     super();
     // register service

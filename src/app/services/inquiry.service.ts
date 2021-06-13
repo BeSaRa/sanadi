@@ -15,11 +15,20 @@ import {RecommendationService} from './recommendation.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {SearchService} from './search.service';
 import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
+import {CaseStatus} from '../enums/case-status.enum';
+import {DynamicOptionsService} from './dynamic-options.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry> {
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'fullName', 'caseStatus', 'organization', 'creatorInfo'];
+  caseStatusIconMap: Map<number, string> = new Map<number, string>([
+    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
+    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+  ]);
   jsonSearchFile: string = 'inquiry_search_form.json';
   interceptor: IModelInterceptor<Inquiry> = new InquiryInterceptor();
   documentService: DocumentService = new DocumentService(this);
@@ -33,6 +42,7 @@ export class InquiryService extends EServiceGenericService<Inquiry> {
               public dialog: DialogService,
               public cfr: ComponentFactoryResolver,
               public domSanitizer: DomSanitizer,
+              public dynamicService: DynamicOptionsService,
               public http: HttpClient) {
     super();
     // register service

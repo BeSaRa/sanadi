@@ -15,11 +15,21 @@ import {ConsultationInterceptor} from '../model-interceptors/consultation-interc
 import {FactoryService} from './factory.service';
 import {SearchService} from './search.service';
 import {ConsultationSearchCriteria} from '../models/consultation-search-criteria';
+import {CaseStatus} from '../enums/case-status.enum';
+import {DynamicOptionsService} from './dynamic-options.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConsultationService extends EServiceGenericService<Consultation> {
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'name', 'caseStatus', 'organization', 'creatorInfo'];
+  caseStatusIconMap: Map<number, string> = new Map<number, string>([
+    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
+    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+  ]);
+
   jsonSearchFile: string = '';
   interceptor: IModelInterceptor<Consultation> = new ConsultationInterceptor();
   actionLogService: ActionLogService = new ActionLogService(this);
@@ -29,10 +39,12 @@ export class ConsultationService extends EServiceGenericService<Consultation> {
   searchService: SearchService = new SearchService(this);
   serviceKey: keyof ILanguageKeys = 'menu_consultations';
 
+
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
               public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
+              public dynamicService: DynamicOptionsService,
               public http: HttpClient) {
     super();
     FactoryService.registerService('ConsultationService', this);
