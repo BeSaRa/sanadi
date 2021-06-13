@@ -55,6 +55,7 @@ import {ExceptionHandlerService} from '../../../services/exception-handler.servi
 import {AidTypes} from '../../../enums/aid-types.enum';
 import {ECookieService} from '../../../services/e-cookie.service';
 import {DateUtils} from '../../../helpers/date-utils';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-user-request',
@@ -186,6 +187,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
               private fb: FormBuilder,
+              private empService: EmployeeService,
               private exceptionHandlerService: ExceptionHandlerService,
               private eCookieService: ECookieService) {
 
@@ -1095,13 +1097,22 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }
 
     if (value.first === BeneficiarySaveStatus.EXISTING) {
-      this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
-        actionBtn: 'btn_continue',
-        thirdBtn: 'btn_save_and_inquire',
-        cancelBtn: 'btn_clear',
-        showCloseIcon: true
-      })
-        .onAfterClose$
+      let confirmMsg = null;
+      if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
+        confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
+          actionBtn: 'btn_continue',
+          thirdBtn: 'btn_save_and_inquire',
+          cancelBtn: 'btn_clear',
+          showCloseIcon: true
+        })
+      } else {
+        confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
+          actionBtn: 'btn_continue',
+          cancelBtn: 'btn_clear',
+          showCloseIcon: true
+        })
+      }
+      confirmMsg.onAfterClose$
         .pipe(take(1))
         .subscribe((click: UserClickOn) => {
           if (!isValidValue(click) || click === UserClickOn.CLOSE) {
