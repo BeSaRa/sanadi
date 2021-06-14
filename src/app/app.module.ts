@@ -31,6 +31,7 @@ import {MenuItemService} from './services/menu-item.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormlyModule} from '@ngx-formly/core';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
+import {AutoRegisterService} from './services/auto-register.service';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
         TokenService,
         AuthService,
         MenuItemService,
+        AutoRegisterService,
         CustomRoleService,
         OrganizationBranchService,
         OrganizationUserService,
@@ -89,8 +91,10 @@ export class AppModule {
                  lookupService: LookupService,
                  tokenService: TokenService,
                  authService: AuthService,
-                 menuItemService: MenuItemService): () => Promise<unknown> {
+                 menuItemService: MenuItemService,
+                 autoRegister: AutoRegisterService): () => Promise<unknown> {
     AppModule.http = http;
+    autoRegister.ping();
     return () => {
       return forkJoin({
         urls: AppModule.loadResource<IAppUrls>(AppModule.URLS_FILE),
