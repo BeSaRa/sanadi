@@ -17,7 +17,7 @@ import {ConfigurationService} from '../services/configuration.service';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {DateUtils} from '../helpers/date-utils';
 
-export class SubventionRequest extends BaseModel<SubventionRequest> {
+export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRequestService> {
   id!: number;
   requestSerial!: number;
   requestFullSerial!: string;

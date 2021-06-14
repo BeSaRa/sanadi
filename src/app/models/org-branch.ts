@@ -10,7 +10,7 @@ import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 
-export class OrgBranch extends BaseModel<OrgBranch> {
+export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
   orgId: number | undefined;
   phoneNumber1: string | undefined;
   phoneNumber2: string | undefined;

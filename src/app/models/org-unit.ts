@@ -11,7 +11,7 @@ import {searchFunctionType} from '../types/types';
 import {FileStore} from './file-store';
 import {DialogRef} from '../shared/models/dialog-ref';
 
-export class OrgUnit extends BaseModel<OrgUnit> {
+export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
   phoneNumber2: string | undefined;
   email: string | undefined;

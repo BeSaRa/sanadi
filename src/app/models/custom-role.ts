@@ -8,7 +8,7 @@ import {CustomRolePermission} from './custom-role-permission';
 import {Permission} from './permission';
 import {searchFunctionType} from '../types/types';
 
-export class CustomRole extends BaseModel<CustomRole> {
+export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   status: boolean = true;
   permissionSet: CustomRolePermission[] = [];
   description: string = '';

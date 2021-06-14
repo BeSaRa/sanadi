@@ -5,10 +5,10 @@ import {Observable} from 'rxjs';
 import {INames} from '../interfaces/i-names';
 import {searchFunctionType} from '../types/types';
 
-export class Localization extends BaseModel<Localization> {
+export class Localization extends BaseModel<Localization, LangService> {
   localizationKey: string | undefined;
   module: number = 0;
-  private service: LangService;
+  service: LangService;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',

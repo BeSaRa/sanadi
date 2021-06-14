@@ -8,7 +8,7 @@ import {Lookup} from './lookup';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 
-export class AidLookup extends BaseModel<AidLookup> {
+export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   aidCode!: string;
   category: number | undefined;
   status: number | undefined;
@@ -18,7 +18,7 @@ export class AidLookup extends BaseModel<AidLookup> {
   parent: number | undefined;
   parentInfo: any | undefined;
 
-  private service: AidLookupService;
+  service: AidLookupService;
   private langService: LangService;
   private statusInfo!: Lookup;
   statusDateModifiedString!: string;
