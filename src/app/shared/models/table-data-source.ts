@@ -196,6 +196,10 @@ export class TableDataSource extends DataSource<any> {
    */
   filterPredicate: ((data: any, filter: string) => boolean) = (data: any, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
+    if (typeof data.search === 'function') {
+      return data.search(filter);
+    }
+
     const dataStr = Object.keys(data).reduce((currentTerm: string, key: string) => {
       // Use an obscure Unicode character to delimit the words in the concatenated string.
       // This avoids matches where the values of two columns combined will match the user's query
