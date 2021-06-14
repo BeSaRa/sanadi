@@ -4,7 +4,8 @@ import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
 
-export class Permission extends BaseModel<Permission> {
+export class Permission extends BaseModel<Permission, any> {
+  service: any;
   permissionKey!: string;
   description: string | undefined;
   groupId!: number;

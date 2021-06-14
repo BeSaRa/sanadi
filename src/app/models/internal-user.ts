@@ -5,7 +5,8 @@ import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
 
-export class InternalUser extends BaseModel<InternalUser> {
+export class InternalUser extends BaseModel<InternalUser, any> {
+  service: any;
   id!: number;
   arName!: string;
   enName!: string;

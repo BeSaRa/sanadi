@@ -8,7 +8,7 @@ import {Validators} from '@angular/forms';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {isValidValue} from '../helpers/utils';
 
-export class SubventionAid extends BaseModel<SubventionAid> {
+export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService> {
   installementsCount: number = 0;
   periodicType!: number;
   approvalDate!: IMyDateModel;
@@ -89,7 +89,7 @@ export class SubventionAid extends BaseModel<SubventionAid> {
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
-      installementsCount: control ? [installementsCount, [CustomValidators.number , Validators.min(1), CustomValidators.maxLength(20)]] : installementsCount
+      installementsCount: control ? [installementsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installementsCount
     };
   }
 }

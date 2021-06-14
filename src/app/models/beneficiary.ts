@@ -13,7 +13,7 @@ import {SubventionRequest} from './subvention-request';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {isValidValue} from '../helpers/utils';
 
-export class Beneficiary extends BaseModel<Beneficiary> {
+export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNationality!: number;
   benPrimaryIdType!: number;
   benPrimaryIdNumber!: string;

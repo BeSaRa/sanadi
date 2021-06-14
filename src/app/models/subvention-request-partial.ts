@@ -7,7 +7,7 @@ import {BaseModel} from './base-model';
 import {SubventionRequestService} from '../services/subvention-request.service';
 import {isValidValue} from '../helpers/utils';
 
-export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial> {
+export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial, any> {
 
   requestId!: number;
   requestFullSerial!: string;
@@ -31,12 +31,12 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
 
   // extra properties
   creationDateString!: string;
-  subventionRequestPartialService: SubventionRequestPartialService;
+  service: SubventionRequestPartialService;
   subventionRequestService: SubventionRequestService;
 
   constructor() {
     super();
-    this.subventionRequestPartialService = FactoryService.getService('SubventionRequestPartialService');
+    this.service = FactoryService.getService('SubventionRequestPartialService');
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');
   }
 
@@ -62,13 +62,14 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
     throw new Error('Method not implemented.');
   }
 
+
   update(): Observable<SubventionRequestPartial> {
     throw new Error('Method not implemented.');
   }
 
   showPartialRequestDetails($event: MouseEvent): void {
     $event.preventDefault();
-    this.subventionRequestPartialService.openPartialRequestDetailsDialog(this.requestId)
+    this.service.openPartialRequestDetailsDialog(this.requestId)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

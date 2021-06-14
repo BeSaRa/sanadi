@@ -1,8 +1,5 @@
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
-import {OrgUnit} from './org-unit';
-import {OrgBranch} from './org-branch';
-import {CustomRole} from './custom-role';
 import {FactoryService} from '../services/factory.service';
 import {OrganizationUserService} from '../services/organization-user.service';
 import {LangService} from '../services/lang.service';
@@ -14,7 +11,7 @@ import {LookupService} from '../services/lookup.service';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 
-export class OrgUser extends BaseModel<OrgUser> {
+export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   email: string | undefined;
   statusDateModified: number | undefined;
   orgId: number | undefined;
@@ -35,7 +32,7 @@ export class OrgUser extends BaseModel<OrgUser> {
   jobTitleInfo: AdminResult | undefined; // need to bind to model
   customRoleInfo: AdminResult | undefined;
 
-  private service: OrganizationUserService;
+  service: OrganizationUserService;
   private langService: LangService;
   lookupService: LookupService;
   statusDateModifiedString!: string;
