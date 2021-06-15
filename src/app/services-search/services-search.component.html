@@ -3,8 +3,15 @@
     <div class="d-flex align-items-center justify-content-start">
       <h1 class="h6 text-primary">{{lang.map.menu_service_search}}</h1>
       <div>
-        <button (click)="search$.next()" [tooltip]="lang.map.btn_reload" class="btn text-primary icon-btn"><i
-          class="mdi mdi-reload"></i>
+        <button (click)="search$.next()" [disabled]="!results.length" [tooltip]="lang.map.btn_reload"
+                class="btn text-primary p-0 icon-btn">
+          <i class="mdi mdi-reload"></i>
+        </button>
+      </div>
+      <div>
+        <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
+                class="btn text-primary p-0 icon-btn">
+          <i class="mdi mdi-printer"></i>
         </button>
       </div>
       <div>
@@ -27,15 +34,11 @@
     </form>
     <button class="btn mb-4 btn-primary shadow shadow-sm"
             (click)="search$.next()">{{lang.map.lbl_search}}</button>
+    <button class="btn mb-4 btn-secondary shadow shadow-sm mx-2"
+            (click)="resetCriteria()">{{lang.map.btn_reset}}</button>
   </ng-template>
   <ng-template #searchResult>
     <div class="col-12">
-      <div class="d-flex flex-row justify-content-end">
-        <button [tooltip]="lang.map.print" (click)="exportSearchResult()" class="btn text-primary icon-btn"><i
-          class="mdi mdi-printer"></i>
-        </button>
-      </div>
-      <br/>
       <app-table #table sortableTable [paginator]="paginator"
                  [data]="results"
                  [columns]="searchColumns">
@@ -45,6 +48,10 @@
             <td cdk-cell *cdkCellDef="let row">
               <a href="#" (click)="$event.preventDefault(); actionOpen(row)">{{row.fullSerial}}</a>
             </td>
+          </ng-container>
+          <ng-container cdkColumnDef="category">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="caseStatus">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
@@ -61,6 +68,10 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.organization}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="organizationId">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo.getName()}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="createdOn">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
@@ -72,7 +83,7 @@
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
-            <td colspan="6">{{lang.map.no_records_to_display}}</td>
+            <td colspan="10">{{lang.map.no_records_to_display}}</td>
           </tr>
         </table>
         <app-paginator #paginator [length]="results.length"></app-paginator>

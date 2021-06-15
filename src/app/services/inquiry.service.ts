@@ -22,7 +22,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry> {
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'fullName', 'caseStatus', 'organization', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'fullName', 'category', 'organization', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
     [CaseStatus.CANCELED, 'mdi mdi-cancel'],
     [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],

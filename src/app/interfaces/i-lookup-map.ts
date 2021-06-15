@@ -29,4 +29,6 @@ export interface ILookupMap {
   ATTACHMENT_TYPE: Lookup[];
   InquiryCategory: Lookup[];
   ConsultationCategory: Lookup[];
+  InquiryStatus: Lookup[];
+  ConsultationStatus: Lookup[];
 }

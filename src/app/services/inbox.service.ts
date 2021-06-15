@@ -21,6 +21,7 @@ import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comm
 import {QueryResult} from '../models/query-result';
 import {ConsultationService} from './consultation.service';
 import {InternationalCooperationService} from './international-cooperation.service';
+import {CaseTypes} from '../enums/case-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -37,9 +38,9 @@ export class InboxService {
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
-    this.services.set(1, this.inquiryService);
-    this.services.set(2, this.consultationService);
-    this.services.set(3, this.internationalCooperationService);
+    this.services.set(CaseTypes.INQUIRY, this.inquiryService);
+    this.services.set(CaseTypes.CONSULTATION, this.consultationService);
+    this.services.set(CaseTypes.INTERNATIONAL_COOPERATION, this.internationalCooperationService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

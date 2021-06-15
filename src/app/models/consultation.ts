@@ -7,11 +7,11 @@ import {Validators} from '@angular/forms';
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
   caseType: number = 2;
   category!: number;
-  email: string = '';
-  fullName: string = '';
-  mobileNo: string = '';
+  email!: string;
+  fullName!: string;
+  mobileNo!: string;
   organizationId!: number;
-  requestBody: string = '';
+  requestBody!: string;
 
   service: ConsultationService;
 

@@ -27,23 +27,23 @@
   {
     "fields": [
       {
-        "type": "selectField",
-        "label": "subject",
         "key": "category",
+        "type": "selectField",
+        "label": "consulting_type",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.InquiryCategory",
+          "loader": "lookup.ConsultationCategory",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
       },
       {
+        "key": "organizationId",
         "type": "selectField",
-        "label": "competent_dep",
-        "key": "competentDepartmentID",
+        "label": "lbl_organization",
         "selectOptions": {
           "options": [],
-          "loader": "department.loadDepartments",
+          "loader": "organization.load",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
@@ -58,7 +58,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.InquiryStatus",
+          "loader": "lookup.ConsultationStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
@@ -66,10 +66,7 @@
       {
         "key": "serial",
         "type": "input",
-        "label": "serial_number",
-        "validations": {
-          "required": false
-        }
+        "label": "serial_number"
       }
     ]
   },
@@ -78,18 +75,12 @@
       {
         "key": "fullName",
         "type": "input",
-        "label": "full_name",
-        "validations": {
-          "required": false
-        }
+        "label": "full_name"
       },
       {
         "key": "email",
         "type": "input",
-        "label": "lbl_email",
-        "validations": {
-          "required": false
-        }
+        "label": "lbl_email"
       }
     ]
   }

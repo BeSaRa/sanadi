@@ -20,7 +20,7 @@ import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: EServiceGenericService<any>;
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'name', 'caseStatus', 'organization', 'creatorInfo'];
+  searchColumns: string[] = [];
   form!: FormGroup;
   fields: FormlyFieldConfig[] = [];
   serviceNumbers: number[] = Array.from(this.eService.services.keys());
@@ -73,6 +73,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .subscribe((service: EServiceGenericService<any>) => {
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
+        this.results = [];
         this.selectedService
           .loadSearchFields()
           .subscribe((fields) => {
@@ -103,12 +104,20 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
 
+  private exportModel(item: CaseModel<any, any>) {
+    item.exportModel().subscribe((blob) => {
+      window.open(blob.url);
+      this.search$.next(null);
+    });
+  }
+
   exportSearchResult(): void {
     const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields();
     this.selectedService
       .exportSearch(criteria)
       .subscribe((blob) => window.open(blob.url));
   }
+
 
   private buildGridActions() {
     this.actions = [
@@ -156,6 +165,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageComments(item);
         }
+      },
+      {
+        type: 'action',
+        icon: 'mdi-printer',
+        label: 'print',
+        onClick: (item: CaseModel<any, any>) => {
+          this.exportModel(item);
+        }
       }
     ];
   }
@@ -192,5 +209,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   getServiceName(service: number) {
     return this.eService.services.get(service)!.getName();
+  }
+
+  resetCriteria() {
+    this.form.reset();
   }
 }

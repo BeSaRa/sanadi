@@ -3,6 +3,7 @@ import {LookupService} from './lookup.service';
 import {FactoryService} from './factory.service';
 import {isObservable, of} from 'rxjs';
 import {InternalDepartmentService} from './internal-department.service';
+import {OrganizationUnitService} from './organization-unit.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,16 +11,20 @@ import {InternalDepartmentService} from './internal-department.service';
 export class DynamicOptionsService {
   private readonly loader: any = {};
 
-  constructor(private lookupService: LookupService, private internalDepartmentService: InternalDepartmentService) {
+  constructor(private lookupService: LookupService,
+              private internalDepartmentService: InternalDepartmentService,
+              private organizationUnitService: OrganizationUnitService
+  ) {
     FactoryService.registerService('DynamicOptionsService', this);
     this.loader = {
       lookup: lookupService.listByCategory,
-      internalDepartmentService: internalDepartmentService
+      department: internalDepartmentService,
+      organization: organizationUnitService
     };
   }
 
-  load(methodWithLoader: string) {
-    let [loader, method] = methodWithLoader.split('.');
+  load(loaderWithCaller: string) {
+    let [loader, method] = loaderWithCaller.split('.');
     let result = typeof this.loader[loader][method] === 'function' ? this.loader[loader][method]() : this.loader[loader][method];
     return isObservable(result) ? result : of(result);
   }

@@ -1,0 +1,5 @@
+export enum CaseTypes {
+  INQUIRY = 1,
+  CONSULTATION,
+  INTERNATIONAL_COOPERATION
+}

@@ -22,7 +22,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
   providedIn: 'root'
 })
 export class ConsultationService extends EServiceGenericService<Consultation> {
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'name', 'caseStatus', 'organization', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organizationId','fullName', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
     [CaseStatus.CANCELED, 'mdi mdi-cancel'],
     [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
@@ -30,7 +30,7 @@ export class ConsultationService extends EServiceGenericService<Consultation> {
     [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
   ]);
 
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'consultation_search_form.json';
   interceptor: IModelInterceptor<Consultation> = new ConsultationInterceptor();
   actionLogService: ActionLogService = new ActionLogService(this);
   commentService: CommentService = new CommentService(this);
