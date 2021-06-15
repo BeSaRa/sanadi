@@ -3,6 +3,7 @@ import {SortableTableDirective} from '../../directives/sortable-table.directive'
 import {CdkColumnDef} from '@angular/cdk/table';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
+import {SortEvent} from '../../../interfaces/sort-event';
 
 @Component({
   selector: '[sortable-header]',
@@ -16,7 +17,7 @@ export class SortableHeaderComponent implements OnInit, OnDestroy {
   id!: string;
   _arrowDirection: string = '';
   @Input()
-  sortCallback?: (a: any, b: any) => number;
+  sortCallback?: (a: any, b: any, sort: SortEvent) => number;
   @Input()
   sortParamAsFullItem: boolean = false;
 

@@ -156,7 +156,10 @@ export class TableDataSource extends DataSource<any> {
       if (activeColumn && activeColumn.sortCallback) {
         const paramA = activeColumn.sortParamAsFullItem ? a : valueA;
         const paramB = activeColumn.sortParamAsFullItem ? b : valueB;
-        comparatorResult = activeColumn.sortCallback(paramA, paramB) || comparatorResult;
+        comparatorResult = activeColumn.sortCallback(paramA, paramB, {
+          direction: direction,
+          active: active
+        }) || comparatorResult;
         return comparatorResult * (direction == 'asc' ? 1 : -1);
       }
 
