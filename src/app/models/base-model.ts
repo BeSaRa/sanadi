@@ -6,7 +6,7 @@ import {ISearchFields} from '../interfaces/i-search-fields';
 import {searchFunctionType} from '../types/types';
 import {BackendGenericService} from '../generics/backend-generic-service';
 
-export abstract class BaseModel<D, S extends BackendGenericService<D>> extends Cloneable<D> implements INames, ModelCrudInterface<D> {
+export abstract class BaseModel<D, S extends BackendGenericService<D>> extends Cloneable<D> implements INames, ISearchFields, ModelCrudInterface<D> {
   // @ts-ignore
   id: number;
   arName: string = '';
@@ -15,6 +15,7 @@ export abstract class BaseModel<D, S extends BackendGenericService<D>> extends C
   updatedOn?: string | undefined;
   clientData?: string | undefined;
   abstract service: S;
+  searchFields: { [key: string]: string | searchFunctionType; } = {};
 
   create(): Observable<D> {
     return this.service.create(this as unknown as D);

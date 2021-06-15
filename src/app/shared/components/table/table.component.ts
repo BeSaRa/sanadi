@@ -54,6 +54,9 @@ export class TableComponent implements OnInit, OnDestroy {
   };
 
   @Input()
+  useSearchToFilter: boolean = false;
+
+  @Input()
   set paginator(val: PaginatorComponent | undefined) {
     this._paginator = val;
     if (val && this.dataSource) {
@@ -105,6 +108,7 @@ export class TableComponent implements OnInit, OnDestroy {
         this.dataSource.filter = this.filter;
         this.dataSource.sort = this.sortable;
         this.dataSource.paginator = this.paginator;
+        this.dataSource.useSearchMethodToFilter = this.useSearchToFilter;
         if (this._filterCallback) {
           this.dataSource.filterPredicate = this._filterCallback;
         }
