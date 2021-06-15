@@ -196,7 +196,7 @@ export class TableDataSource extends DataSource<any> {
    */
   filterPredicate: ((data: any, filter: string) => boolean) = (data: any, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
-    if (typeof data.search === 'function') {
+    if (typeof data.search === 'function' && data.searchFields) {
       return data.search(filter);
     }
 
