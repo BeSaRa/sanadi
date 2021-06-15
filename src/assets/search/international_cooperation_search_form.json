@@ -28,23 +28,23 @@
     "fields": [
       {
         "type": "selectField",
-        "label": "subject",
-        "key": "category",
-        "selectOptions": {
-          "options": [],
-          "loader": "lookup.InquiryCategory",
-          "bindValue": "lookupKey",
-          "bindLabel": "basedOnLanguage"
-        }
-      },
-      {
-        "type": "selectField",
         "label": "competent_dep",
         "key": "competentDepartmentID",
         "selectOptions": {
           "options": [],
           "loader": "department.loadDepartments",
           "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "type": "selectField",
+        "label": "country",
+        "key": "country",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.Countries",
+          "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
       }
@@ -78,18 +78,12 @@
       {
         "key": "fullName",
         "type": "input",
-        "label": "full_name",
-        "validations": {
-          "required": false
-        }
+        "label": "full_name"
       },
       {
         "key": "email",
         "type": "input",
-        "label": "lbl_email",
-        "validations": {
-          "required": false
-        }
+        "label": "lbl_email"
       }
     ]
   }
