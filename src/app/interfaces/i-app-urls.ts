@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  ATTACHMENT_TYPES: string;
   INTERNAL_USER: string;
   TEAMS: string;
   CLAIM_BULK: string;

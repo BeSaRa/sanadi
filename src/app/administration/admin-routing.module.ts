@@ -7,6 +7,7 @@ import {OrganizationUnitComponent} from './pages/organization-unit/organization-
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
 import {PermissionGuard} from '../guards/permission-guard';
+import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
 import {TeamComponent} from './pages/team/team.component';
 
@@ -34,6 +35,11 @@ const routes: Routes = [
     data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
   },
   {path: 'services', component: ServiceDataComponent},
+  {
+    path: 'attachment-types', component: AttachmentTypesComponent,
+    canActivate: [PermissionGuard],
+    // data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
+  },
   {
     path: 'teams', component: TeamComponent
   }

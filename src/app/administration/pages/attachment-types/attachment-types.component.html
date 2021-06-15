@@ -1,0 +1,47 @@
+<div class="row mb-3">
+  <div class="col d-flex justify-content-start align-items-center flex-row">
+    <h1 class="h6 text-primary">{{lang.map.menu_attachment_types}}</h1>
+    <div>
+      <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i class="mdi mdi-reload"></i></button>
+    </div>
+    <div>
+      <button (click)="add()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+        class="mdi mdi-plus-box"></i></button>
+    </div>
+    <div class="flex-grow-1"></div>
+    <div>
+      <input [formControl]="filter" class="form-control">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="table-responsive">
+      <app-table #table [paginator]="paginator" sortableTable
+                 [columns]="columns"
+                 [data]="list"
+                 [filter]="filter.value"
+                 [filterCallback]="filterCallback">
+        <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+          </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_status}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.status}}</td>
+          </ng-container>
+
+          <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+        </table>
+      </app-table>
+      <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
+    </div>
+  </div>
+</div>

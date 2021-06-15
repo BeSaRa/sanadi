@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  menu_attachment_types: string;
   updated_by: string;
   updated_date: string;
   send_to_manager : string;

@@ -270,5 +270,18 @@
     "group": "administration",
     "itemOrder": 1,
     "svg": null
+  },
+  {
+    "id": 22,
+    "langKey": "menu_attachment_types",
+    "path": "/home/administration/attachment-types",
+    "icon": "mdi-text-box-search-outline",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 5,
+    "svg": null
   }
 ]
