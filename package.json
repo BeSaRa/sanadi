@@ -9,7 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prod": "ng build --prod --base-href /sanadi-ui/",
-    "prod:env": "npm run prod && node environments.js CONFIGURATION.json"
+    "eservices": "ng build --prod --base-href /eservices-ui/",
+    "prod:env": "npm run prod && node environments.js CONFIGURATION.json",
+    "prod:eservices": "npm run eservices && node environments.js CONFIGURATION.json"
   },
   "private": true,
   "dependencies": {
