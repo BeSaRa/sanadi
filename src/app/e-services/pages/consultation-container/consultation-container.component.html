@@ -10,6 +10,6 @@
             class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
     <button (click)="ctrl.launch()" [disabled]="ctrl.form.invalid || !ctrl.model?.canStart()"
             class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
-    <button class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
+    <button (click)="navigateBack()" class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
   </div>
 </div>

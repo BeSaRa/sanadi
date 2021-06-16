@@ -123,9 +123,33 @@ export class EmployeeService {
   }
 
   fillCurrentEmployeeData(loginData: ILoginData) {
+    let permissionsMap: Record<string, Permission> = {
+      'public_relations': (new Permission().clone({
+        permissionKey: 'CREATE_CASE_INQUIRY_SERVICE'
+      })),
+      'international_cooperation': (new Permission().clone({
+        permissionKey: 'CREATE_CASE_INTERNATIONAL_COOPERATION_SERVICE'
+      })),
+      'charity_organization': (new Permission().clone({
+        permissionKey: 'CREATE_CASE_CONSULTATION_SERVICE'
+      })),
+      'risk_and_compliance': (new Permission().clone({
+        permissionKey: 'CREATE_CASE_CONSULTATION_SERVICE'
+      }))
+    };
+
     this.type = loginData.type;
     this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
+    this.teams.forEach(team => {
+      let authName = team.authName.toLowerCase().split(' ').join('_');
+      permissionsMap[authName] ? this.permissions?.push(permissionsMap[authName]) : null;
+    });
+
+    this.teams.length ? this.permissions.push((new Permission().clone({
+      permissionKey: 'TEAM_INBOX'
+    }))) : null;
+
     this.setUserData(loginData);
     this.preparePermissionMap();
   }

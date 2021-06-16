@@ -22,9 +22,19 @@ const routes: Routes = [
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
-      {path: 'e-services', loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule)},
+      {
+        path: 'e-services',
+        canActivate: [PermissionGuard],
+        loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule),
+        data: {configPermissionGroup: 'E_SERVICES_PERMISSIONS_GROUP', checkAnyPermission: true}
+      },
       {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
-      {path: 'team-inbox', loadChildren: () => import('./team-inbox/team-inbox.module').then(m => m.TeamInboxModule)},
+      {
+        path: 'team-inbox',
+        canActivate: [PermissionGuard],
+        loadChildren: () => import('./team-inbox/team-inbox.module').then(m => m.TeamInboxModule),
+        data: {permissionKey: 'TEAM_INBOX'}
+      },
       {path: 'services-search', loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)},
       //{path: '**', redirectTo: '../error'}
     ]

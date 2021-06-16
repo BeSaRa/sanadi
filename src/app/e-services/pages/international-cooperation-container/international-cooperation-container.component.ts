@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {LangService} from '../../../services/lang.service';
+import {NavigationService} from '../../../services/navigation.service';
 
 @Component({
   selector: 'international-cooperation-container',
@@ -8,9 +9,14 @@ import {LangService} from '../../../services/lang.service';
 })
 export class InternationalCooperationContainerComponent implements OnInit {
 
-  constructor(public  lang: LangService) { }
+  constructor(public lang: LangService, private navigationService: NavigationService) {
+  }
 
   ngOnInit(): void {
+  }
+
+  navigateBack() {
+    this.navigationService.goToBack();
   }
 
 }

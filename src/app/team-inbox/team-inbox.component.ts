@@ -63,7 +63,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   reloadDefaultTeam(): void {
-    this.inboxChange$.next(this.employee.getInternalDepartment()?.mainTeam.id || this.employee.teams[0].id || null);
+    this.inboxChange$.next(this.employee.teams[0].id || null);
   }
 
   private listenToInboxChange() {
