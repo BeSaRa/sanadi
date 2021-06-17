@@ -4,6 +4,7 @@ import {customValidationTypes} from '../types/types';
 import * as dayjs from 'dayjs';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
+import {some as _some} from 'lodash';
 
 export const validationPatterns: any = {
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
@@ -161,4 +162,21 @@ export function minDateValidator(minDate: string | Date, format: string = ''): V
     }
     return null;
   };
+}
+
+export function uniqueValidator<T>(data: T[], property: keyof T, editObj: T): ValidatorFn {
+  return ((control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const unique = _some(data, function(row) {
+      if (editObj) {
+        return (editObj[property] + '').toLowerCase() !== (row[property] + '').toLowerCase() &&
+          (row[property] + '').toLowerCase() === control.value.toLowerCase();
+      }
+      return (row[property] + '').toLowerCase() === control.value.toLowerCase();
+    });
+    return unique ? {unique: {value: control.value}} : null;
+  });
 }

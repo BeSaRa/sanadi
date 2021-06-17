@@ -17,6 +17,8 @@ import {OrganizationUserComponent} from './pages/organization-user/organization-
 import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
 import {OrganizationBranchUserComponent} from './pages/organization-branch-user/organization-branch-user.component';
 import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
+import {ServiceDataComponent} from './pages/service-data/service-data.component';
+import {ServiceDataPopupComponent} from './popups/service-data-popup/service-data-popup.component';
 import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
 
@@ -24,7 +26,8 @@ import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, TeamComponent, TeamPopupComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, ServiceDataComponent, ServiceDataPopupComponent,
+    TeamComponent, TeamPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

@@ -7,6 +7,7 @@ import {
     validateFieldsStatus,
     maxDateValidator as maxDate,
     minDateValidator as minDate,
+    uniqueValidator as unique,
     validationPatterns
 } from './validate-fields-status';
 import {AbstractControl} from '@angular/forms';
@@ -97,7 +98,8 @@ const errorKeys: IKeyValue = {
         replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
             return message.change({minDate: errorValue.requiredMinDate});
         }
-    }
+    },
+    unique:{key:'err_unique_field',replaceValues:null}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
@@ -138,6 +140,7 @@ export const CustomValidators = {
     commonValidations,
     maxDate,
     minDate,
+    unique,
     inputMaskPatterns,
     validationPatterns,
   attachment

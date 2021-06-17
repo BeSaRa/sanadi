@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  updated_by: string;
+  updated_date: string;
   send_to_manager : string;
   lbl_edit_attachment_type: string;
   lbl_add_attachment_type: string;
@@ -390,11 +392,18 @@ export interface ILanguageKeys {
   ip_address: string;
   request_details: string;
   consulting_type: string;
+  menu_services_data: string;
+  baw_service_code: string;
+  request_serial_code: string;
+  license_serial_code: string;
+  status: string;
+  err_unique_field: string;
+  lbl_edit_service: string;
+  lbl_add_service: string;
+  case_type: string;
   menu_teams: string;
   sub_teams: string;
   code: string;
-  updated_date: string;
-  updated_by: string;
   lbl_add_team: string;
   lbl_edit_team: string;
   ldap_group: string;

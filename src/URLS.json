@@ -37,5 +37,6 @@
   "CLAIM_BULK": "/inbox/task/claim/bulk",
   "TEAMS": "/admin/baw/team",
   "INTERNAL_USER": "/admin/internal/user",
-  "INTERNAL_DEPARTMENT": "admin/internal/department"
+  "INTERNAL_DEPARTMENT": "admin/internal/department",
+  "SERVICE_DATA": "admin/services"
 }
