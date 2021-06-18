@@ -7,6 +7,8 @@ export class AttachmentTypeInterceptor implements IModelInterceptor<AttachmentTy
   }
 
   send(model: Partial<AttachmentType>): Partial<AttachmentType> {
+    delete model.langService;
+    delete model.service;
     return model;
   }
 }

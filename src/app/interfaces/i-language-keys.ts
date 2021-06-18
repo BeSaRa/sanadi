@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  lbl_edit_attachment_type: string;
+  lbl_add_attachment_type: string;
   menu_attachment_types: string;
   updated_by: string;
   updated_date: string;
