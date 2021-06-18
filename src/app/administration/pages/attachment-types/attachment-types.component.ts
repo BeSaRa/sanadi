@@ -6,6 +6,12 @@ import {AttachmentTypeService} from '../../../services/attachment-type.service';
 import {FormControl} from '@angular/forms';
 import {Localization} from '../../../models/localization';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {IGridAction} from '../../../interfaces/i-grid-action';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {DialogService} from '../../../services/dialog.service';
+import {SharedService} from '../../../services/shared.service';
+import {cloneDeep as _deepClone} from 'lodash';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
   selector: 'attachment-types',
@@ -14,12 +20,67 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 })
 export class AttachmentTypesComponent implements OnInit {
   list: AttachmentType[] = [];
-  columns = ['arName', 'enName', 'status', 'actions'];
+  columns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   filter: FormControl = new FormControl();
-  addSubscription!: Subscription;
   reloadSubscription!: Subscription;
+  selectedRecords: AttachmentType[] = [];
+  actionsList: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      icon: 'mdi-close-box',
+      callback: ($event: MouseEvent) => {
+        this.deleteBulk($event);
+      }
+    }
+  ];
 
-  constructor(public lang: LangService, private attachmentTypeService: AttachmentTypeService) {
+  private _addSelected(record: AttachmentType): void {
+    this.selectedRecords.push(_deepClone(record));
+  }
+
+  private _removeSelected(record: AttachmentType): void {
+    const index = this.selectedRecords.findIndex((item) => {
+      return item.id === record.id;
+    });
+    this.selectedRecords.splice(index, 1);
+  }
+
+  get isIndeterminateSelection(): boolean {
+    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.list.length;
+  }
+
+  get isFullSelection(): boolean {
+    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.list.length;
+  }
+
+  isSelected(record: AttachmentType): boolean {
+    return !!this.selectedRecords.find((item) => {
+      return item.id === record.id;
+    });
+  }
+
+  onSelect($event: Event, record: AttachmentType): void {
+    const checkBox = $event.target as HTMLInputElement;
+    if (checkBox.checked) {
+      this._addSelected(record);
+    } else {
+      this._removeSelected(record);
+    }
+  }
+
+  onSelectAll($event: Event): void {
+    if (this.selectedRecords.length === this.list.length) {
+      this.selectedRecords = [];
+    } else {
+      this.selectedRecords = _deepClone(this.list);
+    }
+  }
+
+  constructor(public lang: LangService,
+              private attachmentTypeService: AttachmentTypeService,
+              private dialogService: DialogService,
+              private sharedService: SharedService,
+              private toast: ToastService) {
   }
 
   ngOnInit(): void {
@@ -56,6 +117,44 @@ export class AttachmentTypesComponent implements OnInit {
         sub.unsubscribe();
       });
     });
+  }
 
+  delete(event: MouseEvent, model: AttachmentType): void {
+    event.preventDefault();
+    // @ts-ignore
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reload();
+          sub.unsubscribe();
+        });
+      }
+    });
+  }
+
+  deleteBulk($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      const message = this.lang.map.msg_confirm_delete_selected;
+      this.dialogService.confirm(message)
+        .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const ids = this.selectedRecords.map((item) => {
+            return item.id;
+          });
+          const sub = this.attachmentTypeService.deleteBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+              .subscribe(() => {
+                this.reload();
+                sub.unsubscribe();
+              });
+          });
+        }
+      });
+    }
   }
 }
