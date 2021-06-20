@@ -79,6 +79,7 @@ const errorKeys: IKeyValue = {
     ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
     ENG_AR_NUM_ONLY: {key: 'err_english_arabic_num_only', replaceValues: null},
     PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
+    EMAIL: {key: 'err_invalid_email', replaceValues: null},
     keyExists :{key: 'localization_key_already_exists', replaceValues : null},
     atLeastOneRequired: {
         key: 'at_least_one_field_should_be_filled',

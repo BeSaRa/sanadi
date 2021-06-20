@@ -13,7 +13,8 @@ export type customValidationTypes =
   | 'AR_NUM_ONLY'
   | 'ENG_AR_ONLY'
   | 'ENG_AR_NUM_ONLY'
-  | 'PASSPORT';
+  | 'PASSPORT'
+  | 'EMAIL';
 
 export type searchFunctionType = (text: string) => boolean;
 
