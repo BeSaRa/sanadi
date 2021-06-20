@@ -16,6 +16,7 @@ import {ToastService} from '../../../../services/toast.service';
 import {InquiryService} from '../../../../services/inquiry.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
 import {IESComponent} from '../../../../interfaces/iescomponent';
+import {CustomValidators} from '../../../../validators/custom-validators';
 
 @Component({
   selector: 'inquiry-component',
@@ -48,6 +49,8 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
 
   private changeModel: BehaviorSubject<Inquiry | undefined> = new BehaviorSubject<Inquiry | undefined>(new Inquiry());
   private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable();
+
+  inputMaskPatterns: typeof CustomValidators.inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(private http: HttpClient,
               public service: InquiryService,

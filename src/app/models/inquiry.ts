@@ -2,7 +2,6 @@ import {CaseModel} from './case-model';
 import {CustomValidators} from '../validators/custom-validators';
 import {InquiryService} from '../services/inquiry.service';
 import {FactoryService} from '../services/factory.service';
-import {Validators} from '@angular/forms';
 
 export class Inquiry extends CaseModel<InquiryService, Inquiry> {
   caseType: number = 1;
@@ -38,12 +37,13 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
       category: control ? [category, [CustomValidators.required]] : category,
       fullName: control ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(4),
+        CustomValidators.maxLength(100),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
-      email: control ? [email, [CustomValidators.required, Validators.email]] : email,
-      mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number]] : mobileNo,
-      occupation: control ? [occupation, []] : occupation,
-      organization: control ? [organization, []] : organization,
-      requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
+      occupation: control ? [occupation, [CustomValidators.maxLength(100)]] : occupation,
+      organization: control ? [organization, [CustomValidators.maxLength(100)]] : organization,
+      requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(2000)]] : requestBody,
       competentDepartmentID: control ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
       competentDepartmentAuthName: control ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
     };
