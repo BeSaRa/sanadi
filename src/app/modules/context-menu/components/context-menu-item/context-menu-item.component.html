@@ -1,7 +1,7 @@
 <ng-template>
   <div class="position-fixed">
     <ul class="dropdown-menu show shadow-sm context-menu-item-list">
-      <ng-container *ngFor="let action of filteredAction">
+      <ng-container *ngFor="let action of filteredAction; last as isLast">
         <li *ngIf="isAction(action)">
           <a (click)="onClick($event , action)"
              class="dropdown-item context-menu-item d-flex align-items-center justify-content-start px-2" href="#">
@@ -10,7 +10,7 @@
             <span class="mx-3">{{displayLabel(action)}}</span>
           </a>
         </li>
-        <li *ngIf="isDivider(action)">
+        <li *ngIf="isDivider(action) && !isLast ">
           <hr class="dropdown-divider">
         </li>
       </ng-container>
