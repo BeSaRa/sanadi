@@ -10,6 +10,8 @@ import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {CaseModel} from '../models/case-model';
 import {DialogService} from '../services/dialog.service';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
+import {ToastService} from '../services/toast.service';
+import {DialogRef} from '../shared/models/dialog-ref';
 
 @Component({
   selector: 'services-search',
@@ -31,6 +33,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   tabIndex$: Subject<number> = new Subject<number>();
 
   constructor(public lang: LangService,
+              private toast: ToastService,
               private inboxService: InboxService,
               private dialog: DialogService,
               public eService: EServiceListService) {
@@ -104,9 +107,17 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
 
-  private exportModel(item: CaseModel<any, any>) {
+  actionExportModel(item: CaseModel<any, any>) {
     item.exportModel().subscribe((blob) => {
       window.open(blob.url);
+      this.search$.next(null);
+    });
+  }
+
+  actionLaunch(item: CaseModel<any, any>, dialogRef?: DialogRef) {
+    item.start().subscribe(_ => {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      dialogRef?.close();
       this.search$.next(null);
     });
   }
@@ -171,7 +182,17 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-printer',
         label: 'print',
         onClick: (item: CaseModel<any, any>) => {
-          this.exportModel(item);
+          this.actionExportModel(item);
+        }
+      },
+      {type: 'divider'},
+      {
+        type: 'action',
+        icon: 'mdi-rocket-launch-outline',
+        label: 'launch',
+        show: (item: CaseModel<any, any>) => item.canStart(),
+        onClick: (item: CaseModel<any, any>, dialogRef: DialogRef) => {
+          this.actionLaunch(item, dialogRef);
         }
       }
     ];
