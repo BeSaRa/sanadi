@@ -35,6 +35,9 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
 
   @Input()
+  fromDialog: boolean = false;
+
+  @Input()
   set outModel(model: Inquiry) {
     this.outModelChange$.next(model);
   }

@@ -35,6 +35,9 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   private outModelChange$: BehaviorSubject<InternationalCooperation> = new BehaviorSubject<InternationalCooperation>(null as unknown as InternationalCooperation);
 
   @Input()
+  fromDialog: boolean = false;
+
+  @Input()
   set outModel(model: InternationalCooperation) {
     this.outModelChange$.next(model);
   }

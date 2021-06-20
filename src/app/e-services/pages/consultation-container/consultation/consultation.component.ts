@@ -38,6 +38,9 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   private modelChange$: Observable<Consultation | undefined> = this.changeModel.asObservable();
 
   @Input()
+  fromDialog: boolean = false;
+
+  @Input()
   set outModel(model: Consultation) {
     this.outModelChange$.next(model);
   }
