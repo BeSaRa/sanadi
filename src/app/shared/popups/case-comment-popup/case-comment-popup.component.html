@@ -6,7 +6,7 @@
 <div class="dialog-content min-w400px no-fixed-height">
   <div [formGroup]="form" class="row">
     <div class="col-12 mb-4 position-relative">
-      <textarea validationClasses="text" rows="4" id="text" class="form-control" formControlName="text"
+      <textarea validationClasses="text" rows="4" id="text" class="form-control" maxlength="2000" formControlName="text"
                 [placeholder]="lang.map.type_your_comment"></textarea>
       <app-field-error-message controlName="text"></app-field-error-message>
     </div>

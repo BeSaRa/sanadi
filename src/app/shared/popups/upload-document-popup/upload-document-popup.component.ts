@@ -41,7 +41,7 @@ export class UploadDocumentPopupComponent implements OnInit {
 
   private buildFormRow(): FormGroup {
     return this.fb.group({
-      documentTitle: [null, [CustomValidators.required]],
+      documentTitle: [null, [CustomValidators.required, CustomValidators.maxLength(100)]],
       files: [null, [CustomValidators.required]],
       isPublished: [false]
     }, {validators: CustomValidators.attachment});
@@ -142,5 +142,13 @@ export class UploadDocumentPopupComponent implements OnInit {
 
   closeDialog() {
     this.dialogRef.close(this.documents);
+  }
+
+  checkUploadForm() {
+    this.form.markAllAsTouched();
+    this.form.markAsDirty();
+    this.form.updateValueAndValidity({
+      emitEvent: true
+    });
   }
 }

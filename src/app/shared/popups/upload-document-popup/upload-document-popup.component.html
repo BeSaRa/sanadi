@@ -7,8 +7,11 @@
   <div [formGroup]="form" class="d-flex flex-column">
     <ng-container formArrayName="documents" *ngFor="let control of formArray.controls; let i = index;">
       <div [formGroupName]="i" class="d-flex flex-row mb-4 attachment-row align-items-center">
-        <input class="form-control flex-shrink-1" formControlName="documentTitle"
-               placeholder="{{lang.map.document_title}}*">
+        <div class="position-relative flex-grow-1">
+          <input class="form-control flex-shrink-1" maxlength="100" validationClasses="documentTitle" formControlName="documentTitle"
+                 placeholder="{{lang.map.document_title}}*">
+          <app-field-error-message controlName="documentTitle"></app-field-error-message>
+        </div>
         <span class="mx-2"></span>
         <div class="form-check form-switch">
           <input [tooltip]="lang.map.published_status" class="form-check-input" type="checkbox"
@@ -32,6 +35,11 @@
     <i class="mdi mdi-plus-box"></i>&nbsp;&nbsp;<span>{{lang.map.add_document_item}}</span></button>
 </div>
 <div class="dialog-actions">
+  <button tabindex="-1" (click)="checkUploadForm()" tooltip="{{lang.map.validate_fields}}"
+          class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
   <button (click)="uploadFiles()" class="btn btn-primary">{{lang.map.upload}}</button>
   <button (click)="closeDialog()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
