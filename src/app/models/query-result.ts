@@ -99,6 +99,10 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
+  sendToManager(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToManager(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
+  }
+
   private actionOnTask(actionType: WFResponseType, claimBefore: boolean = false): DialogRef {
     return this.service.takeActionWithComment(this.TKIID, this.BD_CASE_TYPE, actionType, claimBefore, this);
   }

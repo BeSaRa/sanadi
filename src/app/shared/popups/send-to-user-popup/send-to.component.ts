@@ -17,6 +17,8 @@ import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {DialogRef} from '../../models/dialog-ref';
 import {QueryResult} from '../../../models/query-result';
+import {IWFResponse} from '../../../interfaces/i-w-f-response';
+import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
 @Component({
   selector: 'send-to-user-popup',
@@ -29,13 +31,16 @@ export class SendToComponent implements OnInit, OnDestroy {
   group!: FormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
+  WFResponse: typeof WFResponseType = WFResponseType;
+  controlName: string = '';
+  title: keyof ILanguageKeys = 'send_to_user';
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       inboxService: InboxService,
       taskId: string,
-      sendToUser: boolean,
+      sendToResponse: WFResponseType,
       service: EServiceGenericService<any>,
       claimBefore: boolean,
       task: QueryResult
@@ -52,10 +57,14 @@ export class SendToComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    if (this.data.sendToUser) {
+    if (this.data.sendToResponse === WFResponseType.TO_USER) {
       this.loadUsers();
-    } else {
+      this.title = 'send_to_user';
+    } else if (this.data.sendToResponse === WFResponseType.TO_COMPETENT_DEPARTMENT) {
       this.loadDepartments();
+      this.title = 'send_to_competent_dep';
+    } else {
+      this.title = 'send_to_manager';
     }
     this.listenToSave();
   }
@@ -83,19 +92,33 @@ export class SendToComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.group = this.fb.group({
-      [this.data.sendToUser ? 'user' : 'department']: [null, CustomValidators.required],
       comment: [null]
     });
+
+    switch (this.data.sendToResponse) {
+      case WFResponseType.TO_USER:
+        this.group.addControl('user', this.fb.control(null, CustomValidators.required));
+        this.controlName = 'user';
+        break;
+      case WFResponseType.TO_COMPETENT_DEPARTMENT:
+        this.group.addControl('department', this.fb.control(null, CustomValidators.required));
+        this.controlName = 'department';
+        break;
+    }
   }
 
 
   private send(): void {
-    const id: number = this.group.get(this.data.sendToUser ? 'user' : 'department')?.value!;
-    this.data.inboxService.sendTaskTo(this.data.taskId, {
+    let response: Partial<IWFResponse> = {
       comment: this.group.get('comment')?.value,
-      selectedResponse: this.data.sendToUser ? WFResponseType.TO_USER : WFResponseType.TO_COMPETENT_DEPARTMENT,
-      [this.data.sendToUser ? 'generalUserId' : 'competentDeptId']: id
-    }, this.data.service)
+      selectedResponse: this.data.sendToResponse
+    };
+
+    if (this.controlName) {
+      response[this.data.sendToResponse === WFResponseType.TO_USER ? 'generalUserId' : 'competentDeptId'] = this.group.get(this.controlName)?.value!;
+    }
+
+    this.data.inboxService.sendTaskTo(this.data.taskId, response, this.data.service)
       .pipe(take(1))
       .subscribe(() => {
         this.toast.success(this.lang.map.sent_successfully);

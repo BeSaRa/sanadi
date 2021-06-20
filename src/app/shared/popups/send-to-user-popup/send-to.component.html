@@ -1,10 +1,10 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{data.sendToUser ? lang.map.send_to_user : lang.map.send_to_competent_dep}}</h1>
+  <h1 class="h6 text-white">{{lang.map[title]}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div [formGroup]="group" class="dialog-content no-fixed-height" style="width: 500px">
-  <div *ngIf="data.sendToUser" class="col-12 mb-4 position-relative ng-select-wrapper">
+  <div *ngIf="data.sendToResponse === WFResponse.TO_USER" class="col-12 mb-4 position-relative ng-select-wrapper">
     <label asteriskIfRequired="user" for="user" class="form-label">{{lang.map.select_user}}</label>
     <ng-select validationClasses="user" appendTo="body" [selectOnTab]="true" labelForId="user" [clearable]="true"
                placeholder="{{lang.map.select}}" id="user"
@@ -14,7 +14,8 @@
     </ng-select>
     <app-field-error-message controlName="user"></app-field-error-message>
   </div>
-  <div *ngIf="!data.sendToUser" class="col-12 mb-4 position-relative ng-select-wrapper">
+  <div *ngIf="data.sendToResponse === WFResponse.TO_COMPETENT_DEPARTMENT"
+       class="col-12 mb-4 position-relative ng-select-wrapper">
     <label asteriskIfRequired="department" for="department" class="form-label">{{lang.map.select_department}}</label>
     <ng-select validationClasses="department" appendTo="body" [selectOnTab]="true" labelForId="department"
                [clearable]="true"

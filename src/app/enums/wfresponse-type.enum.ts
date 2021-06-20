@@ -5,5 +5,6 @@ export enum WFResponseType {
   CLOSE = 'close',
   RETURN = 'return',
   COMPLETE = 'complete',
-  TO_COMPETENT_DEPARTMENT = 'toCompetentDept'
+  TO_COMPETENT_DEPARTMENT = 'toCompetentDept',
+  TO_MANAGER = 'toManager',
 }

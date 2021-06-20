@@ -7,11 +7,11 @@ import {InternationalCooperationService} from '../services/international-coopera
 export class InternationalCooperation extends CaseModel<InternationalCooperationService, InternationalCooperation> {
   caseType: number = 3;
   country!: string;
-  email: string = '';
-  fullName: string = '';
-  mobileNo: string = '';
-  organization: string = '';
-  requestBody: string = '';
+  email!: string;
+  fullName!: string;
+  mobileNo!: string;
+  organization!: string;
+  requestBody!: string;
   service: InternationalCooperationService;
 
   constructor() {

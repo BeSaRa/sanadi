@@ -121,7 +121,8 @@ export class InboxService {
     return this.takeActionOnTask(taskId, info, service);
   }
 
-  private openSendToDialog(taskId: string, sendToUser: boolean = true,
+  private openSendToDialog(taskId: string,
+                           sendToResponse: WFResponseType,
                            service: EServiceGenericService<any>,
                            claimBefore: boolean = false,
                            task?: QueryResult): DialogRef {
@@ -130,7 +131,7 @@ export class InboxService {
       {
         inboxService: this,
         taskId: taskId,
-        sendToUser,
+        sendToResponse,
         service,
         claimBefore,
         task
@@ -139,13 +140,19 @@ export class InboxService {
 
   sendToUser(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToDialog(taskId, true, service, claimBefore, task);
+    return this.openSendToDialog(taskId, WFResponseType.TO_USER, service, claimBefore, task);
   }
 
   sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToDialog(taskId, false, service, claimBefore, task);
+    return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
+
+  sendToManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.TO_MANAGER, service, claimBefore, task);
+  }
+
 
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);

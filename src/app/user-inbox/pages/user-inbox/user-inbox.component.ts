@@ -126,6 +126,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       .subscribe(() => this.reloadInbox$.next(null));
   }
 
+  actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.sendToManager(true).onAfterClose$.subscribe(() => {
+      viewDialogRef?.close();
+      this.reloadInbox$.next(null);
+    });
+  }
+
   private buildGridActions() {
     this.actions = [
       // open
@@ -256,6 +263,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
+        }
+      },
+      //to Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_manager',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToManager(item, viewDialogRef);
         }
       }
     ];
