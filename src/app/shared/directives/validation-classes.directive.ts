@@ -1,18 +1,18 @@
-import {Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input, OnInit} from '@angular/core';
 import {AbstractControl, ControlContainer} from '@angular/forms';
 import {Subject} from 'rxjs';
 
 @Directive({
   selector: '[validationClasses]'
 })
-export class ValidationClassesDirective implements OnInit, OnDestroy {
+export class ValidationClassesDirective implements OnInit {
   private invalidOnly: boolean = true;
   @Input()
   control!: AbstractControl;
 
   @HostBinding('class.is-valid')
   get checkIsValid(): boolean {
-    return this.invalidOnly ? '' : (this.formControl.valid && (this.formControl.touched || this.formControl.dirty));
+    return this.invalidOnly ? true : (this.formControl.valid && (this.formControl.touched || this.formControl.dirty));
   }
 
   @HostBinding('class.is-invalid')
@@ -43,6 +43,4 @@ export class ValidationClassesDirective implements OnInit, OnDestroy {
       throw Error('PLEASE PROVIDE control name for given element');
     }
   }
-
-
 }
