@@ -5,6 +5,7 @@ import {ActionRegistry} from '../../../models/action-registry';
 import {concatMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '../../../services/lang.service';
 import {AdminResult} from '../../../models/admin-result';
+import {TabComponent} from '../tab/tab.component';
 
 @Component({
   selector: 'log-viewer',
@@ -22,8 +23,10 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input()
   service!: ActionLogService;
 
-  displayedColumns: string[] = ['user', 'action', 'addedOn', 'time','comment'];
+  displayedColumns: string[] = ['user', 'action', 'addedOn', 'time', 'comment'];
   displayLocationColumns: string[] = ['location'];
+
+  displayPrintBtn: boolean = true;
 
   constructor(public lang: LangService) {
   }
@@ -45,5 +48,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  tabChanged($event: TabComponent) {
+    this.displayPrintBtn = $event.name !== 'location';
   }
 }

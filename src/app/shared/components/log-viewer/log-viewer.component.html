@@ -1,6 +1,6 @@
-<tabs-list>
+<tabs-list (onTabChange)="tabChanged($event)">
   <tab [template]="logTemplate" [title]="lang.map.logs"></tab>
-  <tab [template]="locationTemplate" [title]="lang.map.item_location"></tab>
+  <tab name="location" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
 </tabs-list>
 <ng-template #locationTemplate>
   <div class="table-responsive">

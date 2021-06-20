@@ -4,10 +4,10 @@
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div style="width:800px" class="dialog-content">
-  <log-viewer [caseId]="data.caseId" [service]="data.service.actionLogService"></log-viewer>
+  <log-viewer [caseId]="data.caseId" #viewer [service]="data.service.actionLogService"></log-viewer>
 </div>
 <div class="dialog-actions">
-  <button (click)="print()" [tooltip]="lang.map.print" class="btn btn-link"><i
+  <button (click)="print()" *ngIf="viewer.displayPrintBtn" [tooltip]="lang.map.print" class="btn btn-link"><i
     class="mdi mdi-printer text-primary"></i>
   </button>
   <div class="flex-grow-1"></div>
