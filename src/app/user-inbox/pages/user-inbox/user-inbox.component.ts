@@ -127,7 +127,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
-    item.sendToManager(true).onAfterClose$.subscribe(() => {
+    item.sendToManager().onAfterClose$.subscribe(() => {
       viewDialogRef?.close();
       this.reloadInbox$.next(null);
     });

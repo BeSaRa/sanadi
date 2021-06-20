@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  send_to_manager : string;
+  lbl_edit_attachment_type: string;
+  lbl_add_attachment_type: string;
+  menu_attachment_types: string;
+  updated_by: string;
+  updated_date: string;
   menu_service_search: string;
   menu_international_cooperation: string;
   open_task: string
