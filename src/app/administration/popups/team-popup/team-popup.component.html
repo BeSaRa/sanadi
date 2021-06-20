@@ -1,0 +1,100 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+</div>
+
+<div class="dialog-content" #dialogContent>
+  <form class="w600px" novalidate autocomplete="off"
+        [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="arName" asteriskIfRequired="arName"
+               class="form-label">{{langService.map.lbl_arabic_name}}</label>
+        <input id="arName" [ngClass]="fm.getStatusClass('arName')"
+               formControlName="arName" class="form-control">
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="enName" asteriskIfRequired="enName"
+               class="form-label">{{langService.map.lbl_english_name}}</label>
+        <input id="enName" [ngClass]="fm.getStatusClass('enName')"
+               formControlName="enName" class="form-control">
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="authName" asteriskIfRequired="authName"
+               class="form-label">{{langService.map.code}}</label>
+        <input id="authName" [ngClass]="fm.getStatusClass('authName')"
+               formControlName="authName" class="form-control">
+        <app-field-error-message controlName="authName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="parentDeptId" asteriskIfRequired="parentDeptId"
+               class="form-label">{{langService.map.parent}}</label>
+        <ng-select [selectOnTab]="true" labelForId="parentDeptId" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="parentDeptId"
+                   [notFoundText]="langService.map.msg_not_found"
+                   formControlName="parentDeptId"
+                   [ngClass]="fm.getStatusClass('parentDeptId')">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-option *ngFor="let option of parentDepartmentsList" [value]="option.id">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="parentDeptId"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+        <label for="status" asteriskIfRequired="status" class="form-label">{{langService.map.lbl_status}}</label>
+        <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="status"
+                   [notFoundText]="langService.map.msg_not_found"
+                   formControlName="status"
+                   [ngClass]="fm.getStatusClass('status')">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-option *ngFor="let option of statusList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="status"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="ldapGroupName" asteriskIfRequired="ldapGroupName"
+               class="form-label">{{langService.map.ldap_group}}</label>
+        <input id="ldapGroupName" [ngClass]="fm.getStatusClass('ldapGroupName')"
+               formControlName="ldapGroupName" class="form-control">
+        <app-field-error-message controlName="ldapGroupName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 form-check form-switch">
+        <div class="ms-3">
+          <input class="form-check-input" type="checkbox" id="autoClaim" formControlName="autoClaim">
+          <label class="form-check-label"
+                 for="autoClaim">{{langService.map.auto_claim}}</label>
+        </div>
+      </div>
+      <div class="col-sm-6 mb-4 form-check form-switch">
+        <div class="ms-3">
+          <input class="form-check-input" type="checkbox" id="isHidden" formControlName="isHidden">
+          <label class="form-check-label"
+                 for="isHidden">{{langService.map.hidden}}</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
+          class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+</div>

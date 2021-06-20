@@ -10,7 +10,7 @@ import {isEmptyObject} from '../../../helpers/utils';
   styleUrls: ['./page-header.component.scss']
 })
 export class PageHeaderComponent implements OnInit, OnDestroy {
-  @HostBinding('class') containerClass = 'col-4';
+  @HostBinding('class') containerClass = 'col-md-4 col-sm-12';
   @Input() pageTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() clickOnReload$: BehaviorSubject<any> = {} as BehaviorSubject<any>;
   @Input() clickOnNew$: Subject<any> = {} as Subject<any>;

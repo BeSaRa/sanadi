@@ -390,4 +390,15 @@ export interface ILanguageKeys {
   ip_address: string;
   request_details: string;
   consulting_type: string;
+  menu_teams: string;
+  sub_teams: string;
+  code: string;
+  updated_date: string;
+  updated_by: string;
+  lbl_add_team: string;
+  lbl_edit_team: string;
+  ldap_group: string;
+  parent: string;
+  auto_claim: string;
+  hidden: string;
 }

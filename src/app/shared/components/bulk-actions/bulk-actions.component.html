@@ -4,7 +4,7 @@
     <ng-container *ngFor="let action of actionsList">
       <button class="btn btn-link outline-none"
               tooltip="{{langService.map[action.langKey]}}"
-              (click)="callback(action, $event)">
+              (click)="callback($event, action)">
         <i class="mdi {{action.icon}}"></i></button>
     </ng-container>
   </div>

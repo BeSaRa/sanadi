@@ -1,10 +1,4 @@
 import {searchFunctionType} from '../types/types';
-import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
-import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
-import {FactoryService} from '../services/factory.service';
-import {ConfigurationService} from '../services/configuration.service';
-import * as dayjs from 'dayjs';
-import {IAppConfig} from '../interfaces/i-app-config';
 
 export {
   isValidValue,

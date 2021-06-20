@@ -3,13 +3,14 @@ import {DynamicComponentService} from './dynamic-component.service';
 import {InquiryComponent} from '../e-services/pages/inquiry-container/inquiry/inquiry.component';
 import {ConsultationComponent} from '../e-services/pages/consultation-container/consultation/consultation.component';
 import {InternationalCooperationComponent} from '../e-services/pages/international-cooperation-container/international-cooperation/international-cooperation.component';
+import {TeamService} from './team.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutoRegisterService {
 
-  constructor() {
+  constructor(private teamService: TeamService) { // teamService is injected because it is used in info request
     this.ngOnInit();
   }
 

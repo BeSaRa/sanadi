@@ -7,6 +7,7 @@ import {OrganizationUnitComponent} from './pages/organization-unit/organization-
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
 import {PermissionGuard} from '../guards/permission-guard';
+import {TeamComponent} from './pages/team/team.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -30,6 +31,9 @@ const routes: Routes = [
     path: 'users', component: OrganizationUserComponent,
     canActivate: [PermissionGuard],
     data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
+  },
+  {
+    path: 'teams', component: TeamComponent
   }
 ];
 

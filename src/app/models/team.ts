@@ -1,23 +1,46 @@
-import {Cloneable} from './cloneable';
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
+import {BaseModel} from './base-model';
+import {TeamService} from '../services/team.service';
+import {AdminResult} from './admin-result';
+import {searchFunctionType} from '../types/types';
 
-export class Team extends Cloneable<Team> {
-  arName!: string;
-  enName!: string;
+export class Team extends BaseModel<Team, TeamService> {
   authName!: string;
-  autoClaim!: boolean;
-  id!: number;
-  isHidden!: boolean;
+  autoClaim: boolean = false;
+  isHidden: boolean = false;
   ldapGroupName!: string;
   parentDeptId!: number;
-  updatedBy!: number;
+  createdOn!: string;
+  createdBy!: number;
+  status!: number;
+  statusDateModified: string | null = '';
 
+  createdByInfo!: AdminResult;
+  updatedByInfo!: AdminResult;
+  statusInfo!: AdminResult;
+  createdOnString: string = '';
+  updatedOnString: string = '';
+  statusDateModifiedString: string = '';
+
+  service: TeamService;
   langService!: LangService;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    authName: 'authName',
+    createdBy: text => !this.createdByInfo ? false : this.createdByInfo.getName().toLowerCase().indexOf(text) !== -1,
+    createdOn: 'createdOnString',
+    updatedBy: text => !this.updatedByInfo ? false : this.updatedByInfo.getName().toLowerCase().indexOf(text) !== -1,
+    updatedOn: 'updatedOnString',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
+  };
 
   constructor() {
     super();
+    this.service = FactoryService.getService('TeamService');
     this.langService = FactoryService.getService('LangService');
   }
 
