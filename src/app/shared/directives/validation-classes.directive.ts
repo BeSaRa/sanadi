@@ -12,7 +12,7 @@ export class ValidationClassesDirective implements OnInit {
 
   @HostBinding('class.is-valid')
   get checkIsValid(): boolean {
-    return this.invalidOnly ? true : (this.formControl.valid && (this.formControl.touched || this.formControl.dirty));
+    return this.invalidOnly ? false : (this.formControl.valid && (this.formControl.touched || this.formControl.dirty));
   }
 
   @HostBinding('class.is-invalid')
