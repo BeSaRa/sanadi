@@ -31,8 +31,8 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number]] : mobileNo,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody,
-      competentDepartmentID: control ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
-      competentDepartmentAuthName: control ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
+      competentDepartmentID: control ? [competentDepartmentID] : competentDepartmentID,
+      competentDepartmentAuthName: control ? [competentDepartmentAuthName] : competentDepartmentAuthName
     };
   }
 }
