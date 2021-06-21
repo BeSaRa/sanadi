@@ -30,7 +30,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number]] : mobileNo,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
-      requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody,
+      requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
       competentDepartmentID: control ? [competentDepartmentID] : competentDepartmentID,
       competentDepartmentAuthName: control ? [competentDepartmentAuthName] : competentDepartmentAuthName
     };

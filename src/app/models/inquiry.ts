@@ -43,7 +43,7 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
       occupation: control ? [occupation, [CustomValidators.maxLength(100)]] : occupation,
       organization: control ? [organization, [CustomValidators.maxLength(100)]] : organization,
-      requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(2000)]] : requestBody,
+      requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
       competentDepartmentID: control ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
       competentDepartmentAuthName: control ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
     };
