@@ -1,7 +1,6 @@
 import {CaseModel} from './case-model';
 import {FactoryService} from '../services/factory.service';
 import {CustomValidators} from '../validators/custom-validators';
-import {Validators} from '@angular/forms';
 import {InternationalCooperationService} from '../services/international-cooperation.service';
 
 export class InternationalCooperation extends CaseModel<InternationalCooperationService, InternationalCooperation> {
@@ -33,7 +32,7 @@ export class InternationalCooperation extends CaseModel<InternationalCooperation
 
     return {
       country: controls ? [country, [CustomValidators.required]] : country,
-      email: controls ? [email, [CustomValidators.required, Validators.email]] : email,
+      email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       fullName: controls ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(4),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,

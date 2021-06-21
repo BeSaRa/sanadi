@@ -16,6 +16,9 @@ import {filter, map, takeUntil, tap} from 'rxjs/operators';
 import {OrgUnit} from '../../../../models/org-unit';
 import {OrganizationUnitService} from '../../../../services/organization-unit.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
+import {InternalDepartment} from '../../../../models/internal-department';
+import {InternalDepartmentService} from '../../../../services/internal-department.service';
+import {EmployeeService} from '../../../../services/employee.service';
 
 @Component({
   selector: 'consultation',
@@ -23,6 +26,7 @@ import {CaseStatus} from '../../../../enums/case-status.enum';
   styleUrls: ['./consultation.component.scss']
 })
 export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
+  departments: InternalDepartment[] = [];
   organizations: OrgUnit[] = [];
   destroy$: Subject<any> = new Subject<any>();
   saveTypes: typeof SaveTypes = SaveTypes;
@@ -32,6 +36,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   model?: Consultation;
   editMode: boolean = false;
+  public isInternalUser: boolean = this.employeeService.isInternalUser();
   private outModelChange$: BehaviorSubject<Consultation> = new BehaviorSubject<Consultation>(null as unknown as Consultation);
 
   private changeModel: BehaviorSubject<Consultation | undefined> = new BehaviorSubject<Consultation | undefined>(new Consultation());
@@ -55,6 +60,8 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
               private dialog: DialogService,
               private lookupService: LookupService,
               private toast: ToastService,
+              private employeeService: EmployeeService,
+              private intDepService: InternalDepartmentService,
               public lang: LangService,
               private orgUnitService: OrganizationUnitService) {
   }
@@ -62,6 +69,9 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   ngOnInit(): void {
     this.service.ping();
     this.loadOrganizations();
+    if (this.isInternalUser) {
+      this.loadDepartments();
+    }
     this.buildForm();
     this.listenToSave();
     this.listenToModelChange();
@@ -72,6 +82,12 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+  }
+
+  private loadDepartments(): void {
+    this.intDepService.loadDepartments()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps);
   }
 
   private loadOrganizations(): void {
@@ -180,4 +196,12 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       });
   }
 
+  onCompetentDepChange(depId: number): void {
+    const dep = this.departments.find(item => item.id === depId);
+    dep ? this.setAuthName(dep) : this.setAuthName(null);
+  }
+
+  setAuthName(dep: InternalDepartment | null): void {
+    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
+  }
 }

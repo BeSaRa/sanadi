@@ -2,7 +2,6 @@ import {CaseModel} from './case-model';
 import {ConsultationService} from '../services/consultation.service';
 import {FactoryService} from '../services/factory.service';
 import {CustomValidators} from '../validators/custom-validators';
-import {Validators} from '@angular/forms';
 
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
   caseType: number = 2;
@@ -21,7 +20,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   }
 
   getFormFields(control: boolean = false): any {
-    const {category, organizationId, fullName, mobileNo, email, requestBody} = this;
+    const {category, organizationId, fullName, mobileNo, email, requestBody, competentDepartmentID, competentDepartmentAuthName} = this;
 
     return {
       category: control ? [category, [CustomValidators.required]] : category,
@@ -30,8 +29,10 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
         CustomValidators.minLength(4),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number]] : mobileNo,
-      email: control ? [email, [CustomValidators.required, Validators.email]] : email,
-      requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      requestBody: control ? [requestBody, [CustomValidators.required]] : requestBody,
+      competentDepartmentID: control ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
+      competentDepartmentAuthName: control ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
     };
   }
 }
