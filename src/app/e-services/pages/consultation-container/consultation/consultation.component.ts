@@ -19,6 +19,7 @@ import {CaseStatus} from '../../../../enums/case-status.enum';
 import {InternalDepartment} from '../../../../models/internal-department';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
 import {EmployeeService} from '../../../../services/employee.service';
+import {CustomValidators} from '../../../../validators/custom-validators';
 
 @Component({
   selector: 'consultation',
@@ -92,13 +93,18 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
 
   private loadOrganizations(): void {
     this.orgUnitService.load().pipe(takeUntil(this.destroy$))
-      .subscribe(orgs => this.organizations = orgs);
+      .subscribe(organizations => this.organizations = organizations);
   }
 
   private buildForm(): void {
     const consultation = new Consultation();
     this.form = this.fb.group(consultation.getFormFields(true));
     this.fm = new FormManager(this.form, this.lang);
+
+    if (this.isInternalUser) {
+      this.form.get('competentDepartmentID')?.setValidators(CustomValidators.required);
+      this.form.get('competentDepartmentID')?.updateValueAndValidity();
+    }
   }
 
   private listenToSave() {
