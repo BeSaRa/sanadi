@@ -49,6 +49,10 @@ export class CommentsComponent implements OnInit {
   }
 
   openCommentDialog(): void {
+    if (!this.caseId) {
+      this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
+      return;
+    }
     this.dialog.show(CaseCommentPopupComponent, {
       service: this.service,
       caseId: this._caseId

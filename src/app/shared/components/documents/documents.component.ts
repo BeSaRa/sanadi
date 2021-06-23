@@ -197,6 +197,11 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   openUploadDialog(): void {
+    if (!this.caseId) {
+      this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
+      return;
+    }
+
     this.dialog.show(UploadDocumentPopupComponent, {
       caseId: this.caseId,
       service: this.service

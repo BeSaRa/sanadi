@@ -5,6 +5,7 @@ export interface ILanguageKeys {
   updated_by: string;
   updated_date: string;
   send_to_manager : string;
+  this_action_cannot_be_performed_before_saving_the_request: string;
   menu_service_search: string;
   menu_international_cooperation: string;
   open_task: string
