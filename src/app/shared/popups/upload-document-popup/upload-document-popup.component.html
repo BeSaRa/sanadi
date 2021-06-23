@@ -4,29 +4,57 @@
           tabindex="-1" [dialogClose]="documents" aria-label="Close"></button>
 </div>
 <div class="dialog-content">
-  <div [formGroup]="form" class="d-flex flex-column">
+  <div [formGroup]="form" class="d-flex flex-column mb-4">
     <ng-container formArrayName="documents" *ngFor="let control of formArray.controls; let i = index;">
-      <div [formGroupName]="i" class="d-flex flex-row mb-4 attachment-row align-items-center">
-        <div class="position-relative flex-grow-1">
-          <input class="form-control flex-shrink-1" maxlength="100" validationClasses="documentTitle" formControlName="documentTitle"
-                 placeholder="{{lang.map.document_title}}*">
-          <app-field-error-message controlName="documentTitle"></app-field-error-message>
+      <div [formGroupName]="i" class="d-flex flex-column border-bottom mb-4 pb-4">
+        <div class="d-flex flex-row mb-4">
+          <div class="d-flex align-items-end justify-content-start">
+            <input #file id="file_{{i}}" accept="application/pdf" (change)="fileChange($event,i)" type="file"
+                   class="visually-hidden">
+            <label for="file_{{i}}" [class.btn-primary]="file.value" [class.btn-secondary]="!file.value"
+                   [tooltip]="lang.map.upload_file" class="btn flex-shrink-0"><i class="mdi mdi-upload"></i></label>
+            <span class="mx-2"></span>
+            <button (click)="removeControl(i)" [tooltip]="lang.map.btn_delete" class="btn btn-secondary flex-shrink-0">
+              <i class="mdi mdi-close"></i>
+            </button>
+            <span class="mx-2"></span>
+          </div>
+          <div class="row flex-grow-1">
+            <div class="col-md-6 position-relative">
+              <label for="document_title_{{i}}" class="form-label">{{lang.map.document_title}}</label>
+              <input class="form-control flex-shrink-1" id="document_title_{{i}}" maxlength="100"
+                     validationClasses="documentTitle"
+                     formControlName="documentTitle">
+              <app-field-error-message controlName="documentTitle"></app-field-error-message>
+            </div>
+            <div class="col-md-6 position-relative ng-select-wrapper">
+              <!--suppress XmlInvalidId -->
+              <label for="document_type_{{i}}" class="form-label">{{lang.map.attachment_type}}</label>
+              <ng-select [selectOnTab]="true" appendTo="body" labelForId="document_type_{{i}}" [clearable]="true"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         formControlName="documentType"
+                         validationClasses="documentType">
+                <ng-option [value]="option" *ngFor="let option of attachmentTypes">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="documentType"></app-field-error-message>
+            </div>
+          </div>
+          <div class="d-flex align-items-end justify-content-start">
+            <span class="mx-2"></span>
+            <div class="form-check form-switch">
+              <input [tooltip]="lang.map.published_status" class="form-check-input" type="checkbox"
+                     formControlName="isPublished" id="isPublished_{{i}}">
+            </div>
+          </div>
         </div>
-        <span class="mx-2"></span>
-        <div class="form-check form-switch">
-          <input [tooltip]="lang.map.published_status" class="form-check-input" type="checkbox"
-                 formControlName="isPublished" id="isPublished_{{i}}">
+        <div class="row">
+          <div class="col-12">
+            <label>{{lang.map.lbl_description}}</label>
+            <textarea class="form-control" formControlName="description" rows="2"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
+          </div>
         </div>
-        <span class="mx-2"></span>
-        <input #file id="file_{{i}}" accept="application/pdf" (change)="fileChange($event,i)" type="file"
-               class="visually-hidden">
-        <span class="mx-2"></span>
-        <label for="file_{{i}}" [class.btn-primary]="file.value" [class.btn-secondary]="!file.value"
-               [tooltip]="lang.map.upload_file" class="btn flex-shrink-0"><i class="mdi mdi-upload"></i></label>
-        <span class="mx-2"></span>
-        <button (click)="removeControl(i)" [tooltip]="lang.map.btn_delete" class="btn btn-secondary flex-shrink-0"><i
-          class="mdi mdi-close"></i>
-        </button>
       </div>
     </ng-container>
   </div>
