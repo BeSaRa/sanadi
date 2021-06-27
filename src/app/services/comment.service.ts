@@ -36,7 +36,7 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _update(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
-    return this.service.http.put<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', model);
+    return this.service.http.put<CaseComment>(this.service._getServiceURL() + '/comment/', model);
   }
 
   update(caseId: string, model: Partial<CaseComment>): Observable<CaseComment> {

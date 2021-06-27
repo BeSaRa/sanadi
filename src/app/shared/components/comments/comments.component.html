@@ -14,6 +14,15 @@
       <div class="comment-body text-primary flex-shrink-1 flex-grow-1 text-truncate">
         <a [title]="comment.text" (click)="showComment($event , comment )" href="#">{{comment.text}}</a>
       </div>
+      <div *ngIf="isMyComment(comment)">
+        <button (click)="openCommentEditDialog(comment)" [tooltip]="lang.map.edit_comment" class="btn icon-btn"><i
+          class="text-primary mdi mdi-comment-edit"></i></button>
+      </div>
+      <div [tooltip]="lang.map.show_edit_logs">
+        <button [disabled]="!comment.editHistory.length" (click)="openCommentHistory(comment)" class="btn p-0 icon-btn">
+          <i
+            class="text-primary mdi mdi-history"></i></button>
+      </div>
       <div [tooltip]="comment.creatorInfo.getName()" class="cursor-pointer comment-icon text-primary">
         <i class="mdi mdi-comment-account-outline"></i>
       </div>

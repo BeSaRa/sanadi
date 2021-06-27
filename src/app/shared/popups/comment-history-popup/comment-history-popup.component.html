@@ -1,0 +1,25 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.edit_logs}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" style="width: 600px">
+  <app-table sortableTable #table [data]="comments">
+    <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <ng-container cdkColumnDef="text">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.text}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="createdOn">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.modified_on}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date:'medium'}} </td>
+      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </app-table>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

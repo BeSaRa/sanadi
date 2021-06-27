@@ -12,6 +12,7 @@ export class CaseCommentInterceptor implements IModelInterceptor<CaseComment> {
   send(model: any): any {
     delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.editHistory;
     return model;
   }
 }

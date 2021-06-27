@@ -8,7 +8,6 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '../../services/toast.service';
 import {ECookieService} from '../../services/e-cookie.service';
-import {CustomHttpErrorResponse} from '../../models/custom-http-error-response';
 import {TabComponent} from '../../shared/components/tab/tab.component';
 
 @Component({
@@ -77,8 +76,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             mapTo(true),
             tap(() => {
               this.toastService.success(this.lang.map.msg_login_success);
-            }, (error: CustomHttpErrorResponse) => {
-              this.toastService.error(error.getError());
             }),
             catchError(() => {
               return of(false);

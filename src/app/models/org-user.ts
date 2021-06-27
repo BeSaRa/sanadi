@@ -31,6 +31,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   userTypeInfo: AdminResult | undefined; // need to bind to model
   jobTitleInfo: AdminResult | undefined; // need to bind to model
   customRoleInfo: AdminResult | undefined;
+  generalUserId!: number;
 
   service: OrganizationUserService;
   private langService: LangService;

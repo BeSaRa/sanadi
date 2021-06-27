@@ -21,7 +21,7 @@ export class InternalUser extends BaseModel<InternalUser, any> {
   status!: number;
   statusDateModified!: string;
   userType!: UserTypes;
-
+  generalUserId!: number
   langService: LangService;
 
   constructor() {

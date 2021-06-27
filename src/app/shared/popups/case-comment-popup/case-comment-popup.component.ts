@@ -9,6 +9,7 @@ import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../models/dialog-ref';
 import {AdminResult} from '../../../models/admin-result';
 import {EmployeeService} from '../../../services/employee.service';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-case-comment-popup',
@@ -20,13 +21,19 @@ export class CaseCommentPopupComponent implements OnInit {
   service: CommentService;
   caseId: string;
   form!: FormGroup;
+  editMode: boolean = false;
 
   get comment(): string {
     return this.form.get('text')?.value || '';
   };
 
   constructor(
-    @Inject(DIALOG_DATA_TOKEN) data: { comment: CaseComment, caseId: string, service: CommentService},
+    @Inject(DIALOG_DATA_TOKEN) data: {
+      comment: CaseComment,
+      caseId: string,
+      service: CommentService,
+      editMode: boolean,
+    },
     public lang: LangService,
     public fb: FormBuilder,
     private dialogRef: DialogRef,
@@ -35,6 +42,11 @@ export class CaseCommentPopupComponent implements OnInit {
   ) {
     this.service = data.service;
     this.caseId = data.caseId;
+
+    if (data.editMode && data.comment) {
+      this.model = data.comment;
+      this.editMode = data.editMode;
+    }
   }
 
   ngOnInit(): void {
@@ -43,7 +55,7 @@ export class CaseCommentPopupComponent implements OnInit {
 
   buildForm(): void {
     this.form = this.fb.group({
-      text: [null, [CustomValidators.required, CustomValidators.minLength(4)]]
+      text: [this.model ? this.model.text : null, [CustomValidators.required, CustomValidators.minLength(4)]]
     });
   }
 
@@ -58,7 +70,9 @@ export class CaseCommentPopupComponent implements OnInit {
   private prepareComment(): void {
     const employee = this.employeeService.getCurrentUser();
     this.model = (new CaseComment()).clone({
-      text: this.comment, creatorInfo: AdminResult.createInstance({
+      ...this.model,
+      text: this.comment,
+      creatorInfo: AdminResult.createInstance({
         arName: employee.arName,
         enName: employee.enName
       })
@@ -66,12 +80,11 @@ export class CaseCommentPopupComponent implements OnInit {
   }
 
   private saveCommentByApi(): void {
-    this.service
-      .create(this.caseId, this.model!)
-      .subscribe(comment => {
-        this.toast.success(this.lang.map.comment_has_been_saved_successfully);
-        this.dialogRef.close(comment);
-      });
+    const save$ = this.editMode ? this.service.update(this.caseId, this.model!) : this.service.create(this.caseId, this.model!);
+    save$.pipe(take(1)).subscribe(comment => {
+      this.toast.success(this.lang.map.comment_has_been_saved_successfully);
+      this.dialogRef.close(comment);
+    });
   }
 
   private saveCommentByClient(): void {

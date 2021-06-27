@@ -6,6 +6,8 @@ import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {CaseComment} from '../../../models/case-comment';
 import {DialogService} from '../../../services/dialog.service';
 import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-comment-popup.component';
+import {EmployeeService} from '../../../services/employee.service';
+import {CommentHistoryPopupComponent} from '../../popups/comment-history-popup/comment-history-popup.component';
 
 @Component({
   selector: 'app-comments',
@@ -32,6 +34,7 @@ export class CommentsComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
 
   constructor(public lang: LangService,
+              private employeeService: EmployeeService,
               private dialog: DialogService) {
   }
 
@@ -55,7 +58,8 @@ export class CommentsComponent implements OnInit {
     }
     this.dialog.show(CaseCommentPopupComponent, {
       service: this.service,
-      caseId: this._caseId
+      caseId: this._caseId,
+      editMode: false
     }).onAfterClose$
       .subscribe((comment) => {
         if (comment && !this.caseId) {
@@ -95,5 +99,34 @@ export class CommentsComponent implements OnInit {
           this.loadComments();
         }
       });
+  }
+
+  isMyComment(comment: CaseComment) {
+    return comment.creatorInfo.id === this.employeeService.getCurrentUser().generalUserId;
+  }
+
+  openCommentEditDialog(comment: CaseComment) {
+    if (!this.caseId) {
+      this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
+      return;
+    }
+    this.dialog.show(CaseCommentPopupComponent, {
+      service: this.service,
+      caseId: this._caseId,
+      editMode: true,
+      comment
+    }).onAfterClose$
+      .subscribe((comment) => {
+        if (comment && !this.caseId) {
+          this.comments = this.comments.concat(comment);
+        }
+        this.loadComments();
+      });
+  }
+
+  openCommentHistory(comment: CaseComment) {
+    this.dialog.show(CommentHistoryPopupComponent, {
+      comment
+    });
   }
 }
