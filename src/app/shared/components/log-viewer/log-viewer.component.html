@@ -37,7 +37,7 @@
         </ng-container>
         <ng-container cdkColumnDef="time">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_time}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.time}} </td>
+          <td cdk-cell *cdkCellDef="let row"> {{row.addedOn|date:"shortTime"}} </td>
         </ng-container>
         <ng-container cdkColumnDef="comment">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
