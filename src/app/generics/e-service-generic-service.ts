@@ -189,8 +189,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this.dialog.show(ManageCommentPopupComponent, {service: this, caseId});
   }
 
-  openRecommendationDialog(caseId: string): DialogRef {
-    return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId});
+  openRecommendationDialog(caseId: string, onlyLogs: boolean = false): DialogRef {
+    return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId, onlyLogs});
   }
 
   openDocumentDialog(caseId: string): DialogRef {

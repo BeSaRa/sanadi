@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="gridStyle" class="row">
   <ul class="comments d-flex flex-column">
     <li class="comment d-flex flex-row align-items-center text-primary">
       <!--      <div><input class="form-check-input" type="checkbox"></div>-->
@@ -15,6 +15,7 @@
         <a [title]="recommendation.text" (click)="showRecommendation($event , recommendation )"
            href="#">{{recommendation.text}}</a>
       </div>
+      <div class="p-1">{{recommendation.createdOn|date:"short"}}</div>
       <div [tooltip]="recommendation.creatorInfo.getName()" class="cursor-pointer comment-icon text-primary">
         <i class="mdi mdi-account-star"></i>
       </div>
@@ -26,4 +27,34 @@
       <div class="comment-icon invisible"><i class="mdi mdi-account-star"></i></div>
     </li>
   </ul>
+</div>
+<div *ngIf="!gridStyle" class="row mb-3">
+  <label for="recommendation"
+         asteriskIfRequired
+         [control]="formControl"
+         class="col-md-2 col-sm-12 col-form-label position-relative">
+    <span class="d-block">{{lang.map.recommendation}}</span>
+    <span class="d-flex align-items-center">
+      <span [tooltip]="lang.map.save_changes">
+        <button [disabled]="!formControl.dirty || !formControl.value.length"
+                (click)="saveRecommendationChanges()"
+                class="btn p-0">
+          <i class="mdi mdi-content-save-edit-outline text-primary"></i>
+        </button>
+      </span>
+      <button [tooltip]="lang.map.recommendations_logs" (click)="showRecommendationsHistory()"
+              class="btn">
+        <i class="mdi mdi-history text-primary"></i>
+      </button>
+      <button [tooltip]="lang.map.btn_reload" (click)="loadRecommendations()"
+              class="btn p-0">
+        <i class="mdi mdi-reload text-primary"></i>
+      </button>
+    </span>
+  </label>
+  <div class="col-md-10 col-sm-12 mb-3 position-relative">
+    <textarea rows="3" validationClasses [control]="formControl" [formControl]="formControl" id="recommendation"
+              class="form-control"></textarea>
+    <app-field-error-message [control]="formControl"></app-field-error-message>
+  </div>
 </div>

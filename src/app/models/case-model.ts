@@ -120,8 +120,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.openDocumentDialog(this.id);
   }
 
-  manageRecommendations(): DialogRef {
-    return this.service.openRecommendationDialog(this.id);
+  manageRecommendations(onlyLogs: boolean = false): DialogRef {
+    return this.service.openRecommendationDialog(this.id, onlyLogs);
   }
 
   manageComments(): DialogRef {
@@ -150,6 +150,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               const componentRef = instance.container.createComponent(factory);
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
+              comInstance.fromDialog = true;
               instance.component = comInstance;
             });
         })

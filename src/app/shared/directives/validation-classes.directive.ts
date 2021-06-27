@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostBinding, Input, OnInit} from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input, OnInit, Optional} from '@angular/core';
 import {AbstractControl, ControlContainer} from '@angular/forms';
 import {Subject} from 'rxjs';
 
@@ -34,7 +34,7 @@ export class ValidationClassesDirective implements OnInit {
   }
 
   constructor(private element: ElementRef,
-              private parent: ControlContainer) {
+              @Optional() private parent: ControlContainer) {
   }
 
   ngOnInit(): void {

@@ -151,6 +151,7 @@ export class QueryResult extends Cloneable<QueryResult> {
               const componentRef = instance.container.createComponent(factory);
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
+              comInstance.fromDialog = true;
               instance.component = comInstance;
             });
         })

@@ -58,7 +58,8 @@ export class RecommendationPopupComponent implements OnInit {
   private prepareRecommendation(): void {
     const employee = this.employeeService.getCurrentUser();
     this.model = (new Recommendation()).clone({
-      text: this.recommendation, creatorInfo: AdminResult.createInstance({
+      text: this.recommendation,
+      creatorInfo: AdminResult.createInstance({
         arName: employee.arName,
         enName: employee.enName
       })

@@ -1,10 +1,10 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{lang.map.manage_recommendations}}</h1>
+  <h1 class="h6 text-white">{{data.onlyLogs ? lang.map.recommendations_logs : lang.map.manage_recommendations}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content" style="width: 600px">
-  <div class="d-flex flex-row align-items-center justify-content-start">
+  <div *ngIf="!data.onlyLogs" class="d-flex flex-row align-items-center justify-content-start">
     <h6 class="text-primary d-inline-block">{{lang.map.recommendations}}</h6>
     <button [tooltip]="lang.map.btn_add" (click)="component.openRecommendationDialog()"
             class="d-inline-block text-primary icon-btn"><i

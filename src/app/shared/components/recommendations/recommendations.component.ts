@@ -6,6 +6,11 @@ import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {RecommendationService} from '../../../services/recommendation.service';
 import {RecommendationPopupComponent} from '../../popups/recommendation-popup/recommendation-popup.component';
 import {Recommendation} from '../../../models/recommendation';
+import {FormControl} from '@angular/forms';
+import {CaseModel} from '../../../models/case-model';
+import {AdminResult} from '../../../models/admin-result';
+import {EmployeeService} from '../../../services/employee.service';
+import {ToastService} from '../../../services/toast.service';
 
 @Component({
   selector: 'app-recommendations',
@@ -16,6 +21,11 @@ export class RecommendationsComponent implements OnInit {
   _caseId: string = '';
   recommendations: Recommendation[] = [];
   @Input() service!: RecommendationService;
+  @Input() gridStyle: boolean = true;
+  @Input()
+  case!: CaseModel<any, any>;
+
+  formControl: FormControl = new FormControl('');
 
   @Input()
   set caseId(value: string | undefined) {
@@ -32,11 +42,18 @@ export class RecommendationsComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
 
   constructor(public lang: LangService,
+              public employeeService: EmployeeService,
+              private toast: ToastService,
               private dialog: DialogService) {
+
   }
 
   ngOnInit(): void {
-    this.loadRecommendations();
+    if (this.case) {
+      this.formControl.setValue(this.case.recommendation);
+    } else {
+      this.loadRecommendations();
+    }
   }
 
   loadRecommendations(): void {
@@ -45,7 +62,13 @@ export class RecommendationsComponent implements OnInit {
     }
     this.service.load(this._caseId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(recommendations => this.recommendations = recommendations.reverse());
+      .subscribe(recommendations => {
+        this.recommendations = recommendations.reverse();
+        if (this.recommendations.length) {
+          this.formControl.setValue(this.recommendations[0].text);
+          this.formControl.markAsPristine();
+        }
+      });
   }
 
   openRecommendationDialog(): void {
@@ -91,5 +114,39 @@ export class RecommendationsComponent implements OnInit {
           this.loadRecommendations();
         }
       });
+  }
+
+  saveRecommendationChanges() {
+    if (!this._caseId) {
+      return;
+    }
+    const recommendationValue = (this.formControl.value as string).trim();
+    if (recommendationValue.length < 4) {
+      this.dialog.error(this.lang.map.err_specific_min_length.change({field: this.lang.map.recommendation, length: 4}));
+      return;
+    }
+    const employee = this.employeeService.getCurrentUser();
+
+    const recommendation: Recommendation = (new Recommendation()).clone({
+      text: recommendationValue,
+      creatorInfo: AdminResult.createInstance({
+        arName: employee.arName,
+        enName: employee.enName
+      })
+    });
+
+    this.service
+      .create(this._caseId, recommendation)
+      .subscribe((recommendation) => {
+        this.toast.success(this.lang.map.msg_update_x_success.change({x: this.lang.map.recommendation}));
+        this.formControl.setValue(recommendation.text);
+        this.formControl.markAsPristine();
+      });
+  }
+
+  showRecommendationsHistory() {
+    this.case.manageRecommendations(true).onAfterClose$.subscribe(() => {
+      this.loadRecommendations();
+    });
   }
 }
