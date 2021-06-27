@@ -9,7 +9,7 @@ import {LangService} from '../../../services/lang.service';
   styleUrls: ['./comment-history-popup.component.scss']
 })
 export class CommentHistoryPopupComponent implements OnInit {
-  displayedColumns: string[] = ['text', 'createdOn'];
+  displayedColumns: string[] = ['text', 'id'];
   comments: CaseComment[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: { comment: CaseComment },
@@ -20,6 +20,10 @@ export class CommentHistoryPopupComponent implements OnInit {
     this.comments = this.data.comment.editHistory.reverse();
     this.data.comment.createdOn = this.data.comment.lastModified;
     this.comments.unshift(this.data.comment);
+    this.comments = this.comments.map((comment, index) => {
+      comment.id = (index + '');
+      return comment;
+    });
   }
 
 }
