@@ -6,9 +6,11 @@
 <div class="dialog-content" style="width: 600px">
   <div class="d-flex flex-row align-items-center justify-content-start">
     <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
-    <button (click)="component.openUploadDialog()" class="d-inline-block text-primary icon-btn"><i
+    <button [tooltip]="lang.map.btn_add" (click)="component.openUploadDialog()"
+            class="d-inline-block text-primary icon-btn"><i
       class="mdi mdi-plus-box"></i></button>
-    <button (click)="component.loadDocuments()" class="d-inline-block text-primary icon-btn"><i
+    <button [tooltip]="lang.map.btn_reload" (click)="component.loadDocuments()"
+            class="d-inline-block text-primary icon-btn"><i
       class="mdi mdi-reload"></i></button>
   </div>
   <app-documents #component [service]="data.service.documentService" [caseId]="data.caseId"></app-documents>
