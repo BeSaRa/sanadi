@@ -16,7 +16,7 @@
     <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
   </button>
   <div class="flex-grow-1"></div>
-  <button [disabled]="component?.form?.invalid" (click)="component?.save?.next(saveTypes.FINAL)"
+  <button [disabled]="component?.form?.invalid || component?.readonly" (click)="saveCase()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

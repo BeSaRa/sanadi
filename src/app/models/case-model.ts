@@ -133,10 +133,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
     const cfr = this.service.getCFR();
     const factory = cfr.resolveComponentFactory(component);
-    let model: any;
+    let model: CaseModel<any, any>;
     return this.service.getById(this.id)
       .pipe(
-        tap(task => model = task),
+        tap((task: any) => model = task),
         map(_ => this.service.dialog.show(CaseViewerPopupComponent, {key: this.service.serviceKey, model: model, actions})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
@@ -151,6 +151,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
               comInstance.fromDialog = true;
+              comInstance.readonly = !model.canStart();
               instance.component = comInstance;
             });
         })

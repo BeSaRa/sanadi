@@ -7,4 +7,6 @@ export interface IESComponent {
   save: Subject<SaveTypes>;
   form: FormGroup;
   fromDialog: boolean;
+  readonly: boolean;
+  allowMange: boolean;
 }

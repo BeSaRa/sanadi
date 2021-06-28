@@ -133,6 +133,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         }),
         ...value
       })))
+      .pipe(map((value) => {
+        value.actions = value.actions.filter(action => {
+          return !(action.data && action.data.hideFromContext);
+        });
+        return value;
+      }))
       .subscribe((data) => {
         this.debugInfo(() => {
           console.log('actions after filter', data.actions);

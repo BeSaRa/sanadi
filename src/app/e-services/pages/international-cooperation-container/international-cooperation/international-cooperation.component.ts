@@ -48,7 +48,8 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
 
   private changeModel: BehaviorSubject<InternationalCooperation | undefined> = new BehaviorSubject<InternationalCooperation | undefined>(new InternationalCooperation());
   private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable();
-
+  readonly: boolean = false;
+  allowMange: boolean = true;
   constructor(private http: HttpClient,
               public intDepService: InternalDepartmentService,
               public service: InternationalCooperationService,

@@ -180,6 +180,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
 
   private buildGridActions() {
     this.actions = [
+      // claim
+      {
+        type: 'action',
+        icon: 'mdi-hand-right',
+        label: 'claim',
+        onClick: (item: QueryResult) => this.actionClaim(item)
+      },
       // open
       {
         type: 'action',
@@ -210,7 +217,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
-        data: {hideFromViewer: true},
+        data: {
+          hideFromViewer: true,
+          hideFromContext: true
+        },
         onClick: (item: QueryResult) => {
           this.actionManageRecommendations(item);
         }
@@ -231,6 +241,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
         },
@@ -243,6 +256,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
         },
@@ -255,6 +271,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-check',
         label: 'task_complete',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
         },
@@ -267,6 +286,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'approve_task',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
         },
@@ -279,6 +301,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'return_task',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
         },
@@ -291,6 +316,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
         },
@@ -303,6 +331,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
         },
@@ -315,6 +346,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
+        data: {
+          hideFromContext: true
+        },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
         },

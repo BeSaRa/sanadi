@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  <fieldset>
+  <fieldset [disabled]="readonly">
     <form [formGroup]="form" autocomplete="off">
       <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
@@ -7,7 +7,7 @@
             <label asteriskIfRequired="category" for="category"
                    class="col-md-4 col-sm-12 col-form-label">{{lang.map.subject}}</label>
             <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select validationClasses="category" id="category" formControlName="category">
+              <ng-select [readonly]="readonly" validationClasses="category" id="category" formControlName="category">
                 <ng-option [value]="category.lookupKey"
                            *ngFor="let category of categories">{{category.getName()}}</ng-option>
               </ng-select>
@@ -20,7 +20,8 @@
             <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
                    class="col-md-4 col-sm-12 col-form-label">{{lang.map.competent_dep}}</label>
             <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select (change)="onCompetentDepChange($event)" validationClasses="competentDepartmentID"
+              <ng-select [readonly]="readonly" (change)="onCompetentDepChange($event)"
+                         validationClasses="competentDepartmentID"
                          formControlName="competentDepartmentID"
                          id="competentDepartmentID">
                 <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
