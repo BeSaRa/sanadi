@@ -23,7 +23,7 @@ export class RecommendationsComponent implements OnInit {
   @Input() service!: RecommendationService;
   @Input() gridStyle: boolean = true;
   @Input()
-  case!: CaseModel<any, any>;
+  case?: CaseModel<any, any>;
 
   formControl: FormControl = new FormControl('');
 
@@ -145,7 +145,7 @@ export class RecommendationsComponent implements OnInit {
   }
 
   showRecommendationsHistory() {
-    this.case.manageRecommendations(true).onAfterClose$.subscribe(() => {
+    this.case?.manageRecommendations(true).onAfterClose$.subscribe(() => {
       this.loadRecommendations();
     });
   }
