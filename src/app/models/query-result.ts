@@ -16,6 +16,7 @@ import {IESComponent} from '../interfaces/iescomponent';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {CaseModel} from './case-model';
 import {OpenFrom} from '../enums/open-from.enum';
+import {AdminResult} from './admin-result';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -55,6 +56,8 @@ export class QueryResult extends Cloneable<QueryResult> {
   PI_DUE!: string;
   PI_CREATE!: string;
   RESPONSES!: string [];
+
+  fromUserInfo!: AdminResult;
 
   service!: InboxService;
   dialog!: DialogService;

@@ -47,6 +47,10 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="fromUserInfo">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sender}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.fromUserInfo.getName()}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="BD_CASE_TYPE">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{eService.getServiceName(row.BD_CASE_TYPE)}} </td>

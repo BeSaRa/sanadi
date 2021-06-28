@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  sender: string;
   recommendations_logs: string;
   save_changes: string;
   lbl_edit_attachment_type: string;
