@@ -50,6 +50,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable();
   readonly: boolean = false;
   allowMange: boolean = true;
+
   constructor(private http: HttpClient,
               public intDepService: InternalDepartmentService,
               public service: InternationalCooperationService,
@@ -179,6 +180,8 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
+        this.readonly = true;
+        console.log(this.model);
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
     });

@@ -185,6 +185,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
+        this.readonly = true;
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
     });
