@@ -8,6 +8,7 @@ import {SaveTypes} from '../../../enums/save-types';
 import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {DialogRef} from '../../models/dialog-ref';
 import {take} from 'rxjs/operators';
+import {OpenFrom} from '../../../enums/open-from.enum';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -21,6 +22,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   viewInit: Subject<any> = new Subject<any>();
   _component!: IESComponent;
+  openedFrom!: OpenFrom;
 
   set component(component: IESComponent) {
     this.zone.onStable
@@ -43,13 +45,15 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
               public data: {
                 key: keyof ILanguageKeys,
                 model: any,
-                actions: IMenuItem[]
+                actions: IMenuItem[],
+                openedFrom: OpenFrom
               },
               private zone: NgZone,
               private dialogRef: DialogRef,
               public lang: LangService) {
 
     this.model = this.data.model;
+    this.openedFrom = this.data.openedFrom;
   }
 
   ngOnInit(): void {

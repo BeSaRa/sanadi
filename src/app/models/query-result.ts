@@ -15,6 +15,7 @@ import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-
 import {IESComponent} from '../interfaces/iescomponent';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {CaseModel} from './case-model';
+import {OpenFrom} from '../enums/open-from.enum';
 
 export class QueryResult extends Cloneable<QueryResult> {
   TKIID!: string;
@@ -129,7 +130,7 @@ export class QueryResult extends Cloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
   }
 
-  open(actions: IMenuItem[] = [], openFrom?: string): Observable<DialogRef> {
+  open(actions: IMenuItem[] = [], from: OpenFrom = OpenFrom.USER_INBOX): Observable<DialogRef> {
     const service = this.service.getService(this.BD_CASE_TYPE);
     const componentName = service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
@@ -139,7 +140,7 @@ export class QueryResult extends Cloneable<QueryResult> {
     return service.getTask(this.TKIID)
       .pipe(
         tap(task => model = task),
-        map(_ => this.dialog.show(CaseViewerPopupComponent, {key: service.serviceKey, model: this, actions})),
+        map(_ => this.dialog.show(CaseViewerPopupComponent, {key: service.serviceKey, openedFrom: from, model: this, actions})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit

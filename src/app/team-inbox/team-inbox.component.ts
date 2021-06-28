@@ -13,6 +13,7 @@ import {ToastService} from '../services/toast.service';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {OpenFrom} from '../enums/open-from.enum';
 
 @Component({
   selector: 'team-inbox',
@@ -168,7 +169,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions).pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
+    item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
   }
 
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {

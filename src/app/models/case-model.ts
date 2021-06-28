@@ -14,6 +14,7 @@ import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-
 import {IESComponent} from '../interfaces/iescomponent';
 import {ISearchFields} from '../interfaces/i-search-fields';
 import {searchFunctionType} from '../types/types';
+import {OpenFrom} from '../enums/open-from.enum';
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ISearchFields {
   serial!: number;
@@ -128,7 +129,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.openCommentsDialog(this.id);
   }
 
-  open(actions?: IMenuItem[]): Observable<DialogRef> {
+  open(actions?: IMenuItem[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
     const componentName = this.service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
     const cfr = this.service.getCFR();
@@ -137,7 +138,12 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.getById(this.id)
       .pipe(
         tap((task: any) => model = task),
-        map(_ => this.service.dialog.show(CaseViewerPopupComponent, {key: this.service.serviceKey, model: model, actions})),
+        map(_ => this.service.dialog.show(CaseViewerPopupComponent, {
+          key: this.service.serviceKey,
+          openedFrom: from,
+          model: model,
+          actions
+        })),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit

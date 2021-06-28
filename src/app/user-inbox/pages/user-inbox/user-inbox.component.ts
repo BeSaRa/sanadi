@@ -10,6 +10,7 @@ import {WFResponseType} from '../../../enums/wfresponse-type.enum';
 import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {OpenFrom} from '../../../enums/open-from.enum';
 
 @Component({
   selector: 'app-user-inbox',
@@ -121,7 +122,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions)
+    item.open(this.actions, OpenFrom.USER_INBOX)
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reloadInbox$.next(null));
   }

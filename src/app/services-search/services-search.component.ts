@@ -12,6 +12,7 @@ import {DialogService} from '../services/dialog.service';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '../services/toast.service';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {OpenFrom} from '../enums/open-from.enum';
 
 @Component({
   selector: 'services-search',
@@ -90,7 +91,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    item.open(this.actions)
+    item.open(this.actions, OpenFrom.SEARCH)
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.search$.next(null));
   }
