@@ -71,6 +71,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.caseStatus < CaseStatus.STARTED && this.caseStatus === CaseStatus.CREATED;
   }
 
+  alreadyStarted(): boolean {
+    return this.caseStatus >= CaseStatus.STARTED;
+  }
+
   exportActions(): Observable<BlobModel> {
     return this.service.exportActions(this.id);
   }
