@@ -9,6 +9,7 @@ import {FormlyFieldWrapperComponent} from './components/formly-field-wrapper/for
 import {FormlyFieldFullWrapperComponent} from './components/formly-field-full-wrapper/formly-field-full-wrapper.component';
 import {FormlyDateFieldComponent} from './components/formly-date-field/formly-date-field.component';
 import {FormlySelectFieldComponent} from './components/formly-select-field/formly-select-field.component';
+import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-field/formly-mask-input-field.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {FormlySelectFieldComponent} from './components/formly-select-field/forml
     FormlyFieldWrapperComponent,
     FormlyFieldFullWrapperComponent,
     FormlyDateFieldComponent,
-    FormlySelectFieldComponent
+    FormlySelectFieldComponent,
+    FormlyMaskInputFieldComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import {FormlySelectFieldComponent} from './components/formly-select-field/forml
     FormlyModule.forChild({
       types: [
         {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['col-md-4-8']},
-        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['col-md-4-8']}
+        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['col-md-4-8']},
+        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['col-md-4-8']},
       ],
       wrappers: [
         {name: 'col-md-4-8', component: FormlyFieldWrapperComponent},

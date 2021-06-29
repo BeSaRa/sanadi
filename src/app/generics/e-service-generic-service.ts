@@ -247,6 +247,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
       return EServiceGenericService.generateDateField(field, row);
     } else if (field.type === 'selectField') {
       return EServiceGenericService.generateSelectField(field, row);
+    } else if (field.type === 'maskInput') {
+      return EServiceGenericService.generateMaskField(field, row);
     } else {
       return EServiceGenericService.generateDefaultFormField(field, row);
     }
@@ -257,9 +259,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
       key: field.key,
       type: field.type,
       templateOptions: {
-        label: field.label,
-        required: field.validations?.required,
-        rows: field.templateOptions?.rows
+        ...field.templateOptions,
+        ...{
+          label: field.label,
+          required: field.validations?.required,
+          rows: field.templateOptions?.rows
+        }
       },
       wrappers: [(row.fields && row.fields?.length === 1 ? 'col-md-2-10' : 'col-md-4-8')]
     };
@@ -317,10 +322,13 @@ export abstract class EServiceGenericService<T extends { id: string }>
       key: field.key,
       type: field.type,
       templateOptions: {
-        label: field.label,
-        required: field.validations?.required,
-        rows: field.templateOptions?.rows,
-        options: options
+        ...field.templateOptions,
+        ...{
+          label: field.label,
+          required: field.validations?.required,
+          rows: field.templateOptions?.rows,
+          options: options
+        }
       },
       selectOptions: field.selectOptions,
       defaultValue: field.selectOptions?.defaultValue,
@@ -330,5 +338,9 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   getStatusIcon(caseStatus: number): string {
     return this.caseStatusIconMap.has(caseStatus) ? this.caseStatusIconMap.get(caseStatus)! : '';
+  }
+
+  private static generateMaskField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
+    return {...EServiceGenericService.generateDefaultFormField(field, row), mask: field.mask};
   }
 }

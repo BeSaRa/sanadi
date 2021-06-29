@@ -29,5 +29,6 @@ export interface IFormField {
     loadFrom?: string,
     bindValue?: string,
     bindLabel?: string
-  }
+  },
+  mask?: string
 }

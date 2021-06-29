@@ -15,4 +15,5 @@ export interface CustomFormlyFieldConfig extends FormlyFieldConfig {
     bindValue?: string,
     bindLabel?: string
   }
+  mask?: string
 }
