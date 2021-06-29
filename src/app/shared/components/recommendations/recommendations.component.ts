@@ -35,6 +35,10 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
     this._disabled.next(val);
   };
 
+  get disabled(): boolean {
+    return this._disabled.value;
+  }
+
   @Input()
   set caseId(value: string | undefined) {
     this._caseId = value ? value : '';
