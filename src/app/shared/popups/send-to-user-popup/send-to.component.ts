@@ -87,7 +87,7 @@ export class SendToComponent implements OnInit, OnDestroy {
   loadDepartments(): void {
     this.intDepService.loadDepartments()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps);
+      .subscribe(deps => this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id));
   }
 
   private buildForm(): void {
