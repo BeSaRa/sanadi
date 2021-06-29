@@ -10,6 +10,9 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['./formly-mask-input-field.component.scss']
 })
 export class FormlyMaskInputFieldComponent extends FieldType<CustomFormlyFieldConfig> implements OnInit {
+  get mask(): string {
+    return this.field.mask || '';
+  }
 
   get control(): FormControl {
     return this.formControl as FormControl;
