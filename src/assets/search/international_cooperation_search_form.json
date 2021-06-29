@@ -65,11 +65,15 @@
       },
       {
         "key": "serial",
-        "type": "input",
+        "type": "maskInput",
         "label": "serial_number",
         "validations": {
           "required": false
-        }
+        },
+        "templateOptions": {
+          "maxLength": 50
+        },
+        "mask": "0*"
       }
     ]
   },
@@ -78,7 +82,13 @@
       {
         "key": "fullName",
         "type": "input",
-        "label": "full_name"
+        "label": "full_name",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
       },
       {
         "key": "email",
