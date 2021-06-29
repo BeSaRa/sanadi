@@ -13,6 +13,7 @@ import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '../services/toast.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
+import {TabComponent} from '../shared/components/tab/tab.component';
 
 @Component({
   selector: 'services-search',
@@ -235,5 +236,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   resetCriteria() {
     this.form.reset();
+  }
+
+  selectedTabChanged($event: TabComponent) {
+    $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
   }
 }
