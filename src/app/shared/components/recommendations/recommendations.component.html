@@ -36,7 +36,7 @@
     <span class="d-block">{{lang.map.recommendation}}</span>
     <span class="d-flex align-items-center">
       <span [tooltip]="lang.map.save_changes">
-        <button [disabled]="!formControl.dirty || !formControl.value.length"
+        <button [disabled]="_disabled || !formControl.dirty || !formControl.value.length"
                 (click)="saveRecommendationChanges()"
                 class="btn p-0">
           <i class="mdi mdi-content-save-edit-outline text-primary"></i>
@@ -53,7 +53,8 @@
     </span>
   </label>
   <div class="col-md-10 col-sm-12 mb-3 position-relative">
-    <textarea rows="3" validationClasses [control]="formControl" [formControl]="formControl" id="recommendation"
+    <textarea rows="3" validationClasses [control]="formControl" [formControl]="formControl"
+              id="recommendation"
               class="form-control"></textarea>
     <app-field-error-message [control]="formControl"></app-field-error-message>
   </div>

@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
-import {interval, Subject} from 'rxjs';
+import {BehaviorSubject, interval, Subject} from 'rxjs';
 import {DialogService} from '../../../services/dialog.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {RecommendationService} from '../../../services/recommendation.service';
@@ -17,7 +17,8 @@ import {ToastService} from '../../../services/toast.service';
   templateUrl: './recommendations.component.html',
   styleUrls: ['./recommendations.component.scss']
 })
-export class RecommendationsComponent implements OnInit {
+export class RecommendationsComponent implements OnInit, OnDestroy {
+
   _caseId: string = '';
   recommendations: Recommendation[] = [];
   @Input() service!: RecommendationService;
@@ -26,6 +27,13 @@ export class RecommendationsComponent implements OnInit {
   case?: CaseModel<any, any>;
 
   formControl: FormControl = new FormControl('');
+
+  _disabled: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  @Input()
+  set disabled(val: boolean) {
+    this._disabled.next(val);
+  };
 
   @Input()
   set caseId(value: string | undefined) {
@@ -54,6 +62,12 @@ export class RecommendationsComponent implements OnInit {
     } else {
       this.loadRecommendations();
     }
+    this.listenToDisabledState();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadRecommendations(): void {
@@ -148,5 +162,9 @@ export class RecommendationsComponent implements OnInit {
     this.case?.manageRecommendations(true).onAfterClose$.subscribe(() => {
       this.loadRecommendations();
     });
+  }
+
+  private listenToDisabledState() {
+    this._disabled.pipe(takeUntil(this.destroy$)).subscribe((val) => val ? this.formControl.disable() : this.formControl.enable());
   }
 }

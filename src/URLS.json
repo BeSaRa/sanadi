@@ -36,6 +36,7 @@
   "USER_INBOX": "/inbox/user",
   "TEAMS_INBOX": "/inbox/team",
   "CLAIM_BULK": "/inbox/task/claim/bulk",
+  "RELEASE_BULK": "/inbox/task/return/bulk",
   "TEAMS": "/admin/baw/team",
   "INTERNAL_USER": "/admin/internal/user",
   "INTERNAL_DEPARTMENT": "admin/internal/department",

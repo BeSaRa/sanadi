@@ -94,6 +94,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.claimBulk([this.TKIID]);
   }
 
+  release(): Observable<IBulkResult> {
+    return this.service.releaseBulk([this.TKIID]);
+  }
+
   manageAttachments(): DialogRef {
     return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
@@ -180,6 +184,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = true;
+              comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()));
               instance.component = comInstance;
             });
         })

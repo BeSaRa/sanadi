@@ -130,6 +130,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       .subscribe(() => this.reloadInbox$.next(null));
   }
 
+  actionRelease(item: QueryResult) {
+    item.release()
+      .subscribe((val) => {
+        this.reloadInbox$.next(null);
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.task_have_been_released_successfully);
+      });
+  }
+
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
     item.sendToManager().onAfterClose$.subscribe(() => {
       viewDialogRef?.close();
@@ -146,6 +158,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         label: 'open_task',
         data: {hideFromViewer: true},
         onClick: (item: QueryResult) => this.actionOpen(item)
+      },
+      // Release
+      {
+        type: 'action',
+        icon: 'mdi-hand-okay',
+        label: 'release_task',
+        onClick: (item: QueryResult) => this.actionRelease(item)
       },
       // view logs
       {

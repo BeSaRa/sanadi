@@ -8,5 +8,5 @@ export interface IESComponent {
   form: FormGroup;
   fromDialog: boolean;
   readonly: boolean;
-  allowMange: boolean;
+  allowEditRecommendations?: boolean;
 }

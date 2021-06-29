@@ -55,7 +55,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     return this.outModelChange$.value;
   }
   readonly: boolean = false;
-  allowMange: boolean = true;
+  allowEditRecommendations: boolean = true;
 
   constructor(private http: HttpClient,
               public service: ConsultationService,

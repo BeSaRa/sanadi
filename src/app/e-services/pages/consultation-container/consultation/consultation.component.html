@@ -20,7 +20,8 @@
             <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
                    class="col-md-4 col-sm-12 col-form-label">{{lang.map.competent_dep}}</label>
             <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select [readonly]="readonly" (change)="onCompetentDepChange($event)" validationClasses="competentDepartmentID"
+              <ng-select [readonly]="readonly" (change)="onCompetentDepChange($event)"
+                         validationClasses="competentDepartmentID"
                          formControlName="competentDepartmentID"
                          id="competentDepartmentID">
                 <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
@@ -104,7 +105,9 @@
   <div *ngIf="fromDialog" class="row">
     <hr>
     <div class="col-md-12">
-      <app-recommendations [gridStyle]="false" [case]="model" [caseId]="model?.id"
+      <app-recommendations [gridStyle]="false" [disabled]="!allowEditRecommendations"
+                           [case]="model"
+                           [caseId]="model?.id"
                            [service]="service.recommendationService"></app-recommendations>
     </div>
   </div>
@@ -113,7 +116,8 @@
     <div class="col-md-6 col-sm-12">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
-        <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()" class="d-inline-block btn p-0 icon-btn"><i
+        <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()"
+                class="d-inline-block btn p-0 icon-btn"><i
           class="mdi mdi-plus-box text-primary"></i></button>
       </div>
       <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
@@ -121,7 +125,8 @@
     <div class="col-md-6 col-sm-12">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
-        <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()" class="d-inline-block btn p-0 icon-btn"><i
+        <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()"
+                class="d-inline-block btn p-0 icon-btn"><i
           class="mdi mdi-plus-box text-primary"></i></button>
       </div>
       <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>

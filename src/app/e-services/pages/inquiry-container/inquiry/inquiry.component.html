@@ -103,7 +103,10 @@
   <div *ngIf="fromDialog" class="row">
     <hr>
     <div class="col-md-12">
-      <app-recommendations [gridStyle]="false" [case]="model" [caseId]="model?.id"
+      <app-recommendations [gridStyle]="false"
+                           [disabled]="!allowEditRecommendations"
+                           [case]="model"
+                           [caseId]="model?.id"
                            [service]="service.recommendationService"></app-recommendations>
     </div>
   </div>

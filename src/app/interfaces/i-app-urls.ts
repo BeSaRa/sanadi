@@ -2,6 +2,7 @@ export interface IAppUrls {
   ATTACHMENT_TYPES: string;
   INTERNAL_USER: string;
   TEAMS: string;
+  RELEASE_BULK: string
   CLAIM_BULK: string;
   TEAMS_INBOX: string;
   USER_INBOX: string;

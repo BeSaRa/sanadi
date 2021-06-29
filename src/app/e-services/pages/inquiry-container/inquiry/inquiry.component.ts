@@ -53,7 +53,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   inputMaskPatterns: typeof CustomValidators.inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   readonly: boolean = false;
-  allowMange: boolean = true;
+  allowEditRecommendations: boolean = true;
 
   constructor(private http: HttpClient,
               public service: InquiryService,

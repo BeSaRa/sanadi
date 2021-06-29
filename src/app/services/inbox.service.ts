@@ -81,6 +81,15 @@ export class InboxService {
     return this._claimBulk(taskIds);
   }
 
+  @Generator(undefined, false, {property: 'rs'})
+  private _releaseBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this.http.post<IBulkResult>(this.urlService.URLS.RELEASE_BULK, taskIds);
+  }
+
+  releaseBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this._releaseBulk(taskIds);
+  }
+
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
     return service.openDocumentDialog(caseId);

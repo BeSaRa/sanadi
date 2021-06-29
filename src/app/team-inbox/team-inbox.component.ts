@@ -96,7 +96,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((val) => {
         this.reloadSelectedInbox();
-        if (val.failedOperations) {
+        if (val.failedOperations && val.failedOperations.length) {
           this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
           return;
         }
