@@ -31,6 +31,10 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.user}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.userFromInfo.getName()}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="toUser">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.to_user}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.userToInfo.getName()}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="addedOn">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_date}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.addedOn|date}} </td>

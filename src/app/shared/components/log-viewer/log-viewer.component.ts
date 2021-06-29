@@ -23,7 +23,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input()
   service!: ActionLogService;
 
-  displayedColumns: string[] = ['user', 'action', 'addedOn', 'time', 'comment'];
+  displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
   displayLocationColumns: string[] = ['location'];
 
   displayPrintBtn: boolean = true;

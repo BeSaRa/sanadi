@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  to_user: string;
   release_task: string;
   received_data: string;
   sender: string;
