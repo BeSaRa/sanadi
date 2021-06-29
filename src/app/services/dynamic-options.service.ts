@@ -4,6 +4,7 @@ import {FactoryService} from './factory.service';
 import {isObservable, of} from 'rxjs';
 import {InternalDepartmentService} from './internal-department.service';
 import {OrganizationUnitService} from './organization-unit.service';
+import {CountryService} from './country.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,15 @@ export class DynamicOptionsService {
 
   constructor(private lookupService: LookupService,
               private internalDepartmentService: InternalDepartmentService,
-              private organizationUnitService: OrganizationUnitService
+              private organizationUnitService: OrganizationUnitService,
+              private countryService: CountryService,
   ) {
     FactoryService.registerService('DynamicOptionsService', this);
     this.loader = {
       lookup: lookupService.listByCategory,
       department: internalDepartmentService,
-      organization: organizationUnitService
+      organization: organizationUnitService,
+      country: countryService
     };
   }
 

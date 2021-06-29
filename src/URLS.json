@@ -1,6 +1,7 @@
 {
   "LANGUAGE": "admin/localization",
   "ATTACHMENT_TYPES": "admin/attachment-type",
+  "COUNTRY": "admin/country",
   "AUTHENTICATE": "auth/nas/login",
   "INTERNAL_AUTHENTICATE": "auth/internal/login",
   "VALIDATE_TOKEN": "/auth/validate-token",

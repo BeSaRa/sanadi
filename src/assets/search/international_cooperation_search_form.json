@@ -43,8 +43,8 @@
         "key": "country",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.Countries",
-          "bindValue": "lookupKey",
+          "loader": "country.load",
+          "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
       }

@@ -26,7 +26,7 @@
               <ng-select [readonly]="readonly" validationClasses="country"
                          formControlName="country"
                          id="country">
-                <ng-option [value]="country.lookupKey"
+                <ng-option [value]="country.id"
                            *ngFor="let country of countries">{{country.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="country"></app-field-error-message>

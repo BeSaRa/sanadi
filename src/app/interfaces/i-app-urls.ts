@@ -1,5 +1,6 @@
 export interface IAppUrls {
   ATTACHMENT_TYPES: string;
+  COUNTRY: string;
   INTERNAL_USER: string;
   TEAMS: string;
   RELEASE_BULK: string

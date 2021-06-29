@@ -3,10 +3,8 @@ import {SaveTypes} from '../../../../enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {FormManager} from '../../../../models/form-manager';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Lookup} from '../../../../models/lookup';
 import {HttpClient} from '@angular/common/http';
 import {DialogService} from '../../../../services/dialog.service';
-import {LookupService} from '../../../../services/lookup.service';
 import {ToastService} from '../../../../services/toast.service';
 import {LangService} from '../../../../services/lang.service';
 import {filter, map, takeUntil, tap} from 'rxjs/operators';
@@ -16,6 +14,8 @@ import {InternationalCooperation} from '../../../../models/international-coopera
 import {InternationalCooperationService} from '../../../../services/international-cooperation.service';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
 import {InternalDepartment} from '../../../../models/internal-department';
+import {CountryService} from '../../../../services/country.service';
+import {Country} from '../../../../models/country';
 
 @Component({
   selector: 'international-cooperation',
@@ -23,7 +23,7 @@ import {InternalDepartment} from '../../../../models/internal-department';
   styleUrls: ['./international-cooperation.component.scss']
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent {
-  countries: Lookup[] = this.lookupService.listByCategory.Countries;
+  countries: Country[] = [];
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
@@ -56,8 +56,8 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
               public service: InternationalCooperationService,
               private fb: FormBuilder,
               private dialog: DialogService,
-              private lookupService: LookupService,
               private toast: ToastService,
+              private countryService: CountryService,
               public lang: LangService) {
   }
 
@@ -68,6 +68,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.listenToSave();
     this.listenToModelChange();
     this.listenToOutModelChange();
+    this.loadCountries();
   }
 
   ngOnDestroy(): void {
@@ -196,5 +197,12 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       .subscribe((model) => {
         this.changeModel.next(model);
       });
+  }
+
+  private loadCountries() {
+    this.countryService
+      .load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((countries) => this.countries = countries);
   }
 }
