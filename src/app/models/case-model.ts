@@ -145,6 +145,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
       );
   }
 
+  isTask(): boolean {
+    return false;
+  }
+
+  isCase(): boolean {
+    return true;
+  }
+
   getStatusIcon(): string {
     return this.service.getStatusIcon(this.caseStatus);
   }

@@ -9,6 +9,8 @@ import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {DialogRef} from '../../models/dialog-ref';
 import {take} from 'rxjs/operators';
 import {OpenFrom} from '../../../enums/open-from.enum';
+import {CaseModel} from '../../../models/case-model';
+import {QueryResult} from '../../../models/query-result';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -39,7 +41,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   saveTypes: typeof SaveTypes = SaveTypes;
   actions: IMenuItem[] = [];
 
-  model: any;
+  model: CaseModel<any, any> | QueryResult;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)
               public data: {

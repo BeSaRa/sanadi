@@ -194,4 +194,12 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   getStatusIcon(): string {
     return this.service.getService(this.BD_CASE_TYPE).getStatusIcon(this.BD_CASE_STATUS);
   }
+
+  isTask(): boolean {
+    return true;
+  }
+
+  isCase(): boolean {
+    return false;
+  }
 }
