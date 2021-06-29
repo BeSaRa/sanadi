@@ -54,6 +54,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   get outModel(): Consultation {
     return this.outModelChange$.value;
   }
+
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
 
@@ -63,7 +64,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
               private dialog: DialogService,
               private lookupService: LookupService,
               private toast: ToastService,
-              private employeeService: EmployeeService,
+              public employeeService: EmployeeService,
               private intDepService: InternalDepartmentService,
               public lang: LangService,
               private orgUnitService: OrganizationUnitService) {
