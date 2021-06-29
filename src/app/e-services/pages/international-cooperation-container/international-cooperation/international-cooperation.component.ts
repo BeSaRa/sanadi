@@ -180,8 +180,8 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
-        this.readonly = true;
-        console.log(this.model);
+        this.form.reset();
+        this.model = undefined;
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
     });
