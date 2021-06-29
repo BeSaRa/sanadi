@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  received_data: string;
   sender: string;
   recommendations_logs: string;
   save_changes: string;

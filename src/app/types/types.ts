@@ -16,10 +16,12 @@ export type customValidationTypes =
   | 'PASSPORT'
   | 'EMAIL';
 
-export type searchFunctionType = (text: string) => boolean;
+export type searchFunctionType<T = any> = (text: string, model: T) => boolean;
 
 export type CanNavigateOptions = 'ALLOW' | 'DISALLOW' | 'CONFIRM_UNSAVED_CHANGES';
 
 export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';
 
 export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';
+
+export type ISearchFieldsMap<T = any> = { [key: string]: (string | searchFunctionType<T>) };

@@ -2,10 +2,11 @@ import {ILoginInfo} from '../interfaces/i-login-info';
 import {Localization} from '../models/localization';
 import {Lookup} from '../models/lookup';
 import {ILookupMap} from '../interfaces/i-lookup-map';
+import {LocalizationInterceptor} from './localization-interceptor';
 
 export function interceptLoginInfo(model: { rs: ILoginInfo }): ILoginInfo {
   model.rs.localizationSet = model.rs.localizationSet.map(item => {
-    return Object.assign(new Localization(), item);
+    return LocalizationInterceptor.receive(Object.assign(new Localization(), item));
   });
 
   for (const lookupMapKey in model.rs.lookupMap) {

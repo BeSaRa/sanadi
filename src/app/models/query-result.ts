@@ -1,5 +1,4 @@
 import {TaskState} from '../enums/task-state';
-import {Cloneable} from './cloneable';
 import {InboxService} from '../services/inbox.service';
 import {FactoryService} from '../services/factory.service';
 import {Observable} from 'rxjs';
@@ -17,8 +16,12 @@ import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {CaseModel} from './case-model';
 import {OpenFrom} from '../enums/open-from.enum';
 import {AdminResult} from './admin-result';
+import {SearchableCloneable} from './searchable-cloneable';
+import {ISearchFieldsMap} from '../types/types';
+import {DatePipe} from '@angular/common';
+import {LangService} from '../services/lang.service';
 
-export class QueryResult extends Cloneable<QueryResult> {
+export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
   IS_AT_RISK!: boolean;
   PRIORITY!: 30;
@@ -61,11 +64,30 @@ export class QueryResult extends Cloneable<QueryResult> {
 
   service!: InboxService;
   dialog!: DialogService;
+  lang!: LangService;
+
+  searchFields: ISearchFieldsMap<QueryResult> = {
+    BD_FULL_SERIAL: 'BD_FULL_SERIAL',
+    fromUserInfo: (text, model) => model.fromUserInfo && (model.fromUserInfo.getName() + '').toLowerCase().indexOf(text) !== -1,
+    ACTIVATED: (text, model) => {
+      let date = (new DatePipe('en')).transform(model.ACTIVATED);
+      return date ? date.toLowerCase().indexOf(text) !== -1 : false;
+    },
+    BD_CASE_TYPE: (text, model) => {
+      let local = model.lang.map[model.service.getService(model.BD_CASE_TYPE).serviceKey];
+      return local ? local.toLowerCase().indexOf(text) !== -1 : false;
+    },
+    PI_CREATE: (text, model) => {
+      let date = (new DatePipe('en')).transform(model.PI_CREATE);
+      return date ? date.toLowerCase().indexOf(text) !== -1 : false;
+    }
+  };
 
   constructor() {
     super();
     this.service = FactoryService.getService('InboxService');
     this.dialog = FactoryService.getService('DialogService');
+    this.lang = FactoryService.getService('LangService');
   }
 
   claim(): Observable<IBulkResult> {

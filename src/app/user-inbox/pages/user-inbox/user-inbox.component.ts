@@ -11,6 +11,7 @@ import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {OpenFrom} from '../../../enums/open-from.enum';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-user-inbox',
@@ -19,11 +20,11 @@ import {OpenFrom} from '../../../enums/open-from.enum';
 })
 export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
-  searchModel = '';
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private destroy$: Subject<any> = new Subject<any>();
   actions: IMenuItem[] = [];
+  filterControl: FormControl = new FormControl('');
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -42,7 +43,9 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.queryResultSet = value;
+        this.queryResultSet.items[0].search('text');
       });
+
   }
 
   ngOnDestroy(): void {

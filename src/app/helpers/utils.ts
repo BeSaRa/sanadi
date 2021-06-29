@@ -203,7 +203,7 @@ function searchInObject(objectToSearch: any, searchText: string = '', searchFiel
   return keys.some(key => {
     if (typeof objectToSearch[searchFieldsProperty][key] === 'function') {
       const func = objectToSearch[searchFieldsProperty][key] as searchFunctionType;
-      return func(searchText.trim().toLowerCase());
+      return func(searchText.trim().toLowerCase() , objectToSearch);
     } else {
       const field = objectToSearch[searchFieldsProperty][key];
       const value = objectToSearch[field] ? (objectToSearch[field] as string) + '' : '';

@@ -1,7 +1,7 @@
 import {AdminResult} from './admin-result';
-import {Cloneable} from './cloneable';
+import {SearchableCloneable} from './searchable-cloneable';
 
-export abstract class FileNetModel<T> extends Cloneable<T> {
+export abstract class FileNetModel<T> extends SearchableCloneable<T> {
   id!: string;
   createdBy!: string;
   createdByGeneralId!: number;

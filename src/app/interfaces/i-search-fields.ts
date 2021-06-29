@@ -1,5 +1,5 @@
 import {searchFunctionType} from '../types/types';
 
-export interface ISearchFields {
-  searchFields: { [key: string]: searchFunctionType | string }
+export interface ISearchFields<T> {
+  searchFields: { [key: string]: searchFunctionType<T> | string }
 }

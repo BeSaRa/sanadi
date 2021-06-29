@@ -14,7 +14,6 @@ import {DialogRef} from '../../models/dialog-ref';
 import {EmployeeService} from '../../../services/employee.service';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from '../../../services/url.service';
-import {Lookup} from '../../../models/lookup';
 import {AdminResult} from '../../../models/admin-result';
 import {IDefaultResponse} from '../../../interfaces/idefault-response';
 
@@ -171,7 +170,7 @@ export class UploadDocumentPopupComponent implements OnInit {
 
     // tamp implementations for load attachment type till we finish the attachment type part from admin
     private loadAttachmentType() {
-        this.http.get<IDefaultResponse<Lookup[]>>(this.urlService.URLS.BASE_URL + '/admin/attachment-type')
+        this.http.get<IDefaultResponse<AdminResult[]>>(this.urlService.URLS.BASE_URL + '/admin/attachment-type')
             .pipe(
                 map(response => response.rs.map(item => AdminResult.createInstance(item)))
             ) // map to admin result for now
