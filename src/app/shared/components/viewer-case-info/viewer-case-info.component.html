@@ -1,28 +1,31 @@
-<div id="task-details" class="row mb-3">
-  <div class="col-md-6 col-sm-12">
-    <div class="row">
-      <label for="sender"
-             class="col-md-4 col-sm-12 col-form-label">{{model.isTask() ? lang.map.sender : lang.map.created_by }}</label>
-      <div class="col-md-8 mb-3 col-sm-12">
-        <div class="input-group">
-          <span class="input-group-text"><i class="mdi mdi-account text-primary"></i></span>
-          <input id="sender" readonly [value]="username" disabled class="form-control">
+<div id="task-details">
+  <div class="row mb-3">
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="sender"
+               class="col-md-4 col-sm-12 col-form-label">{{model.isTask() ? lang.map.sender : lang.map.created_by }}</label>
+        <div class="col-md-8 mb-3 col-sm-12">
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-account text-primary"></i></span>
+            <input id="sender" readonly [value]="username" disabled class="form-control">
+            <span class="input-group-text"><i class="mdi mdi-calendar text-primary"></i></span>
+            <input id="creationDate" readonly [value]="(creationDate|date: 'mediumDate')" disabled class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="serial"
+               class="col-md-4 col-sm-12 col-form-label">{{lang.map.serial_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12">
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+            <input id="serial" readonly [value]="fullSerial"
+                   class="form-control">
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-6 col-sm-12">
-    <div class="row">
-      <label for="serial"
-             class="col-md-4 col-sm-12 col-form-label">{{lang.map.serial_number}}</label>
-      <div class="col-md-8 mb-3 col-sm-12">
-        <div class="input-group">
-          <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
-          <input id="serial" readonly [value]="fullSerial"
-                 class="form-control">
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr>
 </div>

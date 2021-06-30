@@ -20,6 +20,10 @@ export class ViewerCaseInfoComponent implements OnInit {
     return this.model instanceof QueryResult ? this.model.BD_FULL_SERIAL : this.model.fullSerial;
   };
 
+  get creationDate(): string {
+    return this.model instanceof QueryResult ? this.model.PI_CREATE : this.model.createdOn;
+  }
+
   constructor(public lang: LangService) {
   }
 
