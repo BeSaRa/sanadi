@@ -46,6 +46,12 @@
           <div>
             <img alt="tawtheeq logo" class="nas-logo" src="assets/images/tawtheeq.png">
           </div>
+          <div>
+            <a href="#" (click)="toggleLang($event)" class="text-decoration-none">
+              <span>{{lang.getCurrentLanguage().toggleTo}}</span>
+              <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>
+            </a>
+          </div>
         </div>
       </div>
     </div>

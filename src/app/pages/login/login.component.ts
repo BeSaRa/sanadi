@@ -49,6 +49,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
+  toggleLang($event: MouseEvent) {
+    $event.preventDefault();
+    this.lang.toggleLanguage();
+  }
+
   processLogin(): void {
     this.login$.next();
   }
