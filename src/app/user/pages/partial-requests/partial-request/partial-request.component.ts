@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '../../../../services/dialog.service';
 import {IPartialRequestCriteria} from '../../../../interfaces/i-partial-request-criteria';
 import {DialogRef} from '../../../../shared/models/dialog-ref';
-import {isEmptyObject, objectHasValue} from '../../../../helpers/utils';
+import {isEmptyObject, isValidValue, objectHasValue} from '../../../../helpers/utils';
 import {FilterEventTypes} from '../../../../types/types';
 import {SubventionRequestPartial} from '../../../../models/subvention-request-partial';
 import {SubventionRequestPartialService} from '../../../../services/subvention-request-partial.service';
@@ -81,7 +81,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
       const sub = this.subventionRequestPartialService.openFilterPartialRequestDialog(this.filterCriteria)
         .subscribe((dialog: DialogRef) => {
           dialog.onAfterClose$.subscribe((result: UserClickOn | Partial<IPartialRequestCriteria>) => {
-            if (result === UserClickOn.CLOSE) {
+            if (!isValidValue(result) || result === UserClickOn.CLOSE) {
               return;
             }
             this.filterCriteria = result as Partial<IPartialRequestCriteria>;

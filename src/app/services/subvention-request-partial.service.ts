@@ -88,6 +88,8 @@ export class SubventionRequestPartialService extends BackendGenericService<Subve
         return of(this.dialogService.show(FilterRequestPopupComponent, {
           criteria: filterCriteria,
           orgUnits: orgUnits
+        }, {
+          escToClose: true
         }));
       })
     )
