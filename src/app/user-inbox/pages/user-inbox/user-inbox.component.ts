@@ -43,7 +43,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.queryResultSet = value;
-        this.queryResultSet.items[0].search('text');
       });
 
   }
