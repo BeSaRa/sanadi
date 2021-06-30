@@ -29,7 +29,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   reloadSubscription!: Subscription;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterCriteria: Partial<IPartialRequestCriteria> = {};
-  displayedColumns: string[] = ['requestNumber', 'creationDate', 'creationYear', 'organization', 'benCategory',
+  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'benCategory',
     'requestType', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];
 
   constructor(public langService: LangService,

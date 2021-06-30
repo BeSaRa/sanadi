@@ -308,4 +308,5 @@ export interface ILanguageKeys {
   inquire_beneficiary: string;
   user_organization: string;
   ip_address: string;
+  request_details: string;
 }

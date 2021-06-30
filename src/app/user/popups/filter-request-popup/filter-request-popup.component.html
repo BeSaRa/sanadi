@@ -8,13 +8,6 @@
   <form class="min-w400px w600px" autocomplete="off" [formGroup]="form">
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        <label for="requestFullSerial"
-               class="form-label">{{langService.map.request_number}}</label>
-        <div class="mb-4 position-relative">
-          <input formControlName="requestFullSerial" id="requestFullSerial" type="text" class="form-control">
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
         <label for="requestYear" class="form-label">{{langService.map.year}}</label>
         <div class="mb-4 ng-select-wrapper">
           <ng-select [selectOnTab]="true" labelForId="requestYear" [clearable]="false"
@@ -28,8 +21,6 @@
           </ng-select>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="orgId" class="form-label">{{langService.map.request_type}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -43,6 +34,8 @@
           </ng-select>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="benCategory" class="form-label">{{langService.map.beneficiary_category}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -57,8 +50,6 @@
           </ng-select>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="gender" class="form-label">{{langService.map.gender}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -73,6 +64,8 @@
           </ng-select>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-12 col-md-6" *ngIf="empService.checkPermissions('SUBVENTION_PROVIDER_SHOW')">
         <label for="orgId" class="form-label">{{langService.map.lbl_organization}}</label>
         <div class="mb-4 ng-select-wrapper">

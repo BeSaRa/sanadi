@@ -7,9 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {LangService} from './lang.service';
 import {SubventionRequestPartialLogInterceptor} from '../model-interceptors/subvention-request-partial-log.interceptor';
 import {Generator} from '../decorators/generator';
-import {IPartialRequestCriteria} from '../interfaces/i-partial-request-criteria';
 import {Observable} from 'rxjs';
-import {SubventionRequestPartial} from '../models/subvention-request-partial';
 import {ISubventionRequestPartialLogCriteria} from '../interfaces/i-subvention-request-partial-log-criteria';
 
 @Injectable({

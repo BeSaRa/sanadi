@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {LangService} from '../../../services/lang.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {ConfigurationService} from '../../../services/configuration.service';
 import {LookupService} from '../../../services/lookup.service';
@@ -43,7 +43,6 @@ export class FilterRequestPopupComponent implements OnInit {
 
   private buildForm() {
     this.form = this.fb.group({
-      requestFullSerial: [this.criteria.requestFullSerial, Validators.maxLength(50)],
       requestYear: [this.criteria.requestYear],
       orgId: [this.criteria.orgId],
       benCategory: [this.criteria.benCategory],
@@ -69,7 +68,6 @@ export class FilterRequestPopupComponent implements OnInit {
     }).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES || click === UserClickOn.THIRD_BTN) {
         this.form.patchValue({
-          requestFullSerial: null,
           requestYear: null,
           orgId: null,
           benCategory: null,
