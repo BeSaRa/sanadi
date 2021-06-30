@@ -8,14 +8,16 @@
   <tabs-list>
     <tab [name]="tabsData.request.name" [template]="requestTemplate" [tabWidth]="'800px'"
          [title]="langService.map.request">{{langService.map.request}}</tab>
+    <tab [name]="tabsData.beneficiary.name" [template]="beneficiaryTemplate" [tabWidth]="'800px'"
+         [title]="langService.map.beneficiary">{{langService.map.beneficiary}}</tab>
     <tab [name]="tabsData.aids.name" [template]="aidsTemplate" [tabWidth]="'800px'"
          [title]="langService.map.aids">{{langService.map.aids}}</tab>
   </tabs-list>
   <ng-template #requestTemplate>
     <div class="row">
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.serial_number}}</label>
-        <span class="form-control">{{requestDetails.requestFullSerial}}</span>
+        <label class="form-label">{{langService.map.request_date}}</label>
+        <span class="form-control">{{requestDetails.creationDateString}}</span>
       </div>
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.reason_of_request}}</label>
@@ -24,20 +26,16 @@
     </div>
     <div class="row">
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.request_date}}</label>
-        <span class="form-control">{{requestDetails.creationDateString}}</span>
-      </div>
-      <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.request_aid_amount}}</label>
         <span
           class="form-control">{{requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.request_status}}</label>
         <span class="form-control">{{requestDetails.requestStatusInfo.getName() || '&nbsp;'}}</span>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.status_date}}</label>
         <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
@@ -53,6 +51,82 @@
       <div class="col-sm-12 mb-4">
         <label class="form-label">{{langService.map.notes}}</label>
         <span class="form-control">{{requestDetails.requestNotes || '&nbsp;'}}</span>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #beneficiaryTemplate>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.date_of_birth}}</label>
+        <span class="form-control">{{beneficiary.dateOfBirthString || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.gender}}</label>
+        <span class="form-control">{{beneficiary.genderInfo.getName() || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.lbl_nationality}}</label>
+        <span class="form-control">{{beneficiary.benNationalityInfo.getName() || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.sponsors_count}}</label>
+        <span class="form-control">{{beneficiary.benDependentsCount || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.educational_level}}</label>
+        <span class="form-control">{{beneficiary.educationLevelInfo.getName() || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <span>{{langService.map.income_employment}}</span>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.employment_status}}</label>
+        <span class="form-control">{{beneficiary.occuptionStatusInfo.getName() || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.occupation}}</label>
+        <span class="form-control">{{beneficiary.occuption || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.workplace}}</label>
+        <span class="form-control">{{beneficiary.employeerAddress || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.monthly_income}}</label>
+        <span class="form-control">{{(beneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.extra_income}}</label>
+        <span class="form-control">{{(beneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.extra_income_source}}</label>
+        <span class="form-control">{{beneficiary.benExtraIncomeSource || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.total_debts}}</label>
+        <span class="form-control">{{(beneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.number_of_installments}}</label>
+        <span class="form-control">{{beneficiary.totalInstalments || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.monthly_rent}}</label>
+        <span class="form-control">{{(beneficiary.benHouseRent | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
     </div>
   </ng-template>

@@ -12,6 +12,7 @@ import {SubventionRequestService} from '../../../services/subvention-request.ser
 import {SubventionAid} from '../../../models/subvention-aid';
 import {SubventionResponse} from '../../../models/subvention-response';
 import {IKeyValue} from '../../../interfaces/i-key-value';
+import {Beneficiary} from '../../../models/beneficiary';
 
 @Component({
   selector: 'app-request-details-popup',
@@ -21,12 +22,14 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
 export class RequestDetailsPopupComponent implements OnInit {
   requestDetails!: SubventionRequest;
   aidList!: SubventionAid[];
+  beneficiary: Beneficiary;
 
   userClick: typeof UserClickOn = UserClickOn;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   tabsData: IKeyValue = {
     request: {name: 'request'},
+    beneficiary: {name: 'beneficiary'},
     aids: {name: 'aids'}
   };
   aidColumns = [
@@ -47,6 +50,7 @@ export class RequestDetailsPopupComponent implements OnInit {
               private subventionRequestService: SubventionRequestService,
               private router: Router) {
     this.requestDetails = this.data.subventionResponse.request.clone();
+    this.beneficiary = this.data.subventionResponse.beneficiary.clone();
     this.aidList = this.data.subventionResponse.aidList.slice();
   }
 
