@@ -623,7 +623,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           if (this.currentParamType === this.routeParamTypes.normal) {
             return this.subventionResponseService.loadById(requestId);
           } else if (this.currentParamType === this.routeParamTypes.partial) {
-            return this.subventionResponseService.createPartialRequestById(requestId)
+            return this.subventionResponseService.loadNewPartialRequestDataById(requestId)
               .pipe(
                 catchError((err) => {
                   this.currentParamType = this.routeParamTypes.normal;
@@ -662,7 +662,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }
 
         this.requestChanged$.next(response.request);
-        this.loadSubAidCategory().subscribe();
+        this.loadSubAidCategory().subscribe((_) => {
+          // if partial request page, save it directly
+          if (this.currentParamType === this.routeParamTypes.partial) {
+            this.savePartial$.next(this.saveActions.partialSave);
+          }
+        });
       });
   }
 

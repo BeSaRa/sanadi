@@ -52,7 +52,7 @@ export class SubventionResponseService {
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  createPartialRequestById(id: number): Observable<SubventionResponse> {
+  loadNewPartialRequestDataById(id: number): Observable<SubventionResponse> {
     return this.http.put<SubventionResponse>(this._getPartialRequestServiceURL() + '/create/' + id, {});
   }
 
