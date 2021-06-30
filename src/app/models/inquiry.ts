@@ -39,7 +39,7 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
         CustomValidators.minLength(4),
         CustomValidators.maxLength(100),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      email: control ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
       occupation: control ? [occupation, [CustomValidators.maxLength(100)]] : occupation,
       organization: control ? [organization, [CustomValidators.maxLength(100)]] : organization,

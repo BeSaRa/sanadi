@@ -32,13 +32,13 @@ export class InternationalCooperation extends CaseModel<InternationalCooperation
 
     return {
       country: controls ? [country, [CustomValidators.required]] : country,
-      email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
       fullName: controls ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(4),
         CustomValidators.maxLength(100),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
-      mobileNo: controls ? [mobileNo, [CustomValidators.number , CustomValidators.maxLength(20)]] : mobileNo,
-      organization: controls ? [organization, []] : organization,
+      mobileNo: controls ? [mobileNo, [CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
+      organization: controls ? [organization, [CustomValidators.maxLength(100)]] : organization,
       requestBody: controls ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
       competentDepartmentID: controls ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
       competentDepartmentAuthName: controls ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
