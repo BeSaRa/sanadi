@@ -96,6 +96,9 @@
         "label": "lbl_email",
         "validations": {
           "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
         }
       }
     ]

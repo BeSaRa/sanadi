@@ -93,7 +93,13 @@
       {
         "key": "email",
         "type": "input",
-        "label": "lbl_email"
+        "label": "lbl_email",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
       }
     ]
   }
