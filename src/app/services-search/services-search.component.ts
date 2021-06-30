@@ -82,6 +82,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         this.selectedService
           .loadSearchFields()
           .subscribe((fields) => {
+            this.form.reset();
             this.fields = fields;
           });
       });
