@@ -42,10 +42,10 @@ export class SubventionLog {
   actionTimeString!: string;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
-    organization: text => this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
-    branch: text => this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
-    user: text => this.orgUserInfo.getName().toLowerCase().indexOf(text) !== -1,
-    actionType: text => this.actionTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
+    organization: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
+    branch: text => !this.orgBranchInfo ? false : this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
+    user: text => !this.orgUserInfo ? false : this.orgUserInfo.getName().toLowerCase().indexOf(text) !== -1,
+    actionType: text => !this.actionTypeInfo ? false : this.actionTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
     actionTimeString: 'actionTimeString',
     userComments: 'userComments'
   };

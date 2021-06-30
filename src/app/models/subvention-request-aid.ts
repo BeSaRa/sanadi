@@ -51,7 +51,7 @@ export class SubventionRequestAid {
     organization: (text) => {
       return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
     },
-    requestStatus: text => this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
+    requestStatus: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
   aidCount: any = 0;
 

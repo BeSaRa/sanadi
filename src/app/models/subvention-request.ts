@@ -65,7 +65,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest> {
     organization: (text) => {
       return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
     },
-    requestStatusInfo: text => this.requestStatusInfo.getName().toLowerCase().indexOf(text) !== -1
+    requestStatusInfo: text => !this.requestStatusInfo ? false : this.requestStatusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
 
 

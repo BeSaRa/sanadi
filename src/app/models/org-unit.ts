@@ -61,7 +61,7 @@ export class OrgUnit extends BaseModel<OrgUnit> {
     email: 'email',
     address: 'address',
     statusModifiedDate: 'statusDateModifiedString',
-    status: text => this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
+    status: text => !this.getOrgStatusLookup() ? false : this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {

@@ -35,7 +35,7 @@ export class OrgBranch extends BaseModel<OrgBranch> {
     phoneNumber1: 'phoneNumber1',
     address: 'address',
     statusModifiedDate: 'statusDateModifiedString',
-    status: text => this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
+    status: text => !this.getOrgStatusLookup() ? false : this.getOrgStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {

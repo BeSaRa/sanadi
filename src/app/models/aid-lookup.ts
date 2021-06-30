@@ -27,7 +27,7 @@ export class AidLookup extends BaseModel<AidLookup> {
     aidCode: 'aidCode',
     arName: 'arName',
     enName: 'enName',
-    status: text => this.statusInfo?.getName().toLowerCase().indexOf(text) !== -1,
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
     statusModifiedDate: 'statusDateModifiedString'
   };
 
