@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, QueryList} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, QueryList} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {Observable, Subject} from 'rxjs';
 
@@ -12,6 +12,7 @@ export class TabListService implements OnDestroy {
   changeSelectedTabTo$: Subject<TabComponent> = new Subject();
   activeTabIndex: number = 0;
   onSelectTabChange$: Observable<TabComponent> = this.changeSelectedTabTo$.asObservable();
+  onTabChangeEvent!: EventEmitter<TabComponent>;
 
   constructor() {
     ++TabListService.id;
@@ -25,9 +26,10 @@ export class TabListService implements OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number): void {
+  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, onTabChangeEvent: EventEmitter<TabComponent>): void {
     this.tabs = tabs;
     this.hasTabs = true;
+    this.onTabChangeEvent = onTabChangeEvent;
     this.activeTabIndex = typeof activeTabIndex !== undefined ? activeTabIndex : 0;
     if (this.tabs.length) {
       this.selectActiveIndexOrFirst();
@@ -43,6 +45,7 @@ export class TabListService implements OnDestroy {
   selectTabByIndex(index: number): void {
     const tab = this.findTabByIndex(index);
     this.changeSelectedTabTo$.next(tab);
+    this.onTabChangeEvent.emit(tab);
   }
 
   private findTabByIndex(index: number): TabComponent | undefined {

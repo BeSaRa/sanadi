@@ -49,7 +49,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   }
 
   ngAfterContentInit(): void {
-    this.tabListService.setTabs(this.tabs, this.activeTabIndex);
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.onTabChange);
   }
 
   /**
