@@ -138,6 +138,12 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
     if (!this._caseId) {
       return;
     }
+
+    if (this.disabled) {
+      this.dialog.error(this.lang.map.not_allowed_to_do_this_action);
+      return;
+    }
+
     const recommendationValue = (this.formControl.value as string).trim();
     if (recommendationValue.length < 4) {
       this.dialog.error(this.lang.map.err_specific_min_length.change({field: this.lang.map.recommendation, length: 4}));

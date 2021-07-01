@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  not_allowed_to_do_this_action: string;
   to_user: string;
   release_task: string;
   received_data: string;

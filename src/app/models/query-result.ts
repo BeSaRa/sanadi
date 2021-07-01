@@ -20,6 +20,7 @@ import {SearchableCloneable} from './searchable-cloneable';
 import {ISearchFieldsMap} from '../types/types';
 import {DatePipe} from '@angular/common';
 import {LangService} from '../services/lang.service';
+import {EmployeeService} from '../services/employee.service';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -65,6 +66,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   service!: InboxService;
   dialog!: DialogService;
   lang!: LangService;
+  employeeService!: EmployeeService;
 
   searchFields: ISearchFieldsMap<QueryResult> = {
     BD_FULL_SERIAL: 'BD_FULL_SERIAL',
@@ -88,6 +90,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     this.service = FactoryService.getService('InboxService');
     this.dialog = FactoryService.getService('DialogService');
     this.lang = FactoryService.getService('LangService');
+    this.employeeService = FactoryService.getService('EmployeeService');
   }
 
   claim(): Observable<IBulkResult> {
@@ -184,7 +187,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = true;
-              comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()));
+              comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();
               instance.component = comInstance;
             });
         })
