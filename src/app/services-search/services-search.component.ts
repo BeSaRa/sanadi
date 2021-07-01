@@ -14,6 +14,7 @@ import {ToastService} from '../services/toast.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
 import {TabComponent} from '../shared/components/tab/tab.component';
+import {EmployeeService} from '../services/employee.service';
 
 @Component({
   selector: 'services-search',
@@ -37,6 +38,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toast: ToastService,
               private inboxService: InboxService,
+              private employeeService: EmployeeService,
               private dialog: DialogService,
               public eService: EServiceListService) {
   }
@@ -166,6 +168,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
         data: {hideFromViewer: true},
+        show: () => this.employeeService.isInternalUser(),
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
         }

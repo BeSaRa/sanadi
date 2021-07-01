@@ -12,6 +12,7 @@ import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {OpenFrom} from '../../../enums/open-from.enum';
 import {FormControl} from '@angular/forms';
+import {EmployeeService} from '../../../services/employee.service';
 
 @Component({
   selector: 'app-user-inbox',
@@ -28,6 +29,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private employeeService: EmployeeService,
               public eService: EServiceListService,
               private inboxService: InboxService) {
 
@@ -188,6 +190,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
         data: {hideFromViewer: true},
+        show: () => this.employeeService.isInternalUser(),
         onClick: (item: QueryResult) => {
           this.actionManageRecommendations(item);
         }

@@ -9,7 +9,7 @@
       </div>
       <div>
         <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
-          <option [ngValue]="team.id" *ngFor="let team of employee.teams">{{team.getName()}}</option>
+          <option [ngValue]="team.id" *ngFor="let team of employeeService.teams">{{team.getName()}}</option>
         </select>
       </div>
       <div class="flex-grow-1"></div>

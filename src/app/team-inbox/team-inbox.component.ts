@@ -35,7 +35,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private inboxService: InboxService,
               public eService: EServiceListService,
-              public employee: EmployeeService) {
+              public employeeService: EmployeeService) {
   }
 
   ngOnDestroy(): void {
@@ -65,7 +65,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   reloadDefaultTeam(): void {
-    this.inboxChange$.next(this.employee.teams[0].id || null);
+    this.inboxChange$.next(this.employeeService.teams[0].id || null);
   }
 
   private listenToInboxChange() {
@@ -223,6 +223,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
           hideFromViewer: true,
           hideFromContext: true
         },
+        show: () => this.employeeService.isInternalUser(),
         onClick: (item: QueryResult) => {
           this.actionManageRecommendations(item);
         }
