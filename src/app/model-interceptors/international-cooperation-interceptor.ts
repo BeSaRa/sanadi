@@ -9,6 +9,7 @@ export class InternationalCooperationInterceptor implements IModelInterceptor<In
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.categoryInfo;
+    delete model.employeeService;
     return model;
   }
 

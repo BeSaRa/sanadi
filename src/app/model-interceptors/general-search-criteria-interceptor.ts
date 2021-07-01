@@ -34,6 +34,8 @@ export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICase
     const configurationService: ConfigurationService = FactoryService.getService('ConfigurationService');
     // here you can check the search criteria type if match any of your model you can pass it to your custom interceptor.send method
     delete model.service;
+    delete model.employeeService;
+
     model.createdOnFrom = dayjs(DateUtils.changeDateFromDatepicker(model.createdOnFrom as unknown as IMyDateModel))
       .startOf('day').startOf('day').format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
     model.createdOnTo = dayjs(DateUtils.changeDateFromDatepicker(model.createdOnTo as unknown as IMyDateModel))

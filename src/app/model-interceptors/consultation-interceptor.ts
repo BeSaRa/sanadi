@@ -18,6 +18,7 @@ export class ConsultationInterceptor implements IModelInterceptor<Consultation> 
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.employeeService;
     return model;
   }
 

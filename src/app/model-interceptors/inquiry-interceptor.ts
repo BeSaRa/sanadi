@@ -12,6 +12,7 @@ export class InquiryInterceptor implements IModelInterceptor<Inquiry> {
     delete model.caseStatusInfo;
     delete model.ouInfo;
     delete model.categoryInfo;
+    delete model.employeeService;
     return model;
   }
 

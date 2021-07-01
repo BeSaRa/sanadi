@@ -13,6 +13,8 @@ import {delay, map, take, tap} from 'rxjs/operators';
 import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
 import {IESComponent} from '../interfaces/iescomponent';
 import {OpenFrom} from '../enums/open-from.enum';
+import {EmployeeService} from '../services/employee.service';
+import {FactoryService} from '../services/factory.service';
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> {
   serial!: number;
@@ -29,7 +31,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   competentDepartmentAuthName!: string;
   assignDate!: string;
   className!: string;
+
   service!: S;
+  employeeService: EmployeeService;
+
+  protected constructor() {
+    super();
+    this.employeeService = FactoryService.getService('EmployeeService');
+  }
 
   create(): Observable<T> {
     return this.service.create(this as unknown as T);
@@ -139,6 +148,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = !model.canStart();
+              comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();
               instance.component = comInstance;
             });
         })
