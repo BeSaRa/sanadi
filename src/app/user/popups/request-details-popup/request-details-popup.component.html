@@ -40,6 +40,10 @@
         <label class="form-label">{{langService.map.status_date}}</label>
         <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
       </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.family_member_count}}</label>
+        <span class="form-control">{{beneficiary.familyCount || '&nbsp;'}}</span>
+      </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
@@ -100,13 +104,15 @@
       </div>
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.monthly_income}}</label>
-        <span class="form-control">{{(beneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        <span
+          class="form-control">{{(beneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.extra_income}}</label>
-        <span class="form-control">{{(beneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        <span
+          class="form-control">{{(beneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.extra_income_source}}</label>
@@ -116,7 +122,8 @@
     <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.total_debts}}</label>
-        <span class="form-control">{{(beneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        <span
+          class="form-control">{{(beneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.number_of_installments}}</label>
@@ -126,7 +133,8 @@
     <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.monthly_rent}}</label>
-        <span class="form-control">{{(beneficiary.benHouseRent | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        <span
+          class="form-control">{{(beneficiary.benHouseRent | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
     </div>
   </ng-template>
@@ -174,7 +182,8 @@
             <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
             <tr class="cdk-row" *cdkNoDataRow>
-              <td class="cdk-cell text-center" [colSpan]="aidColumns.length">{{langService.map.msg_no_records_found}}</td>
+              <td class="cdk-cell text-center"
+                  [colSpan]="aidColumns.length">{{langService.map.msg_no_records_found}}</td>
             </tr>
           </table>
         </div>
