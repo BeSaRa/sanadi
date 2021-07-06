@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.lang.toggleLanguage();
+    this.lang.toggleLanguage().subscribe();
   }
 
   processLogin(): void {
