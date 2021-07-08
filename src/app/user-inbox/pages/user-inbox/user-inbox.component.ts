@@ -304,4 +304,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       }
     ];
   }
+
+  displayStepName(row: QueryResult) {
+    return this.lang.map[row.TAD_DISPLAY_NAME];
+  }
 }
