@@ -9,6 +9,7 @@ import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-co
 import {EmployeeService} from '../../../services/employee.service';
 import {CommentHistoryPopupComponent} from '../../popups/comment-history-popup/comment-history-popup.component';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',

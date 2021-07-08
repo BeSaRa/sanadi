@@ -13,6 +13,7 @@ import {UploadDocumentPopupComponent} from '../../popups/upload-document-popup/u
 import {BlobModel} from '../../../models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
@@ -151,7 +152,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   allSelected(): boolean {
-    return !!(this.documents.length && (this.documents.length === this.selectedDocuments.length));
+    return (!!this.documents.length && (this.documents.length === this.selectedDocuments.length));
   }
 
   toggleSelectAll($event: MouseEvent): void {

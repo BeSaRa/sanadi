@@ -17,6 +17,7 @@ import {ConfigurableFocusTrapFactory} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {ConfigurableFocusTrap} from '@angular/cdk/a11y/focus-trap/configurable-focus-trap';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-dialog-container',
   templateUrl: './dialog-container.component.html',

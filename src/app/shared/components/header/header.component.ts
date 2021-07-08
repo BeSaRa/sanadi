@@ -5,6 +5,7 @@ import {SidebarComponent} from '../sidebar/sidebar.component';
 import {EmployeeService} from '../../../services/employee.service';
 import {Subject} from 'rxjs';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
