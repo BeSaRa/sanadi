@@ -16,6 +16,8 @@ import {InternalDepartmentService} from '../../../../services/internal-departmen
 import {InternalDepartment} from '../../../../models/internal-department';
 import {CountryService} from '../../../../services/country.service';
 import {Country} from '../../../../models/country';
+import {OperationTypes} from '../../../../enums/operation-types.enum';
+import {CaseModel} from '../../../../models/case-model';
 
 @Component({
   selector: 'international-cooperation',
@@ -30,7 +32,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   form!: FormGroup;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
-  editMode: boolean = false;
+  operation: OperationTypes = OperationTypes.CREATE;
   model?: InternationalCooperation;
   private outModelChange$: BehaviorSubject<InternationalCooperation> = new BehaviorSubject<InternationalCooperation>(null as unknown as InternationalCooperation);
 
@@ -123,7 +125,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       takeUntil(this.destroy$)
     ).subscribe((fromValues) => {
       const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -134,7 +136,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       takeUntil(this.destroy$)
     ).subscribe(fromValues => {
       const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-      model.commit().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -173,8 +175,13 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.toast.success(this.lang.map.draft_was_saved_successfully);
   }
 
-  private saveMessage(): void {
-    this.toast.success(this.lang.map.request_has_been_saved_successfully);
+  private saveMessage(model: CaseModel<any, any>): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.operation = OperationTypes.UPDATE;
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   launch() {

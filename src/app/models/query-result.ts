@@ -21,6 +21,7 @@ import {ISearchFieldsMap} from '../types/types';
 import {DatePipe} from '@angular/common';
 import {LangService} from '../services/lang.service';
 import {EmployeeService} from '../services/employee.service';
+import {OperationTypes} from '../enums/operation-types.enum';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -187,6 +188,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = true;
+              comInstance.operation = OperationTypes.UPDATE;
               comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();
               instance.component = comInstance;
             });

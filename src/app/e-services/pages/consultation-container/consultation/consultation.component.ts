@@ -20,6 +20,8 @@ import {InternalDepartment} from '../../../../models/internal-department';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
 import {EmployeeService} from '../../../../services/employee.service';
 import {CustomValidators} from '../../../../validators/custom-validators';
+import {OperationTypes} from '../../../../enums/operation-types.enum';
+import {CaseModel} from '../../../../models/case-model';
 
 @Component({
   selector: 'consultation',
@@ -36,7 +38,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   categories: Lookup[] = this.lookupService.listByCategory.ConsultationCategory;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   model?: Consultation;
-  editMode: boolean = false;
+  operation: OperationTypes = OperationTypes.CREATE;
   public isInternalUser: boolean = this.employeeService.isInternalUser();
   private outModelChange$: BehaviorSubject<Consultation> = new BehaviorSubject<Consultation>(null as unknown as Consultation);
 
@@ -160,7 +162,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$)
     ).subscribe((fromValues) => {
       const model = (new Consultation()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -170,7 +172,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$)
     ).subscribe((fromValues) => {
       const model = (new Consultation()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -179,8 +181,13 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     this.toast.success(this.lang.map.draft_was_saved_successfully);
   }
 
-  private saveMessage(): void {
-    this.toast.success(this.lang.map.request_has_been_saved_successfully);
+  private saveMessage(model: CaseModel<any, any>): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.operation = OperationTypes.UPDATE;
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   private listenToModelChange(): void {

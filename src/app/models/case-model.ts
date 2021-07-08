@@ -15,6 +15,7 @@ import {IESComponent} from '../interfaces/iescomponent';
 import {OpenFrom} from '../enums/open-from.enum';
 import {EmployeeService} from '../services/employee.service';
 import {FactoryService} from '../services/factory.service';
+import {OperationTypes} from '../enums/operation-types.enum';
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> {
   serial!: number;
@@ -148,6 +149,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = !model.canStart();
+              comInstance.operation = OperationTypes.UPDATE;
               comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();
               instance.component = comInstance;
             });

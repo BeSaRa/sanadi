@@ -17,6 +17,8 @@ import {InquiryService} from '../../../../services/inquiry.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
 import {IESComponent} from '../../../../interfaces/iescomponent';
 import {CustomValidators} from '../../../../validators/custom-validators';
+import {OperationTypes} from '../../../../enums/operation-types.enum';
+import {CaseModel} from '../../../../models/case-model';
 
 @Component({
   selector: 'inquiry-component',
@@ -31,7 +33,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
-  editMode: boolean = false;
+  operation: OperationTypes = OperationTypes.CREATE;
   model?: Inquiry;
   private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
 
@@ -127,7 +129,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$)
     ).subscribe((fromValues) => {
       const model = (new Inquiry()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -138,7 +140,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$)
     ).subscribe(fromValues => {
       const model = (new Inquiry()).clone({...this.model, ...fromValues});
-      model.commit().pipe(takeUntil(this.destroy$), tap(_ => this.saveMessage()))
+      model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
         .subscribe((model) => this.changeModel.next(model));
     });
   }
@@ -177,8 +179,13 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
     this.toast.success(this.lang.map.draft_was_saved_successfully);
   }
 
-  private saveMessage(): void {
-    this.toast.success(this.lang.map.request_has_been_saved_successfully);
+  private saveMessage(model: CaseModel<any, any>): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.operation = OperationTypes.UPDATE;
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   launch() {
