@@ -58,13 +58,13 @@ import {SendToComponent} from './popups/send-to-user-popup/send-to.component';
 import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
 import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
-import { ManageRecommendationPopupComponent } from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
-import { ManageCommentPopupComponent } from './popups/manage-comment-popup/manage-comment-popup.component';
-import { CaseViewerPopupComponent } from './popups/case-viewer-popup/case-viewer-popup.component';
+import {ManageRecommendationPopupComponent} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {ManageCommentPopupComponent} from './popups/manage-comment-popup/manage-comment-popup.component';
+import {CaseViewerPopupComponent} from './popups/case-viewer-popup/case-viewer-popup.component';
 import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
-import { FullscreenBtnDirective } from './directives/fullscreen-btn.directive';
-import { CommentHistoryPopupComponent } from './popups/comment-history-popup/comment-history-popup.component';
-import { ViewerCaseInfoComponent } from './components/viewer-case-info/viewer-case-info.component';
+import {FullscreenBtnDirective} from './directives/fullscreen-btn.directive';
+import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comment-history-popup.component';
+import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
 
 @NgModule({
   declarations: [
