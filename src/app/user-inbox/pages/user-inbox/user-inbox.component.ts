@@ -131,7 +131,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       .subscribe(() => this.reloadInbox$.next(null));
   }
 
-  actionRelease(item: QueryResult) {
+  actionRelease(item: QueryResult, viewDialogRef?: DialogRef) {
     item.release()
       .subscribe((val) => {
         this.reloadInbox$.next(null);
@@ -140,6 +140,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.task_have_been_released_successfully);
+        viewDialogRef?.close();
       });
   }
 
@@ -165,7 +166,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-hand-okay',
         label: 'release_task',
-        onClick: (item: QueryResult) => this.actionRelease(item)
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
       // view logs
       {
