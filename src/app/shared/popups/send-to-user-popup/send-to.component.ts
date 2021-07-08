@@ -20,6 +20,7 @@ import {QueryResult} from '../../../models/query-result';
 import {IWFResponse} from '../../../interfaces/i-w-f-response';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'send-to-user-popup',
   templateUrl: './send-to.component.html',

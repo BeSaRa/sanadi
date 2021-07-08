@@ -121,15 +121,15 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToUser(true).onAfterClose$.subscribe(() => {
-      viewDialogRef?.close();
+    item.sendToUser(true).onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
   }
 
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToDepartment(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.sendToDepartment(true).onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
   }
@@ -174,8 +174,8 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
-    item.sendToManager(true).onAfterClose$.subscribe(() => {
-      viewDialogRef?.close();
+    item.sendToManager(true).onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
   }
@@ -361,7 +361,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       }
     ];
   }
-  
+
   displayStepName(row: QueryResult) {
     return this.lang.map[row.TAD_DISPLAY_NAME];
   }
