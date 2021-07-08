@@ -24,6 +24,8 @@ export class CommentsComponent implements OnInit {
     this._caseId = value ? value : '';
     if (value) {
       this.addCommentsSilently();
+    } else {
+      this.comments = [];
     }
   }
 

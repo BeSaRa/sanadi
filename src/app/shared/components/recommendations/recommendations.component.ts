@@ -44,6 +44,8 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
     this._caseId = value ? value : '';
     if (value) {
       this.addRecommendationsSilently();
+    } else {
+      this.recommendations = [];
     }
   }
 

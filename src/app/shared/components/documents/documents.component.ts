@@ -26,6 +26,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     this._caseId = value ? value : '';
     if (value) {
       this.uploadFileSilently();
+    } else {
+      this.documents = [];
     }
   };
 

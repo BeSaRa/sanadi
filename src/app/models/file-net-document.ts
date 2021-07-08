@@ -3,7 +3,7 @@ import {FactoryService} from '../services/factory.service';
 import {DialogService} from '../services/dialog.service';
 
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
-  documentType!: number;
+  attachmentTypeId!: number;
   description!: string;
   isPublished!: boolean;
   documentTitle!: string;

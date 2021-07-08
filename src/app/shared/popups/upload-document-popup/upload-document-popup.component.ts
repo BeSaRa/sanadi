@@ -54,7 +54,7 @@ export class UploadDocumentPopupComponent implements OnInit {
         return this.fb.group({
             description: [null],
             documentTitle: [null, [CustomValidators.required, CustomValidators.maxLength(100)]],
-            documentType: [null, [CustomValidators.required]],
+            attachmentTypeId: [null, [CustomValidators.required]],
             files: [null, [CustomValidators.required]],
             isPublished: this.fb.control({
                 value: this.employeeService.isExternalUser(),

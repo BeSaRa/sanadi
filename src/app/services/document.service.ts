@@ -41,7 +41,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.files;
     delete clonedDocument.dialog;
 
-    clonedDocument.documentType = 1;
+    clonedDocument.attachmentTypeId = 1;
 
     content ? formData.append('content', content) : null;
     return this.service.http.post<any>(this.service._getServiceURL() + '/' + caseId + '/document', formData, {
@@ -73,7 +73,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
       formData.append('content', files.item(i)!);
     }
     delete clonedDocument.dialog;
-    clonedDocument.documentType = 1;
+    clonedDocument.attachmentTypeId = 1;
     return this.service.http.post(this.service._getServiceURL() + '/' + caseId + '/document/bulk', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),
       reportProgress: true,
