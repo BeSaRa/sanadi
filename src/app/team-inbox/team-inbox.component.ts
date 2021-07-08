@@ -23,7 +23,7 @@ import {OpenFrom} from '../enums/open-from.enum';
 export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();

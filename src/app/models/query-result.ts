@@ -22,6 +22,7 @@ import {DatePipe} from '@angular/common';
 import {LangService} from '../services/lang.service';
 import {EmployeeService} from '../services/employee.service';
 import {OperationTypes} from '../enums/operation-types.enum';
+import {ILanguageKeys} from '../interfaces/i-language-keys';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -35,7 +36,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   ASSIGNED_TO_ROLE!: null;
   ASSIGNED_TO_ROLE_DISPLAY_NAME!: null;
   SENT_TIME!: null;
-  TAD_DISPLAY_NAME!: string;
+  TAD_DISPLAY_NAME!: keyof ILanguageKeys;
   TAD_DESCRIPTION!: null;
   DUE!: string;
   ACTIVATED!: string;

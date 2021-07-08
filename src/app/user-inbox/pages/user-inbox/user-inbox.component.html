@@ -9,7 +9,7 @@
       </div>
       <div class="flex-grow-1"></div>
       <div>
-        <input [formControl]="filterControl"  [placeholder]="lang.map.lbl_search" class="form-control">
+        <input [formControl]="filterControl" [placeholder]="lang.map.lbl_search" class="form-control">
       </div>
     </div>
   </div>
@@ -31,6 +31,10 @@
         <ng-container cdkColumnDef="ACTIVATED">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.received_data}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.ACTIVATED|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="action">
+          <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.action}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{lang.map[row.TAD_DISPLAY_NAME] || row.TAD_DISPLAY_NAME}} </td>
         </ng-container>
         <ng-container cdkColumnDef="PI_CREATE">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>

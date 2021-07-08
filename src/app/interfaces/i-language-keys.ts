@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  action: string;
+  request_reply: string;
+  approve_request: string;
+  request_rework: string;
+  process_request: string;
+  review_request: string;
   not_allowed_to_do_this_action: string;
   to_user: string;
   release_task: string;
@@ -11,7 +17,7 @@ export interface ILanguageKeys {
   menu_attachment_types: string;
   updated_by: string;
   updated_date: string;
-  send_to_manager : string;
+  send_to_manager: string;
   this_action_cannot_be_performed_before_saving_the_request: string;
   edit_logs: string;
   show_edit_logs: string;
