@@ -50,7 +50,8 @@
             </td>
           </ng-container>
           <ng-container cdkColumnDef="category">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.subject}}</th>
+            <th cdk-header-cell
+                *cdkHeaderCellDef> {{isConsultationSelected() ? lang.map.consulting_type : lang.map.subject}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="caseStatus">

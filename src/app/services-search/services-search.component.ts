@@ -15,6 +15,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
 import {TabComponent} from '../shared/components/tab/tab.component';
 import {EmployeeService} from '../services/employee.service';
+import {CaseTypes} from '../enums/case-types.enum';
 
 @Component({
   selector: 'services-search',
@@ -244,5 +245,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   selectedTabChanged($event: TabComponent) {
     $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
+  }
+
+  isConsultationSelected(): boolean {
+    return this.serviceControl.value === CaseTypes.CONSULTATION;
   }
 }

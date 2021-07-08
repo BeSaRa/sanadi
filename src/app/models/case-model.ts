@@ -167,5 +167,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.getStatusIcon(this.caseStatus);
   }
 
+  isCaseTypeEqual(caseType: number): boolean {
+    return this.caseType === caseType;
+  }
 
 }

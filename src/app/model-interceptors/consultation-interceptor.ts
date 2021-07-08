@@ -9,6 +9,7 @@ export class ConsultationInterceptor implements IModelInterceptor<Consultation> 
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
+    model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
     return model;
   }
 
