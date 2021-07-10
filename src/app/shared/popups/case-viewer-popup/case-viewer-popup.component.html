@@ -11,11 +11,13 @@
   <ng-template #template></ng-template>
 </div>
 <div class="dialog-actions">
-  <button (click)="takeAction(action)" *ngFor="let action of actions" [tooltip]="displayLabel(action)"
-          class="btn btn-outline-light icon-btn">
-    <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i>
-    <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
-  </button>
+  <ng-container *ngFor="let action of actions">
+    <button *ngIf="!hideAction(action)" (click)="takeAction(action)" [tooltip]="displayLabel(action)"
+            class="btn btn-outline-light icon-btn">
+      <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i>
+      <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
+    </button>
+  </ng-container>
   <div class="flex-grow-1"></div>
   <button [disabled]="component?.form?.invalid || component?.readonly" (click)="saveCase()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>

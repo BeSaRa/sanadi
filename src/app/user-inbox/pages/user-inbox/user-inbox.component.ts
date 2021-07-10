@@ -13,6 +13,8 @@ import {DialogRef} from '../../../shared/models/dialog-ref';
 import {OpenFrom} from '../../../enums/open-from.enum';
 import {FormControl} from '@angular/forms';
 import {EmployeeService} from '../../../services/employee.service';
+import {CaseModel} from '../../../models/case-model';
+import {WFActions} from '../../../enums/wfactions.enum';
 
 @Component({
   selector: 'app-user-inbox',
@@ -166,6 +168,12 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-hand-okay',
         label: 'release_task',
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          },
+          hideFromContext: true,
+        },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
       // view logs

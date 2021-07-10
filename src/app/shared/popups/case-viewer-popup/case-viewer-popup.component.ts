@@ -12,6 +12,7 @@ import {OpenFrom} from '../../../enums/open-from.enum';
 import {CaseModel} from '../../../models/case-model';
 import {QueryResult} from '../../../models/query-result';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'case-viewer-popup',
   templateUrl: './case-viewer-popup.component.html',
@@ -40,15 +41,18 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   saveTypes: typeof SaveTypes = SaveTypes;
   actions: IMenuItem[] = [];
-
+  // the model that the user clicked on it
   model: CaseModel<any, any> | QueryResult;
+  // the model that we load to display inside the viewer
+  loadedModel: CaseModel<any, any> | QueryResult;
 
   constructor(@Inject(DIALOG_DATA_TOKEN)
               public data: {
                 key: keyof ILanguageKeys,
                 model: any,
                 actions: IMenuItem[],
-                openedFrom: OpenFrom
+                openedFrom: OpenFrom,
+                loadedModel: any
               },
               private zone: NgZone,
               private dialogRef: DialogRef,
@@ -56,6 +60,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
     this.model = this.data.model;
     this.openedFrom = this.data.openedFrom;
+    this.loadedModel = this.data.loadedModel;
   }
 
   ngOnInit(): void {
@@ -73,11 +78,11 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   takeAction(action: IMenuItem) {
-    action.onClick && action.onClick(this.model, this.dialogRef);
+    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel);
   }
 
   private filterAction(action: IMenuItem) {
-    return action.type === 'action' && !action.data?.hideFromViewer && (!action.show ? true : action.show(this.model));
+    return action.type === 'action' && (!action.show ? true : action.show(this.model));
   }
 
   saveCase(): void {
@@ -85,5 +90,13 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
       return;
     }
     this.component?.save?.next(this.saveTypes.FINAL);
+  }
+
+  hideAction(action: IMenuItem): boolean {
+    if (action.data?.hasOwnProperty('hideFromViewer')) {
+      return typeof action.data?.hideFromViewer === 'function' ? action.data.hideFromViewer(this.loadedModel || this.model) : action.data?.hideFromViewer!;
+    } else {
+      return false;
+    }
   }
 }

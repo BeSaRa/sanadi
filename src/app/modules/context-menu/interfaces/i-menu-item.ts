@@ -5,8 +5,8 @@ export interface IMenuItem {
   type: 'action' | 'divider';
   onClick?: (item?: any, ...params: any) => void;
   data?: {
-    hideFromViewer?: boolean,
-    hideFromContext?: boolean,
+    hideFromViewer?: boolean | ((loadedModel?: any) => boolean),
+    hideFromContext?: boolean | ((item?: any) => boolean),
     [index: string]: any
   };
   label?: keyof ILanguageKeys | ((item?: any) => string);

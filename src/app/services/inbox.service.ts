@@ -22,6 +22,7 @@ import {QueryResult} from '../models/query-result';
 import {ConsultationService} from './consultation.service';
 import {InternationalCooperationService} from './international-cooperation.service';
 import {CaseTypes} from '../enums/case-types.enum';
+import {ExceptionHandlerService} from './exception-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class InboxService {
               private consultationService: ConsultationService,
               private internationalCooperationService: InternationalCooperationService,
               private cfr: ComponentFactoryResolver,
+              private exceptionHandlerService: ExceptionHandlerService,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.

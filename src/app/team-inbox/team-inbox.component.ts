@@ -14,6 +14,8 @@ import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
+import {CaseModel} from '../models/case-model';
+import {WFActions} from '../enums/wfactions.enum';
 
 @Component({
   selector: 'team-inbox',
@@ -91,7 +93,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  actionClaim(item: QueryResult) {
+  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>) {
     item.claim()
       .pipe(take(1))
       .subscribe((val) => {
@@ -100,7 +102,25 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
           this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
           return;
         }
+
         this.toast.success(this.lang.map.task_have_been_claimed_successfully);
+        // remove claim action from the actions to hide claim Action from the viewer.
+        loadedModel && loadedModel.taskDetails.actions.splice(loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM), 1);
+        // push the cancel claim action to the actions array to display the RELEASE ACTION.
+        loadedModel && loadedModel.taskDetails.actions.push(WFActions.ACTION_CANCEL_CLAIM);
+      });
+  }
+
+  actionRelease(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.release()
+      .subscribe((val) => {
+        this.reloadSelectedInbox();
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.task_have_been_released_successfully);
+        viewDialogRef?.close();
       });
   }
 
@@ -187,7 +207,27 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-hand-right',
         label: 'claim',
-        onClick: (item: QueryResult) => this.actionClaim(item)
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
+          }
+        },
+        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>) => {
+          this.actionClaim(item, dialogRef, loadedModel);
+        }
+      },
+      // Release
+      {
+        type: 'action',
+        icon: 'mdi-hand-okay',
+        label: 'release_task',
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          },
+          hideFromContext: true,
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
       // open
       {

@@ -174,7 +174,13 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return service.getTask(this.TKIID)
       .pipe(
         tap(task => model = task),
-        map(_ => this.dialog.show(CaseViewerPopupComponent, {key: service.serviceKey, openedFrom: from, model: this, actions})),
+        map(_ => this.dialog.show(CaseViewerPopupComponent, {
+          key: service.serviceKey,
+          openedFrom: from,
+          model: this,
+          loadedModel: model,
+          actions
+        })),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit

@@ -34,4 +34,5 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   processInstanceName!: string;
   parentCaseId!: string;
   responses!: string[];
+  actions!: string[];
 }

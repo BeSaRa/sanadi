@@ -133,6 +133,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
           key: this.service.serviceKey,
           openedFrom: from,
           model: model,
+          loadedModel: model,
           actions
         })),
         tap(ref => {

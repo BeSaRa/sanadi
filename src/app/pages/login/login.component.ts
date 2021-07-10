@@ -10,6 +10,7 @@ import {ToastService} from '../../services/toast.service';
 import {ECookieService} from '../../services/e-cookie.service';
 import {TabComponent} from '../../shared/components/tab/tab.component';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
