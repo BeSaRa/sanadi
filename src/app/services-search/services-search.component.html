@@ -71,7 +71,7 @@
           </ng-container>
           <ng-container cdkColumnDef="organizationId">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="createdOn">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>

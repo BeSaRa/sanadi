@@ -2,6 +2,7 @@ import {CaseModel} from './case-model';
 import {ConsultationService} from '../services/consultation.service';
 import {FactoryService} from '../services/factory.service';
 import {CustomValidators} from '../validators/custom-validators';
+import {AdminResult} from './admin-result';
 
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
   caseType: number = 2;
@@ -13,6 +14,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   requestBody!: string;
 
   service: ConsultationService;
+  organizationInfo!: AdminResult;
 
   constructor() {
     super();

@@ -10,6 +10,7 @@ export class ConsultationInterceptor implements IModelInterceptor<Consultation> 
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
+    model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
     return model;
   }
 
@@ -21,6 +22,7 @@ export class ConsultationInterceptor implements IModelInterceptor<Consultation> 
     delete model.categoryInfo;
     delete model.ouInfo;
     delete model.employeeService;
+    delete model.organizationInfo;
     return model;
   }
 
