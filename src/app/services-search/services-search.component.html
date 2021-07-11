@@ -29,10 +29,10 @@
     <tab name="result_tab" [title]="lang.map.search_result" [template]="searchResult"></tab>
   </tabs-list>
   <ng-template #formCriteria>
-    <form autocomplete="off" [formGroup]="form">
+    <form autocomplete="off" (keydown.enter)="search$.next()" [formGroup]="form">
       <formly-form [form]="form" [fields]="fields"></formly-form>
     </form>
-    <button class="btn mb-4 btn-primary shadow shadow-sm"
+    <button class="btn mb-4 btn-primary shadow shadow-sm" type="submit"
             (click)="search$.next()">{{lang.map.lbl_search}}</button>
     <button class="btn mb-4 btn-secondary shadow shadow-sm mx-2"
             (click)="resetCriteria()">{{lang.map.btn_reset}}</button>
