@@ -16,6 +16,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
 import {CaseModel} from '../models/case-model';
 import {WFActions} from '../enums/wfactions.enum';
+import {IESComponent} from '../interfaces/iescomponent';
 
 @Component({
   selector: 'team-inbox',
@@ -93,7 +94,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>) {
+  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) {
     item.claim()
       .pipe(take(1))
       .subscribe((val) => {
@@ -108,6 +109,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         loadedModel && loadedModel.taskDetails.actions.splice(loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM), 1);
         // push the cancel claim action to the actions array to display the RELEASE ACTION.
         loadedModel && loadedModel.taskDetails.actions.push(WFActions.ACTION_CANCEL_CLAIM);
+        component && this.employeeService.isInternalUser() && (component.allowEditRecommendations = true);
       });
   }
 
@@ -212,8 +214,8 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
             return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
           }
         },
-        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>) => {
-          this.actionClaim(item, dialogRef, loadedModel);
+        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) => {
+          this.actionClaim(item, dialogRef, loadedModel, component);
         }
       },
       // Release

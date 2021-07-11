@@ -78,7 +78,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   takeAction(action: IMenuItem) {
-    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel);
+    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component);
   }
 
   private filterAction(action: IMenuItem) {
