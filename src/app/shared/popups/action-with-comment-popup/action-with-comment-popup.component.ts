@@ -13,6 +13,7 @@ import {QueryResult} from '../../../models/query-result';
 import {of, Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'action-with-comment-popup',
   templateUrl: './action-with-comment-popup.component.html',

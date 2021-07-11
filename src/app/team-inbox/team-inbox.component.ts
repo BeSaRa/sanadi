@@ -157,37 +157,37 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.complete(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.complete(true).onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.approve(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.approve(true).onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.close(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.close(true).onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.reject(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.reject(true).onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.return(true).onAfterClose$.subscribe(_ => {
-      viewDialogRef?.close();
+    item.return(true).onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
