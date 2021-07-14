@@ -1,6 +1,5 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {FileNetDocument} from '../../../models/file-net-document';
-import {Lookup} from '../../../models/lookup';
 import {DialogService} from '../../../services/dialog.service';
 import {ToastService} from '../../../services/toast.service';
 import {LookupService} from '../../../services/lookup.service';
@@ -13,7 +12,6 @@ import {UploadDocumentPopupComponent} from '../../popups/upload-document-popup/u
 import {BlobModel} from '../../../models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
@@ -38,7 +36,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   @Input() documents: FileNetDocument[] = [];
   @Input() service!: DocumentService;
-  documentTypes: Lookup[] = [];
   selectedDocuments: FileNetDocument[] = [];
   private destroy$: Subject<any> = new Subject();
 
