@@ -41,6 +41,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
 
+  get criteriaTitle(): string {
+    return this.lang.map.search_result + (this.results.length ? " (" + this.results.length + ")" : '');
+  };
+
   constructor(public lang: LangService,
               private toast: ToastService,
               private inboxService: InboxService,

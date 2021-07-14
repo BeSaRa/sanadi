@@ -26,7 +26,7 @@
 <div class="row">
   <tabs-list (onTabChange)="selectedTabChanged($event)" [tabByIndex$]="tabIndex$">
     <tab [title]="lang.map.search_criteria" [template]="formCriteria"></tab>
-    <tab name="result_tab" [title]="lang.map.search_result" [template]="searchResult"></tab>
+    <tab name="result_tab" [title]="criteriaTitle" [template]="searchResult"></tab>
   </tabs-list>
   <ng-template #formCriteria>
     <form autocomplete="off" (keydown.enter)="search$.next()" [formGroup]="form">
