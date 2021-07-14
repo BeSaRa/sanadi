@@ -181,7 +181,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
           model: this,
           loadedModel: model,
           actions
-        })),
+        }, {fullscreen: true})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit

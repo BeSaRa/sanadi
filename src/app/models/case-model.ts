@@ -135,7 +135,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
           model: model,
           loadedModel: model,
           actions
-        })),
+        }, {fullscreen: true})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit
