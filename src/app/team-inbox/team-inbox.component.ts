@@ -218,33 +218,6 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
 
   private buildGridActions() {
     this.actions = [
-      // claim
-      {
-        type: 'action',
-        icon: 'mdi-hand-right',
-        label: 'claim',
-        data: {
-          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
-          }
-        },
-        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) => {
-          this.actionClaim(item, dialogRef, loadedModel, component);
-        }
-      },
-      // Release
-      {
-        type: 'action',
-        icon: 'mdi-hand-okay',
-        label: 'release_task',
-        data: {
-          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
-          },
-          hideFromContext: true,
-        },
-        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
-      },
       // open
       {
         type: 'action',
@@ -293,6 +266,33 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);
         }
+      },
+      // claim
+      {
+        type: 'action',
+        icon: 'mdi-hand-right',
+        label: 'claim',
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
+          }
+        },
+        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) => {
+          this.actionClaim(item, dialogRef, loadedModel, component);
+        }
+      },
+      // Release
+      {
+        type: 'action',
+        icon: 'mdi-hand-okay',
+        label: 'release_task',
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          },
+          hideFromContext: true,
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
       // send to department
       {type: 'divider'},

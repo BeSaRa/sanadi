@@ -163,19 +163,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         data: {hideFromViewer: true},
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
-      // Release
-      {
-        type: 'action',
-        icon: 'mdi-hand-okay',
-        label: 'release_task',
-        data: {
-          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
-          },
-          hideFromContext: true,
-        },
-        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
-      },
       // view logs
       {
         type: 'action',
@@ -213,6 +200,19 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);
         }
+      },
+      // Release
+      {
+        type: 'action',
+        icon: 'mdi-hand-okay',
+        label: 'release_task',
+        data: {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          },
+          hideFromContext: true,
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
       {type: 'divider'},
       // send to department
