@@ -26,10 +26,14 @@ import {CaseTypes} from '../enums/case-types.enum';
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: EServiceGenericService<any>;
+  private allowedServicesForExternalUser: number[] = [
+    CaseTypes.CONSULTATION
+  ];
+
   searchColumns: string[] = [];
   form!: FormGroup;
   fields: FormlyFieldConfig[] = [];
-  serviceNumbers: number[] = Array.from(this.eService.services.keys());
+  serviceNumbers: number[] = Array.from(this.eService.services.keys()).filter((number: number) => this.filterServices(number));
   serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem[] = [];
@@ -269,4 +273,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  private filterServices(number: number): boolean {
+    return this.employeeService.isInternalUser() ? true : this.isServiceAllowedForExternalToSearch(number);
+  }
+
+  private isServiceAllowedForExternalToSearch(number: number) {
+    return this.allowedServicesForExternalUser.indexOf(number) !== -1;
+  }
 }
