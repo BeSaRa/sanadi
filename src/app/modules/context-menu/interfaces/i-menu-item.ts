@@ -5,7 +5,7 @@ export interface IMenuItem {
   type: 'action' | 'divider';
   onClick?: (item?: any, ...params: any) => void;
   data?: {
-    hideFromViewer?: boolean | ((loadedModel?: any) => boolean),
+    hideFromViewer?: boolean | ((loadedModel?: any , model?: any) => boolean),
     hideFromContext?: boolean | ((item?: any) => boolean),
     [index: string]: any
   };

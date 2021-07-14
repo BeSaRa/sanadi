@@ -25,7 +25,7 @@ import {IESComponent} from '../interfaces/iescomponent';
 })
 export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  inboxChange$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
   displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
@@ -54,7 +54,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     if (!this.hasSelectedInbox()) {
       return of(null);
     }
-    return this.inboxService.loadTeamInbox(this.inboxChange$.value!)
+    return this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!)
       .pipe(tap(val => console.log(val.items)))
       .pipe(tap(result => this.queryResultSet = result));
   }
@@ -68,7 +68,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   reloadDefaultTeam(): void {
-    this.inboxChange$.next(this.employeeService.teams[0].id || null);
+    this.inboxChange$.next(this.employeeService.teams[0] || null);
   }
 
   private listenToInboxChange() {
@@ -85,7 +85,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     this.selectControl
       .valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => {
+      .subscribe((value: Team) => {
         this.inboxChange$.next(value);
       });
   }
@@ -143,60 +143,74 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToUser(true).onAfterClose$.subscribe((actionTaken) => {
+    item.sendToUser().onAfterClose$.subscribe((actionTaken) => {
       actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
   }
 
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToDepartment(true).onAfterClose$.subscribe(actionTaken => {
+    item.sendToDepartment().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
   }
 
   actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.complete(true).onAfterClose$.subscribe(actionTaken => {
+    item.complete().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
       actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.approve(true).onAfterClose$.subscribe(actionTaken => {
+    item.approve().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
       actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.close(true).onAfterClose$.subscribe(actionTaken => {
+    item.close().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
       actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.reject(true).onAfterClose$.subscribe(actionTaken => {
+    item.reject().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
       actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.return(true).onAfterClose$.subscribe(actionTaken => {
+    item.return().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
       actionTaken ? viewDialogRef?.close() : null;
     });
   }
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$)).subscribe(() => this.reloadSelectedInbox());
+    item.open(this.actions, OpenFrom.TEAM_INBOX)
+      .pipe(switchMap(ref => ref.onAfterClose$))
+      .subscribe(() => this.reloadSelectedInbox());
+  }
+
+  actionClaimBeforeOpen(item: QueryResult) {
+    item.claim()
+      .pipe(switchMap(_ => {
+        return item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$))
+      }))
+      .subscribe(() => this.reloadSelectedInbox());
+  }
+
+  openTask(item: QueryResult): void {
+    (this.inboxChange$.value && this.inboxChange$.value?.autoClaim) ? this.actionClaimBeforeOpen(item) : this.actionOpen(item);
   }
 
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
-    item.sendToManager(true).onAfterClose$.subscribe((actionTaken) => {
+    item.sendToManager().onAfterClose$.subscribe((actionTaken) => {
       actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
@@ -237,7 +251,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: {hideFromViewer: true},
-        onClick: (item: QueryResult) => this.actionOpen(item)
+        onClick: (item: QueryResult) => this.openTask(item)
       },
       // view logs
       {
@@ -287,7 +301,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
@@ -302,7 +319,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
@@ -317,7 +337,11 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-check',
         label: 'task_complete',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
+
         },
         show: (item: QueryResult) => {
           return !item.RESPONSES.length;
@@ -332,7 +356,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-check-bold',
         label: 'approve_task',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
@@ -347,7 +374,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-undo-variant',
         label: 'return_task',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
@@ -362,7 +392,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
@@ -377,7 +410,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
@@ -392,7 +428,10 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
         data: {
-          hideFromContext: true
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+          }
         },
         show: (item: QueryResult) => {
           return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;

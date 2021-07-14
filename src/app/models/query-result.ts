@@ -23,6 +23,7 @@ import {LangService} from '../services/lang.service';
 import {EmployeeService} from '../services/employee.service';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {WFActions} from "../enums/wfactions.enum";
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -196,11 +197,15 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               comInstance.fromDialog = true;
               comInstance.readonly = true;
               comInstance.operation = OperationTypes.UPDATE;
-              comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();
+              comInstance.allowEditRecommendations = this.isAllowedToEditRecommendations(model, from);
               instance.component = comInstance;
             });
         })
       );
+  }
+
+  private isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
   }
 
   getStatusIcon(): string {

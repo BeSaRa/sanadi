@@ -12,7 +12,6 @@ import {OpenFrom} from '../../../enums/open-from.enum';
 import {CaseModel} from '../../../models/case-model';
 import {QueryResult} from '../../../models/query-result';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'case-viewer-popup',
   templateUrl: './case-viewer-popup.component.html',
@@ -94,7 +93,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   hideAction(action: IMenuItem): boolean {
     if (action.data?.hasOwnProperty('hideFromViewer')) {
-      return typeof action.data?.hideFromViewer === 'function' ? action.data.hideFromViewer(this.loadedModel || this.model) : action.data?.hideFromViewer!;
+      return typeof action.data?.hideFromViewer === 'function' ? action.data.hideFromViewer(this.loadedModel, this.model) : action.data?.hideFromViewer!;
     } else {
       return false;
     }

@@ -1,12 +1,11 @@
-import {ErrorHandler, Injectable, Injector, NgZone} from '@angular/core';
+import {ErrorHandler, Injectable, NgZone} from '@angular/core';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ExceptionHandlerService} from '../services/exception-handler.service';
 
 @Injectable()
 export class GeneralErrorHandler implements ErrorHandler {
 
-
-  constructor(private exceptionHandlerService: ExceptionHandlerService, private  zone: NgZone) {
+  constructor(private exceptionHandlerService: ExceptionHandlerService, private zone: NgZone) {
   }
 
   handleError(error: Error | HttpErrorResponse): void {
@@ -15,7 +14,7 @@ export class GeneralErrorHandler implements ErrorHandler {
         this.exceptionHandlerService.handle(error);
       });
     } else {
-      console.error(error);
+      error.message.indexOf("Cannot read property 'template' of null") === -1 ? console.log(error) : null;
     }
   }
 }
