@@ -82,6 +82,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     this.listenToSave();
     this.listenToModelChange();
     this.listenToOutModelChange();
+    this.setDefaultValuesForExternalUser();
   }
 
   ngOnDestroy(): void {
@@ -135,7 +136,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
-        this.form.reset();
+        this.resetForm();
         this.model = undefined;
         this.operation = OperationTypes.CREATE;
       }
@@ -197,7 +198,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       tap(item => this.model = item)
     ).subscribe((model) => {
       this.toggleOrganizationListStatus();
-      model ? this.updateFromFields(model) : this.form.reset();
+      model ? this.updateFromFields(model) : this.resetForm();
     });
   }
 
@@ -227,5 +228,20 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
 
   toggleOrganizationListStatus(): void {
     this.model && this.model.id ? this.form.get('organizationId')?.disable() : this.form.get('organizationId')?.enable();
+  }
+
+  resetForm(): void {
+    this.form.reset();
+    this.setDefaultValuesForExternalUser();
+  }
+
+  private setDefaultValuesForExternalUser(): void {
+    if (!this.employeeService.isExternalUser() || (this.model && this.model.id)) {
+      return;
+    }
+    this.form.get('organizationId')?.patchValue(this.employeeService.getOrgUnit()?.id);
+    this.form.get('fullName')?.patchValue(this.employeeService.getUser()?.getName());
+    this.form.get('email')?.patchValue(this.employeeService.getUser()?.email);
+    this.form.get('mobileNo')?.patchValue(this.employeeService.getUser()?.phoneNumber);
   }
 }
