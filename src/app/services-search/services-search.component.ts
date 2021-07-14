@@ -35,6 +35,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   actions: IMenuItem[] = [];
   search$: Subject<any> = new Subject<any>();
   tabIndex$: Subject<number> = new Subject<number>();
+  defaultDates: string = '';
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -86,6 +87,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           .loadSearchFields()
           .subscribe((fields) => {
             this.form.reset();
+            this.stringifyDefaultDates(fields[0]);
             this.fields = fields;
           });
       });
@@ -241,6 +243,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   resetCriteria() {
     this.form.reset();
+    this.setDefaultDates();
   }
 
   selectedTabChanged($event: TabComponent) {
@@ -250,4 +253,20 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   isConsultationSelected(): boolean {
     return this.serviceControl.value === CaseTypes.CONSULTATION;
   }
+
+  stringifyDefaultDates(field: FormlyFieldConfig): void {
+    this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
+      return {...prev, [(item.key as string)]: item.defaultValue};
+    }, {} as any));
+  }
+
+  private setDefaultDates(): void {
+    let dates = <Record<string, any>>(JSON.parse(this.defaultDates));
+    Object.keys(dates).forEach((key: string) => {
+      let date = dates[key] as any;
+      date.singleDate.jsDate = new Date(date.singleDate.jsDate);
+      this.form.get(key)?.patchValue(date);
+    });
+  }
+
 }
