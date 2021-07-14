@@ -196,6 +196,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$),
       tap(item => this.model = item)
     ).subscribe((model) => {
+      this.toggleOrganizationListStatus();
       model ? this.updateFromFields(model) : this.form.reset();
     });
   }
@@ -222,5 +223,9 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
 
   setAuthName(dep: InternalDepartment | null): void {
     this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
+  }
+
+  toggleOrganizationListStatus(): void {
+    this.model && this.model.id ? this.form.get('organizationId')?.disable() : this.form.get('organizationId')?.enable();
   }
 }
