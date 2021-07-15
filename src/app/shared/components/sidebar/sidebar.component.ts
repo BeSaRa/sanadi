@@ -51,7 +51,7 @@ export class SidebarComponent implements OnInit {
   searchInput: FormControl = new FormControl('');
 
   @HostBinding('class.sidebar-opened')
-  isOpened: boolean = true;
+  isOpened: boolean = false;
   private ongoingState: boolean = false;
 
   @HostBinding('class.sidebar-closed')
@@ -90,6 +90,7 @@ export class SidebarComponent implements OnInit {
       .subscribe((language) => {
         this.scrollDirection = language.direction;
       });
+    this.isOpened ? this.startOpen() : this.startClose();
   }
 
 

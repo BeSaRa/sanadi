@@ -6,16 +6,42 @@
 
 .attachment {
   border-bottom: 1px dashed $custom-gray;
+  padding: 0 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: [checkbox-start] 20px
+  [checkbox-end icon-start] 25px
+  [icon-end title-start] 1fr
+  [title-end desc-start] 1fr
+  [desc-end date-start] 0.75fr
+  [date-end action-start] 55px [action-end];
+  grid-auto-rows: 38px;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.grid-header {
+  grid-auto-rows: 34px;
 }
 
 .attachment:nth-child(2n) {
   background-color: tint-color($custom-gray, 90);
 }
 
-.attachment-icon, .attachment-title {
-  padding: 5px;
-}
-
 .attachment-link {
   width: 0;
+}
+
+.top-title {
+  grid-column: icon-start / title-end;
+}
+
+.action-cell {
+  grid-column: action;
+}
+
+.full-grid {
+  grid-column: 1 / -1;
 }

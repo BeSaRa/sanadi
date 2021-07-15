@@ -1,44 +1,38 @@
 <div class="row">
   <ul class="attachments d-flex flex-column">
-    <li class="attachment d-flex flex-row align-items-center">
-      <div><input #selectAllToggle (click)="toggleSelectAll($event)" [disabled]="!documents.length"
-                  [checked]="allSelected()"
-                  [tooltip]="lang.map.select_all"
-                  class="form-check-input" type="checkbox"></div>
-      <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate">
-        <span *ngIf="!selectedDocuments.length" class="h6 text-primary mx-1">{{lang.map.document_title}}</span>
-        <span *ngIf="selectedDocuments.length"
-              class="h6 text-primary mx-1">{{selectedDocuments.length}} {{lang.map.items_selected}}</span>
-      </div>
-      <div class="attachment-actions">
-        <span *ngIf="!selectedDocuments.length" class="h6 text-primary">{{lang.map.lbl_actions}}</span>
-        <button *ngIf="selectedDocuments.length" (click)="deleteSelectedFiles()" class="btn icon-btn"><i
-          class="mdi mdi-trash-can-outline text-primary"></i></button>
-      </div>
+    <li class="attachment grid grid-header">
+      <input #selectAllToggle (click)="toggleSelectAll($event)" [disabled]="!documents.length"
+             [checked]="allSelected()"
+             [tooltip]="lang.map.select_all"
+             class="form-check-input" type="checkbox">
+      <span *ngIf="!selectedDocuments.length" class="h6 mb-0 top-title text-primary">{{lang.map.document_title}}</span>
+      <span *ngIf="!selectedDocuments.length"
+            class="h6 mb-0 doc-description text-primary">{{lang.map.lbl_description}}</span>
+      <span *ngIf="!selectedDocuments.length"
+            class="h6 mb-0 doc-date text-primary">{{lang.map.date}}</span>
+      <span *ngIf="selectedDocuments.length"
+            class="h6 text-primary mb-0 top-title">{{selectedDocuments.length}} {{lang.map.items_selected}}</span>
+      <span *ngIf="!selectedDocuments.length" class="h6 text-primary mb-0">{{lang.map.lbl_actions}}</span>
+      <button *ngIf="selectedDocuments.length" (click)="deleteSelectedFiles()"
+              class="btn action-cell icon-btn p-0 m-0 icon-btn"><i
+        class="mdi mdi-trash-can-outline text-primary"></i></button>
     </li>
-    <li class="attachment d-flex flex-row align-items-center" *ngFor="let doc of documents">
-      <div><input [id]="doc.id" (click)="toggleSelectedDocument($event , doc)"
-                  [checked]="isDocumentSelected(doc)" class="form-check-input" type="checkbox"></div>
-      <div class="attachment-link d-inline-flex flex-row align-items-center flex-grow-1 flex-shrink-1 text-primary">
-        <div class="attachment-icon"><i class="mdi {{doc.getIcon()}}"></i></div>
-        <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate"
-             [title]="doc.documentTitle"><a (click)="viewDocument(doc , $event)" href="#">{{doc.documentTitle}}</a>
-        </div>
+    <li class="attachment grid" *ngFor="let doc of documents">
+      <input [id]="doc.id" (click)="toggleSelectedDocument($event , doc)"
+             [checked]="isDocumentSelected(doc)" class="form-check-input" type="checkbox">
+      <div class="attachment-icon"><i class="mdi {{doc.getIcon()}}"></i></div>
+      <div class="attachment-title text-truncate"
+           [title]="doc.documentTitle"><a (click)="viewDocument(doc , $event)" href="#">{{doc.documentTitle}}</a>
       </div>
-      <div class="attachment-actions flex-shrink-0">
-        <button (click)="deleteFile(doc)" class="btn icon-btn"><i
-          class="mdi mdi-trash-can-outline text-primary"></i></button>
+      <div class="attachment-title text-truncate" [title]="doc.description">{{doc.description}}</div>
+      <div class="attachment-title text-truncate"
+           [title]="(doc.createdOn|date: 'mediumDate')">{{doc.createdOn|date: 'mediumDate' }}
       </div>
+      <button (click)="deleteFile(doc)" class="btn action-cell icon-btn p-0 m-0"><i
+        class="mdi mdi-trash-can-outline text-primary"></i></button>
     </li>
-    <li *ngIf="!documents.length" class="attachment d-flex flex-row align-items-center">
-      <div></div>
-      <div class="attachment-link d-inline-flex flex-row align-items-center flex-grow-1 flex-shrink-1 text-primary">
-        <div class="attachment-title flex-shrink-1 flex-grow-1 text-truncate">
-          <span>{{lang.map.no_documents_to_show}}</span>
-        </div>
-        <div class="attachment-icon invisible"><i class="mdi mdi-file-pdf-outline"></i></div>
-      </div>
-      <div class="attachment-actions"></div>
+    <li *ngIf="!documents.length" class="attachment attachment-title grid">
+      <span class="full-grid  text-primary">{{lang.map.no_documents_to_show}}</span>
     </li>
   </ul>
 </div>

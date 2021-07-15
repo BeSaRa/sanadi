@@ -9,8 +9,9 @@ export class FileNetDocumentInterceptor implements IModelInterceptor<FileNetDocu
     return model;
   }
 
-  send(model: any): any {
+  send(model: Partial<FileNetDocument>): any {
     delete model.dialog;
+    delete model.searchFields;
     return model;
   }
 }

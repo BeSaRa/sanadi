@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  date: string;
   action: string;
   request_reply: string;
   approve_request: string;

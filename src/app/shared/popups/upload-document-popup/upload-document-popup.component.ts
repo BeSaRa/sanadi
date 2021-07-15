@@ -18,164 +18,165 @@ import {AdminResult} from '../../../models/admin-result';
 import {IDefaultResponse} from '../../../interfaces/idefault-response';
 
 @Component({
-    selector: 'app-upload-document-popup',
-    templateUrl: './upload-document-popup.component.html',
-    styleUrls: ['./upload-document-popup.component.scss']
+  selector: 'app-upload-document-popup',
+  templateUrl: './upload-document-popup.component.html',
+  styleUrls: ['./upload-document-popup.component.scss']
 })
 export class UploadDocumentPopupComponent implements OnInit {
-    caseId: string;
-    documents: FileNetDocument[] = [];
-    form!: FormGroup;
-    service: DocumentService;
-    attachmentTypes: AdminResult[] = [];
+  caseId: string;
+  documents: FileNetDocument[] = [];
+  form!: FormGroup;
+  service: DocumentService;
+  attachmentTypes: AdminResult[] = [];
 
-    constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService },
-                public lang: LangService,
-                private dialog: DialogService,
-                private dialogRef: DialogRef,
-                private configurationService: ConfigurationService,
-                private employeeService: EmployeeService,
-                private toast: ToastService,
-                private fb: FormBuilder,
-                // we will remove httpClient after finish the admin part of the attachments types
-                private http: HttpClient,
-                private urlService: UrlService) {
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService },
+              public lang: LangService,
+              private dialog: DialogService,
+              private dialogRef: DialogRef,
+              private configurationService: ConfigurationService,
+              private employeeService: EmployeeService,
+              private toast: ToastService,
+              private fb: FormBuilder,
+              // we will remove httpClient after finish the admin part of the attachments types
+              private http: HttpClient,
+              private urlService: UrlService) {
 
-        this.caseId = data.caseId;
-        this.service = data.service;
+    this.caseId = data.caseId;
+    this.service = data.service;
+  }
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.loadAttachmentType();
+  }
+
+  private buildFormRow(): FormGroup {
+    return this.fb.group({
+      description: [null],
+      documentTitle: [null, [CustomValidators.required, CustomValidators.maxLength(100)]],
+      attachmentTypeId: [null, [CustomValidators.required]],
+      files: [null, [CustomValidators.required]],
+      isPublished: this.fb.control({
+        value: this.employeeService.isExternalUser(),
+        disabled: this.employeeService.isExternalUser()
+      })
+    }, {validators: CustomValidators.attachment});
+  }
+
+  private buildForm(): void {
+    this.form = this.fb.group({
+      documents: this.fb.array([this.buildFormRow()]),
+    });
+  }
+
+  get formArray(): FormArray {
+    return this.form.get('documents') as FormArray;
+  }
+
+  addFormRow(): void {
+    this.formArray.push(this.buildFormRow());
+  }
+
+  removeControl(index: number) {
+    this.formArray.removeAt(index);
+  }
+
+  fileChange($event: Event, i: number) {
+    const input = $event.target as HTMLInputElement;
+    const file = input?.files?.item(0);
+    const formGroup = this.formArray.get([i]);
+    const title = formGroup?.get('documentTitle');
+    const validFile = file ? (file.type === 'application/pdf') : true;
+    !validFile ? input.value = '' : null;
+    formGroup?.patchValue({
+      documentTitle: title?.value ? title.value : (file && validFile ? file.name : null),
+      files: input?.files?.length && validFile ? input.files : null
+    });
+
+    if (!validFile) {
+      this.dialog.error(
+        this.lang.map
+          .msg_only_those_files_allowed_to_upload
+          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
+      );
     }
 
-    ngOnInit(): void {
-        this.buildForm();
-        this.loadAttachmentType();
+  }
+
+  uploadFiles(): void {
+    if (!this.isValidFormUploader()) {
+      this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+      return;
     }
-
-    private buildFormRow(): FormGroup {
-        return this.fb.group({
-            description: [null],
-            documentTitle: [null, [CustomValidators.required, CustomValidators.maxLength(100)]],
-            attachmentTypeId: [null, [CustomValidators.required]],
-            files: [null, [CustomValidators.required]],
-            isPublished: this.fb.control({
-                value: this.employeeService.isExternalUser(),
-                disabled: this.employeeService.isExternalUser()
-            })
-        }, {validators: CustomValidators.attachment});
+    this.prepareDocuments();
+    if (!this.caseId) {
+      this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+      this.dialogRef.close(this.documents);
+      return;
     }
+    this.saveUploadedDocuments();
+  }
 
-    private buildForm(): void {
-        this.form = this.fb.group({
-            documents: this.fb.array([this.buildFormRow()]),
-        });
-    }
+  isValidFormUploader(): boolean {
+    return !!(this.formArray.length && this.formArray.valid);
+  }
 
-    get formArray(): FormArray {
-        return this.form.get('documents') as FormArray;
-    }
-
-    addFormRow(): void {
-        this.formArray.push(this.buildFormRow());
-    }
-
-    removeControl(index: number) {
-        this.formArray.removeAt(index);
-    }
-
-    fileChange($event: Event, i: number) {
-        const input = $event.target as HTMLInputElement;
-        const file = input?.files?.item(0);
-        const formGroup = this.formArray.get([i]);
-        const title = formGroup?.get('documentTitle');
-        const validFile = file ? (file.type === 'application/pdf') : true;
-        !validFile ? input.value = '' : null;
-        formGroup?.patchValue({
-            documentTitle: title?.value ? title.value : (file && validFile ? file.name : null),
-            files: input?.files?.length && validFile ? input.files : null
-        });
-
-        if (!validFile) {
-            this.dialog.error(
-                this.lang.map
-                    .msg_only_those_files_allowed_to_upload
-                    .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
-            );
+  private saveUploadedDocuments(): void {
+    const valueDone: Subject<any> = new Subject();
+    interval()
+      .pipe(
+        tap(index => {
+          if (!this.documents[index]) {
+            valueDone.next();
+            valueDone.complete();
+          }
+        }),
+        takeUntil(valueDone),
+        map(index => this.documents[index]),
+        concatMap((doc: FileNetDocument) => {
+          return this.service.addSingleDocument(this.caseId, doc);
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+          this.dialogRef.close(this.documents);
         }
+      });
+  }
 
-    }
+  private prepareDocuments(): void {
+    this.documents = this.formArray.controls.map(ctrl => {
+      return (new FileNetDocument()).clone({
+        documentTitle: ctrl.get('documentTitle')?.value!,
+        isPublished: ctrl.get('isPublished')?.value!,
+        files: ctrl.get('files')?.value!,
+        mimeType: ctrl.get('files')?.value[0].type,
+        description: ctrl.get('description')?.value!,
+      });
+    });
+  }
 
-    uploadFiles(): void {
-        if (!this.isValidFormUploader()) {
-            this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-            return;
-        }
-        this.prepareDocuments();
-        if (!this.caseId) {
-            this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-            this.dialogRef.close(this.documents);
-            return;
-        }
-        this.saveUploadedDocuments();
-    }
+  closeDialog() {
+    this.dialogRef.close(this.documents);
+  }
 
-    isValidFormUploader(): boolean {
-        return !!(this.formArray.length && this.formArray.valid);
-    }
+  checkUploadForm() {
+    this.form.markAllAsTouched();
+    this.form.markAsDirty();
+    this.form.updateValueAndValidity({
+      emitEvent: true
+    });
+  }
 
-    private saveUploadedDocuments(): void {
-        const valueDone: Subject<any> = new Subject();
-        interval()
-            .pipe(
-                tap(index => {
-                    if (!this.documents[index]) {
-                        valueDone.next();
-                        valueDone.complete();
-                    }
-                }),
-                takeUntil(valueDone),
-                map(index => this.documents[index]),
-                concatMap((doc: FileNetDocument) => {
-                    return this.service.addSingleDocument(this.caseId, doc);
-                })
-            )
-            .subscribe({
-                complete: () => {
-                    this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-                    this.dialogRef.close(this.documents);
-                }
-            });
-    }
-
-    private prepareDocuments(): void {
-        this.documents = this.formArray.controls.map(ctrl => {
-            return (new FileNetDocument()).clone({
-                documentTitle: ctrl.get('documentTitle')?.value!,
-                isPublished: ctrl.get('isPublished')?.value!,
-                files: ctrl.get('files')?.value!,
-                mimeType: ctrl.get('files')?.value[0].type
-            });
-        });
-    }
-
-    closeDialog() {
-        this.dialogRef.close(this.documents);
-    }
-
-    checkUploadForm() {
-        this.form.markAllAsTouched();
-        this.form.markAsDirty();
-        this.form.updateValueAndValidity({
-            emitEvent: true
-        });
-    }
-
-    // tamp implementations for load attachment type till we finish the attachment type part from admin
-    private loadAttachmentType() {
-        this.http.get<IDefaultResponse<AdminResult[]>>(this.urlService.URLS.BASE_URL + '/admin/attachment-type')
-            .pipe(
-                map(response => response.rs.map(item => AdminResult.createInstance(item)))
-            ) // map to admin result for now
-            .subscribe((list: AdminResult[]) => {
-                this.attachmentTypes = list;
-            });
-    }
+  // tamp implementations for load attachment type till we finish the attachment type part from admin
+  private loadAttachmentType() {
+    this.http.get<IDefaultResponse<AdminResult[]>>(this.urlService.URLS.BASE_URL + '/admin/attachment-type')
+      .pipe(
+        map(response => response.rs.map(item => AdminResult.createInstance(item)))
+      ) // map to admin result for now
+      .subscribe((list: AdminResult[]) => {
+        this.attachmentTypes = list;
+      });
+  }
 }
