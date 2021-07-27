@@ -30,6 +30,7 @@
     "@ngx-formly/core": "^5.10.21",
     "angular-mydatepicker": "^0.11.0",
     "bootstrap": "^5.0.0-beta1",
+    "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.10.4",
     "helpful-decorators": "^2.1.0",
@@ -38,6 +39,7 @@
     "ngx-mask": "^11.1.4",
     "ngx-scrollbar": "^7.5.4",
     "rxjs": "~6.6.0",
+    "stream-browserify": "^3.0.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
   },
