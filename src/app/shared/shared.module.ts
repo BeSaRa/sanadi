@@ -30,7 +30,6 @@ import {VersionComponent} from './components/version/version.component';
 import {NgxMaskModule} from 'ngx-mask';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {FlipIconDirective} from './directives/flip-icon.directive';
-import {NgScrollbarModule} from 'ngx-scrollbar';
 import {SidebarMenuItemListComponent} from './components/sidebar-menu-item-list/sidebar-menu-item-list.component';
 import {MenuItemFilterPipe} from './pipes/menu-item-filter.pipe';
 import {HighlightPipe} from './pipes/highlight.pipe';
@@ -133,13 +132,11 @@ import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case
     CdkTableModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
-    NgScrollbarModule,
     NgSelectModule,
     AngularMyDatePickerModule
   ],
   exports: [
     ContextMenuModule,
-    NgScrollbarModule,
     CommonModule,
     OverlayModule,
     NgxMaskModule,
