@@ -6,7 +6,7 @@ import {BeneficiaryService} from '../../../services/beneficiary.service';
 import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {forkJoin, of, Subject} from 'rxjs';
-import {catchError, filter, mergeMap, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
@@ -19,7 +19,7 @@ import {SubventionRequestAidService} from '../../../services/subvention-request-
 import {SubventionRequestService} from '../../../services/subvention-request.service';
 import {isValidValue, printBlobData} from '../../../helpers/utils';
 import {AdminResult} from '../../../models/admin-result';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {IKeyValue} from '../../../interfaces/i-key-value';
 import {EmployeeService} from '../../../services/employee.service';
 import {ECookieService} from '../../../services/e-cookie.service';
@@ -150,7 +150,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.routeParams = this.eCookieService.getEObject(this.activeRoute.snapshot.data.cookieKey) as IKeyValue;
     this.eCookieService.removeE(this.activeRoute.snapshot.data.cookieKey);
 
-    const routeName = this._getRouteName(this.activeRoute).toLowerCase();
+    const routeName = UserInquiryComponent._getRouteName(this.activeRoute).toLowerCase();
     if (routeName === 'inquiries') {
       this.isNormalBenSearch = true;
       this.isBenSearchFromRequest = false;
@@ -335,7 +335,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     request.printRequest('InquiryByIdSearchResult.pdf');
   }
 
-  private _getRouteName(route: ActivatedRoute): string {
+  private static _getRouteName(route: ActivatedRoute): string {
     let routeName = '';
     if (route && route.hasOwnProperty('snapshot') && route.snapshot.hasOwnProperty('data')) {
       routeName = route.snapshot.data.routeName;

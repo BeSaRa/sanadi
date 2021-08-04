@@ -1,0 +1,44 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+import {SanadyRoutingModule} from './sanady-routing.module';
+import {SanadyComponent} from './sanady.component';
+import {SharedModule} from "../shared/shared.module";
+import {UserRequestComponent} from './pages/user-request/user-request.component';
+import {SubventionLogPopupComponent} from "./popups/subvention-log-popup/subvention-log-popup.component";
+import {SelectBeneficiaryPopupComponent} from "./popups/select-beneficiary-popup/select-beneficiary-popup.component";
+import {UserRequestSearchComponent} from "./pages/user-request-search/user-request-search.component";
+import {UserInquiryComponent} from "./pages/user-inquiry/user-inquiry.component";
+import {RequestsUnderProcessComponent} from "./pages/requests-under-process/requests-under-process.component";
+import {ReasonPopupComponent} from "./popups/reason-popup/reason-popup.component";
+import {PartialRequestComponent} from "./pages/partial-requests/partial-request/partial-request.component";
+import {RequestDetailsPopupComponent} from "./popups/request-details-popup/request-details-popup.component";
+import {FilterRequestPopupComponent} from "./popups/filter-request-popup/filter-request-popup.component";
+import {PartialRequestReportsComponent} from "./pages/partial-request-reports/partial-request-reports.component";
+import {SubventionAidPopupComponent} from "./popups/subvention-aid-popup/subvention-aid-popup.component";
+
+
+@NgModule({
+  declarations: [
+    SanadyComponent,
+    UserRequestComponent,
+    UserInquiryComponent,
+    SelectBeneficiaryPopupComponent,
+    UserRequestSearchComponent,
+    SubventionLogPopupComponent,
+    SubventionAidPopupComponent,
+    RequestsUnderProcessComponent,
+    ReasonPopupComponent,
+    PartialRequestComponent,
+    RequestDetailsPopupComponent,
+    FilterRequestPopupComponent,
+    PartialRequestReportsComponent
+  ],
+  imports: [
+    CommonModule,
+    SanadyRoutingModule,
+    SharedModule
+  ]
+})
+export class SanadyModule {
+}

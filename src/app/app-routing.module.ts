@@ -35,7 +35,11 @@ const routes: Routes = [
         loadChildren: () => import('./team-inbox/team-inbox.module').then(m => m.TeamInboxModule),
         data: {permissionKey: 'TEAM_INBOX'}
       },
-      {path: 'services-search', loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)},
+      {
+        path: 'services-search',
+        loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)
+      },
+      {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)}
       //{path: '**', redirectTo: '../error'}
     ]
   },

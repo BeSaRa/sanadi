@@ -57,12 +57,12 @@ export class RequestDetailsPopupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addPartialRequest($event: MouseEvent): void {
+  addPartialRequest(): void {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         this.dialogRef.close(true);
-        this.router.navigate(['/home/main/request/partial', this.requestDetails.id],).then();
+        this.router.navigate(['/home/sanady/request/partial', this.requestDetails.id],).then();
       }
     })
   }

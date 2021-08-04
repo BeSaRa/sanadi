@@ -10,7 +10,7 @@ import {Generator} from '../decorators/generator';
 import {IBeneficiaryCriteria} from '../interfaces/i-beneficiary-criteria';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
-import {SelectBeneficiaryPopupComponent} from '../user/popups/select-beneficiary-popup/select-beneficiary-popup.component';
+import {SelectBeneficiaryPopupComponent} from '../sanady/popups/select-beneficiary-popup/select-beneficiary-popup.component';
 import {Pair} from '../interfaces/pair';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {map} from 'rxjs/operators';

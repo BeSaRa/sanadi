@@ -317,7 +317,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         relativeTo: this.activatedRoute,
         queryParams: {criteria: this.latestCriteriaString}
       }
-    ).then((result) => {
+    ).then((_) => {
       this.tabIndex$.next(1);
     });
 
@@ -432,7 +432,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   editRequest(request: SubventionRequestAid): any {
-    return this.router.navigate(['/home/main/request', request.requestId]);
+    return this.router.navigate(['/home/sanady/request', request.requestId]);
   }
 
   cancelRequest(request: SubventionRequestAid) {
@@ -459,14 +459,14 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       idNumber: request.benPrimaryIdNumber,
       nationality: request.benPrimaryIdNationality
     });
-    this.router.navigate(['/home/main/inquiry']).then();
+    this.router.navigate(['/home/sanady/inquiry']).then();
   }
 
   showRequestDetails(request: SubventionRequestAid, $event: MouseEvent) {
     // start read mode request
     $event.preventDefault();
     this.readModeService.setReadOnly(request.requestId);
-    this.router.navigate(['/home/main/request', request.requestId]).then();
+    this.router.navigate(['/home/sanady/request', request.requestId]).then();
   }
 
   setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {

@@ -1,8 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {SubventionRequestAid} from '../../../models/subvention-request-aid';
-import {SubventionRequest} from '../../../models/subvention-request';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {FormControl} from '@angular/forms';
 import {CustomValidators} from '../../../validators/custom-validators';

@@ -96,7 +96,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        this.router.navigate(['/home/main/request/partial', request.requestId],).then();
+        this.router.navigate(['/home/sanady/request/partial', request.requestId],).then();
       }
     })
   }

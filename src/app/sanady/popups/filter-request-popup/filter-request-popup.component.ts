@@ -56,11 +56,11 @@ export class FilterRequestPopupComponent implements OnInit {
     return !isEmptyObject(this.form.value) && objectHasValue(this.form.value);
   }
 
-  filterRecords($event: MouseEvent): void {
+  filterRecords(): void {
     this.dialogRef.close(this.form.value);
   }
 
-  resetFilter($event: MouseEvent): void {
+  resetFilter(): void {
     this.dialogService.confirmWithTree(this.langService.map.msg_confirm_reset_filter_select_action, {
       actionBtn: 'btn_reset',
       cancelBtn: 'btn_cancel',

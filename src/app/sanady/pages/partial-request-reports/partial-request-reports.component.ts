@@ -221,7 +221,7 @@ export class PartialRequestReportsComponent implements OnInit {
     this.setInitValue();
   }
 
-  loadUsersByOrgUnit($event: MouseEvent): void {
+  loadUsersByOrgUnit(): void {
     this.orgUserField.setValue(null);
 
     if (!this.orgUnitField || !this.orgUnitField.value) {
@@ -234,7 +234,7 @@ export class PartialRequestReportsComponent implements OnInit {
       })
   }
 
-  printResult($event: MouseEvent): void {
+  printResult(): void {
     this.subventionRequestPartialLogService.loadByCriteriaAsBlob(this.latestCriteria)
       .subscribe((data) => {
         printBlobData(data, 'PartialRequestLogsByCriteriaSearchResult.pdf');

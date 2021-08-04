@@ -193,6 +193,6 @@
 </div>
 <div class="dialog-actions">
   <button class="btn btn-primary" *ngIf="data.allowAddPartialRequest"
-          (click)="addPartialRequest($event)">{{langService.map.btn_add_partial_request}}</button>
+          (click)="addPartialRequest()">{{langService.map.btn_add_partial_request}}</button>
   <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
 </div>

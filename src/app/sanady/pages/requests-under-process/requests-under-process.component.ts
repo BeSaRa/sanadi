@@ -49,7 +49,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   }
 
   editRequest(request: SubventionRequest): any {
-    return this.router.navigate(['/home/main/request', request.id]);
+    return this.router.navigate(['/home/sanady/request', request.id]);
   }
 
   cancelRequest(request: SubventionRequest) {

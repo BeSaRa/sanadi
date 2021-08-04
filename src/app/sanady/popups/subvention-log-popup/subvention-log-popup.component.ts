@@ -47,7 +47,7 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     this.search$.next(searchText);
   }
 
-  printLogs($event: MouseEvent): void {
+  printLogs(): void {
     this.subventionLogService.loadByRequestIdAsBlob(this.requestId)
       .subscribe((data) => {
         printBlobData(data, 'RequestLogs.pdf');

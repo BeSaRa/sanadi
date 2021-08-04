@@ -15,11 +15,11 @@ import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-cri
 import {SubventionLogService} from './subvention-log.service';
 import {switchMap} from 'rxjs/operators';
 import {SubventionLog} from '../models/subvention-log';
-import {SubventionLogPopupComponent} from '../user/popups/subvention-log-popup/subvention-log-popup.component';
+import {SubventionLogPopupComponent} from '../sanady/popups/subvention-log-popup/subvention-log-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
-import {SubventionAidPopupComponent} from '../user/popups/subvention-aid-popup/subvention-aid-popup.component';
-import {ReasonPopupComponent} from '../user/popups/reason-popup/reason-popup.component';
+import {SubventionAidPopupComponent} from '../sanady/popups/subvention-aid-popup/subvention-aid-popup.component';
+import {ReasonPopupComponent} from '../sanady/popups/reason-popup/reason-popup.component';
 import {LangService} from './lang.service';
 
 @Injectable({

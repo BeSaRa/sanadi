@@ -56,6 +56,7 @@ import {AidTypes} from '../../../enums/aid-types.enum';
 import {ECookieService} from '../../../services/e-cookie.service';
 import {DateUtils} from '../../../helpers/date-utils';
 import {EmployeeService} from '../../../services/employee.service';
+import {DialogRef} from "../../../shared/models/dialog-ref";
 
 @Component({
   selector: 'app-user-request',
@@ -309,6 +310,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }
   }
 
+  // noinspection JSUnusedLocalSymbols
   private updateSecondaryIdNumber(field: { field: string, value: string }): void {
     this.fm.getFormField('personalTab.benSecIdNumber')?.setValue(field.value);
     this.fm.getFormField('personalTab.benSecIdType')?.setValue(field.value.length ? this.idMap[field.field] : null);
@@ -359,7 +361,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       map(value => Number(value))
-    ).subscribe((value) => {
+    ).subscribe((_) => {
       if (this.primaryIdTypeField?.value === this.idMap.passport && isValidValue(this.primaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.primaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
@@ -370,7 +372,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       map(value => Number(value))
-    ).subscribe((value) => {
+    ).subscribe((_) => {
       if (this.secondaryIdTypeField?.value === this.idMap.passport && isValidValue(this.secondaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
@@ -445,7 +447,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       this.currentParamType = 'normal';
       this.form.markAsPristine({onlySelf: true});
       this.skipConfirmUnsavedChanges = true;
-      this.router.navigate(['/home/main/request/', response.request.id]).then();
+      this.router.navigate(['/home/sanady/request/', response.request.id]).then();
     });
 
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
@@ -561,7 +563,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           idNumber: ben.benPrimaryIdNumber,
           nationality: ben.benPrimaryIdNationality
         });
-        this.router.navigate(['/home/main/inquiry']).then();
+        this.router.navigate(['/home/sanady/inquiry']).then();
       }
     });
 
@@ -604,7 +606,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         .pipe(
           filter(params => params.hasOwnProperty('id')),
           pluck('id'),
-          tap(val => {
+          tap(_ => {
             this.currentParamType = this.routeParamTypes.normal;
           })
         ),
@@ -612,7 +614,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         .pipe(
           filter(params => params.hasOwnProperty('partial-id')),
           pluck('partial-id'),
-          tap(val => {
+          tap(_ => {
             this.currentParamType = this.routeParamTypes.partial;
           })
         );
@@ -1102,7 +1104,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }
 
     if (value.first === BeneficiarySaveStatus.EXISTING) {
-      let confirmMsg = null;
+      let confirmMsg: DialogRef;
       if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
         confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
           actionBtn: 'btn_continue',
@@ -1323,12 +1325,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return !this.currentRequest ? false : this.currentRequest.isPartial;
   }
 
-  setButtonsVisibility(tab: any): void {
-    /*const tabsNotToShowSave = [this.tabsData.aids.name, this.tabsData.attachments.name];
-    const tabsNotToShowValidate = [this.tabsData.aids.name, this.tabsData.attachments.name];
-    this.saveVisible = !tab.name || (tabsNotToShowSave.indexOf(tab.name) === -1);
-    this.validateFieldsVisible = !tab.name || (tabsNotToShowValidate.indexOf(tab.name) === -1);*/
-  }
+  // setButtonsVisibility(tab: any): void {
+  //   /*const tabsNotToShowSave = [this.tabsData.aids.name, this.tabsData.attachments.name];
+  //   const tabsNotToShowValidate = [this.tabsData.aids.name, this.tabsData.attachments.name];
+  //   this.saveVisible = !tab.name || (tabsNotToShowSave.indexOf(tab.name) === -1);
+  //   this.validateFieldsVisible = !tab.name || (tabsNotToShowValidate.indexOf(tab.name) === -1);*/
+  // }
 
   updateAttachmentList(attachments: SanadiAttachment[]): void {
     this.attachmentList = [];

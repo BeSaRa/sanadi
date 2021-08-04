@@ -19,7 +19,7 @@
             <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgId"
                        [notFoundText]="langService.map.msg_not_found"
-                       (change)="loadUsersByOrgUnit($event)"
+                       (change)="loadUsersByOrgUnit()"
                        formControlName="orgId">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitsList" [value]="option.id">
@@ -109,7 +109,7 @@
       <div class="col-6 d-flex align-items-center justify-content-end">
         <button class="btn btn-link outline-none"
                 tooltip="{{langService.map.print}}"
-                (click)="printResult($event)">
+                (click)="printResult()">
           <i class="mdi mdi-printer"></i></button>
       </div>
     </div>
