@@ -37,7 +37,6 @@
     "lodash": "^4.17.20",
     "ngx-cookie": "^5.0.1",
     "ngx-mask": "^11.1.4",
-    "ngx-scrollbar": "^7.5.4",
     "rxjs": "~6.6.0",
     "stream-browserify": "^3.0.0",
     "tslib": "^2.0.0",
