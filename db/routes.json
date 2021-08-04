@@ -1,6 +1,0 @@
-{
-  "/custom-roles/": "/customRoles/",
-  "/custom-roles/:id": "/customRoles/:id",
-  "/custom-role-permissions": "/customRolePermissions",
-  "/custom-role-permissions?customRoleId=:id": "/customRolePermissions?customRoleId=:id"
-}
