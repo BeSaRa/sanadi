@@ -13,7 +13,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="displayLocationColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>
         <tr *cdkNoDataRow>
-          <td colspan="4">{{lang.map.no_records_to_display}}</td>
+          <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
     </app-table>
@@ -50,7 +50,7 @@
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
         <tr *cdkNoDataRow>
-          <td colspan="5">{{lang.map.no_records_to_display}}</td>
+          <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
       <app-paginator #paginator [length]="logs.length"></app-paginator>

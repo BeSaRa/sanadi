@@ -291,7 +291,7 @@
     "icon": "in-progress",
     "isSvg": true,
     "permission": null,
-    "permissionGroup": null,
+    "permissionGroup": "SANADY_PERMISSIONS_GROUP",
     "parent": null,
     "group": "main",
     "itemOrder": 4,

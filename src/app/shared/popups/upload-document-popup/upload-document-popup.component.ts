@@ -152,10 +152,12 @@ export class UploadDocumentPopupComponent implements OnInit {
         isPublished: ctrl.get('isPublished')?.value!,
         files: ctrl.get('files')?.value!,
         mimeType: ctrl.get('files')?.value[0].type,
-        description: ctrl.get('description')?.value!,
+        attachmentTypeId: ctrl.get('attachmentTypeId')?.value!,
+        description: ctrl.get('description')?.value || undefined,
       });
     });
   }
+
 
   closeDialog() {
     this.dialogRef.close(this.documents);

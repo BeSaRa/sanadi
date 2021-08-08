@@ -35,14 +35,16 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
   addSingleDocument(caseId: string,
                     document: FileNetDocument,
                     progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
-    const clonedDocument = document.clone();
+
+    const clonedDocument = document.clone() as Partial<FileNetDocument>;
     const content = clonedDocument.files?.item(0);
     const formData = new FormData();
     delete clonedDocument.files;
     delete clonedDocument.dialog;
-
-    clonedDocument.attachmentTypeId = 1;
-
+    delete clonedDocument.searchFields;
+    if (!clonedDocument.description) {
+      delete clonedDocument.description;
+    }
     content ? formData.append('content', content) : null;
     return this.service.http.post<any>(this.service._getServiceURL() + '/' + caseId + '/document', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),

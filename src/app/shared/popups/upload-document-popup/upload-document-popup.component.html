@@ -35,7 +35,7 @@
                          [notFoundText]="lang.map.msg_not_found"
                          formControlName="attachmentTypeId"
                          validationClasses="attachmentTypeId">
-                <ng-option [value]="option" *ngFor="let option of attachmentTypes">{{option.getName()}}</ng-option>
+                <ng-option [value]="option.id" *ngFor="let option of attachmentTypes">{{option.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="attachmentTypeId"></app-field-error-message>
             </div>
