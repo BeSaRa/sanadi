@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  application_name: string;
   date: string;
   action: string;
   request_reply: string;

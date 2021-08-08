@@ -14,10 +14,10 @@
        (mouseleave)="sidebarMouseOut()"
        class="d-flex flex-column flex-grow-1 align-self-stretch">
     <div id="app-logo" class="d-flex align-items-center justify-content-start shadow-sm p-2">
-      <img id="sanady-logo" alt="sanady-logo" src="assets/images/sanady-logo.svg">
-      <img id="sanady-word" alt="sanady-logo" src="assets/images/sanady-word.svg">
+      <img id="sanady-logo" alt="sanady-logo" src="assets/images/raca-logo.png">
+      <h6 id="sanady-word">{{langService.map.application_name}}</h6>
       <span class="flex-grow-1"></span>
-      <button *ngIf="!isOpened" (click)="pinSidebar()" class="icon-btn"><i class="mdi mdi-pin"></i></button>
+      <button *ngIf="!isOpened" (click)="pinSidebar()" class="icon-btn m-0"><i class="mdi mdi-pin"></i></button>
     </div>
     <div class="px-2 d-flex flex-column align-self-stretch flex-grow-1">
       <div class="d-flex flex-row align-items-center justify-content-center py-2" id="home-back-logout-items">
