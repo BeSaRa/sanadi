@@ -98,7 +98,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   }
 
   private loadOrganizations(): void {
-    this.orgUnitService.load().pipe(takeUntil(this.destroy$))
+    this.orgUnitService.loadActive().pipe(takeUntil(this.destroy$))
       .subscribe(organizations => this.organizations = organizations);
   }
 

@@ -31,6 +31,15 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
       );
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadActive(): Observable<T[]> {
+    return this.http.get<T[]>(this._getServiceURL() + '/active/lookup')
+  }
+
+  loadActive(): Observable<T[]> {
+    return this._loadActive();
+  }
+
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   create(@InterceptParam() model: T): Observable<T> {
