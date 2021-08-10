@@ -6,12 +6,21 @@ import {FactoryService} from './factory.service';
 import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {CountryInterceptor} from '../model-interceptors/country-interceptor';
 import {UrlService} from './url.service';
+import {forkJoin, Observable, of} from 'rxjs';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {switchMap, tap} from 'rxjs/operators';
+import {IDialogData} from '../interfaces/i-dialog-data';
+import {OperationTypes} from '../enums/operation-types.enum';
+import {Generator} from '../decorators/generator';
+import {DialogService} from './dialog.service';
+import {CountryPopupComponent} from '../administration/popups/country-popup/country-popup.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService extends BackendGenericService<Country> {
   list: Country[] = [];
+  listCountries: Country[] = [];
   interceptor: IModelInterceptor<Country> = new CountryInterceptor();
 
   _getModel() {
@@ -30,8 +39,73 @@ export class CountryService extends BackendGenericService<Country> {
     return this.interceptor.receive;
   }
 
-  constructor(public http: HttpClient, private urlService: UrlService) {
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              private dialogService: DialogService,) {
     super();
     FactoryService.registerService('CountryService', this);
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadCountries(): Observable<Country[]> {
+    return this.http.get<Country[]>(this._getServiceURL() + '/countries');
+  }
+
+  loadCountries(): Observable<Country[]> {
+    return this._loadCountries()
+      .pipe(
+        tap((result: Country[]) => {
+          this.listCountries = result;
+        })
+      )
+  }
+
+  @Generator(undefined, false)
+  loadCountryById(id: number): Observable<Country> {
+    return this.http.get<Country>(this._getServiceURL() + '/' + id + '/composite');
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  loadCountriesByParentId(parentId: number): Observable<Country[]> {
+    return this.http.get<Country[]>(this._getServiceURL() + '/cities/' + parentId);
+  }
+
+  private _loadDialogData(countryId?: number): Observable<{
+    country: Country
+  }> {
+    return forkJoin({
+      country: !countryId ? of(new Country()) : this.loadCountryById(countryId)
+    });
+  }
+
+  openCreateDialog(parent?: Country): Observable<DialogRef> {
+    return this._loadDialogData()
+      .pipe(
+        switchMap((result) => {
+          if (parent) {
+            result.country.parentId = parent.id;
+          }
+          return of(this.dialogService.show<IDialogData<Country>>(CountryPopupComponent, {
+            model: result.country,
+            operation: OperationTypes.CREATE,
+            parentCountries: this.listCountries,
+            isParent: !parent
+          }))
+        })
+      );
+  }
+
+  openUpdateDialog(modelId: number): Observable<DialogRef> {
+    return this._loadDialogData(modelId)
+      .pipe(
+        switchMap((result) => {
+          return of(this.dialogService.show<IDialogData<Country>>(CountryPopupComponent, {
+            model: result.country,
+            operation: OperationTypes.UPDATE,
+            parentCountries: this.listCountries,
+            isParent: !result.country.parentId
+          }))
+        })
+      );
   }
 }

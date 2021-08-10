@@ -18,17 +18,19 @@ import {OrganizationUserPopupComponent} from './popups/organization-user-popup/o
 import {OrganizationBranchUserComponent} from './pages/organization-branch-user/organization-branch-user.component';
 import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
-import { AttachmentTypesPopupComponent } from './popups/attachment-types-popup/attachment-types-popup.component';
+import {AttachmentTypesPopupComponent} from './popups/attachment-types-popup/attachment-types-popup.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
 import {ServiceDataPopupComponent} from './popups/service-data-popup/service-data-popup.component';
 import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
+import {CountryComponent} from './pages/country/country.component';
+import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent,ServiceDataComponent, ServiceDataPopupComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

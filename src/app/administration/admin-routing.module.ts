@@ -10,6 +10,7 @@ import {PermissionGuard} from '../guards/permission-guard';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {ServiceDataComponent} from './pages/service-data/service-data.component';
 import {TeamComponent} from './pages/team/team.component';
+import {CountryComponent} from './pages/country/country.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -42,6 +43,9 @@ const routes: Routes = [
   },
   {
     path: 'teams', component: TeamComponent
+  },
+  {
+    path: 'countries', component: CountryComponent
   }
 ];
 
