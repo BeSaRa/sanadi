@@ -51,13 +51,13 @@ export class TeamComponent implements OnInit, AfterViewInit {
     },
     sortingCallbacks: {
       createdBy: (a: Team, b: Team, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.getName().toLowerCase();
+        let value1 = !isValidValue(a) ? '' : a.createdByInfo.getName().toLowerCase(),
+          value2 = !isValidValue(b) ? '' : b.createdByInfo.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       updatedBy: (a: Team, b: Team, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.getName().toLowerCase();
+        let value1 = !isValidValue(a) ? '' : a.updatedByInfo.getName().toLowerCase(),
+          value2 = !isValidValue(b) ? '' : b.updatedByInfo.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       createdOn: (a: Team, b: Team, dir: SortEvent): number => {
@@ -73,8 +73,8 @@ export class TeamComponent implements OnInit, AfterViewInit {
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       statusInfo: (a: Team, b: Team, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.getName().toLowerCase();
+        let value1 = !isValidValue(a) ? '' : a.statusInfo.getName().toLowerCase(),
+          value2 = !isValidValue(b) ? '' : b.statusInfo.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       }
     }

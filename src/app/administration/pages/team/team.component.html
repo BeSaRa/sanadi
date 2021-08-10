@@ -43,27 +43,27 @@
           </ng-container>
           <ng-container cdkColumnDef="createdOn">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdOn"
-                *cdkHeaderCellDef class="date-column"> {{langService.map.creation_date}}</th>
+                *cdkHeaderCellDef class="date-column" [sortParamAsFullItem]="true"> {{langService.map.creation_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.createdOnString}} </td>
           </ng-container>
           <ng-container cdkColumnDef="createdBy">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdBy"
-                *cdkHeaderCellDef> {{langService.map.created_by}}</th>
+                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.created_by}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.createdByInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="updatedOn">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedOn"
-                *cdkHeaderCellDef class="date-column"> {{langService.map.updated_date}}</th>
+                *cdkHeaderCellDef class="date-column" [sortParamAsFullItem]="true"> {{langService.map.updated_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.updatedOnString}} </td>
           </ng-container>
           <ng-container cdkColumnDef="updatedBy">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedBy"
-                *cdkHeaderCellDef> {{langService.map.updated_by}}</th>
+                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.updated_by}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.updatedByInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.statusInfo"
-                *cdkHeaderCellDef> {{langService.map.lbl_status}}</th>
+                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">

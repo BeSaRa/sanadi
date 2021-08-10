@@ -264,7 +264,7 @@
     "langKey": "menu_teams",
     "path": "/home/administration/teams",
     "icon": "mdi-account-group-outline",
-    "isSvg": true,
+    "isSvg": false,
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",

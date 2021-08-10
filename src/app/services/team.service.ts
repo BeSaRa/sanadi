@@ -100,7 +100,7 @@ export class TeamService extends BackendGenericService<Team> {
         switchMap((result) => {
           return of(this.dialogService.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
-            operation: OperationTypes.CREATE,
+            operation: OperationTypes.UPDATE,
             parentDepartmentsList: result.internalDepartments
           }))
         })
