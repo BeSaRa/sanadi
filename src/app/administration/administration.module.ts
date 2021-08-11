@@ -27,12 +27,13 @@ import {CountryComponent} from './pages/country/country.component';
 import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
 import { ChangeCountryParentPopupComponent } from './popups/change-country-parent-popup/change-country-parent-popup.component';
 import { AttachmentTypeServiceDataPopupComponent } from './popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
+import { InternalUserComponent } from './pages/internal-user/internal-user.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

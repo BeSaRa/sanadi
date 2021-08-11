@@ -309,5 +309,18 @@
     "group": "administration",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 26,
+    "langKey": "menu_users",
+    "path": "/home/administration/internal-users",
+    "icon": "mdi-account-box-multiple",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "administration",
+    "itemOrder": 4,
+    "svg": null
   }
 ]
