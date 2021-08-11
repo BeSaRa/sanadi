@@ -172,7 +172,10 @@ export class LangService extends BackendGenericService<Localization> {
   }
 
   getLocalByKey(key: keyof ILanguageKeys): Localization {
-    return this.localizationMap[key] || {};
+    return this.localizationMap[key] || (new Localization()).clone({
+      arName: `(${key}) key not exist`,
+      enName: `(${key}) key not exist`
+    });
   }
 
   private getLocalForSpecificLang(key: keyof ILanguageKeys, lang: 'ar' | 'en'): string {

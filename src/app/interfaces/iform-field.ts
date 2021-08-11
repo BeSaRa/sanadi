@@ -1,9 +1,11 @@
 import {ILanguageKeys} from './i-language-keys';
 import {Observable} from 'rxjs';
+import {CriteriaFieldType} from "../helpers/FBuilder";
 
 export interface IFormField {
+  decorator?: boolean,
   key: string,
-  type?: string,
+  type?: CriteriaFieldType,
   label: keyof ILanguageKeys,
   templateOptions?: {
     rows?: number,

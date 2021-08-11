@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {isObservable, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {FileNetDocument} from '../models/file-net-document';
 import {CaseComment} from '../models/case-comment';
 import {CommentService} from '../services/comment.service';
@@ -24,11 +24,8 @@ import {ComponentFactoryResolver} from '@angular/core';
 import {SearchService} from '../services/search.service';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {IFormRowGroup} from '../interfaces/iform-row-group';
-import {IFormField} from '../interfaces/iform-field';
-import {CustomFormlyFieldConfig} from '../interfaces/custom-formly-field-config';
-import {DateUtils} from '../helpers/date-utils';
-import {FactoryService} from '../services/factory.service';
 import {DynamicOptionsService} from '../services/dynamic-options.service';
+import {FBuilder} from "../helpers/FBuilder";
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -138,7 +135,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   loadSearchFields(): Observable<FormlyFieldConfig[]> {
     return this.jsonSearchFile ? this.http.get<IFormRowGroup[]>('assets/search/' + this.jsonSearchFile)
-      .pipe(map((rows: IFormRowGroup[]) => this.castFormlyFields(rows))) : of([]);
+      .pipe(map((rows: IFormRowGroup[]) => FBuilder.castFormlyFields(rows))) : of([]);
   }
 
   getComments(caseId: string): Observable<CaseComment[]> {
@@ -231,116 +228,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   }
 
-  private castFormlyFields(rows: IFormRowGroup[]): FormlyFieldConfig[] {
-    return rows.map(row => this.generateFormRow(row));
-  }
-
-  private generateFormRow(row: IFormRowGroup): FormlyFieldConfig {
-    return {
-      fieldGroupClassName: 'row mb-3 formly-row',
-      fieldGroup: row.fields?.map(field => EServiceGenericService.generateFormField(field, row)),
-    };
-  }
-
-  private static generateFormField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    if (field.type === 'dateField') {
-      return EServiceGenericService.generateDateField(field, row);
-    } else if (field.type === 'selectField') {
-      return EServiceGenericService.generateSelectField(field, row);
-    } else if (field.type === 'maskInput') {
-      return EServiceGenericService.generateMaskField(field, row);
-    } else {
-      return EServiceGenericService.generateDefaultFormField(field, row);
-    }
-  }
-
-  private static generateDefaultFormField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    return {
-      key: field.key,
-      type: field.type,
-      templateOptions: {
-        ...field.templateOptions,
-        ...{
-          label: field.label,
-          required: field.validations?.required,
-          rows: field.templateOptions?.rows
-        }
-      },
-      wrappers: [(row.fields && row.fields?.length === 1 ? 'col-md-2-10' : 'col-md-4-8')]
-    };
-  }
-
-  private static generateDateField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    let defaultValue = field.dateOptions?.defaultValue !== null ? new Date() : null;
-    if (field.dateOptions?.value && field.dateOptions.operator && defaultValue) {
-      let [number, type] = field.dateOptions.value.split(' ');
-      let isPlus = field.dateOptions.operator === '+';
-
-      switch (type.toLowerCase()) {
-        case 'y':
-        case 'year':
-          let year = defaultValue?.getFullYear()!;
-          defaultValue?.setFullYear(isPlus ? (year + (Number(number))) : (year - (Number(number))));
-          break;
-        case 'd':
-        case 'day':
-          let day = defaultValue?.getDate()!;
-          defaultValue?.setDate(isPlus ? (day + (Number(number))) : (day - (Number(number))));
-          break;
-        case 'm':
-        case 'month':
-          let month = defaultValue?.getMonth()!;
-          defaultValue?.setMonth(isPlus ? (month + (Number(number))) : (month - (Number(number))));
-          break;
-      }
-
-    }
-    return {
-      key: field.key,
-      type: field.type,
-      templateOptions: {
-        label: field.label,
-        required: field.validations?.required,
-        rows: field.templateOptions?.rows
-      },
-      dateOptions: field.dateOptions,
-      defaultValue: defaultValue ? DateUtils.changeDateToDatepicker(defaultValue) : null,
-      wrappers: [(row.fields && row.fields?.length === 1 ? 'col-md-2-10' : 'col-md-4-8')]
-    };
-  }
-
-  private static generateSelectField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    const dynamicOptionsService: DynamicOptionsService = FactoryService.getService('DynamicOptionsService');
-    let options: Observable<any[]>;
-    if (field.selectOptions?.loader) {
-      options = dynamicOptionsService.load(field.selectOptions?.loader);
-    } else {
-      options = isObservable(field.selectOptions?.options!) ? field.selectOptions?.options! : of(field.selectOptions?.options!);
-    }
-    field.selectOptions!.options = options;
-    return {
-      key: field.key,
-      type: field.type,
-      templateOptions: {
-        ...field.templateOptions,
-        ...{
-          label: field.label,
-          required: field.validations?.required,
-          rows: field.templateOptions?.rows,
-          options: options
-        }
-      },
-      selectOptions: field.selectOptions,
-      defaultValue: field.selectOptions?.defaultValue,
-      wrappers: [(row.fields && row.fields?.length === 1 ? 'col-md-2-10' : 'col-md-4-8')]
-    };
-  }
 
   getStatusIcon(caseStatus: number): string {
     return this.caseStatusIconMap.has(caseStatus) ? this.caseStatusIconMap.get(caseStatus)! : '';
-  }
-
-  private static generateMaskField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    return {...EServiceGenericService.generateDefaultFormField(field, row), mask: field.mask};
   }
 }
