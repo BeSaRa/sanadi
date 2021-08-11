@@ -105,7 +105,7 @@
   },
   {
     "id": 9,
-    "langKey": "menu_users",
+    "langKey": "menu_organization_user",
     "path": "/home/administration/users",
     "icon": "users",
     "isSvg": true,
