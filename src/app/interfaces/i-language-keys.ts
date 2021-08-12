@@ -435,4 +435,6 @@ export interface ILanguageKeys {
   cities: string;
   lbl_add_city: string;
   lbl_edit_city: string;
+  btn_change_parent: string;
+  change_parent: string;
 }

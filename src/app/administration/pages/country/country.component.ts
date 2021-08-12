@@ -13,6 +13,10 @@ import {SortEvent} from '../../../interfaces/sort-event';
 import {isEmptyObject, isValidValue} from '../../../helpers/utils';
 import {CommonUtils} from '../../../helpers/common-utils';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {DialogService} from '../../../services/dialog.service';
+import {ToastService} from '../../../services/toast.service';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'country',
@@ -21,7 +25,7 @@ import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 })
 export class CountryComponent implements OnInit, AfterViewInit {
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-  @Input() parent?: Country;
+  @Input() parentCountry?: Country;
 
   countries: Country[] = [];
   actions: IMenuItem[] = [];
@@ -35,7 +39,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
   reloadSubscription!: Subscription;
 
   constructor(public langService: LangService,
-              private countryService: CountryService) {
+              private countryService: CountryService,
+              private toast: ToastService,
+              private dialogService: DialogService,
+              private sharedService: SharedService) {
   }
 
   tableOptions: ITableOptions = {
@@ -62,7 +69,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
       statusInfo: (a: Country, b: Country, dir: SortEvent): number => {
         let value1 = !isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
           value2 = !isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-        console.log('status', value1, value2);
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       }
     }
@@ -93,13 +99,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        if (this.parent) {
-          return this.countryService.loadCountriesByParentId(this.parent.id);
+        if (this.parentCountry) {
+          return this.countryService.loadCountriesByParentId(this.parentCountry.id);
         }
         return this.countryService.loadCountries();
       })
     ).subscribe((countries: Country[]) => {
       this.countries = countries;
+      this.table.selection.clear();
     });
   }
 
@@ -111,9 +118,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
     ).subscribe();
   }
 
-
   add(): void {
-    const sub = this.countryService.openCreateDialog(this.parent).subscribe((dialog: DialogRef) => {
+    const sub = this.countryService.openCreateDialog(this.parentCountry).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe(() => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -121,13 +127,67 @@ export class CountryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  editCountry(country: Country): void {
-    const sub = this.countryService.openUpdateDialog(country.id).subscribe((dialog: DialogRef) => {
+  editCountry(country: Country, tab: 'basic' | 'cities' = 'basic'): void {
+    const sub = this.countryService.openUpdateDialog(country.id, tab).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
       });
     });
+  }
+
+  deleteCountry(model: Country): void {
+    // @ts-ignore
+    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const sub = model.delete().subscribe(() => {
+            // @ts-ignore
+            this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        }
+      });
+  }
+
+  deleteBulk($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.table.selection.selected.length > 0) {
+      this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
+        .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const ids = this.table.selection.selected.map((item) => {
+            return item.id;
+          });
+          const sub = this.countryService.deleteBulk(ids).subscribe((response) => {
+            this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response)
+              .subscribe(() => {
+                this.reload$.next(null);
+                sub.unsubscribe();
+              });
+          });
+        }
+      });
+    }
+  }
+
+  showCities(country: Country): void {
+    this.editCountry(country, 'cities');
+  }
+
+  changeBulkParent($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.table.selection.selected.length === 0) {
+      return;
+    }
+    const sub = this.countryService.openChangeParentDialog(this.table.selection.selected)
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe((_) => {
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      });
   }
 
   private buildActions() {
@@ -141,12 +201,49 @@ export class CountryComponent implements OnInit, AfterViewInit {
         show: () => {
           return true
         }
+      },
+      // delete
+      {
+        type: 'action',
+        icon: 'mdi-close-box',
+        label: 'btn_delete',
+        onClick: (item: Country) => this.deleteCountry(item),
+        show: () => {
+          return true
+        }
+      },
+      // cities
+      {
+        type: 'action',
+        icon: 'mdi-city',
+        label: 'cities',
+        onClick: (item: Country) => this.showCities(item),
+        show: () => {
+          return !this.parentCountry;
+        }
       }
     ];
   }
 
   private buildBulkActions() {
-    this.bulkActions = [];
+    this.bulkActions = [
+      {
+        icon: 'mdi-swap-vertical-bold',
+        langKey: 'btn_change_parent',
+        callback: ($event: MouseEvent, action: IGridAction) => this.changeBulkParent($event),
+        show: (items: Country[]) => {
+          return !!this.parentCountry;
+        }
+      },
+      {
+        icon: 'mdi-close-box',
+        langKey: 'btn_delete',
+        callback: ($event: MouseEvent, action: IGridAction) => this.deleteBulk($event),
+        show: (items: Country[]) => {
+          return true;
+        }
+      }
+    ];
   }
 
 }

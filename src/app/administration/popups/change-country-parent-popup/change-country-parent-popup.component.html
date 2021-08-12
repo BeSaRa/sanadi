@@ -1,0 +1,34 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{langService.map.change_parent}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+</div>
+
+<div class="dialog-content" #dialogContent>
+  <form class="w600px" novalidate autocomplete="off">
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label for="parentId" asteriskIfRequired [control]="parentId"
+               class="form-label">{{langService.map.parent}}</label>
+        <ng-select [selectOnTab]="true" labelForId="parentId" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="parentId"
+                   [notFoundText]="langService.map.msg_not_found"
+                   [formControl]="parentId">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-container *ngFor="let option of parentCountriesList">
+            <ng-option [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-container>
+        </ng-select>
+        <app-field-error-message [control]="parentId"></app-field-error-message>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button [disabled]="parentId.invalid" (click)="saveModel()"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+</div>

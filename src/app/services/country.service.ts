@@ -14,6 +14,8 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {Generator} from '../decorators/generator';
 import {DialogService} from './dialog.service';
 import {CountryPopupComponent} from '../administration/popups/country-popup/country-popup.component';
+import {ChangeCountryParentPopupComponent} from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
+import {isValidValue} from '../helpers/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +97,7 @@ export class CountryService extends BackendGenericService<Country> {
       );
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
+  openUpdateDialog(modelId: number, tabName: string = 'basic'): Observable<DialogRef> {
     return this._loadDialogData(modelId)
       .pipe(
         switchMap((result) => {
@@ -103,9 +105,23 @@ export class CountryService extends BackendGenericService<Country> {
             model: result.country,
             operation: OperationTypes.UPDATE,
             parentCountries: this.listCountries,
-            isParent: !result.country.parentId
+            isParent: !result.country.parentId,
+            selectedTabName: (isValidValue(tabName) ? tabName : 'basic')
           }))
         })
       );
   }
+
+  openChangeParentDialog(countriesToChange: Country[]): any {
+    return of(this.dialogService.show(ChangeCountryParentPopupComponent, {
+      countries: countriesToChange,
+      parentCountries: this.listCountries
+    }))
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  updateBulkParents(parentId: number, countriesId: number[]): Observable<Country[]> {
+    return this.http.post<Country[]>(this._getServiceURL() + '/cities-update/' + parentId, countriesId);
+  }
+
 }

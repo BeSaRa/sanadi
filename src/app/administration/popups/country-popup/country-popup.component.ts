@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {FactoryService} from '../../../services/factory.service';
 import {CustomValidators} from '../../../validators/custom-validators';
 import {FormManager} from '../../../models/form-manager';
@@ -22,7 +22,7 @@ import {IKeyValue} from '../../../interfaces/i-key-value';
   templateUrl: './country-popup.component.html',
   styleUrls: ['./country-popup.component.scss']
 })
-export class CountryPopupComponent implements OnInit {
+export class CountryPopupComponent implements OnInit, AfterViewInit {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
@@ -33,11 +33,14 @@ export class CountryPopupComponent implements OnInit {
   statusList: Lookup[];
   isParent: boolean;
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    cities: {name: 'cities'}
+    basic: {name: 'basic', index: 0},
+    cities: {name: 'cities', index: 1}
   };
+  selectedTabIndex$: Subject<number> = new Subject<number>();
   saveVisible = true;
   validateFieldsVisible = true;
+
+  selectedTabName: string;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country>,
               private toast: ToastService,
@@ -50,11 +53,20 @@ export class CountryPopupComponent implements OnInit {
     this.operation = data.operation;
     this.parentCountriesList = data.parentCountries;
     this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
+    this.selectedTabName = data.selectedTabName;
   }
 
   ngOnInit(): void {
     this.buildForm();
     this._saveModel();
+  }
+
+  ngAfterViewInit(): void {
+   setTimeout(()=> {
+     if (this.tabsData.hasOwnProperty(this.selectedTabName) && this.tabsData[this.selectedTabName]) {
+       this.selectedTabIndex$.next(this.tabsData[this.selectedTabName].index);
+     }
+   })
   }
 
   ngOnDestroy(): void {

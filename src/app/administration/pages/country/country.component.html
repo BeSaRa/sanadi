@@ -59,6 +59,15 @@
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-pen"></i>
               </button>
+              <button (click)="deleteCountry(row)" tooltip="{{langService.map.btn_delete}}"
+                      class="btn icon-btn text-primary">
+                <i class="mdi mdi-close-box"></i>
+              </button>
+              <button *ngIf="!parentCountry"
+                (click)="showCities(row)" tooltip="{{langService.map.cities}}"
+                      class="btn icon-btn text-primary">
+                <i class="mdi mdi-city"></i>
+              </button>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
