@@ -5,6 +5,7 @@
     "paths": {
       "crypto": ["./node_modules/crypto-browserify"],
       "stream": ["./node_modules/stream-browserify"],
+      "@app/*": ["./src/app/*"]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
