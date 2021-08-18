@@ -120,7 +120,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.service.openCommentsDialog(this.id);
   }
 
-  open(actions?: IMenuItem[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
+  open(actions?: IMenuItem<CaseModel<any, any>>[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
     const componentName = this.service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
     const cfr = this.service.getCFR();

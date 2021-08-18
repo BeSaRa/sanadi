@@ -14,7 +14,7 @@ export class GeneralErrorHandler implements ErrorHandler {
         this.exceptionHandlerService.handle(error);
       });
     } else {
-      error.message.indexOf("Cannot read property 'template' of null") === -1 ? console.log(error) : null;
+      error.message.indexOf("Cannot read property 'template' of null") === -1 ? console.error(error) : null;
     }
   }
 }

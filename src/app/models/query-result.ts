@@ -165,7 +165,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
   }
 
-  open(actions: IMenuItem[] = [], from: OpenFrom = OpenFrom.USER_INBOX): Observable<DialogRef> {
+  open(actions: IMenuItem<QueryResult>[] = [], from: OpenFrom = OpenFrom.USER_INBOX): Observable<DialogRef> {
     const service = this.service.getService(this.BD_CASE_TYPE);
     const componentName = service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);

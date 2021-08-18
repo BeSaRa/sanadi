@@ -318,7 +318,7 @@
     "isSvg": false,
     "permission": null,
     "permissionGroup": null,
-    "parent": null,
+    "parent": 6,
     "group": "administration",
     "itemOrder": 4,
     "svg": null

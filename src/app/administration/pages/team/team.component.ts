@@ -1,19 +1,17 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
-import {TeamService} from '../../../services/team.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {Team} from '../../../models/team';
-import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '../../../interfaces/sort-event';
-import {isValidValue} from '../../../helpers/utils';
-import {CommonUtils} from '../../../helpers/common-utils';
-import {TableComponent} from '../../../shared/components/table/table.component';
-import {ITableOptions} from '../../../interfaces/i-table-options';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
+import {TeamService} from '@app/services/team.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Team} from '@app/models/team';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {isValidValue} from '@app/helpers/utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {IGridAction} from '@app/interfaces/i-grid-action';
 
 @Component({
   selector: 'team',
@@ -22,7 +20,7 @@ import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 })
 export class TeamComponent implements OnInit, AfterViewInit {
   teams: Team[] = [];
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<Team>[] = [];
   bulkActions: IGridAction[] = [];
 
   @ViewChild('table') table!: TableComponent;

@@ -1,16 +1,16 @@
 import {AfterViewInit, Component, Inject, NgZone, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {Subject} from 'rxjs';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {IESComponent} from '../../../interfaces/iescomponent';
-import {SaveTypes} from '../../../enums/save-types';
-import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {SaveTypes} from '@app/enums/save-types';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {DialogRef} from '../../models/dialog-ref';
 import {take} from 'rxjs/operators';
-import {OpenFrom} from '../../../enums/open-from.enum';
-import {CaseModel} from '../../../models/case-model';
-import {QueryResult} from '../../../models/query-result';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {CaseModel} from '@app/models/case-model';
+import {QueryResult} from '@app/models/query-result';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -39,7 +39,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   saveTypes: typeof SaveTypes = SaveTypes;
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<CaseModel<any, any> | QueryResult>[] = [];
   // the model that the user clicked on it
   model: CaseModel<any, any> | QueryResult;
   // the model that we load to display inside the viewer
@@ -49,7 +49,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
               public data: {
                 key: keyof ILanguageKeys,
                 model: any,
-                actions: IMenuItem[],
+                actions: IMenuItem<CaseModel<any, any> | QueryResult>[],
                 openedFrom: OpenFrom,
                 loadedModel: any
               },
@@ -72,15 +72,15 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
     this.viewInit.unsubscribe();
   }
 
-  displayLabel(action: IMenuItem): string {
+  displayLabel(action: IMenuItem<CaseModel<any, any> | QueryResult>): string {
     return typeof action.label === 'function' ? action.label(this.model) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
   }
 
-  takeAction(action: IMenuItem) {
+  takeAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {
     action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component);
   }
 
-  private filterAction(action: IMenuItem) {
+  private filterAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {
     return action.type === 'action' && (!action.show ? true : action.show(this.model));
   }
 
@@ -91,7 +91,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
     this.component?.save?.next(this.saveTypes.FINAL);
   }
 
-  hideAction(action: IMenuItem): boolean {
+  hideAction(action: IMenuItem<CaseModel<any, any> | QueryResult>): boolean {
     if (action.data?.hasOwnProperty('hideFromViewer')) {
       return typeof action.data?.hideFromViewer === 'function' ? action.data.hideFromViewer(this.loadedModel, this.model) : action.data?.hideFromViewer!;
     } else {

@@ -1,1 +1,62 @@
-<p>internal-user works!</p>
+<div class="row pb-3">
+  <div class="col-12 d-flex align-items-center">
+    <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.menu_users}}</h1>
+    <button class="btn btn-link outline-none"
+            tooltip="{{lang.map.btn_add}}">
+      <i class="mdi mdi-plus-box"></i></button>
+    <button (click)="reload$.next(null)" class="btn btn-link outline-none"
+            tooltip="{{lang.map.btn_reload}}">
+      <i class="mdi mdi-reload"></i></button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <app-table #table [paginator]="paginator"
+               [filter]="filterControl.value"
+               [useSearchToFilter]="true"
+               [selectable]="true"
+               [data]="models"
+               [columns]="displayedColumns" sortableTable>
+      <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="select">
+          <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
+            <input type="checkbox"
+                   [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                   (change)="$event ? table.toggleAll() : null"
+                   [checked]="table.selection.hasValue() && table.allSelected()"
+                   class="form-check-input"></th>
+          <td cdk-cell *cdkCellDef="let row">
+            <input type="checkbox"
+                   (click)="$event.stopPropagation()"
+                   [checked]="table.selection.isSelected(row)"
+                   (change)="$event ? table.selection.toggle(row) : null"
+                   class="form-check-input"></td>
+        </ng-container>
+        <ng-container cdkColumnDef="arName">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="enName">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="status">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="defaultDepartment">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.default_dep}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.defaultDepartmentInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="username">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_username}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.domainName}} </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </app-table>
+    <app-paginator #paginator></app-paginator>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>

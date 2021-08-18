@@ -3,6 +3,7 @@ export interface ILanguageKeys {
   lbl_global: string;
   lbl_mandatory: string;
   lbl_services: string;
+  default_dep: string
   application_name: string;
   date: string;
   action: string;

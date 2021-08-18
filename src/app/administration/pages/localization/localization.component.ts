@@ -1,15 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {Localization} from '../../../models/localization';
+import {LangService} from '@app/services/lang.service';
+import {Localization} from '@app/models/localization';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap, tap} from 'rxjs/operators';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {DialogService} from '../../../services/dialog.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {filterList, searchInObject} from '../../../helpers/utils';
-import {IKeyValue} from '../../../interfaces/i-key-value';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {searchInObject} from '@app/helpers/utils';
 
 @Component({
   selector: 'app-localization',

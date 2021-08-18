@@ -36,7 +36,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   serviceNumbers: number[] = Array.from(this.eService.services.keys()).filter((number: number) => this.filterServices(number));
   serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: Subject<any> = new Subject<any>();
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';

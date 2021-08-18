@@ -4,6 +4,8 @@ import {UserTypes} from '../enums/user-types.enum';
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
+import {AdminResult} from "@app/models/admin-result";
+import {InternalDepartment} from "@app/models/internal-department";
 
 export class InternalUser extends BaseModel<InternalUser, any> {
   service: any;
@@ -11,14 +13,18 @@ export class InternalUser extends BaseModel<InternalUser, any> {
   arName!: string;
   enName!: string;
   defaultDepartmentId!: number;
+  defaultDepartmentInfo!: AdminResult;
+  departmentInfo!: InternalDepartment[];
   domainName!: string;
   email!: string;
   empNum!: string;
   jobTitle!: number;
+  jobTitleInfo!: AdminResult;
   officialPhoneNumber!: string;
   phoneExtension!: string;
   phoneNumber!: string;
   status!: number;
+  statusInfo!: AdminResult;
   statusDateModified!: string;
   userType!: UserTypes;
   generalUserId!: number

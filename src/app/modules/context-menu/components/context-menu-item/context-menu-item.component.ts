@@ -16,10 +16,10 @@ import {BehaviorSubject, fromEvent, Subject} from 'rxjs';
 import {IMenuItem} from '../../interfaces/i-menu-item';
 import {filter, map, takeUntil} from 'rxjs/operators';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {LangService} from '../../../../services/lang.service';
-import {Language} from '../../../../models/language';
+import {LangService} from '@app/services/lang.service';
+import {Language} from '@app/models/language';
 import {DOCUMENT} from '@angular/common';
-import {ILanguageKeys} from '../../../../interfaces/i-language-keys';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'context-menu-item',
@@ -32,13 +32,13 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   overlayRef!: OverlayRef;
   private destroy$: Subject<any> = new Subject<any>();
 
-  private itemsChange: BehaviorSubject<IMenuItem[]> = new BehaviorSubject<IMenuItem[]>([]);
+  private itemsChange: BehaviorSubject<IMenuItem<any>[]> = new BehaviorSubject<IMenuItem<any>[]>([]);
 
-  private preparedActions: BehaviorSubject<IMenuItem[]> = new BehaviorSubject<IMenuItem[]>([]);
+  private preparedActions: BehaviorSubject<IMenuItem<any>[]> = new BehaviorSubject<IMenuItem<any>[]>([]);
 
   private open$: Subject<{ $event: MouseEvent, item: any }> = new Subject<{ $event: MouseEvent, item: any }>();
 
-  filteredAction: IMenuItem[] = [];
+  filteredAction: IMenuItem<any>[] = [];
 
   item: any;
   event?: MouseEvent;
@@ -51,14 +51,14 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   debug: boolean = false;
 
   @Input()
-  set actions(val: IMenuItem[]) {
+  set actions(val: IMenuItem<any>[]) {
     this.debugInfo(() => {
       console.log('action list assigned to the context menu', val);
     });
     this.itemsChange.next(val);
   };
 
-  get actions(): IMenuItem[] {
+  get actions(): IMenuItem<any>[] {
     this.debugInfo(() => {
       console.log('actions assigned', this.itemsChange.value);
     });
@@ -120,7 +120,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   private listenToItemChange() {
     // wil user later something here to prepare the actions hierarchy for sub menus.
     this.itemsChange
-      .subscribe((items: IMenuItem[]) => {
+      .subscribe((items: IMenuItem<any>[]) => {
         this.preparedActions.next(items);
       });
   }
@@ -179,7 +179,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
       });
   }
 
-  displayLabel(action: IMenuItem): string {
+  displayLabel(action: IMenuItem<any>): string {
     return typeof action.label === 'function' ? action.label(this.item) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
   }
 
@@ -208,7 +208,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  onClick(event: MouseEvent, action: IMenuItem) {
+  onClick(event: MouseEvent, action: IMenuItem<any>) {
     event.preventDefault();
     action.onClick && action.onClick(this.item);
     this.close();
@@ -222,11 +222,11 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
       });
   }
 
-  isAction(action: IMenuItem): boolean {
+  isAction(action: IMenuItem<any>): boolean {
     return action.type === 'action';
   }
 
-  isDivider(action: IMenuItem): boolean {
+  isDivider(action: IMenuItem<any>): boolean {
     return action.type === 'divider';
   }
 }

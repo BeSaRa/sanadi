@@ -1,20 +1,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {InboxService} from '../../../services/inbox.service';
-import {QueryResultSet} from '../../../models/query-result-set';
+import {LangService} from '@app/services/lang.service';
+import {InboxService} from '@app/services/inbox.service';
+import {QueryResultSet} from '@app/models/query-result-set';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
-import {EServiceListService} from '../../../services/e-service-list.service';
-import {QueryResult} from '../../../models/query-result';
+import {EServiceListService} from '@app/services/e-service-list.service';
+import {QueryResult} from '@app/models/query-result';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {WFResponseType} from '../../../enums/wfresponse-type.enum';
-import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {OpenFrom} from '../../../enums/open-from.enum';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {OpenFrom} from '@app/enums/open-from.enum';
 import {FormControl} from '@angular/forms';
-import {EmployeeService} from '../../../services/employee.service';
-import {CaseModel} from '../../../models/case-model';
-import {WFActions} from '../../../enums/wfactions.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {CaseModel} from '@app/models/case-model';
+import {WFActions} from '@app/enums/wfactions.enum';
 
 @Component({
   selector: 'app-user-inbox',
@@ -26,7 +26,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private destroy$: Subject<any> = new Subject<any>();
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<QueryResult>[] = [];
   filterControl: FormControl = new FormControl('');
 
   constructor(public lang: LangService,

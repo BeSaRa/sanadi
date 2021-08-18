@@ -30,7 +30,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<QueryResult>[] = [];
 
   filterControl: FormControl = new FormControl('');
 

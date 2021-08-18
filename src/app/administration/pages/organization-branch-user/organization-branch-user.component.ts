@@ -1,14 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {OrgUser} from '../../../models/org-user';
+import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {OrgUser} from '@app/models/org-user';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {OrganizationUserService} from '../../../services/organization-user.service';
-import {LangService} from '../../../services/lang.service';
+import {OrganizationUserService} from '@app/services/organization-user.service';
+import {LangService} from '@app/services/lang.service';
 import {switchMap, tap} from 'rxjs/operators';
-import {OrgBranch} from '../../../models/org-branch';
-import {OrgUnit} from '../../../models/org-unit';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {EmployeeService} from '../../../services/employee.service';
+import {OrgBranch} from '@app/models/org-branch';
+import {OrgUnit} from '@app/models/org-unit';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'app-organization-branch-user',
