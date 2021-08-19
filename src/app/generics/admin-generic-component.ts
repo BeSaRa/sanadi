@@ -1,17 +1,18 @@
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, of, Subject} from "rxjs";
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
-import {switchMap, takeUntil} from "rxjs/operators";
-import {Directive, OnInit} from "@angular/core";
-import {OnDestroy} from "@angular/core";
+import {catchError, exhaustMap, switchMap, takeUntil} from "rxjs/operators";
+import {Directive, OnDestroy, OnInit} from "@angular/core";
 import {FormControl} from "@angular/forms";
-import {BackendGenericService} from "@app/generics/backend-generic-service";
+import {BackendWithDialogOperationsGenericService} from "@app/generics/backend-with-dialog-operations-generic-service";
 
 @Directive()
-export abstract class AdminGenericComponent<M, S extends BackendGenericService<M>> implements OnInit, OnDestroy {
+export abstract class AdminGenericComponent<M extends { id: number }, S extends BackendWithDialogOperationsGenericService<M>> implements OnInit, OnDestroy {
   // behavior subject for load the list
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   // subject for emit clicking on add button
   add$: Subject<any> = new Subject<any>();
+  // subject for emit clicking on edit button
+  edit$: Subject<M> = new Subject<M>();
   // using this subject later to unsubscribe from any subscription
   destroy$: Subject<any> = new Subject<any>();
   // list fo models related to the entity
@@ -26,24 +27,48 @@ export abstract class AdminGenericComponent<M, S extends BackendGenericService<M
   abstract displayedColumns: string[] = [];
 
   ngOnDestroy(): void {
-    console.log('Destroy');
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   ngOnInit(): void {
     this.listenToReload();
+    this.listenToAdd();
+    this.listenToEdit();
   }
 
   /**
-   * @description listen to reload - default implementation we can override it on child Class
+   * @description listen to reload - default implementation you can override it in child Class if you need.
    */
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => this.service.loadComposite()))
+      .pipe(catchError(_ => of([])))
       .subscribe((list: M[]) => {
         this.models = list;
       })
+  }
+
+  /**
+   * @description listen to add - default implementation you can override it in Child class if you need
+   */
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => of(this.service.addDialog())))
+      .subscribe()
+  }
+
+  /**
+   * @description listen to edit - default implementation you can override it in Child class if you need
+   */
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.editDialog(model).pipe(catchError(_ => of(null)))
+      }))
+      .subscribe()
   }
 }

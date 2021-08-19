@@ -4,6 +4,9 @@ import {HttpClient} from "@angular/common/http";
 import {InternalUserInterceptor} from "@app/model-interceptors/internal-user-interceptor";
 import {UrlService} from "@app/services/url.service";
 import {BackendWithDialogOperationsGenericService} from "@app/generics/backend-with-dialog-operations-generic-service";
+import {DialogService} from "@app/services/dialog.service";
+import {ComponentType} from "@angular/cdk/overlay";
+import {InternalUserPopupComponent} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,9 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
   list: InternalUser[] = [];
   interceptor: InternalUserInterceptor = new InternalUserInterceptor();
 
-  constructor(public http: HttpClient, private urlService: UrlService) {
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              public dialog: DialogService) {
     super()
   }
 
@@ -30,5 +35,9 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
 
   _getReceiveInterceptor() {
     return this.interceptor.receive;
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return InternalUserPopupComponent
   }
 }

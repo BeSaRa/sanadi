@@ -1,7 +1,7 @@
 <div class="row pb-3">
   <div class="col-12 d-flex align-items-center">
     <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.menu_users}}</h1>
-    <button class="btn btn-link outline-none"
+    <button (click)="add$.next(null)" class="btn btn-link outline-none"
             tooltip="{{lang.map.btn_add}}">
       <i class="mdi mdi-plus-box"></i></button>
     <button (click)="reload$.next(null)" class="btn btn-link outline-none"

@@ -6,16 +6,29 @@ import {InternalUserService} from "@app/services/internal-user.service";
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
 
 @Component({
-    selector: 'internal-user',
-    templateUrl: './internal-user.component.html',
-    styleUrls: ['./internal-user.component.scss']
+  selector: 'internal-user',
+  templateUrl: './internal-user.component.html',
+  styleUrls: ['./internal-user.component.scss']
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
-    displayedColumns: string[] = ['select', 'username', 'arName', 'enName', 'defaultDepartment', 'status'];
-    actions: IMenuItem<InternalUser>[] = [];
-
-    constructor(public lang: LangService,
-                public service: InternalUserService) {
-        super();
+  displayedColumns: string[] = ['select', 'username', 'arName', 'enName', 'defaultDepartment', 'status'];
+  actions: IMenuItem<InternalUser>[] = [
+    {
+      type: 'action',
+      label: 'btn_reload',
+      icon: 'mdi-reload',
+      onClick: _ => this.reload$.next(null),
+    },
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      onClick: (user) => this.edit$.next(user)
     }
+  ];
+
+  constructor(public lang: LangService,
+              public service: InternalUserService) {
+    super();
+  }
 }
