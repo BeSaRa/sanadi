@@ -125,8 +125,12 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         // @ts-ignore
         this.toast.success(message.change({x: attachmentType.getName()}));
         this.model = attachmentType;
+        const operationBeforeSave = this.operation;
         this.operation = OperationTypes.UPDATE;
-        // this.dialogRef.close(this.model);
+
+        if(operationBeforeSave == OperationTypes.UPDATE) {
+          this.dialogRef.close(this.model);
+        }
         if(attachmentTypeHasChangedToGlobal && this.list.length > 0) {
           this.makeAttachmentTypeGlobal$.next(attachmentType.id);
         }

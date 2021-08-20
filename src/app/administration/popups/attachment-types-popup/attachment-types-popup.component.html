@@ -1,7 +1,9 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{popupTitle}}</h1>
-  <button type="button" class="btn-close btn-close-white"
-          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  <div>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
 </div>
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
@@ -57,8 +59,12 @@
       </div>
     </ng-template>
     <ng-template #servicesTabTemplate>
-      <div class="col d-flex justify-content-start align-items-center flex-row">
+      <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <h1 class="h6 text-primary">{{lang.map.lbl_services}}</h1>
+        <div>
+          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i
+            class="mdi mdi-reload"></i></button>
+        </div>
         <div>
           <button (click)="addService()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
@@ -81,7 +87,7 @@
                 </ng-container>
                 <ng-container cdkColumnDef="isActive">
                   <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_required}}</th>
-                  <td cdk-cell *cdkCellDef="let row">{{row.isRequired}}</td>
+                  <td cdk-cell *cdkCellDef="let row">{{row.isRequired ? lang.map.lbl_yes : lang.map.lbl_no}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
