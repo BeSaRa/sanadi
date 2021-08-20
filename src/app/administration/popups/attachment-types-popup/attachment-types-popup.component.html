@@ -105,6 +105,9 @@
 
                 <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+                <tr *cdkNoDataRow>
+                  <td colspan="10">{{lang.map.no_records_to_display}}</td>
+                </tr>
               </table>
             </app-table>
             <!--            <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>-->
