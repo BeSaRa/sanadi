@@ -5,7 +5,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '../../../models/form-manager';
 import {OperationTypes} from '../../../enums/operation-types.enum';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {extender} from '../../../helpers/extender';
 import {of, Subject} from 'rxjs';
 import {AttachmentType} from '../../../models/attachment-type';
 import {ExceptionHandlerService} from '../../../services/exception-handler.service';
@@ -39,6 +38,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   saveVisible = true;
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
+  private makeAttachmentTypeGlobal$: Subject<number> = new Subject<number>();
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
     services: {name: 'services'}
@@ -65,6 +65,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.listenToIsGlobalChange();
     this.buildForm();
     this._saveModel();
     if(this.model.id) {
@@ -102,10 +103,13 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   }
 
   _saveModel(): void {
-    this.save$
+    let attachmentTypeHasChangedToGlobal = false;
+     this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          const attachmentType = extender<AttachmentType>(AttachmentType, {...this.model, ...this.fm.getForm()?.value});
+          attachmentTypeHasChangedToGlobal = !this.model.global && this.fm.getFormField('global')?.value;
+
+          const attachmentType = (new AttachmentType()).clone({...this.model, ...this.fm.getForm()?.value})
           return attachmentType.save().pipe(
             catchError((err) => {
               this.exceptionHandlerService.handle(err);
@@ -123,6 +127,9 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         this.model = attachmentType;
         this.operation = OperationTypes.UPDATE;
         // this.dialogRef.close(this.model);
+        if(attachmentTypeHasChangedToGlobal && this.list.length > 0) {
+          this.makeAttachmentTypeGlobal$.next(attachmentType.id);
+        }
       });
   }
 
@@ -170,6 +177,23 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  listenToIsGlobalChange() {
+    this.makeAttachmentTypeGlobal$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((attachmentTypeId) => {
+      this.attachmentTypeServiceDataService.makeGlobal(attachmentTypeId)
+        .pipe(catchError((err) => {
+          this.exceptionHandlerService.handle(err);
+          return of(false);
+        }))
+        .subscribe((success: boolean) => {
+          if(success) {
+            this.list = [];
+          }
+        });
+    })
   }
 
   ngOnDestroy(): void {

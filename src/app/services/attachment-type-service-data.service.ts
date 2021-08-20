@@ -97,9 +97,13 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
     return this.http.put<AttachmentTypeServiceData>(this._getServiceURL(), model);
   }
 
-
   getCustomProperties(caseType: number): Observable<CustomProperty[]> {
     return this.http.get<IDefaultResponse<CustomProperty[]>>(this._getCustomPropertiesURL() + '/' + caseType)
       .pipe(map(response => response.rs.map(item => (new CustomProperty()).clone({...item}))));
+  }
+
+  makeGlobal(attachmentTypeId: number): Observable<boolean> {
+    return this.http.put<{sc: number, rs: boolean}>(this._getServiceURL() + '/global/' + attachmentTypeId, attachmentTypeId)
+      .pipe(map(response => response.rs));
   }
 }
