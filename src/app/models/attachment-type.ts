@@ -8,6 +8,7 @@ export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeServ
   service!: AttachmentTypeService;
   langService: LangService;
   status!: number;
+  global: boolean = false;
   constructor() {
     super();
     this.service = FactoryService.getService('AttachmentTypeService');

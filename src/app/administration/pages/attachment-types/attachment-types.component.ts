@@ -4,7 +4,6 @@ import {Subscription} from 'rxjs';
 import {AttachmentType} from '../../../models/attachment-type';
 import {AttachmentTypeService} from '../../../services/attachment-type.service';
 import {FormControl} from '@angular/forms';
-import {Localization} from '../../../models/localization';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
@@ -68,7 +67,7 @@ export class AttachmentTypesComponent implements OnInit {
     }
   }
 
-  onSelectAll($event: Event): void {
+  onSelectAll(): void {
     if (this.selectedRecords.length === this.list.length) {
       this.selectedRecords = [];
     } else {
@@ -94,6 +93,7 @@ export class AttachmentTypesComponent implements OnInit {
   }
 
   reload() {
+    this.selectedRecords = [];
     this.load();
   }
 
@@ -109,9 +109,9 @@ export class AttachmentTypesComponent implements OnInit {
     });
   }
 
-  edit(localization: Localization, $event: MouseEvent): void {
+  edit(attachmentType: AttachmentType, $event: MouseEvent): void {
     $event.preventDefault();
-    const sub = this.attachmentTypeService.openUpdateDialog(localization.id).subscribe((dialog: DialogRef) => {
+    const sub = this.attachmentTypeService.openUpdateDialog(attachmentType.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload();
         sub.unsubscribe();

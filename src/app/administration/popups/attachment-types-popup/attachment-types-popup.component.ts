@@ -15,6 +15,14 @@ import {Lookup} from '../../../models/lookup';
 import {LookupService} from '../../../services/lookup.service';
 import {ToastService} from '../../../services/toast.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {IKeyValue} from '../../../interfaces/i-key-value';
+import {ServiceDataService} from '../../../services/service-data.service';
+import {ServiceData} from '../../../models/service-data';
+import {AttachmentTypeService} from '../../../services/attachment-type.service';
+import {AttachmentTypeServiceData} from '../../../models/attachment-type-service-data';
+import {AttachmentTypeServiceDataService} from '../../../services/attachment-type-service-data.service';
+import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {DialogService} from '../../../services/dialog.service';
 
 @Component({
   selector: 'attachment-types-popup',
@@ -31,6 +39,15 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   saveVisible = true;
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    services: {name: 'services'}
+  };
+  services: ServiceData[] = [];
+
+  list: AttachmentTypeServiceData[] = [];
+  columns = ['arName', 'enName', 'isActive', 'actions'];
+  validToAddServices = false;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentType>,
               public lang: LangService,
@@ -38,7 +55,11 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
               private exceptionHandlerService: ExceptionHandlerService,
               private lookupService: LookupService,
               private toast: ToastService,
-              private dialogRef: DialogRef) {
+              private dialogRef: DialogRef,
+              private servicesService: ServiceDataService,
+              private attachmentTypeService: AttachmentTypeService,
+              private attachmentTypeServiceDataService: AttachmentTypeServiceDataService,
+              private dialogService: DialogService) {
     this.operation = data.operation;
     this.model = data.model;
   }
@@ -46,6 +67,10 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.buildForm();
     this._saveModel();
+    if(this.model.id) {
+      this.loadServiceData();
+      this.validToAddServices = !this.model.global;
+    }
   }
 
   private buildForm(): void {
@@ -58,7 +83,8 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
       ]],
-      status: [this.model.status, [CustomValidators.required]]
+      status: [this.model.status, [CustomValidators.required]],
+      global: [this.model.global]
     });
     this.fm = new FormManager(this.form, this.lang);
 
@@ -90,13 +116,60 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         if (!attachmentType) {
           return;
         }
+        this.validToAddServices = !attachmentType.global;
         const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
         // @ts-ignore
         this.toast.success(message.change({x: attachmentType.getName()}));
         this.model = attachmentType;
         this.operation = OperationTypes.UPDATE;
-        this.dialogRef.close(this.model);
+        // this.dialogRef.close(this.model);
       });
+  }
+
+  private loadServiceData(): void {
+    this.attachmentTypeServiceDataService.loadServicesByAttachmentTypeId(this.model.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(services => {
+        this.list = services;
+      });
+  }
+
+  reload() {
+    this.loadServiceData();
+  }
+
+  addService(): void {
+    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id).onAfterClose$.subscribe(() => {
+      this.reload();
+      sub.unsubscribe();
+    });
+  }
+
+  edit(attachmentTypeServiceData: AttachmentTypeServiceData, $event: MouseEvent): void {
+    $event.preventDefault();
+    const sub = this.attachmentTypeServiceDataService.openUpdateServiceDialog(attachmentTypeServiceData.id, this.model.id).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        this.reload();
+        sub.unsubscribe();
+      });
+    });
+  }
+
+  delete(event: MouseEvent, model: AttachmentTypeServiceData): void {
+    event.preventDefault();
+    // @ts-ignore
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reload();
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {
