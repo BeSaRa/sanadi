@@ -9,6 +9,7 @@ import {FactoryService} from './factory.service';
 import {EmployeeService} from './employee.service';
 import {ILoginData} from '../interfaces/i-login-data';
 import {TokenService} from './token.service';
+import {InternalUserService} from "@app/services/internal-user.service";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class AuthService {
   constructor(private http: HttpClient,
               private urlService: UrlService,
               private tokenService: TokenService,
+              private internalUserService: InternalUserService,
               private employeeService: EmployeeService) {
     FactoryService.registerService('AuthService', this);
     this.init();

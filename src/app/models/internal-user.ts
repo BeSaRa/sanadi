@@ -1,14 +1,14 @@
 import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
 import {UserTypes} from '../enums/user-types.enum';
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
 import {AdminResult} from "@app/models/admin-result";
 import {InternalDepartment} from "@app/models/internal-department";
+import {InternalUserService} from "@app/services/internal-user.service";
 
-export class InternalUser extends BaseModel<InternalUser, any> {
-  service: any;
+export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
+  service: InternalUserService;
   id!: number;
   arName!: string;
   enName!: string;
@@ -33,25 +33,40 @@ export class InternalUser extends BaseModel<InternalUser, any> {
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
-  }
-
-  create(): Observable<InternalUser> {
-    throw new Error('Method not implemented.');
-  }
-
-  delete(): Observable<boolean> {
-    throw new Error('Method not implemented.');
-  }
-
-  save(): Observable<InternalUser> {
-    throw new Error('Method not implemented.');
-  }
-
-  update(): Observable<InternalUser> {
-    throw new Error('Method not implemented.');
+    this.service = FactoryService.getService('InternalUserService');
   }
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+
+  buildForm(controls?: boolean): any {
+    const {
+      arName,
+      enName,
+      domainName,
+      email,
+      empNum,
+      jobTitle,
+      officialPhoneNumber,
+      phoneNumber,
+      status,
+      phoneExtension,
+      defaultDepartmentId
+    } = this;
+    return {
+      arName: controls ? [arName] : arName,
+      enName: controls ? [enName] : enName,
+      domainName: controls ? [domainName] : domainName,
+      email: controls ? [email] : email,
+      empNum: controls ? [empNum] : empNum,
+      jobTitle: controls ? [jobTitle] : jobTitle,
+      officialPhoneNumber: controls ? [officialPhoneNumber] : officialPhoneNumber,
+      phoneNumber: controls ? [phoneNumber] : phoneNumber,
+      status: controls ? [status] : status,
+      phoneExtension: controls ? [phoneExtension] : phoneExtension,
+      defaultDepartmentId: controls ? [defaultDepartmentId] : defaultDepartmentId,
+    }
   }
 }

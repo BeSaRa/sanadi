@@ -9,8 +9,14 @@ import {Observable, of} from "rxjs";
 import {exhaustMap} from "rxjs/operators";
 
 export abstract class BackendWithDialogOperationsGenericService<T extends { id: number }> extends BackendGenericService<T> implements IShowDialog<T> {
+  /**
+   * @description DialogService you have to inject it as public from your service that will extends this class
+   */
   abstract dialog: DialogService;
 
+  /**
+   * @description implement this method in your child class and return from it the responsible component for your popup
+   */
   abstract _getDialogComponent(): ComponentType<any>;
 
   /**

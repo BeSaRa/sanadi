@@ -43,8 +43,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => this.service.loadComposite()))
-      .pipe(catchError(_ => of([])))
+      .pipe(switchMap(() => {
+        return this.service.loadComposite().pipe(catchError(_ => of([])));
+      }))
       .subscribe((list: M[]) => {
         this.models = list;
       })

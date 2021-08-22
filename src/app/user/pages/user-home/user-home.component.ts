@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {MenuItem} from '../../../models/menu-item';
-import {MenuItemService} from '../../../services/menu-item.service';
+import {LangService} from '@app/services/lang.service';
+import {MenuItem} from '@app/models/menu-item';
+import {MenuItemService} from '@app/services/menu-item.service';
 
 @Component({
   selector: 'app-user-home',

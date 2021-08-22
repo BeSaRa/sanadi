@@ -1,5 +1,8 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex ">
   <h1 class="h6 text-white"></h1>
+  <span class="flex-grow-1"></span>
+  <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+          tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
@@ -8,5 +11,6 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
+  <button (click)="save$.next(null)" class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

@@ -7,6 +7,7 @@ import {BackendWithDialogOperationsGenericService} from "@app/generics/backend-w
 import {DialogService} from "@app/services/dialog.service";
 import {ComponentType} from "@angular/cdk/overlay";
 import {InternalUserPopupComponent} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
+import {FactoryService} from "@app/services/factory.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
               private urlService: UrlService,
               public dialog: DialogService) {
     super()
+    FactoryService.registerService('InternalUserService', this);
   }
 
   _getModel() {

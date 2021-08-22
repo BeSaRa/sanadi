@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
-import {CustomValidators} from '../../validators/custom-validators';
-import {AuthService} from '../../services/auth.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AuthService} from '@app/services/auth.service';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
-import {ToastService} from '../../services/toast.service';
-import {ECookieService} from '../../services/e-cookie.service';
-import {TabComponent} from '../../shared/components/tab/tab.component';
+import {ToastService} from '@app/services/toast.service';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

@@ -7,6 +7,8 @@ export class InternalUserInterceptor implements IModelInterceptor<InternalUser> 
     delete model.defaultDepartmentInfo;
     delete model.jobTitleInfo;
     delete model.statusInfo;
+    delete model.service;
+    delete model.langService;
     return model;
   }
 
