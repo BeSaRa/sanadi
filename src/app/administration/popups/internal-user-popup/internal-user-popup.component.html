@@ -6,11 +6,89 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" style="width: 600px">
-
+<div class="dialog-content" #content style="width: 600px">
+  <tabs-list>
+    <tab [template]="basicInfo" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [title]="lang.map.lbl_permissions"></tab>
+    <tab [title]="lang.map.link_teams"></tab>
+    <tab [title]="lang.map.link_services"></tab>
+  </tabs-list>
+  <ng-template #basicInfo>
+    <form [formGroup]="form" novalidate>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+          <input validationClasses="arName" formControlName="arName" type="text" id="arName" class="form-control">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+          <input validationClasses="enName" formControlName="enName" type="text" id="enName" class="form-control">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="domainName" for="domainName">{{lang.map.login_name}}</label>
+          <input validationClasses="domainName" formControlName="domainName" type="text" id="domainName"
+                 class="form-control">
+          <app-field-error-message controlName="domainName"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="empNum" for="empNum">{{lang.map.lbl_employee_number}}</label>
+          <input validationClasses="empNum" formControlName="empNum" type="text" id="empNum" class="form-control">
+          <app-field-error-message controlName="empNum"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="jobTitle" for="jobTitle">{{lang.map.job_title}}</label>
+          <input validationClasses="jobTitle" formControlName="jobTitle" type="text" id="jobTitle" class="form-control">
+          <app-field-error-message controlName="jobTitle"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="defaultDepartmentId" for="defaultDepartmentId">{{lang.map.default_dep}}</label>
+          <input validationClasses="defaultDepartmentId" formControlName="defaultDepartmentId" type="text"
+                 id="defaultDepartmentId" class="form-control">
+          <app-field-error-message controlName="defaultDepartmentId"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+          <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="officialPhoneNumber"
+                 for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
+          <input validationClasses="officialPhoneNumber" formControlName="officialPhoneNumber" type="text"
+                 id="officialPhoneNumber" class="form-control">
+          <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="phoneNumber" for="phoneNumber">{{lang.map.mobile_number}}</label>
+          <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
+                 class="form-control">
+          <app-field-error-message controlName="phoneNumber"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
+          <input validationClasses="status" formControlName="status" type="text" id="status" class="form-control">
+          <app-field-error-message controlName="status"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
 </div>
 <div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null , content)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
   <div class="flex-grow-1"></div>
   <button (click)="save$.next(null)" class="btn btn-primary">{{lang.map.btn_save}}</button>
-  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

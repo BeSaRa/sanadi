@@ -1,18 +1,18 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {Localization} from '../../../models/localization';
+import {Localization} from '@app/models/localization';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {FactoryService} from '../../../services/factory.service';
-import {ToastService} from '../../../services/toast.service';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {FormManager} from '@app/models/form-manager';
+import {FactoryService} from '@app/services/factory.service';
+import {ToastService} from '@app/services/toast.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {DialogRef} from '../../models/dialog-ref';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 
 @Component({
   selector: 'app-localization-popup',

@@ -33,17 +33,18 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
-    console.log('SAVE DONE');
+    // here i closing the popup after click on save and the operation is update
+    this.operation === OperationTypes.UPDATE && dialogRef.close(model);
+    // here i change operation to UPDATE after first save
+    this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
   }
 
   beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
-    console.log('BEFORE SAVE');
-    return true;
+    return form.valid;
   }
 
   prepareModel(model: InternalUser, form: FormGroup): InternalUser | Observable<InternalUser> {
-    console.log('MODEL');
-    return model;
+    return (new InternalUser()).clone({...model, ...form.value});
   }
 
   saveFail(error: Error): void {

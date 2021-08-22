@@ -1,9 +1,10 @@
 import {BehaviorSubject, of, Subject} from "rxjs";
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
-import {catchError, exhaustMap, switchMap, takeUntil} from "rxjs/operators";
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from "rxjs/operators";
 import {Directive, OnDestroy, OnInit} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {BackendWithDialogOperationsGenericService} from "@app/generics/backend-with-dialog-operations-generic-service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends BackendWithDialogOperationsGenericService<M>> implements OnInit, OnDestroy {
@@ -57,8 +58,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => of(this.service.addDialog())))
-      .subscribe()
+      .pipe(exhaustMap(() => this.service.addDialog().onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   /**
@@ -70,6 +71,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .pipe(exhaustMap((model) => {
         return this.service.editDialog(model).pipe(catchError(_ => of(null)))
       }))
-      .subscribe()
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 }

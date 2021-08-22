@@ -1,18 +1,18 @@
 import {Component, ElementRef, HostBinding, HostListener, OnInit, Renderer2} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {MenuItemService} from '../../../services/menu-item.service';
-import {MenuItem} from '../../../models/menu-item';
+import {MenuItemService} from '@app/services/menu-item.service';
+import {MenuItem} from '@app/models/menu-item';
 import {Direction} from '@angular/cdk/bidi';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {FormControl} from '@angular/forms';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {AuthService} from '../../../services/auth.service';
-import {DialogService} from '../../../services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {AuthService} from '@app/services/auth.service';
+import {DialogService} from '@app/services/dialog.service';
 import {Router} from '@angular/router';
-import {ToastService} from '../../../services/toast.service';
-import {NavigationService} from '../../../services/navigation.service';
+import {ToastService} from '@app/services/toast.service';
+import {NavigationService} from '@app/services/navigation.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -51,7 +51,7 @@ export class SidebarComponent implements OnInit {
   searchInput: FormControl = new FormControl('');
 
   @HostBinding('class.sidebar-opened')
-  isOpened: boolean = false;
+  isOpened: boolean = true;
   private ongoingState: boolean = false;
 
   @HostBinding('class.sidebar-closed')

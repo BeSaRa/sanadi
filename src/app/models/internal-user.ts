@@ -6,6 +6,7 @@ import {FactoryService} from '../services/factory.service';
 import {AdminResult} from "@app/models/admin-result";
 import {InternalDepartment} from "@app/models/internal-department";
 import {InternalUserService} from "@app/services/internal-user.service";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
@@ -25,6 +26,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   phoneNumber!: string;
   status!: number;
   statusInfo!: AdminResult;
+  userTypeInfo!: AdminResult;
   statusDateModified!: string;
   userType!: UserTypes;
   generalUserId!: number
@@ -56,17 +58,17 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       defaultDepartmentId
     } = this;
     return {
-      arName: controls ? [arName] : arName,
-      enName: controls ? [enName] : enName,
-      domainName: controls ? [domainName] : domainName,
-      email: controls ? [email] : email,
-      empNum: controls ? [empNum] : empNum,
-      jobTitle: controls ? [jobTitle] : jobTitle,
-      officialPhoneNumber: controls ? [officialPhoneNumber] : officialPhoneNumber,
-      phoneNumber: controls ? [phoneNumber] : phoneNumber,
-      status: controls ? [status] : status,
-      phoneExtension: controls ? [phoneExtension] : phoneExtension,
-      defaultDepartmentId: controls ? [defaultDepartmentId] : defaultDepartmentId,
+      arName: controls ? [arName, [CustomValidators.required]] : arName,
+      enName: controls ? [enName, [CustomValidators.required]] : enName,
+      domainName: controls ? [domainName, [CustomValidators.required]] : domainName,
+      email: controls ? [email, [CustomValidators.required]] : email,
+      empNum: controls ? [empNum, [CustomValidators.required]] : empNum,
+      jobTitle: controls ? [jobTitle, [CustomValidators.required]] : jobTitle,
+      officialPhoneNumber: controls ? [officialPhoneNumber, [CustomValidators.required]] : officialPhoneNumber,
+      phoneNumber: controls ? [phoneNumber, [CustomValidators.required]] : phoneNumber,
+      status: controls ? [status, [CustomValidators.required]] : status,
+      phoneExtension: controls ? [phoneExtension, [CustomValidators.required]] : phoneExtension,
+      defaultDepartmentId: controls ? [defaultDepartmentId, [CustomValidators.required]] : defaultDepartmentId,
     }
   }
 }

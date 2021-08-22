@@ -17,7 +17,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   abstract dialogRef: DialogRef;
   destroy$: Subject<any> = new Subject<any>();
   save$: Subject<any> = new Subject<any>();
-
+  validateFieldsVisible: boolean = true;
 
   ngOnInit(): void {
     this.buildForm();
@@ -60,6 +60,11 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   abstract saveFail(error: Error): void
 
   /**
+   * @description use this method to build your form
+   */
+  abstract buildForm(): void;
+
+  /**
    * @description default implementation to listen to save method you can override it if you need custom logic
    */
   listenToSave() {
@@ -91,7 +96,30 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   }
 
   /**
-   * @description use this method to build your form
+   * @description validate main form or given from and display the highlighted errors
+   * @param form {FormGroup|null}
+   * @param element {HTMLElement|string}
    */
-  abstract buildForm(): void;
+  displayFormValidity(form?: FormGroup | null, element?: HTMLElement | string): void {
+    if (!form) {
+      this.form.markAllAsTouched();
+    } else {
+      form.markAllAsTouched();
+    }
+
+    let ele: HTMLElement | false = false;
+    if (!element) {
+      return;
+    }
+    element instanceof HTMLElement && (ele = element);
+    typeof element === 'string' && (ele = document.getElementById(element) as HTMLElement);
+    if (ele) {
+      ele.scrollTo({top: 0, behavior: "smooth"});
+    }
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  markFormPristine(form?: FormGroup): void {
+    form ? form.markAsPristine() : this.form.markAsPristine();
+  }
 }

@@ -1,33 +1,33 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormManager} from '../../../models/form-manager';
-import {LangService} from '../../../services/lang.service';
-import {OrgUser} from '../../../models/org-user';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ToastService} from '../../../services/toast.service';
-import {extender} from '../../../helpers/extender';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
-import {OrgUnit} from '../../../models/org-unit';
-import {CustomRole} from '../../../models/custom-role';
-import {OrgBranch} from '../../../models/org-branch';
-import {OrganizationBranchService} from '../../../services/organization-branch.service';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FormManager} from '@app/models/form-manager';
+import {LangService} from '@app/services/lang.service';
+import {OrgUser} from '@app/models/org-user';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ToastService} from '@app/services/toast.service';
+import {extender} from '@app/helpers/extender';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {OrgUnit} from '@app/models/org-unit';
+import {CustomRole} from '@app/models/custom-role';
+import {OrgBranch} from '@app/models/org-branch';
+import {OrganizationBranchService} from '@app/services/organization-branch.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {combineLatest, of, Subject} from 'rxjs';
-import {catchError, concatMap, exhaustMap, map, mapTo, mergeMap, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {Permission} from '../../../models/permission';
-import {OrgUserPermission} from '../../../models/org-user-permission';
-import {CheckGroup} from '../../../models/check-group';
-import {PermissionService} from '../../../services/permission.service';
-import {CustomRolePermission} from '../../../models/custom-role-permission';
-import {OrganizationUserPermissionService} from '../../../services/organization-user-permission.service';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {EmployeeService} from '../../../services/employee.service';
-import {AuthService} from '../../../services/auth.service';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {catchError, exhaustMap, map, switchMap, take, takeUntil} from 'rxjs/operators';
+import {Permission} from '@app/models/permission';
+import {OrgUserPermission} from '@app/models/org-user-permission';
+import {CheckGroup} from '@app/models/check-group';
+import {PermissionService} from '@app/services/permission.service';
+import {CustomRolePermission} from '@app/models/custom-role-permission';
+import {OrganizationUserPermissionService} from '@app/services/organization-user-permission.service';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {EmployeeService} from '@app/services/employee.service';
+import {AuthService} from '@app/services/auth.service';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -96,6 +96,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
   }
 
+  // noinspection JSUnusedLocalSymbols
   setDialogButtonsVisibility(tab: any): void {
   }
 
@@ -195,6 +196,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         if (!user) {
           return of(user);
         }
+        // noinspection JSUnusedLocalSymbols
         return this.employeeService.isCurrentEmployee(user) ? this.authService.validateToken()
           .pipe(catchError(error => of(user)), map(_ => user)) : of(user);
       }),
@@ -258,6 +260,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  // noinspection JSUnusedLocalSymbols
   updatePermissionsByRole($event: Event): void {
     const value = this.fm.getFormField('permissions.customRoleId')?.value;
     if (!value) {

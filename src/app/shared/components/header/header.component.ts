@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {UrlService} from '../../../services/url.service';
+import {LangService} from '@app/services/lang.service';
+import {UrlService} from '@app/services/url.service';
 import {SidebarComponent} from '../sidebar/sidebar.component';
-import {EmployeeService} from '../../../services/employee.service';
+import {EmployeeService} from '@app/services/employee.service';
 import {Subject} from 'rxjs';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule

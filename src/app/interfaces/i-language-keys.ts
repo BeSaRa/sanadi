@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  job_title: string;
+  official_phone_number: string;
+  login_name: string;
+  link_teams: string;
+  link_services: string;
   lbl_required: string;
   lbl_global: string;
   lbl_mandatory: string;
