@@ -15,8 +15,11 @@ export class BackendExceptionHandlerInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
-        const resError = Object.assign(new CustomHttpErrorResponse, error) as CustomHttpErrorResponse;
-        resError.error.eo = AdminResult.createInstance(resError.error.eo);
+        const resError = Object.assign(new CustomHttpErrorResponse, {error: error}) as CustomHttpErrorResponse;
+        resError.error.eo = AdminResult.createInstance(resError.error.hasOwnProperty('eo') ? resError.error.eo : {
+          arName: resError.error as unknown as string,
+          enName: resError.error as unknown as string
+        });
         this.exceptionHandlerService.handle(error);
         return throwError(resError);
       })
