@@ -7,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {DialogService} from '../../../../services/dialog.service';
 import {ToastService} from '../../../../services/toast.service';
 import {LangService} from '../../../../services/lang.service';
-import {filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {CaseStatus} from '../../../../enums/case-status.enum';
 import {IESComponent} from '../../../../interfaces/iescomponent';
 import {InternationalCooperation} from '../../../../models/international-cooperation';
@@ -122,11 +122,13 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
 
   private listenToFinalSave(finalSave$: Observable<any>): void {
     finalSave$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((fromValues) => {
-      const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+      takeUntil(this.destroy$),
+      exhaustMap((fromValues) => {
+        const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
+        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
+      })
+    ).subscribe((model) => {
+      this.changeModel.next(model)
     });
   }
 

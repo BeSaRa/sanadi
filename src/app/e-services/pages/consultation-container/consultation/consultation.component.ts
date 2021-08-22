@@ -12,7 +12,7 @@ import {DialogService} from '../../../../services/dialog.service';
 import {ToastService} from '../../../../services/toast.service';
 import {LangService} from '../../../../services/lang.service';
 import {ConsultationService} from '../../../../services/consultation.service';
-import {filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {OrgUnit} from '../../../../models/org-unit';
 import {OrganizationUnitService} from '../../../../services/organization-unit.service';
 import {CaseStatus} from '../../../../enums/case-status.enum';
@@ -161,11 +161,13 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
 
   private listenToFinalSave(finalSave$: Observable<any>): void {
     finalSave$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((fromValues) => {
-      const model = (new Consultation()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+      takeUntil(this.destroy$),
+      exhaustMap((fromValues) => {
+        const model = (new Consultation()).clone({...this.model, ...fromValues});
+        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
+      })
+    ).subscribe((model) => {
+      this.changeModel.next(model)
     });
   }
 

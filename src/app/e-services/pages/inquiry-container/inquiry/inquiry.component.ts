@@ -4,7 +4,7 @@ import {LangService} from '../../../../services/lang.service';
 import {InternalDepartmentService} from '../../../../services/internal-department.service';
 import {InternalDepartment} from '../../../../models/internal-department';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {FormManager} from '../../../../models/form-manager';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Inquiry} from '../../../../models/inquiry';
@@ -126,11 +126,13 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
 
   private listenToFinalSave(finalSave$: Observable<any>): void {
     finalSave$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((fromValues) => {
-      const model = (new Inquiry()).clone({...this.model, ...fromValues});
-      model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+      takeUntil(this.destroy$),
+      exhaustMap((fromValues) => {
+        const model = (new Inquiry()).clone({...this.model, ...fromValues});
+        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
+      })
+    ).subscribe((model) => {
+      this.changeModel.next(model)
     });
   }
 
