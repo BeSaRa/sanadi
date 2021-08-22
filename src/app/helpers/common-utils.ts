@@ -31,4 +31,13 @@ export class CommonUtils {
     }
     return finalValue;
   }
+
+  /**
+   * @description Checks if given value is valid
+   * @param value
+   * Value to check for validity
+   */
+  static isValidValue(value: any): boolean {
+    return ((typeof value === 'string') ? (value.trim() !== '') : (typeof value !== 'undefined' && value !== null));
+  }
 }

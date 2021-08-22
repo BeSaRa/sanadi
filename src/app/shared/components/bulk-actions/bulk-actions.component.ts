@@ -1,6 +1,7 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {LangService} from '../../../services/lang.service';
 import {IGridAction} from '../../../interfaces/i-grid-action';
+import {CommonUtils} from '../../../helpers/common-utils';
 
 @Component({
   selector: 'app-bulk-actions',
@@ -18,17 +19,31 @@ export class BulkActionsComponent implements OnInit {
   constructor(public langService: LangService) {
   }
 
+  checkShow(action: IGridAction): boolean {
+    if (!CommonUtils.isValidValue(action.show)) {
+      return true;
+    }
+    if (action.children && action.children.length > 0) {
+      action.children = action.children.filter((child: IGridAction) => {
+        return this.checkShow(child);
+      });
+      return action.children.length > 0;
+    }
+    // @ts-ignore
+    return action.show(this.selectedRecords);
+  }
+
   ngOnInit() {
     if (this.selectedRecords.length === 0) {
       this.actions = [];
     }
     this.actions = this.actionsList.filter((action: IGridAction) => {
-      return action.show && action.show(this.selectedRecords);
+      return this.checkShow(action);
     });
   }
 
   callback($event: MouseEvent, action: IGridAction): any {
-    action.callback && action.callback($event);
+    action.callback && action.callback($event, action.data);
   }
 
 }
