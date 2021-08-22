@@ -8,14 +8,15 @@ import {CountryInterceptor} from '../model-interceptors/country-interceptor';
 import {UrlService} from './url.service';
 import {forkJoin, Observable, of} from 'rxjs';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {Generator} from '../decorators/generator';
 import {DialogService} from './dialog.service';
 import {CountryPopupComponent} from '../administration/popups/country-popup/country-popup.component';
 import {ChangeCountryParentPopupComponent} from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
-import {isValidValue} from '../helpers/utils';
+import {StatusEnum} from '../enums/status.enum';
+import {CommonUtils} from '../helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -106,7 +107,7 @@ export class CountryService extends BackendGenericService<Country> {
             operation: OperationTypes.UPDATE,
             parentCountries: this.listCountries,
             isParent: !result.country.parentId,
-            selectedTabName: (isValidValue(tabName) ? tabName : 'basic')
+            selectedTabName: (CommonUtils.isValidValue(tabName) ? tabName : 'basic')
           }))
         })
       );
@@ -123,5 +124,40 @@ export class CountryService extends BackendGenericService<Country> {
   updateBulkParents(parentId: number, countriesId: number[]): Observable<Country[]> {
     return this.http.post<Country[]>(this._getServiceURL() + '/cities-update/' + parentId, countriesId);
   }
+
+  updateStatus(countryId: number, newStatus: StatusEnum) {
+    return newStatus === StatusEnum.ACTIVE ? this._activate(countryId) : this._deactivate(countryId);
+  }
+
+  updateStatusBulk(recordIds: number[], newStatus: StatusEnum): Observable<any> {
+    return newStatus === StatusEnum.ACTIVE ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
+  }
+
+  private _activate(countryId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + countryId + '/activate', {});
+  }
+
+  private _deactivate(countryId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + countryId + '/de-activate', {});
+  }
+
+  private _activateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+
+  private _deactivateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/de-activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+
 
 }

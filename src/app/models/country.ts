@@ -5,6 +5,7 @@ import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {AdminResult} from './admin-result';
 import {searchFunctionType} from '../types/types';
+import {StatusEnum} from '../enums/status.enum';
 
 export class Country extends BaseModel<Country, CountryService> {
   parentId?: number;
@@ -35,5 +36,9 @@ export class Country extends BaseModel<Country, CountryService> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  updateStatus(newStatus: StatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

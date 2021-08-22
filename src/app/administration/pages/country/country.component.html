@@ -68,6 +68,16 @@
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-city"></i>
               </button>
+              <button *ngIf="row.status === statusEnum.INACTIVE"
+                (click)="activateCountry(row)" tooltip="{{langService.map.btn_activate}}"
+                      class="btn icon-btn text-primary">
+                <i class="mdi mdi-list-status"></i>
+              </button>
+              <button *ngIf="row.status === statusEnum.ACTIVE"
+                (click)="deactivateCountry(row)" tooltip="{{langService.map.btn_deactivate}}"
+                      class="btn icon-btn text-primary">
+                <i class="mdi mdi-list-status"></i>
+              </button>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>

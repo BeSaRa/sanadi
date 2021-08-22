@@ -317,6 +317,9 @@ export interface ILanguageKeys {
   msg_delete_success: string;
   msg_delete_success_except: string;
   msg_delete_fail: string;
+  msg_update_success: string;
+  msg_update_success_except: string;
+  msg_update_fail: string;
   btn_add: string;
   btn_reload: string;
   btn_edit: string;
@@ -441,4 +444,6 @@ export interface ILanguageKeys {
   lbl_edit_city: string;
   btn_change_parent: string;
   change_parent: string;
+  btn_activate: string;
+  btn_deactivate: string;
 }
