@@ -111,6 +111,9 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       this.form.get('competentDepartmentID')?.setValidators(CustomValidators.required);
       this.form.get('competentDepartmentID')?.updateValueAndValidity();
     }
+    if (this.employeeService.isExternalUser()) {
+      this.form.get('organizationId')?.disable();
+    }
   }
 
   private listenToSave() {
@@ -199,7 +202,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
       takeUntil(this.destroy$),
       tap(item => this.model = item)
     ).subscribe((model) => {
-      this.toggleOrganizationListStatus();
+      // this.toggleOrganizationListStatus();
       model ? this.updateFromFields(model) : this.resetForm();
     });
   }
