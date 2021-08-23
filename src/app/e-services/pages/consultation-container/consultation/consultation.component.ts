@@ -1,27 +1,27 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {IESComponent} from '../../../../interfaces/iescomponent';
+import {IESComponent} from '@app/interfaces/iescomponent';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {SaveTypes} from '../../../../enums/save-types';
+import {SaveTypes} from '@app/enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {Consultation} from '../../../../models/consultation';
-import {FormManager} from '../../../../models/form-manager';
-import {Lookup} from '../../../../models/lookup';
-import {LookupService} from '../../../../services/lookup.service';
+import {Consultation} from '@app/models/consultation';
+import {FormManager} from '@app/models/form-manager';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
 import {HttpClient} from '@angular/common/http';
-import {DialogService} from '../../../../services/dialog.service';
-import {ToastService} from '../../../../services/toast.service';
-import {LangService} from '../../../../services/lang.service';
-import {ConsultationService} from '../../../../services/consultation.service';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {LangService} from '@app/services/lang.service';
+import {ConsultationService} from '@app/services/consultation.service';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {OrgUnit} from '../../../../models/org-unit';
-import {OrganizationUnitService} from '../../../../services/organization-unit.service';
-import {CaseStatus} from '../../../../enums/case-status.enum';
-import {InternalDepartment} from '../../../../models/internal-department';
-import {InternalDepartmentService} from '../../../../services/internal-department.service';
-import {EmployeeService} from '../../../../services/employee.service';
-import {CustomValidators} from '../../../../validators/custom-validators';
-import {OperationTypes} from '../../../../enums/operation-types.enum';
-import {CaseModel} from '../../../../models/case-model';
+import {OrgUnit} from '@app/models/org-unit';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {CaseStatus} from '@app/enums/case-status.enum';
+import {InternalDepartment} from '@app/models/internal-department';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {CaseModel} from '@app/models/case-model';
 
 @Component({
   selector: 'consultation',

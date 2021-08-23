@@ -1,24 +1,24 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {LangService} from '../../../../services/lang.service';
-import {InternalDepartmentService} from '../../../../services/internal-department.service';
-import {InternalDepartment} from '../../../../models/internal-department';
+import {LangService} from '@app/services/lang.service';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
+import {InternalDepartment} from '@app/models/internal-department';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {FormManager} from '../../../../models/form-manager';
+import {FormManager} from '@app/models/form-manager';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Inquiry} from '../../../../models/inquiry';
-import {LookupService} from '../../../../services/lookup.service';
-import {Lookup} from '../../../../models/lookup';
-import {SaveTypes} from '../../../../enums/save-types';
-import {DialogService} from '../../../../services/dialog.service';
-import {ToastService} from '../../../../services/toast.service';
-import {InquiryService} from '../../../../services/inquiry.service';
-import {CaseStatus} from '../../../../enums/case-status.enum';
-import {IESComponent} from '../../../../interfaces/iescomponent';
-import {CustomValidators} from '../../../../validators/custom-validators';
-import {OperationTypes} from '../../../../enums/operation-types.enum';
-import {CaseModel} from '../../../../models/case-model';
+import {Inquiry} from '@app/models/inquiry';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {SaveTypes} from '@app/enums/save-types';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {InquiryService} from '@app/services/inquiry.service';
+import {CaseStatus} from '@app/enums/case-status.enum';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {CaseModel} from '@app/models/case-model';
 
 @Component({
   selector: 'inquiry-component',

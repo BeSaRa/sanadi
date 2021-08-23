@@ -1,23 +1,23 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {SaveTypes} from '../../../../enums/save-types';
+import {SaveTypes} from '@app/enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {FormManager} from '../../../../models/form-manager';
+import {FormManager} from '@app/models/form-manager';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {DialogService} from '../../../../services/dialog.service';
-import {ToastService} from '../../../../services/toast.service';
-import {LangService} from '../../../../services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {LangService} from '@app/services/lang.service';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {CaseStatus} from '../../../../enums/case-status.enum';
-import {IESComponent} from '../../../../interfaces/iescomponent';
-import {InternationalCooperation} from '../../../../models/international-cooperation';
-import {InternationalCooperationService} from '../../../../services/international-cooperation.service';
-import {InternalDepartmentService} from '../../../../services/internal-department.service';
-import {InternalDepartment} from '../../../../models/internal-department';
-import {CountryService} from '../../../../services/country.service';
-import {Country} from '../../../../models/country';
-import {OperationTypes} from '../../../../enums/operation-types.enum';
-import {CaseModel} from '../../../../models/case-model';
+import {CaseStatus} from '@app/enums/case-status.enum';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {InternationalCooperation} from '@app/models/international-cooperation';
+import {InternationalCooperationService} from '@app/services/international-cooperation.service';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
+import {InternalDepartment} from '@app/models/internal-department';
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {CaseModel} from '@app/models/case-model';
 
 @Component({
   selector: 'international-cooperation',

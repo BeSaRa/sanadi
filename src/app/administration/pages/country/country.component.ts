@@ -1,24 +1,24 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Country} from '../../../models/country';
-import {IMenuItem} from '../../../modules/context-menu/interfaces/i-menu-item';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {TableComponent} from '../../../shared/components/table/table.component';
+import {Country} from '@app/models/country';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {TableComponent} from '@app/shared/components/table/table.component';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {LangService} from '../../../services/lang.service';
-import {CountryService} from '../../../services/country.service';
+import {LangService} from '@app/services/lang.service';
+import {CountryService} from '@app/services/country.service';
 import {switchMap, tap} from 'rxjs/operators';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {ITableOptions} from '../../../interfaces/i-table-options';
-import {SortEvent} from '../../../interfaces/sort-event';
-import {isEmptyObject, isValidValue} from '../../../helpers/utils';
-import {CommonUtils} from '../../../helpers/common-utils';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {SharedService} from '../../../services/shared.service';
-import {LookupService} from '../../../services/lookup.service';
-import {StatusEnum} from '../../../enums/status.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {isEmptyObject, isValidValue} from '@app/helpers/utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {SharedService} from '@app/services/shared.service';
+import {LookupService} from '@app/services/lookup.service';
+import {StatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'country',
@@ -30,7 +30,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   @Input() parentCountry?: Country;
 
   countries: Country[] = [];
-  actions: IMenuItem[] = [];
+  actions: IMenuItem<Country>[] = [];
   bulkActions: IGridAction[] = [];
 
   @ViewChild('table') table!: TableComponent;
@@ -224,6 +224,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   private buildActions() {
+    // noinspection JSUnusedLocalSymbols
     this.actions = [
       // edit
       {
@@ -279,6 +280,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   private buildBulkActions() {
+    // noinspection JSUnusedLocalSymbols
     this.bulkActions = [
       {
         icon: 'mdi-swap-vertical-bold',
