@@ -8,6 +8,10 @@ import {IDialogData} from "@app/interfaces/i-dialog-data";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable} from 'rxjs';
+import {InternalDepartmentService} from "@app/services/internal-department.service";
+import {InternalDepartment} from "@app/models/internal-department";
+import {takeUntil} from "rxjs/operators";
+import {Lookup} from "@app/models/lookup";
 
 @Component({
   selector: 'internal-user-popup',
@@ -18,9 +22,12 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   operation: OperationTypes;
   model: InternalUser;
   form!: FormGroup;
+  departments: InternalDepartment[] = [];
+  jobTitles: Lookup[] = [];
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
+              private internalDep: InternalDepartmentService,
               public fb: FormBuilder,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
@@ -28,8 +35,34 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.operation = this.data.operation;
   }
 
+  initPopup(): void {
+    this.loadDepartments();
+    this.loadJobTitles();
+  }
+
+  destroyPopup(): void {
+
+  }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+  }
+
+  //TODO: when the job title service be ready should change implementation here and load if from API
+  private loadJobTitles() {
+    this.jobTitles = [
+      (new Lookup()).clone({enName: 'مسمي وظيفى اول', arName: 'jobTitle 1', id: 1}),
+      (new Lookup()).clone({enName: 'مسمي وظيفي ثانى', arName: 'jobTitle 2', id: 2}),
+      (new Lookup()).clone({enName: 'مسمي وظيفي ثالث', arName: 'jobTitle 3', id: 2})
+    ]
+  }
+
+  private loadDepartments(): void {
+    this.internalDep.load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((departments) => {
+        this.departments = departments;
+      });
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
@@ -50,4 +83,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   saveFail(error: Error): void {
     console.log(error);
   }
+
+  basicInfoHasError() {
+    return (this.form.invalid && (this.form.touched || this.form.dirty));
+  }
+
 }

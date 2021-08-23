@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  edit_internal_user: string;
+  add_new_internal_user: string;
   job_title: string;
   official_phone_number: string;
   login_name: string;

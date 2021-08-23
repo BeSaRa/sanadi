@@ -7,6 +7,7 @@ import {AdminResult} from "@app/models/admin-result";
 import {InternalDepartment} from "@app/models/internal-department";
 import {InternalUserService} from "@app/services/internal-user.service";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {Validators} from "@angular/forms";
 
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
@@ -58,16 +59,39 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       defaultDepartmentId
     } = this;
     return {
-      arName: controls ? [arName, [CustomValidators.required]] : arName,
-      enName: controls ? [enName, [CustomValidators.required]] : enName,
+      arName: controls ? [arName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM')
+      ]] : enName,
       domainName: controls ? [domainName, [CustomValidators.required]] : domainName,
       email: controls ? [email, [CustomValidators.required]] : email,
-      empNum: controls ? [empNum, [CustomValidators.required]] : empNum,
+      empNum: controls ? [empNum, [
+        CustomValidators.required,
+        CustomValidators.number,
+        CustomValidators.maxLength(10)
+      ]] : empNum,
       jobTitle: controls ? [jobTitle, [CustomValidators.required]] : jobTitle,
-      officialPhoneNumber: controls ? [officialPhoneNumber, [CustomValidators.required]] : officialPhoneNumber,
-      phoneNumber: controls ? [phoneNumber, [CustomValidators.required]] : phoneNumber,
+      officialPhoneNumber: controls ? [officialPhoneNumber, [
+        CustomValidators.number,
+        Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
+      ]] : officialPhoneNumber,
+      phoneNumber: controls ? [phoneNumber, [
+        CustomValidators.required, CustomValidators.number,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
+      ]] : phoneNumber,
       status: controls ? [status, [CustomValidators.required]] : status,
-      phoneExtension: controls ? [phoneExtension, [CustomValidators.required]] : phoneExtension,
+      phoneExtension: controls ? [phoneExtension, [
+        CustomValidators.number,
+        CustomValidators.maxLength(10)
+      ]] : phoneExtension,
       defaultDepartmentId: controls ? [defaultDepartmentId, [CustomValidators.required]] : defaultDepartmentId,
     }
   }

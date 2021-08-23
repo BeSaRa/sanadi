@@ -1,21 +1,21 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {OrgUser} from '../../../models/org-user';
+import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {OrgUser} from '@app/models/org-user';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {debounceTime, switchMap, tap} from 'rxjs/operators';
-import {OrganizationUserService} from '../../../services/organization-user.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {LangService} from '../../../services/lang.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {ConfigurationService} from '../../../services/configuration.service';
+import {OrganizationUserService} from '@app/services/organization-user.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {LangService} from '@app/services/lang.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {ConfigurationService} from '@app/services/configuration.service';
 import {cloneDeep as _deepClone} from 'lodash';
-import {searchInObject} from '../../../helpers/utils';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {EmployeeService} from '../../../services/employee.service';
-import {SharedService} from '../../../services/shared.service';
+import {searchInObject} from '@app/helpers/utils';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {EmployeeService} from '@app/services/employee.service';
+import {SharedService} from '@app/services/shared.service';
 
 @Component({
   selector: 'app-organization-user',
@@ -46,6 +46,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     }
   ];
 
+  // noinspection JSUnusedLocalSymbols
   bindingKeys: IKeyValue = {
     arName: 'arName',
     enName: 'enName',
@@ -96,6 +97,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     }
   }
 
+  // noinspection JSUnusedLocalSymbols
   onSelectAll($event: Event): void {
     if (this.selectedRecords.length === this.orgUsers.length) {
       this.selectedRecords = [];

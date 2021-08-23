@@ -18,16 +18,23 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   destroy$: Subject<any> = new Subject<any>();
   save$: Subject<any> = new Subject<any>();
   validateFieldsVisible: boolean = true;
+  operationTypes: typeof OperationTypes = OperationTypes;
 
   ngOnInit(): void {
     this.buildForm();
     this.listenToSave();
+    this.initPopup();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroyPopup();
   }
+
+  abstract initPopup(): void
+
+  abstract destroyPopup(): void
 
   /***
    * @description this method invoked after save succeed

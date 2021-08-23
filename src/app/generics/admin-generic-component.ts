@@ -26,6 +26,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   abstract actions: IMenuItem<M>[] = [];
   // grid columns override it in your component to display your custom columns on your grid
   abstract displayedColumns: string[] = [];
+  //  you can override this property from child class to use load or loadComposite
+  useCompositeToLoad: boolean = true;
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -45,7 +47,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        return this.service.loadComposite().pipe(catchError(_ => of([])));
+        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+        return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: M[]) => {
         this.models = list;
