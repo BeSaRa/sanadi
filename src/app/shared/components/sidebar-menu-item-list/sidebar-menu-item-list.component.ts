@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MenuItem} from '../../../models/menu-item';
-import {EmployeeService} from '../../../services/employee.service';
+import {MenuItem} from '@app/models/menu-item';
+import {EmployeeService} from '@app/services/employee.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 

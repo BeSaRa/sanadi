@@ -68,6 +68,11 @@
   .sidebar-menu-list {
     font-weight: 500;
   }
+  .sidebar-menu-list:not(.level-1) {
+    .sidebar-menu-item-text {
+      font-weight: normal;
+    }
+  }
 }
 
 :host-context(html[dir="ltr"]) {
@@ -77,6 +82,13 @@
 
   .sidebar-menu-item-text {
     font-size: 14px;
+  }
+
+  .sidebar-menu-list:not(.level-1) {
+    .sidebar-menu-item-text {
+      font-weight: normal;
+      font-size: 13px;
+    }
   }
 }
 

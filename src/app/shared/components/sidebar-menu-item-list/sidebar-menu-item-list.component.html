@@ -6,8 +6,9 @@
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <a class="d-none" [routerLink]="item.path"></a>
-      <a href="#" [class.px-2]="level > 1" (click)="toggleCollapseOrNavigate(item , $event)"
-         class="d-flex flex-row align-items-center justify-content-center">
+      <a href="#" [class.px-2]="level > 1" [class.justify-content-start]="level > 1"
+         [class.justify-content-center]="level === 1" (click)="toggleCollapseOrNavigate(item , $event)"
+         class="d-flex flex-row align-items-center overflow-hidden">
         <div class="sidebar-menu-icon d-flex  flex-grow-0 justify-content-center align-items-center">
           <div *ngIf="!item.parent">
             <div *ngIf="item.isSVGIcon()" [innerHTML]="item.safeSVG"
@@ -18,7 +19,7 @@
             </div>
           </div>
         </div>
-        <span class="flex-shrink-0 flex-grow-1 sidebar-menu-item-text text-truncate"
+        <span class="flex-grow-1 sidebar-menu-item-text text-truncate"
               [innerHTML]="item.getName()|highlight:_searchText"></span>
       </a>
       <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"
