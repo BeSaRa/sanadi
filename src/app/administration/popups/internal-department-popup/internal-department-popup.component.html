@@ -1,0 +1,115 @@
+<div class="dialog-toolbar bg-primary align-items-center dialog-toolbar d-flex ">
+  <h1 class="h6 text-white">
+    {{operation === operationTypes.CREATE ? lang.map.add_new_internal_department : lang.map.edit_internal_department}}
+  </h1>
+  <span class="flex-grow-1"></span>
+  <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+          tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form style="width: 800px;" [formGroup]="form" novalidate>
+    <tabs-list>
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+      <tab [name]="tabsData.stamp.name" [template]="stampTabTemplate"
+           [title]="lang.map.lbl_stamp"></tab>
+    </tabs-list>
+    <ng-template #basicTabTemplate>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+          <input validationClasses="arName" formControlName="arName" type="text" id="arName" class="form-control">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+          <input validationClasses="enName" formControlName="enName" type="text" id="enName" class="form-control">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="teamId"
+                 for="teamId">{{lang.map.lbl_team}}</label>
+          <ng-select validationClasses="teamId" appendTo="body" [clearable]="true" id="teamId"
+                     placeholder="{{lang.map.select}}"
+                     formControlName="teamId">
+            <ng-option [value]="team.id" *ngFor="let team of teams">{{team.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="teamId"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="managerId"
+                 for="managerId">{{lang.map.lbl_manager}}</label>
+          <ng-select validationClasses="managerId" appendTo="body" [clearable]="true" id="managerId"
+                     placeholder="{{lang.map.select}}"
+                     formControlName="managerId">
+            <ng-option [value]="user.id" *ngFor="let user of internalUsers">{{user.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="managerId"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+          <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <div class="col-sm-6">
+          <div class="row">
+            <label asteriskIfRequired="status" for="status"
+                   class="form-label">{{lang.map.lbl_status}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select validationClasses="status"
+                         formControlName="status"
+                         id="status">
+                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses">{{status.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="status"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #stampTabTemplate>
+      <div class="row">
+        <input class="input-file" type="file" #stampUploader [hidden]="true" (change)="onStampSelected($event)"
+               [accept]="stampExtensions.join(',')">
+        <div class="col-sm-12">
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <button class="btn btn-primary"
+                      (click)="openFileBrowser($event)">
+                {{lang.map.upload_stamp}}
+              </button>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <div class="stamp-container">
+                <img *ngIf="stampPath" [src]="stampPath" alt="{{lang.map.logo}}"
+                     class="img-fit-contain"/>
+                <button *ngIf="stampPath" class="btn icon-btn text-primary m-0 align-top"
+                        tooltip="{{lang.map.btn_remove}}"
+                        (click)="removeStamp($event)">
+                  <i class="mdi mdi-close-circle"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

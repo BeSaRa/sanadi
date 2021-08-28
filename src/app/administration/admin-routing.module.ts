@@ -12,6 +12,7 @@ import {ServiceDataComponent} from './pages/service-data/service-data.component'
 import {TeamComponent} from './pages/team/team.component';
 import {CountryComponent} from './pages/country/country.component';
 import {InternalUserComponent} from "./pages/internal-user/internal-user.component";
+import {InternalDepartmentComponent} from '@app/administration/pages/internal-department/internal-department.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -48,7 +49,8 @@ const routes: Routes = [
   {
     path: 'countries', component: CountryComponent
   },
-  {path: 'internal-users', component: InternalUserComponent}
+  {path: 'internal-users', component: InternalUserComponent},
+  {path: 'internal-departments', component: InternalDepartmentComponent}
 ];
 
 @NgModule({

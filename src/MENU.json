@@ -322,5 +322,18 @@
     "group": "administration",
     "itemOrder": 4,
     "svg": null
+  },
+  {
+    "id": 27,
+    "langKey": "menu_internal_department",
+    "path": "/home/administration/internal-departments",
+    "icon": "mdi-file-tree",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 8,
+    "svg": null
   }
 ]

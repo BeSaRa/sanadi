@@ -1,4 +1,12 @@
 export interface ILanguageKeys {
+  upload_stamp: string;
+  lbl_stamp: string;
+  msg_save_stamp_for_x_success: string;
+  lbl_team: string;
+  lbl_manager: string;
+  add_new_internal_department: string;
+  edit_internal_department: string;
+  menu_internal_department: string;
   edit_internal_user: string;
   add_new_internal_user: string;
   job_title: string;
