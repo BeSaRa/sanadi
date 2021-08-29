@@ -149,7 +149,9 @@ export class EmployeeService {
     this.teams.length ? this.permissions.push((new Permission().clone({
       permissionKey: 'TEAM_INBOX'
     }))) : null;
-
+    this.permissions.push((new Permission().clone({
+      permissionKey: 'NO_PERMISSION'
+    })))
     this.setUserData(loginData);
     this.preparePermissionMap();
   }

@@ -44,17 +44,18 @@ export abstract class EServiceGenericService<T extends { id: string }>
   abstract http: HttpClient;
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
-  abstract commentService: CommentService;
-  abstract recommendationService: RecommendationService;
-  abstract documentService: DocumentService;
-  abstract actionLogService: ActionLogService;
-  abstract searchService: SearchService;
   abstract interceptor: IModelInterceptor<T>;
   abstract serviceKey: keyof ILanguageKeys;
   abstract cfr: ComponentFactoryResolver;
   abstract caseStatusIconMap: Map<number, string>;
   abstract searchColumns: string[];
   abstract dynamicService: DynamicOptionsService;
+
+  commentService: CommentService = new CommentService(this);
+  recommendationService: RecommendationService = new RecommendationService(this);
+  documentService: DocumentService = new DocumentService(this);
+  actionLogService: ActionLogService = new ActionLogService(this);
+  searchService: SearchService = new SearchService(this);
 
   getCFR(): ComponentFactoryResolver {
     return this.cfr;

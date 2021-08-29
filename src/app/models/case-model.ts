@@ -16,8 +16,9 @@ import {OpenFrom} from '../enums/open-from.enum';
 import {EmployeeService} from '../services/employee.service';
 import {FactoryService} from '../services/factory.service';
 import {OperationTypes} from '../enums/operation-types.enum';
+import {ICaseModel} from "@app/interfaces/icase-model";
 
-export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> {
+export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;
@@ -33,7 +34,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   assignDate!: string;
   className!: string;
 
-  service!: S;
+  abstract service: S;
   employeeService: EmployeeService;
 
   protected constructor() {

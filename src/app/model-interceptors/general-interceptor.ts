@@ -5,6 +5,9 @@ export class GeneralInterceptor {
 
   static send(model: any): any {
     delete model.searchFields;
+    delete model.service;
+    delete model.employeeService;
+    delete model.langService;
     return model;
   }
 }

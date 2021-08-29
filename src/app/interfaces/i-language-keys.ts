@@ -7,6 +7,10 @@ export interface ILanguageKeys {
   add_new_internal_department: string;
   edit_internal_department: string;
   menu_internal_department: string;
+  special_explanations: string;
+  region: string;
+  license_number: string;
+  menu_initial_external_office_approval: string;
   edit_internal_user: string;
   add_new_internal_user: string;
   job_title: string;

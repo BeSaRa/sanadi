@@ -19,7 +19,7 @@
             </div>
           </div>
         </div>
-        <span class="flex-grow-1 sidebar-menu-item-text text-truncate"
+        <span [title]="item.getName()" class="flex-grow-1 sidebar-menu-item-text text-truncate"
               [innerHTML]="item.getName()|highlight:_searchText"></span>
       </a>
       <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"

@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CommentService} from '../../../services/comment.service';
+import {CommentService} from '@app/services/comment.service';
 import {interval, Subject} from 'rxjs';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
-import {CaseComment} from '../../../models/case-comment';
-import {DialogService} from '../../../services/dialog.service';
+import {CaseComment} from '@app/models/case-comment';
+import {DialogService} from '@app/services/dialog.service';
 import {CaseCommentPopupComponent} from '../../popups/case-comment-popup/case-comment-popup.component';
-import {EmployeeService} from '../../../services/employee.service';
+import {EmployeeService} from '@app/services/employee.service';
 import {CommentHistoryPopupComponent} from '../../popups/comment-history-popup/comment-history-popup.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule

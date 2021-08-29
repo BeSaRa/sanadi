@@ -1,5 +1,6 @@
 {
   "LANGUAGE": "admin/localization",
+  "INITIAL_OFFICE_APPROVAL": "/initialExternalOfficeApproval",
   "ATTACHMENT_TYPES": "admin/attachment-type",
   "ATTACHMENT_TYPES_SERVICE_DATA": "admin/attachment-type/service",
   "ATTACHMENT_TYPES_CUSTOM_PROPERTIES": "admin/attachment-type/custom-properties",

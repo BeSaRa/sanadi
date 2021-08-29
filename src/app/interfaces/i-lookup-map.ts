@@ -32,4 +32,5 @@ export interface ILookupMap {
   ConsultationCategory: Lookup[];
   InquiryStatus: Lookup[];
   ConsultationStatus: Lookup[];
+  ServiceRequestType: Lookup[]
 }

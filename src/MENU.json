@@ -335,5 +335,18 @@
     "group": "administration",
     "itemOrder": 8,
     "svg": null
+  },
+  {
+    "id": 29,
+    "langKey": "menu_initial_external_office_approval",
+    "path": "/home/e-services/initial-external-office-approval",
+    "icon": "mdi-account-box-multiple",
+    "isSvg": false,
+    "permission": "NO_PERMISSION",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "e-services",
+    "itemOrder": 4,
+    "svg": null
   }
 ]

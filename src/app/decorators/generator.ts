@@ -30,8 +30,8 @@ function _generateModel(data: any,
   } else {
     finalData = model ? Object.assign(new model(), data[property]) : data[property];
   }
-
-  return GeneralInterceptor.receive(receiveCallback ? receiveCallback(finalData) : finalData);
+  finalData = GeneralInterceptor.receive(finalData); // to run the general interceptor first before invoke special interceptor for the model.
+  return receiveCallback ? receiveCallback(finalData) : finalData;
 }
 
 function _generateCollection(collection: any, model: any, property?: string, receiveCallback?: any, instance?: any): any {
@@ -51,7 +51,7 @@ export function Generator(model?, isCollection = false, options?: { property?: s
     const original = descriptor.value;
     // tslint:disable-next-line:only-arrow-functions
     // @ts-ignore
-    descriptor.value = function(...args): any {
+    descriptor.value = function (...args): any {
       // @ts-ignore
       if (typeof this._getModel !== 'undefined') {
         // @ts-ignore
