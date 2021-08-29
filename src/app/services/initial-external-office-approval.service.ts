@@ -56,7 +56,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
     throw new Error('Method not implemented.');
   }
 
-  licenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria>): Observable<InitialApprovalDocument[]> {
+  licenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria> = {}): Observable<InitialApprovalDocument[]> {
     return this.licenseService.initialLicenseSearch(criteria);
   }
 }

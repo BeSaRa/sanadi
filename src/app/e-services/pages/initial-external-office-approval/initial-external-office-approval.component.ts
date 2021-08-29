@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormBuilder, AbstractControl} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
 import {Observable} from 'rxjs';
@@ -28,6 +28,11 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               private countryService: CountryService,
               public service: InitialExternalOfficeApprovalService) {
     super();
+    this.service.licenseSearch().subscribe((result) => console.log(result))
+  }
+
+  _getEmptyInstanceModel(): InitialExternalOfficeApproval {
+    return new InitialExternalOfficeApproval();
   }
 
   _initComponent(): void {

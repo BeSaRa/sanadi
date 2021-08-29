@@ -79,7 +79,7 @@
         <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
                 class="btn btn-primary">{{lang.map.btn_save}}</button>
         <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-                class="btn btn-success">{{lang.map.save_as_draft}}</button>
+                class="btn btn-warning">{{lang.map.save_as_draft}}</button>
         <button [disabled]="!model?.canCommit()" class="btn btn-primary">{{lang.map.launch}}</button>
         <button class="btn btn-secondary">{{lang.map.btn_reset}}</button>
       </div>

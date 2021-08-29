@@ -18,7 +18,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   readonly: boolean = false;
   allowEditRecommendations?: boolean | undefined;
   operation: OperationTypes = OperationTypes.CREATE;
-  modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(undefined);
+  modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getEmptyInstanceModel());
   destroy$: Subject<any> = new Subject<any>();
   model?: M
   abstract lang: LangService;
@@ -109,6 +109,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         this._resetForm();
       });
   }
+
+  abstract _getEmptyInstanceModel(): M;
 
   abstract _initComponent(): void;
 

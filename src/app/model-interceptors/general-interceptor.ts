@@ -8,6 +8,7 @@ export class GeneralInterceptor {
     delete model.service;
     delete model.employeeService;
     delete model.langService;
+    delete model.dialog;
     return model;
   }
 }
