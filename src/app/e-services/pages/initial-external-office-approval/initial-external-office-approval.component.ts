@@ -20,6 +20,7 @@ import {EmployeeService} from "@app/services/employee.service";
 import {SaveTypes} from "@app/enums/save-types";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ToastService} from "@app/services/toast.service";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -65,8 +66,13 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.setDefaultOrganization();
   }
 
-  _beforeSave(): boolean | Observable<boolean> {
-    return true;
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType !== SaveTypes.DRAFT && this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+      return false;
+    } else {
+      return true;
+    }
   }
 
   _prepareModel(): InitialExternalOfficeApproval | Observable<InitialExternalOfficeApproval> {
@@ -75,7 +81,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   _afterSave(model: InitialExternalOfficeApproval, saveType: SaveTypes, operation: OperationTypes) {
     this.model = model;
-    console.log(model, SaveTypes[saveType], OperationTypes[operation]);
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -164,7 +169,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   onRequestTypeUpdate() {
     // clear/disable the license number field if the request type is new
-    if (this.requestType.value === 1 || this.requestType.invalid) {
+    if (this.requestType.value === ServiceRequestTypes.NEW || this.requestType.invalid) {
       this.licenseNumber.reset();
       this.licenseNumber.disable();
       this.licenseNumber.setValidators([]);

@@ -14,6 +14,7 @@ import {CaseModel} from "@app/models/case-model";
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
   saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
+  launch$: Subject<null> = new Subject<null>();
   resetForm$: Subject<null> = new Subject<null>();
   fromDialog: boolean = false;
   readonly: boolean = false;
@@ -69,8 +70,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     this.save
       .pipe(
         // before save
-        switchMap(_ => {
-          const result = this._beforeSave();
+        switchMap(saveType => {
+          const result = this._beforeSave(saveType);
           return isObservable(result) ? result : of(result);
         }),
         // emit only if the beforeSave returned true
@@ -123,7 +124,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   abstract _buildForm(): void;
 
-  abstract _beforeSave(): boolean | Observable<boolean>;
+  abstract _beforeSave(saveType: SaveTypes): boolean | Observable<boolean>;
 
   abstract _prepareModel(): M | Observable<M>;
 
