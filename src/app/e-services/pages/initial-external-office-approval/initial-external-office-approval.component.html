@@ -7,6 +7,22 @@
       <div class="row mb-3">
         <div class="col-md-6 col-sm-12">
           <div class="row">
+            <label asteriskIfRequired="organizationId"
+                   class="col-form-label col-md-4 col-sm-12"
+                   for="organizationId">{{lang.map.lbl_organization}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <ng-select validationClasses="organizationId" appendTo="body" [clearable]="true" id="organizationId"
+                         formControlName="organizationId">
+                <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="organizationId"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div><!-- row -->
+      <div class="row mb-3">
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
             <label asteriskIfRequired="requestType"
                    class="col-form-label col-md-4 col-sm-12"
                    for="requestType">{{lang.map.request_type}}</label>
@@ -25,9 +41,15 @@
             <label asteriskIfRequired="licenseNumber" class="col-form-label col-md-4 col-sm-12"
                    for="licenseNumber">{{lang.map.license_number}}</label>
             <div class="col-md-8 col-sm-12 mb-position-relative">
-              <input formControlName="licenseNumber" type="text"
-                     validationClasses="licenseNumber" class="form-control"
-                     id="licenseNumber">
+              <div class="input-group">
+                <button [disabled]="licenseNumber.disabled" type="button" (click)="licenseSearch()"
+                        class="input-group-text"><i
+                  class="mdi mdi-file-search text-primary"></i></button>
+                <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
+                       type="text"
+                       validationClasses="licenseNumber" class="form-control"
+                       id="licenseNumber">
+              </div>
               <app-field-error-message controlName="licenseNumber"></app-field-error-message>
             </div>
           </div>
@@ -77,11 +99,11 @@
       </div>
       <div class="d-flex align-items-center justify-content-center gap-2">
         <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
-                class="btn btn-primary">{{lang.map.btn_save}}</button>
+                class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
         <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-                class="btn btn-warning">{{lang.map.save_as_draft}}</button>
+                class="btn shadow-sm btn-warning">{{lang.map.save_as_draft}}</button>
         <button [disabled]="!model?.canCommit()" class="btn btn-primary">{{lang.map.launch}}</button>
-        <button class="btn btn-secondary">{{lang.map.btn_reset}}</button>
+        <button class="btn shadow-sm btn-secondary">{{lang.map.btn_reset}}</button>
       </div>
     </form>
   </div>

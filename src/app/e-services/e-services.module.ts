@@ -11,6 +11,7 @@ import {ConsultationComponent} from './pages/consultation-container/consultation
 import {InternationalCooperationContainerComponent} from './pages/international-cooperation-container/international-cooperation-container.component';
 import {InternationalCooperationComponent} from './pages/international-cooperation-container/international-cooperation/international-cooperation.component';
 import {InitialExternalOfficeApprovalComponent} from './pages/initial-external-office-approval/initial-external-office-approval.component';
+import { SelectLicensePopupComponent } from './poups/select-license-popup/select-license-popup.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {InitialExternalOfficeApprovalComponent} from './pages/initial-external-o
     ConsultationComponent,
     InternationalCooperationContainerComponent,
     InternationalCooperationComponent,
-    InitialExternalOfficeApprovalComponent
+    InitialExternalOfficeApprovalComponent,
+    SelectLicensePopupComponent
   ],
   imports: [
     CommonModule,

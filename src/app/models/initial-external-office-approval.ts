@@ -39,9 +39,10 @@ export class InitialExternalOfficeApproval extends CaseModel<InitialExternalOffi
   }
 
   buildForm(controls?: boolean): any {
-    const {requestType, licenseNumber, country, region, description} = this;
+    const {requestType, licenseNumber, country, region, description, organizationId} = this;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
+      organizationId: controls ? [organizationId, [CustomValidators.required]] : organizationId,
       licenseNumber: controls ? [licenseNumber, []] : licenseNumber,
       country: controls ? [country, [CustomValidators.required]] : country,
       region: controls ? [region, [CustomValidators.required]] : region,

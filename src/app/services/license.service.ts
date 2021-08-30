@@ -8,13 +8,19 @@ import {Generator} from "@app/decorators/generator";
 import {InitialApprovalDocSearchCriteria} from "@app/models/initial-approval-doc-search-criteria";
 import {EmployeeService} from "@app/services/employee.service";
 import {InitialApprovalDocumentInterceptor} from "@app/model-interceptors/initial-approval-document-interceptor";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {DialogService} from "@app/services/dialog.service";
+import {SelectLicensePopupComponent} from "@app/e-services/poups/select-license-popup/select-license-popup.component";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LicenseService {
 
-  constructor(private http: HttpClient, public urlService: UrlService, private employeeService: EmployeeService) {
+  constructor(private http: HttpClient,
+              public urlService: UrlService,
+              private dialog: DialogService,
+              private employeeService: EmployeeService) {
     FactoryService.registerService('LicenseService', this);
   }
 
@@ -31,4 +37,7 @@ export class LicenseService {
     return this._initialLicenseSearch(criteria);
   }
 
+  openSelectLicenseDialog(licenses: InitialApprovalDocument[]): DialogRef {
+    return this.dialog.show(SelectLicensePopupComponent, licenses);
+  }
 }

@@ -4,10 +4,11 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {IESComponent} from "@app/interfaces/iescomponent";
 import {BehaviorSubject, isObservable, Observable, of, Subject} from "rxjs";
-import {catchError, exhaustMap, filter, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
 import {ICaseModel} from "@app/interfaces/icase-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
+import {CaseModel} from "@app/models/case-model";
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
@@ -17,8 +18,9 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   fromDialog: boolean = false;
   readonly: boolean = false;
   allowEditRecommendations?: boolean | undefined;
+  operationTypes: typeof OperationTypes = OperationTypes;
   operation: OperationTypes = OperationTypes.CREATE;
-  modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getEmptyInstanceModel());
+  modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
   destroy$: Subject<any> = new Subject<any>();
   model?: M
   abstract lang: LangService;
@@ -50,14 +52,17 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   @Input()
   set outModel(model: M | undefined) {
     this.modelChange$.next(model);
+    this.operation = OperationTypes.UPDATE;
   }
 
   get outModel(): M | undefined {
     return this.modelChange$.value;
   }
 
-  _saveModel(model: M, saveType: SaveTypes): Observable<M> {
-    return model[this.saveMethods[saveType]]();
+  _saveModel(model: M, saveType: SaveTypes): Observable<{ saveType: SaveTypes, model: M }> {
+    const modelInstance = model as unknown as CaseModel<any, any>;
+    const type = (!modelInstance.canSave() && saveType === SaveTypes.FINAL) ? SaveTypes.COMMIT : saveType;
+    return model[this.saveMethods[type]]().pipe(map(m => ({saveType: type, model: m})));
   }
 
   _listenToSave(): void {
@@ -82,15 +87,16 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           return this._saveModel(model, saveType).pipe(catchError(error => {
             // handle the errors came from backend
             this._saveFail(error);
-            return of(null);
+            return of({saveType: saveType, model: null});
           }))
         }),
         // allow only success save
-        filter((model: M | null): model is M => !!model)
+        filter((model: { saveType: SaveTypes, model: M | null }): model is { saveType: SaveTypes, model: M } => !!model.model)
       )
       .pipe(takeUntil(this.destroy$))
-      .subscribe((model) => {
-        this._afterSave(model)
+      .subscribe((result) => {
+        this._afterSave(result.model, result.saveType, this.operation)
+        this.operation = OperationTypes.UPDATE;
       })
   }
 
@@ -106,11 +112,12 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     this.resetForm$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.operation = OperationTypes.CREATE;
         this._resetForm();
       });
   }
 
-  abstract _getEmptyInstanceModel(): M;
+  abstract _getNewInstance(): M;
 
   abstract _initComponent(): void;
 
@@ -120,13 +127,13 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   abstract _prepareModel(): M | Observable<M>;
 
-  abstract _afterSave(model: M): void;
+  abstract _afterSave(model: M, saveType: SaveTypes, operation: OperationTypes): void;
 
   abstract _saveFail(error: any): void;
 
   abstract _destroyComponent(): void;
 
-  abstract _updateForm(model: M): void;
+  abstract _updateForm(model: M | undefined): void;
 
   abstract _resetForm(): void;
 }

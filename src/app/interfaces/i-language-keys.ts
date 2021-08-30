@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  license_status: string;
+  office_english_name: string;
+  office_arabic_name: string;
+  license_end_date: string;
+  select_license: string;
+  need_license_number_to_search: string;
   upload_stamp: string;
   lbl_stamp: string;
   msg_save_stamp_for_x_success: string;

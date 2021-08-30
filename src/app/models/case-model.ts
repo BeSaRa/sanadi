@@ -71,7 +71,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   }
 
   canSave(): boolean {
-    return this.caseStatus >= CaseStatus.CREATED;
+    return !this.caseStatus || this.caseStatus >= CaseStatus.CREATED;
   }
 
   canCommit(): boolean {
