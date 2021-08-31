@@ -46,6 +46,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   ngOnInit(): void {
     this._initComponent();
     this._buildForm();
+    this._afterBuildForm();
     this._listenToSave();
     this._listenToModelChange();
     this._listenToResetForm();
@@ -155,6 +156,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   abstract _initComponent(): void;
 
   abstract _buildForm(): void;
+
+  abstract _afterBuildForm(): void;
 
   abstract _beforeSave(saveType: SaveTypes): boolean | Observable<boolean>;
 

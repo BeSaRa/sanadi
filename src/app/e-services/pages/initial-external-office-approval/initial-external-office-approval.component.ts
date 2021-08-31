@@ -28,6 +28,7 @@ import {ServiceRequestTypes} from "@app/enums/service-request-types";
   styleUrls: ['./initial-external-office-approval.component.scss']
 })
 export class InitialExternalOfficeApprovalComponent extends EServicesGenericComponent<InitialExternalOfficeApproval, InitialExternalOfficeApprovalService> {
+
   form!: FormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = []
@@ -62,6 +63,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   _buildForm(): void {
     this.form = this.fb.group((new InitialExternalOfficeApproval()).buildForm(true));
+  }
+
+  _afterBuildForm(): void {
     this.onRequestTypeUpdate();
     this.setDefaultOrganization();
   }
