@@ -109,6 +109,19 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.setDefaultOrganization();
   }
 
+  _beforeLaunch(): boolean | Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  _afterLaunch(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  _launchFail(error: any): void {
+    throw new Error('Method not implemented.');
+  }
+
+
   // start custom implementations
   get organizationId(): AbstractControl {
     return this.form.get('organizationId')!;
@@ -176,7 +189,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       this.setSelectedLicense(undefined);
     } else {
       this.licenseNumber.enable();
-      this.licenseNumber.setValidators([CustomValidators.required]);
+      this.licenseNumber.setValidators([CustomValidators.required, (control) => {
+        return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+      }]);
     }
     this.licenseNumber.updateValueAndValidity({emitEvent: false})
   }
@@ -210,11 +225,13 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     // update form fields if i have license
     if (license) {
       this._updateForm((new InitialExternalOfficeApproval()).clone({
+        organizationId: license.organizationId,
         requestType: this.requestType.value,
         licenseNumber: license.licenseNumber,
         country: license.country,
         region: license.region
       }))
+      this.loadRegions(license.country);
     }
   }
 
@@ -240,4 +257,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       })
   }
 
+  viewLicense(): void {
+    if (!this.selectedLicense)
+      return;
+
+    this.licenseService.openSelectLicenseDialog([this.selectedLicense], false)
+  }
 }

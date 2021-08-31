@@ -37,7 +37,10 @@ export class LicenseService {
     return this._initialLicenseSearch(criteria);
   }
 
-  openSelectLicenseDialog(licenses: InitialApprovalDocument[]): DialogRef {
-    return this.dialog.show(SelectLicensePopupComponent, licenses);
+  openSelectLicenseDialog(licenses: InitialApprovalDocument[], select = true): DialogRef {
+    return this.dialog.show(SelectLicensePopupComponent, {
+      licenses,
+      select
+    });
   }
 }

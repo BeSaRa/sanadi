@@ -1,11 +1,11 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{lang.map.select_license}}</h1>
+  <h1 class="h6 text-white">{{lang.map[label]}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
   <app-table #table
-             [data]="list"
+             [data]="data.licenses"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
       <ng-container cdkColumnDef="arName">

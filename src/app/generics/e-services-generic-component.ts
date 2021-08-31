@@ -9,6 +9,7 @@ import {ICaseModel} from "@app/interfaces/icase-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
 import {CaseModel} from "@app/models/case-model";
+import {CaseStatus} from "@app/enums/case-status.enum";
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
@@ -48,6 +49,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     this._listenToSave();
     this._listenToModelChange();
     this._listenToResetForm();
+    this._listenToLaunch();
   }
 
   @Input()
@@ -123,6 +125,31 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       });
   }
 
+  _listenToLaunch() {
+    this.launch$
+      .pipe(
+        switchMap(_ => {
+          const result = this._beforeLaunch();
+          return isObservable(result) ? result : of(result)
+        }),
+        exhaustMap(_ => {
+          const model = this.model as unknown as CaseModel<any, any>
+          return model.start().pipe(catchError(error => {
+            this._launchFail(error);
+            return of(false);
+          }));
+        }),
+        filter<boolean | null, boolean>((value): value is boolean => {
+          return !!value;
+        }),
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        (this.model as unknown as CaseModel<any, any>).caseStatus = CaseStatus.STARTED;
+        this._afterLaunch();
+      })
+  }
+
   abstract _getNewInstance(): M;
 
   abstract _initComponent(): void;
@@ -131,15 +158,22 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   abstract _beforeSave(saveType: SaveTypes): boolean | Observable<boolean>;
 
+  abstract _beforeLaunch(): boolean | Observable<boolean>;
+
+  abstract _afterLaunch(): void ;
+
   abstract _prepareModel(): M | Observable<M>;
 
   abstract _afterSave(model: M, saveType: SaveTypes, operation: OperationTypes): void;
 
   abstract _saveFail(error: any): void;
 
+  abstract _launchFail(error: any): void;
+
   abstract _destroyComponent(): void;
 
   abstract _updateForm(model: M | undefined): void;
 
   abstract _resetForm(): void;
+
 }
