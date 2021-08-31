@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  view_license: string;
   license: string;
   please_select_license_to_complete_save: string;
   license_status: string;

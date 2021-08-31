@@ -68,6 +68,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   _afterBuildForm(): void {
     this.onRequestTypeUpdate();
     this.setDefaultOrganization();
+
+    if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
+      this.loadSelectedLicense(this.model?.licenseNumber!);
+    }
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -119,9 +123,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   _afterLaunch(): void {
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
-    if (this.fromDialog) {
-
-    }
   }
 
   _launchFail(error: any): void {

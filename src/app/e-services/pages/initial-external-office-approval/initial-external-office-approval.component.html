@@ -12,7 +12,8 @@
                      class="col-form-label col-md-4 col-sm-12"
                      for="organizationId">{{lang.map.lbl_organization}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" validationClasses="organizationId" appendTo="body" [clearable]="true" id="organizationId"
+                <ng-select [readonly]="readonly" validationClasses="organizationId" appendTo="body" [clearable]="true"
+                           id="organizationId"
                            formControlName="organizationId">
                   <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
                 </ng-select>
@@ -28,7 +29,8 @@
                      class="col-form-label col-md-4 col-sm-12"
                      for="requestType">{{lang.map.request_type}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()" validationClasses="requestType" appendTo="body"
+                <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()" validationClasses="requestType"
+                           appendTo="body"
                            [clearable]="true" id="requestType"
                            formControlName="requestType">
                   <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
@@ -50,9 +52,9 @@
                          type="text"
                          validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"
                          id="licenseNumber">
-                  <button [disabled]="licenseNumber.disabled" type="button" (click)="viewLicense()"
-                          class="input-group-text"><i
-                    class="mdi mdi-eye text-primary"></i></button>
+                  <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
+                     class="input-group-text"><i
+                    class="mdi mdi-eye text-primary"></i></a>
                 </div>
                 <app-field-error-message controlName="licenseNumber"></app-field-error-message>
               </div>
@@ -83,7 +85,8 @@
                      class="col-form-label col-md-4 col-sm-12"
                      for="region">{{lang.map.region}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" validationClasses="region" appendTo="body" [clearable]="true" id="region"
+                <ng-select [readonly]="readonly" validationClasses="region" appendTo="body" [clearable]="true"
+                           id="region"
                            formControlName="region">
                   <ng-option [value]="region.id" *ngFor="let region of regions">{{region.getName()}}</ng-option>
                 </ng-select>

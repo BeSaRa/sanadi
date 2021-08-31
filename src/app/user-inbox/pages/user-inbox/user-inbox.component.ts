@@ -322,7 +322,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     try {
       serviceKey = this.inboxService.getService(service).serviceKey;
     } catch (e) {
-      console.error(`Please register your service inside the inboxService with number {${service}}`)
+      console.log(service);
       return "";
     }
     return this.lang.getLocalByKey(serviceKey).getName();

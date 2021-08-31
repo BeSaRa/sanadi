@@ -55,7 +55,6 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   @Input()
   set outModel(model: M | undefined) {
-    console.log('emit');
     this.operation = OperationTypes.UPDATE;
     this.modelChange$.next(model);
   }
