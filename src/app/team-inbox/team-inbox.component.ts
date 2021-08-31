@@ -287,7 +287,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         label: 'release_task',
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           },
           hideFromContext: true,
         },
@@ -302,7 +302,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -320,7 +320,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -338,12 +338,12 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
 
         },
         show: (item: QueryResult) => {
-          return !item.RESPONSES.length;
+          return !item.RESPONSES.length || item.RESPONSES.includes(WFResponseType.COMPLETE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionComplete(item, viewDialogRef);
@@ -357,7 +357,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -375,7 +375,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -393,7 +393,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -411,7 +411,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {
@@ -429,7 +429,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },
         show: (item: QueryResult) => {

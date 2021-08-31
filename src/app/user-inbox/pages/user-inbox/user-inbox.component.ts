@@ -207,7 +207,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         label: 'release_task',
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) === -1;
+            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           },
           hideFromContext: true,
         },
@@ -220,7 +220,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_COMPETENT_DEPARTMENT) !== -1;
+          return item.RESPONSES.includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDepartment(item, viewDialogRef);
@@ -232,7 +232,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_USER) !== -1;
+          return item.RESPONSES.includes(WFResponseType.TO_USER);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
@@ -256,7 +256,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-check-bold',
         label: 'approve_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
+          return item.RESPONSES.includes(WFResponseType.APPROVE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
@@ -268,7 +268,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-undo-variant',
         label: 'return_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.RETURN) !== -1;
+          return item.RESPONSES.includes(WFResponseType.RETURN);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReturn(item, viewDialogRef);
@@ -280,7 +280,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.REJECT) !== -1;
+          return item.RESPONSES.includes(WFResponseType.REJECT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReject(item, viewDialogRef);
@@ -292,7 +292,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-close-circle-outline',
         label: 'close_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.CLOSE) !== -1;
+          return item.RESPONSES.includes(WFResponseType.CLOSE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
@@ -304,7 +304,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
+          return item.RESPONSES.includes(WFResponseType.TO_MANAGER);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
