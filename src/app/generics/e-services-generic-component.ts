@@ -4,7 +4,7 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {IESComponent} from "@app/interfaces/iescomponent";
 import {BehaviorSubject, isObservable, Observable, of, Subject} from "rxjs";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, skip, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
 import {ICaseModel} from "@app/interfaces/icase-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
@@ -52,8 +52,9 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   @Input()
   set outModel(model: M | undefined) {
-    this.modelChange$.next(model);
+    console.log('emit');
     this.operation = OperationTypes.UPDATE;
+    this.modelChange$.next(model);
   }
 
   get outModel(): M | undefined {
@@ -104,6 +105,10 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _listenToModelChange(): void {
     this.modelChange$
       .pipe(takeUntil(this.destroy$))
+      .pipe(tap(model => this.operation === OperationTypes.CREATE ? this.model = model : null))
+      .pipe(switchMap(model => {
+        return this.operation === OperationTypes.UPDATE ? of(model) : of(model).pipe(skip(1));
+      }))
       .subscribe((model) => {
         model && this._updateForm(model);
       })
