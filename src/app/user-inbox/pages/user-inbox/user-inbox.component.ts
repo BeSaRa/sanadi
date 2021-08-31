@@ -3,7 +3,6 @@ import {LangService} from '@app/services/lang.service';
 import {InboxService} from '@app/services/inbox.service';
 import {QueryResultSet} from '@app/models/query-result-set';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
-import {EServiceListService} from '@app/services/e-service-list.service';
 import {QueryResult} from '@app/models/query-result';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
@@ -15,6 +14,7 @@ import {FormControl} from '@angular/forms';
 import {EmployeeService} from '@app/services/employee.service';
 import {CaseModel} from '@app/models/case-model';
 import {WFActions} from '@app/enums/wfactions.enum';
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 @Component({
   selector: 'app-user-inbox',
@@ -32,7 +32,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toast: ToastService,
               private employeeService: EmployeeService,
-              public eService: EServiceListService,
               private inboxService: InboxService) {
 
   }
@@ -316,5 +315,16 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   displayStepName(row: QueryResult) {
     return this.lang.map[row.TAD_DISPLAY_NAME];
+  }
+
+  getServiceName(service: number) {
+    let serviceKey: keyof ILanguageKeys;
+    try {
+      serviceKey = this.inboxService.getService(service).serviceKey;
+    } catch (e) {
+      console.error(`Please register your service inside the inboxService with number {${service}}`)
+      return "";
+    }
+    return this.lang.getLocalByKey(serviceKey).getName();
   }
 }

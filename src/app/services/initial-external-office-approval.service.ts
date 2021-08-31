@@ -14,6 +14,7 @@ import {LicenseService} from "@app/services/license.service";
 import {InitialApprovalDocSearchCriteria} from "@app/models/initial-approval-doc-search-criteria";
 import {Observable} from "rxjs";
 import {InitialApprovalDocument} from "@app/models/initial-approval-document";
+import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
   }
 
   getCaseComponentName(): string {
-    throw new Error('Method not implemented.');
+    return 'InitialExternalOfficeApprovalComponent';
   }
 
   licenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria> = {}): Observable<InitialApprovalDocument[]> {

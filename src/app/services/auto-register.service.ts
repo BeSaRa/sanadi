@@ -4,6 +4,7 @@ import {InquiryComponent} from '../e-services/pages/inquiry-container/inquiry/in
 import {ConsultationComponent} from '../e-services/pages/consultation-container/consultation/consultation.component';
 import {InternationalCooperationComponent} from '../e-services/pages/international-cooperation-container/international-cooperation/international-cooperation.component';
 import {TeamService} from './team.service';
+import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('InquiryComponent', InquiryComponent);
       DynamicComponentService.registerComponent('ConsultationComponent', ConsultationComponent);
       DynamicComponentService.registerComponent('InternationalCooperationComponent', InternationalCooperationComponent);
+      DynamicComponentService.registerComponent('InitialExternalOfficeApprovalComponent', InitialExternalOfficeApprovalComponent);
 
     });// just to make sure that service constructed and register all dynamic components
   }

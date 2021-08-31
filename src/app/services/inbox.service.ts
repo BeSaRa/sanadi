@@ -23,6 +23,7 @@ import {ConsultationService} from './consultation.service';
 import {InternationalCooperationService} from './international-cooperation.service';
 import {CaseTypes} from '../enums/case-types.enum';
 import {ExceptionHandlerService} from './exception-handler.service';
+import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class InboxService {
               private inquiryService: InquiryService,
               private consultationService: ConsultationService,
               private internationalCooperationService: InternationalCooperationService,
+              private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
               private cfr: ComponentFactoryResolver,
               private exceptionHandlerService: ExceptionHandlerService,
               private urlService: UrlService) {
@@ -43,6 +45,7 @@ export class InboxService {
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
     this.services.set(CaseTypes.CONSULTATION, this.consultationService);
     this.services.set(CaseTypes.INTERNATIONAL_COOPERATION, this.internationalCooperationService);
+    this.services.set(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL, this.initialExternalOfficeApprovalService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

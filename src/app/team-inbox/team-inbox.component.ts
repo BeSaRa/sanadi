@@ -6,7 +6,6 @@ import {Team} from '../models/team';
 import {EmployeeService} from '../services/employee.service';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {FormControl} from '@angular/forms';
-import {EServiceListService} from '../services/e-service-list.service';
 import {QueryResult} from '../models/query-result';
 import {InboxService} from '../services/inbox.service';
 import {ToastService} from '../services/toast.service';
@@ -17,6 +16,7 @@ import {OpenFrom} from '../enums/open-from.enum';
 import {CaseModel} from '../models/case-model';
 import {WFActions} from '../enums/wfactions.enum';
 import {IESComponent} from '../interfaces/iescomponent';
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 @Component({
   selector: 'team-inbox',
@@ -37,7 +37,6 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toast: ToastService,
               private inboxService: InboxService,
-              public eService: EServiceListService,
               public employeeService: EmployeeService) {
   }
 
@@ -445,5 +444,16 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
 
   displayStepName(row: QueryResult) {
     return this.lang.map[row.TAD_DISPLAY_NAME];
+  }
+
+  getServiceName(service: number) {
+    let serviceKey: keyof ILanguageKeys;
+    try {
+      serviceKey = this.inboxService.getService(service).serviceKey;
+    } catch (e) {
+      console.error(`Please register your service inside the inboxService with number {${service}}`)
+      return "";
+    }
+    return this.lang.getLocalByKey(serviceKey).getName();
   }
 }

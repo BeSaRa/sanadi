@@ -110,15 +110,18 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    return !!this.model && this.form.valid && this.model.canStart();
   }
 
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
+    if (this.fromDialog) {
+
+    }
   }
 
   _launchFail(error: any): void {
-    throw new Error('Method not implemented.');
+    console.log(error);
   }
 
 

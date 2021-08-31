@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {LangService} from '../services/lang.service';
-import {EServiceListService} from '../services/e-service-list.service';
 import {InboxService} from '../services/inbox.service';
 import {Subject} from 'rxjs';
 import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
@@ -16,6 +15,7 @@ import {OpenFrom} from '../enums/open-from.enum';
 import {TabComponent} from '../shared/components/tab/tab.component';
 import {EmployeeService} from '../services/employee.service';
 import {CaseTypes} from '../enums/case-types.enum';
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 @Component({
   selector: 'services-search',
@@ -33,7 +33,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   searchColumns: string[] = [];
   form!: FormGroup;
   fields: FormlyFieldConfig[] = [];
-  serviceNumbers: number[] = Array.from(this.eService.services.keys()).filter((number: number) => this.filterServices(number));
+  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.filterServices(caseType));
   serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -49,8 +49,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private inboxService: InboxService,
               private employeeService: EmployeeService,
-              private dialog: DialogService,
-              public eService: EServiceListService) {
+              private dialog: DialogService) {
   }
 
   ngOnDestroy(): void {
@@ -246,7 +245,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   getServiceName(service: number) {
-    return this.eService.services.get(service)!.getName();
+    let serviceKey: keyof ILanguageKeys;
+    try {
+      serviceKey = this.inboxService.getService(service).serviceKey;
+    } catch (e) {
+      console.error(`Please register your service inside the inboxService with number {${service}}`)
+      return "";
+    }
+    return this.lang.getLocalByKey(serviceKey).getName();
   }
 
   resetCriteria() {
