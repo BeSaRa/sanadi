@@ -45,5 +45,6 @@
   "INTERNAL_USER": "/admin/internal/user",
   "INTERNAL_DEPARTMENT": "admin/internal/department",
   "SERVICE_DATA": "admin/services",
+  "SERVICE_DATA_2": "admin/services/2",
   "SERVICE_DATA_10": "admin/services/10"
 }
