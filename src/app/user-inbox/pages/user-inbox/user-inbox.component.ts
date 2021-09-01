@@ -207,7 +207,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         label: 'release_task',
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
+            return loadedModel.taskDetails.actions && !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           },
           hideFromContext: true,
         },
