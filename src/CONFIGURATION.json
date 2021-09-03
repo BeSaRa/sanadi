@@ -76,5 +76,20 @@
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
+  ],
+  "E_SERVICES_DENIED_USERS_INTERNAL": [
+    "RMANAGER",
+    "CMANAGER",
+    "CRMANAGER",
+    "Ruser1",
+    "Ruser2",
+    "Cuser1",
+    "Cuser2",
+    "CRuser1",
+    "CRuser2"
+  ],
+  "E_SERVICES_DENIED_USERS_EXTERNAL": [
+    "15000000000",
+    "16000000000"
   ]
 }

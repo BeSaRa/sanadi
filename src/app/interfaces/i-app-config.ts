@@ -23,4 +23,6 @@ export interface IAppConfig {
   ATTACHMENT_EXTENSIONS: string[];
   ALLOWED_FILE_TYPES_TO_UPLOAD: string[];
   E_SERVICES_LIST: Record<number, string>;
+  E_SERVICES_DENIED_USERS_INTERNAL: string[];
+  E_SERVICES_DENIED_USERS_EXTERNAL: string[];
 }

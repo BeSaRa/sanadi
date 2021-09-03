@@ -10,6 +10,7 @@ import {UserTypes} from '../enums/user-types.enum';
 import {InternalUser} from '../models/internal-user';
 import {InternalDepartment} from '../models/internal-department';
 import {Team} from '../models/team';
+import {ConfigurationService} from '@app/services/configuration.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class EmployeeService {
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
 
-  constructor() {
+  constructor(private configService: ConfigurationService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -149,11 +150,28 @@ export class EmployeeService {
     this.teams.length ? this.permissions.push((new Permission().clone({
       permissionKey: 'TEAM_INBOX'
     }))) : null;
-    this.permissions.push((new Permission().clone({
+    /*this.permissions.push((new Permission().clone({
       permissionKey: 'NO_PERMISSION'
-    })))
+    })))*/
     this.setUserData(loginData);
+    this.restrictUserFromEServices(loginData);
     this.preparePermissionMap();
+  }
+
+  private restrictUserFromEServices(loginData: ILoginData) {
+    // if user name is not in denied users list, add NO_PERMISSION to allow access to e-services
+    let deniedUsersList: string[] = [];
+    if (this.isExternalUser()) {
+      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_EXTERNAL;
+    } else if (this.isInternalUser()) {
+      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_EXTERNAL;
+    }
+    // @ts-ignore
+    if (deniedUsersList.indexOf(this.getUser()?.domainName) === -1) {
+      this.permissions?.push((new Permission().clone({
+        permissionKey: 'NO_PERMISSION'
+      })))
+    }
   }
 
   private setUserData(loginData: ILoginData) {
