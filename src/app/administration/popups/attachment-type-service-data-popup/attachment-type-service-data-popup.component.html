@@ -33,6 +33,7 @@
           [clearable]="false"
           placeholder="{{lang.map.select}}" id="userType"
           formControlName="userType"
+          appendTo="Body"
           [ngClass]="fm.getStatusClass('userType')">
           <ng-option *ngFor="let option of attachmentTypeUsersList" [value]="option.lookupKey">
             {{option.getName()}}
