@@ -31,7 +31,7 @@ export enum LookupCategories {
   ATTACHMENT_TYPE = 'ATTACHMENT_TYPE',
   CONSULTATION_CATEGORY = 'ConsultationCategory',
   COMMON_STATUS = 'CommonStatus',
-  ATTACHMENT_TYPE_USERS = 'UserType',
+  USER_TYPES = 'UserType',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -65,5 +65,5 @@ export enum LookupCategories {
   ATTACHMENT_TYPE_CAT_ID = '39',
   CONSULTATION_CATEGORY_CAT_ID = '102',
   COMMON_STATUS_CAT_ID = '109',
-  ATTACHMENT_TYPE_USERS_CAT_ID = '114'
+  USER_TYPES_CAT_ID = '114'
 }

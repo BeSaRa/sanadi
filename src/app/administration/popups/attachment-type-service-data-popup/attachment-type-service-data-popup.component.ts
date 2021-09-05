@@ -1,24 +1,24 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {AttachmentTypeServiceData} from '../../../models/attachment-type-service-data';
+import {LangService} from '@app/services/lang.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
+import {FormManager} from '@app/models/form-manager';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ServiceDataService} from '../../../services/service-data.service';
-import {ServiceData} from '../../../models/service-data';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {LookupService} from '../../../services/lookup.service';
-import {Lookup} from '../../../models/lookup';
-import {ToastService} from '../../../services/toast.service';
-import {AttachmentTypeServiceDataService} from '../../../services/attachment-type-service-data.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {CustomProperty} from '../../../models/custom-property';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {ServiceData} from '@app/models/service-data';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {ToastService} from '@app/services/toast.service';
+import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CustomProperty} from '@app/models/custom-property';
 
 @Component({
   selector: 'attachment-type-service-data-popup',
@@ -54,7 +54,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.operation = data.operation;
     this.model = data.model;
     this.attachmentTypeId = data.attachmentTypeId;
-    this.attachmentTypeUsersList = lookupService.getByCategory(LookupCategories.ATTACHMENT_TYPE_USERS);
+    this.attachmentTypeUsersList = lookupService.getByCategory(LookupCategories.USER_TYPES);
   }
 
   ngOnInit(): void {

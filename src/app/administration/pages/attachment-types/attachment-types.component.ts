@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {Subscription} from 'rxjs';
-import {AttachmentType} from '../../../models/attachment-type';
-import {AttachmentTypeService} from '../../../services/attachment-type.service';
+import {AttachmentType} from '@app/models/attachment-type';
+import {AttachmentTypeService} from '@app/services/attachment-type.service';
 import {FormControl} from '@angular/forms';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogService} from '../../../services/dialog.service';
-import {SharedService} from '../../../services/shared.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
 import {cloneDeep as _deepClone} from 'lodash';
-import {ToastService} from '../../../services/toast.service';
+import {ToastService} from '@app/services/toast.service';
 
 @Component({
   selector: 'attachment-types',
@@ -87,7 +87,7 @@ export class AttachmentTypesComponent implements OnInit {
   }
 
   load() {
-    this.attachmentTypeService.load().subscribe(data => {
+    this.attachmentTypeService.loadComposite().subscribe(data => {
       this.list = data;
     });
   }

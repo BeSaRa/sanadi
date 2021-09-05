@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  lbl_add_job_title: string;
+  lbl_edit_job_title: string;
+  menu_job_title: string;
   view_license: string;
   license: string;
   please_select_license_to_complete_save: string;

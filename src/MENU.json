@@ -348,5 +348,18 @@
     "group": "e-services",
     "itemOrder": 4,
     "svg": null
+  },
+  {
+    "id": 30,
+    "langKey": "menu_job_title",
+    "path": "/home/administration/job-titles",
+    "icon": "mdi-badge-account-horizontal-outline",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 9,
+    "svg": null
   }
 ]

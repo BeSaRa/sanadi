@@ -13,6 +13,7 @@ import {TeamComponent} from './pages/team/team.component';
 import {CountryComponent} from './pages/country/country.component';
 import {InternalUserComponent} from "./pages/internal-user/internal-user.component";
 import {InternalDepartmentComponent} from '@app/administration/pages/internal-department/internal-department.component';
+import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -50,7 +51,8 @@ const routes: Routes = [
     path: 'countries', component: CountryComponent
   },
   {path: 'internal-users', component: InternalUserComponent},
-  {path: 'internal-departments', component: InternalDepartmentComponent}
+  {path: 'internal-departments', component: InternalDepartmentComponent},
+  {path: 'job-titles', component: JobTitleComponent}
 ];
 
 @NgModule({

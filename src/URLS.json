@@ -1,4 +1,5 @@
 {
+  "JOB_TITLE": "admin/job-title",
   "LANGUAGE": "admin/localization",
   "INITIAL_OFFICE_APPROVAL": "/initialExternalOfficeApproval",
   "ATTACHMENT_TYPES": "admin/attachment-type",
