@@ -8,6 +8,10 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 export class FilterRetiredStatusPipe implements PipeTransform {
 
   transform(value: Lookup[]): Lookup[] {
+    if(!value || value.length === 0) {
+      return value;
+    }
+
     return value.filter(model => {
       return model.lookupKey !== CommonStatusEnum.RETIRED;
     });
