@@ -11,6 +11,8 @@ import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
 import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
+import {map} from 'rxjs/operators';
+import {NewStatusEnum} from '@app/enums/new-status.enum';
 
 @Component({
   selector: 'attachment-types',
@@ -87,7 +89,13 @@ export class AttachmentTypesComponent implements OnInit {
   }
 
   load() {
-    this.attachmentTypeService.loadComposite().subscribe(data => {
+    this.attachmentTypeService.loadComposite().pipe(
+      map(list => {
+        return list.filter(model => {
+          return model.status !== NewStatusEnum.RETIRED;
+        })
+      })
+    ).subscribe(data => {
       this.list = data;
     });
   }
