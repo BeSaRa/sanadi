@@ -12,7 +12,7 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
 import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {NewStatusEnum} from '@app/enums/new-status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'job-title',
@@ -108,7 +108,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
         return load.pipe(
           map(list => {
             return list.filter(model => {
-              return model.status !== NewStatusEnum.RETIRED;
+              return model.status !== CommonStatusEnum.RETIRED;
             });
           }),
           catchError(_ => of([]))

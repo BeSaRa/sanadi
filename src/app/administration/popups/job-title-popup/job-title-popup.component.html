@@ -37,7 +37,7 @@
                          formControlName="status"
                          id="status"
                          appendTo="body">
-                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses">{{status.getName()}}</ng-option>
+                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="status"></app-field-error-message>
             </div>
