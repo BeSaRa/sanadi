@@ -35,7 +35,8 @@
             <div class="mb-3 position-relative ng-select-wrapper">
               <ng-select validationClasses="status"
                          formControlName="status"
-                         id="status">
+                         id="status"
+                         appendTo="body">
                 <ng-option [value]="status.lookupKey" *ngFor="let status of statuses">{{status.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="status"></app-field-error-message>
@@ -48,7 +49,8 @@
           <ng-select
             validationClasses="type"
             formControlName="type"
-            id="type">
+            id="type"
+            appendTo="body">
             <ng-option *ngFor="let option of userTypes" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
