@@ -23,6 +23,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 })
 export class InternalDepartmentService extends BackendWithDialogOperationsGenericService<InternalDepartment> {
   list!: InternalDepartment[];
+  interceptor: InternalDepartmentInterceptor = new InternalDepartmentInterceptor();
 
   constructor(public http: HttpClient,private domSanitizer: DomSanitizer ,private urlService: UrlService, public dialog: DialogService) {
     super();
@@ -59,7 +60,7 @@ export class InternalDepartmentService extends BackendWithDialogOperationsGeneri
   }
 
   _getSendInterceptor() {
-    return InternalDepartmentInterceptor.send;
+    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
@@ -67,7 +68,7 @@ export class InternalDepartmentService extends BackendWithDialogOperationsGeneri
   }
 
   _getReceiveInterceptor() {
-    return InternalDepartmentInterceptor.receive;
+    return this.interceptor.receive;
   }
 
   _getDialogComponent(): ComponentType<any> {
