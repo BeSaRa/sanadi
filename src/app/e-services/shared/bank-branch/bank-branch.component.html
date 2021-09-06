@@ -1,0 +1,167 @@
+<div [formGroup]="form">
+  <div formGroupName="branches">
+    <ng-container *ngFor="let _ of branchesFormArray.controls; let i = index">
+      <div [formGroupName]="i">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="fullName" asteriskIfRequired="fullName"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.full_name}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="fullName" validationClasses="fullName"
+                         formControlName="fullName" class="form-control">
+                  <app-field-error-message controlName="fullName"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="establishmentDate" asteriskIfRequired="establishmentDate"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.establishment_date}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <div class="input-group">
+                    <i class="input-group-text mdi mdi-calendar"></i>
+                    <div class="form-control" formControlName="establishmentDate"
+                         [ngClass]="{'input-disabled': readonly}"
+                         id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
+                         (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
+                         #dpEstablishmentDate="angular-mydatepicker"
+                         angular-mydatepicker validationClasses="establishmentDate"></div>
+                    <app-field-error-message controlName="establishmentDate"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchEmail" asteriskIfRequired="email"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_email}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchEmail" validationClasses="email"
+                         formControlName="email" class="form-control">
+                  <app-field-error-message controlName="email"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchPhone" asteriskIfRequired="phone"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_phone}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchPhone" validationClasses="phone"
+                         formControlName="phone" class="form-control">
+                  <app-field-error-message controlName="phone"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchFax" asteriskIfRequired="fax"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.fax_number}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchFax" validationClasses="fax"
+                         formControlName="fax" class="form-control">
+                  <app-field-error-message controlName="fax"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchRecordNo" asteriskIfRequired="recordNo"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.record_number}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchRecordNo" validationClasses="recordNo"
+                         formControlName="recordNo" class="form-control">
+                  <app-field-error-message controlName="recordNo"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchAddress" asteriskIfRequired="address"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_address}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchAddress" validationClasses="address"
+                         formControlName="address" class="form-control">
+                  <app-field-error-message controlName="address"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+              <div class="row d-flex flex-column flex-md-row">
+                <label for="branchPostalCode" asteriskIfRequired="postalCode"
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.postal_code}}</label>
+                <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                  <input id="branchPostalCode" validationClasses="postalCode"
+                         formControlName="postalCode" class="form-control">
+                  <app-field-error-message controlName="postalCode"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-row align-items-center justify-content-center">
+            <button (click)="saveBranch()" [disabled]="readonly"
+                    class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+            <button (click)="cancelBranch()"
+                    class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+          </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<app-page-header [hidden]="branchesFormArray.controls.length" pageTitle="branches"
+                 [clickOnNew$]="add$"
+                 [addPermission]="addBranchAllowed()"></app-page-header>
+
+<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+       [dataSource]="listDataSource">
+  <ng-container cdkColumnDef="fullName">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="email">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="fax">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.fax_number}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.fax}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="phone">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="recordNo">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.record_number}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.recordNo}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="actions">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+      <div class="d-flex flex-row">
+        <button (click)="deleteBranch($event, row, i)" class="icon-btn text-primary"
+                [disabled]="readonly"
+                tooltip="{{lang.map.btn_delete}}">
+          <i class="mdi mdi-close-box"></i>
+        </button>
+        <button (click)="editBranch($event, row, i)" class="icon-btn text-primary"
+                [disabled]="readonly"
+                tooltip="{{lang.map.btn_edit}}">
+          <i class="mdi mdi-pen"></i>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+  <tr *cdkNoDataRow>
+    <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+  </tr>
+</table>

@@ -40,4 +40,56 @@ export class CommonUtils {
   static isValidValue(value: any): boolean {
     return ((typeof value === 'string') ? (value.trim() !== '') : (typeof value !== 'undefined' && value !== null));
   }
+
+  /**
+   * @description Generates the html ordered list of passed string values
+   * @param title: string
+   * @param namesList: string[]
+   */
+  static generateHtmlList(title: string, namesList: string[]): HTMLDivElement {
+    const div = document.createElement('div');
+    div.classList.add('dynamic-list-container');
+
+    const titleElement = document.createElement('h6');
+    titleElement.innerText = title;
+
+    const list: HTMLOListElement = document.createElement('ol');
+    for (const name of namesList) {
+      const item = document.createElement('li');
+      item.appendChild(document.createTextNode(name));
+      list.appendChild(item);
+    }
+
+    div.append(titleElement);
+    div.append(list);
+    return div;
+  }
+
+  /**
+   * @description Checks if field is invalid
+   * @param form
+   * @param field
+   * @param isDate
+   */
+  static getFieldInvalidStatus(form: any, field: string, isDate: boolean = false): boolean {
+    const ctrl = form.get(field);
+    if (isDate) {
+      return !!(ctrl?.invalid && form.touched);
+    }
+    return !!(ctrl?.invalid && (ctrl?.touched || ctrl?.dirty));
+  }
+
+  /**
+   * @description Checks if field is valid
+   * @param form
+   * @param field
+   * @param isDate
+   */
+  static getFieldValidStatus(form: any, field: string, isDate: boolean = false): boolean {
+    const ctrl = form.get(field);
+    if (isDate) {
+      return !!ctrl?.valid;
+    }
+    return !!(ctrl?.valid && (ctrl?.touched || ctrl?.dirty));
+  }
 }

@@ -184,6 +184,7 @@ import { FilterRetiredStatusPipe } from './pipes/filter-retired-status.pipe';
     RecommendationsComponent,
     LocalizationKeyExistsDirective,
     FullscreenBtnDirective,
+    ManageCommentPopupComponent,
     FilterRetiredStatusPipe
   ]
 })

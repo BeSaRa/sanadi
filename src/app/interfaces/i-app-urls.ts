@@ -47,6 +47,7 @@ export interface IAppUrls {
   E_INTERNATIONAL_COOPERATION: string;
   INTERNAL_DEPARTMENT: string;
   SERVICE_DATA:string;
+  E_FINAL_EXTERNAL_OFFICE_APPROVAL:string;
 
   [index: string]: string;
 }

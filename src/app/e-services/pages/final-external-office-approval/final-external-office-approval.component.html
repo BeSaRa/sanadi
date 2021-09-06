@@ -1,0 +1,285 @@
+<div class="d-flex flex-column">
+  <div *ngIf="!fromDialog" class="row mb-3">
+    <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_final_external_office_approval}}</h1></div>
+  </div>
+  <div class="row">
+    <fieldset [disabled]="readonly">
+      <form autocomplete="off" [formGroup]="form" id="form">
+        <tabs-list class="py-4">
+          <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+               [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
+          <tab [name]="tabsData.bankAccounts.name" [hasError]="getTabInvalidStatus('bankAccounts')"
+               [template]="bankAccountsTemplate" [title]="lang.map.bank_details">{{lang.map.bank_details}}</tab>
+          <tab [name]="tabsData.managers.name" [hasError]="getTabInvalidStatus('managers')"
+               [template]="managersTabTemplate" [title]="lang.map.managers">{{lang.map.managers}}</tab>
+          <tab [name]="tabsData.branches.name" [hasError]="getTabInvalidStatus('branches')"
+               [template]="branchesTabTemplate" [title]="lang.map.branches">{{lang.map.branches}}</tab>
+          <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
+               [template]="commentsTabTemplate" [title]="lang.map.comments">{{lang.map.comments}}</tab>
+          <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+               [template]="attachmentsTabTemplate" [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
+        </tabs-list>
+        <ng-template #basicInfoTabTemplate>
+          <div formGroupName="basicInfo">
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label for="requestType" asteriskIfRequired="requestType"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.request_type}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                    <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
+                               placeholder="{{lang.map.select}}" id="requestType"
+                               [notFoundText]="lang.map.msg_not_found"
+                               [readonly]="readonly"
+                               formControlName="requestType" validationClasses="requestType">
+                      <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
+                        {{option.getName()}}
+                      </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="requestType"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div *ngIf="!requestTypeField?.value || requestTypeField?.value === serviceRequestTypes.NEW"
+                     class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="initialLicenseNumber" for="initialLicenseNumber"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.initial_license_number}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <div class="input-group">
+                      <button [disabled]="initialLicenseNumberField.disabled" type="button"
+                              (click)="licenseSearch($event)"
+                              class="input-group-text">
+                        <i class="mdi mdi-file-search text-primary"></i></button>
+                      <input (keydown.enter)="licenseSearch($event)" formControlName="initialLicenseNumber"
+                             type="text" validationClasses="initialLicenseNumber" class="form-control"
+                             id="initialLicenseNumber" trimInput>
+                      <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
+                         class="input-group-text"><i
+                        class="mdi mdi-eye text-primary"></i></a>
+                    </div>
+                    <app-field-error-message controlName="initialLicenseNumber"></app-field-error-message>
+                  </div>
+                </div>
+                <div *ngIf="requestTypeField?.value && requestTypeField?.value !== serviceRequestTypes.NEW"
+                     class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="licenseNumber" for="licenseNumber"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.license_number}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <div class="input-group">
+                      <button [disabled]="licenseNumberField.disabled" type="button" (click)="licenseSearch($event)"
+                              class="input-group-text">
+                        <i class="mdi mdi-file-search text-primary"></i></button>
+                      <input (keydown.enter)="licenseSearch($event)" formControlName="licenseNumber"
+                             type="text" validationClasses="licenseNumber" class="form-control"
+                             id="licenseNumber" trimInput>
+                      <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
+                         class="input-group-text"><i
+                        class="mdi mdi-eye text-primary"></i></a>
+                    </div>
+                    <app-field-error-message controlName="licenseNumber"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label for="country" asteriskIfRequired="country"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.country}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                    <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
+                               placeholder="{{lang.map.select}}" id="country"
+                               [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+                               formControlName="country" validationClasses="country">
+                      <ng-option *ngFor="let option of countriesList" [value]="option.id"
+                                 [disabled]="!option.isActive()">
+                        {{option.getName()}}
+                      </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="country"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="region" for="region"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.fa_state}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                    <ng-select [selectOnTab]="true" labelForId="region" [clearable]="false"
+                               placeholder="{{lang.map.select}}" id="region"
+                               [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+                               formControlName="region" validationClasses="region">
+                      <ng-option *ngFor="let option of regionsList" [value]="option.id"
+                                 [disabled]="!option.isActive()">
+                        {{option.getName()}}
+                      </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="region"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="externalOfficeName" for="externalOfficeName"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.external_office_name}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="externalOfficeName" validationClasses="externalOfficeName"
+                           formControlName="externalOfficeName" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="externalOfficeName"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label for="establishmentDate" asteriskIfRequired="establishmentDate"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.establishment_date}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <div class="input-group">
+                      <i class="input-group-text mdi mdi-calendar"></i>
+                      <div class="form-control" formControlName="establishmentDate"
+                           [ngClass]="{'input-disabled': readonly}"
+                           id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
+                           (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
+                           #dpEstablishmentDate="angular-mydatepicker"
+                           angular-mydatepicker validationClasses="establishmentDate"></div>
+                      <app-field-error-message controlName="establishmentDate"></app-field-error-message>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="recordNo" for="recordNo"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.record_number}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="recordNo" validationClasses="recordNo"
+                           formControlName="recordNo" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="recordNo"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="address" for="address"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_address}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="address" validationClasses="address"
+                           formControlName="address" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="address"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="postalCode" for="postalCode"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_po_box_num}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="postalCode" validationClasses="postalCode"
+                           formControlName="postalCode" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="postalCode"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="phone" for="phone"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_phone}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="phone" validationClasses="phone"
+                           formControlName="phone" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="phone"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="fax" for="fax"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.fax_number}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="fax" validationClasses="fax"
+                           formControlName="fax" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="fax"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="row d-flex flex-column flex-md-row">
+                  <label asteriskIfRequired="email" for="email"
+                         class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_email}}</label>
+                  <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                    <input id="email" validationClasses="email"
+                           formControlName="email" trimInput class="form-control" type="text">
+                    <app-field-error-message controlName="email"></app-field-error-message>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label asteriskIfRequired="description" for="description"
+                     class="col-md-2 col-sm-12 col-form-label">{{lang.map.special_explanations}}</label>
+              <div class="col-md-10 col-sm-12 mb-3 position-relative">
+        <textarea rows="5" id="description" validationClasses="description" formControlName="description"
+                  class="form-control"></textarea>
+                <app-field-error-message controlName="description"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #bankAccountsTemplate>
+          <bank-account #bankAccountsTab [countriesList]="countriesList"
+                        [list]="model?.bankAccountList || []"
+                        [readonly]="readonly"
+                        (readyEvent)="bankDetailsTabStatus = $event"></bank-account>
+        </ng-template>
+        <ng-template #managersTabTemplate>
+          <executive-management #managersTab [countriesList]="countriesList"
+                                [readonly]="readonly"
+                                [list]="model?.executiveManagementList || []"
+                                (readyEvent)="managersTabStatus = $event"></executive-management>
+        </ng-template>
+        <ng-template #branchesTabTemplate>
+          <bank-branch #branchesTab
+                       [readonly]="readonly"
+                       [list]="model?.branchList || []"
+                       (readyEvent)="branchesTabStatus = $event"></bank-branch>
+        </ng-template>
+        <ng-template #commentsTabTemplate>
+          <div class="d-flex flex-row align-items-center justify-content-start">
+            <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()"
+                    class="d-inline-block btn p-0 icon-btn"><i
+              class="mdi mdi-plus-box text-primary"></i></button>
+          </div>
+          <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>
+        </ng-template>
+        <ng-template #attachmentsTabTemplate>
+          <div class="d-flex flex-row align-items-center justify-content-start">
+            <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()"
+                    class="d-inline-block btn p-0 icon-btn"><i
+              class="mdi mdi-plus-box text-primary"></i></button>
+          </div>
+          <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
+        </ng-template>
+
+        <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2 mb-3">
+          <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
+                  class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
+          <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
+                  class="btn shadow-sm btn-warning">{{lang.map.save_as_draft}}</button>
+          <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
+                  class="btn btn-primary">{{lang.map.launch}}</button>
+          <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</div>
+

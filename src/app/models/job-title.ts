@@ -6,8 +6,9 @@ import {INames} from '@app/interfaces/i-names';
 import {Lookup} from '@app/models/lookup';
 import {searchFunctionType} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
-export class JobTitle extends BaseModel<JobTitle, JobTitleService>{
+export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
   type!: number;
   status!: number;
   statusInfo!: Lookup;
@@ -26,6 +27,18 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService>{
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  isRetired(): boolean {
+    return Number(this.status) === CommonStatusEnum.RETIRED;
+  }
+
+  isInactive(): boolean {
+    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }
 
   buildForm(controls?: boolean): any {

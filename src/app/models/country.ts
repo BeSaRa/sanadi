@@ -6,6 +6,7 @@ import {LangService} from '../services/lang.service';
 import {AdminResult} from './admin-result';
 import {searchFunctionType} from '../types/types';
 import {StatusEnum} from '../enums/status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class Country extends BaseModel<Country, CountryService> {
   parentId?: number;
@@ -41,4 +42,17 @@ export class Country extends BaseModel<Country, CountryService> {
   updateStatus(newStatus: StatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+
+  isRetired(): boolean {
+    return Number(this.status) === CommonStatusEnum.RETIRED;
+  }
+
+  isInactive(): boolean {
+    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
+
 }

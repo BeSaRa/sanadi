@@ -47,5 +47,6 @@
   "INTERNAL_DEPARTMENT": "admin/internal/department",
   "SERVICE_DATA": "admin/services",
   "SERVICE_DATA_2": "admin/services/2",
-  "SERVICE_DATA_10": "admin/services/10"
+  "SERVICE_DATA_10": "admin/services/10",
+  "E_FINAL_EXTERNAL_OFFICE_APPROVAL": "finalExternalOfficeApproval"
 }

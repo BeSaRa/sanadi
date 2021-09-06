@@ -478,4 +478,20 @@ export interface ILanguageKeys {
   change_parent: string;
   btn_activate: string;
   btn_deactivate: string;
+  menu_final_external_office_approval: string;
+  bank_details: string;
+  managers: string;
+  branches: string;
+  fa_state: string;
+  external_office_name: string;
+  record_number: string;
+  initial_license_number: string;
+  bank_name: string;
+  account_number: string;
+  iban: string;
+  swift_code: string;
+  currency: string;
+  postal_code: string;
+  msg_following_tabs_valid: string;
+  bank_category: string;
 }

@@ -32,6 +32,8 @@ export enum LookupCategories {
   CONSULTATION_CATEGORY = 'ConsultationCategory',
   COMMON_STATUS = 'CommonStatus',
   USER_TYPES = 'UserType',
+  SERVICE_REQUEST_TYPE = 'ServiceRequestType',
+  BANK_CATEGORY = 'BankCategory',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -65,5 +67,6 @@ export enum LookupCategories {
   ATTACHMENT_TYPE_CAT_ID = '39',
   CONSULTATION_CATEGORY_CAT_ID = '102',
   COMMON_STATUS_CAT_ID = '109',
-  USER_TYPES_CAT_ID = '114'
+  ATTACHMENT_TYPE_USERS_CAT_ID = '114',
+  SERVICE_REQUEST_TYPE_CAT_ID = '111'
 }

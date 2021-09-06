@@ -32,5 +32,6 @@ export interface ILookupMap {
   ConsultationCategory: Lookup[];
   InquiryStatus: Lookup[];
   ConsultationStatus: Lookup[];
-  ServiceRequestType: Lookup[]
+  ServiceRequestType: Lookup[];
+  BankCategory: Lookup[];
 }

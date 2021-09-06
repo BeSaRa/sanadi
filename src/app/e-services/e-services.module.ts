@@ -11,8 +11,11 @@ import {ConsultationComponent} from './pages/consultation-container/consultation
 import {InternationalCooperationContainerComponent} from './pages/international-cooperation-container/international-cooperation-container.component';
 import {InternationalCooperationComponent} from './pages/international-cooperation-container/international-cooperation/international-cooperation.component';
 import {InitialExternalOfficeApprovalComponent} from './pages/initial-external-office-approval/initial-external-office-approval.component';
-import { SelectLicensePopupComponent } from './poups/select-license-popup/select-license-popup.component';
-
+import {FinalExternalOfficeApprovalComponent} from './pages/final-external-office-approval/final-external-office-approval.component';
+import {SelectLicensePopupComponent} from './poups/select-license-popup/select-license-popup.component';
+import {BankAccountComponent} from './shared/bank-account/bank-account.component';
+import { ExecutiveManagementComponent } from './shared/executive-management/executive-management.component';
+import { BankBranchComponent } from './shared/bank-branch/bank-branch.component';
 
 @NgModule({
   declarations: [
@@ -23,8 +26,13 @@ import { SelectLicensePopupComponent } from './poups/select-license-popup/select
     ConsultationComponent,
     InternationalCooperationContainerComponent,
     InternationalCooperationComponent,
+    InternationalCooperationComponent,
     InitialExternalOfficeApprovalComponent,
-    SelectLicensePopupComponent
+    FinalExternalOfficeApprovalComponent,
+    SelectLicensePopupComponent,
+    BankAccountComponent,
+    ExecutiveManagementComponent,
+    BankBranchComponent
   ],
   imports: [
     CommonModule,

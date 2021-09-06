@@ -361,5 +361,18 @@
     "group": "administration",
     "itemOrder": 9,
     "svg": null
+  },
+  {
+    "id": 25,
+    "langKey": "menu_final_external_office_approval",
+    "path": "/home/e-services/final-external-office-approval",
+    "icon": "mdi-check-decagram-outline",
+    "isSvg": false,
+    "permission": "NO_PERMISSION",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "e-services",
+    "itemOrder": 6,
+    "svg": null
   }
 ]

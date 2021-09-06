@@ -27,3 +27,5 @@ export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';
 export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';
 
 export type ISearchFieldsMap<T = any> = { [key: string]: (string | searchFunctionType<T>) };
+
+export type ReadinessStatus = 'READY' | 'NOT_READY';
