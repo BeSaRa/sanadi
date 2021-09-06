@@ -78,7 +78,7 @@
                            [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
                            formControlName="country" validationClasses="country">
                   <ng-option *ngFor="let option of countriesList" [value]="option.id"
-                             [disabled]="option.isActive()">
+                             [disabled]="!option.isActive()">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
