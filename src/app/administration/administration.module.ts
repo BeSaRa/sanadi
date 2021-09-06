@@ -33,12 +33,14 @@ import { InternalDepartmentComponent } from './pages/internal-department/interna
 import { InternalDepartmentPopupComponent } from './popups/internal-department-popup/internal-department-popup.component';
 import { JobTitleComponent } from './pages/job-title/job-title.component';
 import { JobTitlePopupComponent } from './popups/job-title-popup/job-title-popup.component';
+import { WorkFieldComponent } from './pages/work-field/work-field.component';
+import { WorkFieldPopupComponent } from './popups/work-field-popup/work-field-popup.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, WorkFieldComponent, WorkFieldPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

@@ -14,6 +14,7 @@ import {CountryComponent} from './pages/country/country.component';
 import {InternalUserComponent} from "./pages/internal-user/internal-user.component";
 import {InternalDepartmentComponent} from '@app/administration/pages/internal-department/internal-department.component';
 import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
+import {WorkFieldComponent} from '@app/administration/pages/work-field/work-field.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -52,7 +53,8 @@ const routes: Routes = [
   },
   {path: 'internal-users', component: InternalUserComponent},
   {path: 'internal-departments', component: InternalDepartmentComponent},
-  {path: 'job-titles', component: JobTitleComponent}
+  {path: 'job-titles', component: JobTitleComponent},
+  {path: 'work-fields', component: WorkFieldComponent}
 ];
 
 @NgModule({

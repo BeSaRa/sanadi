@@ -374,5 +374,18 @@
     "group": "e-services",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 31,
+    "langKey": "menu_work_field",
+    "path": "/home/administration/work-fields",
+    "icon": "mdi-border-all",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 10,
+    "svg": null
   }
 ]
