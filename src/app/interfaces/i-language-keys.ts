@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  menu_work_field: string;
   lbl_add_job_title: string;
   lbl_edit_job_title: string;
   menu_job_title: string;

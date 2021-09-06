@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  WORK_FIELD: string;
   JOB_TITLE: string;
   INITIAL_OFFICE_APPROVAL: string;
   ATTACHMENT_TYPES: string;
