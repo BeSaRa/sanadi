@@ -3,6 +3,7 @@ import {LookupCategories} from '../enums/lookup-categories';
 import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class Lookup extends BaseModel<Lookup, any> {
   service: any;
@@ -49,5 +50,9 @@ export class Lookup extends BaseModel<Lookup, any> {
 
   isCancelledSubRequestStatus(): boolean {
     return Number(this.category) === Number(LookupCategories.SUB_REQUEST_STATUS_CAT_ID) && this.lookupKey === 4;
+  }
+
+  isRetiredCommonStatus(): boolean {
+    return Number(this.category) === Number(LookupCategories.COMMON_STATUS_CAT_ID) && this.lookupKey === CommonStatusEnum.RETIRED;
   }
 }

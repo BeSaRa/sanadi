@@ -233,13 +233,7 @@ export class ExecutiveManagementComponent implements OnInit {
       .subscribe((countries) => this.countriesList = countries);
   }
 
-//TODO: when the job title service be ready should change implementation here and load if from API
   private loadJobTitles() {
-    /*this.jobTitlesList = [
-      (new Lookup()).clone({arName: 'مسمي وظيفى اول', enName: 'jobTitle 1', id: 1}),
-      (new Lookup()).clone({arName: 'مسمي وظيفي ثانى', enName: 'jobTitle 2', id: 2}),
-      (new Lookup()).clone({arName: 'مسمي وظيفي ثالث', enName: 'jobTitle 3', id: 2})
-    ]*/
     this.jobTitleService.loadComposite()
       .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
   }
