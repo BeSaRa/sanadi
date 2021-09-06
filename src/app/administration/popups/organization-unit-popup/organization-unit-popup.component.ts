@@ -135,7 +135,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         orgNationality: [this.model.orgNationality, CustomValidators.required],
         poBoxNum: [this.model.poBoxNum, [CustomValidators.number, Validators.maxLength(10)]],
         hotLine: [this.model.hotLine, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-        faxNumber: [this.model.faxNumber, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
+        faxNumber: [this.model.faxNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)],
         registryCreator: [this.model.registryCreator],
         registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
         licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
