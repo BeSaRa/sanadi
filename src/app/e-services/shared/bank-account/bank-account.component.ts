@@ -32,15 +32,10 @@ export class BankAccountComponent implements OnInit {
 
   @Input() list: BankAccount[] = [];
   @Input() countriesList: Country[] = [];
-  @Input() currenciesList: Lookup[] = [];
   @Input() readonly: boolean = false;
 
   bankCategoriesList: Lookup[] = this.lookupService.listByCategory.BankCategory;
-  /*bankCategoriesList: Lookup[] = [
-    (new Lookup()).clone({arName: 'category 1', enName: 'category 1', lookupKey: 1, id: 1}),
-    (new Lookup()).clone({arName: 'category 2', enName: 'category 2', lookupKey: 2, id: 2}),
-    (new Lookup()).clone({arName: 'category 3', enName: 'category 3', lookupKey: 3, id: 3})
-  ];*/
+  currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
 
   listDataSource: BehaviorSubject<BankAccount[]> = new BehaviorSubject<BankAccount[]>([]);
   columns = ['bankName', 'accountNumber', 'iban', 'swiftCode', 'actions'];
@@ -81,9 +76,6 @@ export class BankAccountComponent implements OnInit {
   private _handleInitData() {
     if (!this.countriesList || !this.countriesList.length) {
       this.loadCountries();
-    }
-    if (!this.currenciesList || !this.currenciesList.length) {
-      this.loadCurrencies();
     }
   }
 
@@ -236,14 +228,5 @@ export class BankAccountComponent implements OnInit {
   private loadCountries() {
     this.countryService.loadCountries()
       .subscribe((countries) => this.countriesList = countries);
-  }
-
-  //TODO: when the currencies service/lookup be ready should change implementation here and load if from API
-  private loadCurrencies() {
-    this.currenciesList = [
-      (new Lookup()).clone({arName: 'currency 1', enName: 'currency 1', lookupKey: 1, id: 1}),
-      (new Lookup()).clone({arName: 'currency 2', enName: 'currency 2', lookupKey: 2, id: 2}),
-      (new Lookup()).clone({arName: 'currency 3', enName: 'currency 3', lookupKey: 3, id: 3})
-    ]
   }
 }
