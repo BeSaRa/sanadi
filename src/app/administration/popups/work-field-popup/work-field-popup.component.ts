@@ -26,6 +26,7 @@ import {WorkFieldService} from '@app/services/work-field.service';
 })
 export class WorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   workFieldTypeId!: number;
+  classification!: Lookup;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: FormGroup;
   fm!: FormManager;
@@ -61,6 +62,9 @@ export class WorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
     this.validToAddSubWorkFields = this.model.id != null;
     this.listenToReloadSubWorkFields();
     this.reloadSubWorkFields$.next();
+
+    this.classification = this.lookupService.listByCategory.ServiceWorkField
+      .find(classification => classification.lookupKey === this.workFieldTypeId)!;
   }
 
   buildForm(): void {
@@ -96,7 +100,9 @@ export class WorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.add_work_field : this.lang.map.edit_work_field;
+    return this.operation === OperationTypes.CREATE ?
+      this.lang.map.add_work_field.change({x: this.classification.getName()}) :
+      this.lang.map.edit_work_field.change({x: this.classification.getName()});
   };
 
   addSubWorkField(): void {
@@ -134,7 +140,9 @@ export class WorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   }
 
   listenToReloadSubWorkFields() {
-    this.reloadSubWorkFields$.subscribe(() => {
+    this.reloadSubWorkFields$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       if (this.model.id) {
         this.model.loadSubWorkFields()
           .pipe(takeUntil(this.destroy$))

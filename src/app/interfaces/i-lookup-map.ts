@@ -1,6 +1,7 @@
 import {Lookup} from '../models/lookup';
 
 export interface ILookupMap {
+  ServiceWorkField: Lookup[];
   CommonStatus: Lookup[];
   AidLookupStatus: Lookup[];
   SubRequestStatus: Lookup[];

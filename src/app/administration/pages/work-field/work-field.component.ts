@@ -17,6 +17,8 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {WorkFieldTypeEnum} from '@app/enums/work-field-type-enum';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
 
 @Component({
   selector: 'work-field',
@@ -25,9 +27,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 })
 export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFieldService> implements OnInit{
   selectWorkFieldType$: BehaviorSubject<number> = new BehaviorSubject<number>(WorkFieldTypeEnum.ocha);
-  workFieldTypeEnum = WorkFieldTypeEnum;
   selectedWorkFieldTypeId: number = 1;
   searchText = '';
+  classifications!: Lookup[];
   tabsData: IKeyValue = {
     ocha: {name: 'OCHA'},
     dac: {name: 'DAC'}
@@ -46,7 +48,7 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
       onClick: (user) => this.edit$.next(user)
     }
   ];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   selectedRecords: WorkField[] = [];
   actionsList: IGridAction[] = [
     {
@@ -62,13 +64,15 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
               public service: WorkFieldService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              public lookupService: LookupService) {
     super();
   }
 
   ngOnInit() {
     super.ngOnInit();
     this.listenToWorkFieldTypeChange();
+    this.getClassificationsLookup();
   }
 
   listenToAdd(): void {
@@ -159,7 +163,9 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
   }
 
   listenToWorkFieldTypeChange() {
-    this.selectWorkFieldType$.subscribe(type => {
+    this.selectWorkFieldType$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(type => {
       this.selectedWorkFieldTypeId = type;
       this.reload$.next(null);
     })
@@ -219,5 +225,17 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
     } else {
       this.selectedRecords = _deepClone(this.models);
     }
+  }
+
+  getClassificationsLookup() {
+    this.classifications = this.lookupService.listByCategory.ServiceWorkField;
+  }
+
+  get dacTabLabel(): string {
+    return this.classifications.find(classification => classification.lookupKey === 2)!.getName();
+  }
+
+  get ochaTabLabel(): string {
+    return this.classifications.find(classification => classification.lookupKey === 1)!.getName();
   }
 }
