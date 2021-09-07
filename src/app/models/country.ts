@@ -39,7 +39,7 @@ export class Country extends BaseModel<Country, CountryService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  updateStatus(newStatus: StatusEnum): any {
+  updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
 

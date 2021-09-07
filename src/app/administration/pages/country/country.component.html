@@ -59,21 +59,21 @@
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-pen"></i>
               </button>
-              <button (click)="deleteCountry(row)" tooltip="{{langService.map.btn_delete}}"
+              <!--<button (click)="deleteCountry(row)" tooltip="{{langService.map.btn_delete}}"
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-close-box"></i>
-              </button>
+              </button>-->
               <button *ngIf="!parentCountry"
                 (click)="showCities(row)" tooltip="{{langService.map.cities}}"
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-city"></i>
               </button>
-              <button *ngIf="row.status === statusEnum.INACTIVE"
+              <button *ngIf="row.status === commonStatusEnum.DEACTIVATED"
                 (click)="activateCountry(row)" tooltip="{{langService.map.btn_activate}}"
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-list-status"></i>
               </button>
-              <button *ngIf="row.status === statusEnum.ACTIVE"
+              <button *ngIf="row.status === commonStatusEnum.ACTIVATED"
                 (click)="deactivateCountry(row)" tooltip="{{langService.map.btn_deactivate}}"
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-list-status"></i>
