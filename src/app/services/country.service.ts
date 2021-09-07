@@ -15,8 +15,8 @@ import {Generator} from '../decorators/generator';
 import {DialogService} from './dialog.service';
 import {CountryPopupComponent} from '../administration/popups/country-popup/country-popup.component';
 import {ChangeCountryParentPopupComponent} from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
-import {StatusEnum} from '../enums/status.enum';
 import {CommonUtils} from '../helpers/common-utils';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -125,12 +125,12 @@ export class CountryService extends BackendGenericService<Country> {
     return this.http.post<Country[]>(this._getServiceURL() + '/cities-update/' + parentId, countriesId);
   }
 
-  updateStatus(countryId: number, newStatus: StatusEnum) {
-    return newStatus === StatusEnum.ACTIVE ? this._activate(countryId) : this._deactivate(countryId);
+  updateStatus(countryId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(countryId) : this._deactivate(countryId);
   }
 
-  updateStatusBulk(recordIds: number[], newStatus: StatusEnum): Observable<any> {
-    return newStatus === StatusEnum.ACTIVE ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
+  updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
   }
 
   private _activate(countryId: number): Observable<any> {

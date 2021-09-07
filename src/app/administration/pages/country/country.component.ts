@@ -18,7 +18,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {SharedService} from '@app/services/shared.service';
 import {LookupService} from '@app/services/lookup.service';
-import {StatusEnum} from '@app/enums/status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'country',
@@ -39,7 +39,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
-  statusEnum = StatusEnum;
+  commonStatusEnum = CommonStatusEnum;
 
   constructor(public langService: LangService,
               private countryService: CountryService,
@@ -177,7 +177,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   activateCountry(model: Country): void {
-    const sub = model.updateStatus(StatusEnum.ACTIVE).subscribe(() => {
+    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
       // @ts-ignore
       this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
       this.reload$.next(null);
@@ -186,7 +186,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   deactivateCountry(model: Country): void {
-    const sub = model.updateStatus(StatusEnum.INACTIVE).subscribe(() => {
+    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
       // @ts-ignore
       this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
       this.reload$.next(null);
@@ -194,7 +194,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  changeStatusBulk($event: MouseEvent, newStatus: StatusEnum): void {
+  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
     const sub = this.countryService.updateStatusBulk(this.table.selection.selected.map(item => item.id), newStatus)
       .subscribe((response) => {
         this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response, 'UPDATE')
@@ -237,7 +237,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         }
       },
       // delete
-      {
+      /*{
         type: 'action',
         icon: 'mdi-close-box',
         label: 'btn_delete',
@@ -245,7 +245,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         show: (item) => {
           return true
         }
-      },
+      },*/
       // cities
       {
         type: 'action',
@@ -263,7 +263,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         label: 'btn_activate',
         onClick: (item: Country) => this.activateCountry(item),
         show: (item) => {
-          return item.status === StatusEnum.INACTIVE;
+          return item.status === CommonStatusEnum.DEACTIVATED;
         }
       },
       // deactivate
@@ -273,7 +273,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
         label: 'btn_deactivate',
         onClick: (item: Country) => this.deactivateCountry(item),
         show: (item) => {
-          return item.status === StatusEnum.ACTIVE;
+          return item.status === CommonStatusEnum.ACTIVATED;
         }
       }
     ];
@@ -290,14 +290,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
           return !!this.parentCountry;
         }
       },
-      {
+      /*{
         icon: 'mdi-close-box',
         langKey: 'btn_delete',
         callback: ($event: MouseEvent, action: IGridAction) => this.deleteBulk($event),
         show: (items: Country[]) => {
           return true;
         }
-      },
+      },*/
       {
         icon: 'mdi-list-status',
         langKey: 'lbl_status',
@@ -305,7 +305,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
           {
             langKey: 'btn_activate',
             icon: '',
-            callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, StatusEnum.ACTIVE),
+            callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
             show: (items: Country[]) => {
               return true;
             }
@@ -313,7 +313,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
           {
             langKey: 'btn_deactivate',
             icon: '',
-            callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, StatusEnum.INACTIVE),
+            callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
             show: (items: Country[]) => {
               return true;
             }
