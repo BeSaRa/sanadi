@@ -1,4 +1,12 @@
 export interface ILanguageKeys {
+  ocha: string;
+  dac: string;
+  sub_work_fields: string;
+  edit_sub_work_field: string;
+  add_sub_work_field: string;
+  edit_work_field: string;
+  add_work_field: string;
+  work_field_classification: string;
   menu_work_field: string;
   lbl_add_job_title: string;
   lbl_edit_job_title: string;
