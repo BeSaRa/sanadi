@@ -24,6 +24,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   parentId?: number;
   workFieldTypeId!: number;
+  classification!: Lookup;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: FormGroup;
   fm!: FormManager;
@@ -48,6 +49,8 @@ export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   }
 
   initPopup(): void {
+    this.classification = this.lookupService.listByCategory.ServiceWorkField
+      .find(classification => classification.lookupKey === this.workFieldTypeId)!;
   }
 
   buildForm(): void {
@@ -78,7 +81,9 @@ export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.add_sub_work_field : this.lang.map.edit_sub_work_field;
+    return this.operation === OperationTypes.CREATE ?
+      this.lang.map.add_sub_work_field.change({x: this.classification.getName()}) :
+      this.lang.map.edit_sub_work_field.change({x: this.classification.getName()});
   };
 
   edit(subWorkField: WorkField, $event: MouseEvent): void {

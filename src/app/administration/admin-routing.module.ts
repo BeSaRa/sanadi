@@ -54,7 +54,7 @@ const routes: Routes = [
   {path: 'internal-users', component: InternalUserComponent},
   {path: 'internal-departments', component: InternalDepartmentComponent},
   {path: 'job-titles', component: JobTitleComponent},
-  {path: 'work-fields', component: WorkFieldComponent}
+  {path: 'ocha-dac-class', component: WorkFieldComponent}
 ];
 
 @NgModule({

@@ -10,7 +10,7 @@
     <tabs-list>
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
       <tab [name]="tabsData.subWorkFields.name" [template]="subWorkFieldsTabTemplate"
-           [title]="lang.map.sub_work_fields"
+           [title]="lang.map.sub_work_fields.change({x: classification.getName()})"
            [disabled]="!validToAddSubWorkFields"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
@@ -52,7 +52,7 @@
     </ng-template>
     <ng-template #subWorkFieldsTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
-        <h1 class="h6 text-primary">{{lang.map.sub_work_fields}}</h1>
+        <h1 class="h6 text-primary">{{lang.map.sub_work_fields.change({x: classification.getName()})}}</h1>
         <div>
           <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubWorkFields$.next()"><i
             class="mdi mdi-reload"></i></button>
