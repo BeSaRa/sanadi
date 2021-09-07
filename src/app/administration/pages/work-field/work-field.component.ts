@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {WorkField} from '@app/models/work-field';
 import {WorkFieldService} from '@app/services/work-field.service';
@@ -9,18 +9,29 @@ import {SharedService} from '@app/services/shared.service';
 import {ToastService} from '@app/services/toast.service';
 import {cloneDeep as _deepClone} from 'lodash';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {of} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {IGridAction} from '@app/interfaces/i-grid-action';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {WorkFieldTypeEnum} from '@app/enums/work-field-type-enum';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'work-field',
   templateUrl: './work-field.component.html',
   styleUrls: ['./work-field.component.scss']
 })
-export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFieldService>{
+export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFieldService> implements OnInit{
+  selectWorkFieldType$: BehaviorSubject<number> = new BehaviorSubject<number>(WorkFieldTypeEnum.ocha);
+  workFieldTypeEnum = WorkFieldTypeEnum;
+  selectedWorkFieldTypeId: number = 1;
   searchText = '';
+  tabsData: IKeyValue = {
+    ocha: {name: 'OCHA'},
+    dac: {name: 'DAC'}
+  };
   actions: IMenuItem<WorkField>[] = [
     {
       type: 'action',
@@ -53,6 +64,29 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
               private sharedService: SharedService,
               private toast: ToastService) {
     super();
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+    this.listenToWorkFieldTypeChange();
+  }
+
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openCreateWorkFieldDialog(this.selectedWorkFieldTypeId).onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openUpdateWorkFieldDialog(model.id, this.selectedWorkFieldTypeId).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   edit(workField: WorkField, event: MouseEvent) {
@@ -111,12 +145,34 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
               return model.status !== CommonStatusEnum.RETIRED;
             });
           }),
+          map(list => {
+            return list.filter(model => {
+              return model.type === this.selectedWorkFieldTypeId;
+            });
+          }),
           catchError(_ => of([]))
         );
       }))
       .subscribe((list: WorkField[]) => {
         this.models = list;
       })
+  }
+
+  listenToWorkFieldTypeChange() {
+    this.selectWorkFieldType$.subscribe(type => {
+      this.selectedWorkFieldTypeId = type;
+      this.reload$.next(null);
+    })
+  }
+
+  tabChanged(tab: TabComponent) {
+    if(tab.name.toLowerCase() === 'ocha') {
+      this.selectWorkFieldType$.next(WorkFieldTypeEnum.ocha);
+    }
+
+    if(tab.name.toLowerCase() === 'dac') {
+      this.selectWorkFieldType$.next(WorkFieldTypeEnum.dac);
+    }
   }
 
   filterCallback = (record: any, searchText: string) => {

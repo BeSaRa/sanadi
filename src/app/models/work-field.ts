@@ -6,6 +6,7 @@ import {searchFunctionType} from '@app/types/types';
 import {INames} from '@app/interfaces/i-names';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Lookup} from '@app/models/lookup';
+import {Observable} from 'rxjs';
 
 export class WorkField extends BaseModel<WorkField, WorkFieldService> {
   status!: number;
@@ -13,6 +14,7 @@ export class WorkField extends BaseModel<WorkField, WorkFieldService> {
   service: WorkFieldService;
   langService: LangService;
   statusInfo!: Lookup;
+  parentId?: number;
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName'
@@ -49,7 +51,11 @@ export class WorkField extends BaseModel<WorkField, WorkFieldService> {
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
       status: controls ? [status, [CustomValidators.required]] : status,
-      type: controls ? [type, [CustomValidators.required]] : type
+      type: controls ? [type] : type
     }
+  }
+
+  loadSubWorkFields(): Observable<WorkField[]> {
+    return this.service.loadSubWorkFields(this.id);
   }
 }
