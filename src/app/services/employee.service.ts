@@ -164,10 +164,11 @@ export class EmployeeService {
     if (this.isExternalUser()) {
       deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_EXTERNAL;
     } else if (this.isInternalUser()) {
-      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_EXTERNAL;
+      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_INTERNAL;
     }
+    deniedUsersList = deniedUsersList.map(x => x.toLowerCase());
     // @ts-ignore
-    if (deniedUsersList.indexOf(this.getUser()?.domainName) === -1) {
+    if (deniedUsersList.indexOf(this.getCurrentUser()?.domainName.toLowerCase()) === -1) {
       this.permissions?.push((new Permission().clone({
         permissionKey: 'NO_PERMISSION'
       })))
