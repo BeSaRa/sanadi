@@ -228,17 +228,20 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument) {
+  private setSelectedLicense(license?: InitialApprovalDocument, ignoreFormUpdate = false) {
     this.selectedLicense = license;
     // update form fields if i have license
-    if (license) {
+    if (license && !ignoreFormUpdate) {
       this._updateForm((new InitialExternalOfficeApproval()).clone({
         organizationId: license.organizationId,
         requestType: this.requestType.value,
         licenseNumber: license.licenseNumber,
         country: license.country,
-        region: license.region
+        region: license.region,
       }))
+    }
+
+    if (license) {
       this.loadRegions(license.country);
     }
   }
@@ -261,7 +264,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license)
+        this.setSelectedLicense(license, true)
       })
   }
 

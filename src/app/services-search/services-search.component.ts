@@ -16,6 +16,7 @@ import {TabComponent} from '../shared/components/tab/tab.component';
 import {EmployeeService} from '../services/employee.service';
 import {CaseTypes} from '../enums/case-types.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'services-search',
@@ -47,6 +48,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
               private inboxService: InboxService,
               private employeeService: EmployeeService,
               private dialog: DialogService) {
@@ -60,6 +63,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = new FormGroup({});
+    this.listenToRouteParams();
     this.listenToServiceChange(this.serviceControl.value);
     this.listenToSearch();
     this.buildGridActions();
@@ -87,6 +91,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(map(val => Number(val)))
       .pipe(map(val => this.inboxService.getService(val)))
       .subscribe((service: EServiceGenericService<any>) => {
+        this.updateRoute();
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
         this.results = [];
@@ -289,5 +294,19 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   private isServiceAllowedForExternalToSearch(number: number) {
     return this.allowedServicesForExternalUser.indexOf(number) !== -1;
+  }
+
+  private listenToRouteParams() {
+    this.activatedRoute.fragment.subscribe((serviceNumber) => {
+      let service = serviceNumber ? Number(serviceNumber.split('-').pop()) : -1
+      service && this.serviceNumbers.includes(service) && this.serviceControl.value !== service && this.serviceControl.patchValue(service);
+    })
+  }
+
+  private updateRoute() {
+    console.log(this.serviceControl.value);
+    this.router.navigate([this.activatedRoute], {
+      fragment: ("service-" + this.serviceControl.value)
+    }).then((val) => console.log(val))
   }
 }

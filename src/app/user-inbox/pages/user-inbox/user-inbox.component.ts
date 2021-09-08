@@ -244,7 +244,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-check',
         label: 'task_complete',
         show: (item: QueryResult) => {
-          return !item.RESPONSES.length;
+          return !item.RESPONSES.length || item.RESPONSES.includes(WFResponseType.COMPLETE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionComplete(item, viewDialogRef);
