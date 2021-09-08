@@ -104,6 +104,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.postpone().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.close().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
@@ -260,6 +267,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
+        }
+      },
+      // postpone
+      {
+        type: 'action',
+        icon: 'mdi-calendar-clock',
+        label: 'postpone_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.POSTPONE);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionPostpone(item, viewDialogRef);
         }
       },
       // return

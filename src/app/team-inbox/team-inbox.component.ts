@@ -169,6 +169,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.postpone().onAfterClose$.subscribe(actionTaken => {
+      this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
+    });
+  }
+
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.close().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
@@ -365,6 +372,24 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
+        }
+      },
+      // postpone
+      {
+        type: 'action',
+        icon: 'mdi-calendar-clock',
+        label: 'postpone_task',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.POSTPONE);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionPostpone(item, viewDialogRef);
         }
       },
       // return
