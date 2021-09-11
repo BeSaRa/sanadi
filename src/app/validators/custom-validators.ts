@@ -34,6 +34,7 @@ const commonValidations = {
   gccRId: [number, maxLength(20)],
   visa: [number, maxLength(20)],
   phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  mobileNo: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   fax: [number, maxLength(10)]
 };
 
@@ -41,7 +42,7 @@ const inputMaskPatterns = {
   NUMBER_ONLY: '0*',
   SEPARATOR: 'separator',
   THOUSAND_SEPARATOR: ','
-};
+}
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},

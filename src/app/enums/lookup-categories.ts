@@ -36,6 +36,9 @@ export enum LookupCategories {
   BANK_CATEGORY = 'BankCategory',
   CURRENCY = 'Currency',
   DOMAIN = 'Domain',
+  HEADQUARTER_TYPE = 'HeadQuarterType',
+  REQUEST_CLASSIFICATION = 'RequestClassification',
+  ATTACHMENT_TYPE_USERS = 'UserType',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -71,7 +74,9 @@ export enum LookupCategories {
   COMMON_STATUS_CAT_ID = '109',
   ATTACHMENT_TYPE_USERS_CAT_ID = '114',
   SERVICE_REQUEST_TYPE_CAT_ID = '111',
+  HEADQUARTER_TYPE_CAT_ID = '116',
+  REQUEST_CLASSIFICATION_CAT_ID = '117',
+  DOMAIN_CAT_ID = '121',
   BANK_CATEGORY_CAT_ID = '118',
   CURRENCY_CAT_ID = '120',
-  DOMAIN_CAT_ID = '121'
 }

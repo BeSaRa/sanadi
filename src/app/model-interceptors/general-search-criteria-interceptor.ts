@@ -12,6 +12,7 @@ import * as dayjs from 'dayjs';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import {FinalExternalOfficeApprovalSearchCriteriaInterceptor} from '@app/search-criteria-interceptors/final-external-office-approval-search-criteria-interceptor';
+import {PartnerApprovalSearchCriteriaInterceptor} from "@app/search-criteria-interceptors/partner-approval-search-criteria-interceptor";
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -19,6 +20,7 @@ interceptors.set(CaseTypes.INQUIRY, new InquirySearchCriteriaInterceptor());
 interceptors.set(CaseTypes.CONSULTATION, new ConsultationSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.INTERNATIONAL_COOPERATION, new InternationalCooperationSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, new FinalExternalOfficeApprovalSearchCriteriaInterceptor());
+interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
 

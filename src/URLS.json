@@ -39,6 +39,7 @@
   "E_INQUIRY": "/inquiry",
   "E_CONSULTATION": "/consultation",
   "E_INTERNATIONAL_COOPERATION": "/international-cooperation",
+  "E_PARTNER_APPROVAL": "/partner-approval",
   "USER_INBOX": "/inbox/user",
   "TEAMS_INBOX": "/inbox/team",
   "CLAIM_BULK": "/inbox/task/claim/bulk",

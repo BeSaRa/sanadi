@@ -36,7 +36,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-    // CaseTypes.PARTNER_APPROVAL
+    CaseTypes.PARTNER_APPROVAL
   ]
   form!: FormGroup;
 

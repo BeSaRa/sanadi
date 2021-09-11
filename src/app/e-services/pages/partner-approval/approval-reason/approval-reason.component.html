@@ -1,0 +1,111 @@
+<div [formGroup]="form">
+  <div formGroupName="approvalReasons">
+    <ng-container *ngFor="let _ of approvalReasonsFormArray.controls; let i = index">
+      <div [formGroupName]="i">
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="projects" asteriskIfRequired="projects"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_projects}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="projects" validationClasses="projects"
+                       formControlName="projects" class="form-control">
+                <app-field-error-message controlName="projects"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="research" asteriskIfRequired="research"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_research}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="research" validationClasses="research"
+                       formControlName="research" class="form-control">
+                <app-field-error-message controlName="research"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="fieldVisit" asteriskIfRequired="fieldVisit"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_field_visit}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="fieldVisit" validationClasses="fieldVisit"
+                       formControlName="fieldVisit" class="form-control">
+                <app-field-error-message controlName="fieldVisit"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-12">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="description" asteriskIfRequired="description"
+                     class="col-sm-12 col-md-2 col-form-label">{{lang.map.lbl_description}}</label>
+              <div class="col-md-10 col-sm-12 mb-4 position-relative">
+                  <textarea rows="5" id="description" validationClasses="description" formControlName="description"
+                            class="form-control"></textarea>
+                <app-field-error-message controlName="description"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row align-items-center justify-content-center">
+          <button (click)="save()" [disabled]="readonly"
+                  class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+          <button (click)="cancel()"
+                  class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<app-page-header [hidden]="approvalReasonsFormArray.controls.length" pageTitle="approval_reasons"
+                 [clickOnNew$]="add$"
+                 [addPermission]="addAllowed()"></app-page-header>
+
+<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+       [dataSource]="dataSource">
+  <ng-container cdkColumnDef="projects">
+    <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{lang.map.lbl_projects}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.projects}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="research">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_research}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.research}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="fieldVisit">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_field_visit}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.fieldVisit}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="description">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.description}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="actions">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+      <div class="d-flex flex-row">
+        <button (click)="delete($event, row, i)" class="icon-btn text-primary"
+                tooltip="{{lang.map.btn_delete}}"
+                [disabled]="readonly">
+          <i class="mdi mdi-close-box"></i>
+        </button>
+        <button (click)="edit($event, row, i)" class="icon-btn text-primary"
+                tooltip="{{lang.map.btn_edit}}"
+                [disabled]="readonly">
+          <i class="mdi mdi-pen"></i>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+  <tr *cdkNoDataRow>
+    <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+  </tr>
+</table>

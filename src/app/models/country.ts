@@ -43,6 +43,14 @@ export class Country extends BaseModel<Country, CountryService> {
     return this.service.updateStatus(this.id, newStatus);
   }
 
+  isRetiredCountry(): boolean {
+    return Number(this.status) === 2;
+  }
+
+  isInactiveCountry(): boolean {
+    return Number(this.status) === 0;
+  }
+
   isRetired(): boolean {
     return Number(this.status) === CommonStatusEnum.RETIRED;
   }

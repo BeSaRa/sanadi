@@ -1,0 +1,110 @@
+[
+  {
+    "fields": [
+      {
+        "key": "serial",
+        "type": "maskInput",
+        "label": "serial_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        },
+        "mask": "0*"
+      },
+      {
+        "key": "subject",
+        "type": "maskInput",
+        "label": "subject",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        },
+        "mask": "0*"
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.load",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "key": "caseStatus",
+        "type": "selectField",
+        "label": "lbl_status",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.InquiryStatus",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "requestClassification",
+        "type": "selectField",
+        "label": "request_classification",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.RequestClassification",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "key": "country",
+        "type": "selectField",
+        "label": "country",
+        "validations": {
+          "required": true
+        },
+        "selectOptions": {
+          "options": [],
+          "loader": "country.load",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  }
+]

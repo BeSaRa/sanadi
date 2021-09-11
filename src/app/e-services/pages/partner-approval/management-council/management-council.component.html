@@ -1,0 +1,161 @@
+<div [formGroup]="form">
+  <div formGroupName="managementCouncils">
+    <ng-container *ngFor="let _ of managementCouncilsFormArray.controls; let i = index">
+      <div [formGroupName]="i">
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="arabicName" asteriskIfRequired="arabicName"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.arabic_name}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="arabicName" validationClasses="arabicName"
+                       formControlName="arabicName" class="form-control">
+                <app-field-error-message controlName="arabicName"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="englishName" asteriskIfRequired="englishName"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.english_name}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="englishName" validationClasses="englishName"
+                       formControlName="englishName" class="form-control">
+                <app-field-error-message controlName="englishName"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="phone" asteriskIfRequired="phone"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_phone}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="phone" validationClasses="phone"
+                       formControlName="phone" class="form-control">
+                <app-field-error-message controlName="phone"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="mobileNo" asteriskIfRequired="mobileNo"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.mobile_number}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="mobileNo" validationClasses="mobileNo"
+                       formControlName="mobileNo" class="form-control">
+                <app-field-error-message controlName="mobileNo"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="email" asteriskIfRequired="email"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_email}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                <input id="email" validationClasses="email"
+                       formControlName="email" class="form-control">
+                <app-field-error-message controlName="email"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="country" asteriskIfRequired="country"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.country}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
+                           placeholder="{{lang.map.select}}" id="country"
+                           [notFoundText]="lang.map.msg_not_found"
+                           formControlName="country" validationClasses="country">
+                  <ng-option *ngFor="let option of countriesList" [value]="option.id">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+                <app-field-error-message controlName="country"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label for="jobTitle" asteriskIfRequired="jobTitle"
+                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.job_title}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <ng-select [selectOnTab]="true" labelForId="jobTitle" [clearable]="false"
+                           placeholder="{{lang.map.select}}" id="jobTitle"
+                           [notFoundText]="lang.map.msg_not_found"
+                           formControlName="jobTitle" validationClasses="jobTitle">
+                  <ng-option *ngFor="let option of jobTitlesList" [value]="option.id">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+                <app-field-error-message controlName="jobTitle"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-row align-items-center justify-content-center">
+          <button (click)="save()" [disabled]="readonly"
+                  class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+          <button (click)="cancel()"
+                  class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<app-page-header [hidden]="managementCouncilsFormArray.controls.length" pageTitle="management_council"
+                 [clickOnNew$]="add$"
+                 [addPermission]="addAllowed()"></app-page-header>
+
+<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+       [dataSource]="dataSource">
+  <ng-container cdkColumnDef="arabicName">
+    <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{lang.map.arabic_name}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="englishName">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="email">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="phone">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_phone}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.phone}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="mobileNo">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.mobile_number}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.mobileNo}} </td>
+  </ng-container>
+  <ng-container cdkColumnDef="actions">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+      <div class="d-flex flex-row">
+        <button (click)="delete($event, row, i)" class="icon-btn text-primary"
+                tooltip="{{lang.map.btn_delete}}"
+                [disabled]="readonly">
+          <i class="mdi mdi-close-box"></i>
+        </button>
+        <button (click)="edit($event, row, i)" class="icon-btn text-primary"
+                tooltip="{{lang.map.btn_edit}}"
+                [disabled]="readonly">
+          <i class="mdi mdi-pen"></i>
+        </button>
+      </div>
+    </td>
+  </ng-container>
+  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+  <tr *cdkNoDataRow>
+    <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+  </tr>
+</table>

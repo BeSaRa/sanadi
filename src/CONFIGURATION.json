@@ -7,7 +7,7 @@
     "RACA": "http://eblaepm.no-ip.org:9090/sanadi-services/api/",
     "BAW": "http://100.100.15.102:9080/sanadi-services/api/",
     "BAW_DEV": "http://100.100.15.102:9080/eservices/api/",
-    "BAW_STG": "http://ibm-baw3:9081/eservices/api/"
+    "BAW_STG": "http://ibm-baw3:9084/eservices/api/"
   },
   "BASE_ENVIRONMENT": "BAW",
   "BASE_URL": "",

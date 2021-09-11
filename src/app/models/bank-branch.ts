@@ -1,5 +1,6 @@
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {DateUtils} from "@app/helpers/date-utils";
 
 export class BankBranch extends SearchableCloneable<BankBranch> {
   fullName!: string;
@@ -25,7 +26,7 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
 
     return {
       fullName: control ? [fullName, [CustomValidators.required]] : fullName,
-      establishmentDate: control ? [establishmentDate, [CustomValidators.required]] : establishmentDate,
+      establishmentDate: control ? [establishmentDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,

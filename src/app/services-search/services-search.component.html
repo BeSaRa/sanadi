@@ -81,6 +81,22 @@
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo.getName()}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="countryInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.country}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="ouInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="requestClassificationInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_classification}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestClassificationInfo.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="subject">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.subject}} </td>
+          </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>

@@ -37,4 +37,6 @@ export interface ILookupMap {
   BankCategory: Lookup[];
   Currency: Lookup[];
   Domain: Lookup[];
+  HeadQuarterType: Lookup[];
+  RequestClassification: Lookup[];
 }

@@ -7,11 +7,14 @@ import {ConsultationContainerComponent} from '@app/e-services/pages/consultation
 import {InternationalCooperationContainerComponent} from '@app/e-services/pages/international-cooperation-container/international-cooperation-container.component';
 import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
 import {FinalExternalOfficeApprovalComponent} from '@app/e-services/pages/final-external-office-approval/final-external-office-approval.component';
+import {PartnerApprovalComponent} from "./pages/partner-approval/partner-approval.component";
 
 const routes: Routes = [
   {path: '', component: EServicesComponent},
   {path: 'inquiries', component: InquiryContainerComponent},
   {path: 'consultations', component: ConsultationContainerComponent},
+  {path: 'international-coop', component: InternationalCooperationContainerComponent},
+  {path: 'partner-approval', component: PartnerApprovalComponent},
   {path: 'international-coop', component: InternationalCooperationContainerComponent},
   {path: 'initial-external-office-approval', component: InitialExternalOfficeApprovalComponent},
   {path: 'final-external-office-approval', component: FinalExternalOfficeApprovalComponent}
