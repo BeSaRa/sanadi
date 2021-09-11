@@ -176,6 +176,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionAskForConsultation(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.askForConsultation().onAfterClose$.subscribe(actionTaken => {
+      this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
+    });
+  }
+
   actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.postpone().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
@@ -397,6 +404,24 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionFinalApprove(item, viewDialogRef);
+        }
+      },
+      //ask for consultation
+      {
+        type: 'action',
+        icon: 'mdi-help-rhombus-outline',
+        label: 'ask_for_consultation_task',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionAskForConsultation(item, viewDialogRef);
         }
       },
       // postpone

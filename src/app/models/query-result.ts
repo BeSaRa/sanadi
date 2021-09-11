@@ -158,6 +158,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.FINAL_APPROVE, claimBefore);
   }
 
+  askForConsultation(claimBefore: boolean = false): DialogRef {
+    let response = this.RESPONSES.find(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0);
+    return this.actionOnTask(response as WFResponseType, claimBefore);
+  }
+
   postpone(claimBefore: boolean = false): DialogRef {
     return this.actionOnTask(WFResponseType.POSTPONE, claimBefore);
   }

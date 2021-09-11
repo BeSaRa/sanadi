@@ -62,7 +62,12 @@ export class ActionWithCommentPopupComponent implements OnInit {
     public lang: LangService,
     private fb: FormBuilder,
     private serviceDataService: ServiceDataService) {
-    this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
+
+    if (this.data.actionType.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0) {
+      this.label = 'ask_for_consultation_task';
+    } else {
+      this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
+    }
     this.action = this.data.actionType;
   }
 
@@ -90,15 +95,15 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      licenseStartDate: [''],
-      licenseDuration: [null, [CustomValidators.number]],
+      licenseStartDate: ['', [CustomValidators.required]],
+      licenseDuration: [null, [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{
         value: '',
         disabled: true
-      }],
-      customTerms: [''],
+      }, [CustomValidators.required]],
+      customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
-      followUpDate: ['']
+      followUpDate: ['', [CustomValidators.required]]
     });
   }
 

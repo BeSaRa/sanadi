@@ -9,5 +9,5 @@ export enum WFResponseType {
   TO_MANAGER = 'toManager',
   POSTPONE = 'postpone',
   FINAL_APPROVE = 'finalApprove',
-  LAUNCH = 'launch'
+  ASK_FOR_CONSULTATION = 'launch:'
 }
