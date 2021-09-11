@@ -18,6 +18,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   statusDateModifiedString!: string;
   updatedOnString!: string;
   updatedByInfo!: AdminResult;
+  serviceTerms: string = '';
 
   service: ServiceDataService;
   langService: LangService;

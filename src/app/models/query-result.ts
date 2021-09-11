@@ -24,6 +24,7 @@ import {EmployeeService} from '../services/employee.service';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {WFActions} from "../enums/wfactions.enum";
+import {LicenseApprovalModel} from '@app/models/license-approval-model';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -206,6 +207,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
             });
         })
       );
+  }
+
+  loadLicenseModel(): Observable<LicenseApprovalModel<any, any>> {
+    const service = this.service.getService(this.BD_CASE_TYPE);
+    return service.getTask(this.TKIID);
   }
 
   private isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {

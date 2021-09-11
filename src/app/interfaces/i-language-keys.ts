@@ -17,6 +17,7 @@ export interface ILanguageKeys {
   license_status: string;
   office_english_name: string;
   office_arabic_name: string;
+  license_start_date: string;
   license_end_date: string;
   select_license: string;
   need_license_number_to_search: string;
@@ -504,4 +505,9 @@ export interface ILanguageKeys {
   postal_code: string;
   msg_following_tabs_valid: string;
   bank_category: string;
+  license_duration: string;
+  public_terms: string;
+  custom_terms: string;
+  conditional_license: string;
+  followup_date: string;
 }

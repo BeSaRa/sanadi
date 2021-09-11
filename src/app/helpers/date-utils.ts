@@ -7,7 +7,7 @@ import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-option
 
 export class DateUtils {
   static changeDateToDatepicker(dateValue: any): IMyDateModel {
-    if (!dateValue) {
+    if (!dateValue || dateValue.hasOwnProperty('singleDate')) {
       return dateValue;
     }
     return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};

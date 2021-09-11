@@ -11,7 +11,7 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {Observable, of} from 'rxjs';
 import {DialogService} from './dialog.service';
 import {ServiceDataPopupComponent} from '../administration/popups/service-data-popup/service-data-popup.component';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 
 @Injectable({
@@ -65,5 +65,17 @@ export class ServiceDataService extends BackendGenericService<ServiceData> {
         }));
       })
     );
+  }
+
+  @Generator(undefined, true)
+  private _loadByCaseType(caseType: number): Observable<ServiceData[]> {
+    return this.http.get<ServiceData[]>(this._getServiceURL() + '/caseType/' + caseType);
+  }
+
+  loadByCaseType(caseType: number): Observable<ServiceData> {
+    return this._loadByCaseType(caseType)
+      .pipe(
+        map(item => item[0])
+      );
   }
 }

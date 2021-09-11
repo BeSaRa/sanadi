@@ -7,8 +7,9 @@ import {CaseModel} from './case-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {LicenseApprovalModel} from '@app/models/license-approval-model';
 
-export class FinalExternalOfficeApproval extends CaseModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
+export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
   caseType: number = 8;
   requestType!: number;
   organizationId!: number;
@@ -25,12 +26,6 @@ export class FinalExternalOfficeApproval extends CaseModel<FinalExternalOfficeAp
   chiefDecision?: number;
   managerDecision?: number;
   reviewerDepartmentDecision?: number;
-  licenseNumber: string = '';
-  licenseDuration!: number;
-  licenseStatus!: number;
-  licenseStartDate: string = '';
-  licenseEndDate: string = '';
-  licenseApprovedDate: string = '';
   establishmentDate: string = '';
   address: string = '';
   email: string = '';
@@ -40,8 +35,7 @@ export class FinalExternalOfficeApproval extends CaseModel<FinalExternalOfficeAp
   phone: string = '';
   postalCode: string = '';
   recordNo: string = '';
-  customTerms: string = '';
-  publicTerms: string = '';
+
   executiveManagementList: ExecutiveManagement[] = [];
   branchList: BankBranch[] = [];
   bankAccountList: BankAccount[] = [];

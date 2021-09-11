@@ -2,11 +2,11 @@ import {CaseModel} from "@app/models/case-model";
 import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
 import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {LicenseApprovalModel} from '@app/models/license-approval-model';
 
 // noinspection JSUnusedGlobalSymbols
-export class InitialExternalOfficeApproval extends CaseModel<InitialExternalOfficeApprovalService, InitialExternalOfficeApproval> {
+export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialExternalOfficeApprovalService, InitialExternalOfficeApproval> {
   caseType: number = 6;
-  licenseNumber!: string;
   organizationId!: number
   subject!: string;
   requestType!: number;
@@ -23,13 +23,7 @@ export class InitialExternalOfficeApproval extends CaseModel<InitialExternalOffi
   managerDecision!: number;
   generalManagerDecision!: number;
   reviewerDepartmentDecision!: number;
-  licenseDuration!: number;
-  licenseStatus!: number;
-  licenseStartDate!: string;
-  licenseEndDate!: string;
-  licenseApprovedDate!: string;
-  customTerms!: string;
-  publicTerms!: string;
+
   // properties to be delete while send to the backend
   service: InitialExternalOfficeApprovalService;
 
