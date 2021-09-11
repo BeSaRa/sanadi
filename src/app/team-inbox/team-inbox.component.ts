@@ -169,6 +169,13 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionFinalApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.finalApprove().onAfterClose$.subscribe(actionTaken => {
+      this.reloadSelectedInbox();
+      actionTaken ? viewDialogRef?.close() : null;
+    });
+  }
+
   actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.postpone().onAfterClose$.subscribe(actionTaken => {
       this.reloadSelectedInbox();
@@ -368,10 +375,28 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
           }
         },
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.APPROVE) !== -1;
+          return item.RESPONSES.includes(WFResponseType.APPROVE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
+        }
+      },
+      // final approve
+      {
+        type: 'action',
+        icon: 'mdi-check-underline',
+        label: 'final_approve_task',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.FINAL_APPROVE);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionFinalApprove(item, viewDialogRef);
         }
       },
       // postpone

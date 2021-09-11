@@ -154,6 +154,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.APPROVE, claimBefore);
   }
 
+  finalApprove(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.FINAL_APPROVE, claimBefore);
+  }
+
   postpone(claimBefore: boolean = false): DialogRef {
     return this.actionOnTask(WFResponseType.POSTPONE, claimBefore);
   }

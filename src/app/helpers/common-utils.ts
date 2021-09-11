@@ -92,4 +92,9 @@ export class CommonUtils {
     }
     return !!(ctrl?.valid && (ctrl?.touched || ctrl?.dirty));
   }
+
+  static changeCamelToSnakeCase(str: string): string {
+    return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+
+  }
 }

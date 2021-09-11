@@ -7,5 +7,7 @@ export enum WFResponseType {
   COMPLETE = 'complete',
   TO_COMPETENT_DEPARTMENT = 'toCompetentDept',
   TO_MANAGER = 'toManager',
-  POSTPONE = 'postpone'
+  POSTPONE = 'postpone',
+  FINAL_APPROVE = 'finalApprove',
+  LAUNCH = 'launch'
 }

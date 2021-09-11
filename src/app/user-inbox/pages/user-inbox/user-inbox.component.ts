@@ -104,6 +104,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionFinalApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.finalApprove().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
   actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.postpone().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
@@ -267,6 +274,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
+        }
+      },
+      // final approve
+      {
+        type: 'action',
+        icon: 'mdi-check-underline',
+        label: 'final_approve_task',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.FINAL_APPROVE);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionFinalApprove(item, viewDialogRef);
         }
       },
       // postpone

@@ -84,6 +84,7 @@ export interface ILanguageKeys {
   approve_task: string;
   complete_task: string;
   postpone_task: string;
+  final_approve_task: string;
   task_complete: string;
   task_complete_successfully: string;
   sent_successfully: string;

@@ -20,6 +20,7 @@ import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {CaseModel} from '@app/models/case-model';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -61,8 +62,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
     public lang: LangService,
     private fb: FormBuilder,
     private serviceDataService: ServiceDataService) {
-    console.log(data.task);
-    this.label = ((this.data.actionType + '_task') as unknown as keyof ILanguageKeys);
+    this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     this.action = this.data.actionType;
   }
 
@@ -85,7 +85,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
   }
 
   displayCustomForm(): void {
-    this.displayLicenseForm = this.data.task && this.action === WFResponseType.APPROVE && this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE);
+    this.displayLicenseForm = this.data.task && (this.action === WFResponseType.APPROVE || this.action === WFResponseType.FINAL_APPROVE) && this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE);
   }
 
   buildForm() {
