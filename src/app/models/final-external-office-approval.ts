@@ -8,6 +8,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
+import {DateUtils} from '@app/helpers/date-utils';
 
 export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
   caseType: number = 8;
@@ -75,16 +76,16 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
         value: licenseNumber,
         disabled: !CommonUtils.isValidValue(requestType)
       }] : licenseNumber,
-      country: control ? [country, [CustomValidators.required]] : requestType,
-      region: control ? [region, [CustomValidators.required]] : requestType,//state
-      externalOfficeName: control ? [externalOfficeName, [CustomValidators.required]] : requestType,
-      establishmentDate: control ? [establishmentDate, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : requestType,
-      recordNo: control ? [recordNo, [CustomValidators.required, CustomValidators.maxLength(20)]] : requestType,
-      address: control ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : requestType,
-      phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : requestType,
-      fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : requestType,
-      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : requestType,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : requestType,
+      country: control ? [country, [CustomValidators.required]] : country,
+      region: control ? [region, [CustomValidators.required]] : region,//state
+      externalOfficeName: control ? [externalOfficeName, [CustomValidators.required]] : externalOfficeName,
+      establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required, CustomValidators.maxDate(new Date())]] : DateUtils.changeDateToDatepicker(establishmentDate),
+      recordNo: control ? [recordNo, [CustomValidators.required, CustomValidators.maxLength(20)]] : recordNo,
+      address: control ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : address,
+      phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
+      fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
+      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : postalCode,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       description: control ? [description, [CustomValidators.required]] : description
     }
   }

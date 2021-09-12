@@ -26,7 +26,7 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
 
     return {
       fullName: control ? [fullName, [CustomValidators.required]] : fullName,
-      establishmentDate: control ? [establishmentDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
+      establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
