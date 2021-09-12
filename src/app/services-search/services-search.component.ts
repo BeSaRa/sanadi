@@ -63,7 +63,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = new FormGroup({});
-    this.listenToRouteParams();
+    // this.listenToRouteParams();
     this.listenToServiceChange(this.serviceControl.value);
     this.listenToSearch();
     this.buildGridActions();
@@ -91,7 +91,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(map(val => Number(val)))
       .pipe(map(val => this.inboxService.getService(val)))
       .subscribe((service: EServiceGenericService<any>) => {
-        this.updateRoute();
+        // this.updateRoute();
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
         this.results = [];
