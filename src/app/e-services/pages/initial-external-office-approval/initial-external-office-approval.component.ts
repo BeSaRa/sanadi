@@ -44,7 +44,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               private orgService: OrganizationUnitService,
               private licenseService: LicenseService,
               private dialog: DialogService,
-              private employeeService: EmployeeService,
+              public employeeService: EmployeeService,
               private toast: ToastService,
               public service: InitialExternalOfficeApprovalService) {
     super();

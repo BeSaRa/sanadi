@@ -104,6 +104,27 @@
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
+        <hr>
+        <div class="row">
+          <div [ngClass]="{'col-md-12': employeeService.isExternalUser()}" class="col-md-6 col-sm-12">
+            <div class="d-flex flex-row align-items-center justify-content-start">
+              <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
+              <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()"
+                      class="d-inline-block btn p-0 icon-btn"><i
+                class="mdi mdi-plus-box text-primary"></i></button>
+            </div>
+            <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
+          </div>
+          <div *ngIf="employeeService.isInternalUser()" class="col-md-6 col-sm-12">
+            <div class="d-flex flex-row align-items-center justify-content-start">
+              <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
+              <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()"
+                      class="d-inline-block btn p-0 icon-btn"><i
+                class="mdi mdi-plus-box text-primary"></i></button>
+            </div>
+            <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>
+          </div>
+        </div>
         <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2">
           <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
                   class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
