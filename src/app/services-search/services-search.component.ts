@@ -28,7 +28,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: EServiceGenericService<any>;
   private allowedServicesForExternalUser: number[] = [
-    CaseTypes.CONSULTATION
+    CaseTypes.CONSULTATION,
+    CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    CaseTypes.PARTNER_APPROVAL,
+    CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
   ];
 
   searchColumns: string[] = [];
