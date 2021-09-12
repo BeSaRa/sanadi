@@ -19,6 +19,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   updatedOnString!: string;
   updatedByInfo!: AdminResult;
   serviceTerms: string = '';
+  licenseMaxTime!: number;
+  licenseMinTime!: number;
 
   service: ServiceDataService;
   langService: LangService;

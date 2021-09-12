@@ -10,7 +10,7 @@ import {DialogRef} from '../../models/dialog-ref';
 import {ToastService} from '@app/services/toast.service';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {QueryResult} from '@app/models/query-result';
-import {Observable, of, Subject} from 'rxjs';
+import {isObservable, Observable, of, Subject} from 'rxjs';
 import {filter, switchMap, withLatestFrom} from 'rxjs/operators';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -82,7 +82,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
           withLatestFrom(this.serviceDataService.loadByCaseType(this.data.task.BD_CASE_TYPE))
         )
         .subscribe(([caseDetails, serviceData]) => {
-          console.log(caseDetails, serviceData);
+          // console.log(caseDetails, serviceData);
           this.loadedLicense = caseDetails;
           this.updateForm(caseDetails, serviceData);
         });
@@ -116,6 +116,15 @@ export class ActionWithCommentPopupComponent implements OnInit {
       conditionalLicenseIndicator: caseDetails.conditionalLicenseIndicator,
       followUpDate: DateUtils.changeDateToDatepicker(caseDetails.followUpDate)
     });
+    let licenseDurationValidations = [CustomValidators.required, CustomValidators.number];
+    if (CommonUtils.isValidValue(serviceData.licenseMinTime)) {
+      licenseDurationValidations.push(Validators.min(serviceData.licenseMinTime));
+    }
+    if (CommonUtils.isValidValue(serviceData.licenseMaxTime)) {
+      licenseDurationValidations.push(Validators.max(serviceData.licenseMaxTime));
+    }
+    this.licenseDurationField.setValidators(licenseDurationValidations);
+    this.licenseDurationField.updateValueAndValidity();
   }
 
   proceed(): Observable<boolean> {
@@ -141,6 +150,16 @@ export class ActionWithCommentPopupComponent implements OnInit {
   private listenToTakeAction() {
     this.done$
       .pipe(
+        // beforeSave
+        switchMap(_ => {
+          let validData = true;
+          if (this.displayLicenseForm) {
+            validData = this.form.valid
+          }
+          return isObservable(validData) ? validData : of(validData);
+        }),
+        // emit only if the beforeSave returned true
+        filter(value => !!value),
         switchMap(_ => this.data.claimBefore ? this.data.task.claim() : of(null)),
         switchMap(() => this.proceed())
       )
@@ -152,6 +171,10 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   get conditionalLicenseField(): FormControl {
     return this.form.get('conditionalLicenseIndicator') as FormControl;
+  }
+
+  get licenseDurationField(): FormControl {
+    return this.form.get('licenseDuration') as FormControl;
   }
 
   updateCase(): Observable<any> {
