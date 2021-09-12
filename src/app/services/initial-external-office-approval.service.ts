@@ -15,6 +15,8 @@ import {InitialApprovalDocSearchCriteria} from "@app/models/initial-approval-doc
 import {Observable} from "rxjs";
 import {InitialApprovalDocument} from "@app/models/initial-approval-document";
 import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
+import {InitialExternalOfficeApprovalSearchCriteria} from "@app/models/initial-external-office-approval-search-criteria";
+import {SearchService} from "@app/services/search.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,8 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
   interceptor: IModelInterceptor<InitialExternalOfficeApproval> = new InitialExternalOfficeApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_initial_external_office_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'ouInfo', 'subject', 'creatorInfo'];
+  searchService: SearchService = new SearchService(this);
 
   constructor(public dynamicService: DynamicOptionsService,
               public domSanitizer: DomSanitizer,
@@ -50,7 +53,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
   }
 
   getSearchCriteriaModel<S extends InitialExternalOfficeApproval>(): InitialExternalOfficeApproval {
-    throw new Error('Method not implemented.');
+    return new InitialExternalOfficeApprovalSearchCriteria();
   }
 
   getCaseComponentName(): string {
