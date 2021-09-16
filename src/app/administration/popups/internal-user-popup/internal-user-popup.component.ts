@@ -12,6 +12,8 @@ import {InternalDepartmentService} from "@app/services/internal-department.servi
 import {InternalDepartment} from "@app/models/internal-department";
 import {takeUntil} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
+import {LookupService} from '@app/services/lookup.service';
+import {LookupCategories} from '@app/enums/lookup-categories';
 
 @Component({
   selector: 'internal-user-popup',
@@ -24,15 +26,18 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   form!: FormGroup;
   departments: InternalDepartment[] = [];
   jobTitles: Lookup[] = [];
+  statusList: Lookup[] = [];
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
               public fb: FormBuilder,
+              private lookupService: LookupService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
     this.model = this.data.model;
     this.operation = this.data.operation;
+    this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
   }
 
   initPopup(): void {
