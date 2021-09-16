@@ -40,8 +40,8 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
     searchText: '',
     sortingCallbacks: {
       updatedBy: (a: ServiceData, b: ServiceData, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.getName().toLowerCase();
+        let value1 = !isValidValue(a) ? '' : a.updatedByInfo.getName().toLowerCase(),
+          value2 = !isValidValue(b) ? '' : b.updatedByInfo.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       updatedOn: (a: ServiceData, b: ServiceData, dir: SortEvent): number => {
@@ -52,8 +52,8 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       status: (a: ServiceData, b: ServiceData, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.getName().toLowerCase();
+        let value1 = !isValidValue(a) ? '' : a.statusInfo.getName().toLowerCase(),
+          value2 = !isValidValue(b) ? '' : b.statusInfo.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       }
     },

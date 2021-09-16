@@ -4,104 +4,145 @@
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
 <div class="dialog-content" #dialogContent>
-  <form novalidate autocomplete="off" [formGroup]="form">
-    <div class="row mb-3">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="arName" for="arName"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.arabic_name}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="arName" validationClasses="arName" formControlName="arName"
-                   class="form-control">
-            <app-field-error-message controlName="arName"></app-field-error-message>
-          </div>
-        </div>
+  <form novalidate autocomplete="off" [formGroup]="form" class="w800px">
+    <div class="row mb-4">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.arabic_name}}</label>
+        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
+        <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="enName" for="enName"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.english_name}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="enName" validationClasses="enName" formControlName="enName"
-                   class="form-control">
-            <app-field-error-message controlName="enName"></app-field-error-message>
-          </div>
-        </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.english_name}}</label>
+        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
+        <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.baw_service_code}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
-                   class="form-control">
-            <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
-          </div>
-        </div>
+    <div class="row mb-4">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
+               class="form-label">{{langService.map.baw_service_code}}</label>
+        <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
+               class="form-control">
+        <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="caseType" for="caseType"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.case_type}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="caseType" validationClasses="caseType" formControlName="caseType"
-                   class="form-control">
-            <app-field-error-message controlName="caseType"></app-field-error-message>
-          </div>
-        </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{langService.map.case_type}}</label>
+        <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">
+        <app-field-error-message controlName="caseType"></app-field-error-message>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.license_serial_code}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="licenseSerialCode" validationClasses="licenseSerialCode" formControlName="licenseSerialCode"
-                   class="form-control">
-            <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
-          </div>
-        </div>
+    <div class="row mb-4">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
+               class="form-label">{{langService.map.license_serial_code}}</label>
+        <input id="licenseSerialCode" validationClasses="licenseSerialCode" formControlName="licenseSerialCode"
+               class="form-control">
+        <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
       </div>
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.request_serial_code}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <input id="requestSerialCode" validationClasses="requestSerialCode" formControlName="requestSerialCode"
-                   class="form-control">
-            <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
-          </div>
-        </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
+               class="form-label">{{langService.map.request_serial_code}}</label>
+        <input id="requestSerialCode" validationClasses="requestSerialCode" formControlName="requestSerialCode"
+               class="form-control">
+        <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
       </div>
     </div>
-    <div class="row mb-3">
-      <div class="col-md-6 col-sm-12">
-        <div class="row">
-          <label for="status" asteriskIfRequired="status"
-                 class="col-md-4 col-sm-12 col-form-label">{{langService.map.lbl_status}}</label>
-          <div class="col-md-8 mb-3 position-relative col-sm-12">
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-          </div>
-          <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
-        </div>
+    <div class="row mb-4">
+      <div class="col-sm-6 ng-select-wrapper">
+        <label for="status" asteriskIfRequired="status" class="form-label">{{langService.map.lbl_status}}</label>
+        <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="status"
+                   [notFoundText]="langService.map.msg_not_found"
+                   formControlName="status" validationClasses="status">
+          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+          <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
+                     [disabled]="option.isRetiredCommonStatus()">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="status"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
+               class="form-label">{{langService.map.service_time_limit}}</label>
+        <input id="serviceTimeLimit" validationClasses="serviceTimeLimit" formControlName="serviceTimeLimit"
+               class="form-control">
+        <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="licenseMinTime" for="licenseMinTime"
+               class="form-label">{{langService.map.license_min_time}}</label>
+        <input id="licenseMinTime" validationClasses="licenseMinTime" formControlName="licenseMinTime"
+               class="form-control">
+        <app-field-error-message controlName="licenseMinTime"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="licenseMaxTime" for="licenseMaxTime"
+               class="form-label">{{langService.map.license_max_time}}</label>
+        <input id="licenseMaxTime" validationClasses="licenseMaxTime" formControlName="licenseMaxTime"
+               class="form-control">
+        <app-field-error-message controlName="licenseMaxTime"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="fees" for="fees" class="form-label">{{langService.map.fees}}</label>
+        <input id="fees" validationClasses="fees" formControlName="fees" class="form-control">
+        <app-field-error-message controlName="fees"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="serviceTerms" for="serviceTerms"
+               class="form-label">{{langService.map.service_terms}}</label>
+        <textarea id="serviceTerms" validationClasses="serviceTerms" formControlName="serviceTerms"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="serviceTerms"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="serviceRequirements" for="serviceRequirements"
+               class="form-label">{{langService.map.service_requirements}}</label>
+        <textarea id="serviceRequirements" validationClasses="serviceRequirements" formControlName="serviceRequirements"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="serviceRequirements"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="serviceDescription" for="serviceDescription"
+               class="form-label">{{langService.map.service_description}}</label>
+        <textarea id="serviceDescription" validationClasses="serviceDescription" formControlName="serviceDescription"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="serviceDescription"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="serviceStepsArabic" for="serviceStepsArabic"
+               class="form-label">{{langService.map.service_steps_arabic}}</label>
+        <textarea id="serviceStepsArabic" validationClasses="serviceStepsArabic" formControlName="serviceStepsArabic"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="serviceStepsArabic"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="serviceStepsEnglish" for="serviceStepsEnglish"
+               class="form-label">{{langService.map.service_steps_english}}</label>
+        <textarea id="serviceStepsEnglish" validationClasses="serviceStepsEnglish" formControlName="serviceStepsEnglish"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="serviceStepsEnglish"></app-field-error-message>
       </div>
     </div>
   </form>
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
+  <button tabindex="-1" (click)="displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
           class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>

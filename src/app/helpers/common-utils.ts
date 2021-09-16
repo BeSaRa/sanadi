@@ -1,3 +1,5 @@
+import { FormGroup } from "@angular/forms";
+
 export class CommonUtils {
   /**
    * @description Returns the sort value (1 | -1 | 0) depending on sort direction
@@ -93,8 +95,34 @@ export class CommonUtils {
     return !!(ctrl?.valid && (ctrl?.touched || ctrl?.dirty));
   }
 
+  /**
+   * @description Transforms the given string to snake case
+   * @param str
+   */
   static changeCamelToSnakeCase(str: string): string {
     return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
+  }
+
+  /**
+   * @description Highlight validity of all fields in form
+   * @param form
+   * @param containerRefToScroll
+   * Scroll the form to the top of given element
+   */
+  static displayFormValidity(form: FormGroup, containerRefToScroll: HTMLElement | string = ''): void {
+    form.markAllAsTouched();
+
+    if (!containerRefToScroll) {
+      return;
+    }
+
+    if (typeof containerRefToScroll === 'string') {
+      containerRefToScroll = document.getElementById(containerRefToScroll) as HTMLElement;
+    }
+
+    if (containerRefToScroll.scrollTop > 0) {
+      containerRefToScroll.scrollTo({top: 0, behavior: "smooth"});
+    }
   }
 }

@@ -31,22 +31,21 @@
 
         <!-- updatedOn column-->
         <ng-container cdkColumnDef="updatedOn">
-          <th sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedOn"
-              cdk-header-cell *cdkHeaderCellDef
-              class="date-column">{{langService.map.updated_date}}</th>
+          <th sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedOn" cdk-header-cell
+              *cdkHeaderCellDef class="date-column">{{langService.map.updated_date}}</th>
           <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.updatedOnString}}</span></td>
         </ng-container>
 
         <!-- updatedBy column-->
         <ng-container cdkColumnDef="updatedBy">
           <th sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedBy" cdk-header-cell
-              *cdkHeaderCellDef> {{langService.map.updated_by}}</th>
+              *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.updated_by}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.updatedByInfo?.getName()}} </td>
         </ng-container>
 
         <ng-container cdkColumnDef="status">
           <th sortable-header [sortCallback]="tableOptions.sortingCallbacks.status" cdk-header-cell
-              *cdkHeaderCellDef> {{langService.map.lbl_status}}</th>
+              *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.lbl_status}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo?.getName()}} </td>
         </ng-container>
 

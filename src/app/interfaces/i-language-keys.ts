@@ -536,5 +536,14 @@ export interface ILanguageKeys {
   custom_terms: string;
   conditional_license: string;
   followup_date: string;
+  service_time_limit: string;
+  license_min_time: string;
+  license_max_time: string;
+  fees: string;
+  service_terms: string;
+  service_description: string;
+  service_requirements: string;
+  service_steps_arabic: string;
+  service_steps_english: string;
   manager_decision: string;
 }

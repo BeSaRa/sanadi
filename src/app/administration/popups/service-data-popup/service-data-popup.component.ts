@@ -1,21 +1,21 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {of, Subject} from 'rxjs';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormManager} from '../../../models/form-manager';
-import {ServiceData} from '../../../models/service-data';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {LangService} from '../../../services/lang.service';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {ServiceData} from '@app/models/service-data';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {LangService} from '@app/services/lang.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {extender} from '../../../helpers/extender';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {Lookup} from '../../../models/lookup';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {LookupService} from '../../../services/lookup.service';
+import {extender} from '@app/helpers/extender';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {Lookup} from '@app/models/lookup';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {LookupService} from '@app/services/lookup.service';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'service-data-popup',
@@ -29,7 +29,6 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   model: ServiceData;
   operation: OperationTypes;
   list: ServiceData[] = [];
-  fm!: FormManager;
   statusList: Lookup[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>, private lookupService: LookupService,
@@ -52,6 +51,10 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
+  displayFormValidity(elmRefToScroll: HTMLElement) {
+    CommonUtils.displayFormValidity(this.form, elmRefToScroll);
+  }
+
   buildForm(): void {
     this.form = this.fb.group({
       caseType: [this.model.caseType, [CustomValidators.required, CustomValidators.number]],
@@ -68,9 +71,17 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       ]],
       requestSerialCode: [this.model.requestSerialCode, CustomValidators.required],
       licenseSerialCode: [this.model.licenseSerialCode, CustomValidators.required],
-      status: [this.model.status, [CustomValidators.required]]
+      status: [this.model.status, [CustomValidators.required]],
+      serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number]],
+      licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number]],
+      licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number]],
+      serviceDescription: [this.model.serviceDescription, [CustomValidators.maxLength(1000)]],
+      serviceRequirements: [this.model.serviceRequirements, [CustomValidators.maxLength(1000)]],
+      serviceTerms: [this.model.serviceTerms, [CustomValidators.required, CustomValidators.maxLength(1000)]],
+      fees: [this.model.fees, [CustomValidators.number]],
+      serviceStepsArabic: [this.model.serviceStepsArabic, [CustomValidators.maxLength(1000)]],
+      serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]],
     });
-    this.fm = new FormManager(this.form, this.langService);
   }
 
   saveModel(): void {
