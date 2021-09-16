@@ -1,21 +1,21 @@
 import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
-import {FactoryService} from '../../../services/factory.service';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {FormManager} from '../../../models/form-manager';
-import {OperationTypes} from '../../../enums/operation-types.enum';
+import {FactoryService} from '@app/services/factory.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {FormManager} from '@app/models/form-manager';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {LangService} from '../../../services/lang.service';
-import {LookupService} from '../../../services/lookup.service';
-import {Country} from '../../../models/country';
-import {Lookup} from '../../../models/lookup';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {IKeyValue} from '../../../interfaces/i-key-value';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {Country} from '@app/models/country';
+import {Lookup} from '@app/models/lookup';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'country-popup',
@@ -85,11 +85,11 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
     this.form = this.fb.group({
       basic: this.fb.group({
         arName: [this.model.arName, [
-          CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+          CustomValidators.required, CustomValidators.maxLength(100),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
         ]],
         enName: [this.model.enName, [
-          CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+          CustomValidators.required, CustomValidators.maxLength(100),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
         parentId: [{
@@ -97,7 +97,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
           disabled: !this.model.id // disabled while adding
         }],
         status: [this.model.status, [CustomValidators.required]],
-        riskLevel: [this.model.riskLevel, [CustomValidators.required, CustomValidators.number]]
+        riskLevel: [this.model.riskLevel, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(10)]]
       }, {
         validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'parentId', 'status', 'riskLevel'])
       })
