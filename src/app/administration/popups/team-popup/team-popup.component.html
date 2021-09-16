@@ -56,7 +56,8 @@
                    formControlName="status"
                    [ngClass]="fm.getStatusClass('status')">
           <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-          <ng-option *ngFor="let option of statusList" [value]="option.lookupKey">
+          <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
+                     [disabled]="option.isRetiredCommonStatus()">
             {{option.getName()}}
           </ng-option>
         </ng-select>
