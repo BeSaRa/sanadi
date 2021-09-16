@@ -51,7 +51,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     public dialogRef: DialogRef,
     public fb: FormBuilder,
     public lang: LangService,
-  @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
     private teamService: TeamService,
     private internalUserService: InternalUserService,
     private configService: ConfigurationService,
@@ -73,8 +73,10 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    if(this.disableForm) {
+    if (this.disableForm) {
       this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
     }
   }
 
@@ -88,12 +90,12 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   afterSave(model: InternalDepartment, dialogRef: DialogRef): void {
     let message = '';
-    if(this.operation === OperationTypes.UPDATE) {
+    if (this.operation === OperationTypes.UPDATE) {
       message = this.lang.map.msg_update_x_success;
       dialogRef.close(model)
     }
 
-    if(this.operation === OperationTypes.CREATE) {
+    if (this.operation === OperationTypes.CREATE) {
       message = this.lang.map.msg_create_x_success;
       this.operation = OperationTypes.UPDATE
     }
@@ -145,7 +147,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
         );
       })
     ).subscribe((success) => {
-      if(success) {
+      if (success) {
         this.toast.success(this.lang.map.msg_save_stamp_for_x_success.change({x: this.model.getName()}));
       }
     })
@@ -179,7 +181,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   setCurrentStamp() {
     this.model.getStamp().subscribe((file) => {
-      if(file.blob.type === 'error'){
+      if (file.blob.type === 'error') {
         return;
       }
       this.blob = file;

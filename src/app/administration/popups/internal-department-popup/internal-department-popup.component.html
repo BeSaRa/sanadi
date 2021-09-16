@@ -64,7 +64,8 @@
               <ng-select validationClasses="status"
                          formControlName="status"
                          id="status">
-                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses">{{status.getName()}}</ng-option>
+                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses"
+                           [disabled]="status.isRetiredCommonStatus()">{{status.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="status"></app-field-error-message>
             </div>
@@ -77,7 +78,7 @@
         <input class="input-file" type="file" #stampUploader [hidden]="true" (change)="onStampSelected($event)"
                [accept]="stampExtensions.join(',')">
         <div class="col-sm-12">
-          <div class="row mb-3">
+          <div class="row mb-3" *ngIf="!disableForm">
             <div class="col-sm-12">
               <button class="btn btn-primary"
                       (click)="openFileBrowser($event)">
@@ -90,7 +91,7 @@
               <div class="stamp-container">
                 <img *ngIf="stampPath" [src]="stampPath" alt="{{lang.map.logo}}"
                      class="img-fit-contain"/>
-                <button *ngIf="stampPath" class="btn icon-btn text-primary m-0 align-top"
+                <button *ngIf="!disableForm && stampPath" class="btn icon-btn text-primary m-0 align-top"
                         tooltip="{{lang.map.btn_remove}}"
                         (click)="removeStamp($event)">
                   <i class="mdi mdi-close-circle"></i>
