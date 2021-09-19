@@ -55,6 +55,17 @@
   {
     "fields": [
       {
+        "key": "requestType",
+        "type": "selectField",
+        "label": "request_type",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.ServiceRequestType",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
         "key": "caseStatus",
         "type": "selectField",
         "label": "lbl_status",
@@ -64,7 +75,11 @@
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
-      },
+      }
+    ]
+  },
+  {
+    "fields": [
       {
         "key": "licenseNumber",
         "type": "maskInput",
