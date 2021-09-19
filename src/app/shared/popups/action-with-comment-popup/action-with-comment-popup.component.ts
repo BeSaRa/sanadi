@@ -21,6 +21,7 @@ import {CaseModel} from '@app/models/case-model';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -74,23 +75,27 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.listenToTakeAction();
-    this.displayCustomForm();
-    this.buildForm();
-    if (this.displayLicenseForm) {
+    if (this.data.task) {
       this.data.task.loadLicenseModel()
         .pipe(
           withLatestFrom(this.serviceDataService.loadByCaseType(this.data.task.BD_CASE_TYPE))
         )
         .subscribe(([caseDetails, serviceData]) => {
-          // console.log(caseDetails, serviceData);
           this.loadedLicense = caseDetails;
-          this.updateForm(caseDetails, serviceData);
+          this.displayCustomForm(caseDetails);
+          this.buildForm();
+          if (this.displayLicenseForm) {
+            this.updateForm(caseDetails, serviceData);
+          }
         });
     }
   }
 
-  displayCustomForm(): void {
-    this.displayLicenseForm = this.data.task && (this.action === WFResponseType.APPROVE || this.action === WFResponseType.FINAL_APPROVE) && this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE);
+  displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
+    this.displayLicenseForm = this.data.task &&
+      (this.action === WFResponseType.APPROVE || this.action === WFResponseType.FINAL_APPROVE) &&
+      this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
+      caseDetails.requestType !== ServiceRequestTypes.CANCEL;
   }
 
   buildForm() {
