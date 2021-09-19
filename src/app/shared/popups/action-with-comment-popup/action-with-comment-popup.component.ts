@@ -17,7 +17,6 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {CaseModel} from '@app/models/case-model';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
 import {CommonUtils} from '@app/helpers/common-utils';
@@ -46,7 +45,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   datepickerOptionsMap: IKeyValue = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
   };
 
   constructor(
