@@ -202,6 +202,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       this.licenseNumber.setValidators([CustomValidators.required, (control) => {
         return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
       }]);
+      this._handleRequestTypeDependentValidations();
     }
     this.licenseNumber.updateValueAndValidity({emitEvent: false})
   }
@@ -242,6 +243,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         region: license.region,
       }))
     }
+    this._handleRequestTypeDependentValidations();
 
     if (license) {
       this.loadRegions(license.country);
@@ -255,6 +257,16 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       return;
     }
     this.licenseSearch$.next(value);
+  }
+
+  private _handleRequestTypeDependentValidations(): void {
+    if (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL) {
+      this.country.disable();
+      this.region.disable();
+    } else {
+      this.country.enable();
+      this.region.enable();
+    }
   }
 
   private loadSelectedLicense(licenseNumber: string): void {
