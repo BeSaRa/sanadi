@@ -178,7 +178,9 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.listenToCountryChange();
 
     if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
-      this.loadSelectedLicense(this.model?.licenseNumber!);
+      setTimeout(() => {
+        this.loadSelectedLicense(this.model?.licenseNumber!);
+      });
     }
   }
 

@@ -145,7 +145,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.listenToRequestTypeChange();
     this.listenToCountryChange();
     if (this.fromDialog) {
-      this.loadSelectedLicense(this.model?.licenseNumber!);
+      setTimeout(() => {
+        this.loadSelectedLicense(this.model?.licenseNumber!);
+      });
     }
   }
 
