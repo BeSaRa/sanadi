@@ -86,6 +86,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     PI_CREATE: (text, model) => {
       let date = (new DatePipe('en')).transform(model.PI_CREATE);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
+    },
+    action: (text, model) => {
+      let local = this.lang.map[model.TAD_DISPLAY_NAME] || model.TAD_DISPLAY_NAME;
+      return local ? local.toLowerCase().indexOf(text) !== -1 : false;
     }
   };
 
