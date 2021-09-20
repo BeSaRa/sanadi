@@ -88,6 +88,11 @@ export class ActionWithCommentPopupComponent implements OnInit {
           }
         });
     }
+
+    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
+      this.comment.setValidators([CustomValidators.required]);
+      this.comment.updateValueAndValidity();
+    }
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
@@ -159,6 +164,8 @@ export class ActionWithCommentPopupComponent implements OnInit {
           let validData = true;
           if (this.displayLicenseForm) {
             validData = this.form.valid
+          } else if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
+            validData = !!this.comment.value;
           }
           return isObservable(validData) ? validData : of(validData);
         }),

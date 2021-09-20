@@ -72,10 +72,11 @@
     </form>
   </div>
   <div class="row mb-4">
-    <div class="col-12">
-      <label class="form-label" for="comment">{{lang.map.comment}}</label>
+    <div class="col-12 position-relative">
+      <label class="form-label" for="comment" asteriskIfRequired [control]="comment">{{lang.map.comment}}</label>
       <textarea name="comment" [formControl]="comment" id="comment" rows="3" [placeholder]="lang.map.type_your_comment"
-                class="form-control"></textarea>
+                class="form-control" validationClasses [control]="comment"></textarea>
+      <app-field-error-message [control]="comment"></app-field-error-message>
     </div>
   </div>
 </div>
