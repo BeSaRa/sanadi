@@ -11,6 +11,7 @@ import {InitialApprovalDocumentInterceptor} from "@app/model-interceptors/initia
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DialogService} from "@app/services/dialog.service";
 import {SelectLicensePopupComponent} from "@app/e-services/poups/select-license-popup/select-license-popup.component";
+import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,19 @@ export class LicenseService {
   partnerApprovalLicenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria>): Observable<InitialApprovalDocument[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
+  }
+
+
+  @Generator(InitialApprovalDocument, true, {
+    property: 'rs',
+    interceptReceive: (new InitialApprovalDocumentInterceptor()).receive
+  })
+  private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<InitialApprovalDocument[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
+    return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
+  }
+  finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<InitialApprovalDocument[]> {
+    return this._finalApprovalLicenseSearch(criteria);
   }
 
   openSelectLicenseDialog(licenses: InitialApprovalDocument[], select = true): DialogRef {

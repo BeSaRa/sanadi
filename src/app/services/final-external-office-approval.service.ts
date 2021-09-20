@@ -30,6 +30,7 @@ import {BankAccount} from '@app/models/bank-account';
 import {BankAccountInterceptor} from '@app/model-interceptors/bank-account-interceptor';
 import {ExecutiveManagementInterceptor} from '@app/model-interceptors/executive-management-interceptor';
 import {BankBranchInterceptor} from '@app/model-interceptors/bank-branch-interceptor';
+import {LicenseService} from '@app/services/license.service';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,7 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
               public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
+              private licenseService: LicenseService,
               public http: HttpClient) {
     super();
     FactoryService.registerService('FinalExternalOfficeApprovalService', this);
@@ -77,6 +79,10 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
 
   getSearchCriteriaModel<S extends FinalExternalOfficeApproval>(): FinalExternalOfficeApproval {
     return new FinalExternalOfficeApprovalSearchCriteria();
+  }
+
+  licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<InitialApprovalDocument[]> {
+    return this.licenseService.finalApprovalLicenseSearch(criteria);
   }
 
 }

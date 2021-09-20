@@ -350,8 +350,13 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(exhaustMap(value => {
-        return this.loadInitialLicencesByCriteria(value)
-          .pipe(catchError(() => of([])))
+        if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+          return this.loadInitialLicencesByCriteria(value)
+            .pipe(catchError(() => of([])))
+        } else {
+          return this.loadFinalLicencesByCriteria(value)
+            .pipe(catchError(() => of([])))
+        }
       }))
       .pipe(
         // display message in case there is no returned license
@@ -387,12 +392,20 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
 
   private loadSelectedLicense(licenseNumber: string): void {
-    this.loadInitialLicencesByCriteria(licenseNumber)
-      .pipe(
-        filter(list => !!list.length),
-        map(list => list[0]),
-        takeUntil(this.destroy$)
-      )
+    if (!this.model || !licenseNumber) {
+      return;
+    }
+    let response;
+    if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+      response = this.loadInitialLicencesByCriteria(licenseNumber);
+    } else {
+      response = this.loadFinalLicencesByCriteria(licenseNumber);
+    }
+    response.pipe(
+      filter(list => !!list.length),
+      map(list => list[0]),
+      takeUntil(this.destroy$)
+    )
       .subscribe((license) => {
         this.setSelectedLicense(license)
       })
@@ -407,6 +420,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   loadInitialLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {
     return this.initialApprovalService.licenseSearch({licenseNumber: value});
+  }
+
+  loadFinalLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {
+    return this.service.licenseSearch({licenseNumber: value});
   }
 
   get basicTab(): FormGroup {
