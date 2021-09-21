@@ -70,6 +70,10 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{getServiceName(row.BD_CASE_TYPE)}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="BD_SUBJECT">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.subject}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.BD_SUBJECT}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell class="table-actions" *cdkCellDef="let row">

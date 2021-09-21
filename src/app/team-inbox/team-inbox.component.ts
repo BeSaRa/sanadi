@@ -26,7 +26,7 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 export class TeamInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();

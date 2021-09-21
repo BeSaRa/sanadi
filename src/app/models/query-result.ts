@@ -64,6 +64,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   PI_DUE!: string;
   PI_CREATE!: string;
   RESPONSES!: string [];
+  BD_SUBJECT!: string;
 
   fromUserInfo!: AdminResult;
 
@@ -87,6 +88,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       let date = (new DatePipe('en')).transform(model.PI_CREATE);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
     },
+    BD_SUBJECT: 'BD_SUBJECT',
     action: (text, model) => {
       let local = this.lang.map[model.TAD_DISPLAY_NAME] || model.TAD_DISPLAY_NAME;
       return local ? local.toLowerCase().indexOf(text) !== -1 : false;
