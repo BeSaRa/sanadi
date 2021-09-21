@@ -5,6 +5,7 @@ import {DialogService} from '../services/dialog.service';
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
   description!: string;
+  isInternal!: boolean;
   isPublished!: boolean;
   documentTitle!: string;
   mimeType!: string;
@@ -28,5 +29,9 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
 
   getIcon(): string {
     return this.mimeType === 'application/pdf' ? 'mdi-file-pdf-outline' : 'mdi-file-image-outline';
+  }
+
+  getInternalExternalIcon(): string {
+    return this.isInternal ? 'mdi-recycle' : '';
   }
 }
