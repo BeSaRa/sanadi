@@ -11,6 +11,11 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.specialistDecisionInfo;
+    delete model.chiefDecisionInfo;
+    delete model.managerDecisionInfo;
+    delete model.generalManagerDecisionInfo;
+    delete model.reviewerDepartmentDecisionInfo;
 
     return model;
   }
@@ -20,6 +25,12 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
+    model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
+    model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
+    model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
+    model.generalManagerDecisionInfo = AdminResult.createInstance(model.generalManagerDecisionInfo);
+    model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
+
 
     return model;
   }

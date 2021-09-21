@@ -536,4 +536,5 @@ export interface ILanguageKeys {
   custom_terms: string;
   conditional_license: string;
   followup_date: string;
+  manager_decision: string;
 }

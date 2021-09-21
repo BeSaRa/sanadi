@@ -28,4 +28,26 @@
       </div>
     </div>
   </div>
+
+  <div class="row mb-3" *ngIf="showManagerRequestStatus">
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="managerDecisionInfo" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.manager_decision}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <input id="managerDecisionInfo" readonly disabled [value]="managerDecisionInfo?.getName()"
+                 class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="managerJustification"
+               class="col-md-4 col-sm-12 col-form-label">{{lang.map.reason}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative" disabled>
+          <input id="managerJustification" readonly disabled [value]="managerJustification" class="form-control">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

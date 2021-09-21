@@ -3,6 +3,7 @@ import {InitialExternalOfficeApprovalService} from "@app/services/initial-extern
 import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
+import {AdminResult} from "@app/models/admin-result";
 
 // noinspection JSUnusedGlobalSymbols
 export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialExternalOfficeApprovalService, InitialExternalOfficeApproval> {
@@ -23,6 +24,11 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   managerDecision!: number;
   generalManagerDecision!: number;
   reviewerDepartmentDecision!: number;
+  specialistDecisionInfo!: AdminResult;
+  chiefDecisionInfo!: AdminResult;
+  managerDecisionInfo!: AdminResult;
+  generalManagerDecisionInfo!: AdminResult;
+  reviewerDepartmentDecisionInfo!: AdminResult;
 
   // properties to be delete while send to the backend
   service: InitialExternalOfficeApprovalService;
