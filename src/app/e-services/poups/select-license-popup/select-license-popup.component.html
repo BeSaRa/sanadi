@@ -32,6 +32,10 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <button (click)="selectLicense(row)" class="btn btn-primary">{{lang.map.select}}</button>
+          <button class="btn btn-link outline-none mx-2"
+                  tooltip="{{lang.map.view_license}}"
+                  (click)="viewLicenseAsPDF(row)">
+            <i class="mdi mdi-file-pdf-outline"></i></button>
         </td>
       </ng-container>
       <tr *cdkNoDataRow>
