@@ -246,4 +246,8 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   isCase(): boolean {
     return false;
   }
+
+  isReturned(): boolean {
+    return this.BD_IS_RETURNED;
+  }
 }
