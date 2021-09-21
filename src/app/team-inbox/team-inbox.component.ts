@@ -212,7 +212,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.TEAM_INBOX)
+    item.open(this.actions, OpenFrom.TEAM_INBOX, true)
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reloadSelectedInbox());
   }

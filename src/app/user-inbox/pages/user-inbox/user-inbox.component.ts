@@ -148,7 +148,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.USER_INBOX)
+    item.open(this.actions, OpenFrom.USER_INBOX, !this.employeeService.isCharityManager())
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reloadInbox$.next(null));
   }

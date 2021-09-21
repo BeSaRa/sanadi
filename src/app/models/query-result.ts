@@ -187,7 +187,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
   }
 
-  open(actions: IMenuItem<QueryResult>[] = [], from: OpenFrom = OpenFrom.USER_INBOX): Observable<DialogRef> {
+  open(actions: IMenuItem<QueryResult>[] = [], from: OpenFrom = OpenFrom.USER_INBOX, readonly: boolean = true): Observable<DialogRef> {
     const service = this.service.getService(this.BD_CASE_TYPE);
     const componentName = service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
@@ -217,7 +217,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
               comInstance.fromDialog = true;
-              comInstance.readonly = true;
+              comInstance.readonly = readonly;
               comInstance.operation = OperationTypes.UPDATE;
               comInstance.allowEditRecommendations = this.isAllowedToEditRecommendations(model, from);
               instance.component = comInstance;

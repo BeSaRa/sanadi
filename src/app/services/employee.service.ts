@@ -11,6 +11,7 @@ import {InternalUser} from '../models/internal-user';
 import {InternalDepartment} from '../models/internal-department';
 import {Team} from '../models/team';
 import {ConfigurationService} from '@app/services/configuration.service';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,16 @@ export class EmployeeService {
 
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
+
+  private userRoleTeamAuthMap = {
+    charityUser: 'Charity Organization',
+    charityManager: 'Charity Organization Manager',
+    licenseUser: 'Licenses',
+    licenseManager: 'Licenses Manager',
+    licenseChiefManager: 'Licenses Chief',
+    licenseGeneralManager: 'Licenses General Manager',
+    riskAndComplianceUser: 'Risk and Compliance'
+  };
 
   constructor(private configService: ConfigurationService) {
     FactoryService.registerService('EmployeeService', this);
@@ -224,5 +235,40 @@ export class EmployeeService {
 
   getCurrentUser(): InternalUser | OrgUser {
     return this.isInternalUser() ? this.getInternalUser()! : this.getUser()!;
+  }
+
+  private _isInTeamByAuthName(teamName: string) {
+    if (!this.teams.length || !CommonUtils.isValidValue(teamName)) {
+      return false;
+    }
+    return this.teams.some(x => CommonUtils.isValidValue(x.authName) && x.authName.toLowerCase() === teamName.toLowerCase());
+  }
+
+  isCharityUser(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.charityUser);
+  }
+
+  isCharityManager(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.charityManager);
+  }
+
+  isLicensingUser(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseUser);
+  }
+
+  isLicensingManager(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseManager);
+  }
+
+  isLicensingGeneralManager(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseGeneralManager);
+  }
+
+  isLicensingChiefManager(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseChiefManager);
+  }
+
+  isRiskAndComplianceUser(): boolean {
+    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.riskAndComplianceUser);
   }
 }
