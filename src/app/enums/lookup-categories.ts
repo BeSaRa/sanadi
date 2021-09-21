@@ -39,6 +39,7 @@ export enum LookupCategories {
   HEADQUARTER_TYPE = 'HeadQuarterType',
   REQUEST_CLASSIFICATION = 'RequestClassification',
   ATTACHMENT_TYPE_USERS = 'UserType',
+  ServiceWorkField = 'ServiceWorkField',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -79,4 +80,5 @@ export enum LookupCategories {
   DOMAIN_CAT_ID = '121',
   BANK_CATEGORY_CAT_ID = '118',
   CURRENCY_CAT_ID = '120',
+  ServiceWorkFieldId = '122',
 }

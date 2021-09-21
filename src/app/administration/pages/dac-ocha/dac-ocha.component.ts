@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {WorkField} from '@app/models/work-field';
-import {WorkFieldService} from '@app/services/work-field.service';
+import {DacOcha} from '@app/models/dac-ocha';
+import {DacOchaService} from '@app/services/dac-ocha.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -14,27 +14,27 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {BehaviorSubject, of} from 'rxjs';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {WorkFieldTypeEnum} from '@app/enums/work-field-type-enum';
+import {DacOchaTypeEnum} from '@app/enums/dac-ocha-type-enum';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 
 @Component({
-  selector: 'work-field',
-  templateUrl: './work-field.component.html',
-  styleUrls: ['./work-field.component.scss']
+  selector: 'dac-ocha',
+  templateUrl: './dac-ocha.component.html',
+  styleUrls: ['./dac-ocha.component.scss']
 })
-export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFieldService> implements OnInit{
-  selectWorkFieldType$: BehaviorSubject<number> = new BehaviorSubject<number>(WorkFieldTypeEnum.ocha);
-  selectedWorkFieldTypeId: number = 1;
+export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaService> implements OnInit{
+  selectDacOchaType$: BehaviorSubject<number> = new BehaviorSubject<number>(DacOchaTypeEnum.ocha);
+  selectedDacOchaTypeId: number = 1;
   searchText = '';
   classifications!: Lookup[];
   tabsData: IKeyValue = {
     ocha: {name: 'OCHA'},
     dac: {name: 'DAC'}
   };
-  actions: IMenuItem<WorkField>[] = [
+  actions: IMenuItem<DacOcha>[] = [
     {
       type: 'action',
       label: 'btn_reload',
@@ -49,7 +49,7 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
-  selectedRecords: WorkField[] = [];
+  selectedRecords: DacOcha[] = [];
   actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -61,7 +61,7 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
   ];
 
   constructor(public lang: LangService,
-              public service: WorkFieldService,
+              public service: DacOchaService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               private toast: ToastService,
@@ -71,14 +71,14 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
 
   ngOnInit() {
     super.ngOnInit();
-    this.listenToWorkFieldTypeChange();
+    this.listenToDacOchaTypeChange();
     this.getClassificationsLookup();
   }
 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.service.openCreateWorkFieldDialog(this.selectedWorkFieldTypeId).onAfterClose$))
+      .pipe(exhaustMap(() => this.service.openCreateDacOchaDialog(this.selectedDacOchaTypeId).onAfterClose$))
       .subscribe(() => this.reload$.next(null))
   }
 
@@ -86,19 +86,19 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openUpdateWorkFieldDialog(model.id, this.selectedWorkFieldTypeId).pipe(catchError(_ => of(null)))
+        return this.service.openUpdateDacOchaDialog(model.id, this.selectedDacOchaTypeId).pipe(catchError(_ => of(null)))
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null))
   }
 
-  edit(workField: WorkField, event: MouseEvent) {
+  edit(dacOcha: DacOcha, event: MouseEvent) {
     event.preventDefault();
-    this.edit$.next(workField);
+    this.edit$.next(dacOcha);
   }
 
-  delete(event: MouseEvent, model: WorkField): void {
+  delete(event: MouseEvent, model: DacOcha): void {
     event.preventDefault();
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
@@ -151,33 +151,33 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
           }),
           map(list => {
             return list.filter(model => {
-              return model.type === this.selectedWorkFieldTypeId;
+              return model.type === this.selectedDacOchaTypeId;
             });
           }),
           catchError(_ => of([]))
         );
       }))
-      .subscribe((list: WorkField[]) => {
+      .subscribe((list: DacOcha[]) => {
         this.models = list;
       })
   }
 
-  listenToWorkFieldTypeChange() {
-    this.selectWorkFieldType$
+  listenToDacOchaTypeChange() {
+    this.selectDacOchaType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(type => {
-      this.selectedWorkFieldTypeId = type;
+      this.selectedDacOchaTypeId = type;
       this.reload$.next(null);
     })
   }
 
   tabChanged(tab: TabComponent) {
     if(tab.name.toLowerCase() === 'ocha') {
-      this.selectWorkFieldType$.next(WorkFieldTypeEnum.ocha);
+      this.selectDacOchaType$.next(DacOchaTypeEnum.ocha);
     }
 
     if(tab.name.toLowerCase() === 'dac') {
-      this.selectWorkFieldType$.next(WorkFieldTypeEnum.dac);
+      this.selectDacOchaType$.next(DacOchaTypeEnum.dac);
     }
   }
 
@@ -185,11 +185,11 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
     return record.search(searchText);
   }
 
-  private _addSelected(record: WorkField): void {
+  private _addSelected(record: DacOcha): void {
     this.selectedRecords.push(_deepClone(record));
   }
 
-  private _removeSelected(record: WorkField): void {
+  private _removeSelected(record: DacOcha): void {
     const index = this.selectedRecords.findIndex((item) => {
       return item.id === record.id;
     });
@@ -204,13 +204,13 @@ export class WorkFieldComponent extends AdminGenericComponent<WorkField, WorkFie
     return this.selectedRecords.length > 0 && this.selectedRecords.length === this.models.length;
   }
 
-  isSelected(record: WorkField): boolean {
+  isSelected(record: DacOcha): boolean {
     return !!this.selectedRecords.find((item) => {
       return item.id === record.id;
     });
   }
 
-  onSelect($event: Event, record: WorkField): void {
+  onSelect($event: Event, record: DacOcha): void {
     const checkBox = $event.target as HTMLInputElement;
     if (checkBox.checked) {
       this._addSelected(record);

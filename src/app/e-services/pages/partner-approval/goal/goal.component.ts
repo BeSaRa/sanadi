@@ -13,8 +13,8 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {LookupService} from "@app/services/lookup.service";
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {Domains} from "@app/enums/domains.enum";
-import {WorkFieldService} from "@app/services/work-field.service";
-import {WorkField} from "@app/models/work-field";
+import {DacOchaService} from "@app/services/dac-ocha.service";
+import {DacOcha} from "@app/models/dac-ocha";
 import {AdminResult} from "@app/models/admin-result";
 import {indexOf} from "lodash";
 
@@ -29,7 +29,7 @@ export class GoalComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               public lookupService: LookupService,
-              private ochaDacClassfService: WorkFieldService,
+              private ochaDacClassfService: DacOchaService,
               private fb: FormBuilder) {
   }
 

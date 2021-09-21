@@ -1,5 +1,5 @@
 export interface IAppUrls {
-  WORK_FIELD: string;
+  DAC_OCHA: string;
   JOB_TITLE: string;
   INITIAL_OFFICE_APPROVAL: string;
   ATTACHMENT_TYPES: string;

@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {WorkField} from '@app/models/work-field';
+import {DacOcha} from '@app/models/dac-ocha';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
@@ -17,23 +17,23 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
-  selector: 'sub-work-field-popup',
-  templateUrl: './sub-work-field-popup.component.html',
-  styleUrls: ['./sub-work-field-popup.component.scss']
+  selector: 'sub-dac-ocha-popup',
+  templateUrl: './sub-dac-ocha-popup.component.html',
+  styleUrls: ['./sub-dac-ocha-popup.component.scss']
 })
-export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
+export class SubDacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   parentId?: number;
-  workFieldTypeId!: number;
+  dacOchaTypeId!: number;
   classification!: Lookup;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: FormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
-  model!: WorkField;
+  model!: DacOcha;
   saveVisible = true;
   columns = ['arName', 'enName', 'status', 'actions'];
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<WorkField>,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<DacOcha>,
               public lang: LangService,
               public fb: FormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
@@ -45,12 +45,12 @@ export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
     this.operation = data.operation;
     this.model = data.model;
     this.parentId = data.parentId;
-    this.workFieldTypeId = data.workFieldTypeId;
+    this.dacOchaTypeId = data.dacOchaTypeId;
   }
 
   initPopup(): void {
     this.classification = this.lookupService.listByCategory.ServiceWorkField
-      .find(classification => classification.lookupKey === this.workFieldTypeId)!;
+      .find(classification => classification.lookupKey === this.dacOchaTypeId)!;
   }
 
   buildForm(): void {
@@ -58,17 +58,17 @@ export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: WorkField, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: DacOcha, form: FormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: WorkField, form: FormGroup): Observable<WorkField> | WorkField {
+  prepareModel(model: DacOcha, form: FormGroup): Observable<DacOcha> | DacOcha {
     model.parentId = this.parentId;
-    model.type = this.workFieldTypeId;
-    return (new WorkField()).clone({...model, ...form.value});
+    model.type = this.dacOchaTypeId;
+    return (new DacOcha()).clone({...model, ...form.value});
   }
 
-  afterSave(model: WorkField, dialogRef: DialogRef): void {
+  afterSave(model: DacOcha, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     // @ts-ignore
     this.toast.success(message.change({x: model.getName()}));
@@ -82,20 +82,20 @@ export class SubWorkFieldPopupComponent extends AdminGenericDialog<WorkField> {
 
   get popupTitle(): string {
     return this.operation === OperationTypes.CREATE ?
-      this.lang.map.add_sub_work_field.change({x: this.classification.getName()}) :
-      this.lang.map.edit_sub_work_field.change({x: this.classification.getName()});
+      this.lang.map.add_sub_dac_ocha.change({x: this.classification.getName()}) :
+      this.lang.map.edit_sub_dac_ocha.change({x: this.classification.getName()});
   };
 
-  edit(subWorkField: WorkField, $event: MouseEvent): void {
+  edit(subDacOcha: DacOcha, $event: MouseEvent): void {
     $event.preventDefault();
-    const sub = this.model.service.openUpdateSubWorkFieldDialog(subWorkField.id, this.model.id).subscribe((dialog: DialogRef) => {
+    const sub = this.model.service.openUpdateSubDacOchaDialog(subDacOcha.id, this.model.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });
     });
   }
 
-  delete(event: MouseEvent, model: WorkField): void {
+  delete(event: MouseEvent, model: DacOcha): void {
     event.preventDefault();
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});

@@ -9,9 +9,9 @@
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
     <tabs-list>
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-      <tab [name]="tabsData.subWorkFields.name" [template]="subWorkFieldsTabTemplate"
-           [title]="lang.map.sub_work_fields.change({x: classification.getName()})"
-           [disabled]="!validToAddSubWorkFields"></tab>
+      <tab [name]="tabsData.subDacOchas.name" [template]="subDacOchasTabTemplate"
+           [title]="lang.map.sub_dac_ochas.change({x: classification.getName()})"
+           [disabled]="!validToAddSubDacOchas"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -50,15 +50,15 @@
         </div>
       </div>
     </ng-template>
-    <ng-template #subWorkFieldsTabTemplate>
+    <ng-template #subDacOchasTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
-        <h1 class="h6 text-primary">{{lang.map.sub_work_fields.change({x: classification.getName()})}}</h1>
+        <h1 class="h6 text-primary">{{lang.map.sub_dac_ochas.change({x: classification.getName()})}}</h1>
         <div>
-          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubWorkFields$.next()"><i
+          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubDacOchas$.next()"><i
             class="mdi mdi-reload"></i></button>
         </div>
         <div>
-          <button (click)="addSubWorkField()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+          <button (click)="addSubDacOcha()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
       </div>
@@ -67,7 +67,7 @@
           <div class="table-responsive">
             <app-table #table sortableTable
                        [columns]="columns"
-                       [data]="subWorkFields">
+                       [data]="subDacOchas">
               <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
                 <ng-container cdkColumnDef="arName">
                   <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>

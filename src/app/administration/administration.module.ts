@@ -33,15 +33,15 @@ import { InternalDepartmentComponent } from './pages/internal-department/interna
 import { InternalDepartmentPopupComponent } from './popups/internal-department-popup/internal-department-popup.component';
 import { JobTitleComponent } from './pages/job-title/job-title.component';
 import { JobTitlePopupComponent } from './popups/job-title-popup/job-title-popup.component';
-import { WorkFieldComponent } from './pages/work-field/work-field.component';
-import { WorkFieldPopupComponent } from './popups/work-field-popup/work-field-popup.component';
-import { SubWorkFieldPopupComponent } from './popups/sub-work-field-popup/sub-work-field-popup.component';
+import { DacOchaComponent } from './pages/dac-ocha/dac-ocha.component';
+import { DacOchaPopupComponent } from './popups/dac-ocha-popup/dac-ocha-popup.component';
+import { SubDacOchaPopupComponent } from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, WorkFieldComponent, WorkFieldPopupComponent, SubWorkFieldPopupComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, DacOchaComponent, DacOchaPopupComponent, SubDacOchaPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

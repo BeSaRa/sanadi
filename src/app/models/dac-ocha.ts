@@ -1,5 +1,5 @@
 import {BaseModel} from '@app/models/base-model';
-import {WorkFieldService} from '@app/services/work-field.service';
+import {DacOchaService} from '@app/services/dac-ocha.service';
 import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {searchFunctionType} from '@app/types/types';
@@ -8,10 +8,10 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Lookup} from '@app/models/lookup';
 import {Observable} from 'rxjs';
 
-export class WorkField extends BaseModel<WorkField, WorkFieldService> {
+export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
   status!: number;
   type!: number;
-  service: WorkFieldService;
+  service: DacOchaService;
   langService: LangService;
   statusInfo!: Lookup;
   parentId?: number;
@@ -22,7 +22,7 @@ export class WorkField extends BaseModel<WorkField, WorkFieldService> {
 
   constructor() {
     super();
-    this.service = FactoryService.getService('WorkFieldService');
+    this.service = FactoryService.getService('DacOchaService');
     this.langService = FactoryService.getService('LangService');
   }
 
@@ -55,7 +55,7 @@ export class WorkField extends BaseModel<WorkField, WorkFieldService> {
     }
   }
 
-  loadSubWorkFields(): Observable<WorkField[]> {
-    return this.service.loadSubWorkFields(this.id);
+  loadSubDacOchas(): Observable<DacOcha[]> {
+    return this.service.loadSubDacOchas(this.id);
   }
 }
