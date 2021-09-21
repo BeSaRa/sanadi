@@ -44,6 +44,10 @@ export class LicenseService {
     return this._initialLicenseSearch(criteria);
   }
 
+  @Generator(InitialApprovalDocument, true, {
+    property: 'rs',
+    interceptReceive: (new InitialApprovalDocumentInterceptor()).receive
+  })
   partnerApprovalLicenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria>): Observable<InitialApprovalDocument[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
