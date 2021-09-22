@@ -62,14 +62,16 @@ export class LicenseService {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
   }
+
   finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<InitialApprovalDocument[]> {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
-  openSelectLicenseDialog(licenses: InitialApprovalDocument[], select = true): DialogRef {
+  openSelectLicenseDialog(licenses: InitialApprovalDocument[], caseType: number | undefined, select = true): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
-      select
+      select,
+      caseType
     });
   }
 
