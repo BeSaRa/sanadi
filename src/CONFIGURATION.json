@@ -9,7 +9,7 @@
     "BAW_DEV": "http://100.100.15.102:9080/eservices/api/",
     "BAW_STG": "http://ibm-baw3:9084/eservices/api/"
   },
-  "BASE_ENVIRONMENT": "BAW_STG",
+  "BASE_ENVIRONMENT": "BAW",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
@@ -89,7 +89,5 @@
     "CRuser2"
   ],
   "E_SERVICES_DENIED_USERS_EXTERNAL": [
-    "15000000000",
-    "16000000000"
   ]
 }
