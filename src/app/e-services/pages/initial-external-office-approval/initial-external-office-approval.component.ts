@@ -298,6 +298,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   isAddCommentAllowed(): boolean {
+    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+      return true;
+    }
     return !!(this.model?.id) && !this.readonly;
   }
 }
