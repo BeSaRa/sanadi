@@ -21,6 +21,7 @@ import {SaveTypes} from "@app/enums/save-types";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ToastService} from "@app/services/toast.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -66,14 +67,14 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _afterBuildForm(): void {
-    this.onRequestTypeUpdate();
     this.setDefaultOrganization();
 
-    if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
+        this.onRequestTypeUpdate();
         this.loadSelectedLicense(this.model?.licenseNumber!);
-      });
-    }
+      }
+    });
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -287,5 +288,16 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       return;
 
     this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model?.caseType, false)
+  }
+
+  isAddAttachmentAllowed(): boolean {
+    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+      return true;
+    }
+    return !!(this.model?.id) && !this.readonly;
+  }
+
+  isAddCommentAllowed(): boolean {
+    return !!(this.model?.id) && !this.readonly;
   }
 }

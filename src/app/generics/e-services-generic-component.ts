@@ -10,6 +10,7 @@ import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
 import {CaseModel} from "@app/models/case-model";
 import {CaseStatus} from "@app/enums/case-status.enum";
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
@@ -18,6 +19,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   launch$: Subject<null> = new Subject<null>();
   resetForm$: Subject<null> = new Subject<null>();
   fromDialog: boolean = false;
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   readonly: boolean = false;
   allowEditRecommendations?: boolean | undefined;
   operationTypes: typeof OperationTypes = OperationTypes;

@@ -19,6 +19,7 @@ export class CommentsComponent implements OnInit {
   _caseId: string = '';
   comments: CaseComment[] = [];
   @Input() service!: CommentService;
+  @Input() readonly: boolean = false;
 
   @Input()
   set caseId(value: string | undefined) {

@@ -219,6 +219,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               comInstance.fromDialog = true;
               comInstance.readonly = readonly;
               comInstance.operation = OperationTypes.UPDATE;
+              comInstance.openFrom = from;
               comInstance.allowEditRecommendations = this.isAllowedToEditRecommendations(model, from);
               instance.component = comInstance;
             });

@@ -22,6 +22,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'consultation',
@@ -39,6 +40,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   model?: Consultation;
   operation: OperationTypes = OperationTypes.CREATE;
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   public isInternalUser: boolean = this.employeeService.isInternalUser();
   private outModelChange$: BehaviorSubject<Consultation> = new BehaviorSubject<Consultation>(null as unknown as Consultation);
 

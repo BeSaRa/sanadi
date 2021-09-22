@@ -19,6 +19,7 @@ import {IESComponent} from '@app/interfaces/iescomponent';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'inquiry-component',
@@ -34,6 +35,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
   operation: OperationTypes = OperationTypes.CREATE;
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   model?: Inquiry;
   private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
 

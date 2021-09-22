@@ -15,11 +15,11 @@
         <a [title]="comment.text" (click)="showComment($event , comment )" href="#">{{comment.text}}</a>
       </div>
       <div *ngIf="isMyComment(comment)">
-        <button (click)="openCommentEditDialog(comment)" [tooltip]="lang.map.edit_comment" class="btn icon-btn"><i
+        <button [disabled]="readonly" (click)="!readonly && openCommentEditDialog(comment)" [tooltip]="lang.map.edit_comment" class="btn icon-btn"><i
           class="text-primary mdi mdi-comment-edit"></i></button>
       </div>
       <div [tooltip]="lang.map.show_edit_logs">
-        <button [disabled]="!comment.editHistory.length" (click)="openCommentHistory(comment)" class="btn p-0 icon-btn">
+        <button [disabled]="readonly || !comment.editHistory.length" (click)="!readonly && openCommentHistory(comment)" class="btn p-0 icon-btn">
           <i
             class="text-primary mdi mdi-history"></i></button>
       </div>

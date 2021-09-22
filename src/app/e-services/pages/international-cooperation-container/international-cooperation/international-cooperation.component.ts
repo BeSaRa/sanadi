@@ -18,6 +18,7 @@ import {CountryService} from '@app/services/country.service';
 import {Country} from '@app/models/country';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'international-cooperation',
@@ -33,6 +34,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
   operation: OperationTypes = OperationTypes.CREATE;
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   model?: InternationalCooperation;
   private outModelChange$: BehaviorSubject<InternationalCooperation> = new BehaviorSubject<InternationalCooperation>(null as unknown as InternationalCooperation);
 

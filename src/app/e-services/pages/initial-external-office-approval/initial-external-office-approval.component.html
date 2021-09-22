@@ -3,138 +3,138 @@
     <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_initial_external_office_approval}}</h1></div>
   </div>
   <div class="row">
-    <fieldset [disabled]="readonly">
-      <form [formGroup]="form">
-        <div class="row mb-3">
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="organizationId"
-                     class="col-form-label col-md-4 col-sm-12"
-                     for="organizationId">{{lang.map.lbl_organization}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" validationClasses="organizationId" appendTo="body" [clearable]="true"
-                           id="organizationId"
-                           formControlName="organizationId">
-                  <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="organizationId"></app-field-error-message>
-              </div>
+    <form [formGroup]="form">
+      <div class="row mb-3">
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
+            <label asteriskIfRequired="organizationId"
+                   class="col-form-label col-md-4 col-sm-12"
+                   for="organizationId">{{lang.map.lbl_organization}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <ng-select [readonly]="readonly" validationClasses="organizationId" appendTo="body" [clearable]="true"
+                         id="organizationId"
+                         formControlName="organizationId">
+                <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="organizationId"></app-field-error-message>
             </div>
           </div>
-        </div><!-- row -->
-        <div class="row mb-3">
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="requestType"
-                     class="col-form-label col-md-4 col-sm-12"
-                     for="requestType">{{lang.map.request_type}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()" validationClasses="requestType"
-                           appendTo="body"
-                           [clearable]="true" id="requestType"
-                           formControlName="requestType">
-                  <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="requestType"></app-field-error-message>
-              </div>
+        </div>
+      </div><!-- row -->
+      <div class="row mb-3">
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
+            <label asteriskIfRequired="requestType"
+                   class="col-form-label col-md-4 col-sm-12"
+                   for="requestType">{{lang.map.request_type}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()" validationClasses="requestType"
+                         appendTo="body"
+                         [clearable]="true" id="requestType"
+                         formControlName="requestType">
+                <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="requestType"></app-field-error-message>
             </div>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="licenseNumber" class="col-form-label col-md-4 col-sm-12"
-                     for="licenseNumber">{{lang.map.license_number}}</label>
-              <div class="col-md-8 col-sm-12 mb-position-relative">
-                <div class="input-group">
-                  <button [disabled]="licenseNumber.disabled" type="button" (click)="licenseSearch()"
-                          class="input-group-text"><i
-                    class="mdi mdi-file-search text-primary"></i></button>
-                  <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
-                         type="text"
-                         validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"
-                         id="licenseNumber">
-                  <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
-                     class="input-group-text"><i
-                    class="mdi mdi-eye text-primary"></i></a>
-                </div>
-                <app-field-error-message controlName="licenseNumber"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
+            <label asteriskIfRequired="licenseNumber" class="col-form-label col-md-4 col-sm-12"
+                   for="licenseNumber">{{lang.map.license_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-position-relative">
+              <div class="input-group">
+                <button [disabled]="licenseNumber.disabled" type="button" (click)="licenseSearch()"
+                        class="input-group-text"><i
+                  class="mdi mdi-file-search text-primary"></i></button>
+                <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
+                       type="text" [readOnly]="readonly"
+                       validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"
+                       id="licenseNumber">
+                <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
+                   class="input-group-text"><i
+                  class="mdi mdi-eye text-primary"></i></a>
               </div>
+              <app-field-error-message controlName="licenseNumber"></app-field-error-message>
             </div>
           </div>
-        </div><!-- row -->
-        <div class="row mb-3">
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="country"
-                     class="col-form-label col-md-4 col-sm-12"
-                     for="country">{{lang.map.country}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" (change)="onCountrySelected()" validationClasses="country"
-                           appendTo="body" [clearable]="true"
-                           id="country"
-                           formControlName="country">
-                  <ng-option [value]="country.id"
-                             *ngFor="let country of countries">{{country.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="country"></app-field-error-message>
-              </div>
+        </div>
+      </div><!-- row -->
+      <div class="row mb-3">
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
+            <label asteriskIfRequired="country"
+                   class="col-form-label col-md-4 col-sm-12"
+                   for="country">{{lang.map.country}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <ng-select [readonly]="readonly" (change)="onCountrySelected()" validationClasses="country"
+                         appendTo="body" [clearable]="true"
+                         id="country"
+                         formControlName="country">
+                <ng-option [value]="country.id"
+                           *ngFor="let country of countries">{{country.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="country"></app-field-error-message>
             </div>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="region"
-                     class="col-form-label col-md-4 col-sm-12"
-                     for="region">{{lang.map.region}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="readonly" validationClasses="region" appendTo="body" [clearable]="true"
-                           id="region"
-                           formControlName="region">
-                  <ng-option [value]="region.id" *ngFor="let region of regions">{{region.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="region"></app-field-error-message>
-              </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="row">
+            <label asteriskIfRequired="region"
+                   class="col-form-label col-md-4 col-sm-12"
+                   for="region">{{lang.map.region}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <ng-select [readonly]="readonly" validationClasses="region" appendTo="body" [clearable]="true"
+                         id="region"
+                         formControlName="region">
+                <ng-option [value]="region.id" *ngFor="let region of regions">{{region.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="region"></app-field-error-message>
             </div>
           </div>
-        </div><!-- row -->
-        <div class="row mb-3">
-          <label asteriskIfRequired="description" for="description"
-                 class="col-md-2 col-sm-12 col-form-label">{{lang.map.special_explanations}}</label>
-          <div class="col-md-10 col-sm-12 mb-3 position-relative">
+        </div>
+      </div><!-- row -->
+      <div class="row mb-3">
+        <label asteriskIfRequired="description" for="description"
+               class="col-md-2 col-sm-12 col-form-label">{{lang.map.special_explanations}}</label>
+        <div class="col-md-10 col-sm-12 mb-3 position-relative">
         <textarea rows="5" id="description" validationClasses="description" formControlName="description"
-                  class="form-control"></textarea>
-            <app-field-error-message controlName="description"></app-field-error-message>
-          </div>
+                  class="form-control" [readOnly]="readonly"></textarea>
+          <app-field-error-message controlName="description"></app-field-error-message>
         </div>
-        <hr>
-        <div class="row">
-          <div [ngClass]="{'col-md-12': employeeService.isExternalUser()}" class="col-md-6 col-sm-12">
-            <div class="d-flex flex-row align-items-center justify-content-start">
-              <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
-              <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()"
-                      class="d-inline-block btn p-0 icon-btn"><i
-                class="mdi mdi-plus-box text-primary"></i></button>
-            </div>
-            <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
+      </div>
+      <hr>
+      <div class="row">
+        <div [ngClass]="{'col-md-12': employeeService.isExternalUser()}" class="col-md-6 col-sm-12">
+          <div class="d-flex flex-row align-items-center justify-content-start">
+            <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
+            <button [disabled]="!isAddAttachmentAllowed()" (click)="attachmentsCtrl.openUploadDialog()"
+                    class="d-inline-block btn p-0 icon-btn"><i
+              class="mdi mdi-plus-box text-primary"></i></button>
           </div>
-          <div *ngIf="employeeService.isInternalUser()" class="col-md-6 col-sm-12">
-            <div class="d-flex flex-row align-items-center justify-content-start">
-              <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
-              <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()"
-                      class="d-inline-block btn p-0 icon-btn"><i
-                class="mdi mdi-plus-box text-primary"></i></button>
-            </div>
-            <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>
+          <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
+                         [readonly]="readonly"></app-documents>
+        </div>
+        <div *ngIf="employeeService.isInternalUser()" class="col-md-6 col-sm-12">
+          <div class="d-flex flex-row align-items-center justify-content-start">
+            <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
+            <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
+                    class="d-inline-block btn p-0 icon-btn"><i
+              class="mdi mdi-plus-box text-primary"></i></button>
           </div>
+          <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
+                        [readonly]="readonly"></app-comments>
         </div>
-        <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2">
-          <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
-                  class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
-          <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-                  class="btn shadow-sm btn-warning">{{lang.map.save_as_draft}}</button>
-          <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
-                  class="btn btn-primary">{{lang.map.launch}}</button>
-          <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
-        </div>
-      </form>
-    </fieldset>
+      </div>
+      <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2">
+        <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
+                class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
+        <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
+                class="btn shadow-sm btn-warning">{{lang.map.save_as_draft}}</button>
+        <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
+                class="btn btn-primary">{{lang.map.launch}}</button>
+        <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
+      </div>
+    </form>
   </div>
 </div>
