@@ -23,7 +23,7 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 })
 export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'];
+  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'];
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private destroy$: Subject<any> = new Subject<any>();
   actions: IMenuItem<QueryResult>[] = [];

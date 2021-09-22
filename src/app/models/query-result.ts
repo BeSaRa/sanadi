@@ -67,6 +67,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   BD_SUBJECT!: string;
 
   fromUserInfo!: AdminResult;
+  orgInfo!: AdminResult;
 
   service!: InboxService;
   dialog!: DialogService;
@@ -76,6 +77,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   searchFields: ISearchFieldsMap<QueryResult> = {
     BD_FULL_SERIAL: 'BD_FULL_SERIAL',
     fromUserInfo: (text, model) => model.fromUserInfo && (model.fromUserInfo.getName() + '').toLowerCase().indexOf(text) !== -1,
+    orgInfo: (text, model) => model.orgInfo && (model.orgInfo.getName() + '').toLowerCase().indexOf(text) !== -1,
     ACTIVATED: (text, model) => {
       let date = (new DatePipe('en')).transform(model.ACTIVATED);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;

@@ -9,6 +9,7 @@ export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
 
   receive(model: QueryResult): QueryResult {
     model.fromUserInfo = AdminResult.createInstance(model.fromUserInfo);
+    model.orgInfo = AdminResult.createInstance(model.orgInfo);
     return model;
   }
 }
