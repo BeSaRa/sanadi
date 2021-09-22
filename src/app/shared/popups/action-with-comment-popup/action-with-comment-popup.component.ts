@@ -89,10 +89,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
         });
     }
 
-    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
-      this.comment.setValidators([CustomValidators.required]);
-      this.comment.updateValueAndValidity();
-    }
+    this.setRequiredCommentIfRejectOrPostpone();
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
@@ -104,8 +101,14 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      licenseStartDate: ['', [CustomValidators.required]],
-      licenseDuration: [null, [CustomValidators.required, CustomValidators.number]],
+      licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
+        [CustomValidators.required]],
+      licenseDuration: [
+        {
+          value: null,
+          disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE
+        },
+        [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{
         value: '',
         disabled: true
@@ -188,6 +191,10 @@ export class ActionWithCommentPopupComponent implements OnInit {
     return this.form.get('licenseDuration') as FormControl;
   }
 
+  get licenseStartDateField(): FormControl {
+    return this.form.get('licenseStartDate') as FormControl;
+  }
+
   updateCase(): Observable<any> {
     return this.loadedLicense ? this.loadedLicense.patchAndUpdateModel({
       ...this.form.value,
@@ -205,5 +212,12 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
       return data;
     }) : of(null);
+  }
+
+  private setRequiredCommentIfRejectOrPostpone(): void {
+    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
+      this.comment.setValidators([CustomValidators.required]);
+      this.comment.updateValueAndValidity();
+    }
   }
 }
