@@ -21,6 +21,7 @@ import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {EmployeeService} from '@app/services/employee.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -33,6 +34,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
   comment: FormControl = new FormControl();
   done$: Subject<any> = new Subject<any>();
   displayLicenseForm: boolean = false;
+  licenseFormReadonly: boolean = false;
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
@@ -61,6 +63,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
     private toast: ToastService,
     public lang: LangService,
     private fb: FormBuilder,
+    private employeeService: EmployeeService,
     private serviceDataService: ServiceDataService) {
 
     if (this.data.actionType.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0) {
@@ -86,6 +89,10 @@ export class ActionWithCommentPopupComponent implements OnInit {
           if (this.displayLicenseForm) {
             this.updateForm(caseDetails, serviceData);
           }
+          if (this.employeeService.isRiskAndComplianceUser()) {
+            this.licenseFormReadonly = true;
+            this.form.disable();
+          }
         });
     }
 
@@ -103,16 +110,9 @@ export class ActionWithCommentPopupComponent implements OnInit {
     this.form = this.fb.group({
       licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
         [CustomValidators.required]],
-      licenseDuration: [
-        {
-          value: null,
-          disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE
-        },
+      licenseDuration: [{value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
         [CustomValidators.required, CustomValidators.number]],
-      publicTerms: [{
-        value: '',
-        disabled: true
-      }, [CustomValidators.required]],
+      publicTerms: [{value: '', disabled: true}, [CustomValidators.required]],
       customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
       followUpDate: ['', [CustomValidators.required]]
@@ -166,7 +166,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
         switchMap(_ => {
           let validData = true;
           if (this.displayLicenseForm) {
-            validData = this.form.valid
+            validData = this.licenseFormReadonly ? true : this.form.valid;
           } else if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
             validData = !!this.comment.value;
           }
