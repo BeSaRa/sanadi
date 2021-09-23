@@ -238,8 +238,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         licenseNumber: license.licenseNumber,
         country: license.country,
         region: license.region,
-        licenseDuration: license.licenseDuration,
-        licenseStartDate: license.licenseStartDate
       }))
     }
 
