@@ -169,13 +169,13 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   delete(event: MouseEvent, model: AttachmentTypeServiceData): void {
     event.preventDefault();
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.serviceInfo.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.serviceInfo.getName()}));
           this.reload();
           sub.unsubscribe();
         });
