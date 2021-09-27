@@ -22,6 +22,7 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ToastService} from "@app/services/toast.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -67,12 +68,18 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _afterBuildForm(): void {
+    this.listenToRequestTypeChange();
     this.setDefaultOrganization();
 
     setTimeout(() => {
-      if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
-        this.onRequestTypeUpdate();
-        this.loadSelectedLicense(this.model?.licenseNumber!);
+      if (this.fromDialog) {
+        // if license number exists, load it and regions will be loaded inside
+        // otherwise load regions separately
+        if (this.model?.licenseNumber) {
+          this.loadSelectedLicense(this.model?.licenseNumber!);
+        } else {
+          this.loadRegions(this.country.value);
+        }
       }
     });
   }
@@ -161,6 +168,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private loadRegions(id: number): void {
+    this.regions = [];
+    if (!id) {
+      return;
+    }
     this.countryService.loadCountriesByParentId(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((regions) => this.regions = regions)
@@ -191,21 +202,30 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.loadRegions(this.country.value);
   }
 
-  onRequestTypeUpdate() {
-    // clear/disable the license number field if the request type is new
-    if (this.requestType.value === ServiceRequestTypes.NEW || this.requestType.invalid) {
-      this.licenseNumber.reset();
-      this.licenseNumber.disable();
-      this.licenseNumber.setValidators([]);
-      this.setSelectedLicense(undefined);
-    } else {
-      this.licenseNumber.enable();
-      this.licenseNumber.setValidators([CustomValidators.required, (control) => {
-        return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
-      }]);
-      this._handleRequestTypeDependentValidations();
-    }
-    this.licenseNumber.updateValueAndValidity({emitEvent: false})
+  listenToRequestTypeChange(): void {
+    this.requestType?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(requestTypeValue => {
+      this._handleRequestTypeDependentControls();
+      // if no requestType, reset license and its validations
+      if (!requestTypeValue) {
+        this.licenseNumber.reset();
+        this.licenseNumber.setValidators([]);
+        this.setSelectedLicense(undefined);
+      } else {
+        // if new record and requestType = new, reset license and its validations
+        if (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW) {
+          this.licenseNumber.reset();
+          this.licenseNumber.setValidators([]);
+          this.setSelectedLicense(undefined);
+        } else {
+          this.licenseNumber.setValidators([CustomValidators.required, (control) => {
+            return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+          }]);
+        }
+        this.licenseNumber.updateValueAndValidity({emitEvent: false});
+      }
+    });
   }
 
   private listenToLicenseSearch() {
@@ -244,10 +264,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         region: license.region,
       }))
     }
-    this._handleRequestTypeDependentValidations();
+    this._handleRequestTypeDependentControls();
 
     if (license) {
-      this.loadRegions(license.country);
+      this.loadRegions(this.country.value);
     }
   }
 
@@ -260,8 +280,24 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.licenseSearch$.next(value);
   }
 
-  private _handleRequestTypeDependentValidations(): void {
-    if (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL) {
+  private _handleRequestTypeDependentControls(): void {
+    let requestType = this.requestType.value;
+    // if no request type selected, disable license, country, region
+    // otherwise enable/disable license, country and region according to request type
+    if (!CommonUtils.isValidValue(requestType)) {
+      this.licenseNumber.disable();
+      this.country.disable();
+      this.region.disable();
+      return;
+    }
+
+    if (requestType === ServiceRequestTypes.NEW) {
+      this.licenseNumber.disable();
+    } else {
+      this.licenseNumber.enable();
+    }
+
+    if (requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL) {
       this.country.disable();
       this.region.disable();
     } else {
@@ -271,10 +307,20 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private loadSelectedLicense(licenseNumber: string): void {
+    if (!this.model || !licenseNumber) {
+      return;
+    }
     this.service
       .licenseSearch({licenseNumber})
       .pipe(
-        filter(list => !!list.length),
+        filter(list => {
+          // if license number exists, set it and regions will be loaded inside
+          // otherwise load regions separately
+          if (list.length === 0) {
+            this.loadRegions(this.country.value);
+          }
+          return list.length > 0;
+        }),
         map(list => list[0]),
         takeUntil(this.destroy$)
       )

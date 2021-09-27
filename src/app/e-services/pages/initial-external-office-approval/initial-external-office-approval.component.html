@@ -28,7 +28,7 @@
                    class="col-form-label col-md-4 col-sm-12"
                    for="requestType">{{lang.map.request_type}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()" validationClasses="requestType"
+              <ng-select [readonly]="readonly" validationClasses="requestType"
                          appendTo="body"
                          [clearable]="true" id="requestType"
                          formControlName="requestType">
