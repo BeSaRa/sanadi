@@ -40,7 +40,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   }
 
   initPopup(): void {
-    this.userTypes = this.lookupService.getByCategory(LookupCategories.USER_TYPES);
+    this.userTypes = this.lookupService.getByCategory(LookupCategories.USER_TYPE);
   }
 
   buildForm(): void {

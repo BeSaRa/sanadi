@@ -54,7 +54,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.operation = data.operation;
     this.model = data.model;
     this.attachmentTypeId = data.attachmentTypeId;
-    this.attachmentTypeUsersList = lookupService.getByCategory(LookupCategories.USER_TYPES);
+    this.attachmentTypeUsersList = lookupService.getByCategory(LookupCategories.USER_TYPE);
   }
 
   ngOnInit(): void {

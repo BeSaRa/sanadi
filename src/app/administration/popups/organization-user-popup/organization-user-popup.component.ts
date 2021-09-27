@@ -232,7 +232,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
 
   private buildPermissionGroups(): void {
-    combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.PERMISSION_GROUP))])
+    combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = OrganizationUserPopupComponent.buildPermissionsByGroupId(result[0]);
