@@ -19,8 +19,8 @@ export class NavigationService {
       if (event instanceof NavigationEnd) {
         this.previousPath = this.currentPath;
         this.currentPath = event.url;
-        console.log('previous path', this.previousPath);
-        console.log('current path', this.currentPath);
+        // console.log('previous path', this.previousPath);
+        // console.log('current path', this.currentPath);
       }
     });
   }

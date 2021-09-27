@@ -54,7 +54,7 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
       return of(null);
     }
     return this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!)
-      .pipe(tap(val => console.log(val.items)))
+      // .pipe(tap(val => console.log(val.items)))
       .pipe(tap(result => this.queryResultSet = result));
   }
 
