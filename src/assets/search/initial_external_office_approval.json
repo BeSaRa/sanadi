@@ -2,7 +2,7 @@
   {
     "fields": [
       {
-        "key": "serial",
+        "key": "fullSerial",
         "type": "maskInput",
         "label": "serial_number",
         "validations": {
