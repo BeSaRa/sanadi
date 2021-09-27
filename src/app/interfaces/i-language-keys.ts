@@ -546,4 +546,6 @@ export interface ILanguageKeys {
   service_requirements: string;
   service_steps_arabic: string;
   service_steps_english: string;
+  internal: string;
+  external: string;
 }

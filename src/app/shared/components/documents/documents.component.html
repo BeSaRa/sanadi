@@ -23,7 +23,7 @@
              [checked]="isDocumentSelected(doc)" class="form-check-input" type="checkbox">
       <div class="attachment-icon">
         <i class="mdi {{doc.getIcon()}}"></i>
-        <i class="mdi {{doc.getInternalExternalIcon()}}"></i>
+        <i class="mdi {{doc.getInternalExternalIcon()}}" [tooltip]="lang.map[doc.getInternalExternalTooltip()]"></i>
       </div>
       <div class="attachment-title text-truncate"
            [title]="doc.documentTitle"><a (click)="viewDocument(doc , $event)" href="#">{{doc.documentTitle}}</a>

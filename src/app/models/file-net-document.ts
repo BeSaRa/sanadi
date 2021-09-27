@@ -1,6 +1,7 @@
 import {FileNetModel} from './FileNetModel';
 import {FactoryService} from '../services/factory.service';
 import {DialogService} from '../services/dialog.service';
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
@@ -32,6 +33,10 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   }
 
   getInternalExternalIcon(): string {
-    return this.isInternal ? 'mdi-recycle' : '';
+    return this.isInternal ? 'mdi-recycle' : 'mdi-arrow-top-right-thick';
+  }
+
+  getInternalExternalTooltip(): keyof ILanguageKeys {
+    return this.isInternal ? "internal" : "external";
   }
 }
