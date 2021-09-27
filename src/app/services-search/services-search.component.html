@@ -46,7 +46,10 @@
           <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <a href="#" (click)="$event.preventDefault(); actionOpen(row)">{{row.fullSerial}}</a>
+              <a *ngIf="row.fullSerial" href="#"
+                 (click)="$event.preventDefault(); actionOpen(row)">{{row.fullSerial}}</a>
+              <a *ngIf="!row.fullSerial" href="#"
+                 (click)="$event.preventDefault(); actionOpen(row)">{{lang.map.open_task}}</a>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="category">
