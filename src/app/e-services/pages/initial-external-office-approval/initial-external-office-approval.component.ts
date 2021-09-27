@@ -70,8 +70,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.setDefaultOrganization();
 
     setTimeout(() => {
+      this.onRequestTypeUpdate();
       if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
-        this.onRequestTypeUpdate();
         this.loadSelectedLicense(this.model?.licenseNumber!);
       }
     });
