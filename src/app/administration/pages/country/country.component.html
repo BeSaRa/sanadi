@@ -13,7 +13,7 @@
     <div class="table-responsive">
       <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
                  [columns]="tableOptions.columns" [data]="countries" [filter]="tableOptions.searchText"
-                 [filterCallback]="tableOptions.filterCallback">
+                 [filterCallback]="tableOptions.searchCallback">
         <table cdk-table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource">
           <ng-container cdkColumnDef="select">
             <th cdk-header-cell *cdkHeaderCellDef>

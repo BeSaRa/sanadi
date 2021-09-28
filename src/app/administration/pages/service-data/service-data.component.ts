@@ -11,6 +11,7 @@ import {CommonUtils} from '../../../helpers/common-utils';
 import {ITableOptions} from '../../../interfaces/i-table-options';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {TableComponent} from '../../../shared/components/table/table.component';
+import {FilterEventTypes} from '@app/types/types';
 
 @Component({
   selector: 'service-data',
@@ -30,11 +31,13 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
 
   tableOptions: ITableOptions = {
     ready: false,
-    filterCallback: (record: any, searchText: string) => {
+    searchCallback: (record: any, searchText: string) => {
       if (!record) {
         return false;
       }
       return record.search(searchText);
+    },
+    filterCallback: (type: FilterEventTypes = 'OPEN') => {
     },
     columns: ['bawServiceCode', 'arName', 'enName', 'updatedOn', 'updatedBy', 'status', 'actions'],
     searchText: '',

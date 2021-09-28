@@ -1,4 +1,5 @@
 import {IKeyValue} from './i-key-value';
+import {FilterEventTypes} from '@app/types/types';
 
 export interface ITableOptions {
   ready: boolean,
@@ -8,5 +9,7 @@ export interface ITableOptions {
 
   isSelectedRecords(): boolean,
 
-  filterCallback(record: any, searchText: string): any
+  searchCallback(record: any, searchText: string): any,
+
+  filterCallback(type?: FilterEventTypes): any
 }

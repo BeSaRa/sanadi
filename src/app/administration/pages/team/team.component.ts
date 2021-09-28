@@ -12,6 +12,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {ITableOptions} from '@app/interfaces/i-table-options';
 import {IGridAction} from '@app/interfaces/i-grid-action';
+import {FilterEventTypes} from '@app/types/types';
 
 @Component({
   selector: 'team',
@@ -44,8 +45,10 @@ export class TeamComponent implements OnInit, AfterViewInit {
       }
       return this.table.selection.selected.length !== 0;
     },
-    filterCallback: (record: any, searchText: string) => {
+    searchCallback: (record: any, searchText: string) => {
       return record.search(searchText);
+    },
+    filterCallback: (type: FilterEventTypes = 'OPEN') => {
     },
     sortingCallbacks: {
       createdBy: (a: Team, b: Team, dir: SortEvent): number => {

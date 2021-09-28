@@ -8,7 +8,7 @@
   <div class="col-12">
     <app-table #table [selectable]="true" [columns]="tableOptions.columns" [data]="data"
                [filter]="tableOptions.searchText"
-               [filterCallback]="tableOptions.filterCallback" [paginator]="paginator"
+               [filterCallback]="tableOptions.searchCallback" [paginator]="paginator"
                sortableTable>
       <table cdk-table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource">
         <!-- bawServiceCode Column -->

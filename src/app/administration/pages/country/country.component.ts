@@ -19,6 +19,7 @@ import {ToastService} from '@app/services/toast.service';
 import {SharedService} from '@app/services/shared.service';
 import {LookupService} from '@app/services/lookup.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {FilterEventTypes} from '@app/types/types';
 
 @Component({
   selector: 'country',
@@ -59,8 +60,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
       }
       return this.table.selection.selected.length !== 0;
     },
-    filterCallback: (record: any, searchText: string) => {
+    searchCallback: (record: any, searchText: string) => {
       return record.search(searchText);
+    },
+    filterCallback: (type: FilterEventTypes = 'OPEN') => {
     },
     sortingCallbacks: {
       statusDateModified: (a: Country, b: Country, dir: SortEvent): number => {
