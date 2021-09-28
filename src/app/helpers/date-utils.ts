@@ -4,6 +4,7 @@ import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import * as dayjs from 'dayjs';
 import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 export class DateUtils {
   static changeDateToDatepicker(dateValue: any): IMyDateModel {
@@ -109,5 +110,56 @@ export class DateUtils {
    */
   static isLessThan(dateToCheck: any, dateToCompare: any): boolean {
     return dayjs(dateToCheck).isBefore(dayjs(dateToCompare));
+  }
+
+  /**
+   * @description Set the min date for the "To" datepicker relative to "From" datepicker
+   * @param options
+   */
+  static setRelatedMinDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }) {
+    setTimeout(() => {
+      let toFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.toFieldName]);
+      const fromDate = this.changeDateFromDatepicker(options.controlsMap[options.fromFieldName]?.value);
+      if (!fromDate) {
+        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
+      } else {
+        const disableDate = new Date(fromDate);
+        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
+        if (!options.disableSelectedFromRelated) {
+          disableDate.setDate(disableDate.getDate() - 1);
+        }
+        toFieldDateOptions.disableUntil = {
+          year: disableDate.getFullYear(),
+          month: disableDate.getMonth() + 1,
+          day: disableDate.getDate()
+        }
+      }
+      options.controlOptionsMap[options.toFieldName] = toFieldDateOptions;
+    }, 100);
+  }
+
+  /**
+   * @description Set the max date for the "From" datepicker relative to "To" datepicker
+   * @param options
+   */
+  static setRelatedMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }): void {
+    setTimeout(() => {
+      let fromFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.fromFieldName]);
+      const toDate = this.changeDateFromDatepicker(options.controlsMap[options.toFieldName]?.value);
+      if (!toDate) {
+        fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
+      } else {
+        const disableDate = new Date(toDate);
+        if (!options.disableSelectedFromRelated) {
+          disableDate.setDate(disableDate.getDate() + 1);
+        }
+        fromFieldDateOptions.disableSince = {
+          year: disableDate.getFullYear(),
+          month: disableDate.getMonth() + 1,
+          day: disableDate.getDate()
+        }
+      }
+      options.controlOptionsMap[options.fromFieldName] = fromFieldDateOptions;
+    }, 100);
   }
 }
