@@ -60,7 +60,9 @@
         </ng-container>
         <ng-container cdkColumnDef="PI_DUE">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
+          <td cdk-cell *cdkCellDef="let row"><span
+            [tooltip]="row.riskStatusInfo.getName()" [ngClass]="row.getRiskStatusColor()">{{row.PI_DUE|date}}</span>
+          </td>
         </ng-container>
         <ng-container cdkColumnDef="fromUserInfo">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sender}}</th>

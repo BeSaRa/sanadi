@@ -25,6 +25,8 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {WFActions} from "../enums/wfactions.enum";
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
+import {IKeyValue} from "@app/interfaces/i-key-value";
+import {RiskStatus} from "@app/enums/risk-status";
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -65,9 +67,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   PI_CREATE!: string;
   RESPONSES!: string [];
   BD_SUBJECT!: string;
-
+  RISK_STATUS!: number;
   fromUserInfo!: AdminResult;
   orgInfo!: AdminResult;
+  riskStatusInfo!: AdminResult;
 
   service!: InboxService;
   dialog!: DialogService;
@@ -250,5 +253,15 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   isReturned(): boolean {
     return this.BD_IS_RETURNED;
+  }
+
+  getRiskStatusColor(): string {
+    const color: IKeyValue = {
+      [RiskStatus.NORMAL]: '',
+      [RiskStatus.AT_RISK]: 'text-danger',
+      [RiskStatus.OVER_DUE]: 'text-info'
+    }
+
+    return color[this.RISK_STATUS];
   }
 }
