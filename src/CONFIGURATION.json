@@ -86,7 +86,12 @@
     "Cuser1",
     "Cuser2",
     "CRuser1",
-    "CRuser2"
+    "CRuser2",
+    "eblaluser1",
+    "eblaluser2",
+    "eblalmanager",
+    "eblalgmanager",
+    "eblalchief"
   ],
   "E_SERVICES_DENIED_USERS_EXTERNAL": [
   ]
