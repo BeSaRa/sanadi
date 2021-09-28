@@ -108,8 +108,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
-        [CustomValidators.required]],
+      licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE}],
       licenseDuration: [{value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
         [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{value: '', disabled: true}, [CustomValidators.required]],
