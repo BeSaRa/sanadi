@@ -74,6 +74,9 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return !this.caseStatus || this.caseStatus >= CaseStatus.CREATED;
   }
 
+  /**
+   * @description CaseStatus.DRAFT
+   */
   canCommit(): boolean {
     return this.caseStatus === CaseStatus.DRAFT;
   }
@@ -145,12 +148,19 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               delay(0)
             )
             .subscribe(() => {
+              let readonly = !model.canStart();
+              // if draft request opened from search by charity user + creator, not readonly
+              if (from === OpenFrom.SEARCH && this.employeeService.isCharityUser() && !!this.employeeService.getUser()) {
+                if (this.canCommit() && this.employeeService.isCurrentEmployee(this.employeeService.getUser()!)) {
+                  readonly = false;
+                }
+              }
               instance.container.clear();
               const componentRef = instance.container.createComponent(factory);
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
               comInstance.fromDialog = true;
-              comInstance.readonly = !model.canStart();
+              comInstance.readonly = readonly;
               comInstance.operation = OperationTypes.UPDATE;
               comInstance.openFrom = from;
               comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();

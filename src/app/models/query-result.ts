@@ -25,6 +25,7 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {WFActions} from "../enums/wfactions.enum";
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
+import {CaseStatus} from '@app/enums/case-status.enum';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -212,6 +213,22 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
               delay(0)
             )
             .subscribe(() => {
+
+              if (from === OpenFrom.USER_INBOX) {
+                if (this.employeeService.isCharityManager()) {
+                  readonly = false;
+                } else if (this.employeeService.isCharityUser()) {
+                  readonly = !this.isReturned();
+                }
+              } else if (from === OpenFrom.SEARCH) {
+                // if draft request opened from search by charity user + creator, not readonly
+                if (this.employeeService.isCharityUser() && !!this.employeeService.getUser()) {
+                  if (this.isDraft() && this.employeeService.isCurrentEmployee(this.employeeService.getUser()!)) {
+                    readonly = false;
+                  }
+                }
+              }
+
               instance.container.clear();
               const componentRef = instance.container.createComponent(factory);
               const comInstance = componentRef.instance as unknown as IESComponent;
@@ -250,5 +267,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   isReturned(): boolean {
     return this.BD_IS_RETURNED;
+  }
+
+  isDraft(): boolean {
+    return this.BD_CASE_STATUS === CaseStatus.DRAFT;
   }
 }

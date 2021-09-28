@@ -148,13 +148,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
 
   actionOpen(item: QueryResult) {
-    let readonly = true;
-    if (this.employeeService.isCharityManager()) {
-      readonly = false;
-    } else if (this.employeeService.isCharityUser()) {
-      readonly = !item.isReturned();
-    }
-    item.open(this.actions, OpenFrom.USER_INBOX, readonly)
+    item.open(this.actions, OpenFrom.USER_INBOX)
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reloadInbox$.next(null));
   }
