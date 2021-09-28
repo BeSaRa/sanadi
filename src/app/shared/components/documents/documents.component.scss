@@ -14,7 +14,8 @@
   grid-template-columns: [checkbox-start] 20px
   [checkbox-end icon-start] 50px
   [icon-end title-start] 1fr
-  [title-end desc-start] 1fr
+  [title-end attachment-type-start] 1fr
+  [attachment-type-end desc-start] 1fr
   [desc-end date-start] 0.75fr
   [date-end action-start] 55px [action-end];
   grid-auto-rows: 38px;

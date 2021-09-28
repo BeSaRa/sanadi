@@ -6,6 +6,7 @@
              [tooltip]="lang.map.select_all"
              class="form-check-input" type="checkbox">
       <span *ngIf="!selectedDocuments.length" class="h6 mb-0 top-title text-primary">{{lang.map.document_title}}</span>
+      <span *ngIf="!selectedDocuments.length" class="h6 mb-0 doc-attachment_type text-primary">{{lang.map.attachment_type}}</span>
       <span *ngIf="!selectedDocuments.length"
             class="h6 mb-0 doc-description text-primary">{{lang.map.lbl_description}}</span>
       <span *ngIf="!selectedDocuments.length"
@@ -28,6 +29,7 @@
       <div class="attachment-title text-truncate"
            [title]="doc.documentTitle"><a (click)="viewDocument(doc , $event)" href="#">{{doc.documentTitle}}</a>
       </div>
+      <div class="attachment-title text-truncate" [title]="doc.documentTitle">{{doc.documentTitle}}</div>
       <div class="attachment-title text-truncate" [title]="doc.description">{{doc.description}}</div>
       <div class="attachment-title text-truncate"
            [title]="(doc.createdOn|date: 'mediumDate')">{{doc.createdOn|date: 'mediumDate' }}
