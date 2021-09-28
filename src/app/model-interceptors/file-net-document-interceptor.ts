@@ -6,12 +6,14 @@ export class FileNetDocumentInterceptor implements IModelInterceptor<FileNetDocu
   receive(model: FileNetDocument): FileNetDocument {
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
+    model.attachmentTypeInfo = AdminResult.createInstance(model.attachmentTypeInfo);
     return model;
   }
 
   send(model: Partial<FileNetDocument>): any {
     delete model.dialog;
     delete model.searchFields;
+    delete model.attachmentTypeInfo;
     return model;
   }
 }

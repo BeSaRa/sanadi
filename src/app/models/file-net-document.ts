@@ -2,6 +2,7 @@ import {FileNetModel} from './FileNetModel';
 import {FactoryService} from '../services/factory.service';
 import {DialogService} from '../services/dialog.service';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {AdminResult} from "@app/models/admin-result";
 
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
@@ -22,6 +23,7 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   // not related to the model
   files?: FileList;
   dialog?: DialogService;
+  attachmentTypeInfo!: AdminResult;
 
   constructor() {
     super();
