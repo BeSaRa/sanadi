@@ -201,6 +201,8 @@ export class ActionWithCommentPopupComponent implements OnInit {
     }, (data) => {
       if (data.licenseStartDate) {
         data.licenseStartDate = DateUtils.changeDateFromDatepicker(data.licenseStartDate);
+      } else if (this.displayLicenseForm && data.licenseApprovedDate && !data.licenseStartDate) {
+        data.licenseStartDate = DateUtils.changeDateFromDatepicker(data.licenseApprovedDate);
       }
       if (data.licenseEndDate) {
         data.licenseEndDate = DateUtils.changeDateFromDatepicker(data.licenseEndDate);
