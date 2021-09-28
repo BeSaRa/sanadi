@@ -387,7 +387,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.caseType).onAfterClose$),
+        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
         filter<null | InitialApprovalDocument, InitialApprovalDocument>
         ((selection): selection is InitialApprovalDocument => selection instanceof InitialApprovalDocument),
@@ -411,7 +411,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     if (!this.selectedLicense)
       return;
 
-    this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model?.caseType, false)
+    this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model, false)
   }
 
   get basicTab(): FormGroup {

@@ -67,11 +67,11 @@ export class LicenseService {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
-  openSelectLicenseDialog(licenses: InitialApprovalDocument[], caseType: number | undefined, select = true): DialogRef {
+  openSelectLicenseDialog(licenses: InitialApprovalDocument[], caseRecord: any | undefined, select = true): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
-      caseType
+      caseRecord
     });
   }
 
