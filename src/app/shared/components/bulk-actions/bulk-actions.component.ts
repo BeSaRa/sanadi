@@ -9,7 +9,7 @@ import {CommonUtils} from '../../../helpers/common-utils';
   styleUrls: ['./bulk-actions.component.scss']
 })
 export class BulkActionsComponent implements OnInit {
-  @HostBinding('class') containerClass = 'col-md-8 col-sm-12';
+  @HostBinding('class') containerClass = 'col-md-6 col-sm-12';
 
   @Input() actionsList!: IGridAction[];
   @Input() selectedRecords!: any[];
