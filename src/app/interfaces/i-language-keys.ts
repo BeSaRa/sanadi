@@ -548,6 +548,7 @@ export interface ILanguageKeys {
   service_steps_english: string;
   internal: string;
   external: string;
+  err_num_hyphen_comma: string;
   role: string;
   decision: string;
   role_specialist: string;

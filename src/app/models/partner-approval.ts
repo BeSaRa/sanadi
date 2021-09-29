@@ -6,12 +6,10 @@ import {Goal} from "./goal";
 import {ManagementCouncil} from "./management-council";
 import {ContactOfficer} from "./contact-officer";
 import {ApprovalReason} from "./approval-reason";
-import {CaseModel} from "./case-model";
 import {PartnerApprovalService} from "../services/partner-approval.service";
 import {FactoryService} from "../services/factory.service";
 import {CustomValidators} from "../validators/custom-validators";
 import {LicenseApprovalModel} from "@app/models/license-approval-model";
-import {FinalExternalOfficeApprovalService} from "@app/services/final-external-office-approval.service";
 import {DateUtils} from "@app/helpers/date-utils";
 
 export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService, PartnerApproval> {
@@ -89,18 +87,20 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       country: control ? [country, CustomValidators.required] : country,
       city: control ? [city, CustomValidators.required] : city,
       headQuarterType: control ? [headQuarterType, CustomValidators.required] : headQuarterType,
-      latitude: control ? [latitude, CustomValidators.required] : latitude,
-      longitude: control ? [longitude, CustomValidators.required] : longitude,
+      latitude: control ? [latitude,
+        [CustomValidators.required, CustomValidators.maxLength(12), CustomValidators.pattern('NUM_HYPHEN_COMMA')]] : latitude,
+      longitude: control ? [longitude,
+        [CustomValidators.required, CustomValidators.maxLength(12), CustomValidators.pattern('NUM_HYPHEN_COMMA')]] : longitude,
       address: control ? [address, CustomValidators.required] : address,
       establishmentDate: control ? [establishmentDate, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : DateUtils.changeDateToDatepicker(establishmentDate),
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      fax: control ? [fax, CustomValidators.required] : fax,
-      website: control ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
-      postalCode: control ? [postalCode, CustomValidators.required] : postalCode,
-      firstSocialMedia: control ? [firstSocialMedia, CustomValidators.required] : firstSocialMedia,
-      secondSocialMedia: control ? [secondSocialMedia] : secondSocialMedia,
-      thirdSocialMedia: control ? [thirdSocialMedia] : thirdSocialMedia
+      fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
+      website: control ? [website, [CustomValidators.required, CustomValidators.maxLength(100)]] : website,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
+      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.maxLength(100)]] : postalCode,
+      firstSocialMedia: control ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(100)]] : firstSocialMedia,
+      secondSocialMedia: control ? [secondSocialMedia, CustomValidators.maxLength(100)] : secondSocialMedia,
+      thirdSocialMedia: control ? [thirdSocialMedia, CustomValidators.maxLength(100)] : thirdSocialMedia
     }
   }
 }

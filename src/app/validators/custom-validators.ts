@@ -35,7 +35,7 @@ const commonValidations = {
   visa: [number, maxLength(20)],
   phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   mobileNo: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
-  fax: [number, maxLength(10)]
+  fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)]
 };
 
 const inputMaskPatterns = {
@@ -102,7 +102,8 @@ const errorKeys: IKeyValue = {
       return message.change({minDate: errorValue.requiredMinDate});
     }
   },
-  unique: {key: 'err_unique_field', replaceValues: null}
+  unique: {key: 'err_unique_field', replaceValues: null},
+  NUM_HYPHEN_COMMA: {key: 'err_num_hyphen_comma'}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
