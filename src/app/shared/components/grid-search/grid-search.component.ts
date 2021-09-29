@@ -12,10 +12,11 @@ import {UserClickOn} from '../../../enums/user-click-on.enum';
   styleUrls: ['./grid-search.component.scss']
 })
 export class GridSearchComponent implements OnInit {
-  @HostBinding('class') containerClass = 'col-md-8 col-sm-12';
+  @HostBinding('class') containerClass = 'col-md-6 col-sm-12';
   @Output() searchTextEvent = new EventEmitter<string>();
   @Output('filterEvent') filterButtonEvent = new EventEmitter<FilterEventTypes>();
 
+  @Input() searchBox: boolean = true;
   @Input() filterButton: boolean = false;
   @Input() filterCriteria: any = {};
 

@@ -1,8 +1,8 @@
-import {Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
-import {LangService} from '../../../services/lang.service';
+import {Component, HostBinding, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {LangService} from '@app/services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {isEmptyObject} from '../../../helpers/utils';
+import {isEmptyObject} from '@app/helpers/utils';
 
 @Component({
   selector: 'app-page-header',
@@ -10,11 +10,13 @@ import {isEmptyObject} from '../../../helpers/utils';
   styleUrls: ['./page-header.component.scss']
 })
 export class PageHeaderComponent implements OnInit, OnDestroy {
-  @HostBinding('class') containerClass = 'col-md-4 col-sm-12';
+  @HostBinding('class') containerClass = 'col-md-6 col-sm-12';
   @Input() pageTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() clickOnReload$: BehaviorSubject<any> = {} as BehaviorSubject<any>;
   @Input() clickOnNew$: Subject<any> = {} as Subject<any>;
   @Input() addPermission = true;
+  @Input() customTemplate?: TemplateRef<any>;
+  @Input() useReloadValue: boolean = false;
 
   isReloadAvailable = false;
 
@@ -36,6 +38,14 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
   get isAddAvailable(): boolean {
     return this.addPermission && !isEmptyObject(this.clickOnNew$)
+  }
+
+  reloadCallback(): void {
+    if (this.useReloadValue) {
+      this.clickOnReload$.next(this.clickOnReload$.value);
+    } else {
+      this.clickOnReload$.next(null);
+    }
   }
 
 

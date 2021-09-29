@@ -1,6 +1,5 @@
-<div class="row">
-  <div class="col-8"></div>
-  <div class="col-4">
+<div class="row float-end">
+  <div class="col-12 d-flex flex-row">
     <div *ngIf="filterButton" class="d-flex align-items-center justify-content-end position-relative">
       <a href="#" class="text-primary text-decoration-none" *ngIf="hasFilterCriteria()"
          (click)="clearFilter($event)">{{langService.map.clear_filter}}</a>
@@ -9,7 +8,7 @@
         <i class="mdi {{hasFilterCriteria() ? 'mdi-filter' : 'mdi-filter-outline'}}"></i>
       </button>
     </div>
-    <div *ngIf="!filterButton" class=" d-flex align-items-center justify-content-end position-relative">
+    <div *ngIf="searchBox" class=" d-flex align-items-center justify-content-end position-relative">
       <input id="search" class="form-control pe-4" autocomplete="off"
              [formControl]="searchText" (keyup)="search($event)"
              placeholder="{{langService.map.lbl_search}}">

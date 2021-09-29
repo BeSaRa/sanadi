@@ -1,11 +1,15 @@
-<div class="row">
-  <div class="col-12 d-flex align-items-center">
+<div class="d-flex flex-row">
+  <div class="align-items-center">
     <h1 class="h6 text-primary m-0 d-inline-block">{{langService.map[pageTitle]}}</h1>
     <button class="btn btn-link outline-none" *ngIf="isAddAvailable"
             tooltip="{{langService.map.btn_add}}" (click)="clickOnNew$.next(null)">
       <i class="mdi mdi-plus-box"></i></button>
     <button class="btn btn-link" *ngIf="isReloadAvailable"
-            tooltip="{{langService.map.btn_reload}}" (click)="clickOnReload$.next(null)">
+            tooltip="{{langService.map.btn_reload}}" (click)="reloadCallback()">
       <i class="mdi mdi-reload"></i></button>
+  </div>
+  <div *ngIf="customTemplate">
+    <ng-container *ngTemplateOutlet="customTemplate">
+    </ng-container>
   </div>
 </div>
