@@ -23,8 +23,9 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.requestClassificationInfo = AdminResult.createInstance(model.requestClassificationInfo);
-    // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
+    model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
 
+    // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
     model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(x));
     model.goalsList = model.goalsList.map(x => service.goalInterceptor.receive(x));
