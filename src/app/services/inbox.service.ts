@@ -1,7 +1,7 @@
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {QueryResultSet} from '../models/query-result-set';
 import {Generator} from '../decorators/generator';
 import {QueryResultSetInterceptor} from '../model-interceptors/query-result-set-interceptor';
@@ -27,6 +27,10 @@ import {InitialExternalOfficeApprovalService} from "@app/services/initial-extern
 import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalService} from "@app/services/partner-approval.service";
 import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
+import {ITeamInboxCriteria} from '@app/interfaces/i-team-inbox-criteria-interface';
+import {FilterInboxRequestPopupComponent} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import {DateUtils} from '@app/helpers/date-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -68,8 +72,19 @@ export class InboxService {
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
   private _loadTeamInbox(teamId: number, options?: any): Observable<QueryResultSet> {
+    let objOptions;
+    if (!CommonUtils.isEmptyObject(options) && CommonUtils.objectHasValue(options)) {
+      objOptions = {...options};
+
+      if (objOptions.hasOwnProperty('createdDateFrom') && objOptions.createdDateFrom) {
+        objOptions.createdDateFrom = DateUtils.changeDateFromDatepicker(objOptions.createdDateFrom)?.toISOString();
+      }
+      if (objOptions.hasOwnProperty('createdDateTo') && objOptions.createdDateTo) {
+        objOptions.createdDateTo = DateUtils.changeDateFromDatepicker(objOptions.createdDateTo)?.toISOString();
+      }
+    }
     return this.http.get<QueryResultSet>(this.urlService.URLS.TEAMS_INBOX + '/' + teamId, {
-      params: (new HttpParams({fromObject: options}))
+      params: (new HttpParams({fromObject: objOptions || options}))
     });
   }
 
@@ -195,4 +210,13 @@ export class InboxService {
       task
     });
   }
+
+  openFilterTeamInboxDialog(filterCriteria: Partial<ITeamInboxCriteria>): Observable<DialogRef> {
+    return of(this.dialog.show(FilterInboxRequestPopupComponent, {
+      criteria: filterCriteria
+    }, {
+      escToClose: true
+    }));
+  }
+
 }

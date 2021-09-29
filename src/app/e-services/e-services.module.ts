@@ -22,6 +22,7 @@ import { ApprovalReasonComponent } from './pages/partner-approval/approval-reaso
 import {FinalExternalOfficeApprovalComponent} from './pages/final-external-office-approval/final-external-office-approval.component';
 import {SelectLicensePopupComponent} from './poups/select-license-popup/select-license-popup.component';
 import { BankBranchComponent } from './shared/bank-branch/bank-branch.component';
+import { FilterInboxRequestPopupComponent } from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { BankBranchComponent } from './shared/bank-branch/bank-branch.component'
     GoalComponent,
     TargetGroupComponent,
     ContactOfficerComponent,
-    ApprovalReasonComponent
+    ApprovalReasonComponent,
+    FilterInboxRequestPopupComponent
   ],
   imports: [
     CommonModule,

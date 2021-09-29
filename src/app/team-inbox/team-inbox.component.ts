@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {QueryResultSet} from '../models/query-result-set';
 import {LangService} from '../services/lang.service';
 import {switchMap, take, takeUntil, tap} from 'rxjs/operators';
@@ -17,13 +17,20 @@ import {CaseModel} from '../models/case-model';
 import {WFActions} from '../enums/wfactions.enum';
 import {IESComponent} from '../interfaces/iescomponent';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {FilterEventTypes} from '@app/types/types';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
+import {ITeamInboxCriteria} from '@app/interfaces/i-team-inbox-criteria-interface';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'team-inbox',
   templateUrl: './team-inbox.component.html',
   styleUrls: ['./team-inbox.component.scss']
 })
-export class TeamInboxComponent implements OnInit, OnDestroy {
+export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
   displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'];
@@ -32,7 +39,9 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
   selectControl: FormControl = new FormControl();
   actions: IMenuItem<QueryResult>[] = [];
 
-  filterControl: FormControl = new FormControl('');
+  @ViewChild('table') table!: TableComponent;
+  filterCriteria: Partial<ITeamInboxCriteria> = {};
+  // filterControl: FormControl = new FormControl('');
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -40,9 +49,53 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
               public employeeService: EmployeeService) {
   }
 
+  tableOptions: ITableOptions = {
+    ready: false,
+    columns: ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'],
+    searchText: '',
+    isSelectedRecords: () => {
+      if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
+        return false;
+      }
+      return this.table.selection.selected.length !== 0;
+    },
+    searchCallback: (record: any, searchText: string) => {
+      return record.search(searchText);
+    },
+    filterCallback: (type: FilterEventTypes = 'OPEN') => {
+      if (type === 'CLEAR') {
+        this.filterCriteria = {};
+        this.reloadSelectedInbox();
+      } else if (type === 'OPEN') {
+        const sub = this.inboxService.openFilterTeamInboxDialog(this.filterCriteria)
+          .subscribe((dialog: DialogRef) => {
+            dialog.onAfterClose$.subscribe((result: UserClickOn | Partial<IPartialRequestCriteria>) => {
+              if (!CommonUtils.isValidValue(result) || result === UserClickOn.CLOSE) {
+                return;
+              }
+              this.filterCriteria = result as Partial<ITeamInboxCriteria>;
+              this.reloadSelectedInbox();
+              sub.unsubscribe();
+            });
+          })
+      }
+    },
+    sortingCallbacks: {}
+  };
+
+  ngAfterViewInit(): void {
+    Promise.resolve().then(() => {
+      this.tableOptions.ready = true;
+    });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  hasFilterCriteria(): boolean {
+    return !CommonUtils.isEmptyObject(this.filterCriteria) && CommonUtils.objectHasValue(this.filterCriteria);
   }
 
   hasSelectedInbox(): boolean {
@@ -53,9 +106,18 @@ export class TeamInboxComponent implements OnInit, OnDestroy {
     if (!this.hasSelectedInbox()) {
       return of(null);
     }
-    return this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!)
+    let data;
+    if (!this.hasFilterCriteria()) {
+      data = this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!);
+    } else {
+      data = this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!, this.filterCriteria);
+    }
+    return data
       // .pipe(tap(val => console.log(val.items)))
-      .pipe(tap(result => this.queryResultSet = result));
+      .pipe(tap(result => {
+        this.queryResultSet = result;
+        this.table.selection.clear();
+      }));
   }
 
   ngOnInit(): void {

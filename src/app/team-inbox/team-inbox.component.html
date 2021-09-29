@@ -1,109 +1,107 @@
-<div class="row mb-3">
-  <div class="col">
-    <div class="d-flex flex-row justify-content-start align-items-center">
-      <h1 class="h6 text-primary">{{lang.map.menu_team_inbox}}</h1>
-      <div>
-        <button [tooltip]="lang.map.btn_reload" (click)="reloadSelectedInbox()" class="btn text-primary icon-btn"><i
-          class="mdi mdi-reload"></i>
-        </button>
-      </div>
-      <div>
-        <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
-          <option [ngValue]="team" *ngFor="let team of employeeService.teams">{{team.getName()}}</option>
-        </select>
-      </div>
-      <div class="flex-grow-1"></div>
-      <div>
-        <input [formControl]="filterControl" [placeholder]="lang.map.lbl_search" class="form-control">
-      </div>
+<div class="row">
+  <app-page-header pageTitle="menu_team_inbox" [clickOnReload$]="inboxChange$"
+                   [useReloadValue]="true"
+                   [customTemplate]="customHeader">
+  </app-page-header>
+  <ng-template #customHeader>
+    <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
+      <option [ngValue]="team" *ngFor="let team of employeeService.teams">{{team.getName()}}</option>
+    </select>
+  </ng-template>
+  <app-grid-search *ngIf="!tableOptions.isSelectedRecords()"
+                   [searchBox]="true" (searchTextEvent)="tableOptions.searchText = $event"
+                   [filterButton]="true" (filterEvent)="tableOptions.filterCallback($event)"
+                   [filterCriteria]="filterCriteria"></app-grid-search>
+  <app-bulk-actions *ngIf="tableOptions.isSelectedRecords()"
+                    [actionsList]="[]"
+                    [selectedRecords]="table.selection.selected"></app-bulk-actions>
+</div>
+<div class="row pt-3">
+  <div class="col-12">
+    <div class="table-responsive">
+      <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
+                 [columns]="tableOptions.columns" [data]="queryResultSet?.items" [filter]="tableOptions.searchText"
+                 [useSearchToFilter]="true">
+        <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="select">
+            <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
+              <input type="checkbox"
+                     [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                     (change)="$event ? table.toggleAll() : null"
+                     [checked]="table.selection.hasValue() && table.allSelected()"
+                     class="form-check-input"></th>
+            <td cdk-cell *cdkCellDef="let row">
+              <input type="checkbox"
+                     (click)="$event.stopPropagation()"
+                     [checked]="table.selection.isSelected(row)"
+                     (change)="$event ? table.selection.toggle(row) : null"
+                     class="form-check-input"></td>
+          </ng-container>
+          <ng-container cdkColumnDef="BD_FULL_SERIAL">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"><a href="#"
+                                                  (click)="$event.preventDefault(); openTask(row)">{{row.BD_FULL_SERIAL}}</a>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="ACTIVATED">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.received_data}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ACTIVATED|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="action">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.action}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{ displayStepName(row) || row.TAD_DISPLAY_NAME}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="PI_CREATE">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.PI_CREATE|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="PI_DUE">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="fromUserInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sender}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.fromUserInfo.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="BD_CASE_TYPE">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{getServiceName(row.BD_CASE_TYPE)}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="BD_SUBJECT">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.BD_SUBJECT}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="orgInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell class="table-actions" *cdkCellDef="let row">
+              <button (click)="actionViewLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
+                <i class="mdi mdi-view-list-outline"></i></button>
+              <button (click)="actionClaim(row)" [tooltip]="lang.map.claim" class="btn text-primary icon-btn">
+                <i class="mdi mdi-hand-right"></i></button>
+              <button (click)="actionManageAttachments(row)" [tooltip]="lang.map.manage_attachments"
+                      class="btn text-primary icon-btn">
+                <i class="mdi mdi-paperclip"></i></button>
+              <button (click)="actionSendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
+                      class="btn text-primary icon-btn">
+                <i class="mdi mdi-send-circle"></i></button>
+              <button (click)="actionSendToUser(row)" [tooltip]="lang.map.send_to_user"
+                      class="btn text-primary icon-btn">
+                <i class="mdi mdi-account-arrow-right"></i></button>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="10">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator [length]="(queryResultSet?.totalCount || 0)"></app-paginator>
+      </app-table>
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-12">
-    <app-table #table [selectable]="true" sortableTable [paginator]="paginator" [filter]="filterControl.value"
-               [data]="queryResultSet?.items"
-               [useSearchToFilter]="true"
-               [columns]="displayedColumns">
-      <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-        <ng-container cdkColumnDef="select">
-          <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
-            <input type="checkbox"
-                   [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                   (change)="$event ? table.toggleAll() : null"
-                   [checked]="table.selection.hasValue() && table.allSelected()"
-                   class="form-check-input"></th>
-          <td cdk-cell *cdkCellDef="let row">
-            <input type="checkbox"
-                   (click)="$event.stopPropagation()"
-                   [checked]="table.selection.isSelected(row)"
-                   (change)="$event ? table.selection.toggle(row) : null"
-                   class="form-check-input"></td>
-        </ng-container>
-        <ng-container cdkColumnDef="BD_FULL_SERIAL">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-          <td cdk-cell *cdkCellDef="let row"><a href="#"
-                                                (click)="$event.preventDefault(); openTask(row)">{{row.BD_FULL_SERIAL}}</a>
-          </td>
-        </ng-container>
-        <ng-container cdkColumnDef="ACTIVATED">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.received_data}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.ACTIVATED|date}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="action">
-          <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.action}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{ displayStepName(row) || row.TAD_DISPLAY_NAME}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="PI_CREATE">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.PI_CREATE|date}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="PI_DUE">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.due_date}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.PI_DUE|date}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="fromUserInfo">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.sender}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.fromUserInfo.getName()}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="BD_CASE_TYPE">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.service_type}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{getServiceName(row.BD_CASE_TYPE)}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="BD_SUBJECT">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.subject}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.BD_SUBJECT}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="orgInfo">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-          <td cdk-cell class="table-actions" *cdkCellDef="let row">
-            <button (click)="actionViewLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
-              <i class="mdi mdi-view-list-outline"></i></button>
-            <button (click)="actionClaim(row)" [tooltip]="lang.map.claim" class="btn text-primary icon-btn">
-              <i class="mdi mdi-hand-right"></i></button>
-            <button (click)="actionManageAttachments(row)" [tooltip]="lang.map.manage_attachments"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-paperclip"></i></button>
-            <button (click)="actionSendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-send-circle"></i></button>
-            <button (click)="actionSendToUser(row)" [tooltip]="lang.map.send_to_user"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-account-arrow-right"></i></button>
-          </td>
-        </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
-        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
-        <tr *cdkNoDataRow>
-          <td colspan="10">{{lang.map.no_records_to_display}}</td>
-        </tr>
-      </table>
-      <app-paginator #paginator [length]="(queryResultSet?.totalCount || 0)"></app-paginator>
-    </app-table>
-  </div>
-  <context-menu-item #menu [actions]="actions"></context-menu-item>
-</div>
+<context-menu-item #menu [actions]="actions"></context-menu-item>

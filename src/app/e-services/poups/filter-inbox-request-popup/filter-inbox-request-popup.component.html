@@ -1,0 +1,45 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1
+    class="h6 text-white">{{langService.map.filter}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content">
+  <form class="min-w400px w600px" autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="createdDateFrom" for="createdDateFrom"
+               class="form-label">{{langService.map.creation_date_from}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="createdDateFrom"
+               id="createdDateFrom" [options]="datepickerOptionsMap.createdDateFrom"
+               (click)="dpCreatedDateFrom.toggleCalendar()" #dpCreatedDateFrom="angular-mydatepicker"
+               angular-mydatepicker validationClasses="createdDateFrom"
+               (inputFieldChanged)="onDateChange($event, 'createdDateFrom', 'createdDateTo')"></div>
+          <app-field-error-message controlName="createdDateFrom"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="createdDateTo" for="createdDateTo"
+               class="form-label">{{langService.map.creation_date_to}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="createdDateTo"
+               id="createdDateTo" [options]="datepickerOptionsMap.createdDateTo"
+               (click)="dpCreatedDateTo.toggleCalendar()" #dpCreatedDateTo="angular-mydatepicker"
+               angular-mydatepicker validationClasses="createdDateTo"
+               (inputFieldChanged)="onDateChange($event, 'createdDateFrom', 'createdDateTo')"></div>
+          <app-field-error-message controlName="createdDateTo"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button [disabled]="!hasFilterCriteria" (click)="filterRecords()"
+          class="btn btn-primary">{{langService.map.filter}}</button>
+  <button (click)="resetFilter()"
+          class="btn btn-primary">{{langService.map.btn_reset}}</button>
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>
+</div>
