@@ -125,4 +125,27 @@ export class CommonUtils {
       containerRefToScroll.scrollTo({top: 0, behavior: "smooth"});
     }
   }
+
+  /**
+   * @description Checks if given object is empty(not having properties)
+   * @param objectToCheck
+   * Object to check for emptiness
+   */
+  static isEmptyObject(objectToCheck: any): boolean {
+    for (const key in objectToCheck) {
+      if (objectToCheck.hasOwnProperty(key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * @description Check if object has any property with value
+   * @param objectToCheck
+   * Object to check for property values
+   */
+  static objectHasValue(objectToCheck: any): boolean {
+    return Object.values(objectToCheck).some(value => this.isValidValue(value));
+  }
 }
