@@ -34,6 +34,7 @@ import {OrgUnit} from "@app/models/org-unit";
 import {CommonUtils} from "@app/helpers/common-utils";
 import {JobTitleService} from "@app/services/job-title.service";
 import {JobTitle} from "@app/models/job-title";
+import {OpenFrom} from "@app/enums/open-from.enum";
 
 @Component({
   selector: 'partner-approval',
@@ -436,5 +437,19 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   get city(): FormControl {
     return (this.form.get('basic')?.get('city')) as FormControl;
+  }
+
+  isAddAttachmentAllowed(): boolean {
+    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+      return true;
+    }
+    return !!(this.model?.id) && !this.readonly;
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+      return true;
+    }
+    return !!(this.model?.id) && !this.readonly;
   }
 }
