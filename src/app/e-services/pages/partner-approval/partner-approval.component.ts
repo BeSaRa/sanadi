@@ -377,7 +377,9 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         requestType: this.requestType.value,
         licenseNumber: license.licenseNumber,
         country: license.country,
-        city: license.region
+        city: license.region,
+        licenseDuration: license.licenseDuration,
+        licenseStartDate: license.licenseStartDate
       });
     }
   }
