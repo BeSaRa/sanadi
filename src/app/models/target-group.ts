@@ -9,8 +9,8 @@ export class TargetGroup extends SearchableCloneable<TargetGroup> {
     const {services, targetedGroup} = this;
 
     return {
-      services: control ? [services, CustomValidators.required] : services,
-      targetedGroup: control ? [targetedGroup, CustomValidators.required] : targetedGroup
+      services: control ? [services, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : services,
+      targetedGroup: control ? [targetedGroup, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : targetedGroup
     };
   }
 }
