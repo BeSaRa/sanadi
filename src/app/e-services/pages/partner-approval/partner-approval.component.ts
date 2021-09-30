@@ -185,11 +185,15 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.setDefaultOrganization();
     this.listenToCountryChange();
 
-    if (this.fromDialog && this.requestType.value !== ServiceRequestTypes.NEW) {
-      setTimeout(() => {
-        this.loadSelectedLicense(this.model?.licenseNumber!);
-      });
-    }
+    setTimeout(() => {
+      if (this.fromDialog) {
+        // if license number exists, load it and regions will be loaded inside
+        // otherwise load regions separately
+        if (this.model?.licenseNumber) {
+          this.loadSelectedLicense(this.model?.licenseNumber!);
+        }
+      }
+    });
   }
 
   _afterSave(model: PartnerApproval, saveType: SaveTypes, operation: OperationTypes): void {
