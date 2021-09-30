@@ -80,49 +80,56 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       name: 'bankAccounts',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
+        return true;
+        // return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
       }
     },
     goals: {
       name: 'goals',
       langKey: 'goals',
       validStatus: () => {
-        return !this.goalComponentRef || (this.goalsTabStatus === 'READY' && this.goalComponentRef.list.length > 0);
+        return true;
+        // return !this.goalComponentRef || (this.goalsTabStatus === 'READY' && this.goalComponentRef.list.length > 0);
       }
     },
     managementCouncils: {
       name: 'managementCouncils',
       langKey: 'management_council',
       validStatus: () => {
-        return !this.managementCouncilComponentRef || (this.managementCouncilsTabStatus === 'READY' && this.managementCouncilComponentRef.list.length > 0);
+        return true;
+        // return !this.managementCouncilComponentRef || (this.managementCouncilsTabStatus === 'READY' && this.managementCouncilComponentRef.list.length > 0);
       }
     },
     executiveManagements: {
       name: 'executiveManagements',
       langKey: 'executive_management',
       validStatus: () => {
-        return !this.executiveManagementComponentRef || (this.executiveManagementsTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+        return true;
+        // return !this.executiveManagementComponentRef || (this.executiveManagementsTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
       }
     },
     targetGroups: {
       name: 'targetGroups',
       langKey: 'target_groups',
       validStatus: () => {
-        return !this.targetGroupComponentRef || (this.targetGroupsTabStatus === 'READY' && this.targetGroupComponentRef.list.length > 0);
+        return true;
+        // return !this.targetGroupComponentRef || (this.targetGroupsTabStatus === 'READY' && this.targetGroupComponentRef.list.length > 0);
       }
     },
     contactOfficers: {
       name: 'contactOfficers',
       langKey: 'contact_officers',
       validStatus: () => {
-        return !this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0);
+        return true;
+        //  return !this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0);
       }
     },
     approvalReasons: {
       name: 'approvalReasons',
       langKey: 'approval_reasons',
       validStatus: () => {
-        return !this.approvalReasonComponentRef || (this.bankDetailsTabStatus === 'READY' && this.approvalReasonComponentRef.list.length > 0);
+        return true;
+        // return !this.approvalReasonComponentRef || (this.bankDetailsTabStatus === 'READY' && this.approvalReasonComponentRef.list.length > 0);
       }
     },
     comments: {
