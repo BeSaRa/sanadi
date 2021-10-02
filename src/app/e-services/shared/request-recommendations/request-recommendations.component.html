@@ -4,18 +4,19 @@
 <div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
-      <app-table [selectable]="false" #table [columns]="tableOptions.columns" [data]="data">
+      <app-table [selectable]="false" #table
+                 [columns]="tableOptions.columns" [data]="data">
         <table cdk-table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource">
           <ng-container cdkColumnDef="role">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{langService.map.role}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.role}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.roleInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="decision">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{langService.map.decision}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.decision}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.actionInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="comment">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{langService.map.comment}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.comment}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
