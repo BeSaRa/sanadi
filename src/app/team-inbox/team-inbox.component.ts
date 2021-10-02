@@ -171,6 +171,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         // push the cancel claim action to the actions array to display the RELEASE ACTION.
         loadedModel && loadedModel.taskDetails.actions.push(WFActions.ACTION_CANCEL_CLAIM);
         component && this.employeeService.isInternalUser() && (component.allowEditRecommendations = true);
+        if (component && component.handleReadonly && typeof component?.handleReadonly === 'function'){
+          component.handleReadonly();
+        }
       });
   }
 
@@ -274,7 +277,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.TEAM_INBOX, true)
+    item.open(this.actions, OpenFrom.TEAM_INBOX)
       .pipe(switchMap(ref => ref.onAfterClose$))
       .subscribe(() => this.reloadSelectedInbox());
   }

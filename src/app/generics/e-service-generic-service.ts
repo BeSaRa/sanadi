@@ -26,6 +26,10 @@ import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.co
 import {IFormRowGroup} from '../interfaces/iform-row-group';
 import {DynamicOptionsService} from '../services/dynamic-options.service';
 import {FBuilder} from "../helpers/FBuilder";
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-case-status.enum';
+import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
+import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -56,6 +60,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
   documentService: DocumentService = new DocumentService(this);
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
+
+  caseStatusEnumMap: any = {
+    [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
+    [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
+    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
+  };
 
   getCFR(): ComponentFactoryResolver {
     return this.cfr;

@@ -13,4 +13,5 @@ export interface IESComponent {
   allowEditRecommendations?: boolean;
   operation: OperationTypes;
   openFrom: OpenFrom;
+  handleReadonly?: any;
 }

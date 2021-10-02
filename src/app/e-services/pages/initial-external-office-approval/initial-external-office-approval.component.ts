@@ -23,6 +23,7 @@ import {ToastService} from "@app/services/toast.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {WFActions} from '@app/enums/wfactions.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -72,6 +73,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.setDefaultOrganization();
 
     setTimeout(() => {
+      this.handleReadonly();
       if (this.fromDialog) {
         // if license number exists, load it and regions will be loaded inside
         // otherwise load regions separately
@@ -119,7 +121,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   _updateForm(model: InitialExternalOfficeApproval): void {
     this.model = model;
-    this.form.patchValue(model.buildForm())
+    this.form.patchValue(model.buildForm());
   }
 
   _resetForm(): void {
@@ -207,24 +209,23 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
       this._handleRequestTypeDependentControls();
-      // if no requestType, reset license and its validations
-      if (!requestTypeValue) {
+      if (this.model) {
+        this.model.licenseNumber = '';
+        this.model.licenseDuration = 0;
+        this.model.licenseStartDate = '';
+      }
+      // if no requestType or (new record and requestType = new), reset license and its validations
+      // if new record and requestType = new, reset license and its validations
+      if (!requestTypeValue || (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW)) {
         this.licenseNumber.reset();
         this.licenseNumber.setValidators([]);
         this.setSelectedLicense(undefined);
       } else {
-        // if new record and requestType = new, reset license and its validations
-        if (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW) {
-          this.licenseNumber.reset();
-          this.licenseNumber.setValidators([]);
-          this.setSelectedLicense(undefined);
-        } else {
-          this.licenseNumber.setValidators([CustomValidators.required, (control) => {
-            return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
-          }]);
-        }
-        this.licenseNumber.updateValueAndValidity({emitEvent: false});
+        this.licenseNumber.setValidators([CustomValidators.required, (control) => {
+          return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+        }]);
       }
+      this.licenseNumber.updateValueAndValidity({emitEvent: false});
     });
   }
 
@@ -283,11 +284,12 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private _handleRequestTypeDependentControls(): void {
-    let requestType = this.requestType.value;
+    /*let requestType = this.requestType.value;
     // if no request type selected, disable license, country, region
     // otherwise enable/disable license, country and region according to request type
+
+
     if (!CommonUtils.isValidValue(requestType) || this.readonly) {
-      this.licenseNumber.disable();
       this.country.disable();
       this.region.disable();
       return;
@@ -305,7 +307,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     } else {
       this.country.enable();
       this.region.enable();
-    }
+    }*/
   }
 
   private loadSelectedLicense(licenseNumber: string): void {
@@ -338,17 +340,140 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model, false)
   }
 
-  isAddAttachmentAllowed(): boolean {
-    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (!this.model?.canCommit()) {
+        this.readonly = true;
+      }
+      if (this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
+        this.readonly = false;
+      }
+    }
+  }
+
+
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  isEditLicenseAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+  }
+
+  isEditCountryAllowed(): boolean {
+    let requestType = this.requestType.value,
+      isAllowed = !(requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL);
+
+    if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
+      return isAllowed;
+    } else {
+      return isAllowed && !this.readonly;
+    }
+  }
+
+  isEditRequestTypeAllowed1(): boolean {
+    // allow edit if new record
+    if (!this.model?.id) {
       return true;
     }
-    return !!(this.model?.id) && !this.readonly;
+
+    let allowEdit = false;
+    if (this.openFrom === OpenFrom.ADD_SCREEN) {
+      // add screen, allow edit if saved as draft
+      allowEdit = this.model.canCommit();
+    } else {
+      let caseStatusEnum = this.service.caseStatusEnumMap[this.model?.caseType!];
+
+      if (this.openFrom === OpenFrom.USER_INBOX) {
+        // if final approved or final rejected, can't change
+        // otherwise if charity manager or charity user, allow change if its returned request
+        if (this.model?.caseStatus === caseStatusEnum.FINAL_APPROVE || this.model?.caseStatus === caseStatusEnum.FINAL_REJECTION) {
+          allowEdit = false;
+        } else if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
+          allowEdit = this.model.isReturned();
+        }
+      } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+        // if not claimed, don't allow edit
+        // otherwise after claim, if charity manager or charity user, allow change if its returned request
+        if (this.model.taskDetails.actions.includes(WFActions.ACTION_CLAIM)) {
+          allowEdit = false;
+        } else if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
+          allowEdit = this.model.isReturned();
+        }
+      } else if (this.openFrom === OpenFrom.SEARCH) {
+        // if saved as draft and opened by creator who is charity user, allow edit
+        if (this.model?.canCommit() && this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
+          allowEdit = true;
+        }
+      }
+    }
+    return allowEdit;
+  }
+
+  isAddAttachmentAllowed(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = false;
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      isAllowed = this.employeeService.isLicensingUser();
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if (this.model.taskDetails.isClaimed()) {
+        isAllowed = this.employeeService.isLicensingUser();
+      } else {
+        isAllowed = false;
+      }
+    }
+
+    return isAllowed;
+    /*if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+      return true;
+    }
+    return !!(this.model?.id) && !this.readonly;*/
   }
 
   isAddCommentAllowed(): boolean {
-    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = false;
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      isAllowed = this.employeeService.isLicensingUser();
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if (this.model.taskDetails.isClaimed()) {
+        isAllowed = this.employeeService.isLicensingUser();
+      } else {
+        isAllowed = false;
+      }
+    }
+    return isAllowed;
+    /*if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
       return true;
     }
-    return !!(this.model?.id) && !this.readonly;
+    return !!(this.model?.id) && !this.readonly;*/
   }
 }

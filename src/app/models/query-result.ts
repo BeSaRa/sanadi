@@ -217,7 +217,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
             )
             .subscribe(() => {
 
-              if (from === OpenFrom.USER_INBOX) {
+              /*if (from === OpenFrom.USER_INBOX) {
                 if (this.employeeService.isCharityManager()) {
                   readonly = false;
                 } else if (this.employeeService.isCharityUser()) {
@@ -230,7 +230,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
                     readonly = false;
                   }
                 }
-              }
+              }*/
 
               instance.container.clear();
               const componentRef = instance.container.createComponent(factory);

@@ -1,4 +1,5 @@
 import {Cloneable} from './cloneable';
+import {WFActions} from '@app/enums/wfactions.enum';
 
 export class TaskDetails extends Cloneable<TaskDetails> {
   tkiid!: string;
@@ -35,4 +36,8 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   parentCaseId!: string;
   responses!: string[];
   actions!: string[];
+
+  isClaimed(): boolean {
+    return this.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
+  }
 }

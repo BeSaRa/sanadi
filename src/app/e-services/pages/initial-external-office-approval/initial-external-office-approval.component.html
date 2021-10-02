@@ -11,7 +11,8 @@
                    class="col-form-label col-md-4 col-sm-12"
                    for="organizationId">{{lang.map.lbl_organization}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly || !!(this.model?.id)" validationClasses="organizationId" appendTo="body" [clearable]="true"
+              <ng-select [readonly]="readonly || !!(this.model?.id)" validationClasses="organizationId" appendTo="body"
+                         [clearable]="true"
                          id="organizationId"
                          formControlName="organizationId">
                 <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
@@ -28,7 +29,7 @@
                    class="col-form-label col-md-4 col-sm-12"
                    for="requestType">{{lang.map.request_type}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly" validationClasses="requestType"
+              <ng-select [readonly]="!isEditRequestTypeAllowed()" validationClasses="requestType"
                          appendTo="body"
                          [clearable]="true" id="requestType"
                          formControlName="requestType">
@@ -44,11 +45,11 @@
                    for="licenseNumber">{{lang.map.license_number}}</label>
             <div class="col-md-8 col-sm-12 mb-position-relative">
               <div class="input-group">
-                <button [disabled]="licenseNumber.disabled" type="button" (click)="licenseSearch()"
+                <button [disabled]="!isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
                         class="input-group-text"><i
                   class="mdi mdi-file-search text-primary"></i></button>
                 <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
-                       type="text" [readOnly]="readonly"
+                       type="text" [readOnly]="!isEditLicenseAllowed()"
                        validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"
                        id="licenseNumber">
                 <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
@@ -67,7 +68,7 @@
                    class="col-form-label col-md-4 col-sm-12"
                    for="country">{{lang.map.country}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly" (change)="onCountrySelected()" validationClasses="country"
+              <ng-select [readonly]="!isEditCountryAllowed()" (change)="onCountrySelected()" validationClasses="country"
                          appendTo="body" [clearable]="true"
                          id="country"
                          formControlName="country">
@@ -84,7 +85,7 @@
                    class="col-form-label col-md-4 col-sm-12"
                    for="region">{{lang.map.region}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly" validationClasses="region" appendTo="body" [clearable]="true"
+              <ng-select [readonly]="!isEditCountryAllowed()" validationClasses="region" appendTo="body" [clearable]="true"
                          id="region"
                          formControlName="region">
                 <ng-option [value]="region.id" *ngFor="let region of regions">{{region.getName()}}</ng-option>
