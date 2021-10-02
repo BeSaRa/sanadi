@@ -29,7 +29,7 @@
       <div class="attachment-title text-truncate"
            [title]="doc.documentTitle"><a (click)="viewDocument(doc , $event)" href="#">{{doc.documentTitle}}</a>
       </div>
-      <div class="attachment-title text-truncate" [title]="doc.documentTitle">{{doc.documentTitle}}</div>
+      <div class="attachment-title text-truncate" [title]="doc.attachmentTypeInfo.getName()">{{doc.attachmentTypeInfo.getName()}}</div>
       <div class="attachment-title text-truncate" [title]="doc.description">{{doc.description}}</div>
       <div class="attachment-title text-truncate"
            [title]="(doc.createdOn|date: 'mediumDate')">{{doc.createdOn|date: 'mediumDate' }}
