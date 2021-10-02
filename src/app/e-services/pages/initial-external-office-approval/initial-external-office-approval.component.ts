@@ -24,6 +24,7 @@ import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -40,6 +41,19 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   selectedLicense?: InitialApprovalDocument;
   organizations: OrgUnit[] = [];
 
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: 'basicInfoTab',
+      langKey: 'lbl_basic_info',
+      validStatus: () => this.form && this.form.valid
+    },
+    recommendations: {
+      name: 'recommendations',
+      langKey: 'recommendations',
+      validStatus: () => true
+    }
+  };
+
   constructor(public fb: FormBuilder,
               public lang: LangService,
               private lookupService: LookupService,
@@ -52,6 +66,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               public service: InitialExternalOfficeApprovalService) {
     super();
 
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
   }
 
   _getNewInstance(): InitialExternalOfficeApproval {
