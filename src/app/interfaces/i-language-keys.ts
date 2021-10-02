@@ -548,4 +548,11 @@ export interface ILanguageKeys {
   service_steps_english: string;
   internal: string;
   external: string;
+  role: string;
+  decision: string;
+  role_specialist: string;
+  role_manager: string;
+  role_reviewer_department: string;
+  role_general_manager: string;
+  role_chief: string;
 }
