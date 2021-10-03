@@ -228,18 +228,21 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
       this._handleRequestTypeDependentControls();
-      if (this.model) {
-        this.model.licenseNumber = '';
-        this.model.licenseDuration = 0;
-        this.model.licenseStartDate = '';
-      }
-      // if no requestType or (new record and requestType = new), reset license and its validations
-      // if new record and requestType = new, reset license and its validations
+
+      // if no requestType or (requestType = new)
+      // if new record or draft, reset license and its validations
+      // also reset the values in model
       if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
-        this.licenseNumber.reset();
-        this.licenseNumber.setValidators([]);
-        if (!this.model?.id) {
+        if (!this.model?.id || this.model.canCommit()) {
+          this.licenseNumber.reset();
+          this.licenseNumber.setValidators([]);
           this.setSelectedLicense(undefined);
+
+          if (this.model) {
+            this.model.licenseNumber = '';
+            this.model.licenseDuration = 0;
+            this.model.licenseStartDate = '';
+          }
         }
       } else {
         this.licenseNumber.setValidators([CustomValidators.required, (control) => {
