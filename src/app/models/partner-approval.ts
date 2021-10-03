@@ -67,13 +67,12 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   getBasicFields(control: boolean = false): any {
     const {
-      subject, requestType, requestClassification, arabicName, englishName, country, city, headQuarterType, latitude,
+      requestType, requestClassification, arabicName, englishName, country, city, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
       firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber
     } = this;
 
     return {
-      subject: control ? [subject, [CustomValidators.required]] : subject,
       organizationId: control ? [organizationId, [CustomValidators.required]] : organizationId,
       licenseNumber: control ? [licenseNumber, []] : licenseNumber,
       requestType: control ? [requestType, CustomValidators.required] : requestType,
