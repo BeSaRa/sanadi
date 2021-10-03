@@ -462,42 +462,22 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     if (!this.model?.id) {
       return false;
     }
-    let isAllowed = false;
-    if (this.openFrom === OpenFrom.USER_INBOX) {
-      isAllowed = this.employeeService.isLicensingUser();
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if (this.model.taskDetails.isClaimed()) {
-        isAllowed = this.employeeService.isLicensingUser();
-      } else {
-        isAllowed = false;
-      }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
     }
 
     return isAllowed;
-    /*if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
-      return true;
-    }
-    return !!(this.model?.id) && !this.readonly;*/
   }
 
   isAddCommentAllowed(): boolean {
-    if (!this.model?.id) {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
       return false;
     }
-    let isAllowed = false;
-    if (this.openFrom === OpenFrom.USER_INBOX) {
-      isAllowed = this.employeeService.isLicensingUser();
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if (this.model.taskDetails.isClaimed()) {
-        isAllowed = this.employeeService.isLicensingUser();
-      } else {
-        isAllowed = false;
-      }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
     }
     return isAllowed;
-    /*if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
-      return true;
-    }
-    return !!(this.model?.id) && !this.readonly;*/
   }
 }
