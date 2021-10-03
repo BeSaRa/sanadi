@@ -152,7 +152,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
     }
 
     return stream$.pipe(
-      switchMap(_ => this.updateCase()),
+      switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
       switchMap(() => this.data.inboxService.takeActionOnTask(this.data.taskId, responseInfo, this.data.service))
     )
