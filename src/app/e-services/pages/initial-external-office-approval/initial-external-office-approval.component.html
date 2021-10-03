@@ -7,7 +7,7 @@
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
       <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-           [template]="recommendationsTemplate" [title]="lang.map.recommendations"
+           [template]="recommendationsTemplate" [title]="lang.map.recommendations" *ngIf="employeeService.isInternalUser()"
            [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
     </tabs-list>
     <ng-template #basicInfoTabTemplate>

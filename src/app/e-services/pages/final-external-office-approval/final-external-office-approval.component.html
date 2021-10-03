@@ -19,7 +19,7 @@
           <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
                [template]="attachmentsTabTemplate" [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
           <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-               [template]="recommendationsTemplate" [title]="lang.map.recommendations"
+               [template]="recommendationsTemplate" [title]="lang.map.recommendations" *ngIf="employeeService.isInternalUser()"
                [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
         </tabs-list>
         <ng-template #basicInfoTabTemplate>
