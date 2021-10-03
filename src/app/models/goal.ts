@@ -23,11 +23,11 @@ export class Goal extends SearchableCloneable<Goal> {
     } = this;
 
     return {
-      goal: control ? [goal, CustomValidators.required] : goal,
+      goal: control ? [goal, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : goal,
       domain: control ? [domain, CustomValidators.required] : domain,
       mainDACCategory: control ? [mainDACCategory] : mainDACCategory,
       mainUNOCHACategory: control ? [mainUNOCHACategory] : mainUNOCHACategory,
-      workArea: control ? [workArea, CustomValidators.required] : workArea,
+      workArea: control ? [workArea, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : workArea,
       mainDACCategoryInfo: control ? [mainDACCategoryInfo] : mainDACCategoryInfo,
       mainUNOCHACategoryInfo: control ? [mainUNOCHACategoryInfo] : mainUNOCHACategoryInfo
     };
