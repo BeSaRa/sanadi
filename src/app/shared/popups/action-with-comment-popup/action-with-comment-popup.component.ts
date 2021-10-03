@@ -166,6 +166,9 @@ export class ActionWithCommentPopupComponent implements OnInit {
           let validData = true;
           if (this.displayLicenseForm) {
             validData = this.licenseFormReadonly ? true : this.form.valid;
+            if (!validData) {
+              this.form.markAllAsTouched();
+            }
           } else if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
             validData = !!this.comment.value;
           }
