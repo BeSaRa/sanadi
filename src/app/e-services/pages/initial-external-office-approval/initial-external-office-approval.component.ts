@@ -9,7 +9,7 @@ import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {InitialApprovalDocument} from "@app/models/initial-approval-document";
 import {LicenseService} from "@app/services/license.service";
 import {DialogService} from "@app/services/dialog.service";
@@ -224,6 +224,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   listenToRequestTypeChange(): void {
     this.requestType?.valueChanges.pipe(
+      delay(50),
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
       this._handleRequestTypeDependentControls();
@@ -234,10 +235,12 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       }
       // if no requestType or (new record and requestType = new), reset license and its validations
       // if new record and requestType = new, reset license and its validations
-      if (!requestTypeValue || (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW)) {
+      if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
         this.licenseNumber.reset();
         this.licenseNumber.setValidators([]);
-        this.setSelectedLicense(undefined);
+        if (!this.model?.id) {
+          this.setSelectedLicense(undefined);
+        }
       } else {
         this.licenseNumber.setValidators([CustomValidators.required, (control) => {
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
@@ -381,12 +384,12 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft and opened by creator who is charity user, then no readonly
-      if (!this.model?.canCommit()) {
-        this.readonly = true;
-      }
-      if (this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
+      if (this.model?.canCommit()) {
         this.readonly = false;
       }
+      /*if (this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
+        this.readonly = false;
+      }*/
     }
   }
 
