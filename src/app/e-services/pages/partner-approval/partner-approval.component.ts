@@ -356,6 +356,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       }]);
     }
     this.licenseNumber.updateValueAndValidity({emitEvent: false})
+    this._handleRequestTypeDependentControls();
   }
 
   private loadSelectedLicense(licenseNumber: string): void {
@@ -386,6 +387,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         licenseStartDate: license.licenseStartDate
       });
     }
+    this._handleRequestTypeDependentControls();
   }
 
   private listenToLicenseSearch() {
@@ -464,5 +466,31 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       return true;
     }
     return !!(this.model?.id) && !this.readonly;
+  }
+
+  private _handleRequestTypeDependentControls(): void {
+    let requestType = this.requestType.value;
+    // if no request type selected, disable license, country, region
+    // otherwise enable/disable license, country and region according to request type
+    if (!CommonUtils.isValidValue(requestType) || this.readonly) {
+      this.licenseNumber.disable();
+      this.country.disable();
+      this.city.disable();
+      return;
+    }
+
+    if (requestType === ServiceRequestTypes.NEW) {
+      this.licenseNumber.disable();
+    } else {
+      this.licenseNumber.enable();
+    }
+
+    if (requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL) {
+      this.country.disable();
+      this.city.disable();
+    } else {
+      this.country.enable();
+      this.city.enable();
+    }
   }
 }
