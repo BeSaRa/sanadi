@@ -21,7 +21,7 @@ export class SelectLicensePopupComponent {
   label: keyof ILanguageKeys = "license";
   caseType: number;
   caseStatus: number;
-  isFinalApprovedRequest: boolean = false;
+  // isFinalApprovedRequest: boolean = false;
   caseStatusEnumMap: any = {
     [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
     [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
@@ -34,13 +34,10 @@ export class SelectLicensePopupComponent {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.caseType;
     this.caseStatus = this.data.caseRecord?.caseStatus;
-    this.isFinalApprovedRequest = this._isFinalApprovedRequest();
-
-    if (this.data.select || this.isFinalApprovedRequest) {
-      this.displayedColumns = [...this.displayedColumns, 'action'];
-      if (this.data.select) {
-        this.label = "select_license";
-      }
+    // this.isFinalApprovedRequest = this._isFinalApprovedRequest();
+    this.displayedColumns = [...this.displayedColumns, 'action'];
+    if (this.data.select) {
+      this.label = "select_license";
     }
   }
 
@@ -56,9 +53,9 @@ export class SelectLicensePopupComponent {
   }
 
   viewLicenseAsPDF(license: InitialApprovalDocument) {
-    if (!this.isFinalApprovedRequest) {
+    /*if (!this.isFinalApprovedRequest) {
       return;
-    }
+    }*/
     return this.licenseService.showLicenseContent(license, this.caseType)
       .subscribe((file) => {
         if (file.blob.type === 'error') {

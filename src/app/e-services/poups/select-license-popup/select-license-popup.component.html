@@ -33,7 +33,6 @@
         <td cdk-cell *cdkCellDef="let row">
           <button (click)="selectLicense(row)" *ngIf="data.select" class="btn btn-primary">{{lang.map.select}}</button>
           <button class="btn btn-link outline-none mx-2"
-                  *ngIf="isFinalApprovedRequest"
                   tooltip="{{lang.map.view_license}}"
                   (click)="viewLicenseAsPDF(row)">
             <i class="mdi mdi-file-pdf-outline"></i></button>
