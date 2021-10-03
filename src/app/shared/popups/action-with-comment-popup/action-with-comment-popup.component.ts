@@ -201,9 +201,9 @@ export class ActionWithCommentPopupComponent implements OnInit {
     }, (data) => {
 
       let licenseStartDate = data.licenseStartDate;
-      if (!licenseStartDate && this.action === WFResponseType.FINAL_APPROVE && data.requestType !== ServiceRequestTypes.UPDATE && data.requestType !== ServiceRequestTypes.CANCEL) {
-        if (data.licenseApprovedDate) {
-          licenseStartDate = data.licenseApprovedDate;
+      if (!licenseStartDate && this.action === WFResponseType.FINAL_APPROVE && this.loadedLicense?.requestType !== ServiceRequestTypes.UPDATE && this.loadedLicense?.requestType !== ServiceRequestTypes.CANCEL) {
+        if (this.loadedLicense?.licenseApprovedDate) {
+          licenseStartDate = this.loadedLicense?.licenseApprovedDate;
         } else {
           licenseStartDate = new Date().toString();
         }

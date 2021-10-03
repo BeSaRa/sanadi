@@ -18,7 +18,7 @@ export class DateUtils {
     if (!dateValue) {
       return dateValue;
     }
-    return dateValue.singleDate?.jsDate;
+    return dateValue.hasOwnProperty('singleDate') ? dateValue.singleDate?.jsDate : new Date(dateValue as unknown as Date);
   }
 
   static getDateStringFromDate(dateValue: any, format: (keyof IAppConfig) = {} as keyof IAppConfig): string {
