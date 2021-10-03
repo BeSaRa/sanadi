@@ -186,7 +186,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
         data: {hideFromViewer: true},
-        show: () => this.employeeService.isInternalUser(),
+        show: (item: CaseModel<any, any>) => {
+          return this.employeeService.isInternalUser() &&
+            ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL, CaseTypes.PARTNER_APPROVAL, CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL].includes(item.caseType);
+        },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
         }

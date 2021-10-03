@@ -194,9 +194,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     item.manageAttachments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
   }
 
-  actionManageRecommendations(item: QueryResult) {
+  /*actionManageRecommendations(item: QueryResult) {
     item.manageRecommendations().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
-  }
+  }*/
 
   actionManageComments(item: QueryResult) {
     item.manageComments().onAfterClose$.subscribe(() => this.reloadSelectedInbox());
@@ -329,7 +329,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       // recommendations
-      {
+      /*{
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
@@ -341,7 +341,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         onClick: (item: QueryResult) => {
           this.actionManageRecommendations(item);
         }
-      },
+      },*/
       // comments
       {
         type: 'action',
