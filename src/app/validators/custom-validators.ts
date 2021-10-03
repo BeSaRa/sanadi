@@ -24,7 +24,8 @@ const defaultLengths = {
   PHONE_NUMBER_MAX: 20,
   ADDRESS_MAX: 1000,
   QID_MIN: 11,
-  QID_MAX: 11
+  QID_MAX: 11,
+  SWIFT_CODE_MAX: 50
 };
 
 const commonValidations = {
