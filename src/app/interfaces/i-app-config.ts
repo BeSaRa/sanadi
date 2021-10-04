@@ -25,4 +25,5 @@ export interface IAppConfig {
   E_SERVICES_LIST: Record<number, string>;
   E_SERVICES_DENIED_USERS_INTERNAL: string[];
   E_SERVICES_DENIED_USERS_EXTERNAL: string[];
+  E_SERVICES_RESTRICTED_CASE_TYPES: number[];
 }

@@ -17,6 +17,7 @@ import {EmployeeService} from '../services/employee.service';
 import {CaseTypes} from '../enums/case-types.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ConfigurationService} from '@app/services/configuration.service';
 
 @Component({
   selector: 'services-search',
@@ -55,6 +56,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private inboxService: InboxService,
               private employeeService: EmployeeService,
+              private configService: ConfigurationService,
               private dialog: DialogService) {
   }
 
@@ -295,6 +297,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private filterServices(number: number): boolean {
+    if (this.configService.CONFIG.hasOwnProperty('E_SERVICES_RESTRICTED_CASE_TYPES')) {
+      if (this.configService.CONFIG.E_SERVICES_RESTRICTED_CASE_TYPES.includes(number)) {
+        return false;
+      }
+    }
     return this.employeeService.isInternalUser() ? true : this.isServiceAllowedForExternalToSearch(number);
   }
 
