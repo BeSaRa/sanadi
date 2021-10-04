@@ -71,7 +71,7 @@
                   <label asteriskIfRequired="requestType" for="requestType"
                          class="col-md-4 col-sm-12 col-form-label">{{lang.map.request_type}}</label>
                   <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-                    <ng-select [readonly]="readonly" (change)="onRequestTypeUpdate()"
+                    <ng-select [readonly]="readonly"
                                validationClasses="requestType" id="requestType"
                                formControlName="requestType" appendTo="body">
                       <ng-option [value]="requestType.lookupKey"

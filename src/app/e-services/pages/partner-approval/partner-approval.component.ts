@@ -181,7 +181,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   _afterBuildForm(): void {
-    this.onRequestTypeUpdate();
+    this.listenToRequestTypeChange();
     this.setDefaultOrganization();
     this.listenToCountryChange();
 
@@ -342,41 +342,61 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     }
   }
 
-  onRequestTypeUpdate() {
-    // clear/disable the license number field if the request type is new
-    if (this.requestType.value === ServiceRequestTypes.NEW || this.requestType.invalid) {
-      this.licenseNumber.reset();
-      this.licenseNumber.disable();
-      this.licenseNumber.setValidators([]);
-      this.setSelectedLicense(undefined);
-    } else {
-      this.licenseNumber.enable();
-      this.licenseNumber.setValidators([CustomValidators.required, (control) => {
-        return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
-      }]);
-    }
-    this.licenseNumber.updateValueAndValidity({emitEvent: false})
-    this._handleRequestTypeDependentControls();
+  listenToRequestTypeChange(): void {
+    this.requestType?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(requestTypeValue => {
+      this._handleRequestTypeDependentControls();
+      // if no requestType, reset license and its validations
+      if (!requestTypeValue) {
+        this.licenseNumber.reset();
+        this.licenseNumber.setValidators([]);
+        this.setSelectedLicense(undefined);
+      } else {
+        // if new record and requestType = new, reset license and its validations
+        if (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW) {
+          this.licenseNumber.reset();
+          this.licenseNumber.setValidators([]);
+          this.setSelectedLicense(undefined);
+        } else {
+          this.licenseNumber.setValidators([CustomValidators.required, (control) => {
+            return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+          }]);
+        }
+        this.licenseNumber.updateValueAndValidity({emitEvent: false});
+      }
+    });
   }
 
   private loadSelectedLicense(licenseNumber: string): void {
+    if (!this.model || !licenseNumber) {
+      return;
+    }
+
     this.service
       .licenseSearch({licenseNumber})
       .pipe(
-        filter(list => !!list.length),
+        filter(list => {
+          // if license number exists, set it and regions will be loaded inside
+          // otherwise load regions separately
+          if (list.length === 0) {
+            this.loadCities();
+          }
+          return list.length > 0;
+        }),
         map(list => list[0]),
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license)
+        this.setSelectedLicense(license, true)
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument) {
+  private setSelectedLicense(license?: InitialApprovalDocument, ignoreFormUpdate = false) {
     this.selectedLicense = license;
 
     // update form fields if i have license
-    if (license) {
+    if (license && !ignoreFormUpdate) {
       this.basicTab.patchValue({
         organizationId: license.organizationId,
         requestType: this.requestType.value,
