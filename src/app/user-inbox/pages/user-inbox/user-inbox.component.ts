@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {InboxService} from '@app/services/inbox.service';
 import {QueryResultSet} from '@app/models/query-result-set';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {QueryResult} from '@app/models/query-result';
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, of, Subject} from 'rxjs';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '@app/services/toast.service';
@@ -15,6 +15,13 @@ import {EmployeeService} from '@app/services/employee.service';
 import {CaseModel} from '@app/models/case-model';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ITableOptions} from "@app/interfaces/i-table-options";
+import {FilterEventTypes} from "@app/types/types";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {IPartialRequestCriteria} from "@app/interfaces/i-partial-request-criteria";
+import {CommonUtils} from "@app/helpers/common-utils";
+import {IInboxCriteria} from "@app/interfaces/i-inbox-criteria";
+import {TableComponent} from "@app/shared/components/table/table.component";
 
 @Component({
   selector: 'app-user-inbox',
@@ -23,11 +30,46 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 })
 export class UserInboxComponent implements OnInit, OnDestroy {
   queryResultSet?: QueryResultSet;
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'];
   reloadInbox$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private destroy$: Subject<any> = new Subject<any>();
   actions: IMenuItem<QueryResult>[] = [];
-  filterControl: FormControl = new FormControl('');
+  //filterControl: FormControl = new FormControl('');
+  @ViewChild('table') table!: TableComponent;
+  filterCriteria: Partial<IInboxCriteria> = {};
+
+  tableOptions: ITableOptions = {
+    ready: false,
+    columns: ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'],
+    searchText: '',
+    isSelectedRecords: () => {
+      if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
+        return false;
+      }
+      return this.table.selection.selected.length !== 0;
+    },
+    searchCallback: (record: any, searchText: string) => {
+      return record.search(searchText);
+    },
+    filterCallback: (type: FilterEventTypes = 'OPEN') => {
+      if (type === 'CLEAR') {
+        this.filterCriteria = {};
+        this.reloadInbox$.next(null)
+      } else if (type === 'OPEN') {
+        const sub = this.inboxService.openFilterTeamInboxDialog(this.filterCriteria)
+          .subscribe((dialog: DialogRef) => {
+            dialog.onAfterClose$.subscribe((result: UserClickOn | Partial<IPartialRequestCriteria>) => {
+              if (!CommonUtils.isValidValue(result) || result === UserClickOn.CLOSE) {
+                return;
+              }
+              this.filterCriteria = result as Partial<IInboxCriteria>;
+              this.reloadInbox$.next(null)
+              sub.unsubscribe();
+            });
+          })
+      }
+    },
+    sortingCallbacks: {}
+  };
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -40,7 +82,15 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   private listenToReload() {
     this.reloadInbox$
       .pipe(
-        switchMap(_ => this.inboxService.loadUserInbox()),
+        switchMap(_ => {
+            //this.inboxService.loadUserInbox()
+            if (!this.hasFilterCriteria()) {
+              return this.inboxService.loadUserInbox();
+            } else {
+              return this.inboxService.loadUserInbox(this.filterCriteria);
+            }
+          }
+        ),
         takeUntil(this.destroy$),
         tap(items => console.log(items))
       )
@@ -383,5 +433,9 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       return "";
     }
     return this.lang.getLocalByKey(serviceKey).getName();
+  }
+
+  hasFilterCriteria(): boolean {
+    return !CommonUtils.isEmptyObject(this.filterCriteria) && CommonUtils.objectHasValue(this.filterCriteria);
   }
 }

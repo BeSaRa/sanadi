@@ -22,7 +22,7 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {FilterEventTypes} from '@app/types/types';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
-import {ITeamInboxCriteria} from '@app/interfaces/i-team-inbox-criteria-interface';
+import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
@@ -40,7 +40,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   actions: IMenuItem<QueryResult>[] = [];
 
   @ViewChild('table') table!: TableComponent;
-  filterCriteria: Partial<ITeamInboxCriteria> = {};
+  filterCriteria: Partial<IInboxCriteria> = {};
   // filterControl: FormControl = new FormControl('');
 
   constructor(public lang: LangService,
@@ -73,7 +73,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
               if (!CommonUtils.isValidValue(result) || result === UserClickOn.CLOSE) {
                 return;
               }
-              this.filterCriteria = result as Partial<ITeamInboxCriteria>;
+              this.filterCriteria = result as Partial<IInboxCriteria>;
               this.reloadSelectedInbox();
               sub.unsubscribe();
             });
