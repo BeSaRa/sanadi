@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.3.2-rc#14",
+  "VERSION": "v1.3.2-rc#15",
   "ENVIRONMENTS_URLS": {
     "STAGING": "http://100.100.3.220:9080/sanadi-services/api/",
     "TEST": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
