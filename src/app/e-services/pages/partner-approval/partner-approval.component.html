@@ -30,6 +30,9 @@
           <tab [name]="tabsData.attachments.name" [template]="attachmentsTemplate"
                [hasError]="getTabInvalidStatus('attachments')"
                [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
+          <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
+               [template]="recommendationsTemplate" [title]="lang.map.recommendations" *ngIf="employeeService.isInternalUser()"
+               [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
 
           <!-- basic -->
           <ng-template formGroupName="basic" #basicTemplate>
@@ -397,6 +400,9 @@
                 class="mdi mdi-plus-box text-primary"></i></button>
             </div>
             <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
+          </ng-template>
+          <ng-template #recommendationsTemplate>
+            <request-recommendations [record]="model"></request-recommendations>
           </ng-template>
         </tabs-list>
 
