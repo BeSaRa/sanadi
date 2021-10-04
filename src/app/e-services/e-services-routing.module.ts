@@ -8,16 +8,40 @@ import {InternationalCooperationContainerComponent} from '@app/e-services/pages/
 import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
 import {FinalExternalOfficeApprovalComponent} from '@app/e-services/pages/final-external-office-approval/final-external-office-approval.component';
 import {PartnerApprovalComponent} from "./pages/partner-approval/partner-approval.component";
+import {PermissionGuard} from '@app/guards/permission-guard';
 
 const routes: Routes = [
   {path: '', component: EServicesComponent},
-  {path: 'inquiries', component: InquiryContainerComponent},
-  {path: 'consultations', component: ConsultationContainerComponent},
-  {path: 'international-coop', component: InternationalCooperationContainerComponent},
-  {path: 'partner-approval', component: PartnerApprovalComponent},
-  {path: 'international-coop', component: InternationalCooperationContainerComponent},
-  {path: 'initial-external-office-approval', component: InitialExternalOfficeApprovalComponent},
-  {path: 'final-external-office-approval', component: FinalExternalOfficeApprovalComponent}
+  {
+    path: 'inquiries', component: InquiryContainerComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'CREATE_CASE_INQUIRY_SERVICE', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'consultations', component: ConsultationContainerComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'CREATE_CASE_CONSULTATION_SERVICE', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'international-coop', component: InternationalCooperationContainerComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'CREATE_CASE_INTERNATIONAL_COOPERATION_SERVICE', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'partner-approval', component: PartnerApprovalComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'NO_PERMISSION_1', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'initial-external-office-approval', component: InitialExternalOfficeApprovalComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'NO_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'final-external-office-approval', component: FinalExternalOfficeApprovalComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'NO_PERMISSION_1', configPermissionGroup: null, checkAnyPermission: false}
+  }
 ];
 
 @NgModule({
