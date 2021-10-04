@@ -10,7 +10,7 @@
     "BAW_STG": "http://ibm-baw3:9084/eservices/api/",
     "RACA_E_SERVICES": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
-  "BASE_ENVIRONMENT": "RACA_E_SERVICES",
+  "BASE_ENVIRONMENT": "BAW",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
