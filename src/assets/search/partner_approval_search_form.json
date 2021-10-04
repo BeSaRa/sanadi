@@ -71,7 +71,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.InquiryStatus",
+          "loader": "lookup.PartnerApprovalStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }

@@ -58,7 +58,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.InquiryStatus",
+          "loader": "lookup.InternationalCooperationnStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
