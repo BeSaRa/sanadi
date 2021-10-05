@@ -139,7 +139,7 @@
                   <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
                     <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
                                placeholder="{{lang.map.select}}" id="country"
-                               [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+                               [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                                formControlName="country" validationClasses="country">
                       <ng-option *ngFor="let option of countriesList" [value]="option.id">
                         {{option.getName()}}
@@ -154,7 +154,7 @@
                   <label asteriskIfRequired="city" for="city"
                          class="col-md-4 col-sm-12 col-form-label">{{lang.map.city}}</label>
                   <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
-                    <ng-select [readonly]="readonly" [selectOnTab]="true" labelForId="region" [clearable]="false"
+                    <ng-select [readonly]="!isEditCountryAllowed()" [selectOnTab]="true" labelForId="region" [clearable]="false"
                                validationClasses="city" formControlName="city" id="city">
                       <ng-option [value]="city.id"
                                  *ngFor="let city of citiesList">{{city.getName()}}</ng-option>

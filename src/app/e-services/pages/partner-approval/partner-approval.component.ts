@@ -252,6 +252,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   _resetForm(): void {
     this.form.reset();
+    this.requestType.enable();
     this.bankAccountComponentRef.forceClearComponent();
     this.goalComponentRef.forceClearComponent();
     this.managementCouncilComponentRef.forceClearComponent();
@@ -345,7 +346,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.requestType?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
-      this._handleRequestTypeDependentControls();
+      // this._handleRequestTypeDependentControls();
       // if no requestType, reset license and its validations
       if (!requestTypeValue) {
         this.licenseNumber.reset();
@@ -391,22 +392,25 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument, ignoreFormUpdate = false) {
+  private setSelectedLicense(license?: InitialApprovalDocument | any, ignoreFormUpdate = false) {
     this.selectedLicense = license;
 
     // update form fields if i have license
     if (license && !ignoreFormUpdate) {
-      this.basicTab.patchValue({
+      const updateModel = {
         organizationId: license.organizationId,
         requestType: this.requestType.value,
         licenseNumber: license.licenseNumber,
         country: license.country,
-        city: license.region,
+        city: license.city,
         licenseDuration: license.licenseDuration,
         licenseStartDate: license.licenseStartDate
-      });
+      };
+
+      Object.assign(this.model, updateModel);
+      this.basicTab.patchValue(updateModel);
     }
-    this._handleRequestTypeDependentControls();
+    // this._handleRequestTypeDependentControls();
   }
 
   private listenToLicenseSearch() {
@@ -497,6 +501,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     return isAllowed;
   }
 
+  // TODO remove
   private _handleRequestTypeDependentControls(): void {
     let requestType = this.requestType.value;
     // if no request type selected, disable license, country, region
@@ -561,5 +566,16 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
     return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+  }
+
+  isEditCountryAllowed(): boolean {
+    let requestType = this.requestType.value,
+      isAllowed = !(requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL);
+
+    if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
+      return isAllowed;
+    } else {
+      return isAllowed && !this.readonly;
+    }
   }
 }
