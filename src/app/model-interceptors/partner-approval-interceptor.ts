@@ -31,13 +31,13 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
 
     // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
-    model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(x));
-    model.goalsList = model.goalsList.map(x => service.goalInterceptor.receive(x));
-    model.managementCouncilList = model.managementCouncilList.map(x => service.managementCouncilInterceptor.receive(x));
-    model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(x));
-    model.targetGroupList = model.targetGroupList.map(x => service.targetGroupInterceptor.receive(x));
-    model.contactOfficerList = model.contactOfficerList.map(x => service.contactOfficerInterceptor.receive(x));
-    model.approvalReasonList = model.approvalReasonList.map(x => service.approvalReasonInterceptor.receive(x));
+    model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(new BankAccount().clone(x)));
+    model.goalsList = model.goalsList.map(x => service.goalInterceptor.receive(new Goal().clone(x)));
+    model.managementCouncilList = model.managementCouncilList.map(x => service.managementCouncilInterceptor.receive(new ManagementCouncil().clone(x)));
+    model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(new ExecutiveManagement().clone(x)));
+    model.targetGroupList = model.targetGroupList.map(x => service.targetGroupInterceptor.receive(new TargetGroup().clone(x)));
+    model.contactOfficerList = model.contactOfficerList.map(x => service.contactOfficerInterceptor.receive(new ContactOfficer().clone(x)));
+    model.approvalReasonList = model.approvalReasonList.map(x => service.approvalReasonInterceptor.receive(new ApprovalReason().clone(x)));
 
     return model;
   }
