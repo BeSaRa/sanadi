@@ -6,7 +6,6 @@
   </div>
   <!-- content -->
   <div class="d-flex flex-column">
-    <fieldset [disabled]="readonly">
       <form [formGroup]="form" autocomplete="off">
         <tabs-list>
           <tab [name]="tabsData.basic.name" [template]="basicTemplate" [title]="lang.map.lbl_basic_info"
@@ -31,7 +30,8 @@
                [hasError]="getTabInvalidStatus('attachments')"
                [title]="lang.map.attachments">{{lang.map.attachments}}</tab>
           <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-               [template]="recommendationsTemplate" [title]="lang.map.recommendations" *ngIf="employeeService.isInternalUser()"
+               [template]="recommendationsTemplate" [title]="lang.map.recommendations"
+               *ngIf="employeeService.isInternalUser()"
                [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
 
           <!-- basic -->
@@ -43,7 +43,8 @@
                          class="col-form-label col-md-4 col-sm-12"
                          for="organizationId">{{lang.map.lbl_organization}}</label>
                   <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                    <ng-select [readonly]="readonly || !!(this.model?.id)" validationClasses="organizationId" appendTo="body"
+                    <ng-select [readonly]="readonly || !!(this.model?.id)" validationClasses="organizationId"
+                               appendTo="body"
                                [clearable]="true"
                                id="organizationId"
                                formControlName="organizationId">
@@ -391,7 +392,8 @@
                       class="d-inline-block btn p-0 icon-btn"><i
                 class="mdi mdi-plus-box text-primary"></i></button>
             </div>
-            <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"></app-comments>
+            <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
+                          [readonly]="readonly"></app-comments>
           </ng-template>
           <ng-template #attachmentsTemplate>
             <div class="d-flex flex-row align-items-center justify-content-start">
@@ -399,7 +401,8 @@
                       class="d-inline-block btn p-0 icon-btn"><i
                 class="mdi mdi-plus-box text-primary"></i></button>
             </div>
-            <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
+            <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
+                           [readonly]="readonly"></app-documents>
           </ng-template>
           <ng-template #recommendationsTemplate>
             <request-recommendations [record]="model"></request-recommendations>
@@ -417,6 +420,5 @@
           <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
         </div>
       </form>
-    </fieldset>
   </div>
 </div>

@@ -474,17 +474,27 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   isAddAttachmentAllowed(): boolean {
-    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
-      return true;
+    if (!this.model?.id) {
+      return false;
     }
-    return !!(this.model?.id) && !this.readonly;
+
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+
+    return isAllowed;
   }
 
   isAddCommentAllowed(): boolean {
-    if (this.employeeService.isLicensingUser() && this.openFrom === OpenFrom.USER_INBOX) {
-      return true;
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
     }
-    return !!(this.model?.id) && !this.readonly;
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
   }
 
   private _handleRequestTypeDependentControls(): void {
