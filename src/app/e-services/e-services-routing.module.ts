@@ -30,7 +30,7 @@ const routes: Routes = [
   {
     path: 'partner-approval', component: PartnerApprovalComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'NO_PERMISSION_1', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: 'NO_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'initial-external-office-approval', component: InitialExternalOfficeApprovalComponent,
@@ -40,7 +40,7 @@ const routes: Routes = [
   {
     path: 'final-external-office-approval', component: FinalExternalOfficeApprovalComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'NO_PERMISSION_1', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: 'NO_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 
