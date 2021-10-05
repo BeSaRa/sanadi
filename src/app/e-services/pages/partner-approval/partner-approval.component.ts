@@ -556,4 +556,10 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     // allow edit if new record or saved as draft
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
+
+  isEditLicenseAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+  }
 }

@@ -91,11 +91,11 @@
                          for="licenseNumber">{{lang.map.license_number}}</label>
                   <div class="col-md-8 col-sm-12 mb-position-relative">
                     <div class="input-group">
-                      <button [disabled]="licenseNumber.disabled" type="button" (click)="licenseSearch()"
+                      <button [disabled]="!isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
                               class="input-group-text"><i
                         class="mdi mdi-file-search text-primary"></i></button>
                       <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
-                             type="text"
+                             type="text" [readOnly]="!isEditLicenseAllowed()"
                              validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"
                              id="licenseNumber">
                       <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
