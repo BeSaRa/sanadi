@@ -23,7 +23,11 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.requestClassificationInfo = AdminResult.createInstance(model.requestClassificationInfo);
+
     model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
+    model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
+    model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
+    model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
 
     // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
