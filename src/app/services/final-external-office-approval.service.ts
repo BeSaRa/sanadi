@@ -36,7 +36,7 @@ import {LicenseService} from '@app/services/license.service';
   providedIn: 'root'
 })
 export class FinalExternalOfficeApprovalService extends EServiceGenericService<FinalExternalOfficeApproval> {
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organizationId', 'fullName', 'category', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   interceptor: IModelInterceptor<FinalExternalOfficeApproval> = new FinalExternalOfficeApprovalInterceptor();
   bankAccountInterceptor: IModelInterceptor<BankAccount> = new BankAccountInterceptor();

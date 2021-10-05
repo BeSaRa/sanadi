@@ -26,7 +26,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
   interceptor: IModelInterceptor<InitialExternalOfficeApproval> = new InitialExternalOfficeApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_initial_external_office_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'ouInfo', 'subject', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
   searchService: SearchService = new SearchService(this);
 
   constructor(public dynamicService: DynamicOptionsService,
