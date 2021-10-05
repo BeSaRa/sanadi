@@ -96,7 +96,7 @@
         "type": "selectField",
         "label": "country",
         "validations": {
-          "required": true
+          "required": false
         },
         "selectOptions": {
           "options": [],
