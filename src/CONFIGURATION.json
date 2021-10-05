@@ -92,7 +92,12 @@
     "eblaluser2",
     "eblalmanager",
     "eblalgmanager",
-    "eblalchief"
+    "eblalchief",
+    "lchief",
+    "lgmanager",
+    "lmanager",
+    "luser1",
+    "luser2"
   ],
   "E_SERVICES_DENIED_USERS_EXTERNAL": [
   ],
