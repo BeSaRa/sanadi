@@ -392,11 +392,16 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   private setSelectedLicense(license?: InitialApprovalDocument) {
     this.selectedLicense = license;
     if (license) {
-      this.basicTab.patchValue({
-        initialLicenseNumber: license.licenseNumber,
+      let licenseValue: any = {
         country: license.country,
         region: license.region
-      });
+      };
+      if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+        licenseValue.initialLicenseNumber = license.licenseNumber;
+      } else {
+        licenseValue.licenseNumber = license.licenseNumber;
+      }
+      this.basicTab.patchValue(licenseValue);
     }
   }
 
