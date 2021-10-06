@@ -249,7 +249,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
         }]);
       }
-      this.licenseNumber.updateValueAndValidity({emitEvent: false});
+      this.licenseNumber.updateValueAndValidity();
     });
   }
 

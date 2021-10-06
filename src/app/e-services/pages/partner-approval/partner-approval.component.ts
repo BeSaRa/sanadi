@@ -7,7 +7,7 @@ import {PartnerApprovalService} from "@app/services/partner-approval.service";
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
 import {DateUtils} from "@app/helpers/date-utils";
@@ -344,27 +344,32 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   listenToRequestTypeChange(): void {
     this.requestType?.valueChanges.pipe(
+      delay(50),
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
       // this._handleRequestTypeDependentControls();
-      // if no requestType, reset license and its validations
-      if (!requestTypeValue) {
-        this.licenseNumber.reset();
-        this.licenseNumber.setValidators([]);
-        this.setSelectedLicense(undefined);
-      } else {
-        // if new record and requestType = new, reset license and its validations
-        if (!this.model?.id && requestTypeValue === ServiceRequestTypes.NEW) {
+
+      // if no requestType or (requestType = new)
+      // if new record or draft, reset license and its validations
+      // also reset the values in model
+      if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+        if (!this.model?.id || this.model.canCommit()) {
           this.licenseNumber.reset();
           this.licenseNumber.setValidators([]);
           this.setSelectedLicense(undefined);
-        } else {
-          this.licenseNumber.setValidators([CustomValidators.required, (control) => {
-            return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
-          }]);
+
+          if (this.model) {
+            this.model.licenseNumber = '';
+            this.model.licenseDuration = 0;
+            this.model.licenseStartDate = '';
+          }
         }
-        this.licenseNumber.updateValueAndValidity({emitEvent: false});
+      } else {
+        this.licenseNumber.setValidators([CustomValidators.required, (control) => {
+          return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+        }]);
       }
+      this.licenseNumber.updateValueAndValidity();
     });
   }
 
