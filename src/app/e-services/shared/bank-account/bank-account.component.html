@@ -46,12 +46,12 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="getiBAN" asteriskIfRequired="getiBAN"
+              <label for="iBAN" asteriskIfRequired="iBAN"
                      class="col-sm-12 col-md-4 col-form-label">{{lang.map.iban}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="getiBAN" validationClasses="getiBAN"
-                       formControlName="getiBAN" class="form-control">
-                <app-field-error-message controlName="getiBAN"></app-field-error-message>
+                <input id="iBAN" validationClasses="iBAN"
+                       formControlName="iBAN" class="form-control">
+                <app-field-error-message controlName="iBAN"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -133,7 +133,7 @@
   </ng-container>
   <ng-container cdkColumnDef="iban">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.getiBAN}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.iBAN}} </td>
   </ng-container>
   <ng-container cdkColumnDef="swiftCode">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.swift_code}}</th>

@@ -5,7 +5,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   currency!: number;
   accountNumber!: string;
   bankName!: string;
-  getiBAN!: string;
+  iBAN!: string;
   swiftCode!: string;
   country!: number;
   bankCategory!: number;
@@ -15,7 +15,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
       currency,
       accountNumber,
       bankName,
-      getiBAN,
+      iBAN,
       swiftCode,
       country,
       bankCategory
@@ -24,7 +24,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
     return {
       bankName: control ? [bankName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : bankName,
       accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : accountNumber,
-      getiBAN: control ? [getiBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : getiBAN,
+      iBAN: control ? [iBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iBAN,
       swiftCode: control ? [swiftCode, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : swiftCode,
       country: control ? [country, [CustomValidators.required]] : country,
       currency: control ? [currency, [CustomValidators.required]] : currency,
