@@ -162,4 +162,18 @@ export class DateUtils {
       options.controlOptionsMap[options.fromFieldName] = fromFieldDateOptions;
     }, 100);
   }
+
+  static setStartOfDay(date: IMyDateModel | Date | string): any {
+    if (!date) {
+      return date;
+    }
+    return dayjs(DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)).startOf('day');
+  }
+
+  static setEndOfDay(date: IMyDateModel | Date | string): any {
+    if (!date) {
+      return date;
+    }
+    return dayjs(DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)).endOf('day');
+  }
 }

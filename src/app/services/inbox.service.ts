@@ -24,7 +24,6 @@ import {InternationalCooperationService} from './international-cooperation.servi
 import {CaseTypes} from '../enums/case-types.enum';
 import {ExceptionHandlerService} from './exception-handler.service';
 import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
-import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalService} from "@app/services/partner-approval.service";
 import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
@@ -66,10 +65,10 @@ export class InboxService {
       objOptions = {...options};
 
       if (objOptions.hasOwnProperty('createdDateFrom') && objOptions.createdDateFrom) {
-        objOptions.createdDateFrom = DateUtils.changeDateFromDatepicker(objOptions.createdDateFrom)?.toISOString();
+        objOptions.createdDateFrom = DateUtils.setStartOfDay(objOptions.createdDateFrom)?.toISOString();
       }
       if (objOptions.hasOwnProperty('createdDateTo') && objOptions.createdDateTo) {
-        objOptions.createdDateTo = DateUtils.changeDateFromDatepicker(objOptions.createdDateTo)?.toISOString();
+        objOptions.createdDateTo = DateUtils.setEndOfDay(objOptions.createdDateTo)?.toISOString();
       }
     }
 
@@ -89,10 +88,10 @@ export class InboxService {
       objOptions = {...options};
 
       if (objOptions.hasOwnProperty('createdDateFrom') && objOptions.createdDateFrom) {
-        objOptions.createdDateFrom = DateUtils.changeDateFromDatepicker(objOptions.createdDateFrom)?.toISOString();
+        objOptions.createdDateFrom = DateUtils.setStartOfDay(objOptions.createdDateFrom)?.toISOString();
       }
       if (objOptions.hasOwnProperty('createdDateTo') && objOptions.createdDateTo) {
-        objOptions.createdDateTo = DateUtils.changeDateFromDatepicker(objOptions.createdDateTo)?.toISOString();
+        objOptions.createdDateTo = DateUtils.setEndOfDay(objOptions.createdDateTo)?.toISOString();
       }
     }
     return this.http.get<QueryResultSet>(this.urlService.URLS.TEAMS_INBOX + '/' + teamId, {
