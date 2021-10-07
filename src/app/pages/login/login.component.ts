@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AuthService} from '@app/services/auth.service';
@@ -9,6 +9,7 @@ import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '@app/services/toast.service';
 import {ECookieService} from '@app/services/e-cookie.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {numberValidator as number} from "@app/validators/validate-fields-status";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -89,7 +90,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  get externalUserNameField(): AbstractControl {
+    return this.loginFromExternal?.get('username') as AbstractControl;
+  }
+
   tabChanged(tab: TabComponent) {
     this.isExternalLogin = tab.title !== this.lang.map.authority_employee;
+    if (this.isExternalLogin) {
+      //.concat(CustomValidators.commonValidations.qId)
+      this.externalUserNameField.setValidators([CustomValidators.required, number]);
+      this.externalUserNameField.updateValueAndValidity();
+    }
   }
 }
