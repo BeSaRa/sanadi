@@ -94,7 +94,7 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
     return new PartnerApprovalSearchCriteria();
   }
 
-  licenseSearch(criteria: Partial<InitialApprovalDocument> = {}): Observable<InitialApprovalDocument[]> {
+  licenseSearch(criteria: Partial<InitialApprovalDocument> = {}): Observable<PartnerApproval[]> {
     return this.licenseService.partnerApprovalLicenseSearch(criteria);
   }
 }

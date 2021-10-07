@@ -6,7 +6,6 @@ import {DialogService} from "@app/services/dialog.service";
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {ManagementCouncil} from "@app/models/management-council";
 import {Country} from "@app/models/country";
-import {Lookup} from "@app/models/lookup";
 import {ReadinessStatus} from "@app/types/types";
 import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
@@ -29,7 +28,15 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) {
   }
 
-  @Input() list: ManagementCouncil[] = [];
+  private _list: ManagementCouncil[] = [];
+  @Input() set list(list: ManagementCouncil[]) {
+    this._list = list;
+    this.dataSource.next(this._list);
+  }
+
+  get list(): ManagementCouncil[] {
+    return this._list;
+  }
   @Input() countriesList: Country[] = [];
   @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;

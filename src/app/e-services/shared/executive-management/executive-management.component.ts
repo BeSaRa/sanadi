@@ -5,7 +5,6 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {Country} from '@app/models/country';
-import {Lookup} from '@app/models/lookup';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {ExecutiveManagement} from '@app/models/executive-management';
@@ -31,7 +30,15 @@ export class ExecutiveManagementComponent implements OnInit {
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
-  @Input() list: ExecutiveManagement[] = [];
+  private _list: ExecutiveManagement[] = [];
+  @Input() set list(list: ExecutiveManagement[]) {
+    this._list = list;
+    this.listDataSource.next(this._list);
+  }
+
+  get list(): ExecutiveManagement[] {
+    return this._list;
+  }
   @Input() countriesList: Country[] = [];
   @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;
@@ -51,7 +58,6 @@ export class ExecutiveManagementComponent implements OnInit {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.listDataSource.next(this.list);
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();

@@ -29,8 +29,17 @@ export class BankAccountComponent implements OnInit {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
+  private _list: BankAccount[] = [];
 
-  @Input() list: BankAccount[] = [];
+  @Input() set list(list: BankAccount[]) {
+    this._list = list;
+    this.listDataSource.next(this._list);
+  }
+
+  get list(): BankAccount[] {
+    return this._list;
+  }
+
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
 
@@ -51,8 +60,6 @@ export class BankAccountComponent implements OnInit {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.listDataSource.next(this.list);
-
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();

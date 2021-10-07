@@ -14,9 +14,7 @@ import {LookupService} from "@app/services/lookup.service";
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {Domains} from "@app/enums/domains.enum";
 import {DacOchaService} from "@app/services/dac-ocha.service";
-import {DacOcha} from "@app/models/dac-ocha";
 import {AdminResult} from "@app/models/admin-result";
-import {indexOf} from "lodash";
 
 @Component({
   selector: 'goal',
@@ -34,7 +32,17 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   @Input() readonly: boolean = false;
-  @Input() list: Goal[] = [];
+  private _list: Goal[] = [];
+
+  @Input() set list(list: Goal[]) {
+    this._list = list;
+    this.dataSource.next(this._list);
+  }
+
+  get list(): Goal[] {
+    return this._list;
+  }
+
   domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
   mainDACCategoriesList: AdminResult[] = [];
   mainUNOCHACategoriesList: AdminResult[] = [];
@@ -56,7 +64,6 @@ export class GoalComponent implements OnInit, OnDestroy {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.dataSource.next(this.list);
     this._handleInitData();
     this.buildForm();
     this.listenToAdd();

@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
-import {BehaviorSubject, Observable, of, Subject} from "rxjs";
+import {Observable, of, Subject} from "rxjs";
 import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalService} from "@app/services/partner-approval.service";
@@ -25,7 +25,6 @@ import {TargetGroupComponent} from "@app/e-services/pages/partner-approval/targe
 import {ContactOfficerComponent} from "@app/e-services/pages/partner-approval/contact-officer/contact-officer.component";
 import {ApprovalReasonComponent} from "@app/e-services/pages/partner-approval/approval-reason/approval-reason.component";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
-import {InitialApprovalDocument} from "@app/models/initial-approval-document";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {LicenseService} from "@app/services/license.service";
 import {EmployeeService} from "@app/services/employee.service";
@@ -53,7 +52,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   organizations: OrgUnit[] = [];
   readonly: boolean = false;
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: InitialApprovalDocument;
+  selectedLicense?: PartnerApproval;
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   goalsTabStatus: ReadinessStatus = 'READY';
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
@@ -248,6 +247,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   _updateForm(model: PartnerApproval): void {
     this.model = model;
     this.basicTab.patchValue(model.getBasicFields());
+    this.cd.detectChanges();
   }
 
   _resetForm(): void {
@@ -347,8 +347,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       delay(50),
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
-      // this._handleRequestTypeDependentControls();
-
       // if no requestType or (requestType = new)
       // if new record or draft, reset license and its validations
       // also reset the values in model
@@ -397,25 +395,19 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument | any, ignoreFormUpdate = false) {
+  private setSelectedLicense(license?: PartnerApproval | any, ignoreFormUpdate = false) {
     this.selectedLicense = license;
 
     // update form fields if i have license
     if (license && !ignoreFormUpdate) {
-      const updateModel = {
-        organizationId: license.organizationId,
+      const partnerApproval = Object.assign(license, {
+        id: '',
         requestType: this.requestType.value,
-        licenseNumber: license.licenseNumber,
-        country: license.country,
-        city: license.city,
-        licenseDuration: license.licenseDuration,
-        licenseStartDate: license.licenseStartDate
-      };
-
-      Object.assign(this.model, updateModel);
-      this.basicTab.patchValue(updateModel);
+        arabicName: license.arName,
+        englishName: license.enName
+      });
+      this._updateForm(partnerApproval)
     }
-    // this._handleRequestTypeDependentControls();
   }
 
   private listenToLicenseSearch() {
@@ -433,8 +425,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        filter<null | InitialApprovalDocument, InitialApprovalDocument>
-        ((selection): selection is InitialApprovalDocument => selection instanceof InitialApprovalDocument),
+        filter<null | PartnerApproval, PartnerApproval>
+        ((selection): selection is PartnerApproval => selection instanceof PartnerApproval),
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
@@ -504,33 +496,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       isAllowed = this.model.taskDetails.isClaimed();
     }
     return isAllowed;
-  }
-
-  // TODO remove
-  private _handleRequestTypeDependentControls(): void {
-    let requestType = this.requestType.value;
-    // if no request type selected, disable license, country, region
-    // otherwise enable/disable license, country and region according to request type
-    if (!CommonUtils.isValidValue(requestType) || this.readonly) {
-      this.licenseNumber.disable();
-      this.country.disable();
-      this.city.disable();
-      return;
-    }
-
-    if (requestType === ServiceRequestTypes.NEW) {
-      this.licenseNumber.disable();
-    } else {
-      this.licenseNumber.enable();
-    }
-
-    if (requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL) {
-      this.country.disable();
-      this.city.disable();
-    } else {
-      this.country.enable();
-      this.city.enable();
-    }
   }
 
   handleReadonly(): void {

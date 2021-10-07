@@ -22,7 +22,15 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) {
   }
 
-  @Input() list: ApprovalReason[] = [];
+  private _list: ApprovalReason[] = [];
+  @Input() set list(list: ApprovalReason[]) {
+    this._list = list;
+    this.dataSource.next(this._list);
+  }
+
+  get list(): ApprovalReason[] {
+    return this._list;
+  }
   @Input() readonly : boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -41,7 +49,6 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.dataSource.next(this.list);
     this._handleInitData();
     this.buildForm();
     this.listenToAdd();

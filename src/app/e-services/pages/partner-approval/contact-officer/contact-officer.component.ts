@@ -22,7 +22,16 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) {
   }
 
-  @Input() list: ContactOfficer[] = [];
+  private _list: ContactOfficer[] = [];
+  @Input() set list(list: ContactOfficer[]) {
+    this._list = list;
+    this.dataSource.next(this._list);
+  }
+
+  get list(): ContactOfficer[] {
+    return this._list;
+  }
+
   @Input() readonly : boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -41,7 +50,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.dataSource.next(this.list);
     this._handleInitData();
     this.buildForm();
     this.listenToAdd();

@@ -9,6 +9,7 @@ import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {TargetGroup} from "@app/models/target-group";
 import {Goal} from "@app/models/goal";
+import {ManagementCouncil} from "@app/models/management-council";
 
 @Component({
   selector: 'target-group',
@@ -23,7 +24,15 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
               private fb: FormBuilder) {
   }
 
-  @Input() list: TargetGroup[] = [];
+  private _list: TargetGroup[] = [];
+  @Input() set list(list: TargetGroup[]) {
+    this._list = list;
+    this.dataSource.next(this._list);
+  }
+
+  get list(): TargetGroup[] {
+    return this._list;
+  }
   @Input() readonly : boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -42,7 +51,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   form!: FormGroup;
 
   ngOnInit(): void {
-    this.dataSource.next(this.list);
     this._handleInitData();
     this.buildForm();
     this.listenToAdd();

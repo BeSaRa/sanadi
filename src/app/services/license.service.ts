@@ -17,6 +17,8 @@ import {BlobModel} from "@app/models/blob-model";
 import {DomSanitizer} from "@angular/platform-browser";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ViewDocumentPopupComponent} from "@app/shared/popups/view-document-popup/view-document-popup.component";
+import {PartnerApproval} from "@app/models/partner-approval";
+import {PartnerApprovalInterceptor} from "@app/model-interceptors/partner-approval-interceptor";
 
 @Injectable({
   providedIn: 'root'
@@ -44,13 +46,13 @@ export class LicenseService {
     return this._initialLicenseSearch(criteria);
   }
 
-  @Generator(InitialApprovalDocument, true, {
+  @Generator(PartnerApproval, true, {
     property: 'rs',
-    interceptReceive: (new InitialApprovalDocumentInterceptor()).receive
+    interceptReceive: (new PartnerApprovalInterceptor()).receive
   })
-  partnerApprovalLicenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria>): Observable<InitialApprovalDocument[]> {
+  partnerApprovalLicenseSearch(criteria: Partial<InitialApprovalDocSearchCriteria>): Observable<PartnerApproval[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<PartnerApproval[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
   }
 
 
@@ -67,7 +69,7 @@ export class LicenseService {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
-  openSelectLicenseDialog(licenses: InitialApprovalDocument[], caseRecord: any | undefined, select = true): DialogRef {
+  openSelectLicenseDialog(licenses: InitialApprovalDocument[] | PartnerApproval[], caseRecord: any | undefined, select = true): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

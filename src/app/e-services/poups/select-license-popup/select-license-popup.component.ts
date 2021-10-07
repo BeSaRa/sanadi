@@ -10,6 +10,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-case-status.enum';
 import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
 import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
+import {PartnerApproval} from "@app/models/partner-approval";
 
 @Component({
   selector: 'select-license-popup',
@@ -30,7 +31,7 @@ export class SelectLicensePopupComponent {
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
-              @Inject(DIALOG_DATA_TOKEN) public data: { licenses: InitialApprovalDocument[], caseRecord: any | undefined, select: boolean }) {
+              @Inject(DIALOG_DATA_TOKEN) public data: { licenses: InitialApprovalDocument[] | PartnerApproval[], caseRecord: any | undefined, select: boolean }) {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.caseType;
     this.caseStatus = this.data.caseRecord?.caseStatus;

@@ -28,6 +28,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
     model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
     model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
+    model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
 
     // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
