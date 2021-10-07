@@ -37,6 +37,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   get list(): ManagementCouncil[] {
     return this._list;
   }
+
   @Input() countriesList: Country[] = [];
   @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;
@@ -63,24 +64,12 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     this.listenToChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    setTimeout(() => {
-      this._handleInitData();
-    }, 100);
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-  }
-
-  private _handleInitData() {
-    if (!this.countriesList || !this.countriesList.length) {
-      this.loadCountries();
-    }
-    if (!this.jobTitlesList || !this.jobTitlesList.length) {
-      this.loadJobTitles();
-    }
   }
 
   private buildForm() {
@@ -227,17 +216,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
 
-  }
-
-  private loadCountries() {
-    this.countryService.loadCountries()
-      .subscribe((countries) => this.countriesList = countries);
-
-  }
-
-  private loadJobTitles() {
-    this.jobTitleService.loadComposite()
-      .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
   }
 
   forceClearComponent() {

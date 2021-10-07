@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {Country} from '@app/models/country';
@@ -65,9 +65,6 @@ export class BankAccountComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    setTimeout(() => {
-      this._handleInitData();
-    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -78,12 +75,6 @@ export class BankAccountComponent implements OnInit {
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
-  }
-
-  private _handleInitData() {
-    if (!this.countriesList || !this.countriesList.length) {
-      this.loadCountries();
-    }
   }
 
   buildForm(): void {
@@ -230,10 +221,5 @@ export class BankAccountComponent implements OnInit {
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
-  }
-
-  private loadCountries() {
-    this.countryService.loadCountries()
-      .subscribe((countries) => this.countriesList = countries);
   }
 }

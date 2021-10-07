@@ -63,9 +63,6 @@ export class ExecutiveManagementComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    setTimeout(() => {
-      this._handleInitData();
-    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -76,15 +73,6 @@ export class ExecutiveManagementComponent implements OnInit {
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
-  }
-
-  private _handleInitData() {
-    if (!this.countriesList || !this.countriesList.length) {
-      this.loadCountries();
-    }
-    if (!this.jobTitlesList || !this.jobTitlesList.length) {
-      this.loadJobTitles();
-    }
   }
 
   buildForm(): void {
@@ -232,15 +220,5 @@ export class ExecutiveManagementComponent implements OnInit {
         }
       });
   }
-
-
-  private loadCountries() {
-    this.countryService.loadCountries()
-      .subscribe((countries) => this.countriesList = countries);
-  }
-
-  private loadJobTitles() {
-    this.jobTitleService.loadComposite()
-      .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
-  }
+  
 }
