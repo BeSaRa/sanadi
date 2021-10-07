@@ -86,15 +86,15 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       }] : licenseNumber,
       country: control ? [country, [CustomValidators.required]] : country,
       region: control ? [region, [CustomValidators.required]] : region,//state
-      externalOfficeName: control ? [externalOfficeName, [CustomValidators.required]] : externalOfficeName,
+      externalOfficeName: control ? [externalOfficeName, [CustomValidators.required, CustomValidators.maxLength(100)]] : externalOfficeName,
       establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required, CustomValidators.maxDate(new Date())]] : DateUtils.changeDateToDatepicker(establishmentDate),
       recordNo: control ? [recordNo, [CustomValidators.required, CustomValidators.maxLength(20)]] : recordNo,
       address: control ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : address,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : postalCode,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
-      description: control ? [description, [CustomValidators.required]] : description
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description
     }
   }
 }
