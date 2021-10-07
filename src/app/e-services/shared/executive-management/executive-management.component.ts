@@ -47,6 +47,7 @@ export class ExecutiveManagementComponent implements OnInit {
   columns = ['arabicName', 'englishName', 'email', 'phone', 'actions'];
 
   editIndex: number = -1;
+  viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
   add$: Subject<any> = new Subject<any>();
@@ -92,15 +93,16 @@ export class ExecutiveManagementComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.viewOnly = false;
         this.recordChanged$.next(new ExecutiveManagement());
       });
   }
 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((manager) => {
-      if (this.readonly) {
+      /*if (this.readonly) {
         return;
-      }
+      }*/
       this.currentRecord = manager || undefined;
       this.updateManagerForm(this.currentRecord);
     });
@@ -112,13 +114,16 @@ export class ExecutiveManagementComponent implements OnInit {
     if (manager) {
       this._setComponentReadiness('NOT_READY');
       managersFormArray.push(this.fb.group(manager.getManagerFields(true)));
+      if (this.readonly || this.viewOnly) {
+        this.managersFormArray.disable();
+      }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
   saveManager() {
-    if (this.readonly) {
+    if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
@@ -159,6 +164,7 @@ export class ExecutiveManagementComponent implements OnInit {
       this._updateList(manager, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editIndex = -1;
+      this.viewOnly = false;
       this.recordChanged$.next(null);
     });
   }
@@ -202,6 +208,14 @@ export class ExecutiveManagementComponent implements OnInit {
       return;
     }
     this.editIndex = index;
+    this.viewOnly = false;
+    this.recordChanged$.next(record);
+  }
+
+  view($event: MouseEvent, record: ExecutiveManagement, index: number) {
+    $event.preventDefault();
+    this.editIndex = index;
+    this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 

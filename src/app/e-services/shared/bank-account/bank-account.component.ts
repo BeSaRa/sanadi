@@ -50,6 +50,7 @@ export class BankAccountComponent implements OnInit {
   columns = ['bankName', 'accountNumber', 'iBan', 'swiftCode', 'actions'];
 
   editRecordIndex: number = -1;
+  viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
   add$: Subject<any> = new Subject<any>();
@@ -94,15 +95,16 @@ export class BankAccountComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.viewOnly = false;
         this.recordChanged$.next(new BankAccount());
       });
   }
 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((bankAccount) => {
-      if (this.readonly) {
+      /*if (this.readonly) {
         return;
-      }
+      }*/
       this.currentRecord = bankAccount || undefined;
       this.updateForm(this.currentRecord);
     });
@@ -114,13 +116,16 @@ export class BankAccountComponent implements OnInit {
     if (bankAccount) {
       this._setComponentReadiness('NOT_READY');
       bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true)));
+      if (this.readonly || this.viewOnly) {
+        this.bankAccountsFormArray.disable();
+      }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
   saveBankAccount() {
-    if (this.readonly) {
+    if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
@@ -161,6 +166,7 @@ export class BankAccountComponent implements OnInit {
       this._updateList(bankAccount, (this.editRecordIndex > -1 ? 'UPDATE' : 'ADD'), this.editRecordIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editRecordIndex = -1;
+      this.viewOnly = false;
       this.recordChanged$.next(null);
     });
   }
@@ -204,6 +210,14 @@ export class BankAccountComponent implements OnInit {
       return;
     }
     this.editRecordIndex = index;
+    this.viewOnly = false;
+    this.recordChanged$.next(record);
+  }
+
+  view($event: MouseEvent, record: BankAccount, index: number) {
+    $event.preventDefault();
+    this.editRecordIndex = index;
+    this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 

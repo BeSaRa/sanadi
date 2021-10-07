@@ -24,15 +24,25 @@ export class BankBranchComponent implements OnInit {
               private fb: FormBuilder) {
   }
 
+  private _list: BankBranch[] = [];
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-
-  @Input() list: BankBranch[] = [];
   @Input() readonly: boolean = false;
+
+  // @Input() list: BankBranch[] = [];
+  @Input() set list(list: BankBranch[]) {
+    this._list = list;
+    this.listDataSource.next(this._list);
+  }
+
+  get list(): BankBranch[] {
+    return this._list;
+  }
 
   listDataSource: BehaviorSubject<BankBranch[]> = new BehaviorSubject<BankBranch[]>([]);
   columns = ['fullName', 'email', 'fax', 'phone', 'recordNo', 'actions'];
 
   editIndex: number = -1;
+  viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
   add$: Subject<any> = new Subject<any>();
@@ -48,7 +58,7 @@ export class BankBranchComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.listDataSource.next(this.list);
+    // this.listDataSource.next(this.list);
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
@@ -83,15 +93,16 @@ export class BankBranchComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.viewOnly = false;
         this.recordChanged$.next(new BankBranch());
       });
   }
 
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((branch) => {
-      if (this.readonly) {
+      /*if (this.readonly) {
         return;
-      }
+      }*/
       this.currentRecord = branch || undefined;
       this.updateBranchForm(this.currentRecord);
     });
@@ -103,13 +114,16 @@ export class BankBranchComponent implements OnInit {
     if (branch) {
       this._setComponentReadiness('NOT_READY');
       branchFormArray.push(this.fb.group(branch.getBranchFields(true)));
+      if (this.readonly || this.viewOnly) {
+        this.branchesFormArray.disable();
+      }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
   saveBranch() {
-    if (this.readonly) {
+    if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
@@ -150,6 +164,7 @@ export class BankBranchComponent implements OnInit {
       this._updateList(branch, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editIndex = -1;
+      this.viewOnly = false;
       this.recordChanged$.next(null);
     });
   }
@@ -193,6 +208,14 @@ export class BankBranchComponent implements OnInit {
       return;
     }
     this.editIndex = index;
+    this.viewOnly = false;
+    this.recordChanged$.next(record);
+  }
+
+  view($event: MouseEvent, record: BankBranch, index: number) {
+    $event.preventDefault();
+    this.editIndex = index;
+    this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 

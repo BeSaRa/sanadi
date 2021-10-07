@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="saveBankAccount()" [disabled]="readonly"
+          <button (click)="saveBankAccount()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
                   class="btn btn-primary m-2">{{(editRecordIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
           <button (click)="cancelBankAccount()"
                   class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
@@ -152,6 +152,10 @@
                 [disabled]="readonly"
                 tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
+        </button>
+        <button (click)="view($event, row, i)" class="icon-btn text-primary"
+                tooltip="{{lang.map.view}}">
+          <i class="mdi mdi-eye"></i>
         </button>
       </div>
     </td>
