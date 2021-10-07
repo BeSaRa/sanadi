@@ -59,11 +59,11 @@ export class RequestRecommendationsComponent implements OnInit {
       },
       {
         roleInfo: AdminResult.createInstance({
-          arName: this.langService.getArabicLocalByKey('role_manager'),
-          enName: this.langService.getEnglishLocalByKey('role_manager')
+          arName: this.langService.getArabicLocalByKey('role_chief'),
+          enName: this.langService.getEnglishLocalByKey('role_chief')
         }),
-        comment: !this.record ? '' : this.record.managerJustification,
-        actionInfo: !this.record ? null : this.record.managerDecisionInfo,
+        comment: !this.record ? '' : this.record.chiefJustification,
+        actionInfo: !this.record ? null : this.record.chiefDecisionInfo,
         show: true
       },
       {
@@ -77,11 +77,11 @@ export class RequestRecommendationsComponent implements OnInit {
       },
       {
         roleInfo: AdminResult.createInstance({
-          arName: this.langService.getArabicLocalByKey('role_chief'),
-          enName: this.langService.getEnglishLocalByKey('role_chief')
+          arName: this.langService.getArabicLocalByKey('role_manager'),
+          enName: this.langService.getEnglishLocalByKey('role_manager')
         }),
-        comment: !this.record ? '' : this.record.chiefJustification,
-        actionInfo: !this.record ? null : this.record.chiefDecisionInfo,
+        comment: !this.record ? '' : this.record.managerJustification,
+        actionInfo: !this.record ? null : this.record.managerDecisionInfo,
         show: true
       }
     ];
