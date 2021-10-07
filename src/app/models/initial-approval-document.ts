@@ -10,5 +10,4 @@ export class InitialApprovalDocument extends BaseLicense {
   publicTerms!: string;
   countryInfo!: AdminResult;
   regionInfo!: AdminResult;
-  licenseStatusInfo!: AdminResult;
 }

@@ -1,5 +1,4 @@
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
 import {FinalExternalOfficeApproval} from '../models/final-external-office-approval';
 import {FactoryService} from './factory.service';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
@@ -8,22 +7,16 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {HttpClient} from '@angular/common/http';
 import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {Consultation} from '../models/consultation';
-import {ConsultationInterceptor} from '../model-interceptors/consultation-interceptor';
 import {FinalExternalOfficeApprovalInterceptor} from '../model-interceptors/final-external-office-approval-interceptor';
 import {ActionLogService} from './action-log.service';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {ConsultationSearchCriteria} from '../models/consultation-search-criteria';
 import {FinalExternalOfficeApprovalSearchCriteria} from '../models/final-external-office-approval-search-criteria';
 import {DomSanitizer} from '@angular/platform-browser';
 import {CommentService} from './comment.service';
 import {DocumentService} from './document.service';
 import {RecommendationService} from './recommendation.service';
 import {SearchService} from './search.service';
-import {CaseStatus} from '@app/enums/case-status.enum';
-import {InitialApprovalDocSearchCriteria} from '@app/models/initial-approval-doc-search-criteria';
 import {Observable} from 'rxjs';
-import {InitialApprovalDocument} from '@app/models/initial-approval-document';
 import {BankBranch} from '@app/models/bank-branch';
 import {ExecutiveManagement} from '@app/models/executive-management';
 import {BankAccount} from '@app/models/bank-account';
@@ -31,6 +24,7 @@ import {BankAccountInterceptor} from '@app/model-interceptors/bank-account-inter
 import {ExecutiveManagementInterceptor} from '@app/model-interceptors/executive-management-interceptor';
 import {BankBranchInterceptor} from '@app/model-interceptors/bank-branch-interceptor';
 import {LicenseService} from '@app/services/license.service';
+import {FinalApprovalDocument} from '@app/models/final-approval-document';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +75,7 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
     return new FinalExternalOfficeApprovalSearchCriteria();
   }
 
-  licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<InitialApprovalDocument[]> {
+  licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<FinalApprovalDocument[]> {
     return this.licenseService.finalApprovalLicenseSearch(criteria);
   }
 

@@ -19,6 +19,8 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ViewDocumentPopupComponent} from "@app/shared/popups/view-document-popup/view-document-popup.component";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalInterceptor} from "@app/model-interceptors/partner-approval-interceptor";
+import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {FinalApprovalDocumentInterceptor} from '@app/model-interceptors/final-approval-document-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -56,20 +58,20 @@ export class LicenseService {
   }
 
 
-  @Generator(InitialApprovalDocument, true, {
+  @Generator(FinalApprovalDocument, true, {
     property: 'rs',
-    interceptReceive: (new InitialApprovalDocumentInterceptor()).receive
+    interceptReceive: (new FinalApprovalDocumentInterceptor()).receive
   })
-  private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<InitialApprovalDocument[]> {
+  private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalApprovalDocument[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<InitialApprovalDocument[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<FinalApprovalDocument[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
   }
 
-  finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<InitialApprovalDocument[]> {
+  finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalApprovalDocument[]> {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
-  openSelectLicenseDialog(licenses: InitialApprovalDocument[] | PartnerApproval[], caseRecord: any | undefined, select = true): DialogRef {
+  openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[]), caseRecord: any | undefined, select = true): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

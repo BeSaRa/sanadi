@@ -28,6 +28,8 @@ import {ReadinessStatus} from '@app/types/types';
 import {BankAccountComponent} from '@app/e-services/shared/bank-account/bank-account.component';
 import {ExecutiveManagementComponent} from '@app/e-services/shared/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/e-services/shared/bank-branch/bank-branch.component';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {FinalApprovalDocument} from '@app/models/final-approval-document';
 
 @Component({
   selector: 'final-external-office-approval',
@@ -95,7 +97,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   unprocessedLicensesList: any[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: InitialApprovalDocument;
+  selectedLicense?: InitialApprovalDocument | FinalApprovalDocument;
 
   datepickerOptionsMap: IKeyValue = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
@@ -140,20 +142,20 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _buildForm(): void {
-    const finalExternalOfficeApproval = new FinalExternalOfficeApproval();
     this.form = this.fb.group({
-      basicInfo: this.fb.group(finalExternalOfficeApproval.getFormFields(true))
+      basicInfo: this.fb.group((new FinalExternalOfficeApproval()).getFormFields(true))
     });
   }
 
   _afterBuildForm(): void {
     this.listenToRequestTypeChange();
     this.listenToCountryChange();
-    if (this.fromDialog) {
-      setTimeout(() => {
-        this.loadSelectedLicense(this.model?.licenseNumber!);
-      });
-    }
+    setTimeout(() => {
+      this.handleReadonly();
+      if (this.fromDialog) {
+        this.loadSelectedLicense(this.requestTypeField?.value === ServiceRequestTypes.NEW ? this.model?.initialLicenseNumber! : this.model?.licenseNumber!);
+      }
+    });
   }
 
   private _handleRequestTypeDependentValidations(): void {
@@ -258,7 +260,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   _updateForm(model: FinalExternalOfficeApproval): void {
     this.model = model;
-    this.form.patchValue(model.getFormFields());
+    this.basicTab.patchValue(model.getFormFields());
+    this.cd.detectChanges();
   }
 
   _resetForm(): void {
@@ -314,33 +317,55 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       });
   }
 
+  private _handleLicenseValidationsByRequestType(): void {
+    // disable the license fields and set validators to empty
+    this.initialLicenseNumberField?.disable();
+    this.initialLicenseNumberField?.setValidators([]);
+    this.licenseNumberField?.disable();
+    this.licenseNumberField?.setValidators([]);
+
+    // if no requestType
+    // if new record or draft, reset license and its validations
+    // also reset the values in model
+    if (!CommonUtils.isValidValue(this.requestTypeField?.value)) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.initialLicenseNumberField?.setValue(null);
+        this.licenseNumberField?.setValue(null);
+        this.setSelectedLicense(undefined);
+
+        if (this.model) {
+          this.model.licenseNumber = '';
+          this.model.licenseDuration = 0;
+          this.model.licenseStartDate = '';
+        }
+      }
+    } else {
+      if (this.requestTypeField?.value === ServiceRequestTypes.NEW) {
+        this.licenseNumberField?.setValue(null);
+        this.initialLicenseNumberField?.enable();
+        this.initialLicenseNumberField?.setValidators([CustomValidators.required, (control) => {
+          return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+        }]);
+      } else {
+        this.initialLicenseNumberField?.setValue(null);
+        this.licenseNumberField?.enable();
+        this.licenseNumberField?.setValidators([CustomValidators.required, (control) => {
+          return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
+        }]);
+      }
+    }
+
+    this.initialLicenseNumberField.updateValueAndValidity();
+    this.licenseNumberField.updateValueAndValidity();
+  }
+
   listenToRequestTypeChange(): void {
     this.requestTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      this._handleRequestTypeDependentValidations();
-      this.initialLicenseNumberField?.setValue(null);
-      this.licenseNumberField?.setValue(null);
-      this.selectedLicense = undefined;
 
-      if (!CommonUtils.isValidValue(value)) {
-        this.initialLicenseNumberField?.disable();
-        this.licenseNumberField?.disable();
-      } else {
-        if (value === this.serviceRequestTypes.NEW) {
-          this.initialLicenseNumberField?.enable();
-          this.initialLicenseNumberField?.setValidators([CustomValidators.required]);
-          this.licenseNumberField?.setValidators([]);
-          this.licenseNumberField?.disable();
-        } else {
-          this.licenseNumberField?.enable();
-          this.licenseNumberField?.setValidators([CustomValidators.required]);
-          this.initialLicenseNumberField?.setValidators([]);
-          this.initialLicenseNumberField?.disable();
-        }
-        this.initialLicenseNumberField.updateValueAndValidity();
-        this.licenseNumberField.updateValueAndValidity();
-      }
+      this._handleLicenseValidationsByRequestType();
+      this._handleRequestTypeDependentValidations();
     });
   }
 
@@ -380,8 +405,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        filter<null | InitialApprovalDocument, InitialApprovalDocument>
-        ((selection): selection is InitialApprovalDocument => selection instanceof InitialApprovalDocument),
+        filter<null | InitialApprovalDocument | FinalApprovalDocument, InitialApprovalDocument | FinalApprovalDocument>
+        ((selection): selection is (InitialApprovalDocument | FinalApprovalDocument) => {
+          return (selection instanceof InitialApprovalDocument) || (selection instanceof FinalApprovalDocument);
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
@@ -389,19 +416,23 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument) {
+  private setSelectedLicense(license?: InitialApprovalDocument | FinalApprovalDocument, ignoreFormUpdate = false) {
     this.selectedLicense = license;
-    if (license) {
-      let licenseValue: any = {
+    if (license && !ignoreFormUpdate) {
+      let result: Partial<FinalExternalOfficeApproval> = {
         country: license.country,
-        region: license.region
+        region: license.region,
+        requestType: this.requestTypeField.value,
+        licenseDuration: license.licenseDuration,
+        licenseStartDate: license.licenseStartDate
       };
+
       if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
-        licenseValue.initialLicenseNumber = license.licenseNumber;
+        result.initialLicenseNumber = license.licenseNumber;
       } else {
-        licenseValue.licenseNumber = license.licenseNumber;
+        result.licenseNumber = license.licenseNumber;
       }
-      this.basicTab.patchValue(licenseValue);
+      this._updateForm((new FinalExternalOfficeApproval()).clone(result));
     }
   }
 
@@ -420,10 +451,15 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       filter(list => !!list.length),
       map(list => list[0]),
       takeUntil(this.destroy$)
-    )
-      .subscribe((license) => {
-        this.setSelectedLicense(license)
-      })
+    ).subscribe((license) => {
+      this.setSelectedLicense(license, true);
+
+      /*if (this.model && (license instanceof FinalApprovalDocument)) {
+        this.model.bankAccountList = license.bankAccountList;
+        this.model.executiveManagementList = license.executiveManagementList;
+        this.model.branchList = license.branchList;
+      }*/
+    })
   }
 
   viewLicense(): void {
@@ -433,11 +469,53 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model, false)
   }
 
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+      /*if (this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
+        this.readonly = false;
+      }*/
+    }
+  }
+
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  isEditLicenseAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
   loadInitialLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {
     return this.initialApprovalService.licenseSearch({licenseNumber: value});
   }
 
-  loadFinalLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {
+  loadFinalLicencesByCriteria(value: any): Observable<FinalApprovalDocument[]> {
     return this.service.licenseSearch({licenseNumber: value});
   }
 
@@ -471,5 +549,28 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   get specialExplanationField(): FormControl {
     return (this.form.get('basicInfo')?.get('description')) as FormControl;
+  }
+
+  isAddAttachmentAllowed(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+
+    return isAllowed;
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
   }
 }

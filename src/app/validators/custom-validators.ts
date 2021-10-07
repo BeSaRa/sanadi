@@ -104,7 +104,8 @@ const errorKeys: IKeyValue = {
     }
   },
   unique: {key: 'err_unique_field', replaceValues: null},
-  NUM_HYPHEN_COMMA: {key: 'err_num_hyphen_comma'}
+  NUM_HYPHEN_COMMA: {key: 'err_num_hyphen_comma'},
+  select_license: {key: 'err_missing_license', replaceValues: null}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {

@@ -9,9 +9,11 @@ import {Validators} from '@angular/forms';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {DateUtils} from '@app/helpers/date-utils';
+import {AdminResult} from '@app/models/admin-result';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
-  caseType: number = 8;
+  caseType: number = CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
   requestType!: number;
   organizationId!: number;
   subject: string = '';
@@ -40,6 +42,12 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   executiveManagementList: ExecutiveManagement[] = [];
   branchList: BankBranch[] = [];
   bankAccountList: BankAccount[] = [];
+
+  specialistDecisionInfo!: AdminResult;
+  chiefDecisionInfo!: AdminResult;
+  managerDecisionInfo!: AdminResult;
+  generalManagerDecisionInfo!: AdminResult;
+  reviewerDepartmentDecisionInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
 

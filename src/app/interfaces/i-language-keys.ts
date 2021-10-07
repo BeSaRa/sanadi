@@ -556,4 +556,5 @@ export interface ILanguageKeys {
   role_reviewer_department: string;
   role_general_manager: string;
   role_chief: string;
+  view: string;
 }

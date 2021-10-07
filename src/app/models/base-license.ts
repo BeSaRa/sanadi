@@ -1,4 +1,5 @@
 import {FileNetDocument} from "@app/models/file-net-document";
+import {AdminResult} from '@app/models/admin-result';
 
 
 export class BaseLicense extends FileNetDocument {
@@ -9,4 +10,5 @@ export class BaseLicense extends FileNetDocument {
   licenseApprovedDate!: string;
   licenseStartDate!: string;
   licenseEndDate!: string;
+  licenseStatusInfo!: AdminResult;
 }

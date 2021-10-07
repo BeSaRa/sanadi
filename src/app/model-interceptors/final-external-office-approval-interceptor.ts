@@ -23,12 +23,17 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
-    // model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
+
+    model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
+    model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
+    model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
+    model.generalManagerDecisionInfo = AdminResult.createInstance(model.generalManagerDecisionInfo);
+    model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
 
     let service = FactoryService.getService<FinalExternalOfficeApprovalService>('FinalExternalOfficeApprovalService');
-    model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(x));
-    model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(x));
-    model.branchList = model.branchList.map(x => service.bankBranchInterceptor.receive(x));
+    model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(new BankAccount().clone(x)));
+    model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(new ExecutiveManagement().clone(x)));
+    model.branchList = model.branchList.map(x => service.bankBranchInterceptor.receive(new BankBranch().clone(x)));
     return model;
   }
 
@@ -53,6 +58,11 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     delete model.creatorInfo;
     delete model.categoryInfo;
     delete model.ouInfo;
+    delete model.specialistDecisionInfo;
+    delete model.chiefDecisionInfo;
+    delete model.managerDecisionInfo;
+    delete model.generalManagerDecisionInfo;
+    delete model.reviewerDepartmentDecisionInfo;
     // delete model.organizationInfo;
     return model;
   }
