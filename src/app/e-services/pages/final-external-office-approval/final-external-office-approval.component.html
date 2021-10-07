@@ -95,7 +95,7 @@
                 <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                   <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
                              placeholder="{{lang.map.select}}" id="country"
-                             [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+                             [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                              formControlName="country" validationClasses="country">
                     <ng-option *ngFor="let option of countriesList" [value]="option.id"
                                [disabled]="!option.isActive()">
@@ -113,7 +113,7 @@
                 <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                   <ng-select [selectOnTab]="true" labelForId="region" [clearable]="false"
                              placeholder="{{lang.map.select}}" id="region"
-                             [notFoundText]="lang.map.msg_not_found" [readonly]="readonly"
+                             [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                              formControlName="region" validationClasses="region">
                     <ng-option *ngFor="let option of regionsList" [value]="option.id"
                                [disabled]="!option.isActive()">

@@ -158,26 +158,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     });
   }
 
-  private _handleRequestTypeDependentValidations(): void {
-    /*if (this.operation === OperationTypes.UPDATE) {
-
-    }
-    if (this.requestTypeField.value === this.serviceRequestTypes.UPDATE || this.requestTypeField.value === this.serviceRequestTypes.RENEW) {
-      this.countryField.disable();
-      this.regionField.disable();
-    } else {
-      this.countryField.enable();
-      this.regionField.enable();
-    }*/
-
-    /*if (this.requestTypeField.value === this.serviceRequestTypes.EXTEND || this.requestTypeField.value === this.serviceRequestTypes.CANCEL) {
-      this.basicTab.disable();
-      this.specialExplanationField.enable();
-    } else {
-      this.basicTab.enable();
-    }*/
-  }
-
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
     for (const key in this.tabsData) {
@@ -357,6 +337,26 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
     this.initialLicenseNumberField.updateValueAndValidity();
     this.licenseNumberField.updateValueAndValidity();
+  }
+
+  private _handleRequestTypeDependentValidations(): void {
+    /*if (this.operation === OperationTypes.UPDATE) {
+
+    }
+    if (this.requestTypeField.value === this.serviceRequestTypes.UPDATE || this.requestTypeField.value === this.serviceRequestTypes.RENEW) {
+      this.countryField.disable();
+      this.regionField.disable();
+    } else {
+      this.countryField.enable();
+      this.regionField.enable();
+    }*/
+
+    /*if (this.requestTypeField.value === this.serviceRequestTypes.EXTEND || this.requestTypeField.value === this.serviceRequestTypes.CANCEL) {
+      this.basicTab.disable();
+      this.specialExplanationField.enable();
+    } else {
+      this.basicTab.enable();
+    }*/
   }
 
   listenToRequestTypeChange(): void {
@@ -575,5 +575,16 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       isAllowed = this.model.taskDetails.isClaimed();
     }
     return isAllowed;
+  }
+
+  isEditCountryAllowed(): boolean {
+    let requestType = this.requestTypeField.value,
+      isAllowed = !(requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.UPDATE);
+
+    if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
+      return isAllowed;
+    } else {
+      return isAllowed && !this.readonly;
+    }
   }
 }
