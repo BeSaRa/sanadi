@@ -431,6 +431,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         result.initialLicenseNumber = license.licenseNumber;
       } else {
         result.licenseNumber = license.licenseNumber;
+        result.bankAccountList = (license as FinalApprovalDocument).bankAccountList;
+        result.executiveManagementList = (license as FinalApprovalDocument).executiveManagementList;
+        result.branchList = (license as FinalApprovalDocument).branchList;
       }
       this._updateForm((new FinalExternalOfficeApproval()).clone(result));
     }
