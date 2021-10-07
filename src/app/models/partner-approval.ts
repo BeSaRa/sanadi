@@ -57,6 +57,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
   managementCouncilList!: ManagementCouncil[];
   goalsList!: Goal[];
   targetGroupList!: TargetGroup[];
+  description!: string;
 
   service: PartnerApprovalService;
 
@@ -69,7 +70,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
     const {
       requestType, requestClassification, arabicName, englishName, country, city, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
-      firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber
+      firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber, description
     } = this;
 
     return {
@@ -99,7 +100,8 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.maxLength(100)]] : postalCode,
       firstSocialMedia: control ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(100)]] : firstSocialMedia,
       secondSocialMedia: control ? [secondSocialMedia, CustomValidators.maxLength(100)] : secondSocialMedia,
-      thirdSocialMedia: control ? [thirdSocialMedia, CustomValidators.maxLength(100)] : thirdSocialMedia
+      thirdSocialMedia: control ? [thirdSocialMedia, CustomValidators.maxLength(100)] : thirdSocialMedia,
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description,
     }
   }
 }

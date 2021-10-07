@@ -331,6 +331,15 @@
                 </div>
               </div>
             </div>
+            <div class="row mb-3">
+              <label asteriskIfRequired="description" for="description"
+                     class="col-md-2 col-sm-12 col-form-label">{{lang.map.special_explanations}}</label>
+              <div class="col-md-10 col-sm-12 mb-3 position-relative">
+        <textarea rows="5" id="description" validationClasses="description" formControlName="description"
+                  class="form-control" [readOnly]="readonly"></textarea>
+                <app-field-error-message controlName="description"></app-field-error-message>
+              </div>
+            </div>
           </ng-template>
           <!-- Bank accounts -->
           <ng-template #bankAccountsTemplate>
