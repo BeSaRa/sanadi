@@ -25,14 +25,14 @@ export class BankBranch extends SearchableCloneable<BankBranch> {
     } = this;
 
     return {
-      fullName: control ? [fullName, [CustomValidators.required]] : fullName,
+      fullName: control ? [fullName, [CustomValidators.required, CustomValidators.maxLength(100)]] : fullName,
       establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
-      address: control ? [address, [CustomValidators.required]] : address,
-      recordNo: control ? [recordNo, [CustomValidators.required]] : recordNo,
-      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number]] : postalCode
+      address: control ? [address, [CustomValidators.required, CustomValidators.maxLength(100)]] : address,
+      recordNo: control ? [recordNo, [CustomValidators.maxLength(20)]] : recordNo,
+      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode
     }
   }
 }
