@@ -404,9 +404,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     if (license && !ignoreFormUpdate) {
       const partnerApproval = Object.assign(license, {
         id: '',
-        requestType: this.requestType.value,
-        arabicName: license.arName,
-        englishName: license.enName
+        requestType: this.requestType.value
       });
       this._updateForm(partnerApproval)
     }

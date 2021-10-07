@@ -16,7 +16,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
   caseType: number = 7;
   organizationId!: number;
   address!: string;
-  arabicName!: string;
+  arName!: string;
   chiefDecision!: number;
   chiefJustification!: string;
   city!: number;
@@ -28,7 +28,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
   reviewerDepartmentDecisionInfo!: AdminResult;
   licenseStatusInfo!: AdminResult;
   email!: string;
-  englishName!: string;
+  enName!: string;
   establishmentDate!: string;
   fax!: string;
   headQuarterType!: number;
@@ -68,7 +68,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   getBasicFields(control: boolean = false): any {
     const {
-      requestType, requestClassification, arabicName, englishName, country, city, headQuarterType, latitude,
+      requestType, requestClassification, arName, enName, country, city, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
       firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber, description
     } = this;
@@ -78,12 +78,12 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       licenseNumber: control ? [licenseNumber, []] : licenseNumber,
       requestType: control ? [requestType, CustomValidators.required] : requestType,
       requestClassification: control ? [requestClassification, CustomValidators.required] : requestClassification,
-      arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
+      arName: control ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : arabicName,
-      englishName: control ? [englishName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : arName,
+      enName: control ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : englishName,
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
       country: control ? [country, CustomValidators.required] : country,
       city: control ? [city, CustomValidators.required] : city,
       headQuarterType: control ? [headQuarterType, CustomValidators.required] : headQuarterType,

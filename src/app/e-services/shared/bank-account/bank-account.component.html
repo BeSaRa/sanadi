@@ -46,12 +46,12 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="iBAN" asteriskIfRequired="iBAN"
+              <label for="iBan" asteriskIfRequired="iBan"
                      class="col-sm-12 col-md-4 col-form-label">{{lang.map.iban}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="iBAN" validationClasses="iBAN"
-                       formControlName="iBAN" class="form-control">
-                <app-field-error-message controlName="iBAN"></app-field-error-message>
+                <input id="iBan" validationClasses="iBan"
+                       formControlName="iBan" class="form-control">
+                <app-field-error-message controlName="iBan"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -131,9 +131,9 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
   </ng-container>
-  <ng-container cdkColumnDef="iban">
+  <ng-container cdkColumnDef="iBan">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.iBAN}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.iBan}} </td>
   </ng-container>
   <ng-container cdkColumnDef="swiftCode">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.swift_code}}</th>

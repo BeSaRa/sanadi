@@ -47,7 +47,7 @@ export class BankAccountComponent implements OnInit {
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
 
   listDataSource: BehaviorSubject<BankAccount[]> = new BehaviorSubject<BankAccount[]>([]);
-  columns = ['bankName', 'accountNumber', 'iban', 'swiftCode', 'actions'];
+  columns = ['bankName', 'accountNumber', 'iBan', 'swiftCode', 'actions'];
 
   editRecordIndex: number = -1;
   private save$: Subject<any> = new Subject<any>();
