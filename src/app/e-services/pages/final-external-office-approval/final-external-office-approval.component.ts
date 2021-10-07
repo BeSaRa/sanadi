@@ -212,6 +212,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _afterLaunch(): void {
+    this._resetForm();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -262,6 +263,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   _resetForm(): void {
     this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = this.operationTypes.CREATE;
     this.setDefaultValuesForExternalUser();
     this.bankAccountComponentRef.forceClearComponent();
     this.executiveManagementComponentRef.forceClearComponent();

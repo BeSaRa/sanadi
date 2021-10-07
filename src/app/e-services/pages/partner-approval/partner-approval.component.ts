@@ -252,7 +252,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   _resetForm(): void {
     this.form.reset();
-    this.requestType.enable();
+    this.model = this._getNewInstance();
+    this.operation = this.operationTypes.CREATE;
     this.bankAccountComponentRef.forceClearComponent();
     this.goalComponentRef.forceClearComponent();
     this.managementCouncilComponentRef.forceClearComponent();
@@ -268,6 +269,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   _afterLaunch(): void {
+    this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 

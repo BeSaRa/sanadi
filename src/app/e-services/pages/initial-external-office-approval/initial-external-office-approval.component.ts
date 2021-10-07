@@ -144,6 +144,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   _resetForm(): void {
     this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = this.operationTypes.CREATE;
     this.setDefaultOrganization();
   }
 
@@ -152,6 +154,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _afterLaunch(): void {
+    this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
