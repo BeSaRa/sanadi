@@ -141,7 +141,7 @@
                                placeholder="{{lang.map.select}}" id="country"
                                [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                                formControlName="country" validationClasses="country">
-                      <ng-option *ngFor="let option of countriesList" [value]="option.id">
+                      <ng-option *ngFor="let option of countries" [value]="option.id">
                         {{option.getName()}}
                       </ng-option>
                     </ng-select>
@@ -151,15 +151,15 @@
               </div>
               <div class="col-md-6 col-sm-12">
                 <div class="row">
-                  <label asteriskIfRequired="city" for="city"
-                         class="col-md-4 col-sm-12 col-form-label">{{lang.map.city}}</label>
+                  <label asteriskIfRequired="region" for="region"
+                         class="col-md-4 col-sm-12 col-form-label">{{lang.map.region}}</label>
                   <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
                     <ng-select [readonly]="!isEditCountryAllowed()" [selectOnTab]="true" labelForId="region" [clearable]="false"
-                               validationClasses="city" formControlName="city" id="city">
-                      <ng-option [value]="city.id"
-                                 *ngFor="let city of citiesList">{{city.getName()}}</ng-option>
+                               validationClasses="region" formControlName="region" id="region">
+                      <ng-option [value]="region.id"
+                                 *ngFor="let region of regions">{{region.getName()}}</ng-option>
                     </ng-select>
-                    <app-field-error-message controlName="city"></app-field-error-message>
+                    <app-field-error-message controlName="region"></app-field-error-message>
                   </div>
                 </div>
               </div>
@@ -344,7 +344,7 @@
           <!-- Bank accounts -->
           <ng-template #bankAccountsTemplate>
             <bank-account #bankAccountsTab
-                          [countriesList]="countriesList"
+                          [countriesList]="countries"
                           [list]="model?.bankAccountList || []"
                           [readonly]="readonly"
                           (readyEvent)="bankDetailsTabStatus = $event"></bank-account>
@@ -359,8 +359,8 @@
           <!-- Management Councils -->
           <ng-template #managementCouncilsTemplate>
             <management-council #managementCouncilsTab
-                                [countriesList]="countriesList"
-                                [jobTitlesList]="jobTitlesList"
+                                [countriesList]="countries"
+                                [jobTitlesList]="jobTitles"
                                 [list]="model?.managementCouncilList || []"
                                 [readonly]="readonly"
                                 (readyEvent)="managementCouncilsTabStatus = $event"></management-council>
@@ -368,8 +368,8 @@
           <!-- Executive Managements -->
           <ng-template #executiveManagementsTemplate>
             <executive-management #executiveManagementsTab
-                                  [countriesList]="countriesList"
-                                  [jobTitlesList]="jobTitlesList"
+                                  [countriesList]="countries"
+                                  [jobTitlesList]="jobTitles"
                                   [list]="model?.executiveManagementList || []"
                                   [readonly]="readonly"
                                   (readyEvent)="executiveManagementsTabStatus = $event"></executive-management>

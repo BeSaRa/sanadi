@@ -19,7 +19,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
   arName!: string;
   chiefDecision!: number;
   chiefJustification!: string;
-  city!: number;
+  region!: number;
   country!: number;
   countryInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;
@@ -68,7 +68,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   getBasicFields(control: boolean = false): any {
     const {
-      requestType, requestClassification, arName, enName, country, city, headQuarterType, latitude,
+      requestType, requestClassification, arName, enName, country, region, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
       firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber, description
     } = this;
@@ -85,7 +85,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
       country: control ? [country, CustomValidators.required] : country,
-      city: control ? [city, CustomValidators.required] : city,
+      region: control ? [region, CustomValidators.required] : region,
       headQuarterType: control ? [headQuarterType, CustomValidators.required] : headQuarterType,
       latitude: control ? [latitude,
         [CustomValidators.required, CustomValidators.maxLength(12), CustomValidators.pattern('NUM_HYPHEN_COMMA')]] : latitude,

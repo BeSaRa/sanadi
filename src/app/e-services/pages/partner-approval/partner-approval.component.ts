@@ -43,9 +43,9 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerApproval, PartnerApprovalService> implements AfterViewInit {
   form!: FormGroup;
   serviceRequestTypes = ServiceRequestTypes;
-  countriesList: Country[] = [];
-  jobTitlesList: JobTitle[] = [];
-  citiesList: Country[] = [];
+  countries: Country[] = [];
+  jobTitles: JobTitle[] = [];
+  regions: Country[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType;
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
@@ -278,15 +278,20 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     console.log(error);
   }
 
-  loadCities(): void {
-    this.citiesList = [];
-    if (!this.country?.value) {
+  loadRegions(id: number): void {
+    this.regions = [];
+    if (!id) {
       return;
     }
-    this.countryService.loadCountriesByParentId(this.country?.value)
+    this.countryService.loadCountriesByParentId(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: Country[]) => {
-        this.citiesList = result;
+        this.regions = result;
+        if (this.model?.region) {
+          this.basicTab.patchValue({
+            region: this.model?.region
+          });
+        }
       });
   }
 
@@ -294,20 +299,20 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.countryService
       .loadCountries()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countriesList = countries);
+      .subscribe((countries) => this.countries = countries);
   }
 
   private loadJobTitles() {
     this.jobTitleService.loadComposite()
-      .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
+      .subscribe((jobTitles) => this.jobTitles = jobTitles);
   }
 
   listenToCountryChange(): void {
     this.country?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      this.city?.reset();
-      this.loadCities();
+      this.region?.reset();
+      this.loadRegions(this.country?.value);
     });
   }
 
@@ -385,7 +390,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
           // if license number exists, set it and regions will be loaded inside
           // otherwise load regions separately
           if (list.length === 0) {
-            this.loadCities();
+            this.loadRegions(this.country?.value);
           }
           return list.length > 0;
         }),
@@ -470,8 +475,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     return (this.form.get('basic')?.get('country')) as FormControl;
   }
 
-  get city(): FormControl {
-    return (this.form.get('basic')?.get('city')) as FormControl;
+  get region(): FormControl {
+    return (this.form.get('basic')?.get('region')) as FormControl;
   }
 
   isAddAttachmentAllowed(): boolean {
