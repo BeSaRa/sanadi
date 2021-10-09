@@ -86,12 +86,13 @@ export class ActionWithCommentPopupComponent implements OnInit {
           this.loadedLicense = caseDetails;
           this.displayCustomForm(caseDetails);
           this.buildForm();
+          if (this.employeeService.isRiskAndComplianceUser()) {
+            this.displayLicenseForm = false;
+            /*this.licenseFormReadonly = true;
+            this.form.disable();*/
+          }
           if (this.displayLicenseForm) {
             this.updateForm(caseDetails, serviceData);
-          }
-          if (this.employeeService.isRiskAndComplianceUser()) {
-            this.licenseFormReadonly = true;
-            this.form.disable();
           }
         });
     }
