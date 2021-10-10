@@ -114,7 +114,11 @@ export class BankAccountComponent implements OnInit {
     const bankAccountFormArray = this.bankAccountsFormArray;
     bankAccountFormArray.clear();
     if (bankAccount) {
-      this._setComponentReadiness('NOT_READY');
+      if (this.viewOnly) {
+        this._setComponentReadiness('READY');
+      } else {
+        this._setComponentReadiness('NOT_READY');
+      }
       bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true)));
       if (this.readonly || this.viewOnly) {
         this.bankAccountsFormArray.disable();

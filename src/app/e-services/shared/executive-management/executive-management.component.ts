@@ -112,7 +112,11 @@ export class ExecutiveManagementComponent implements OnInit {
     const managersFormArray = this.managersFormArray;
     managersFormArray.clear();
     if (manager) {
-      this._setComponentReadiness('NOT_READY');
+      if (this.viewOnly) {
+        this._setComponentReadiness('READY');
+      } else {
+        this._setComponentReadiness('NOT_READY');
+      }
       managersFormArray.push(this.fb.group(manager.getManagerFields(true)));
       if (this.readonly || this.viewOnly) {
         this.managersFormArray.disable();
@@ -234,5 +238,5 @@ export class ExecutiveManagementComponent implements OnInit {
         }
       });
   }
-  
+
 }

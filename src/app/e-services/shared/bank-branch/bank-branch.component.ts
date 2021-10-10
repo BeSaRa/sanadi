@@ -112,7 +112,11 @@ export class BankBranchComponent implements OnInit {
     const branchFormArray = this.branchesFormArray;
     branchFormArray.clear();
     if (branch) {
-      this._setComponentReadiness('NOT_READY');
+      if (this.viewOnly) {
+        this._setComponentReadiness('READY');
+      } else {
+        this._setComponentReadiness('NOT_READY');
+      }
       branchFormArray.push(this.fb.group(branch.getBranchFields(true)));
       if (this.readonly || this.viewOnly) {
         this.branchesFormArray.disable();
