@@ -178,7 +178,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeChange();
     this.setDefaultOrganization();
     this.listenToCountryChange();
 
@@ -190,6 +189,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         if (this.model?.licenseNumber) {
           this.loadSelectedLicense(this.model?.licenseNumber!);
         }
+        this.listenToRequestTypeChange();
       }
     });
   }
