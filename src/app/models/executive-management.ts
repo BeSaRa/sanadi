@@ -21,12 +21,12 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : arabicName,
       englishName: control ? [englishName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : englishName,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       jobTitle: control ? [jobTitle, [CustomValidators.required]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       country: control ? [country, [CustomValidators.required]] : country
