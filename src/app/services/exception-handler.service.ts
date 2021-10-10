@@ -30,9 +30,10 @@ export class ExceptionHandlerService {
     if (this.excludedUrls.has(error.url!)) {
       return;
     }
-    const modelInterceptor = error.hasOwnProperty('message') && (error.message.indexOf('JSON') !== -1);
+    /*const modelInterceptor = error.hasOwnProperty('message') && (error.message.indexOf('JSON') !== -1);
     // for now we will log it to console but later we will agreed with backend-team about the errorHandler for each code.
-    this.dialog.error(error.error.eo.getName() ? ((modelInterceptor ? 'CHECK YOU MODEL INTERCEPTOR' : error.error.ec) + '<br />' + error.error.eo.getName()) : (error.error.ec + '<br />' + error.error.ms));
+    this.dialog.error(error.error.eo.getName() ? ((modelInterceptor ? 'CHECK YOU MODEL INTERCEPTOR' : error.error.ec) + '<br />' + error.error.eo.getName()) : (error.error.ec + '<br />' + error.error.ms));*/
+    this.dialog.error(error.error.eo.getName() ? (error.error.eo.getName()) : (error.error.ms));
   }
 
   // noinspection JSUnusedGlobalSymbols
