@@ -97,7 +97,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
         });
     }
 
-    this.setRequiredCommentIfRejectOrPostpone();
+    this.setRequiredComment();
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
@@ -231,8 +231,8 @@ export class ActionWithCommentPopupComponent implements OnInit {
     }) : of(null);
   }
 
-  private setRequiredCommentIfRejectOrPostpone(): void {
-    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
+  private setRequiredComment(): void {
+    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE) {
       this.comment.setValidators([CustomValidators.required]);
       this.comment.updateValueAndValidity();
     }
