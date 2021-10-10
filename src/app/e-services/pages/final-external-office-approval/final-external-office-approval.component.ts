@@ -148,13 +148,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeChange();
-    this.listenToCountryChange();
+    // this.listenToRequestTypeChange();
     setTimeout(() => {
+      this.listenToCountryChange();
       this.handleReadonly();
       if (this.fromDialog) {
         this.loadSelectedLicense(this.requestTypeField?.value === ServiceRequestTypes.NEW ? this.model?.initialLicenseNumber! : this.model?.licenseNumber!);
       }
+      this.listenToRequestTypeChange();
     });
   }
 
@@ -298,10 +299,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   private _handleLicenseValidationsByRequestType(): void {
-    // disable the license fields and set validators to empty
-    this.initialLicenseNumberField?.disable();
+    // set validators to empty
+    // this.initialLicenseNumberField?.disable();
+    // this.licenseNumberField?.disable();
     this.initialLicenseNumberField?.setValidators([]);
-    this.licenseNumberField?.disable();
     this.licenseNumberField?.setValidators([]);
 
     // if no requestType
@@ -322,13 +323,13 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     } else {
       if (this.requestTypeField?.value === ServiceRequestTypes.NEW) {
         this.licenseNumberField?.setValue(null);
-        this.initialLicenseNumberField?.enable();
+        // this.initialLicenseNumberField?.enable();
         this.initialLicenseNumberField?.setValidators([CustomValidators.required, (control) => {
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
         }]);
       } else {
         this.initialLicenseNumberField?.setValue(null);
-        this.licenseNumberField?.enable();
+        // this.licenseNumberField?.enable();
         this.licenseNumberField?.setValidators([CustomValidators.required, (control) => {
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
         }]);
@@ -343,13 +344,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     /*if (this.operation === OperationTypes.UPDATE) {
 
     }
-    if (this.requestTypeField.value === this.serviceRequestTypes.UPDATE || this.requestTypeField.value === this.serviceRequestTypes.RENEW) {
-      this.countryField.disable();
-      this.regionField.disable();
-    } else {
-      this.countryField.enable();
-      this.regionField.enable();
-    }*/
 
     /*if (this.requestTypeField.value === this.serviceRequestTypes.EXTEND || this.requestTypeField.value === this.serviceRequestTypes.CANCEL) {
       this.basicTab.disable();
@@ -510,8 +504,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   isEditLicenseAllowed(): boolean {
-    // if new or draft record and request type !== new, edit is allowed
-    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    // if new or draft record, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestTypeField.value);
   }
 
   loadInitialLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {

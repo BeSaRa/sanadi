@@ -76,14 +76,8 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
 
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      initialLicenseNumber: control ? [{
-        value: initialLicenseNumber,
-        disabled: !CommonUtils.isValidValue(requestType)
-      }] : initialLicenseNumber,
-      licenseNumber: control ? [{
-        value: licenseNumber,
-        disabled: !CommonUtils.isValidValue(requestType)
-      }] : licenseNumber,
+      initialLicenseNumber: control ? [initialLicenseNumber] : initialLicenseNumber,
+      licenseNumber: control ? [licenseNumber] : licenseNumber,
       country: control ? [country, [CustomValidators.required]] : country,
       region: control ? [region, [CustomValidators.required]] : region,//state
       externalOfficeName: control ? [externalOfficeName, [CustomValidators.required, CustomValidators.maxLength(100)]] : externalOfficeName,
