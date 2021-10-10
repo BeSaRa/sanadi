@@ -38,7 +38,7 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
   }
 
   send(model: Partial<FinalExternalOfficeApproval>): Partial<FinalExternalOfficeApproval> {
-    model.establishmentDate = !model.establishmentDate ? '' : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
+    model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
     let service = FactoryService.getService<FinalExternalOfficeApprovalService>('FinalExternalOfficeApprovalService');
     model.bankAccountList = model.bankAccountList?.map(x => {

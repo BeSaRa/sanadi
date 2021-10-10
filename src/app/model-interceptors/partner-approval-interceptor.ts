@@ -44,7 +44,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
   }
 
   send(model: Partial<PartnerApproval>): Partial<PartnerApproval> {
-    model.establishmentDate = !model.establishmentDate ? '' : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
+    model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
     model.bankAccountList = model.bankAccountList?.map((x: BankAccount) => {
