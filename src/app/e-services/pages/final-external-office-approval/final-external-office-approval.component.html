@@ -247,7 +247,7 @@
       </ng-template>
       <ng-template #managersTabTemplate>
         <executive-management #managersTab [countriesList]="countriesList"
-                              [readonly]="readonly"
+                              [readonly]="readonly" [jobTitlesList]="jobTitlesList"
                               [list]="model?.executiveManagementList || []"
                               (readyEvent)="managersTabStatus = $event"></executive-management>
       </ng-template>

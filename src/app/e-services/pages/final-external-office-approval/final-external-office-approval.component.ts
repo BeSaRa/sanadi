@@ -30,6 +30,8 @@ import {ExecutiveManagementComponent} from '@app/e-services/shared/executive-man
 import {BankBranchComponent} from '@app/e-services/shared/bank-branch/bank-branch.component';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {JobTitleService} from '@app/services/job-title.service';
+import {JobTitle} from '@app/models/job-title';
 
 @Component({
   selector: 'final-external-office-approval',
@@ -94,6 +96,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   countriesList: Country[] = [];
   regionsList: Country[] = [];
+  jobTitlesList: JobTitle[] = [];
 
   unprocessedLicensesList: any[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -123,6 +126,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
               private configurationService: ConfigurationService,
               private toastService: ToastService,
               private countryService: CountryService,
+              private jobTitleService: JobTitleService,
               public fb: FormBuilder) {
     super();
   }
@@ -138,6 +142,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   _initComponent(): void {
     this.loadCountries();
+    this.loadJobTitles();
     this.listenToLicenseSearch();
   }
 
@@ -268,6 +273,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries)
+  }
+
+  private loadJobTitles() {
+    this.jobTitleService.loadComposite()
+      .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
   }
 
   private setDefaultValuesForExternalUser(): void {
