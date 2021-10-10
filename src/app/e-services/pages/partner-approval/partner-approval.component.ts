@@ -189,8 +189,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         if (this.model?.licenseNumber) {
           this.loadSelectedLicense(this.model?.licenseNumber!);
         }
-        this.listenToRequestTypeChange();
       }
+      this.listenToRequestTypeChange();
     });
   }
 
@@ -220,11 +220,9 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (saveType !== SaveTypes.DRAFT && this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+    if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
-    } else if (saveType === SaveTypes.DRAFT) {
-      return true;
     } else {
       const invalidTabs = this._getInvalidTabs();
       if (invalidTabs.length > 0) {
