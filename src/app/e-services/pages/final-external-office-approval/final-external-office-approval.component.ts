@@ -177,9 +177,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (saveType == SaveTypes.DRAFT) {
-      return true;
-    }
     if (!this.selectedLicense) {
       this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
       return false;
