@@ -289,7 +289,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.countryField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      this.regionField?.reset();
+      if (!value) {
+        this.regionField?.reset();
+      }
       this.loadRegionsList();
     });
   }
@@ -437,6 +439,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         result.branchList = (license as FinalApprovalDocument).branchList;
       }
       this._updateForm((new FinalExternalOfficeApproval()).clone(result));
+    } else {
+      this.countryField.updateValueAndValidity();
     }
   }
 

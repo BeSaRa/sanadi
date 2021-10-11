@@ -5,7 +5,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   arabicName!: string;
   englishName!: string;
   email!: string;
-  jobTitle!: string;
+  jobTitle!: number;
   phone!: string;
   country!: number;
 
