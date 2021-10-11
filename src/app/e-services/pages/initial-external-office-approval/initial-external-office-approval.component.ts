@@ -87,7 +87,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeChange();
     this.setDefaultOrganization();
 
     setTimeout(() => {
@@ -101,6 +100,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
           this.loadRegions(this.country.value);
         }
       }
+      this.listenToRequestTypeChange();
     });
   }
 
