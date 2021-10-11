@@ -149,13 +149,6 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               delay(0)
             )
             .subscribe(() => {
-              /*let readonly = !model.canStart();
-              // if draft request opened from search by charity user + creator, not readonly
-              if (from === OpenFrom.SEARCH && this.employeeService.isCharityUser() && !!this.employeeService.getUser()) {
-                if (this.canCommit() && this.employeeService.isCurrentEmployee(this.employeeService.getUser()!)) {
-                  readonly = false;
-                }
-              }*/
               instance.container.clear();
               const componentRef = instance.container.createComponent(factory);
               const comInstance = componentRef.instance as unknown as IESComponent;

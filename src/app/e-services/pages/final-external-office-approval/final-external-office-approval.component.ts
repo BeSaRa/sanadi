@@ -408,7 +408,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        // filter<null | InitialApprovalDocument | FinalApprovalDocument, InitialApprovalDocument | FinalApprovalDocument>
         filter<{ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
         ((selection): selection is ({ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }) => {
           return (selection && selection.selected instanceof InitialApprovalDocument && selection.details instanceof InitialExternalOfficeApproval) || (selection && selection.selected instanceof FinalApprovalDocument && selection.details instanceof FinalExternalOfficeApproval);
