@@ -80,6 +80,7 @@ export interface ILanguageKeys {
   process_has_been_done_successfully: string;
   return_task: string;
   close_task: string;
+  cancel_task: string;
   reject_task: string;
   approve_task: string;
   complete_task: string;

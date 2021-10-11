@@ -547,7 +547,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
-        label: 'close_task',
+        label: 'cancel_task',
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {

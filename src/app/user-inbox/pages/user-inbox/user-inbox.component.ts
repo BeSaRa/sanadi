@@ -397,7 +397,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
-        label: 'close_task',
+        label: 'cancel_task',
         show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.CLOSE);
         },
