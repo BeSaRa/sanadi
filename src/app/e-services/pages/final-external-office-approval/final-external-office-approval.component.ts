@@ -588,13 +588,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   isEditCountryAllowed(): boolean {
-    let requestType = this.requestTypeField.value,
-      isAllowed = !(requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.UPDATE);
+    if (!this.isNewRequestType()) {
+      return false;
+    }
 
     if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
-      return isAllowed;
+      return true;
     } else {
-      return isAllowed && !this.readonly;
+      return !this.readonly;
     }
   }
 
@@ -604,5 +605,17 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   isShowNormalLicenseField(): boolean {
     return (this.requestTypeField?.value && this.requestTypeField?.value !== ServiceRequestTypes.NEW) || this.model?.isFinalApproved();
+  }
+
+  isNewRequestType(): boolean {
+    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.NEW)
+  }
+
+  isRenewOrUpdateRequestType(): boolean {
+    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.RENEW || this.requestTypeField.value === ServiceRequestTypes.UPDATE);
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.EXTEND || this.requestTypeField.value === ServiceRequestTypes.CANCEL)
   }
 }

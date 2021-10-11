@@ -109,7 +109,7 @@
             <div class="col-sm-12 col-md-6">
               <div class="row d-flex flex-column flex-md-row">
                 <label asteriskIfRequired="region" for="region"
-                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.fa_state}}</label>
+                       class="col-sm-12 col-md-4 col-form-label">{{lang.map.region}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
                   <ng-select [selectOnTab]="true" labelForId="region" [clearable]="false"
                              placeholder="{{lang.map.select}}" id="region"
@@ -131,7 +131,7 @@
                 <label asteriskIfRequired="externalOfficeName" for="externalOfficeName"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.external_office_name}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="externalOfficeName" validationClasses="externalOfficeName" [readOnly]="readonly"
+                  <input id="externalOfficeName" validationClasses="externalOfficeName" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="externalOfficeName" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="externalOfficeName"></app-field-error-message>
                 </div>
@@ -145,9 +145,9 @@
                   <div class="input-group">
                     <i class="input-group-text mdi mdi-calendar"></i>
                     <div class="form-control" formControlName="establishmentDate"
-                         [ngClass]="{'input-disabled': readonly}"
+                         [ngClass]="{'input-disabled': (isExtendOrCancelRequestType() || readonly)}"
                          id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
-                         (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
+                         (click)="!isExtendOrCancelRequestType() && !readonly && dpEstablishmentDate.toggleCalendar()"
                          #dpEstablishmentDate="angular-mydatepicker"
                          angular-mydatepicker validationClasses="establishmentDate"></div>
                     <app-field-error-message controlName="establishmentDate"></app-field-error-message>
@@ -162,7 +162,7 @@
                 <label asteriskIfRequired="recordNo" for="recordNo"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.record_number}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="recordNo" validationClasses="recordNo" [readOnly]="readonly"
+                  <input id="recordNo" validationClasses="recordNo" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="recordNo" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="recordNo"></app-field-error-message>
                 </div>
@@ -173,7 +173,7 @@
                 <label asteriskIfRequired="address" for="address"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_address}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="address" validationClasses="address" [readOnly]="readonly"
+                  <input id="address" validationClasses="address" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="address" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="address"></app-field-error-message>
                 </div>
@@ -186,7 +186,7 @@
                 <label asteriskIfRequired="postalCode" for="postalCode"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_po_box_num}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="postalCode" validationClasses="postalCode" [readOnly]="readonly"
+                  <input id="postalCode" validationClasses="postalCode" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="postalCode" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="postalCode"></app-field-error-message>
                 </div>
@@ -197,7 +197,7 @@
                 <label asteriskIfRequired="phone" for="phone"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_phone}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="phone" validationClasses="phone" [readOnly]="readonly"
+                  <input id="phone" validationClasses="phone" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="phone" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="phone"></app-field-error-message>
                 </div>
@@ -210,7 +210,7 @@
                 <label asteriskIfRequired="fax" for="fax"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.fax_number}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="fax" validationClasses="fax" [readOnly]="readonly"
+                  <input id="fax" validationClasses="fax" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="fax" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="fax"></app-field-error-message>
                 </div>
@@ -221,7 +221,7 @@
                 <label asteriskIfRequired="email" for="email"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_email}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="email" validationClasses="email" [readOnly]="readonly"
+                  <input id="email" validationClasses="email" [readOnly]="isExtendOrCancelRequestType() || readonly"
                          formControlName="email" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="email"></app-field-error-message>
                 </div>
