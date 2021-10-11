@@ -25,18 +25,17 @@ export class SelectLicensePopupComponent {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.caseType;
     this.caseStatus = this.data.caseRecord?.caseStatus;
-    // this.isFinalApprovedRequest = this._isFinalApprovedRequest();
     this.displayedColumns = [...this.displayedColumns, 'action'];
     if (this.data.select) {
       this.label = "select_license";
     }
   }
 
-  selectLicense(license: InitialApprovalDocument) {
+  selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
     this.dialogRef.close(license);
   }
 
-  viewLicenseAsPDF(license: InitialApprovalDocument) {
+  viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
     return this.licenseService.showLicenseContent(license, this.caseType)
       .subscribe((file) => {
         if (file.blob.type === 'error') {

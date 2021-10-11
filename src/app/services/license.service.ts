@@ -79,7 +79,7 @@ export class LicenseService {
     });
   }
 
-  openLicenseFullContentDialog(blob: BlobModel, license: InitialApprovalDocument): DialogRef {
+  openLicenseFullContentDialog(blob: BlobModel, license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)): DialogRef {
     return this.dialog.show(ViewDocumentPopupComponent, {
       model: license,
       blob: blob
@@ -88,7 +88,7 @@ export class LicenseService {
     });
   }
 
-  showLicenseContent(license: InitialApprovalDocument, caseType: number): Observable<BlobModel> {
+  showLicenseContent(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument), caseType: number): Observable<BlobModel> {
     let url!: string;
 
     switch (caseType) {
