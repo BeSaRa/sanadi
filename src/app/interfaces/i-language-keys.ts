@@ -557,4 +557,5 @@ export interface ILanguageKeys {
   role_general_manager: string;
   role_chief: string;
   view: string;
+  generated_license_number: string;
 }

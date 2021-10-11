@@ -11,6 +11,7 @@ import {take} from 'rxjs/operators';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CaseModel} from '@app/models/case-model';
 import {QueryResult} from '@app/models/query-result';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -51,7 +52,8 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
                 model: any,
                 actions: IMenuItem<CaseModel<any, any> | QueryResult>[],
                 openedFrom: OpenFrom,
-                loadedModel: any
+                loadedModel: any,
+                componentService: EServiceGenericService<any>
               },
               private zone: NgZone,
               private dialogRef: DialogRef,

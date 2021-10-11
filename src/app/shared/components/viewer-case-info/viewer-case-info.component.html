@@ -50,4 +50,20 @@
       </div>
     </div>
   </div>
+  <div class="row mb-3" *ngIf="showFinalGeneratedLicense">
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="managerDecisionInfo" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="form-control input-disabled">{{finalGeneratedLicenseNumber}}</span>
+            <a type="button" [tooltip]="lang.map.view_license" (click)="viewLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
