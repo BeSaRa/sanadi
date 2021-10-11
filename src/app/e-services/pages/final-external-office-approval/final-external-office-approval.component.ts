@@ -158,7 +158,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       this.listenToCountryChange();
       this.handleReadonly();
       if (this.fromDialog) {
-        this.loadSelectedLicense(this.requestTypeField?.value === ServiceRequestTypes.NEW ? this.model?.initialLicenseNumber! : this.model?.licenseNumber!);
+        if (this.requestTypeField?.value === ServiceRequestTypes.NEW && !this.model?.isFinalApproved()) {
+          this.loadSelectedLicense(this.model?.initialLicenseNumber!);
+        } else {
+          this.loadSelectedLicense(this.model?.licenseNumber!);
+        }
       }
       this.listenToRequestTypeChange();
     });
@@ -205,7 +209,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     let value = (new FinalExternalOfficeApproval()).clone({...this.model, ...this.form.value.basicInfo});
     // if new request, and selected licence is available, use the licence number from selected licence instead of value in field
     if (!value.id && this.selectedLicense) {
-      if (this.requestTypeField.value === this.serviceRequestTypes.NEW) {
+      if (this.requestTypeField.value === this.serviceRequestTypes.NEW && !this.model?.isFinalApproved()) {
         value.initialLicenseNumber = this.selectedLicense.licenseNumber;
       } else {
         value.licenseNumber = this.selectedLicense.licenseNumber
@@ -309,8 +313,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   private _handleLicenseValidationsByRequestType(): void {
     // set validators to empty
-    // this.initialLicenseNumberField?.disable();
-    // this.licenseNumberField?.disable();
     this.initialLicenseNumberField?.setValidators([]);
     this.licenseNumberField?.setValidators([]);
 
@@ -330,15 +332,13 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         }
       }
     } else {
-      if (this.requestTypeField?.value === ServiceRequestTypes.NEW) {
+      if (this.requestTypeField?.value === ServiceRequestTypes.NEW && !this.model?.isFinalApproved()) {
         this.licenseNumberField?.setValue(null);
-        // this.initialLicenseNumberField?.enable();
         this.initialLicenseNumberField?.setValidators([CustomValidators.required, (control) => {
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
         }]);
       } else {
         this.initialLicenseNumberField?.setValue(null);
-        // this.licenseNumberField?.enable();
         this.licenseNumberField?.setValidators([CustomValidators.required, (control) => {
           return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
         }]);
@@ -376,7 +376,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     $event.preventDefault();
     let value = '';
     if (this.requestTypeField.valid) {
-      value = this.requestTypeField.value === this.serviceRequestTypes.NEW ? this.initialLicenseNumberField.value : this.licenseNumberField.value;
+      if (this.requestTypeField.value === this.serviceRequestTypes.NEW && !this.model?.isFinalApproved()) {
+        value = this.initialLicenseNumberField.value;
+      } else {
+        value = this.licenseNumberField.value;
+      }
     }
     if (!CommonUtils.isValidValue(value)) {
       this.dialogService.info(this.lang.map.need_license_number_to_search);
@@ -388,7 +392,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(exhaustMap(value => {
-        if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+        if (this.requestTypeField?.value === this.serviceRequestTypes.NEW && !this.model?.isFinalApproved()) {
           return this.loadInitialLicencesByCriteria(value)
             .pipe(catchError(() => of([])))
         } else {
@@ -430,7 +434,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         licenseStartDate: license.licenseStartDate
       };
 
-      if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+      if (this.requestTypeField?.value === this.serviceRequestTypes.NEW && !this.model?.isFinalApproved()) {
         result.initialLicenseNumber = license.licenseNumber;
       } else {
         result.licenseNumber = license.licenseNumber;
@@ -450,7 +454,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       return;
     }
     let response;
-    if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+    if (this.requestTypeField?.value === this.serviceRequestTypes.NEW && !this.model?.isFinalApproved()) {
       response = this.loadInitialLicencesByCriteria(licenseNumber);
     } else {
       response = this.loadFinalLicencesByCriteria(licenseNumber);
@@ -592,5 +596,13 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     } else {
       return isAllowed && !this.readonly;
     }
+  }
+
+  isShowInitialLicenseField(): boolean {
+    return (!this.requestTypeField?.value || this.requestTypeField?.value === ServiceRequestTypes.NEW) && !this.model?.isFinalApproved();
+  }
+
+  isShowNormalLicenseField(): boolean {
+    return (this.requestTypeField?.value && this.requestTypeField?.value !== ServiceRequestTypes.NEW) || this.model?.isFinalApproved();
   }
 }

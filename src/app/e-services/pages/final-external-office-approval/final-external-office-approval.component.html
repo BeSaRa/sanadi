@@ -43,7 +43,7 @@
               </div>
             </div>
             <div class="col-sm-12 col-md-6">
-              <div *ngIf="!requestTypeField?.value || requestTypeField?.value === serviceRequestTypes.NEW"
+              <div *ngIf="isShowInitialLicenseField()"
                    class="row d-flex flex-column flex-md-row">
                 <label asteriskIfRequired="initialLicenseNumber" for="initialLicenseNumber"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.initial_license_number}}</label>
@@ -65,7 +65,7 @@
 
                 </div>
               </div>
-              <div *ngIf="requestTypeField?.value && requestTypeField?.value !== serviceRequestTypes.NEW"
+              <div *ngIf="isShowNormalLicenseField()"
                    class="row d-flex flex-column flex-md-row">
                 <label asteriskIfRequired="licenseNumber" for="licenseNumber"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.license_number}}</label>

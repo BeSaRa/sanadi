@@ -260,6 +260,14 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.getService(this.BD_CASE_TYPE).getStatusIcon(this.BD_CASE_STATUS);
   }
 
+  getCaseType(): any {
+    return this.BD_CASE_TYPE;
+  }
+
+  getCaseStatus(): any {
+    return this.BD_CASE_STATUS;
+  }
+
   isTask(): boolean {
     return true;
   }
