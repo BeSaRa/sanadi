@@ -344,7 +344,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   listenToRequestTypeChange(): void {
     this.requestType?.valueChanges.pipe(
-      delay(50),
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
       // if no requestType or (requestType = new)
@@ -400,8 +399,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
     // update form fields if i have license
     if (license && !ignoreFormUpdate) {
-      const partnerApproval = Object.assign(license, {
-        id: '',
+      const partnerApproval = license.clone({
+        id: undefined,
         requestType: this.requestType.value
       });
       this._updateForm(partnerApproval)
