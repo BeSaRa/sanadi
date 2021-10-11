@@ -170,7 +170,9 @@ export class ActionWithCommentPopupComponent implements OnInit {
             if (!validData) {
               this.form.markAllAsTouched();
             }
-          } else if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE) {
+          }
+
+          if (validData && this.isCommentRequired()) {
             validData = !!this.comment.value;
           }
           return isObservable(validData) ? validData : of(validData);
@@ -232,9 +234,13 @@ export class ActionWithCommentPopupComponent implements OnInit {
   }
 
   private setRequiredComment(): void {
-    if (this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE) {
+    if (this.isCommentRequired()) {
       this.comment.setValidators([CustomValidators.required]);
       this.comment.updateValueAndValidity();
     }
+  }
+
+  private isCommentRequired(): boolean {
+    return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE;
   }
 }
