@@ -292,8 +292,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   listenToCountryChange(): void {
     this.countryField?.valueChanges.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(value => {
-      if (!value) {
+    ).subscribe((value) => {
+      // console.log(value, this.model?.country);
+      if (value !== this.model?.country) {
         this.regionField?.reset();
       }
       this.loadRegionsList();
