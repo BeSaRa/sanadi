@@ -224,7 +224,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {
-      if (saveType === SaveTypes.DRAFT){
+      if (saveType === SaveTypes.DRAFT) {
         return true;
       }
       const invalidTabs = this._getInvalidTabs();
@@ -425,12 +425,14 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        filter<null | PartnerApproval, PartnerApproval>
-        ((selection): selection is PartnerApproval => selection instanceof PartnerApproval),
+        filter<{ selected: PartnerApproval, details: PartnerApproval }, any>
+        ((selection): selection is { selected: PartnerApproval, details: PartnerApproval } => {
+          return !!(selection);
+        }),
         takeUntil(this.destroy$)
       )
-      .subscribe((license) => {
-        this.setSelectedLicense(license);
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.selected);
       })
   }
 
