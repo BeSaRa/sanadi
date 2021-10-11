@@ -285,11 +285,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: Country[]) => {
         this.regions = result;
-        if (this.model?.region) {
-          this.basicTab.patchValue({
-            region: this.model?.region
-          });
-        }
       });
   }
 
