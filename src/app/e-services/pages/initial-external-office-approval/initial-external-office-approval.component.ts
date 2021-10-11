@@ -25,6 +25,8 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -239,7 +241,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         if (!this.model?.id || this.model.canCommit()) {
           this.licenseNumber.reset();
           this.licenseNumber.setValidators([]);
-          this.setSelectedLicense(undefined);
+          this.setSelectedLicense(undefined, undefined);
 
           if (this.model) {
             this.model.licenseNumber = '';
@@ -271,19 +273,21 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        filter<null | InitialApprovalDocument, InitialApprovalDocument>
-        ((selection): selection is InitialApprovalDocument => selection instanceof InitialApprovalDocument),
+        filter<{selected: InitialApprovalDocument, details: InitialExternalOfficeApproval}, any>
+        ((selection): selection is {selected: InitialApprovalDocument, details: InitialExternalOfficeApproval} => {
+          return !!(selection);
+        }),
         takeUntil(this.destroy$)
       )
-      .subscribe((license) => {
-        this.setSelectedLicense(license);
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.selected, selection.details);
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument, ignoreFormUpdate = false) {
+  private setSelectedLicense(license?: InitialApprovalDocument, licenseDetails?: InitialExternalOfficeApproval) {
     this.selectedLicense = license;
     // update form fields if i have license
-    if (license && !ignoreFormUpdate) {
+    if (license && licenseDetails) {
       this._updateForm((new InitialExternalOfficeApproval()).clone({
         organizationId: license.organizationId,
         requestType: this.requestType.value,
@@ -356,7 +360,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license, true)
+        this.setSelectedLicense(license, undefined)
       })
   }
 

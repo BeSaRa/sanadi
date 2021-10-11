@@ -21,6 +21,10 @@ import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalInterceptor} from "@app/model-interceptors/partner-approval-interceptor";
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {FinalApprovalDocumentInterceptor} from '@app/model-interceptors/final-approval-document-interceptor';
+import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
+import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
+import {InitialExternalOfficeApprovalInterceptor} from '@app/model-interceptors/initial-external-office-approval-interceptor';
+import {FinalExternalOfficeApprovalInterceptor} from '@app/model-interceptors/final-external-office-approval-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +73,42 @@ export class LicenseService {
 
   finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalApprovalDocument[]> {
     return this._finalApprovalLicenseSearch(criteria);
+  }
+
+  @Generator(InitialExternalOfficeApproval, false, {
+    property: 'rs',
+    interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
+  })
+  private _loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
+    return this.http.get<InitialExternalOfficeApproval>(this.urlService.URLS.INITIAL_OFFICE_APPROVAL + '/license/' + licenseId + '/details');
+  }
+
+  loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
+    return this._loadInitialLicenseByLicenseId(licenseId);
+  }
+
+  @Generator(PartnerApproval, false, {
+    property: 'rs',
+    interceptReceive: (new PartnerApprovalInterceptor()).receive
+  })
+  private _loadPartnerLicenseByLicenseId(licenseId: string): Observable<PartnerApproval> {
+    return this.http.get<PartnerApproval>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/' + licenseId + '/details');
+  }
+
+  loadPartnerLicenseByLicenseId(licenseId: string): Observable<PartnerApproval> {
+    return this._loadPartnerLicenseByLicenseId(licenseId);
+  }
+
+  @Generator(FinalExternalOfficeApproval, false, {
+    property: 'rs',
+    interceptReceive: (new FinalExternalOfficeApprovalInterceptor()).receive
+  })
+  private _loadFinalLicenseByLicenseId(licenseId: string): Observable<FinalExternalOfficeApproval> {
+    return this.http.get<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/' + licenseId + '/details');
+  }
+
+  loadFinalLicenseByLicenseId(licenseId: string): Observable<FinalExternalOfficeApproval> {
+    return this._loadFinalLicenseByLicenseId(licenseId);
   }
 
   openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[]), caseRecord: any | undefined, select = true): DialogRef {

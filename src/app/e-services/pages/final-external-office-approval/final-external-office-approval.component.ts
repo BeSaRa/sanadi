@@ -32,6 +32,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {JobTitleService} from '@app/services/job-title.service';
 import {JobTitle} from '@app/models/job-title';
+import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 
 @Component({
   selector: 'final-external-office-approval',
@@ -322,7 +323,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       if (!this.model?.id || this.model.canCommit()) {
         this.initialLicenseNumberField?.setValue(null);
         this.licenseNumberField?.setValue(null);
-        this.setSelectedLicense(undefined);
+        this.setSelectedLicense(undefined, undefined);
 
         if (this.model) {
           this.model.licenseNumber = '';
@@ -407,36 +408,51 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
         // allow only if the user select license
-        filter<null | InitialApprovalDocument | FinalApprovalDocument, InitialApprovalDocument | FinalApprovalDocument>
-        ((selection): selection is (InitialApprovalDocument | FinalApprovalDocument) => {
-          return (selection instanceof InitialApprovalDocument) || (selection instanceof FinalApprovalDocument);
+        // filter<null | InitialApprovalDocument | FinalApprovalDocument, InitialApprovalDocument | FinalApprovalDocument>
+        filter<{ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
+        ((selection): selection is ({ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }) => {
+          return (selection && selection.selected instanceof InitialApprovalDocument && selection.details instanceof InitialExternalOfficeApproval) || (selection && selection.selected instanceof FinalApprovalDocument && selection.details instanceof FinalExternalOfficeApproval);
         }),
         takeUntil(this.destroy$)
       )
-      .subscribe((license) => {
-        this.setSelectedLicense(license);
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.selected, selection.details);
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument | FinalApprovalDocument, ignoreFormUpdate = false) {
+  private setSelectedLicense(license?: InitialApprovalDocument | FinalApprovalDocument, licenseDetails?: InitialExternalOfficeApproval | FinalExternalOfficeApproval) {
     this.selectedLicense = license;
-    if (license && !ignoreFormUpdate) {
-      let result: Partial<FinalExternalOfficeApproval> = {
-        country: license.country,
-        region: license.region,
-        requestType: this.requestTypeField.value,
-        licenseDuration: license.licenseDuration,
-        licenseStartDate: license.licenseStartDate
-      };
+    if (license && licenseDetails) {
+      let requestType = this.requestTypeField?.value,
+        result: Partial<FinalExternalOfficeApproval> = {
+          country: licenseDetails.country,
+          region: licenseDetails.region,
+          requestType: requestType,
+          licenseDuration: licenseDetails.licenseDuration,
+          licenseStartDate: licenseDetails.licenseStartDate
+        };
 
-      if (this.requestTypeField?.value === this.serviceRequestTypes.NEW) {
+      if (requestType === this.serviceRequestTypes.NEW) {
         result.initialLicenseNumber = license.licenseNumber;
       } else {
         result.licenseNumber = license.licenseNumber;
+      }
+
+      if (licenseDetails instanceof FinalExternalOfficeApproval) {
+        result.externalOfficeName = licenseDetails.externalOfficeName;
+        result.establishmentDate = licenseDetails.establishmentDate;
+        result.recordNo = licenseDetails.recordNo;
+        result.address = licenseDetails.address;
+        result.postalCode = licenseDetails.postalCode;
+        result.phone = licenseDetails.phone;
+        result.email = licenseDetails.email;
+        result.fax = licenseDetails.fax;
+        result.description = licenseDetails.description;
         result.bankAccountList = (license as FinalApprovalDocument).bankAccountList;
         result.executiveManagementList = (license as FinalApprovalDocument).executiveManagementList;
         result.branchList = (license as FinalApprovalDocument).branchList;
       }
+
       this._updateForm((new FinalExternalOfficeApproval()).clone(result));
     } else {
       this.countryField.updateValueAndValidity();
@@ -459,7 +475,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       map(list => list[0]),
       takeUntil(this.destroy$)
     ).subscribe((license) => {
-      this.setSelectedLicense(license, true);
+      this.setSelectedLicense(license, undefined);
 
       /*if (this.model && (license instanceof FinalApprovalDocument)) {
         this.model.bankAccountList = license.bankAccountList;

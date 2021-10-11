@@ -7,6 +7,9 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {LicenseService} from "@app/services/license.service";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {filter, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {SearchService} from '@app/services/search.service';
 
 @Component({
   selector: 'select-license-popup',
@@ -32,7 +35,23 @@ export class SelectLicensePopupComponent {
   }
 
   selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
-    this.dialogRef.close(license);
+    let loadedLicense: Observable<any>;
+
+    if (license instanceof InitialApprovalDocument) {
+      loadedLicense = this.licenseService.loadInitialLicenseByLicenseId(license.id);
+    } else if (license instanceof PartnerApproval) {
+      loadedLicense = this.licenseService.loadPartnerLicenseByLicenseId(license.id);
+    } else {
+      loadedLicense = this.licenseService.loadFinalLicenseByLicenseId(license.id);
+    }
+
+    loadedLicense
+      .subscribe((licenseDetails) => {
+        if (!licenseDetails) {
+          return;
+        }
+        this.dialogRef.close({selected: license, details: licenseDetails});
+      })
   }
 
   viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
