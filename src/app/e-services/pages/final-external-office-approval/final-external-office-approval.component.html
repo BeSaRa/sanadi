@@ -283,7 +283,7 @@
         <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
                 class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
         <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-                class="btn shadow-sm btn-warning">{{lang.map.save_as_draft}}</button>
+                class="btn shadow-sm btn-primary">{{lang.map.save_as_draft}}</button>
         <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
                 class="btn btn-primary">{{lang.map.launch}}</button>
         <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
