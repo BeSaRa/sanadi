@@ -224,6 +224,9 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {
+      if (saveType === SaveTypes.DRAFT){
+        return true;
+      }
       const invalidTabs = this._getInvalidTabs();
       if (invalidTabs.length > 0) {
         const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
