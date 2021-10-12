@@ -12,6 +12,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {LookupService} from '@app/services/lookup.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'bank-account',
@@ -42,9 +43,11 @@ export class BankAccountComponent implements OnInit {
 
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
+  @Input() caseType?: CaseTypes;
 
   bankCategoriesList: Lookup[] = this.lookupService.listByCategory.BankCategory;
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
+  caseTypes = CaseTypes;
 
   listDataSource: BehaviorSubject<BankAccount[]> = new BehaviorSubject<BankAccount[]>([]);
   columns = ['bankName', 'accountNumber', 'iBan', 'swiftCode', 'actions'];
@@ -119,7 +122,7 @@ export class BankAccountComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true)));
+      bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true, this.caseType)));
       if (this.readonly || this.viewOnly) {
         this.bankAccountsFormArray.disable();
       }

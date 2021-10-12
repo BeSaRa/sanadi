@@ -48,6 +48,8 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
 
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');
     model.bankAccountList = model.bankAccountList?.map((x: BankAccount) => {
+      // @ts-ignore
+      delete x.category;
       return service.bankAccountInterceptor.send(x) as BankAccount;
     });
     model.goalsList = model.goalsList?.map((x: Goal) => {

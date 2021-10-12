@@ -46,7 +46,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   countries: Country[] = [];
   jobTitles: JobTitle[] = [];
   regions: Country[] = [];
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType;
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
   organizations: OrgUnit[] = [];
