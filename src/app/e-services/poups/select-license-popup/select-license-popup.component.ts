@@ -7,9 +7,7 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {LicenseService} from "@app/services/license.service";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
-import {filter, map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {SearchService} from '@app/services/search.service';
 
 @Component({
   selector: 'select-license-popup',
@@ -26,8 +24,8 @@ export class SelectLicensePopupComponent {
               private licenseService: LicenseService,
               @Inject(DIALOG_DATA_TOKEN) public data: { licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[]), caseRecord: any | undefined, select: boolean }) {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
-    this.caseType = this.data.caseRecord?.caseType;
-    this.caseStatus = this.data.caseRecord?.caseStatus;
+    this.caseType = this.data.caseRecord?.getCaseType();
+    this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.displayedColumns = [...this.displayedColumns, 'action'];
     if (this.data.select) {
       this.label = "select_license";
