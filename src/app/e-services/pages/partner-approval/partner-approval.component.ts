@@ -356,7 +356,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         if (!this.model?.id || this.model.canCommit()) {
           this.licenseNumber.reset();
           this.licenseNumber.setValidators([]);
-          this.setSelectedLicense(undefined);
+          this.setSelectedLicense(undefined, undefined);
 
           if (this.model) {
             this.model.licenseNumber = '';
@@ -393,16 +393,16 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license, true)
+        this.setSelectedLicense(license, undefined)
       })
   }
 
-  private setSelectedLicense(license?: PartnerApproval | any, ignoreFormUpdate = false) {
+  private setSelectedLicense(license?: PartnerApproval | any, licenseDetails?: PartnerApproval) {
     this.selectedLicense = license;
 
     // update form fields if i have license
-    if (license && !ignoreFormUpdate) {
-      const partnerApproval = license.clone({
+    if (license && licenseDetails) {
+      const partnerApproval = licenseDetails.clone({
         id: undefined,
         requestType: this.requestType.value
       });
@@ -432,7 +432,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
-        this.setSelectedLicense(selection.selected);
+        this.setSelectedLicense(selection.selected, selection.details);
       })
   }
 
