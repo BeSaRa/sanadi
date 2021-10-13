@@ -22,28 +22,28 @@ const routes: Routes = [
   {
     path: 'custom-role', component: CustomRoleComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'MANAGE_CUSTOM_ROLE'}
+    data: {permissionKey: 'MANAGE_CUSTOM_ROLE', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'organizations', component: OrganizationUnitComponent,
     canActivate: [PermissionGuard],
-    data: {configPermissionGroup: 'MANAGE_ORG_PERMISSIONS_GROUP', checkAnyPermission: true}
+    data: {permissionKey: null, configPermissionGroup: 'MANAGE_ORG_PERMISSIONS_GROUP', checkAnyPermission: true}
   },
   {
     path: 'aid', component: AidLookupContainerComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'MANAGE_AID_TYPE'}
+    data: {permissionKey: 'MANAGE_AID_TYPE', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'users', component: OrganizationUserComponent,
     canActivate: [PermissionGuard],
-    data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
+    data: {permissionKey: null, configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
   },
   {path: 'services', component: ServiceDataComponent},
   {
     path: 'attachment-types', component: AttachmentTypesComponent,
     canActivate: [PermissionGuard],
-    // data: {configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'teams', component: TeamComponent

@@ -5,6 +5,7 @@ import {Injectable} from '@angular/core';
 import {EmployeeService} from '../services/employee.service';
 import {LangService} from '../services/lang.service';
 import {ConfigurationService} from '../services/configuration.service';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -17,12 +18,23 @@ export class PermissionGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean {
-    let permissions: string | string[] = route.data.permissionKey;
-    if (!!route.data.configPermissionGroup) {
+    let permissionKey: string | string[] = route.data.permissionKey,
+      permissionGroup: string = route.data.configPermissionGroup,
+      checkAnyPermission: boolean = route.data.checkAnyPermission,
+      permissions: string | string[] = '';
+    if (CommonUtils.isValidValue(permissionGroup)) {
       // @ts-ignore
-      permissions = this.configService.CONFIG[route.data.configPermissionGroup] || '';
+      permissions = this.configService.CONFIG[permissionGroup] || '';
     }
-    const hasPermission = this.empService.checkPermissions(permissions, route.data.checkAnyPermission);
+    if (CommonUtils.isValidValue(permissionKey)) {
+      if (typeof permissionKey === 'string') {
+        permissions = permissionKey;
+        checkAnyPermission = false;
+      } else {
+        permissions = (permissionKey.length > 0) ? permissionKey : '';
+      }
+    }
+    const hasPermission = this.empService.checkPermissions(permissions, checkAnyPermission);
     if (!hasPermission) {
       this.dialogService.info(this.langService.map.access_denied);
     }

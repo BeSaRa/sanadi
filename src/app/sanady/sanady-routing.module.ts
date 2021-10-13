@@ -19,13 +19,13 @@ const routes: Routes = [
   {
     path: 'inquiries', component: UserInquiryComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'BEN_SEARCH', routeName: 'inquiries'},
+    data: {permissionKey: 'BEN_SEARCH', configPermissionGroup: null,  checkAnyPermission: false, routeName: 'inquiries'},
   },
   {
     path: 'inquiry', component: UserInquiryComponent,
     canActivate: [PermissionGuard, CookieGuard],
     data: {
-      permissionKey: 'SUBVENTION_AID_SEARCH',
+      permissionKey: 'SUBVENTION_AID_SEARCH', configPermissionGroup: null,  checkAnyPermission: false,
       routeName: 'inquiry',
       cookieKey: 'b_i_d',
       validateCookie: (value: any) => {
@@ -37,39 +37,39 @@ const routes: Routes = [
     path: 'request', component: UserRequestComponent,
     canActivate: [PermissionGuard],
     canDeactivate: [CanDeactivateGuard],
-    data: {permissionKey: 'SUBVENTION_ADD'}
+    data: {permissionKey: 'SUBVENTION_ADD', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'request/:id', component: UserRequestComponent,
     canActivate: [PermissionGuard],
     canDeactivate: [CanDeactivateGuard],
-    data: {permissionKey: 'EDIT_SUBVENTION_REQUEST'}
+    data: {permissionKey: 'EDIT_SUBVENTION_REQUEST', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'request/partial/:partial-id', component: UserRequestComponent,
     canActivate: [PermissionGuard],
     canDeactivate: [CanDeactivateGuard],
-    data: {permissionKey: 'SUBVENTION_ADD'}
+    data: {permissionKey: 'SUBVENTION_ADD', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'partial-requests', component: PartialRequestComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'PARTIAL_SUBVENTION_REQUESTS_MAIL'}
+    data: {permissionKey: 'PARTIAL_SUBVENTION_REQUESTS_MAIL', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'partial-request-reports', component: PartialRequestReportsComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'PARTIAL_SUBVENTION_REQUESTS_REPORT'}
+    data: {permissionKey: 'PARTIAL_SUBVENTION_REQUESTS_REPORT', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'request-search', component: UserRequestSearchComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'SUBVENTION_SEARCH'}
+    data: {permissionKey: 'SUBVENTION_SEARCH', configPermissionGroup: null,  checkAnyPermission: false}
   },
   {
     path: 'requests-under-process', component: RequestsUnderProcessComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'UNDER_PROCESSING_REQUESTS'}
+    data: {permissionKey: 'UNDER_PROCESSING_REQUESTS', configPermissionGroup: null,  checkAnyPermission: false}
   }
 ];
 
