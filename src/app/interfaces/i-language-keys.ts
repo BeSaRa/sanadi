@@ -559,4 +559,6 @@ export interface ILanguageKeys {
   role_chief: string;
   view: string;
   generated_license_number: string;
+  lbl_user_custom_terms: string;
+  lbl_terms: string;
 }

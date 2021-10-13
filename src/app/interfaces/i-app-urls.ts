@@ -8,6 +8,7 @@ export interface IAppUrls {
   COUNTRY: string;
   INTERNAL_USER: string;
   TEAMS: string;
+  CUSTOM_TERMS: string;
   RELEASE_BULK: string
   CLAIM_BULK: string;
   TEAMS_INBOX: string;
@@ -49,7 +50,7 @@ export interface IAppUrls {
   E_PARTNER_APPROVAL: string;
   INTERNAL_DEPARTMENT: string;
   SERVICE_DATA: string;
-  E_FINAL_EXTERNAL_OFFICE_APPROVAL:string;
+  E_FINAL_EXTERNAL_OFFICE_APPROVAL: string;
 
   [index: string]: string;
 }

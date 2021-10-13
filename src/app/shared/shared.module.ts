@@ -65,6 +65,7 @@ import {FullscreenBtnDirective} from './directives/fullscreen-btn.directive';
 import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comment-history-popup.component';
 import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
 import { FilterRetiredStatusPipe } from './pipes/filter-retired-status.pipe';
+import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term-popup.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { FilterRetiredStatusPipe } from './pipes/filter-retired-status.pipe';
     FullscreenBtnDirective,
     CommentHistoryPopupComponent,
     ViewerCaseInfoComponent,
-    FilterRetiredStatusPipe
+    FilterRetiredStatusPipe,
+    CustomTermPopupComponent
   ],
   imports: [
     CommonModule,

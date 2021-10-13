@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
@@ -11,7 +11,7 @@ import {ToastService} from '@app/services/toast.service';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {QueryResult} from '@app/models/query-result';
 import {isObservable, Observable, of, Subject} from 'rxjs';
-import {filter, switchMap, withLatestFrom} from 'rxjs/operators';
+import {filter, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IKeyValue} from '@app/interfaces/i-key-value';
@@ -22,6 +22,10 @@ import {ServiceData} from '@app/models/service-data';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {EmployeeService} from '@app/services/employee.service';
+import {CustomTerm} from "@app/models/custom-term";
+import {CustomTermService} from "@app/services/custom-term.service";
+import {DialogService} from "@app/services/dialog.service";
+import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -29,12 +33,14 @@ import {EmployeeService} from '@app/services/employee.service';
   templateUrl: './action-with-comment-popup.component.html',
   styleUrls: ['./action-with-comment-popup.component.scss']
 })
-export class ActionWithCommentPopupComponent implements OnInit {
+export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   label: keyof ILanguageKeys;
   comment: FormControl = new FormControl();
   done$: Subject<any> = new Subject<any>();
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
+  destroy$: Subject<any> = new Subject<any>();
+
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
@@ -44,6 +50,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   private readonly action: WFResponseType;
   private loadedLicense?: LicenseApprovalModel<any, any>;
+  customTerms: CustomTerm[] = [];
 
   datepickerOptionsMap: IKeyValue = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
@@ -64,7 +71,9 @@ export class ActionWithCommentPopupComponent implements OnInit {
     public lang: LangService,
     private fb: FormBuilder,
     private employeeService: EmployeeService,
-    private serviceDataService: ServiceDataService) {
+    private serviceDataService: ServiceDataService,
+    private customTermService: CustomTermService,
+    private dialog: DialogService) {
 
     if (this.data.actionType.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0) {
       this.label = 'ask_for_consultation_task';
@@ -76,6 +85,7 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.loadUserCustomTerms();
     this.listenToTakeAction();
     if (this.data.task) {
       this.data.task.loadLicenseModel()
@@ -98,6 +108,12 @@ export class ActionWithCommentPopupComponent implements OnInit {
     }
 
     this.setRequiredComment();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
@@ -200,6 +216,10 @@ export class ActionWithCommentPopupComponent implements OnInit {
     return this.form.get('licenseStartDate') as FormControl;
   }
 
+  get customTermsField(): FormControl {
+    return this.form.get('customTerms') as FormControl;
+  }
+
   updateCase(): Observable<any> {
     return this.loadedLicense ? this.loadedLicense.patchAndUpdateModel({
       ...this.form.value,
@@ -215,13 +235,6 @@ export class ActionWithCommentPopupComponent implements OnInit {
         }
       }
       data.licenseStartDate = DateUtils.changeDateFromDatepicker(licenseStartDate);
-
-
-      /*if (data.licenseStartDate) {
-        data.licenseStartDate = DateUtils.changeDateFromDatepicker(data.licenseStartDate);
-      } else if (this.displayLicenseForm && data.licenseApprovedDate && !data.licenseStartDate) {
-        data.licenseStartDate = data.licenseApprovedDate;
-      }*/
       if (data.licenseEndDate) {
         data.licenseEndDate = DateUtils.changeDateFromDatepicker(data.licenseEndDate);
       }
@@ -242,5 +255,26 @@ export class ActionWithCommentPopupComponent implements OnInit {
 
   private isCommentRequired(): boolean {
     return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE;
+  }
+
+  private loadUserCustomTerms() {
+    this.customTermService.loadByCaseType(this.data.task.BD_CASE_TYPE)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(customTerms => this.customTerms = customTerms);
+  }
+
+  openAddCustomTermDialog() {
+    const customTerm = new CustomTerm().clone({caseType: this.data.task.BD_CASE_TYPE});
+    this.dialog.show(CustomTermPopupComponent, {
+      model: customTerm
+    }).onAfterClose$
+      .subscribe((customTerm) => {
+        this.loadUserCustomTerms();
+      });
+  }
+
+  onCustomTermsChange(customTerm: CustomTerm) {
+    var appendTerm = this.customTermsField.value ? this.customTermsField.value + ' ' + customTerm.terms : customTerm.terms;
+    this.customTermsField.setValue(appendTerm)
   }
 }

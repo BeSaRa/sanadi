@@ -45,6 +45,7 @@
   "CLAIM_BULK": "/inbox/task/claim/bulk",
   "RELEASE_BULK": "/inbox/task/return/bulk",
   "TEAMS": "/admin/baw/team",
+  "CUSTOM_TERMS": "/admin/terms",
   "INTERNAL_USER": "/admin/internal/user",
   "INTERNAL_DEPARTMENT": "admin/internal/department",
   "SERVICE_DATA": "admin/services",

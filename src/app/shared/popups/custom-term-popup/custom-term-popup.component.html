@@ -1,0 +1,26 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.custom_terms}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="min-w400px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="col-sm-12 mb-3 position-relative">
+      <label asteriskIfRequired="terms" for="terms"
+             class="form-label">{{lang.map.lbl_terms}}</label>
+      <textarea id="terms" validationClasses="terms"
+                formControlName="terms" class="form-control"></textarea>
+      <app-field-error-message controlName="terms"></app-field-error-message>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{lang.map.validate_fields}}"
+          class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
