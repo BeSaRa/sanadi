@@ -8,30 +8,39 @@ export class CommonUtils {
    * @param direction
    */
   static getSortValue(value1: any, value2: any, direction: string): number {
-    let finalValue: number;
-    switch (direction) {
+    value1 = value1 ? (value1 + '').toLowerCase() : value1;
+    value2 = value2 ? (value2 + '').toLowerCase() : value2;
+
+    if(!direction){
+      return 0;
+    } else {
+      if (value1 < value2) {
+        return -1;
+      } else if (value1 > value2) {
+        return 1;
+      }
+      return 0;
+    }
+   /*let finalValue: number = 0;
+   switch (direction) {
       case 'asc':
         if (value1 < value2) {
           finalValue = -1;
-        }
-        if (value1 > value2) {
+        } else if (value1 > value2) {
           finalValue = 1;
         }
-        finalValue = 0;
         break;
       case 'desc':
         if (value2 < value1) {
           finalValue = -1;
-        }
-        if (value2 > value1) {
+        } else if (value2 > value1) {
           finalValue = 1;
         }
-        finalValue = 0;
         break;
       default:
         finalValue = 0;
     }
-    return finalValue;
+    return finalValue;*/
   }
 
   /**

@@ -176,4 +176,11 @@ export class DateUtils {
     }
     return dayjs(DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)).endOf('day');
   }
+
+  static getTimeStampFromDate(date: IMyDateModel | Date | string): any {
+    if (!date) {
+      return date;
+    }
+    return DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)?.valueOf() || null;
+  }
 }

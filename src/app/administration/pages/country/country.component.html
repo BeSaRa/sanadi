@@ -48,7 +48,8 @@
             <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="statusDateModified">
-            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.statusDateModified"
+            <th cdk-header-cell sortable-header  [sortParamAsFullItem]="true"
+                [sortCallback]="tableOptions.sortingCallbacks.statusDateModified"
                 *cdkHeaderCellDef class="date-column"> {{langService.map.lbl_status_date_modified}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.statusDateModifiedString}} </td>
           </ng-container>

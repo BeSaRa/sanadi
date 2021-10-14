@@ -10,7 +10,7 @@ import {switchMap, tap} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ITableOptions} from '@app/interfaces/i-table-options';
 import {SortEvent} from '@app/interfaces/sort-event';
-import {isEmptyObject, isValidValue} from '@app/helpers/utils';
+import {isEmptyObject} from '@app/helpers/utils';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -68,14 +68,14 @@ export class CountryComponent implements OnInit, AfterViewInit {
     sortingCallbacks: {
       statusDateModified: (a: Country, b: Country, dir: SortEvent): number => {
         // @ts-ignore
-        let value1 = !isValidValue(a) ? '' : new Date(a.statusDateModified).valueOf(),
+        let value1 = !CommonUtils.isValidValue(a) ? '' : new Date(a.statusDateModified).valueOf(),
           // @ts-ignore
-          value2 = !isValidValue(b) ? '' : new Date(b.statusDateModified).valueOf();
+          value2 = !CommonUtils.isValidValue(b) ? '' : new Date(b.statusDateModified).valueOf();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       statusInfo: (a: Country, b: Country, dir: SortEvent): number => {
-        let value1 = !isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-          value2 = !isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+        let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+          value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       }
     }
