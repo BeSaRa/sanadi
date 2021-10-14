@@ -34,7 +34,8 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
 
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
-    enName: 'enName'
+    enName: 'enName',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {
@@ -72,9 +73,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
       teamId: controls ? [teamId, [
         CustomValidators.required
       ]] : teamId,
-      managerId: controls ? [managerId, [
-
-      ]] : managerId,
+      managerId: controls ? [managerId, []] : managerId,
       email: controls ? [email, [
         CustomValidators.required,
         CustomValidators.maxLength(50),
