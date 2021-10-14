@@ -7,7 +7,8 @@
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
       <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-           [template]="recommendationsTemplate" [title]="lang.map.recommendations" *ngIf="employeeService.isInternalUser()"
+           [template]="recommendationsTemplate" [title]="lang.map.recommendations"
+           *ngIf="employeeService.isInternalUser()"
            [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
     </tabs-list>
     <ng-template #basicInfoTabTemplate>
@@ -82,8 +83,8 @@
                            appendTo="body" [clearable]="true"
                            id="country"
                            formControlName="country">
-                  <ng-option [value]="country.id"
-                             *ngFor="let country of countries">{{country.getName()}}</ng-option>
+                  <ng-option *ngFor="let option of countries" [value]="option.id"
+                             [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
                 </ng-select>
                 <app-field-error-message controlName="country"></app-field-error-message>
               </div>
@@ -99,7 +100,8 @@
                            [clearable]="true"
                            id="region"
                            formControlName="region">
-                  <ng-option [value]="region.id" *ngFor="let region of regions">{{region.getName()}}</ng-option>
+                  <ng-option *ngFor="let option of regions" [value]="option.id"
+                             [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
                 </ng-select>
                 <app-field-error-message controlName="region"></app-field-error-message>
               </div>

@@ -26,8 +26,8 @@
               <ng-select [readonly]="readonly" validationClasses="country"
                          formControlName="country"
                          id="country">
-                <ng-option [value]="country.id"
-                           *ngFor="let country of countries">{{country.getName()}}</ng-option>
+                <ng-option [value]="option.id" *ngFor="let option of countries"
+                           [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="country"></app-field-error-message>
             </div>
