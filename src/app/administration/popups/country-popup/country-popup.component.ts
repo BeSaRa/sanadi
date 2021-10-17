@@ -41,6 +41,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   validateFieldsVisible = true;
 
   selectedTabName: string;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country>,
               private toast: ToastService,
@@ -57,16 +58,17 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.langService = FactoryService.getService('LangService');
     this.buildForm();
     this._saveModel();
   }
 
   ngAfterViewInit(): void {
-   setTimeout(()=> {
-     if (this.tabsData.hasOwnProperty(this.selectedTabName) && this.tabsData[this.selectedTabName]) {
-       this.selectedTabIndex$.next(this.tabsData[this.selectedTabName].index);
-     }
-   })
+    setTimeout(() => {
+      if (this.tabsData.hasOwnProperty(this.selectedTabName) && this.tabsData[this.selectedTabName]) {
+        this.selectedTabIndex$.next(this.tabsData[this.selectedTabName].index);
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -81,9 +83,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   }
 
   buildForm(): void {
-    this.langService = FactoryService.getService('LangService');
-    this.form = this.fb.group({
-      basic: this.fb.group({
+    let controls: IKeyValue = {
         arName: [this.model.arName, [
           CustomValidators.required, CustomValidators.maxLength(100),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
@@ -97,9 +97,18 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
           disabled: !this.model.id // disabled while adding
         }],
         status: [this.model.status, [CustomValidators.required]],
-        riskLevel: [this.model.riskLevel, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(10)]]
-      }, {
-        validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'parentId', 'status', 'riskLevel'])
+        riskLevel: [this.model.riskLevel, [CustomValidators.required, CustomValidators.decimal]]
+      },
+      validators: string[] = ['arName', 'enName', 'parentId', 'status', 'riskLevel'];
+
+    // if country is not parent country, remove risk level
+    if (this.model.parentId) {
+      delete controls.riskLevel;
+      validators = validators.filter(x => x !== 'riskLevel');
+    }
+    this.form = this.fb.group({
+      basic: this.fb.group(controls, {
+        validators: CustomValidators.validateFieldsStatus(validators)
       })
     });
     this.fm = new FormManager(this.form, this.langService);

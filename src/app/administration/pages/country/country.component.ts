@@ -91,6 +91,10 @@ export class CountryComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.tableOptions.ready = true;
+      // if not parent country, hide riskLevel
+      if (this.parentCountry) {
+        this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'riskLevel');
+      }
     });
   }
 

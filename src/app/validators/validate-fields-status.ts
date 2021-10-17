@@ -37,6 +37,14 @@ export function numberValidator(control: AbstractControl): ValidationErrors | nu
   return !isValid ? {number: true} : null;
 }
 
+export function decimalValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null;
+  }
+  const isValid = (/^(\d*)(\.\d{1,2})?$/).test(control.value);
+  return !isValid ? {decimal: true} : null;
+}
+
 export function maxlengthValidator(maxLength: number): ValidatorFn {
   if (maxLength === 0 || !isValidValue(maxLength)) {
     return Validators.nullValidator;

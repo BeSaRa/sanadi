@@ -5,8 +5,8 @@ import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {AdminResult} from './admin-result';
 import {searchFunctionType} from '../types/types';
-import {StatusEnum} from '../enums/status.enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class Country extends BaseModel<Country, CountryService> {
   parentId?: number;
@@ -23,9 +23,14 @@ export class Country extends BaseModel<Country, CountryService> {
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    // parent: text => !this.parentInfo ? false : this.parentInfo.getName().toLowerCase().indexOf(text) !== -1,
     status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
-    riskLevel: 'riskLevel',
+    riskLevel: (text) => {
+      // if country is parent country, search for risk level, otherwise no
+      if (this.parentId) {
+        return false;
+      }
+      return !CommonUtils.isValidValue(this.riskLevel) ? false : (this.riskLevel + '').indexOf(text) > -1;
+    },
     statusDateModified: 'statusDateModifiedString'
   };
 

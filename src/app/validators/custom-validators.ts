@@ -2,6 +2,7 @@ import {
   maxlengthValidator as maxLength,
   minlengthValidator as minLength,
   numberValidator as number,
+  decimalValidator as decimal,
   patternValidator as pattern,
   requiredValidator as required,
   validateFieldsStatus,
@@ -41,6 +42,7 @@ const commonValidations = {
 
 const inputMaskPatterns = {
   NUMBER_ONLY: '0*',
+  NUMBER_DECIMAL: '0*.00',
   SEPARATOR: 'separator',
   THOUSAND_SEPARATOR: ','
 }
@@ -49,6 +51,12 @@ const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},
   email: {key: 'err_invalid_email', replaceValues: null},
   number: {key: 'err_number_only', replaceValues: null},
+  decimal: {
+    key: 'err_number_decimal_x_places',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({x: 2});
+    }
+  },
   minlength: {
     key: 'err_specific_min_length',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
@@ -138,6 +146,7 @@ export const CustomValidators = {
   required,
   pattern,
   number,
+  decimal,
   minLength,
   maxLength,
   anyFieldsHasLength,
