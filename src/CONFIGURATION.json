@@ -5,12 +5,11 @@
     "TEST": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "TEST2": "http://localhost:9080/sanadi-services/api/",
     "RACA": "http://eblaepm.no-ip.org:9090/sanadi-services/api/",
-    "BAW": "http://100.100.15.102:9080/sanadi-services/api/",
+    "BAW_UI": "http://100.100.15.102:9080/sanadi-services/api/",
     "BAW_DEV": "http://100.100.15.102:9080/eservices/api/",
-    "BAW_STG": "http://ibm-baw3:9084/eservices/api/",
-    "RACA_E_SERVICES": "http://eblaepm.no-ip.org:9084/eservices/api"
+    "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
-  "BASE_ENVIRONMENT": "RACA_E_SERVICES",
+  "BASE_ENVIRONMENT": "BAW_UI",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
