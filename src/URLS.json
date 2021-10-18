@@ -2,7 +2,7 @@
   "DAC_OCHA": "admin/work-field",
   "JOB_TITLE": "admin/job-title",
   "LANGUAGE": "admin/localization",
-  "INITIAL_OFFICE_APPROVAL": "/initialExternalOfficeApproval",
+  "INITIAL_OFFICE_APPROVAL": "/initial-office-approval",
   "ATTACHMENT_TYPES": "admin/attachment-type",
   "ATTACHMENT_TYPES_SERVICE_DATA": "admin/attachment-type/service",
   "ATTACHMENT_TYPES_CUSTOM_PROPERTIES": "admin/attachment-type/custom-properties",
@@ -51,5 +51,5 @@
   "SERVICE_DATA": "admin/services",
   "SERVICE_DATA_2": "admin/services/2",
   "SERVICE_DATA_10": "admin/services/10",
-  "E_FINAL_EXTERNAL_OFFICE_APPROVAL": "finalExternalOfficeApproval"
+  "E_FINAL_EXTERNAL_OFFICE_APPROVAL": "/final-office-approval"
 }
