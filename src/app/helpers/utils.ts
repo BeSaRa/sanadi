@@ -11,7 +11,8 @@ export {
   printBlobData,
   filterList,
   getPropertyValue,
-  searchInObject
+  searchInObject,
+  arrayChunk
 };
 
 /**
@@ -203,11 +204,20 @@ function searchInObject(objectToSearch: any, searchText: string = '', searchFiel
   return keys.some(key => {
     if (typeof objectToSearch[searchFieldsProperty][key] === 'function') {
       const func = objectToSearch[searchFieldsProperty][key] as searchFunctionType;
-      return func(searchText.trim().toLowerCase() , objectToSearch);
+      return func(searchText.trim().toLowerCase(), objectToSearch);
     } else {
       const field = objectToSearch[searchFieldsProperty][key];
       const value = objectToSearch[field] ? (objectToSearch[field] as string) + '' : '';
       return value.toLowerCase().indexOf(searchText.trim().toLowerCase()) !== -1;
     }
   });
+}
+
+
+function arrayChunk<T>(arr: T[], bulkSize: number = 3): T[][] {
+  const bulks: T[][] = [];
+  for (let i = 0; i < Math.ceil(arr.length / bulkSize); i++) {
+    bulks.push(arr.slice(i * bulkSize, (i + 1) * bulkSize));
+  }
+  return bulks;
 }
