@@ -5,7 +5,7 @@ export class CheckGroup<T extends { id: number }> {
   rows!: T[][];
   idList!: number[];
 
-  constructor(public group: Lookup, private items: T[], private selected: number[], chunkCount: number) {
+  constructor(public group: Lookup, private items: T[], private selected: number[] = [], chunkCount: number = 3) {
     this.getItemsId();
     this.filterSelection();
     this.updateChunkCount(chunkCount);
