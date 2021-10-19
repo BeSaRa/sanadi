@@ -26,7 +26,8 @@ const defaultLengths = {
   ADDRESS_MAX: 1000,
   QID_MIN: 11,
   QID_MAX: 11,
-  SWIFT_CODE_MAX: 50
+  SWIFT_CODE_MAX: 50,
+  DECIMAL_PLACES: 2
 };
 
 const commonValidations = {
@@ -42,7 +43,6 @@ const commonValidations = {
 
 const inputMaskPatterns = {
   NUMBER_ONLY: '0*',
-  NUMBER_DECIMAL: '0*.00',
   SEPARATOR: 'separator',
   THOUSAND_SEPARATOR: ','
 }
@@ -54,7 +54,7 @@ const errorKeys: IKeyValue = {
   decimal: {
     key: 'err_number_decimal_x_places',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({x: 2});
+      return message.change({x: errorValue.numberOfPlaces});
     }
   },
   minlength: {

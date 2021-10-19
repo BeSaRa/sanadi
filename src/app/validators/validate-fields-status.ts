@@ -5,6 +5,7 @@ import * as dayjs from 'dayjs';
 import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import {some as _some} from 'lodash';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export const validationPatterns: any = {
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
@@ -17,7 +18,7 @@ export const validationPatterns: any = {
   ENG_AR_NUM_ONLY: new RegExp(/^[a-zA-Z\u0621-\u064A0-9\u0660-\u0669 ]+$/),
   PASSPORT: new RegExp('^[A-Z][0-9]{8,}$'),
   EMAIL: new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/),
-  NUM_HYPHEN_COMMA:new RegExp('^(?=.*?[1-9])[0-9-,._]+$')
+  NUM_HYPHEN_COMMA: new RegExp('^(?=.*?[1-9])[0-9-,._]+$')
 };
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
@@ -37,12 +38,19 @@ export function numberValidator(control: AbstractControl): ValidationErrors | nu
   return !isValid ? {number: true} : null;
 }
 
-export function decimalValidator(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) {
-    return null;
+export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {
+  if (!CommonUtils.isValidValue(numberOfPlaces)) {
+    return Validators.nullValidator;
   }
-  const isValid = (/^(\d*)(\.\d{1,2})?$/).test(control.value);
-  return !isValid ? {decimal: true} : null;
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isValidValue(control.value)) {
+      return null;
+    }
+
+    let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`;
+    const isValid = new RegExp(decimalPattern).test(control.value);
+    return isValid ? null : {decimal: {numberOfPlaces: numberOfPlaces}};
+  };
 }
 
 export function maxlengthValidator(maxLength: number): ValidatorFn {
@@ -180,7 +188,7 @@ export function uniqueValidator<T>(data: T[], property: keyof T, editObj: T): Va
       return null;
     }
 
-    const unique = _some(data, function(row) {
+    const unique = _some(data, function (row) {
       if (editObj) {
         return (editObj[property] + '').toLowerCase() !== (row[property] + '').toLowerCase() &&
           (row[property] + '').toLowerCase() === control.value.toLowerCase();
