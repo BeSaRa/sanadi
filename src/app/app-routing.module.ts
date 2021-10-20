@@ -40,7 +40,13 @@ const routes: Routes = [
         loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
-      {path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)}
+      {path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)},
+      {
+        path: 'training',
+        canActivate: [PermissionGuard],
+        //data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
+        loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
+      }
       //{path: '**', redirectTo: '../error'}
     ]
   },

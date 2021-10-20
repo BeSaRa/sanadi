@@ -1,5 +1,9 @@
 export interface ILanguageKeys {
   menu_projects_models: string;
+  trainer_specialization: string;
+  trainer_job_title: string;
+  menu_accredited_trainer: string;
+  menu_training_services: string;
   ocha: string;
   dac: string;
   sub_dac_ochas: string;

@@ -1,4 +1,5 @@
 {
+  "TRAINER": "training/trainer",
   "DAC_OCHA": "admin/work-field",
   "SD_GOAL": "admin/sdg",
   "JOB_TITLE": "admin/job-title",

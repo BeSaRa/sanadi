@@ -426,5 +426,31 @@
     "group": "projects",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 35,
+    "langKey": "menu_training_services",
+    "path": "/home/training",
+    "icon": "mdi-border-all",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 11,
+    "svg": null
+  },
+  {
+    "id": 36,
+    "langKey": "menu_accredited_trainer",
+    "path": "/home/training/trainer",
+    "icon": "mdi-border-all",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 35,
+    "group": "training-services",
+    "itemOrder": 1,
+    "svg": null
   }
 ]
