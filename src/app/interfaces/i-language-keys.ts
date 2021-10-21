@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  menu_projects_models: string;
   ocha: string;
   dac: string;
   sub_dac_ochas: string;
