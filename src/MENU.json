@@ -413,5 +413,18 @@
     "group": "main",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 34,
+    "langKey": "menu_projects_models",
+    "path": "/home/projects/projects-models",
+    "icon": "mdi-table-star",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 33,
+    "group": "projects",
+    "itemOrder": 5,
+    "svg": null
   }
 ]
