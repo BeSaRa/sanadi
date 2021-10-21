@@ -2,18 +2,28 @@ import {Component, Inject} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {AdminGenericDialog} from "@app/generics/admin-generic-dialog";
 import {InternalUser} from "@app/models/internal-user";
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {IDialogData} from "@app/interfaces/i-dialog-data";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {InternalDepartmentService} from "@app/services/internal-department.service";
 import {InternalDepartment} from "@app/models/internal-department";
-import {takeUntil} from "rxjs/operators";
+import {switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from '@app/services/lookup.service';
 import {LookupCategories} from '@app/enums/lookup-categories';
+import {CheckGroup} from "@app/models/check-group";
+import {Permission} from "@app/models/permission";
+import {PermissionService} from "@app/services/permission.service";
+import {JobTitleService} from "@app/services/job-title.service";
+import {JobTitle} from "@app/models/job-title";
+import {CheckGroupHandler} from "@app/models/check-group-handler";
+import {CustomRole} from "@app/models/custom-role";
+import {CustomRoleService} from "@app/services/custom-role.service";
+import {UserPermissionService} from "@app/services/user-permission.service";
+import {ToastService} from "@app/services/toast.service";
 
 @Component({
   selector: 'internal-user-popup',
@@ -25,14 +35,23 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   model: InternalUser;
   form!: FormGroup;
   departments: InternalDepartment[] = [];
-  jobTitles: Lookup[] = [];
+  jobTitles: JobTitle[] = [];
   statusList: Lookup[] = [];
+  permissionGroups: CheckGroup<Permission>[] = [];
+  selectedPermissions: number[] = [];
+  groupHandler!: CheckGroupHandler<Permission>;
+  customRoles: CustomRole[] = [];
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
               public fb: FormBuilder,
               private lookupService: LookupService,
+              private jobTitleService: JobTitleService,
+              private customRoleService: CustomRoleService,
+              private userPermissionService: UserPermissionService,
+              private permissionService: PermissionService,
+              private toast: ToastService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
     this.model = this.data.model;
@@ -43,6 +62,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   initPopup(): void {
     this.loadDepartments();
     this.loadJobTitles();
+    this.loadPermissions();
+    this.loadCustomRoles();
   }
 
   destroyPopup(): void {
@@ -50,16 +71,17 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true));
+    this.form = this.fb.group({
+      user: this.fb.group(this.model.buildForm(true)),
+      userPermissions: this.fb.group({
+        permissions: [false, Validators.requiredTrue],
+        customRoleId: [this.model?.customRoleId, Validators.required]
+      })
+    });
   }
 
-  //TODO: when the job title service be ready should change implementation here and load if from API
   private loadJobTitles() {
-    this.jobTitles = [
-      (new Lookup()).clone({enName: 'مسمي وظيفى اول', arName: 'jobTitle 1', id: 1}),
-      (new Lookup()).clone({enName: 'مسمي وظيفي ثانى', arName: 'jobTitle 2', id: 2}),
-      (new Lookup()).clone({enName: 'مسمي وظيفي ثالث', arName: 'jobTitle 3', id: 2})
-    ]
+    this.jobTitleService.load().subscribe((jobTitles) => this.jobTitles = jobTitles)
   }
 
   private loadDepartments(): void {
@@ -71,10 +93,17 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
-    // here i closing the popup after click on save and the operation is update
-    this.operation === OperationTypes.UPDATE && dialogRef.close(model);
-    // here i change operation to UPDATE after first save
-    this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
+    this.userPermissionService
+      .saveUserPermissions(model.id, this.groupHandler.getSelection())
+      .subscribe(() => {
+        const message = (this.operation === OperationTypes.CREATE)
+          ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+        this.toast.success(message.change({x: model.getName()}));
+        // here i closing the popup after click on save and the operation is update
+        this.operation === OperationTypes.UPDATE && dialogRef.close(model);
+        // here i change operation to UPDATE after first save
+        this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
+      });
   }
 
   beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
@@ -82,15 +111,93 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   prepareModel(model: InternalUser, form: FormGroup): InternalUser | Observable<InternalUser> {
-    return (new InternalUser()).clone({...model, ...form.value});
+    return (new InternalUser()).clone({...model, ...form.get('user')?.value});
   }
 
   saveFail(error: Error): void {
     console.log(error);
   }
 
+  get basicFormTab() {
+    return this.form.get('user');
+  }
+
+  get permissionsFormTab() {
+    return this.form.get('userPermissions');
+  }
+
+  get customRoleId() {
+    return this.permissionsFormTab?.get('customRoleId');
+  }
+
+  get userCustomRoleId() {
+    return this.basicFormTab?.get('customRoleId');
+  }
+
+  get userPermissions() {
+    return this.permissionsFormTab?.get('permissions');
+  }
+
   basicInfoHasError() {
-    return (this.form.invalid && (this.form.touched || this.form.dirty));
+    return (this.basicFormTab!.invalid && (this.basicFormTab!.touched || this.basicFormTab!.dirty));
+  }
+
+  permissionTabHasError() {
+    return (this.permissionsFormTab!.invalid && (this.permissionsFormTab!.touched || this.permissionsFormTab!.dirty));
+  }
+
+  updateUserPermissions(bool: boolean): void {
+    this.userPermissions?.setValue(bool);
+    this.userPermissions?.markAsDirty();
+  }
+
+  private onPermissionChanged(): void {
+    this.groupHandler.getSelection().length ? this.updateUserPermissions(true) : this.updateUserPermissions(false);
+  }
+
+  private loadPermissions() {
+    this.permissionService
+      .load()
+      .pipe(takeUntil(this.destroy$))
+      .pipe(withLatestFrom(of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))))
+      .pipe(switchMap(([permissions, groups]) => {
+        this.buildPermissionGroups(groups, permissions);
+        this.groupHandler = new CheckGroupHandler<Permission>(
+          this.permissionGroups,
+          () => this.onPermissionChanged(),
+          () => this.onPermissionChanged()
+        );
+        return of(true);
+      }))
+      .pipe(switchMap(_ => this.model.id ? this.userPermissionService.loadUserPermissions(this.model.id) : of([])))
+      .subscribe((userPermissions) => {
+        this.groupHandler.setSelection(userPermissions.map(p => p.permissionId));
+      })
+
+  }
+
+  private buildPermissionGroups(groups: Lookup[], permissions: Permission[]): void {
+    const permissionsByGroup = new Map<number, Permission[]>();
+    this.permissionGroups = [];
+    permissions.reduce((record, permission) => {
+      return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
+    }, {} as any);
+    groups.forEach(group => this.permissionGroups.push(new CheckGroup(group, permissionsByGroup.get(group.lookupKey) || [], [])));
+  }
+
+
+  private loadCustomRoles() {
+    this.customRoleService
+      .loadComposite()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((roles) => this.customRoles = roles);
+  }
+
+  onCustomRoleChange() {
+    let selectedRole = this.customRoles.find(role => role.id === this.customRoleId!.value);
+    this.userCustomRoleId?.setValue(selectedRole ? selectedRole.id : null);
+    this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : [])
+    this.updateUserPermissions(!!this.groupHandler.selection.length)
   }
 
 }

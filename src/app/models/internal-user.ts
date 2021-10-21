@@ -30,7 +30,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   userTypeInfo!: AdminResult;
   statusDateModified!: string;
   userType!: UserTypes;
-  generalUserId!: number
+  generalUserId!: number;
+  customRoleId!: number;
   langService: LangService;
 
   constructor() {
@@ -56,7 +57,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       phoneNumber,
       status,
       phoneExtension,
-      defaultDepartmentId
+      defaultDepartmentId,
+      customRoleId
     } = this;
     return {
       arName: controls ? [arName, [
@@ -93,6 +95,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         CustomValidators.maxLength(10)
       ]] : phoneExtension,
       defaultDepartmentId: controls ? [defaultDepartmentId, [CustomValidators.required]] : defaultDepartmentId,
+      customRoleId: controls ? [customRoleId] : customRoleId
     }
   }
 }

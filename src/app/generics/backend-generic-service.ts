@@ -25,7 +25,6 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
 
   @Generator(undefined, false, {property: 'rs'})
   private _update(model: T): Observable<T> {
-    console.log('this._getServiceURL()', this._getServiceURL());
     return this.http.put<T>(this._getServiceURL() + '/full', model);
   }
 
@@ -80,7 +79,6 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
 
   @SendInterceptor()
   update(@InterceptParam() model: T): Observable<T> {
-    console.log('model', model);
     return this._update(model);
   }
 

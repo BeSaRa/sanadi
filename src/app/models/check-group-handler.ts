@@ -3,21 +3,28 @@ import {CheckGroup} from "@app/models/check-group";
 export class CheckGroupHandler<T extends { id: number }> {
   selection: number[] = [];
 
-  constructor(private groups: CheckGroup<T>[]) {
+  constructor(private groups: CheckGroup<T>[], private onGroupClickedCallback?: Function, private onCheckBoxClickedCallback?: Function) {
   }
 
   getSelection(): number[] {
     return this.selection;
   }
 
+  setSelection(selection: number[]): void {
+    this.selection = selection;
+    this.groups.forEach(group => group.setSelected(selection));
+  }
+
   onGroupClicked(group: CheckGroup<T>): void {
     group.toggleSelection();
     this.updateSelection();
+    this.onGroupClickedCallback && this.onGroupClickedCallback();
   }
 
   onCheckBoxClicked(item: T, {target}: Event, group: CheckGroup<T>): void {
     let check = CheckGroupHandler.getCheckState(target);
     check ? this.addToSelection(item, group) : this.removeFromSelection(item, group);
+    this.onCheckBoxClickedCallback && this.onCheckBoxClickedCallback();
   }
 
   static getCheckState(target: any): target is HTMLInputElement {

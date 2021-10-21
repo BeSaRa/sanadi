@@ -11,98 +11,144 @@
 <div class="dialog-content" #content style="width: 800px">
   <tabs-list>
     <tab [hasError]="basicInfoHasError()" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [template]="permissionsTab" [title]="lang.map.lbl_permissions"></tab>
+    <tab [hasError]="permissionTabHasError()" [template]="permissionsTab" [title]="lang.map.lbl_permissions"></tab>
     <tab [title]="lang.map.link_teams"></tab>
     <tab [title]="lang.map.link_services"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <form [formGroup]="form" novalidate>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
-          <input validationClasses="arName" formControlName="arName" type="text" id="arName" class="form-control">
-          <app-field-error-message controlName="arName"></app-field-error-message>
+      <ng-container formGroupName="user">
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+            <input validationClasses="arName" formControlName="arName" type="text" id="arName" class="form-control">
+            <app-field-error-message controlName="arName"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+            <input validationClasses="enName" formControlName="enName" type="text" id="enName" class="form-control">
+            <app-field-error-message controlName="enName"></app-field-error-message>
+          </div>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
-          <input validationClasses="enName" formControlName="enName" type="text" id="enName" class="form-control">
-          <app-field-error-message controlName="enName"></app-field-error-message>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="domainName" for="domainName">{{lang.map.login_name}}</label>
+            <input validationClasses="domainName" formControlName="domainName" type="text" id="domainName"
+                   class="form-control">
+            <app-field-error-message controlName="domainName"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="empNum" for="empNum">{{lang.map.lbl_employee_number}}</label>
+            <input validationClasses="empNum" formControlName="empNum" type="text" id="empNum" class="form-control">
+            <app-field-error-message controlName="empNum"></app-field-error-message>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="domainName" for="domainName">{{lang.map.login_name}}</label>
-          <input validationClasses="domainName" formControlName="domainName" type="text" id="domainName"
-                 class="form-control">
-          <app-field-error-message controlName="domainName"></app-field-error-message>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="defaultDepartmentId"
+                   for="defaultDepartmentId">{{lang.map.default_dep}}</label>
+            <ng-select validationClasses="defaultDepartmentId" appendTo="body" [clearable]="true"
+                       id="defaultDepartmentId"
+                       formControlName="defaultDepartmentId">
+              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="defaultDepartmentId"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="jobTitle"
+                   for="jobTitle">{{lang.map.job_title}}</label>
+            <ng-select validationClasses="jobTitle" appendTo="body" [clearable]="true" id="jobTitle"
+                       formControlName="jobTitle">
+              <ng-option [value]="title.id" *ngFor="let title of jobTitles">{{title.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="jobTitle"></app-field-error-message>
+          </div>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="empNum" for="empNum">{{lang.map.lbl_employee_number}}</label>
-          <input validationClasses="empNum" formControlName="empNum" type="text" id="empNum" class="form-control">
-          <app-field-error-message controlName="empNum"></app-field-error-message>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+            <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
+            <app-field-error-message controlName="email"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="officialPhoneNumber"
+                   for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
+            <input validationClasses="officialPhoneNumber" formControlName="officialPhoneNumber" type="text"
+                   id="officialPhoneNumber" class="form-control">
+            <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="defaultDepartmentId"
-                 for="defaultDepartmentId">{{lang.map.default_dep}}</label>
-          <ng-select validationClasses="defaultDepartmentId" appendTo="body" [clearable]="true" id="defaultDepartmentId"
-                     formControlName="defaultDepartmentId">
-            <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="defaultDepartmentId"></app-field-error-message>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="phoneNumber"
+                   for="phoneNumber">{{lang.map.mobile_number}}</label>
+            <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
+                   class="form-control">
+            <app-field-error-message controlName="phoneNumber"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
+            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                       placeholder="{{lang.map.select}}" id="status"
+                       [notFoundText]="lang.map.msg_not_found"
+                       formControlName="status" validationClasses="status">
+              <ng-option value="">{{lang.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
+                         [disabled]="option.isRetiredCommonStatus()">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="status"></app-field-error-message>
+          </div>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="jobTitle"
-                 for="jobTitle">{{lang.map.job_title}}</label>
-          <ng-select validationClasses="jobTitle" appendTo="body" [clearable]="true" id="jobTitle"
-                     formControlName="jobTitle">
-            <ng-option [value]="title.id" *ngFor="let title of jobTitles">{{title.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="jobTitle"></app-field-error-message>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
-          <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
-          <app-field-error-message controlName="email"></app-field-error-message>
-        </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="officialPhoneNumber"
-                 for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
-          <input validationClasses="officialPhoneNumber" formControlName="officialPhoneNumber" type="text"
-                 id="officialPhoneNumber" class="form-control">
-          <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="phoneNumber"
-                 for="phoneNumber">{{lang.map.mobile_number}}</label>
-          <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
-                 class="form-control">
-          <app-field-error-message controlName="phoneNumber"></app-field-error-message>
-        </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
-          <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                     placeholder="{{lang.map.select}}" id="status"
-                     [notFoundText]="lang.map.msg_not_found"
-                     formControlName="status" validationClasses="status">
-            <ng-option value="">{{lang.map.lbl_none}}</ng-option>
-            <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                       [disabled]="option.isRetiredCommonStatus()">
-              {{option.getName()}}
-            </ng-option>
-          </ng-select>
-          <app-field-error-message controlName="status"></app-field-error-message>
-        </div>
-      </div>
+      </ng-container>
     </form>
   </ng-template>
   <ng-template #permissionsTab>
-    <div>Permissions</div>
+    <ng-container [formGroup]="form">
+      <div formGroupName="userPermissions" class="row">
+        <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+          <label for="customRoleId" asteriskIfRequired="customRoleId"
+                 class="form-label">{{lang.map.lbl_custom_role}}</label>
+          <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="customRoleId"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="customRoleId"
+                     (change)="onCustomRoleChange()">
+            <ng-option value="">{{lang.map.lbl_none}}</ng-option>
+            <ng-option *ngFor="let option of customRoles" [value]="option.id"
+                       [disabled]="!option.status">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </ng-container>
+    <div *ngIf="customRoleId?.value" class="row">
+      <div *ngFor="let checkBoxGroup of permissionGroups" class="col-sm-12 mb-2">
+        <div class="p-2 border border-1">
+          <div class="form-check mb-2 pb-2 border-bottom">
+            <input [indeterminate]="checkBoxGroup.isIndeterminate()" [checked]="checkBoxGroup.isFull()"
+                   type="checkbox"
+                   id="group-id-{{checkBoxGroup.group.id}}" (change)="groupHandler.onGroupClicked(checkBoxGroup)"
+                   class="form-check-input cursor-pointer">
+            <label for="group-id-{{checkBoxGroup.group.id}}"
+                   class="cursor-pointer">{{checkBoxGroup.group.getName()}}</label>
+          </div>
+          <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
+            <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
+              <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
+                     id="group-permission-id-{{permission.id}}"
+                     (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
+                     class="form-check-input cursor-pointer">
+              <label for="group-permission-id-{{permission.id}}"
+                     class="cursor-pointer">{{permission.getName()}}</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </ng-template>
 </div>
 <div class="dialog-actions">

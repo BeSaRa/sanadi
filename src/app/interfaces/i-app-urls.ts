@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  INTERNAL_USER_PERMISSIONS: string;
   DAC_OCHA: string;
   JOB_TITLE: string;
   INITIAL_OFFICE_APPROVAL: string;
