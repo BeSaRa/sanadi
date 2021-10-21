@@ -39,11 +39,12 @@ const routes: Routes = [
         path: 'services-search',
         loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)
       },
-      {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)}
+      {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
+      {path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)}
       //{path: '**', redirectTo: '../error'}
     ]
   },
-  {path: 'error', component: ErrorPageComponent}
+  {path: 'error', component: ErrorPageComponent},
 
 ];
 

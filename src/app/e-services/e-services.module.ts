@@ -24,6 +24,7 @@ import {SelectLicensePopupComponent} from './poups/select-license-popup/select-l
 import {BankBranchComponent} from './shared/bank-branch/bank-branch.component';
 import {FilterInboxRequestPopupComponent} from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {RequestRecommendationsComponent} from './shared/request-recommendations/request-recommendations.component';
+import {ProjectsModelsComponent} from './pages/projects-models/projects-models.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {RequestRecommendationsComponent} from './shared/request-recommendations/
     ContactOfficerComponent,
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
-    RequestRecommendationsComponent
+    RequestRecommendationsComponent,
+    ProjectsModelsComponent
   ],
   imports: [
     CommonModule,
