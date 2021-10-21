@@ -5,11 +5,13 @@ import {INames} from '@app/interfaces/i-names';
 import {LangService} from '@app/services/lang.service';
 import {searchFunctionType} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 export class Trainer extends BaseModel<Trainer, TrainerService> {
   specialization!: string;
   jobTitle!: string;
   langList!: string;
+  langListArr: number[] = [];
   nationality!: number;
   email!: string;
   phoneNumber!: string;
@@ -37,7 +39,15 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
   buildForm(controls?: boolean): any {
     const {
       arName,
-      enName
+      enName,
+      specialization,
+      jobTitle,
+      email,
+      phoneNumber,
+      nationality,
+      langListArr,
+      organizationUnit,
+      address
     } = this;
     return {
       arName: controls ? [arName, [
@@ -51,7 +61,34 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')
-      ]] : enName
+      ]] : enName,
+      specialization: controls ? [specialization, [
+        CustomValidators.required
+      ]] : specialization,
+      jobTitle: controls ? [jobTitle, [
+        CustomValidators.required
+      ]] : jobTitle,
+      email: controls ? [email, [
+        CustomValidators.required,
+        Validators.email
+      ]] : email,
+      phoneNumber: controls ? [phoneNumber, [
+        CustomValidators.required,
+        CustomValidators.number,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
+      ]] : phoneNumber,
+      nationality: controls ? [nationality, [
+        CustomValidators.required
+      ]] : nationality,
+      langListArr: controls ? [langListArr, [
+        CustomValidators.required
+      ]] : langListArr,
+      organizationUnit: controls ? [organizationUnit, [
+        CustomValidators.required
+      ]] : organizationUnit,
+      address: controls ? [address, [
+        CustomValidators.maxLength(100)
+      ]] : address,
     }
   }
 }

@@ -1,6 +1,7 @@
 import {Lookup} from '../models/lookup';
 
 export interface ILookupMap {
+  TRAINING_LANG: Lookup[];
   OrgUnitType: Lookup[];
   OrgStatus: Lookup[];
   OrgUserType: Lookup[];

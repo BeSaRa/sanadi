@@ -9,7 +9,7 @@ import {MenuItemService} from '@app/services/menu-item.service';
   styleUrls: ['./training-services.component.scss']
 })
 export class TrainingServicesComponent implements OnInit {
-  menuItems: MenuItem[] = this.menuItemService.getMenuByRouteGroup('training-services-services');
+  menuItems: MenuItem[] = this.menuItemService.getMenuByRouteGroup('training-services');
 
   constructor(private langService: LangService,
               private menuItemService: MenuItemService) {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {Trainer} from '@app/models/trainer';
 import {ComponentType} from '@angular/cdk/portal';
-import {TrainerPopupComponent} from '@app/training-services/popups/trainer-popup/trainer-popup.component';
+import {AccreditedTrainerPopupComponent} from '@app/training-services/popups/accredited-trainer-popup/accredited-trainer-popup.component';
 import {TrainerInterceptor} from '@app/model-interceptors/trainer-interceptor';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from '@app/services/url.service';
@@ -23,7 +23,7 @@ export class TrainerService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return TrainerPopupComponent;
+    return AccreditedTrainerPopupComponent;
   }
 
   _getModel(): any {

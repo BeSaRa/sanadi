@@ -80,23 +80,23 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
     this.edit$.next(trainer);
   }
 
-  // delete(event: MouseEvent, model: Trainer): void {
-  //   event.preventDefault();
-  //   // @ts-ignore
-  //   const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
-  //   this.dialogService.confirm(message)
-  //     .onAfterClose$.subscribe((click: UserClickOn) => {
-  //     if (click === UserClickOn.YES) {
-  //       const sub = model.delete().subscribe(() => {
-  //         // @ts-ignore
-  //         this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
-  //         this.reload$.next(null);
-  //         sub.unsubscribe();
-  //       });
-  //     }
-  //   });
-  // }
-  //
+  delete(event: MouseEvent, model: Trainer): void {
+    event.preventDefault();
+    // @ts-ignore
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
+  }
+
   // deleteBulk($event: MouseEvent): void {
   //   $event.preventDefault();
   //   if (this.selectedRecords.length > 0) {

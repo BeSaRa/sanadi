@@ -61,6 +61,7 @@ export enum LookupCategories {
   DOMAIN = 'Domain',
   INIT_OFFICE_STATUS = 'initOfficeStatus',
   FINAL_OFFICE_STATUS = 'FinalOfficeStatus',
+  TRAINING_LANG = 'TRAINING_LANG',
 
 
   ORG_UNIT_TYPE_CAT_ID = '1',
@@ -125,5 +126,5 @@ export enum LookupCategories {
   DOMAIN_CAT_ID = '121',
   INIT_OFFICE_STATUS_CAT_ID = '122',
   FINAL_OFFICE_STATUS_CAT_ID = '123',
-
+  TRAINING_LANG_CAT_ID = '124'
 }

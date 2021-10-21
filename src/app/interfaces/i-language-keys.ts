@@ -1,5 +1,12 @@
 export interface ILanguageKeys {
   menu_projects_models: string;
+  trainer_organization_unit: string;
+  lbl_resume: string;
+  training_languages: string;
+  add_trainer: string;
+  edit_trainer: string;
+  lbl_trainer_job_title: string;
+  lbl_trainer_specialization: string;
   trainer_specialization: string;
   trainer_job_title: string;
   menu_accredited_trainer: string;

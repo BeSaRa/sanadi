@@ -4,7 +4,7 @@ import {SharedModule} from '@app/shared/shared.module';
 import {TrainingServicesRoutingModule} from '@app/training-services/training-services-routing.module';
 import { TrainingServicesComponent } from './training-services.component';
 import { AccreditedTrainerComponent } from './pages/accredited-trainer/accredited-trainer.component';
-import { TrainerPopupComponent } from './popups/trainer-popup/trainer-popup.component';
+import { AccreditedTrainerPopupComponent } from './popups/accredited-trainer-popup/accredited-trainer-popup.component';
 
 
 
@@ -12,7 +12,7 @@ import { TrainerPopupComponent } from './popups/trainer-popup/trainer-popup.comp
   declarations: [
     TrainingServicesComponent,
     AccreditedTrainerComponent,
-    TrainerPopupComponent
+    AccreditedTrainerPopupComponent
   ],
   imports: [
     CommonModule,
