@@ -1,5 +1,6 @@
 {
   "DAC_OCHA": "admin/work-field",
+  "SD_GOAL": "admin/sdg",
   "JOB_TITLE": "admin/job-title",
   "LANGUAGE": "admin/localization",
   "INITIAL_OFFICE_APPROVAL": "/initial-office-approval",
