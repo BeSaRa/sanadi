@@ -77,6 +77,11 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
     return this.http.get<T>(this._getServiceURL() + '/' + modelId);
   }
 
+  @Generator()
+  getByIdComposite(modelId: number): Observable<T> {
+    return this.http.get<T>(this._getServiceURL() + '/' + modelId + '/composite');
+  }
+
   @SendInterceptor()
   update(@InterceptParam() model: T): Observable<T> {
     return this._update(model);

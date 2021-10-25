@@ -1,5 +1,7 @@
 export interface ILanguageKeys {
   menu_projects_models: string;
+  upload_resume: string;
+  view_resume: string;
   trainer_organization_unit: string;
   lbl_resume: string;
   training_languages: string;

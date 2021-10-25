@@ -5,6 +5,7 @@ import {TrainingServicesRoutingModule} from '@app/training-services/training-ser
 import { TrainingServicesComponent } from './training-services.component';
 import { AccreditedTrainerComponent } from './pages/accredited-trainer/accredited-trainer.component';
 import { AccreditedTrainerPopupComponent } from './popups/accredited-trainer-popup/accredited-trainer-popup.component';
+import { TrainerCvPopupComponent } from './popups/trainer-cv-popup/trainer-cv-popup.component';
 
 
 
@@ -12,7 +13,8 @@ import { AccreditedTrainerPopupComponent } from './popups/accredited-trainer-pop
   declarations: [
     TrainingServicesComponent,
     AccreditedTrainerComponent,
-    AccreditedTrainerPopupComponent
+    AccreditedTrainerPopupComponent,
+    TrainerCvPopupComponent
   ],
   imports: [
     CommonModule,

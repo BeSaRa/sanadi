@@ -50,4 +50,14 @@ export abstract class BackendWithDialogOperationsGenericService<T extends { id: 
       .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
   }
 
+  /**
+   * @description open edit dialog for the given model composite
+   * @param model
+   * @returns Observable<DialogRef> Observable of reference for opened dialog
+   */
+  editDialogComposite(model: T): Observable<DialogRef> {
+    return this.getByIdComposite(model.id)
+      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
+  }
+
 }

@@ -17,6 +17,7 @@ export class TrainerInterceptor implements IModelInterceptor<Trainer>{
   send(model: Partial<Trainer>): Partial<Trainer> {
     model.langList = JSON.stringify(model.langListArr);
     delete model.langListArr;
+    delete model.trainerCV;
     return model;
   }
 }

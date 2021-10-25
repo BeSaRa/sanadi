@@ -6,6 +6,9 @@ import {LangService} from '@app/services/lang.service';
 import {searchFunctionType} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {BlobModel} from '@app/models/blob-model';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 export class Trainer extends BaseModel<Trainer, TrainerService> {
   specialization!: string;
@@ -17,6 +20,7 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
   phoneNumber!: string;
   address!: string;
   organizationUnit!: string;
+  trainerCV!: {vsId: string};
 
   service: TrainerService;
   langService: LangService;
@@ -90,5 +94,17 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.maxLength(100)
       ]] : address,
     }
+  }
+
+  uploadResume(file: File, documentTitle: string): Observable<string> {
+    return this.service.uploadResume(this.id, documentTitle, file);
+  }
+
+  getResume(): Observable<BlobModel> {
+    return this.service.getResume(this.trainerCV.vsId);
+  }
+
+  viewResume(): Observable<DialogRef> {
+    return this.service.viewResumeDialog(this);
   }
 }
