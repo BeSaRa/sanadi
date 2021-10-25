@@ -62,6 +62,8 @@ export interface ILookupMap {
   ServiceWorkField: Lookup[];
   Currency: Lookup[];
   Domain: Lookup[];
+  ProjectType: Lookup[];
   initOfficeStatus: Lookup[];
   FinalOfficeStatus: Lookup[];
+  ImplementingAgencyType: Lookup[];
 }

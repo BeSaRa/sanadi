@@ -1,4 +1,15 @@
 export interface ILanguageKeys {
+  implementation_agency_type: string;
+  implementation_period: string;
+  execution_info: string;
+  execution_country_info: string;
+  beneficiary_country_info: string;
+  project_description: string;
+  project_name: string;
+  project_type: string;
+  project_components_budgets: string;
+  project_summary_info: string;
+  project_category_info: string;
   menu_projects_models: string;
   upload_resume: string;
   view_resume: string;
