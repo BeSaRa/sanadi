@@ -3,6 +3,7 @@ import {ModelCrudInterface} from '../interfaces/model-crud-interface';
 import {Observable} from 'rxjs';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {SearchableCloneable} from './searchable-cloneable';
+import {AdminResult} from "@app/models/admin-result";
 
 export abstract class BaseModel<D, S extends BackendGenericService<D>> extends SearchableCloneable<D> implements INames, ModelCrudInterface<D> {
   // @ts-ignore
@@ -29,4 +30,8 @@ export abstract class BaseModel<D, S extends BackendGenericService<D>> extends S
   update(): Observable<D> {
     return this.service.update(this as unknown as D);
   };
+
+  createAdminResult(): AdminResult {
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id});
+  }
 }
