@@ -1,4 +1,13 @@
 export interface ILanguageKeys {
+  first_sd_goal: string;
+  first_sd_goal_percentage: string;
+  second_sd_goal: string;
+  second_sd_goal_percentage: string;
+  third_sd_goal: string;
+  third_sd_goal_percentage: string;
+  sub_unocha_category: string;
+  sub_dac_category: string;
+  the_domain: string;
   implementation_agency_type: string;
   implementation_period: string;
   execution_info: string;
