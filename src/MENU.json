@@ -377,7 +377,7 @@
   },
   {
     "id": 31,
-    "langKey": "menu_work_field",
+    "langKey": "menu_dac_ocha",
     "path": "/home/administration/ocha-dac-class",
     "icon": "mdi-border-all",
     "isSvg": false,
