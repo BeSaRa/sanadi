@@ -1,4 +1,20 @@
 export interface ILanguageKeys {
+  project_sustainability_items: string;
+  project_expected_impacts: string;
+  project_expected_results: string;
+  project_success_items: string;
+  project_outputs: string;
+  number_of_0_to_5: string;
+  number_of_5_to_18: string;
+  number_of_19_to_60: string;
+  number_of_above_60: string;
+  direct_beneficiary_count_by_age: string;
+  female_beneficiaries_number: string;
+  male_beneficiaries_number: string;
+  direct_beneficiary_count_by_gender: string;
+  indirect_beneficiary_count_by_gender: string;
+  project_goals: string;
+  project_needs_assessment: string;
   first_sd_goal: string;
   first_sd_goal_percentage: string;
   second_sd_goal: string;
