@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  details: string;
+  total_cost: string;
+  quantity: string;
+  component_name: string;
   project_sustainability_items: string;
   project_expected_impacts: string;
   project_expected_results: string;
