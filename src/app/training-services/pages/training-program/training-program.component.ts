@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {Trainer} from '@app/models/trainer';
-import {TrainerService} from '@app/services/trainer.service';
+import {TrainingProgram} from '@app/models/training-program';
+import {TrainingProgramService} from '@app/services/training-program.service';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
 import {ToastService} from '@app/services/toast.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {IGridAction} from '@app/interfaces/i-grid-action';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {cloneDeep as _deepClone} from 'lodash';
-import {SharedService} from '@app/services/shared.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
 
 @Component({
-  selector: 'accredited-trainer',
-  templateUrl: './accredited-trainer.component.html',
-  styleUrls: ['./accredited-trainer.component.scss']
+  selector: 'training-program',
+  templateUrl: './training-program.component.html',
+  styleUrls: ['./training-program.component.scss']
 })
-export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, TrainerService> {
+export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService>{
   searchText = '';
-  actions: IMenuItem<Trainer>[] = [
+  actions: IMenuItem<TrainingProgram>[] = [
     {
       type: 'action',
       label: 'btn_reload',
@@ -29,11 +29,11 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
-      onClick: (trainer) => this.edit$.next(trainer)
+      onClick: (trainingProgram) => this.edit$.next(trainingProgram)
     }
   ];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'specialization', 'jobTitle', 'actions'];
-  selectedRecords: Trainer[] = [];
+  displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingDate', 'registrationDate', 'actions'];
+  selectedRecords: TrainingProgram[] = [];
   actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -45,28 +45,28 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
   ];
 
   constructor(public lang: LangService,
-              public service: TrainerService,
+              public service: TrainingProgramService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               private toast: ToastService) {
     super();
   }
 
-  edit(trainer: Trainer, event: MouseEvent) {
+  edit(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
-    this.edit$.next(trainer);
+    this.edit$.next(trainingProgram);
   }
 
-  delete(event: MouseEvent, model: Trainer): void {
+  delete(event: MouseEvent, model: TrainingProgram): void {
     event.preventDefault();
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.activityName});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.activityName}));
           this.reload$.next(null);
           sub.unsubscribe();
         });
@@ -101,11 +101,11 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
     return record.search(searchText);
   }
 
-  private _addSelected(record: Trainer): void {
+  private _addSelected(record: TrainingProgram): void {
     this.selectedRecords.push(_deepClone(record));
   }
 
-  private _removeSelected(record: Trainer): void {
+  private _removeSelected(record: TrainingProgram): void {
     const index = this.selectedRecords.findIndex((item) => {
       return item.id === record.id;
     });
@@ -120,13 +120,13 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
     return this.selectedRecords.length > 0 && this.selectedRecords.length === this.models.length;
   }
 
-  isSelected(record: Trainer): boolean {
+  isSelected(record: TrainingProgram): boolean {
     return !!this.selectedRecords.find((item) => {
       return item.id === record.id;
     });
   }
 
-  onSelect($event: Event, record: Trainer): void {
+  onSelect($event: Event, record: TrainingProgram): void {
     const checkBox = $event.target as HTMLInputElement;
     if (checkBox.checked) {
       this._addSelected(record);

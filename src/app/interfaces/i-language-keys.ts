@@ -8,6 +8,11 @@ export interface ILanguageKeys {
   total_cost: string;
   quantity: string;
   component_name: string;
+  training_registration_date: string;
+  training_date: string;
+  training_type_name: string;
+  training_program_activity_name: string;
+  menu_training_programs: string;
   project_sustainability_items: string;
   project_expected_impacts: string;
   project_expected_results: string;
@@ -56,7 +61,7 @@ export interface ILanguageKeys {
   lbl_trainer_specialization: string;
   trainer_specialization: string;
   trainer_job_title: string;
-  menu_accredited_trainer: string;
+  menu_accredited_trainers: string;
   menu_training_services: string;
   ocha: string;
   dac: string;

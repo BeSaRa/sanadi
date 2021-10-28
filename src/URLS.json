@@ -1,5 +1,6 @@
 {
   "PROJECT_MODELING": "/external-project-modeling",
+  "TRAINING_PROGRAM": "training/training-program",
   "TRAINER": "training/trainer",
   "DAC_OCHA": "admin/work-field",
   "SD_GOAL": "admin/sdg",

@@ -1,5 +1,5 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_accredited_trainers'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+  <app-page-header [pageTitle]="'menu_training_programs'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
   </app-page-header>
   <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                     [selectedRecords]="selectedRecords"
@@ -28,21 +28,21 @@
                      (change)="onSelect($event , row)" class="form-check-input cursor-pointer">
             </td>
           </ng-container>
-          <ng-container cdkColumnDef="arName">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+          <ng-container cdkColumnDef="activityName">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_activity_name}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.activityName}}</td>
           </ng-container>
-          <ng-container cdkColumnDef="enName">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+          <ng-container cdkColumnDef="trainingType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_type_name}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.trainingTypeInfo?.getName()}}</td>
           </ng-container>
-          <ng-container cdkColumnDef="specialization">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainer_specialization}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.specialization}}</td>
+          <ng-container cdkColumnDef="trainingDate">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_date}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.startDate | date:'shortDate'}} - {{row.endDate | date:'shortDate'}}</td>
           </ng-container>
-          <ng-container cdkColumnDef="jobTitle">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainer_job_title}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.jobTitle}}</td>
+          <ng-container cdkColumnDef="registrationDate">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_registration_date}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.registrationDate}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
