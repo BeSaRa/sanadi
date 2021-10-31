@@ -9,6 +9,7 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {ProjectModelInterceptor} from "@app/model-interceptors/project-model-interceptor";
 import {FactoryService} from "@app/services/factory.service";
+import {UrlService} from "@app/services/url.service";
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +22,15 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
   searchColumns: string[] = [];
 
   _getModel() {
-    throw new Error('Method not implemented.');
+    return ProjectModel;
   }
 
   _getServiceURL(): string {
-    throw new Error('Method not implemented.');
+    return this.urlService.URLS.PROJECT_MODELING;
   }
 
   _getInterceptor(): Partial<IModelInterceptor<ProjectModel>> {
-    throw new Error('Method not implemented.');
+    return this.interceptor;
   }
 
   getSearchCriteriaModel<S extends ProjectModel>(): ProjectModel {
@@ -44,6 +45,7 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
               public dialog: DialogService,
               public domSanitizer: DomSanitizer,
               public dynamicService: DynamicOptionsService,
+              private urlService: UrlService,
               public cfr: ComponentFactoryResolver) {
     super();
     FactoryService.registerService('ProjectModelService', this);

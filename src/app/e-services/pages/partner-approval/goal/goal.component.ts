@@ -27,7 +27,7 @@ export class GoalComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               public lookupService: LookupService,
-              private ochaDacClassfService: DacOchaService,
+              private dacOchaService: DacOchaService,
               private fb: FormBuilder) {
   }
 
@@ -277,7 +277,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   private loadOCHADACClassifications() {
-    return this.ochaDacClassfService.load()
+    return this.dacOchaService.load()
       .pipe(
         map(ouchaDACList => {
           return ouchaDACList.filter(ouchaDac => {

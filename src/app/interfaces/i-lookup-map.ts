@@ -70,4 +70,5 @@ export interface ILookupMap {
   InternalProjectType: Lookup[];
   InternalProjectStatus: Lookup[];
   Experts: Lookup[];
+  TemplateType: Lookup[];
 }

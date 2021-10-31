@@ -27,6 +27,9 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
   destroy$: Subject<any> = new Subject<any>();
   model?: M
+
+  formValidity$: Subject<any> = new Subject<any>();
+
   abstract lang: LangService;
   abstract form: FormGroup;
   abstract fb: FormBuilder;
@@ -53,6 +56,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     this._listenToModelChange();
     this._listenToResetForm();
     this._listenToLaunch();
+    this._listenToValidateForms();
   }
 
   @Input()
@@ -152,6 +156,28 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       })
   }
 
+  _listenToValidateForms(): void {
+    this.formValidity$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(withLatestFrom(of(this._validateForms())))
+      .subscribe(([element, forms]) => {
+        if (!forms || !forms.length) {
+          return;
+        }
+        forms.forEach(form => form.markAllAsTouched());
+        if (!element) {
+          return;
+        }
+        let ele: HTMLElement | null = null;
+        if (typeof element === 'string') {
+          ele = document.getElementById(element);
+        } else if (element instanceof HTMLElement) {
+          ele = element;
+        }
+        ele?.scrollTo({top: 0, behavior: "smooth"});
+      })
+  }
+
   abstract _getNewInstance(): M;
 
   abstract _initComponent(): void;
@@ -180,4 +206,10 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   abstract _resetForm(): void;
 
+  /**
+   * @description return here array of forms that you need to make it as touched to display the validation message below it
+   */
+  _validateForms(): FormGroup[] {
+    return [this.form]
+  }
 }

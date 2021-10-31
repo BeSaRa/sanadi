@@ -1,7 +1,7 @@
 import {Component, Input, HostBinding, Optional} from '@angular/core';
 import {AbstractControl, ControlContainer} from '@angular/forms';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {LangService} from '../../../services/lang.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LangService} from '@app/services/lang.service';
 
 @Component({
   selector: 'app-field-error-message',
@@ -14,6 +14,10 @@ export class FieldErrorMessageComponent {
   @Input() labelText?: string;
   @Input() controlName?: string;
   @HostBinding('class') containerClass = 'invalid-feedback position-absolute';
+
+  @HostBinding('class.ignore-top-position')
+  @Input()
+  ignoreTop: boolean = false;
 
   constructor(private langService: LangService, @Optional() private parent: ControlContainer) {
   }

@@ -1,3 +1,7 @@
 :host {
   width: auto !important;
 }
+
+:host.ignore-top-position.invalid-feedback {
+  top: auto !important;
+}

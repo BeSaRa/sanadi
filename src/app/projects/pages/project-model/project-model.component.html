@@ -1,1 +1,468 @@
-<p>project-model works!</p>
+<div class="row mb-3">
+  <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
+</div>
+<div class="row">
+  <tabs-list>
+    <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
+         [title]="lang.map.project_category_info"></tab>
+    <tab [hasError]="tabHasError('summaryInfo')" [template]="summaryInfoTab"
+         [title]="lang.map.project_summary_info"></tab>
+    <tab [template]="componentsBudgetsTab" [title]="lang.map.project_components_budgets"></tab>
+    <tab [hasError]="tabHasError('description')" [template]="specialExplanationTab"
+         [title]="lang.map.special_explanations"></tab>
+    <tab [template]="commentsTab" [title]="lang.map.comments"></tab>
+    <tab [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+</div>
+<ng-container [formGroup]="form">
+  <ng-template #basicInfoTab>
+    <ng-container formGroupName="basicInfo">
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="requestType"
+                 for="requestType">{{lang.map.request_type}}</label>
+          <ng-select validationClasses="requestType" appendTo="body" [clearable]="true" id="requestType"
+                     formControlName="requestType">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="templateType"
+                 for="templateType">{{lang.map.model_type}}</label>
+          <ng-select (change)="onModelTypeChange()" validationClasses="templateType" appendTo="body" [clearable]="true"
+                     id="templateType"
+                     formControlName="templateType">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of modelTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="templateType"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="projectType"
+                 for="projectType">{{lang.map.project_type}}</label>
+          <ng-select validationClasses="projectType" appendTo="body" [clearable]="true" id="projectType"
+                     formControlName="projectType">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="projectType"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="projectName"
+                 for="projectName">{{lang.map.project_name}}</label>
+          <input id="projectName" validationClasses="projectName" formControlName="projectName" class="form-control">
+          <app-field-error-message [ignoreTop]="true" controlName="projectName"></app-field-error-message>
+        </div>
+        <div class="col-md-8 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="projectDescription"
+                 for="projectDescription">{{lang.map.project_description}}</label>
+          <textarea name="projectDescription" validationClasses="projectDescription"
+                    formControlName="projectDescription" id="projectDescription" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="projectDescription"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.beneficiary_country_info}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaryCountry"
+                 for="beneficiaryCountry">{{lang.map.country}}</label>
+          <ng-select validationClasses="beneficiaryCountry" appendTo="body" [clearable]="true" id="beneficiaryCountry"
+                     formControlName="beneficiaryCountry">
+            <ng-option [value]="option.id" *ngFor="let option of countries">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaryRegion"
+                 for="beneficiaryRegion">{{lang.map.region}}</label>
+          <input id="beneficiaryRegion" validationClasses="beneficiaryRegion" formControlName="beneficiaryRegion"
+                 class="form-control">
+          <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.execution_country_info}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="executionCountry"
+                 for="executionCountry">{{lang.map.country}}</label>
+          <ng-select validationClasses="executionCountry" appendTo="body" [clearable]="true" id="executionCountry"
+                     formControlName="executionCountry">
+            <ng-option [value]="option.id" *ngFor="let option of countries">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="executionCountry"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="executionRegion"
+                 for="executionRegion">{{lang.map.region}}</label>
+          <input id="executionRegion" validationClasses="executionRegion" formControlName="executionRegion"
+                 class="form-control">
+          <app-field-error-message controlName="executionRegion"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.execution_info}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="implementingAgencyType"
+                 for="implementingAgencyType">{{lang.map.implementation_agency_type}}</label>
+          <ng-select validationClasses="implementingAgencyType" appendTo="body" [clearable]="true"
+                     id="implementingAgencyType"
+                     formControlName="implementingAgencyType">
+            <ng-option [value]="option.lookupKey"
+                       *ngFor="let option of implementingAgencyTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="year"
+                 for="year">{{lang.map.year}}</label>
+          <input id="year" validationClasses="year" formControlName="year"
+                 class="form-control">
+          <app-field-error-message controlName="year"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="implementationPeriod"
+                 for="implementationPeriod">{{lang.map.implementation_period}}</label>
+          <input id="implementationPeriod" validationClasses="implementationPeriod"
+                 formControlName="implementationPeriod"
+                 class="form-control">
+          <app-field-error-message controlName="implementationPeriod"></app-field-error-message>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #categoryInfoTab>
+    <ng-container formGroupName="categoryInfo">
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="domain"
+                 for="domain">{{lang.map.the_domain}}</label>
+          <ng-select (change)="onDomainChange()" validationClasses="domain" appendTo="body" [clearable]="true"
+                     id="domain"
+                     formControlName="domain">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="domain"></app-field-error-message>
+        </div>
+        <ng-container *ngIf="domain.value === domainTypes.DEVELOPMENT" id="DACCategory">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mainDACCategory"
+                   for="mainDACCategory">{{lang.map.main_dac_category}}</label>
+            <ng-select (change)="onMainDacOchaChanged()" validationClasses="mainDACCategory" appendTo="body"
+                       [clearable]="true" id="mainDACCategory"
+                       formControlName="mainDACCategory">
+              <ng-option [value]="option.id" *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="subDACCategory"
+                   for="subDACCategory">{{lang.map.sub_dac_category}}</label>
+            <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
+                       formControlName="subDACCategory">
+              <ng-option [value]="option.id" *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="subDACCategory"></app-field-error-message>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="domain.value === domainTypes.HUMANITARIAN" id="UNOCHACategory">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
+                   for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
+            <ng-select (change)="onMainDacOchaChanged()" validationClasses="mainUNOCHACategory" appendTo="body"
+                       [clearable]="true" id="mainUNOCHACategory"
+                       formControlName="mainUNOCHACategory">
+              <ng-option [value]="option.id" *ngFor="let option of mainOchaCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="subUNOCHACategory"
+                   for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
+            <ng-select validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true" id="subUNOCHACategory"
+                       formControlName="subUNOCHACategory">
+              <ng-option [value]="option.id" *ngFor="let option of subOchaCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
+          </div>
+        </ng-container>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="firstSDGoal"
+                 for="firstSDGoal">{{lang.map.first_sd_goal}}</label>
+          <ng-select validationClasses="firstSDGoal" appendTo="body" [clearable]="true" id="firstSDGoal"
+                     formControlName="firstSDGoal">
+            <ng-container *ngFor="let option of goals">
+              <ng-option [value]="option.id"
+                         *ngIf="option.id !== secondGoal.value && option.id !== thirdGoal.value">{{option.getName()}}</ng-option>
+            </ng-container>
+          </ng-select>
+          <app-field-error-message controlName="firstSDGoal"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="secondSDGoal"
+                 for="secondSDGoal">{{lang.map.second_sd_goal}}</label>
+          <ng-select validationClasses="secondSDGoal" appendTo="body" [clearable]="true" id="secondSDGoal"
+                     formControlName="secondSDGoal">
+            <ng-container *ngFor="let option of goals">
+              <ng-option [value]="option.id"
+                         *ngIf="option.id !== firstGoal.value && option.id !== thirdGoal.value">{{option.getName()}}</ng-option>
+            </ng-container>
+          </ng-select>
+          <app-field-error-message controlName="secondSDGoal"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="thirdSDGoal"
+                 for="thirdSDGoal">{{lang.map.third_sd_goal}}</label>
+          <ng-select validationClasses="thirdSDGoal" appendTo="body" [clearable]="true" id="thirdSDGoal"
+                     formControlName="thirdSDGoal">
+            <ng-container *ngFor="let option of goals">
+              <ng-option [value]="option.id"
+                         *ngIf="option.id !== firstGoal.value && option.id !== secondGoal.value">{{option.getName()}}</ng-option>
+            </ng-container>
+          </ng-select>
+          <app-field-error-message controlName="thirdSDGoal"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="firstSDGoalPercentage"
+                 for="firstSDGoalPercentage">{{lang.map.first_sd_goal_percentage}}</label>
+          <input id="firstSDGoalPercentage" validationClasses="firstSDGoalPercentage"
+                 formControlName="firstSDGoalPercentage" class="form-control">
+          <app-field-error-message controlName="firstSDGoalPercentage"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="secondSDGoalPercentage"
+                 for="secondSDGoalPercentage">{{lang.map.second_sd_goal_percentage}}</label>
+          <input id="secondSDGoalPercentage" validationClasses="secondSDGoalPercentage"
+                 formControlName="secondSDGoalPercentage" class="form-control">
+          <app-field-error-message controlName="secondSDGoalPercentage"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="thirdSDGoalPercentage"
+                 for="thirdSDGoalPercentage">{{lang.map.third_sd_goal_percentage}}</label>
+          <input id="thirdSDGoalPercentage" validationClasses="thirdSDGoalPercentage"
+                 formControlName="thirdSDGoalPercentage" class="form-control">
+          <app-field-error-message controlName="thirdSDGoalPercentage"></app-field-error-message>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #summaryInfoTab>
+    <ng-container formGroupName="summaryInfo">
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="needsAssessment"
+                 for="needsAssessment">{{lang.map.project_needs_assessment}}</label>
+          <textarea name="needsAssessment" formControlName="needsAssessment" validationClasses="needsAssessment"
+                    id="needsAssessment" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="needsAssessment"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="goal" asteriskIfRequired="goal">{{lang.map.project_goals}}</label>
+          <textarea name="goal" formControlName="goal" validationClasses="goal" id="goal" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="goal"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.direct_beneficiary_count_by_gender}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="directMaleBeneficiaries"
+                 for="directMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
+          <input id="directMaleBeneficiaries" validationClasses="directMaleBeneficiaries"
+                 formControlName="directMaleBeneficiaries" class="form-control">
+          <app-field-error-message controlName="directMaleBeneficiaries"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="directFemaleBeneficiaries"
+                 for="directFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
+          <input id="directFemaleBeneficiaries" validationClasses="directFemaleBeneficiaries"
+                 formControlName="directFemaleBeneficiaries" class="form-control">
+          <app-field-error-message controlName="directFemaleBeneficiaries"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.indirect_beneficiary_count_by_gender}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="indirectMaleBeneficiaries"
+                 for="indirectMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
+          <input id="indirectMaleBeneficiaries" validationClasses="indirectMaleBeneficiaries"
+                 formControlName="indirectMaleBeneficiaries" class="form-control">
+          <app-field-error-message controlName="indirectMaleBeneficiaries"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="indirectFemaleBeneficiaries"
+                 for="indirectFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
+          <input id="indirectFemaleBeneficiaries" validationClasses="indirectFemaleBeneficiaries"
+                 formControlName="indirectFemaleBeneficiaries" class="form-control">
+          <app-field-error-message controlName="indirectFemaleBeneficiaries"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12"><h2 class="h6 text-primary">{{lang.map.direct_beneficiary_count_by_age}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries0to5"
+                 for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
+          <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
+                 class="form-control">
+          <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries5to18"
+                 for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
+          <input id="beneficiaries5to18" validationClasses="beneficiaries5to18" formControlName="beneficiaries5to18"
+                 class="form-control">
+          <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries19to60"
+                 for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
+          <input id="beneficiaries19to60" validationClasses="beneficiaries19to60" formControlName="beneficiaries19to60"
+                 class="form-control">
+          <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiariesOver60"
+                 for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
+          <input id="beneficiariesOver60" validationClasses="beneficiariesOver60" formControlName="beneficiariesOver60"
+                 class="form-control">
+          <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="successItems"
+                 asteriskIfRequired="successItems">{{lang.map.project_success_items}}</label>
+          <textarea name="successItems" id="successItems" validationClasses="successItems"
+                    formControlName="successItems" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="successItems"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="outputs" asteriskIfRequired="outputs">{{lang.map.project_outputs}}</label>
+          <textarea name="outputs" id="outputs" formControlName="outputs" validationClasses="outputs" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="outputs"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="expectedResults"
+                 asteriskIfRequired="expectedResults">{{lang.map.project_expected_results}}</label>
+          <textarea name="expectedResults" id="expectedResults" validationClasses="expectedResults"
+                    formControlName="expectedResults" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="expectedResults"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="expectedImpact"
+                 asteriskIfRequired="expectedImpact">{{lang.map.project_expected_impacts}}</label>
+          <textarea name="expectedImpact" id="expectedImpact" validationClasses="expectedImpact"
+                    formControlName="expectedImpact" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="expectedImpact"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" for="sustainabilityItems"
+                 asteriskIfRequired="sustainabilityItems">{{lang.map.project_sustainability_items}}</label>
+          <textarea name="sustainabilityItems" formControlName="sustainabilityItems"
+                    validationClasses="sustainabilityItems" id="sustainabilityItems" rows="4"
+                    class="form-control"></textarea>
+          <app-field-error-message controlName="sustainabilityItems"></app-field-error-message>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #componentsBudgetsTab>
+    <ng-container formArrayName="componentBudgetInfo">
+      <ng-container *ngFor="let control of componentBudgetArray.controls; index as i">
+        <div [formGroupName]="i" class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="componentName"
+                   for="componentName">{{lang.map.component_name}}</label>
+            <input id="componentName" validationClasses="componentName" formControlName="componentName"
+                   class="form-control">
+            <app-field-error-message controlName="componentName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="details"
+                   for="details">{{lang.map.details}}</label>
+            <input id="details" validationClasses="details" formControlName="details"
+                   class="form-control">
+            <app-field-error-message controlName="details"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="totalCost"
+                   for="totalCost">{{lang.map.total_cost}}</label>
+            <input id="totalCost" validationClasses="totalCost" formControlName="totalCost"
+                   class="form-control">
+            <app-field-error-message controlName="totalCost"></app-field-error-message>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+  <ng-template #specialExplanationTab>
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="description"
+               for="description">{{lang.map.special_explanations}}</label>
+        <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                  rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="description"></app-field-error-message>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #commentsTab>
+    <div class="row">Attachments</div>
+  </ng-template>
+  <ng-template #attachmentsTab>
+    <div class="row">Attachments</div>
+  </ng-template>
+</ng-container>
+<div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center mb-5 gap-2">
+  <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
+          class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
+  <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
+          class="btn shadow-sm btn-primary">{{lang.map.save_as_draft}}</button>
+  <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
+          class="btn btn-primary">{{lang.map.launch}}</button>
+  <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
+  <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="formValidity$.next('main-content')"><i
+    class="mdi mdi-information-outline text-info"></i></button>
+</div>
+<div class="mb-5">
+  <button class="invisible">RACA</button>
+</div>

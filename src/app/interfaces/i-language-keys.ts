@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  model_type: string;
   details: string;
   total_cost: string;
   quantity: string;

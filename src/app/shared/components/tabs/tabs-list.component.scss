@@ -5,3 +5,7 @@
 .tab-link:not(:disabled) {
   cursor: pointer;
 }
+
+.tab-link.active {
+  font-weight: bold;
+}

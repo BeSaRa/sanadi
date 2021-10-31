@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  PROJECT_MODELING: string;
   INTERNAL_USER_PERMISSIONS: string;
   SD_GOAL: string;
   TRAINER: string;
