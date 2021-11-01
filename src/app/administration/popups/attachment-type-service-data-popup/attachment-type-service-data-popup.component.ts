@@ -40,7 +40,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   customProperties$: Subject<any> = new Subject<any>();
   customProperties: CustomProperty[] = [];
   selectedService!: ServiceData;
-  customPropertiesKeyValue: {[key: string]: number} = {};
+  customPropertiesKeyValue: { [key: string]: number } = {};
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentTypeServiceData>,
               public lang: LangService,
@@ -100,7 +100,10 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          let attachmentTypeServiceData = (new AttachmentTypeServiceData()).clone({...this.model, ...this.fm.getForm()?.value});
+          let attachmentTypeServiceData = (new AttachmentTypeServiceData()).clone({
+            ...this.model, ...this.fm.getForm()?.value,
+            caseType: this.selectedService.caseType
+          });
           attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.attachmentTypeId, this.customPropertiesKeyValue);
           return attachmentTypeServiceData.save().pipe(
             catchError((err) => {
@@ -159,25 +162,25 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     const key = this.customProperties[index].name;
     const value = this.customPropertiesArrayForm.controls[index].value;
 
-    if(value) {
+    if (value) {
       this.customPropertiesKeyValue[key] = value;
     } else {
       delete this.customPropertiesKeyValue[key];
     }
   }
 
-  getCustomPropertiesAsString(customPropertiesJson: {[key: string]: number}): string {
+  getCustomPropertiesAsString(customPropertiesJson: { [key: string]: number }): string {
     return JSON.stringify(customPropertiesJson);
   }
 
   getCustomPropertiesAsJson(customPropertiesString: string) {
-    if(customPropertiesString) {
+    if (customPropertiesString) {
       return JSON.parse(customPropertiesString);
     }
     return {};
   }
 
-  mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData: AttachmentTypeServiceData, attachmentTypeId: number, customPropertiesJson: {[key: string]: number}): AttachmentTypeServiceData {
+  mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData: AttachmentTypeServiceData, attachmentTypeId: number, customPropertiesJson: { [key: string]: number }): AttachmentTypeServiceData {
     attachmentTypeServiceData.attachmentTypeId = attachmentTypeId;
     attachmentTypeServiceData.customProperties = this.getCustomPropertiesAsString(customPropertiesJson);
     return attachmentTypeServiceData;

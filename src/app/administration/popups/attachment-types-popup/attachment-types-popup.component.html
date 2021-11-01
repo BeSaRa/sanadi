@@ -44,7 +44,8 @@
                          formControlName="status"
                          id="status"
                          appendTo="body">
-                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
+                <ng-option [value]="status.lookupKey"
+                           *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message [control]="fm.getFormField('status')"></app-field-error-message>
             </div>
@@ -56,6 +57,15 @@
             <label class="form-check-label"
                    for="global">{{lang.map.lbl_global}}</label>
           </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="arDesc"
+                 for="arDesc">{{lang.map.lbl_description}}</label>
+          <textarea name="arDesc" formControlName="arDesc" validationClasses="arDesc" id="arDesc"
+                    rows="4" class="form-control"></textarea>
+          <app-field-error-message controlName="arDesc"></app-field-error-message>
         </div>
       </div>
     </ng-template>

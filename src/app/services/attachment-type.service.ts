@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {AttachmentType} from '../models/attachment-type';
 import {HttpClient} from '@angular/common/http';
@@ -13,6 +13,7 @@ import {DialogService} from './dialog.service';
 import {AttachmentTypesPopupComponent} from '../administration/popups/attachment-types-popup/attachment-types-popup.component';
 import {Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
+import {Generator} from "@app/decorators/generator";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,15 @@ export class AttachmentTypeService extends BackendGenericService<AttachmentType>
 
   _getServiceURL(): string {
     return this.urlService.URLS.ATTACHMENT_TYPES;
+  }
+
+  @Generator(undefined, true)
+  private _loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {
+    return this.http.get<AttachmentType[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/service/' + caseId);
+  }
+
+  loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {
+    return this._loadTypesByCaseType(caseId);
   }
 
   openCreateDialog(): DialogRef {

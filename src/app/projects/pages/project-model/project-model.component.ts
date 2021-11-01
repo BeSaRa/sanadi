@@ -22,6 +22,7 @@ import {ProjectModelTypes} from "@app/enums/project-model-types";
 import {ProjectTypes} from "@app/enums/project-types";
 import {DomainTypes} from "@app/enums/domain-types";
 import {IDacOchaFields} from "@app/interfaces/idac-ocha-fields";
+import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'project-model',
@@ -46,6 +47,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   isDacOchaLoaded: boolean = false;
 
   goals: SDGoal[] = [];
+
+  loadAttachments: boolean = false;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -288,5 +291,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   onMainDacOchaChanged(): void {
     let selectedId = this.domain.value === DomainTypes.HUMANITARIAN ? this.mainUNOCHACategory.value : this.mainDACCategory.value
     selectedId ? this.loadSubDacOcha(selectedId) : this.emptySubCategories();
+  }
+
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === 'attachments';
   }
 }

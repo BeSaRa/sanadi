@@ -13,6 +13,7 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   userType!: number;
   customProperties: string = '';
   serviceInfo!: AdminResult;
+  caseType!: number;
 
   constructor() {
     super();

@@ -33,6 +33,7 @@ import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {JobTitleService} from '@app/services/job-title.service';
 import {JobTitle} from '@app/models/job-title';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
+import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'final-external-office-approval',
@@ -115,6 +116,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   managersTabStatus: ReadinessStatus = 'READY';
   branchesTabStatus: ReadinessStatus = 'READY';
+  loadAttachments: boolean = false;
 
   constructor(public lang: LangService,
               private cd: ChangeDetectorRef,
@@ -628,5 +630,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   isExtendOrCancelRequestType(): boolean {
     return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.EXTEND || this.requestTypeField.value === ServiceRequestTypes.CANCEL)
+  }
+
+  onTabChange($event: TabComponent) {
+    if ($event.name === 'attachmentsTab') {
+      this.loadAttachments = true;
+    }
   }
 }

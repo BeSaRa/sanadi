@@ -193,6 +193,7 @@ export interface ILanguageKeys {
   msg_only_those_files_allowed_to_upload: string;
   upload: string;
   upload_file: string;
+  update_file: string;
   add_document_item: string;
   file_uploader: string;
   no_documents_to_show: string;

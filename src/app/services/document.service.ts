@@ -42,6 +42,10 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.files;
     delete clonedDocument.dialog;
     delete clonedDocument.searchFields;
+    delete clonedDocument.attachmentTypeInfo;
+    delete clonedDocument.createdOn;
+    delete clonedDocument.creatorInfo;
+    delete clonedDocument.ouInfo;
     if (!clonedDocument.description) {
       delete clonedDocument.description;
     }
@@ -132,7 +136,9 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
 
   deleteBulkDocument(documentIds: string[]) {
     return this.service.http.request('DELETE', this.service._getServiceURL() + '/document/bulk', {
-      body: documentIds
+      params: {
+        docIds: documentIds,
+      }
     });
   }
 }

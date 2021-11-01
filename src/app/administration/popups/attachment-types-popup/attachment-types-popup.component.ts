@@ -68,7 +68,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     this.listenToIsGlobalChange();
     this.buildForm();
     this._saveModel();
-    if(this.model.id) {
+    if (this.model.id) {
       this.loadServiceData();
       this.validToAddServices = !this.model.global;
     }
@@ -85,6 +85,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
       ]],
       status: [this.model.status, [CustomValidators.required]],
+      arDesc: [this.model.arDesc, CustomValidators.required],
       global: [this.model.global]
     });
     this.fm = new FormManager(this.form, this.lang);
@@ -104,7 +105,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   _saveModel(): void {
     let attachmentTypeHasChangedToGlobal = false;
-     this.save$
+    this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
           attachmentTypeHasChangedToGlobal = !this.model.global && this.fm.getFormField('global')?.value;
@@ -128,10 +129,10 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         const operationBeforeSave = this.operation;
         this.operation = OperationTypes.UPDATE;
 
-        if(operationBeforeSave == OperationTypes.UPDATE) {
+        if (operationBeforeSave == OperationTypes.UPDATE) {
           this.dialogRef.close(this.model);
         }
-        if(attachmentTypeHasChangedToGlobal && this.list.length > 0) {
+        if (attachmentTypeHasChangedToGlobal && this.list.length > 0) {
           this.makeAttachmentTypeGlobal$.next(attachmentType.id);
         }
       });
@@ -193,7 +194,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
           return of(false);
         }))
         .subscribe((success: boolean) => {
-          if(success) {
+          if (success) {
             this.list = [];
           }
         });

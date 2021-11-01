@@ -71,6 +71,7 @@ import {ValidationGroupClassesDirective} from './directives/validation-group-cla
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
 import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multiple.component';
+import { AttachmentsComponent } from './components/attachments/attachments.component';
 
 @NgModule({
   declarations: [
@@ -129,11 +130,12 @@ import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multi
     CommentHistoryPopupComponent,
     ViewerCaseInfoComponent,
     FilterRetiredStatusPipe,
-    CustomTermPopupComponent,
     RequestRecommendationsComponent,
     ValidationGroupClassesDirective,
     GroupErrorMessageComponent,
-    SendToMultipleComponent
+    SendToMultipleComponent,
+    CustomTermPopupComponent,
+    AttachmentsComponent
   ],
   imports: [
     CommonModule,
@@ -201,7 +203,8 @@ import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multi
     FilterRetiredStatusPipe,
     RequestRecommendationsComponent,
     ValidationGroupClassesDirective,
-    GroupErrorMessageComponent
+    GroupErrorMessageComponent,
+    AttachmentsComponent
   ]
 })
 export class SharedModule {

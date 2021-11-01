@@ -4,7 +4,7 @@
   </div>
   <div class="row">
     <form autocomplete="off" [formGroup]="form" id="form">
-      <tabs-list class="py-4">
+      <tabs-list (onTabChange)="onTabChange($event)" class="py-4">
         <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
              [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
         <tab [name]="tabsData.bankAccounts.name" [hasError]="getTabInvalidStatus('bankAccounts')"
@@ -131,7 +131,8 @@
                 <label asteriskIfRequired="externalOfficeName" for="externalOfficeName"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.external_office_name}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="externalOfficeName" validationClasses="externalOfficeName" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                  <input id="externalOfficeName" validationClasses="externalOfficeName"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="externalOfficeName" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="externalOfficeName"></app-field-error-message>
                 </div>
@@ -162,7 +163,8 @@
                 <label asteriskIfRequired="recordNo" for="recordNo"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.record_number}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="recordNo" validationClasses="recordNo" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                  <input id="recordNo" validationClasses="recordNo"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="recordNo" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="recordNo"></app-field-error-message>
                 </div>
@@ -173,7 +175,8 @@
                 <label asteriskIfRequired="address" for="address"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_address}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="address" validationClasses="address" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                  <input id="address" validationClasses="address"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="address" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="address"></app-field-error-message>
                 </div>
@@ -186,7 +189,8 @@
                 <label asteriskIfRequired="postalCode" for="postalCode"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_po_box_num}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                  <input id="postalCode" validationClasses="postalCode" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                  <input id="postalCode" validationClasses="postalCode"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="postalCode" trimInput class="form-control" type="text">
                   <app-field-error-message controlName="postalCode"></app-field-error-message>
                 </div>
@@ -269,13 +273,15 @@
                       [readonly]="readonly"></app-comments>
       </ng-template>
       <ng-template #attachmentsTabTemplate>
-        <div class="d-flex flex-row align-items-center justify-content-start">
-          <button [disabled]="!isAddAttachmentAllowed()" (click)="attachmentsCtrl.openUploadDialog()"
-                  class="d-inline-block btn p-0 icon-btn"><i
-            class="mdi mdi-plus-box text-primary"></i></button>
-        </div>
-        <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                       [readonly]="readonly"></app-documents>
+        <!--        <div class="d-flex flex-row align-items-center justify-content-start">-->
+        <!--          <button [disabled]="!isAddAttachmentAllowed()" (click)="attachmentsCtrl.openUploadDialog()"-->
+        <!--                  class="d-inline-block btn p-0 icon-btn"><i-->
+        <!--            class="mdi mdi-plus-box text-primary"></i></button>-->
+        <!--        </div>-->
+        <!--        <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"-->
+        <!--                       [readonly]="readonly"></app-documents>-->
+        <attachments [caseType]="model?.caseType" [caseId]="model?.id" [load]="loadAttachments"
+                     [service]="service.documentService"></attachments>
       </ng-template>
       <ng-template #recommendationsTemplate>
         <request-recommendations [record]="model"></request-recommendations>

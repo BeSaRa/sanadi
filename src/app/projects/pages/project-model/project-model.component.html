@@ -2,7 +2,7 @@
   <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
 </div>
 <div class="row">
-  <tabs-list>
+  <tabs-list (onTabChange)="onTabChange($event)" [activeTabIndex]="6">
     <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
          [title]="lang.map.project_category_info"></tab>
@@ -12,7 +12,7 @@
     <tab [hasError]="tabHasError('description')" [template]="specialExplanationTab"
          [title]="lang.map.special_explanations"></tab>
     <tab [template]="commentsTab" [title]="lang.map.comments"></tab>
-    <tab [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab [template]="attachmentsTab" name="attachments" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">
@@ -449,7 +449,7 @@
     <div class="row">Attachments</div>
   </ng-template>
   <ng-template #attachmentsTab>
-    <div class="row">Attachments</div>
+    <attachments [caseType]="model?.caseType"  [load]="loadAttachments"></attachments>
   </ng-template>
 </ng-container>
 <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center mb-5 gap-2">
