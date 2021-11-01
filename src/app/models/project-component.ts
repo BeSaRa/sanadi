@@ -6,7 +6,7 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> {
   details!: string;
   totalCost!: number;
 
-  getFormFields(control: boolean = false): any {
+  buildForm(control: boolean = false): any {
     const {
       componentName,
       details,

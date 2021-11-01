@@ -684,7 +684,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     const projectComponentsFormArray = this.projectComponentsFormArray;
     projectComponentsFormArray.clear();
     if (projectComponent) {
-      projectComponentsFormArray.push(this.fb.group(projectComponent.getFormFields(true)));
+      projectComponentsFormArray.push(this.fb.group(projectComponent.buildForm(true)));
       if (this.readonly) {
         this.projectComponentsFormArray.disable();
       }
