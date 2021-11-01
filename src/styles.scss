@@ -366,3 +366,9 @@ td.td-checkbox, th.td-checkbox {
 .select-all-td {
   width: 35px;
 }
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  span.custom-option {
+    font-weight: 500;
+  }
+}
