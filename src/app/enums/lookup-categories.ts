@@ -61,8 +61,11 @@ export enum LookupCategories {
   DOMAIN = 'Domain',
   INIT_OFFICE_STATUS = 'initOfficeStatus',
   FINAL_OFFICE_STATUS = 'FinalOfficeStatus',
+  RISK_STATUS = 'RiskStatus',
+  PROJECT_TYPE = 'ProjectType',
   TRAINING_LANG = 'TRAINING_LANG',
-
+  INTERNAL_PROJECT_TYPE = 'InternalProjectType',
+  INTERNAL_PROJECT_STATUS = 'InternalProjectStatus',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -126,5 +129,10 @@ export enum LookupCategories {
   DOMAIN_CAT_ID = '121',
   INIT_OFFICE_STATUS_CAT_ID = '122',
   FINAL_OFFICE_STATUS_CAT_ID = '123',
-  TRAINING_LANG_CAT_ID = '124'
+  RISK_STATUS_CAT_ID = '124',
+  PROJECT_TYPE_CAT_ID = '125',
+  TRAINING_LANG_CAT_ID = '',
+  INTERNAL_PROJECT_TYPE_CAT_ID = '131',
+  INTERNAL_PROJECT_STATUS_CAT_ID = '132'
+
 }

@@ -54,6 +54,7 @@ export interface IAppUrls {
   INTERNAL_DEPARTMENT: string;
   SERVICE_DATA: string;
   E_FINAL_EXTERNAL_OFFICE_APPROVAL: string;
+  INTERNAL_PROJECT_LICENSE: string;
 
   [index: string]: string;
 }

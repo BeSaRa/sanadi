@@ -24,6 +24,13 @@ export class Lookup extends BaseModel<Lookup, any> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
+  ngSelectSearch(searchText: string): boolean {
+    if (!searchText) {
+      return true;
+    }
+    return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
+
   setValues(arName: string, enName: string, lookupKey: number, id: number): Lookup {
     this.arName = arName;
     this.enName = enName;

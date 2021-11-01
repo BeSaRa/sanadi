@@ -64,8 +64,12 @@ import {LocalizationKeyExistsDirective} from '../validators/localization-key-exi
 import {FullscreenBtnDirective} from './directives/fullscreen-btn.directive';
 import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comment-history-popup.component';
 import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
-import { FilterRetiredStatusPipe } from './pipes/filter-retired-status.pipe';
-import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term-popup.component';
+import {FilterRetiredStatusPipe} from './pipes/filter-retired-status.pipe';
+import {CustomTermPopupComponent} from './popups/custom-term-popup/custom-term-popup.component';
+import {RequestRecommendationsComponent} from '@app/shared/components/request-recommendations/request-recommendations.component';
+import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
+import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
+import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 
 @NgModule({
   declarations: [
@@ -124,7 +128,10 @@ import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term
     CommentHistoryPopupComponent,
     ViewerCaseInfoComponent,
     FilterRetiredStatusPipe,
-    CustomTermPopupComponent
+    CustomTermPopupComponent,
+    RequestRecommendationsComponent,
+    ValidationGroupClassesDirective,
+    GroupErrorMessageComponent
   ],
   imports: [
     CommonModule,
@@ -137,6 +144,7 @@ import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
     NgSelectModule,
+    NgOptionHighlightModule,
     AngularMyDatePickerModule
   ],
   exports: [
@@ -169,6 +177,7 @@ import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term
     VersionComponent,
     SidebarComponent,
     NgSelectModule,
+    NgOptionHighlightModule,
     AngularMyDatePickerModule,
     DateFixDirective,
     AttachmentListComponent,
@@ -187,7 +196,10 @@ import { CustomTermPopupComponent } from './popups/custom-term-popup/custom-term
     LocalizationKeyExistsDirective,
     FullscreenBtnDirective,
     ManageCommentPopupComponent,
-    FilterRetiredStatusPipe
+    FilterRetiredStatusPipe,
+    RequestRecommendationsComponent,
+    ValidationGroupClassesDirective,
+    GroupErrorMessageComponent
   ]
 })
 export class SharedModule {

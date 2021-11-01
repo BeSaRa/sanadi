@@ -4,7 +4,7 @@ import {AbstractControl, ControlContainer} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
 
 @Directive({
-  selector: 'input[trimInput]'
+  selector: 'input[trimInput],textarea[trimInput]'
 })
 export class TrimInputDirective implements OnInit, OnDestroy {
   @Input() trimInput: 'START' | 'END' | '' | 'ALL' = '';

@@ -8,6 +8,7 @@ import {LicenseService} from "@app/services/license.service";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {Observable} from 'rxjs';
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 
 @Component({
   selector: 'select-license-popup',
@@ -22,7 +23,7 @@ export class SelectLicensePopupComponent {
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
-              @Inject(DIALOG_DATA_TOKEN) public data: { licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[]), caseRecord: any | undefined, select: boolean }) {
+              @Inject(DIALOG_DATA_TOKEN) public data: { licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select: boolean }) {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
@@ -32,15 +33,21 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
+  selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {
     let loadedLicense: Observable<any>;
 
     if (license instanceof InitialApprovalDocument) {
       loadedLicense = this.licenseService.loadInitialLicenseByLicenseId(license.id);
     } else if (license instanceof PartnerApproval) {
       loadedLicense = this.licenseService.loadPartnerLicenseByLicenseId(license.id);
-    } else {
+    } else if (license instanceof FinalApprovalDocument) {
       loadedLicense = this.licenseService.loadFinalLicenseByLicenseId(license.id);
+    } else { //if (license instanceof InternalProjectLicenseResult) {
+      loadedLicense = this.licenseService.loadInternalProjectLicenseByLicenseId(license.id);
+    }
+
+    if (!loadedLicense) {
+      return;
     }
 
     loadedLicense
@@ -52,7 +59,7 @@ export class SelectLicensePopupComponent {
       })
   }
 
-  viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)) {
+  viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {
     return this.licenseService.showLicenseContent(license, this.caseType)
       .subscribe((file) => {
         if (file.blob.type === 'error') {

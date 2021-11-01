@@ -100,6 +100,10 @@
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.subject}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.subject}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="projectName">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.projectNameInfo?.getName()}} </td>
+          </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>

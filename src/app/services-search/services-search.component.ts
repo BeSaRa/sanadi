@@ -32,7 +32,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     CaseTypes.CONSULTATION,
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
-    CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
+    CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    CaseTypes.INTERNAL_PROJECT_LICENSE
   ];
 
   searchColumns: string[] = [];

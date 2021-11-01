@@ -30,6 +30,17 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
   };
 }
 
+export function validateSum(expectedSum: number, fields: string[], fieldLocalizationMap: any[]): ValidatorFn {
+  return (formGroup): ValidationErrors | null => {
+    const values = fields.map((fieldName: string) => {
+      let control = formGroup.get(fieldName);
+      return CommonUtils.isValidValue(control?.value) ? Number(control?.value) : 0;
+    });
+    let isValid = (values.reduce((a, b) => (a + b), 0) === expectedSum);
+    return !isValid ? {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}} : null;
+  };
+}
+
 export function numberValidator(control: AbstractControl): ValidationErrors | null {
   if (!control.value) {
     return null;
@@ -38,7 +49,7 @@ export function numberValidator(control: AbstractControl): ValidationErrors | nu
   return !isValid ? {number: true} : null;
 }
 
-export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {
+export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {// , allowNegative: boolean = false
   if (!CommonUtils.isValidValue(numberOfPlaces)) {
     return Validators.nullValidator;
   }
@@ -50,6 +61,14 @@ export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {
     let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`;
     const isValid = new RegExp(decimalPattern).test(control.value);
     return isValid ? null : {decimal: {numberOfPlaces: numberOfPlaces}};
+
+    /*let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
+      negativeDecimalPattern = `^-?([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
+      decimalError = {decimal: {numberOfPlaces: numberOfPlaces}},
+      negativeDecimalError = {negativeDecimal: {numberOfPlaces: numberOfPlaces}};
+
+    const isValid = new RegExp(allowNegative ? negativeDecimalPattern : decimalPattern).test(control.value);
+    return isValid ? null : (allowNegative ? negativeDecimalError : decimalError);*/
   };
 }
 

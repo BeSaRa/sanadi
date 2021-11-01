@@ -25,6 +25,11 @@ import {FinalExternalOfficeApproval} from '@app/models/final-external-office-app
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {InitialExternalOfficeApprovalInterceptor} from '@app/model-interceptors/initial-external-office-approval-interceptor';
 import {FinalExternalOfficeApprovalInterceptor} from '@app/model-interceptors/final-external-office-approval-interceptor';
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
+import {InternalProjectLicenseResultInterceptor} from '@app/model-interceptors/internal-project-license-result-interceptor';
+import {InternalProjectLicense} from '@app/models/internal-project-license';
+import {InternalProjectLicenseInterceptor} from '@app/model-interceptors/internal-project-license-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +80,19 @@ export class LicenseService {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
+  @Generator(InternalProjectLicenseResult, true, {
+    property: 'rs',
+    interceptReceive: (new InternalProjectLicenseResultInterceptor()).receive
+  })
+  private _internalProjectLicenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
+    return this.http.post<InternalProjectLicenseResult[]>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/license/search', {...criteria, ...orgId})
+  }
+
+  internalProjectLicenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
+    return this._internalProjectLicenseSearch(criteria);
+  }
+
   @Generator(InitialExternalOfficeApproval, false, {
     property: 'rs',
     interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
@@ -111,7 +129,19 @@ export class LicenseService {
     return this._loadFinalLicenseByLicenseId(licenseId);
   }
 
-  openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[]), caseRecord: any | undefined, select = true): DialogRef {
+  @Generator(InternalProjectLicense, false, {
+    property: 'rs',
+    interceptReceive: (new InternalProjectLicenseInterceptor()).receive
+  })
+  private _loadInternalProjectLicenseByLicenseId(licenseId: string): Observable<InternalProjectLicense> {
+    return this.http.get<InternalProjectLicense>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/license/' + licenseId + '/details');
+  }
+
+  loadInternalProjectLicenseByLicenseId(licenseId: string): Observable<InternalProjectLicense> {
+    return this._loadInternalProjectLicenseByLicenseId(licenseId);
+  }
+
+  openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
@@ -119,7 +149,7 @@ export class LicenseService {
     });
   }
 
-  openLicenseFullContentDialog(blob: BlobModel, license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument)): DialogRef {
+  openLicenseFullContentDialog(blob: BlobModel, license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)): DialogRef {
     return this.dialog.show(ViewDocumentPopupComponent, {
       model: license,
       blob: blob
@@ -128,7 +158,7 @@ export class LicenseService {
     });
   }
 
-  showLicenseContent(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument), caseType: number): Observable<BlobModel> {
+  showLicenseContent(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult), caseType: number): Observable<BlobModel> {
     let url!: string;
 
     switch (caseType) {
@@ -140,6 +170,9 @@ export class LicenseService {
         break;
       case CaseTypes.PARTNER_APPROVAL:
         url = this.urlService.URLS.E_PARTNER_APPROVAL;
+        break;
+      case CaseTypes.INTERNAL_PROJECT_LICENSE:
+        url = this.urlService.URLS.INTERNAL_PROJECT_LICENSE;
         break;
     }
 

@@ -6,16 +6,18 @@ import {
   patternValidator as pattern,
   requiredValidator as required,
   validateFieldsStatus,
+  validateSum,
   maxDateValidator as maxDate,
   minDateValidator as minDate,
   uniqueValidator as unique,
   validationPatterns
 } from './validate-fields-status';
-import {AbstractControl} from '@angular/forms';
+import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {IValidationInfo} from '../interfaces/i-validation-info';
 import {anyFieldsHasLength} from './any-fields-has-length';
 import {documentValidator as attachment} from './document-validator';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 const defaultLengths = {
   MIN_LENGTH: 3,
@@ -38,7 +40,11 @@ const commonValidations = {
   visa: [number, maxLength(20)],
   phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   mobileNo: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
-  fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)]
+  fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
+    let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);
+    return [decimal(numberOfPlaces), Validators.min(minValueToSet!)]
+  }
 };
 
 const inputMaskPatterns = {
@@ -57,6 +63,12 @@ const errorKeys: IKeyValue = {
       return message.change({x: errorValue.numberOfPlaces});
     }
   },
+  /*negativeDecimal: {
+    key: 'err_number_negative_decimal_x_places',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({x: errorValue.numberOfPlaces});
+    }
+  },*/
   minlength: {
     key: 'err_specific_min_length',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
@@ -113,7 +125,16 @@ const errorKeys: IKeyValue = {
   },
   unique: {key: 'err_unique_field', replaceValues: null},
   NUM_HYPHEN_COMMA: {key: 'err_num_hyphen_comma'},
-  select_license: {key: 'err_missing_license', replaceValues: null}
+  select_license: {key: 'err_missing_license', replaceValues: null},
+  invalid_sum_total: {
+    key: 'err_invalid_sum_total',
+    replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
+      return message.change({
+        expectedSum: errorValue.expectedSum,
+        fields: errorValue.fieldLocalizationMap.map((local: any) => '<b>' + local.getName() + '</b>').join(', ')
+      });
+    }
+  }
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
@@ -141,8 +162,13 @@ function _getControlName(control: AbstractControl): string | null {
   return Object.keys(formGroup).find(name => control === formGroup[name]) || null;
 }
 
+function _getDecimalMinValue(numberOfPlaces: number) {
+  return Number('.' + ('1'.padStart(numberOfPlaces, '0')));
+}
+
 export const CustomValidators = {
   validateFieldsStatus,
+  validateSum,
   required,
   pattern,
   number,

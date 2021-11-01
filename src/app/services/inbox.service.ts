@@ -30,6 +30,7 @@ import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {FilterInboxRequestPopupComponent} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {DateUtils} from '@app/helpers/date-utils';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class InboxService {
               private internationalCooperationService: InternationalCooperationService,
               private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
               private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
+              private internalProjectLicenseService: InternalProjectLicenseService,
               private cfr: ComponentFactoryResolver,
               private exceptionHandlerService: ExceptionHandlerService,
               private partnerApprovalService: PartnerApprovalService,
@@ -56,6 +58,7 @@ export class InboxService {
     this.services.set(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL, this.initialExternalOfficeApprovalService);
     this.services.set(CaseTypes.PARTNER_APPROVAL, this.partnerApprovalService);
     this.services.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, this.finalExternalOfficeApprovalService);
+    this.services.set(CaseTypes.INTERNAL_PROJECT_LICENSE, this.internalProjectLicenseService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

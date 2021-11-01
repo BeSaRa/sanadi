@@ -23,7 +23,6 @@ import {FinalExternalOfficeApprovalComponent} from './pages/final-external-offic
 import {SelectLicensePopupComponent} from './poups/select-license-popup/select-license-popup.component';
 import {BankBranchComponent} from './shared/bank-branch/bank-branch.component';
 import {FilterInboxRequestPopupComponent} from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
-import {RequestRecommendationsComponent} from './shared/request-recommendations/request-recommendations.component';
 import {ProjectsModelsComponent} from './pages/projects-models/projects-models.component';
 
 @NgModule({
@@ -50,7 +49,6 @@ import {ProjectsModelsComponent} from './pages/projects-models/projects-models.c
     ContactOfficerComponent,
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
-    RequestRecommendationsComponent,
     ProjectsModelsComponent
   ],
   imports: [

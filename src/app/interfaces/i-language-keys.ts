@@ -604,6 +604,8 @@ export interface ILanguageKeys {
   internal: string;
   external: string;
   err_num_hyphen_comma: string;
+  err_number_decimal_x_places: string;
+  err_number_negative_decimal_x_places: string;
   role: string;
   decision: string;
   role_specialist: string;
@@ -615,4 +617,25 @@ export interface ILanguageKeys {
   generated_license_number: string;
   lbl_user_custom_terms: string;
   lbl_terms: string;
+  menu_internal_project_license: string;
+  main_category: string;
+  sub_category1: string;
+  sub_category2: string;
+  beneficiary_analysis: string;
+  err_invalid_sum_total: string;
+  individual_beneficiary: string;
+  family_beneficiary: string;
+  number_of_target_families: string;
+  average_number_of_people: string;
+  average_age_group: string;
+  number_of_direct_beneficiaries: string;
+  number_of_indirect_beneficiaries: string;
+  number_of_beneficiaries_with_special_needs: string;
+  expected_date_of_impact_evaluation: string;
+  deduction_ratio: string;
+  total_value_of_admin_deduction: string;
+  target_cost: string;
+  project_components: string;
+  project_budget: string;
+  err_invalid_project_component_total_x: string;
 }
