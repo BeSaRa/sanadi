@@ -51,7 +51,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   destroy$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = [/*'select',*/ 'title', 'type', 'description', 'date', 'actions'];
+  displayedColumns: string[] = [/*'select',*/ 'title', 'type', 'description', 'mandatory', 'date', 'actions'];
 
   filter: FormControl = new FormControl();
 
@@ -95,9 +95,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private mergeAttachments(attachments: FileNetDocument[], types: FileNetDocument[]): FileNetDocument[] {
+
     this.loadedAttachments = attachments.reduce((record, attachment) => {
       return {...record, [attachment.attachmentTypeId]: attachment};
-    }, {} as Record<number, FileNetDocument>)
+    }, {} as Record<number, FileNetDocument>);
+
     return types.map(attachment => {
       attachment.id = this.loadedAttachments[attachment.attachmentTypeId]?.id;
       attachment.createdOn = this.loadedAttachments[attachment.attachmentTypeId]?.createdOn;
@@ -192,6 +194,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.loadingStatus.next(true);
   }
 
-  deleteBulk() {
+  hasRequiredAttachments(): boolean {
+    return this.attachments.some(attachment => attachment.required && !attachment.id);
   }
 }

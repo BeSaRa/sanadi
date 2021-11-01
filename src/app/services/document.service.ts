@@ -46,6 +46,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.createdOn;
     delete clonedDocument.creatorInfo;
     delete clonedDocument.ouInfo;
+    delete clonedDocument.required;
     if (!clonedDocument.description) {
       delete clonedDocument.description;
     }
@@ -79,6 +80,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
       formData.append('content', files.item(i)!);
     }
     delete clonedDocument.dialog;
+    delete clonedDocument.required;
     clonedDocument.attachmentTypeId = 1;
     return this.service.http.post(this.service._getServiceURL() + '/' + caseId + '/document/bulk', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),

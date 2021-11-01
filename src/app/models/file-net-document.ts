@@ -3,6 +3,7 @@ import {FactoryService} from '../services/factory.service';
 import {DialogService} from '../services/dialog.service';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {AdminResult} from "@app/models/admin-result";
+import {LangService} from "@app/services/lang.service";
 
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
@@ -21,13 +22,16 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   lockOwner!: string;
   className!: string;
   // not related to the model
+  required?: boolean = false;
   files?: FileList;
   dialog?: DialogService;
   attachmentTypeInfo!: AdminResult;
+  langService: LangService;
 
   constructor() {
     super();
     this.dialog = FactoryService.getService('DialogService');
+    this.langService = FactoryService.getService('LangService');
   }
 
   getIcon(): string {
@@ -40,5 +44,9 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
 
   getInternalExternalTooltip(): keyof ILanguageKeys {
     return this.isInternal ? "internal" : "external";
+  }
+
+  getRequiredTranslate(): string {
+    return this.langService.getLocalByKey(this.required ? 'lbl_yes' : 'lbl_no').getName()
   }
 }

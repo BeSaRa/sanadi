@@ -1,5 +1,5 @@
 <div>
-  <div class="d-flex flex-row justify-content-start align-items-center">
+  <div class="d-flex flex-row justify-content-start align-items-center mb-3">
     <h1 class="h6 text-primary">{{lang.map.attachments}}</h1>
     <div>
       <button [tooltip]="lang.map.btn_reload" (click)="reload()" class="btn text-primary icon-btn">
@@ -37,6 +37,10 @@
       <ng-container cdkColumnDef="description">
         <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.description}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="mandatory">
+        <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.getRequiredTranslate()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="date">
         <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
