@@ -2,7 +2,7 @@
   <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
 </div>
 <div class="row">
-  <tabs-list (onTabChange)="onTabChange($event)" [activeTabIndex]="6">
+  <tabs-list (onTabChange)="onTabChange($event)">
     <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
          [title]="lang.map.project_category_info"></tab>
@@ -204,10 +204,8 @@
                  for="firstSDGoal">{{lang.map.first_sd_goal}}</label>
           <ng-select validationClasses="firstSDGoal" appendTo="body" [clearable]="true" id="firstSDGoal"
                      formControlName="firstSDGoal">
-            <ng-container *ngFor="let option of goals">
-              <ng-option [value]="option.id"
-                         *ngIf="option.id !== secondGoal.value && option.id !== thirdGoal.value">{{option.getName()}}</ng-option>
-            </ng-container>
+            <ng-option *ngFor="let option of goals" [value]="option.id"
+                       [disabled]="option.id === secondGoal.value || option.id === thirdGoal.value">{{option.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="firstSDGoal"></app-field-error-message>
         </div>
@@ -216,10 +214,10 @@
                  for="secondSDGoal">{{lang.map.second_sd_goal}}</label>
           <ng-select validationClasses="secondSDGoal" appendTo="body" [clearable]="true" id="secondSDGoal"
                      formControlName="secondSDGoal">
-            <ng-container *ngFor="let option of goals">
-              <ng-option [value]="option.id"
-                         *ngIf="option.id !== firstGoal.value && option.id !== thirdGoal.value">{{option.getName()}}</ng-option>
-            </ng-container>
+
+            <ng-option *ngFor="let option of goals" [value]="option.id"
+                       [disabled]="option.id === firstGoal.value || option.id === thirdGoal.value">{{option.getName()}}</ng-option>
+
           </ng-select>
           <app-field-error-message controlName="secondSDGoal"></app-field-error-message>
         </div>
@@ -228,10 +226,10 @@
                  for="thirdSDGoal">{{lang.map.third_sd_goal}}</label>
           <ng-select validationClasses="thirdSDGoal" appendTo="body" [clearable]="true" id="thirdSDGoal"
                      formControlName="thirdSDGoal">
-            <ng-container *ngFor="let option of goals">
-              <ng-option [value]="option.id"
-                         *ngIf="option.id !== firstGoal.value && option.id !== secondGoal.value">{{option.getName()}}</ng-option>
-            </ng-container>
+
+            <ng-option *ngFor="let option of goals" [value]="option.id"
+                       [disabled]="option.id === firstGoal.value || option.id === secondGoal.value">{{option.getName()}}</ng-option>
+
           </ng-select>
           <app-field-error-message controlName="thirdSDGoal"></app-field-error-message>
         </div>
@@ -449,7 +447,7 @@
     <div class="row">Attachments</div>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments [caseType]="model?.caseType"  [load]="loadAttachments"></attachments>
+    <attachments [caseType]="model?.caseType" [load]="loadAttachments"></attachments>
   </ng-template>
 </ng-container>
 <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center mb-5 gap-2">
