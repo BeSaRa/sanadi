@@ -47,7 +47,7 @@ export class AttachmentTypeService extends BackendGenericService<AttachmentType>
 
   @Generator(undefined, true)
   private _loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {
-    return this.http.get<AttachmentType[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/service/' + caseId);
+    return this.http.get<AttachmentType[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/attachment-types-by-case-type/' + caseId);
   }
 
   loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {

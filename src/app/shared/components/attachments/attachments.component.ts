@@ -83,7 +83,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .pipe(filter(val => (val && (!this.loaded || (this.loaded && this.forceLoadEveryTime)))))
       .pipe(
         tap(_ => this.loaded = true),
-        switchMap(_ => this.caseType ? this.attachmentTypeService.load()
+        switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType)
           .pipe(tap(types => this.attachmentTypes = types)) : of([])),
         map<AttachmentType[], FileNetDocument[]>(attachmentTypes => attachmentTypes.map(type => type.convertToAttachment())),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
@@ -105,13 +105,13 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement) {
+  uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
     uploader.click();
     this.selectedFile = row;
     this.selectedIndex = this.attachments.indexOf(row);
   }
 
-  uploaderFileChange($event: Event) {
+  uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
     const validFile = file ? (file.type === 'application/pdf') : true;
@@ -149,7 +149,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       })
   }
 
-  deleteFile(file: FileNetDocument) {
+  deleteFile(file: FileNetDocument): void {
     if (!file.id) {
       return;
     }
@@ -187,8 +187,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  reload(): void {
+    this.loaded = false;
+    this.loadingStatus.next(true);
+  }
+
   deleteBulk() {
-
-
   }
 }

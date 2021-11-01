@@ -1,6 +1,11 @@
 <div>
-  <div [class.invisible]="table && table.selection && !table.selection.hasValue()"
-       class="d-flex mb-2 visible align-items-center justify-content-end">
+  <div class="d-flex flex-row justify-content-start align-items-center">
+    <h1 class="h6 text-primary">{{lang.map.attachments}}</h1>
+    <div>
+      <button [tooltip]="lang.map.btn_reload" (click)="reload()" class="btn text-primary icon-btn">
+        <i class="mdi mdi-reload"></i>
+      </button>
+    </div>
   </div>
   <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
              [filter]="filter.value"
