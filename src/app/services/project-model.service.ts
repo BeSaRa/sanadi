@@ -10,16 +10,17 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {ProjectModelInterceptor} from "@app/model-interceptors/project-model-interceptor";
 import {FactoryService} from "@app/services/factory.service";
 import {UrlService} from "@app/services/url.service";
+import {ProjectModelSearchCriteria} from "@app/models/project-model-search-criteria";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectModelService extends EServiceGenericService<ProjectModel> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'external_project_models.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_models';
   interceptor: IModelInterceptor<ProjectModel> = new ProjectModelInterceptor();
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['domainInfo', 'caseStatus', 'projectTypeInfo', 'requestTypeInfo', 'createdOn', 'templateTypeInfo'];
 
   _getModel() {
     return ProjectModel;
@@ -34,11 +35,11 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
   }
 
   getSearchCriteriaModel<S extends ProjectModel>(): ProjectModel {
-    throw new Error('Method not implemented.');
+    return new ProjectModelSearchCriteria();
   }
 
   getCaseComponentName(): string {
-    throw new Error('Method not implemented.');
+    return 'ProjectModelComponent';
   }
 
   constructor(public http: HttpClient,

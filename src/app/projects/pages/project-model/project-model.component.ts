@@ -42,7 +42,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ExternalModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
   mainOchaCategories: DacOcha[] = [];
   subOchaCategories: DacOcha[] = [];
@@ -424,7 +424,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.model && this.model.componentList.splice(this.model.componentList.indexOf(this.currentEditedProjectComponent), 1, (new ProjectComponent()).clone({...this.currentProjectComponent.value}))
       this.model && (this.model.componentList = this.model.componentList.slice());
     } else {
-      this.model && (this.model.componentList = this.model?.componentList.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})))
+      const list = this.model?.componentList ? this.model?.componentList : []
+      this.model && (this.model.componentList = list.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})))
     }
     this.toast.success(this.lang.map.msg_save_success);
     this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);

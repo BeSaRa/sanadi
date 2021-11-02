@@ -104,6 +104,22 @@
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.projectNameInfo?.getName()}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="templateTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.model_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.templateTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="domainInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.the_domain}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.domainInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="projectTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.projectTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="requestTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName()}} </td>
+          </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>

@@ -71,4 +71,6 @@ export interface ILookupMap {
   InternalProjectStatus: Lookup[];
   Experts: Lookup[];
   TemplateType: Lookup[];
+  ExternalModelingReqType: Lookup[];
+  ExternalModelingStatus: Lookup[];
 }

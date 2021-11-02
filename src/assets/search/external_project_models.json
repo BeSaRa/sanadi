@@ -1,0 +1,132 @@
+[
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "templateSerial",
+        "type": "maskInput",
+        "label": "template_serial",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        },
+        "mask": "0*"
+      },
+      {
+        "key": "caseStatus",
+        "type": "selectField",
+        "label": "lbl_status",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.ExternalModelingStatus",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "domain",
+        "type": "selectField",
+        "label": "the_domain",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.Domain",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "key": "projectType",
+        "type": "selectField",
+        "label": "project_type",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.ProjectType",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "executionCountry",
+        "type": "selectField",
+        "label": "execution_country_info",
+        "selectOptions": {
+          "options": [],
+          "loader": "country.loadCountries",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "key": "beneficiaryCountry",
+        "type": "selectField",
+        "label": "execution_country_info",
+        "selectOptions": {
+          "options": [],
+          "loader": "country.loadCountries",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "executionRegion",
+        "type": "input",
+        "label": "region",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
+      },
+      {
+        "key": "beneficiaryRegion",
+        "type": "input",
+        "label": "region",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
+      }
+    ]
+  }
+]

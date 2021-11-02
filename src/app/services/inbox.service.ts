@@ -33,6 +33,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
 import {ExpertsEnum} from '@app/enums/experts-enum';
+import {ProjectModelService} from "@app/services/project-model.service";
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,7 @@ export class InboxService {
               private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
               private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
               private internalProjectLicenseService: InternalProjectLicenseService,
+              private projectModelService: ProjectModelService,
               private cfr: ComponentFactoryResolver,
               private exceptionHandlerService: ExceptionHandlerService,
               private partnerApprovalService: PartnerApprovalService,
@@ -61,6 +63,7 @@ export class InboxService {
     this.services.set(CaseTypes.PARTNER_APPROVAL, this.partnerApprovalService);
     this.services.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, this.finalExternalOfficeApprovalService);
     this.services.set(CaseTypes.INTERNAL_PROJECT_LICENSE, this.internalProjectLicenseService);
+    this.services.set(CaseTypes.EXTERNAL_PROJECT_MODELS, this.projectModelService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

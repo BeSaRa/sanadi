@@ -55,7 +55,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
-  componentList: ProjectComponent[] = [];
+  componentList!: ProjectComponent[];
   requestTypeInfo!: AdminResult;
   projectTypeInfo!: AdminResult;
   templateTypeInfo!: AdminResult;

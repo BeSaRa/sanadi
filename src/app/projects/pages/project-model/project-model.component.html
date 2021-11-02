@@ -488,7 +488,7 @@
       <tr cdk-header-row *cdkHeaderRowDef="projectListColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: projectListColumns;"></tr>
       <tr cdk-footer-row *cdkFooterRowDef="projectListFooterColumns"
-          [hidden]="model && model.componentList.length === 0"></tr>
+          [hidden]="model && model.componentList && model.componentList.length === 0"></tr>
       <tr *cdkNoDataRow>
         <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
       </tr>
