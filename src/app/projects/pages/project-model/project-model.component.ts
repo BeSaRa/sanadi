@@ -338,7 +338,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private displayAttachmentsMessage(validAttachments: boolean): void {
     if (!validAttachments) {
       this.dialog.error(this.lang.map.kindly_check_required_attachments);
-      this.tabIndex$.next(6);
+      this.tabIndex$.next(5);
     }
   }
 
@@ -390,17 +390,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === 'attachments';
-  }
-
-  isAddCommentAllowed(): boolean {
-    if (!this.model?.id || this.employeeService.isExternalUser()) {
-      return false;
-    }
-    let isAllowed = true;
-    if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.model.taskDetails.isClaimed();
-    }
-    return isAllowed;
   }
 
   onClickAddProjectComponent(): void {

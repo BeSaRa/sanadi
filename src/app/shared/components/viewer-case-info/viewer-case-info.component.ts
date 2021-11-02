@@ -97,4 +97,11 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     this.licenseService.openSelectLicenseDialog([this.selectedFinalLicense], this.model, false)
   }
 
+  isTemplateModelServiceAndApproved() {
+    return this.model.getCaseType() === CaseTypes.EXTERNAL_PROJECT_MODELS && this.model.getCaseStatus() === 4 // approved
+  }
+
+  get templateSerial(): string {
+    return this.isTemplateModelServiceAndApproved() && this.model.isCase() ? (this.model as any).templateFullSerial + '' : ''
+  }
 }

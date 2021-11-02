@@ -67,4 +67,18 @@
       </div>
     </div>
   </div>
+  <div *ngIf="isTemplateModelServiceAndApproved()" class="row mb-3">
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="managerDecisionInfo" class="col-md-4 col-sm-12 col-form-label">{{lang.map.template_serial}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-numeric"></i></span>
+            <input id="templateSerial" readonly [readOnly]="true" [value]="templateSerial"
+                   class="form-control">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
