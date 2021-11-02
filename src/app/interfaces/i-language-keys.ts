@@ -638,4 +638,7 @@ export interface ILanguageKeys {
   project_components: string;
   project_budget: string;
   err_invalid_project_component_total_x: string;
+  send_to_multi_departments: string;
+  send_to_structure_expert: string;
+  send_to_development_expert: string;
 }

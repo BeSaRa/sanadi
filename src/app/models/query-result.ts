@@ -145,8 +145,20 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.sendToUser(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
+  sendToStructureExpert(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToStructureExpert(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
+  }
+
+  sendToDevelopmentExpert(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToDevelopmentExpert(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
+  }
+
   sendToDepartment(claimBefore: boolean = false): DialogRef {
     return this.service.sendToDepartment(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
+  }
+
+  sendToMultiDepartments(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToMultiDepartments(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
   sendToManager(claimBefore: boolean = false): DialogRef {
@@ -244,6 +256,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   getStatusIcon(): string {
     return this.service.getService(this.BD_CASE_TYPE).getStatusIcon(this.BD_CASE_STATUS);
   }
+
+  getCaseId(): any {
+    return this.PI_PARENT_CASE_ID;
+  }
+
 
   getCaseType(): any {
     return this.BD_CASE_TYPE;

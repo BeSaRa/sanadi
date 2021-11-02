@@ -70,6 +70,7 @@ import {RequestRecommendationsComponent} from '@app/shared/components/request-re
 import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
 import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
+import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multiple.component';
 
 @NgModule({
   declarations: [
@@ -131,7 +132,8 @@ import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
     CustomTermPopupComponent,
     RequestRecommendationsComponent,
     ValidationGroupClassesDirective,
-    GroupErrorMessageComponent
+    GroupErrorMessageComponent,
+    SendToMultipleComponent
   ],
   imports: [
     CommonModule,

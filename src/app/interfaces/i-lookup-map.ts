@@ -69,4 +69,5 @@ export interface ILookupMap {
   ImplementingAgencyType: Lookup[];
   InternalProjectType: Lookup[];
   InternalProjectStatus: Lookup[];
+  Experts: Lookup[];
 }

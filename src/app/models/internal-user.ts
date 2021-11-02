@@ -98,4 +98,11 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       customRoleId: controls ? [customRoleId] : customRoleId
     }
   }
+
+  ngSelectSearch(searchText: string): boolean {
+    if (!searchText) {
+      return true;
+    }
+    return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
 }

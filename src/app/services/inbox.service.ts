@@ -31,6 +31,8 @@ import {FilterInboxRequestPopupComponent} from '@app/e-services/poups/filter-inb
 import {DateUtils} from '@app/helpers/date-utils';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
+import {ExpertsEnum} from '@app/enums/experts-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -171,6 +173,15 @@ export class InboxService {
     return this.takeActionOnTask(taskId, info, service);
   }
 
+  sendTaskToMultiple(taskId: string, info: {taskName: string, departments: number[], users: number[]}, service: EServiceGenericService<any>): Observable<boolean> {
+    return this.startTaskToMultiple(taskId, info, service);
+  }
+
+  startTaskToMultiple(taskId: string, info: {taskName: string, departments: number[], users: number[]}, service: EServiceGenericService<any>): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/start', info)
+      .pipe(map(response => response.rs));
+  }
+
   private openSendToDialog(taskId: string,
                            sendToResponse: WFResponseType,
                            service: EServiceGenericService<any>,
@@ -188,14 +199,48 @@ export class InboxService {
       });
   }
 
+  private openSendToMultipleDialog(taskId: string,
+                                   sendToResponse: WFResponseType,
+                                   service: EServiceGenericService<any>,
+                                   claimBefore: boolean = false,
+                                   task?: QueryResult,
+                                   extraInfo?: any): DialogRef {
+
+    return this.dialog.show(SendToMultipleComponent,
+      {
+        inboxService: this,
+        taskId: taskId,
+        sendToResponse,
+        service,
+        claimBefore,
+        task,
+        extraInfo
+      });
+  }
+
   sendToUser(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_USER, service, claimBefore, task);
   }
 
+  sendToStructureExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT, service, claimBefore, task, {teamType: ExpertsEnum.STRUCTURAL});
+  }
+
+  sendToDevelopmentExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT, service, claimBefore, task, {teamType: ExpertsEnum.DEVELOPMENTAL});
+  }
+
   sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
+  }
+
+  sendToMultiDepartments(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS, service, claimBefore, task, null);
   }
 
   sendToManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {

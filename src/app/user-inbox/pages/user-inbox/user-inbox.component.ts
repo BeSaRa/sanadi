@@ -133,8 +133,29 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionSendToStructureExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToStructureExpert().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
+  actionSendToDevelopmentExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToDevelopmentExpert().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToDepartment().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
+  actionSendToMultiDepartments(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToMultiDepartments().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
       this.reloadInbox$.next(null);
     });
@@ -261,7 +282,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionManageRecommendations(item);
         }
       },*/
-      // comments
+      // manage comments
       {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
@@ -297,6 +318,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionSendToDepartment(item, viewDialogRef);
         }
       },
+      // send to multi department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_multi_departments',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToMultiDepartments(item, viewDialogRef);
+        }
+      },
       // send to user
       {
         type: 'action',
@@ -307,6 +340,30 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
+        }
+      },
+      // send to structural expert
+      {
+        type: 'action',
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_structure_expert',
+        show: (item: QueryResult) => {
+         return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToStructureExpert(item, viewDialogRef);
+        }
+      },
+      // send to developmental expert
+      {
+        type: 'action',
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_development_expert',
+        show: (item: QueryResult) => {
+         return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
       },
       // complete
@@ -393,7 +450,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionReject(item, viewDialogRef);
         }
       },
-      //close
+      //close/cancel task
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
@@ -405,7 +462,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionClose(item, viewDialogRef);
         }
       },
-      //to Manager
+      // send to Manager
       {
         type: 'action',
         icon: 'mdi-card-account-details-star',

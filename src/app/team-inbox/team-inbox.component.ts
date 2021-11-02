@@ -213,8 +213,29 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  actionSendToStructureExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToStructureExpert().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadSelectedInbox();
+    });
+  }
+
+  actionSendToDevelopmentExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToDevelopmentExpert().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadSelectedInbox();
+    });
+  }
+
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToDepartment().onAfterClose$.subscribe(actionTaken => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadSelectedInbox();
+    });
+  }
+
+  actionSendToMultiDepartments(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToMultiDepartments().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
       this.reloadSelectedInbox();
     });
@@ -342,7 +363,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           this.actionManageRecommendations(item);
         }
       },*/
-      // comments
+      // manage comments
       {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
@@ -379,8 +400,8 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
-      // send to department
       {type: 'divider'},
+      // send to department
       {
         type: 'action',
         icon: 'mdi-send-circle',
@@ -396,6 +417,24 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDepartment(item, viewDialogRef);
+        }
+      },
+      // send to multi department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_multi_departments',
+        data: {
+          hideFromContext: true,
+          hideFromViewer:(loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToMultiDepartments(item, viewDialogRef);
         }
       },
       // send to user
@@ -414,6 +453,42 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
+        }
+      },
+      // send to structural expert
+      {
+        type: 'action',
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_structure_expert',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToStructureExpert(item, viewDialogRef);
+        }
+      },
+      // send to developmental expert
+      {
+        type: 'action',
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_development_expert',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
       },
       // complete
@@ -543,7 +618,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           this.actionReject(item, viewDialogRef);
         }
       },
-      //close
+      //close/cancel task
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',

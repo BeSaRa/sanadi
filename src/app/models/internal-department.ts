@@ -90,4 +90,11 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
   getStamp(): Observable<BlobModel> {
     return this.service.getStamp(this.id);
   }
+
+  ngSelectSearch(searchText: string): boolean {
+    if (!searchText) {
+      return true;
+    }
+    return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
 }
