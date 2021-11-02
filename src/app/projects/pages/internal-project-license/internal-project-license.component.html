@@ -681,12 +681,12 @@
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
               <div class="d-flex flex-row">
                 <button (click)="deleteProjectComponent($event, row, i)" class="icon-btn text-primary"
-                        [disabled]="readonly"
+                        [disabled]="(isExtendOrCancelRequestType() || readonly)"
                         tooltip="{{lang.map.btn_delete}}">
                   <i class="mdi mdi-close-box"></i>
                 </button>
                 <button (click)="editProjectComponent($event, row, i)" class="icon-btn text-primary"
-                        [disabled]="readonly"
+                        [disabled]="(isExtendOrCancelRequestType() || readonly)"
                         tooltip="{{lang.map.btn_edit}}">
                   <i class="mdi mdi-pen"></i>
                 </button>
