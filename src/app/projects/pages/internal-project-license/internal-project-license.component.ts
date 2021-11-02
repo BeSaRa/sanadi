@@ -65,7 +65,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   goalsList: SDGoal[] = [];
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
 
-  selectedLicenseDisplayColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate'];
+  selectedLicenseDisplayColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'action'];
 
   private projectComponentChanged$: Subject<ProjectComponent | null> = new Subject<ProjectComponent | null>();
   private currentProjectComponentRecord?: ProjectComponent;
@@ -184,17 +184,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   _afterBuildForm(): void {
     setTimeout(() => {
       this.loadAidLookup(AidTypes.CLASSIFICATIONS);
-      this.listenToRequestTypeChange();
       this.listenToAddProjectComponent();
       this.listenToProjectComponentChange();
       this.listenToSaveProjectComponent();
-
-      this.updateBeneficiaryValidations();
-
-      if (this.model?.id) {
-        this.handleChangeMainCategory(this.model.domain);
-        this.handleChangeSubCategory1(this.model.firstSubDomain);
-      }
 
       if (this.fromDialog) {
         const oldLicenseFullSerial = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
@@ -274,7 +266,30 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   _updateForm(model: InternalProjectLicense | undefined): void {
     this.model = model;
     // patch the form here
+    if (!model) {
+      this.cd.detectChanges();
+      return;
+    }
 
+    this.form.patchValue({
+      basicInfo: model.getBasicFormFields(),
+      projectCategory: model.getProjectCategoryFields(),
+      projectCategoryPercent: model.getProjectCategoryPercentFields(),
+      projectSummary: model.getProjectSummaryFields(),
+      beneficiaryAnalysis: model.getBeneficiaryAnalysisFields(),
+      beneficiaryAnalysisIndividualPercent: model.getBeneficiaryAnalysisDirectPercentFields(),
+      projectBudget: model.getProjectBudgetFields(),
+      specialExplanations: model.getSpecialExplanationFields()
+    });
+
+    this.handleRequestTypeChange(model.requestType);
+    this.handleChangeMainCategory(model.domain, false);
+    this.handleChangeSubCategory1(model.firstSubDomain, false);
+    this.updateBeneficiaryValidations();
+
+    console.log('basicInfo.oldLicenseFullserial', this.form.get('basicInfo.oldLicenseFullserial')?.value);
+    console.log('basicInfo.oldLicenseId', this.form.get('basicInfo.oldLicenseId')?.value);
+    console.log('basicInfo.oldLicenseSerial', this.form.get('basicInfo.oldLicenseSerial')?.value);
 
     this.cd.detectChanges();
   }
@@ -440,59 +455,73 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return isAllowed && CommonUtils.isValidValue(this.requestTypeField.value) && this.requestTypeField.value !== ServiceRequestTypes.NEW;
   }
 
-  listenToRequestTypeChange(): void {
-    this.requestTypeField?.valueChanges.pipe(
-      delay(50),
-      takeUntil(this.destroy$)
-    ).subscribe(requestTypeValue => {
-      // this._handleRequestTypeDependentControls();
-
-      // if no requestType or (requestType = new)
-      // if new record or draft, reset license and its validations
-      // also reset the values in model
-      if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
-        if (!this.model?.id || this.model.canCommit()) {
-          this.oldLicenseFullSerialField.reset();
-          this.oldLicenseFullSerialField.setValidators([]);
-          this.setSelectedLicense(undefined, undefined);
-
-          if (this.model) {
-            this.model.licenseNumber = '';
-            this.model.licenseDuration = 0;
-            this.model.licenseStartDate = '';
-          }
-        }
-      } else {
-        this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-          return this.selectedLicense && this.selectedLicense?.licenseNumber === control.value ? null : {select_license: true}
-        }]);
-      }
-      this.oldLicenseFullSerialField.updateValueAndValidity();
-    });
+  private _handleRequestTypeDependentControls(): void {
+    if (this.isExtendOrCancelRequestType() || this.readonly) {
+      this.familyBeneficiarySwitchField.disable();
+      this.individualBeneficiarySwitchField.disable();
+    } else {
+      this.familyBeneficiarySwitchField.enable();
+      this.individualBeneficiarySwitchField.enable();
+    }
   }
 
-  handleChangeMainCategory(value: any): void {
-    this.subCategories1List = [];
-    this.subCategory1Field.reset();
-    this.subCategory1Field.updateValueAndValidity();
-    this.subCategory1Field.markAsTouched();
+  handleRequestTypeChange(requestTypeValue: number): void {
+    this._handleRequestTypeDependentControls();
 
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    }
+
+    // if no requestType or (requestType = new)
+    // if new record or draft, reset license and its validations
+    // also reset the values in model
+    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.oldLicenseFullSerialField.reset();
+        this.oldLicenseFullSerialField.setValidators([]);
+        this.setSelectedLicense(undefined, undefined);
+
+        if (this.model) {
+          this.model.licenseNumber = '';
+          this.model.licenseDuration = 0;
+          this.model.licenseStartDate = '';
+        }
+      }
+    } else {
+      this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
+        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+      }]);
+    }
+
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  handleChangeMainCategory(value: number, forceResetSubValue: boolean = false): void {
+    this.subCategories1List = [];
     this.subCategories2List = [];
-    this.subCategory2Field.reset();
-    this.subCategory2Field.updateValueAndValidity();
-    this.subCategory2Field.markAsTouched();
+
+    if (forceResetSubValue) {
+      this.subCategory1Field.reset();
+      this.subCategory1Field.updateValueAndValidity();
+      this.subCategory1Field.markAsTouched();
+
+      this.subCategory2Field.reset();
+      this.subCategory2Field.updateValueAndValidity();
+      this.subCategory2Field.markAsTouched();
+    }
 
     if (value) {
       this.loadAidLookup(AidTypes.MAIN_CATEGORY, value);
     }
   }
 
-  handleChangeSubCategory1(value: any): void {
+  handleChangeSubCategory1(value: number, forceResetSubValue: boolean = false): void {
     this.subCategories2List = [];
-    this.subCategory2Field.reset();
-    this.subCategory2Field.updateValueAndValidity();
-    this.subCategory2Field.markAsTouched();
-
+    if (forceResetSubValue) {
+      this.subCategory2Field.reset();
+      this.subCategory2Field.updateValueAndValidity();
+      this.subCategory2Field.markAsTouched();
+    }
     if (value) {
       this.loadAidLookup(AidTypes.SUB_CATEGORY, value);
     }
@@ -569,7 +598,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
         return this.service
-          .licenseSearch({licenseNumber: oldLicenseFullSerial})
+          .licenseSearch({fullSerial: oldLicenseFullSerial})
           .pipe(catchError(() => of([])))
       }))
       .pipe(
@@ -591,26 +620,22 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       })
   }
 
-  private setSelectedLicense(license?: InternalProjectLicenseResult, licenseDetails?: InternalProjectLicense) {
-    this.selectedLicense = license;
-    console.log(license, licenseDetails);
+  private setSelectedLicense(selectedLicense?: InternalProjectLicenseResult, licenseDetails?: InternalProjectLicense) {
+    this.selectedLicense = selectedLicense;
     // update form fields if i have license
-    /*if (license && licenseDetails) {
-      this._updateForm((new InitialExternalOfficeApproval()).clone({
-        organizationId: license.organizationId,
-        requestType: this.requestType.value,
-        licenseNumber: license.licenseNumber,
-        country: license.country,
-        region: license.region,
-        licenseDuration: license.licenseDuration,
-        licenseStartDate: license.licenseStartDate
-      }))
-    }
-    this._handleRequestTypeDependentControls();
+    if (selectedLicense && licenseDetails) {
+      let value: any = (new InternalProjectLicense()).clone(licenseDetails);
+      value.requestType = this.requestTypeField.value;
+      value.oldLicenseFullserial = selectedLicense.fullSerial;
+      value.oldLicenseId = selectedLicense.id;
+      value.oldLicenseSerial = selectedLicense.serial;
 
-    if (license) {
-      this.loadRegions(this.country.value);
-    }*/
+      // delete id because license details contains old license id and we are adding new, so no id is needed
+      delete value.id;
+      delete value.vsId;
+
+      this._updateForm(value);
+    }
   }
 
   loadLicencesByCriteria(value: any): Observable<InternalProjectLicenseResult[]> {

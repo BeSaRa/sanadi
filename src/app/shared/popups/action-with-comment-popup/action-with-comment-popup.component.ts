@@ -44,7 +44,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-    CaseTypes.PARTNER_APPROVAL
+    CaseTypes.PARTNER_APPROVAL,
+    CaseTypes.INTERNAL_PROJECT_LICENSE
   ]
   form!: FormGroup;
 
@@ -124,26 +125,40 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   buildForm() {
-    this.form = this.fb.group({
+    let controls: any = {
       licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE}],
       licenseDuration: [{value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
         [CustomValidators.required, CustomValidators.number]],
       publicTerms: [{value: '', disabled: true}, [CustomValidators.required]],
       customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
-      followUpDate: ['', [CustomValidators.required]]
-    });
+      followUpDate: ['', [CustomValidators.required]],
+      deductionPercent: ['', [CustomValidators.required, CustomValidators.decimal(2)]]
+    };
+
+    if (!this.canShowDeductionRatio) {
+      delete controls.deductionPercent;
+    }
+    this.form = this.fb.group(controls);
   }
 
   updateForm(caseDetails: LicenseApprovalModel<any, any>, serviceData: ServiceData) {
-    this.form.patchValue({
+    let data: any = {
       licenseStartDate: DateUtils.changeDateToDatepicker(caseDetails.licenseStartDate),
       licenseDuration: caseDetails.licenseDuration,
       publicTerms: serviceData.serviceTerms,
       customTerms: caseDetails.customTerms,
       conditionalLicenseIndicator: caseDetails.conditionalLicenseIndicator,
-      followUpDate: DateUtils.changeDateToDatepicker(caseDetails.followUpDate)
-    });
+      followUpDate: DateUtils.changeDateToDatepicker(caseDetails.followUpDate),
+      deductionPercent: caseDetails.deductionPercent
+    };
+
+    if (!this.canShowDeductionRatio){
+      delete data.deductionPercent
+    }
+
+    this.form.patchValue(data);
+
     let licenseDurationValidations = [CustomValidators.required, CustomValidators.number];
     if (CommonUtils.isValidValue(serviceData.licenseMinTime)) {
       licenseDurationValidations.push(Validators.min(serviceData.licenseMinTime));
@@ -276,5 +291,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   onCustomTermsChange(customTerm: CustomTerm) {
     var appendTerm = this.customTermsField.value ? this.customTermsField.value + ' ' + customTerm.terms : customTerm.terms;
     this.customTermsField.setValue(appendTerm)
+  }
+
+  get canShowDeductionRatio(): boolean {
+    return this.data.task.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE;
   }
 }

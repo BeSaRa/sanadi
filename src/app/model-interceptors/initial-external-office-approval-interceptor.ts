@@ -16,6 +16,7 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     delete model.managerDecisionInfo;
     delete model.generalManagerDecisionInfo;
     delete model.reviewerDepartmentDecisionInfo;
+    delete model.deductionPercent;
 
     return model;
   }

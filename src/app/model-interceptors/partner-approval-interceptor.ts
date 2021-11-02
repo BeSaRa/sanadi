@@ -87,6 +87,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     delete model.requestClassificationInfo;
     delete model.categoryInfo;
     delete model.searchFields;
+    delete model.deductionPercent;
 
     return model;
   }

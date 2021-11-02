@@ -32,6 +32,7 @@
                      class="form-label">{{lang.map.request_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="requestType"
+                         (change)="handleRequestTypeChange($event)"
                          [notFoundText]="lang.map.msg_not_found"
                          [readonly]="!isEditRequestTypeAllowed()"
                          formControlName="requestType" validationClasses="requestType">
@@ -151,7 +152,7 @@
                      class="form-label">{{lang.map.main_category}}</label>
               <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="domain"
-                         (change)="handleChangeMainCategory($event)"
+                         (change)="handleChangeMainCategory($event, true)"
                          [notFoundText]="lang.map.msg_not_found"
                          [readonly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="domain" validationClasses="domain">
@@ -166,7 +167,7 @@
                      class="form-label">{{lang.map.sub_category1}}</label>
               <ng-select [selectOnTab]="true" labelForId="firstSubDomain" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="firstSubDomain"
-                         (change)="handleChangeSubCategory1($event)"
+                         (change)="handleChangeSubCategory1($event, true)"
                          [notFoundText]="lang.map.msg_not_found"
                          [readonly]="(isExtendOrCancelRequestType() || readonly)"
                          formControlName="firstSubDomain" validationClasses="firstSubDomain">
@@ -295,30 +296,34 @@
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="needsAssessment" asteriskIfRequired="needsAssessment"
                      class="form-label">{{lang.map.project_needs_assessment}}</label>
-              <textarea rows="2" id="needsAssessment" validationClasses="needsAssessment" [readOnly]="(readonly)"
+              <textarea rows="2" id="needsAssessment" validationClasses="needsAssessment"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="needsAssessment" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="needsAssessment"></app-field-error-message>
             </div>
             <div class="col-sm-12 col-md-6 position-relative">
-              <label for="goal" asteriskIfRequired="goal"
+              <label for="goals" asteriskIfRequired="goals"
                      class="form-label">{{lang.map.goal}}</label>
-              <textarea rows="2" id="goal" validationClasses="goal" [readOnly]="(readonly)"
-                        formControlName="goal" trimInput class="form-control"></textarea>
-              <app-field-error-message controlName="goal"></app-field-error-message>
+              <textarea rows="2" id="goals" validationClasses="goals"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                        formControlName="goals" trimInput class="form-control"></textarea>
+              <app-field-error-message controlName="goals"></app-field-error-message>
             </div>
           </div>
           <div class="row mb-4">
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="outputs" asteriskIfRequired="outputs"
                      class="form-label">{{lang.map.project_outputs}}</label>
-              <textarea rows="2" id="outputs" validationClasses="outputs" [readOnly]="(readonly)"
+              <textarea rows="2" id="outputs" validationClasses="outputs"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="outputs" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="outputs"></app-field-error-message>
             </div>
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="successItems" asteriskIfRequired="successItems"
                      class="form-label">{{lang.map.project_success_items}}</label>
-              <textarea rows="2" id="successItems" validationClasses="successItems" [readOnly]="(readonly)"
+              <textarea rows="2" id="successItems" validationClasses="successItems"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="successItems" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="successItems"></app-field-error-message>
             </div>
@@ -327,14 +332,16 @@
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="expectedResults" asteriskIfRequired="expectedResults"
                      class="form-label">{{lang.map.project_expected_results}}</label>
-              <textarea rows="2" id="expectedResults" validationClasses="expectedResults" [readOnly]="(readonly)"
+              <textarea rows="2" id="expectedResults" validationClasses="expectedResults"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="expectedResults" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="expectedResults"></app-field-error-message>
             </div>
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="expectedImpact" asteriskIfRequired="expectedImpact"
                      class="form-label">{{lang.map.project_expected_impacts}}</label>
-              <textarea rows="2" id="expectedImpact" validationClasses="expectedImpact" [readOnly]="(readonly)"
+              <textarea rows="2" id="expectedImpact" validationClasses="expectedImpact"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="expectedImpact" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="expectedImpact"></app-field-error-message>
             </div>
@@ -344,7 +351,7 @@
               <label for="sustainabilityItems" asteriskIfRequired="sustainabilityItems"
                      class="form-label">{{lang.map.project_sustainability_items}}</label>
               <textarea rows="2" id="sustainabilityItems" validationClasses="sustainabilityItems"
-                        [readOnly]="(readonly)"
+                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="sustainabilityItems" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="sustainabilityItems"></app-field-error-message>
             </div>
@@ -373,16 +380,6 @@
             <div class="col-sm-12 col-md-4 position-relative">
               <label for="targetedNationalities" asteriskIfRequired="targetedNationalities"
                      class="form-label">{{lang.map.lbl_nationality}}</label>
-              <!--<ng-select [selectOnTab]="true" labelForId="targetedNationalities" [clearable]="true"
-                         placeholder="{{lang.map.select}}" id="targetedNationalities"
-                         [notFoundText]="lang.map.msg_not_found"
-                         [multiple]="true" [closeOnSelect]="false"
-                         [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                         formControlName="targetedNationalities" validationClasses="targetedNationalities">
-                <ng-option *ngFor="let option of nationalityList" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>-->
               <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="targetedNationalities"
                          bindValue="lookupKey" [clearable]="true"
                          [searchFn]="searchNgSelect"
@@ -609,9 +606,8 @@
           </div>
         </div>
         <div class="d-flex flex-row align-items-center justify-content-start"
-             *ngIf="!projectComponentsFormArray.controls.length">
-          <button [disabled]="(isExtendOrCancelRequestType() || readonly)"
-                  (click)="addProjectComponent$.next()" tooltip="{{lang.map.btn_add}}"
+             *ngIf="(!projectComponentsFormArray.controls.length) && !(isExtendOrCancelRequestType() || readonly)">
+          <button (click)="addProjectComponent$.next()" tooltip="{{lang.map.btn_add}}"
                   class="d-inline-block btn p-0 icon-btn"><i
             class="mdi mdi-plus-box text-primary"></i></button>
         </div>

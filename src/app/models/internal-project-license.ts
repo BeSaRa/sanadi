@@ -6,6 +6,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {AdminResult} from '@app/models/admin-result';
+import {DateUtils} from '@app/helpers/date-utils';
 
 export class InternalProjectLicense extends LicenseApprovalModel<InternalProjectLicenseService, InternalProjectLicense> {
   service: InternalProjectLicenseService;
@@ -17,7 +18,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   caseType: number = CaseTypes.INTERNAL_PROJECT_LICENSE;
   organizationId!: number;
-  administrativedeductionAmount!: string;
+  administrativedeductionAmount!: number;
   ageAverageCategory!: number;
   arName!: string;
   beneficiaries0to5!: number;
@@ -28,7 +29,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   chiefDecision?: number;
   chiefJustification: string = '';
   componentList: ProjectComponent[] = [];
-  deductionPercent!: number;
+  // deductionPercent!: number;
   description!: string;
   directBeneficiaryNumber!: number;
   domain!: number;
@@ -45,7 +46,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   followUpDate!: string;
   generalManagerDecision?: number;
   generalManagerJustification: string = ''
-  goal!: string;
+  goals!: string;
   handicappedBeneficiaryNumber!: number;
   hasFamilyBeneficiaries!: boolean;
   hasIndividualBeneficiaries!: boolean;
@@ -93,6 +94,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   firstSDGoalInfo!: AdminResult;
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
+  targetNationalitiesInfo!: AdminResult[] | null;
   className!: string;
   usedInProjectCompletion!: boolean;
 
@@ -104,6 +106,8 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
       requestType,
       projectType,
       oldLicenseFullserial,
+      oldLicenseId,
+      oldLicenseSerial,
       arName,
       enName,
       projectDescription
@@ -113,6 +117,8 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       projectType: control ? [projectType, [CustomValidators.required]] : projectType,
       oldLicenseFullserial: control ? [oldLicenseFullserial] : oldLicenseFullserial,
+      oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
+      oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       arName: control ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : arName,
@@ -160,7 +166,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   getProjectSummaryFields(control: boolean = false): any {
     const {
       needsAssessment,
-      goal,
+      goals,
       outputs,
       successItems,
       expectedResults,
@@ -170,7 +176,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
     return {
       needsAssessment: control ? [needsAssessment, [CustomValidators.required]] : needsAssessment,
-      goal: control ? [goal, [CustomValidators.required]] : goal,
+      goals: control ? [goals, [CustomValidators.required]] : goals,
       outputs: control ? [outputs, [CustomValidators.required]] : outputs,
       successItems: control ? [successItems, [CustomValidators.required]] : successItems,
       expectedResults: control ? [expectedResults, [CustomValidators.required]] : expectedResults,
@@ -238,9 +244,9 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     return {
       deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2)]] : deductionPercent,
       projectTotalCost: control ? [projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : projectTotalCost,
-      administrativedeductionAmount: control ? [administrativedeductionAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : administrativedeductionAmount,
+      administrativedeductionAmount: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2)]] : deductionPercent,
       targetAmount: control ? [targetAmount] : targetAmount,
-      expectedImpactDate: control ? [expectedImpactDate, [CustomValidators.required]] : expectedImpactDate,
+      expectedImpactDate: control ? [expectedImpactDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(expectedImpactDate),
       licenseDuration: control ? [licenseDuration, [CustomValidators.required, CustomValidators.number]] : licenseDuration
     }
   }

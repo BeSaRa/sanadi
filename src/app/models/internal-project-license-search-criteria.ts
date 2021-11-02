@@ -17,6 +17,6 @@ export class InternalProjectLicenseSearchCriteria extends InternalProjectLicense
   licenseEndDateTo!: string;
   licenseApprovedDateFrom!: string;
   licenseApprovedDateTo!: string;
-  beneficiaries18to60!: number
+  beneficiaries18to60!: number;
 
 }

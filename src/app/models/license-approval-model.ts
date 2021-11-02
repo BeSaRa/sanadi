@@ -15,6 +15,7 @@ export abstract class LicenseApprovalModel<S extends EServiceGenericService<M>, 
   conditionalLicenseIndicator: boolean = false;
   followUpDate!: string;
   requestType!: number;
+  deductionPercent!: number;
 
 
   patchAndUpdateModel(data: Partial<LicenseApprovalModel<any, any>>, callback?: (data: any) => any): Observable<any> {

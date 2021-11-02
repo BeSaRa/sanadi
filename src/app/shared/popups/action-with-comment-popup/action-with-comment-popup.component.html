@@ -31,12 +31,16 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12 col-md-6 mb-3 position-relative">
-          <div class="form-check form-switch pt-4">
-            <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
-                   class="form-check-input cursor-pointer">
-            <label for="conditionalLicenseIndicator" class="cursor-pointer">{{lang.map.conditional_license}}
-              : {{conditionalLicenseField?.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative" *ngIf="canShowDeductionRatio">
+          <label for="deductionPercent" asteriskIfRequired="deductionPercent"
+                 class="form-label">{{lang.map.deduction_ratio}}</label>
+          <div class="input-group">
+            <input id="deductionPercent" validationClasses="deductionPercent"
+                   formControlName="deductionPercent" trimInput class="form-control" type="text">
+            <div class="input-group-append">
+              <span class="input-group-text">%</span>
+            </div>
+            <app-field-error-message controlName="deductionPercent"></app-field-error-message>
           </div>
         </div>
         <div class="col-sm-12 col-md-6 mb-3 position-relative">
@@ -50,6 +54,14 @@
                  #dpFollowUpDate="angular-mydatepicker"
                  angular-mydatepicker validationClasses="followUpDate"></div>
             <app-field-error-message controlName="followUpDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <div class="form-check form-switch pt-4">
+            <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
+                   class="form-check-input cursor-pointer">
+            <label for="conditionalLicenseIndicator" class="cursor-pointer">{{lang.map.conditional_license}}
+              : {{conditionalLicenseField?.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
           </div>
         </div>
       </div>

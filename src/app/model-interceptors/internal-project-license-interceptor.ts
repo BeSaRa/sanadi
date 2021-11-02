@@ -8,13 +8,18 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {FactoryService} from '@app/services/factory.service';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {ProjectComponent} from '@app/models/project-component';
-import {BankAccount} from '@app/models/bank-account';
+import {TaskDetails} from '@app/models/task-details';
 
 export class InternalProjectLicenseInterceptor implements IModelInterceptor<InternalProjectLicense> {
   receive(model: InternalProjectLicense): InternalProjectLicense {
+    model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
     // if targetedNationalities = null, set it to empty array
-    if (CommonUtils.isValidValue(model.targetedNationalities)) {
+    if (!CommonUtils.isValidValue(model.targetedNationalities)) {
       model.targetedNationalities = [];
+      model.targetNationalitiesInfo = [];
+    }
+    if (CommonUtils.isValidValue(model.targetNationalitiesInfo)) {
+      model.targetNationalitiesInfo = model.targetNationalitiesInfo!.map(x => AdminResult.createInstance(isValidAdminResult(x) ? x : {}));
     }
 
     let internalProjectLicenseService = FactoryService.getService('InternalProjectLicenseService') as InternalProjectLicenseService;
@@ -82,6 +87,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     delete model.firstSDGoalInfo;
     delete model.secondSDGoalInfo;
     delete model.thirdSDGoalInfo;
+    delete model.targetNationalitiesInfo;
 
     return model;
   }
