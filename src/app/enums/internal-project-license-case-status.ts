@@ -1,4 +1,4 @@
-export enum PartnerOfficeApproveCaseStatus {
+export enum InternalProjectLicenseCaseStatus {
   INITIAL_APPROVE = 4,
   FINAL_APPROVE = 5,
   UNDER_PROCESSING = 3,
@@ -7,5 +7,4 @@ export enum PartnerOfficeApproveCaseStatus {
   DRAFT = 1,
   RETURNED = 6,
   CANCELLED = 0
-
 }

@@ -30,6 +30,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-case-status.enum';
 import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
 import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
+import {InternalProjectLicenseCaseStatus} from '@app/enums/internal-project-license-case-status';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -65,6 +66,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
     [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
     [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
+    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
   };
 
   getCFR(): ComponentFactoryResolver {

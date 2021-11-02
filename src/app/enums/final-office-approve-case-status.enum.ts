@@ -6,5 +6,6 @@ export enum FinalOfficeApproveCaseStatus {
   FINAL_REJECTION = 7,
   DRAFT = 1,
   RETURNED = 6,
-  CLOSED = 0
+  CANCELLED = 0
+
 }
