@@ -6,10 +6,10 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {ProjectModel} from "@app/models/project-model";
 import {LangService} from '@app/services/lang.service';
 import {ProjectModelService} from "@app/services/project-model.service";
-import {iif, Observable, of, pipe, Subject} from 'rxjs';
+import {iif, Observable, of, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {filter, map, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {DacOchaService} from "@app/services/dac-ocha.service";
@@ -269,6 +269,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.categoryInfoTab.get('mainDACCategory') as AbstractControl;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   get subDACCategory(): AbstractControl {
     return this.categoryInfoTab.get('subDACCategory') as AbstractControl;
   }
@@ -277,6 +278,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.categoryInfoTab.get('mainUNOCHACategory') as AbstractControl;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   get subUNOCHACategory(): AbstractControl {
     return this.categoryInfoTab.get('subUNOCHACategory') as AbstractControl;
   }
@@ -364,6 +366,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.componentBudgetArray.get('0') as AbstractControl;
   }
 
+  // noinspection JSUnusedLocalSymbols
   private displayAttachmentsMessage(validAttachments: boolean): void {
     if (!validAttachments) {
       this.dialog.error(this.lang.map.kindly_check_required_attachments);
