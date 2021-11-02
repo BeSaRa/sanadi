@@ -11,6 +11,12 @@ import {ProjectModelInterceptor} from "@app/model-interceptors/project-model-int
 import {FactoryService} from "@app/services/factory.service";
 import {UrlService} from "@app/services/url.service";
 import {ProjectModelSearchCriteria} from "@app/models/project-model-search-criteria";
+import {Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
+import {ExternalProjectTemplate} from "@app/models/external-project-template";
+import {Generator} from "@app/decorators/generator";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {SelectTemplatePopupComponent} from "@app/e-services/poups/select-template-popup/select-template-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +56,31 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
               public cfr: ComponentFactoryResolver) {
     super();
     FactoryService.registerService('ProjectModelService', this);
+  }
+
+  @Generator(undefined, true)
+  private _searchTemplateBySerial(serial: string): Observable<ProjectModel[]> {
+    return this.http.post<ProjectModel[]>(this._getServiceURL() + '/template/search', {
+      templateFullSerial: serial
+    })
+  }
+  @Generator(undefined , false)
+  private _getTemplateById(id: string): Observable<ProjectModel> {
+    return this.http.get<ProjectModel>(this._getServiceURL() + '/template/' + id + '/details')
+  }
+
+  getTemplateById(id: string): Observable<ProjectModel> {
+    return this._getTemplateById(id);
+  }
+
+  searchTemplateBySerial(serial: string): Observable<ProjectModel[]> {
+    return this._searchTemplateBySerial(serial);
+  }
+
+  openSelectTemplate(list: ProjectModel[]): DialogRef {
+    return this.dialog.show(SelectTemplatePopupComponent, {
+      list,
+      service: this
+    })
   }
 }

@@ -155,7 +155,6 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = !model.canStart();
-              console.log('model.canStart()', model.canStart());
               comInstance.operation = OperationTypes.UPDATE;
               comInstance.openFrom = from;
               comInstance.allowEditRecommendations = (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart())) && this.employeeService.isInternalUser();

@@ -1,15 +1,15 @@
 import {Component, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ProjectModel} from "@app/models/project-model";
 import {LangService} from '@app/services/lang.service';
 import {ProjectModelService} from "@app/services/project-model.service";
-import {iif, Observable, of, Subject} from 'rxjs';
+import {iif, Observable, of, pipe, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {filter, map, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
 import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {DacOchaService} from "@app/services/dac-ocha.service";
@@ -25,9 +25,10 @@ import {IDacOchaFields} from "@app/interfaces/idac-ocha-fields";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
-import {OpenFrom} from "@app/enums/open-from.enum";
 import {EmployeeService} from "@app/services/employee.service";
 import {AttachmentsComponent} from "@app/shared/components/attachments/attachments.component";
+import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -61,6 +62,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   @ViewChild(AttachmentsComponent)
   attachmentComponent!: AttachmentsComponent;
 
+  selectedModel?: ProjectModel;
+  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'templateTypeInfo'];
+  displayTemplateSerialField: boolean = false;
+
+  templateSerialControl: FormControl = new FormControl(null);
+
+  searchTemplate$: Subject<string> = new Subject<string>();
+
   constructor(public lang: LangService,
               public fb: FormBuilder,
               private toast: ToastService,
@@ -82,6 +91,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.loadCountries();
     this.loadGoals();
     this.listenToProjectComponentChange();
+    this.listenToTemplateSearch();
   }
 
   _buildForm(): void {
@@ -103,15 +113,25 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterBuildForm(): void {
+    setTimeout(() => {
+      if (this.fromDialog) {
+        // final approved
+        if (this.model?.getCaseStatus() !== 4) {
+          this.readonly = false;
+        }
 
+        this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
+          .pipe(takeUntil(this.destroy$)).subscribe((template) => {
+            this.selectedModel = template;
+            this.displayTemplateSerialField = true;
+            this.templateSerialControl.setValue(template.templateFullSerial);
+          })
+      }
+    })
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
-    validAttachments$
-      .pipe(map(_ => !this.attachmentComponent.hasRequiredAttachments()))
-      .pipe(tap(valid => this.displayAttachmentsMessage(valid)));
-
     if (saveType === SaveTypes.DRAFT) {
       return true;
     }
@@ -182,11 +202,20 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.templateSerialControl.setValue('');
+    this.templateSerialControl.setValidators(null);
+    this.templateSerialControl.updateValueAndValidity();
+    this.selectedModel = undefined;
+    this.displayTemplateSerialField = false;
   }
 
   /**
    *  list of getters for most used FormController/FormGroup
    */
+
+  get requestType(): AbstractControl {
+    return this.form.get('basicInfo')?.get('requestType') as AbstractControl;
+  }
 
   get projectTotalCostField(): AbstractControl {
     return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
@@ -423,5 +452,37 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   cancelProjectComponent(): void {
     this.componentBudgetArray.removeAt(0);
+  }
+
+  onRequestTypeChange() {
+    this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.EDIT;
+    this.templateSerialControl.setValidators(CustomValidators.required);
+  }
+
+  searchForTemplate() {
+    if (!this.templateSerialControl.value) {
+      return;
+    }
+    this.searchTemplate$.next(this.templateSerialControl.value);
+  }
+
+  listenToTemplateSearch(): void {
+    this.searchTemplate$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(val => this.service.searchTemplateBySerial(val)))
+      .pipe(tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null))
+      .pipe(filter(v => !!v))
+      .pipe(switchMap(list => this.service.openSelectTemplate(list).onAfterClose$))
+      .subscribe((result: UserClickOn | ProjectModel) => {
+        if (result instanceof ProjectModel) {
+          this.selectedModel = result;
+          this.templateSerialControl.setValue(result.templateFullSerial);
+          this._updateForm(result.clone({
+            id: undefined,
+            templateId: result.id,
+            requestType: this.requestType.value,
+          }))
+        }
+      });
   }
 }
