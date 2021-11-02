@@ -11,12 +11,12 @@ const routes: Routes = [
     path: 'projects-models',
     canActivate: [PermissionGuard],
     component: ProjectModelComponent,
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false},
+    data: {permissionKey: 'NO_PERMISSION', configPermissionGroup: null, checkAnyPermission: false},
   },
   {
     path: 'internal-project-license', component: InternalProjectLicenseComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: 'NO_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 
