@@ -1,4 +1,4 @@
 export enum DomainTypes {
   HUMANITARIAN = 1,
-  DEVELOPMENT
+  DEVELOPMENT = 2
 }

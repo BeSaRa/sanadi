@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  kindly_check_required_attachments: string;
   model_type: string;
   details: string;
   total_cost: string;

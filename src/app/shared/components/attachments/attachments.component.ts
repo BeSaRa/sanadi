@@ -25,6 +25,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   // only the true value will emit
   private reload$ = this.loadingStatus.asObservable().pipe(filter(v => !!v));
+  private loadedStatus$: Subject<any> = new Subject<any>();
   // loaded status to check before load the stuff again
   private loaded: boolean = false;
   @Input()
@@ -91,6 +92,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       )
       .subscribe((attachments) => {
         this.attachments = attachments;
+        this.loadedStatus$.next(true);
       })
   }
 
@@ -194,9 +196,17 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  reload(): void {
+  reload(): Observable<any> {
     this.loaded = false;
-    this.loadingStatus.next(true);
+    return new Observable((subscriber) => {
+      this.loadingStatus.next(true);
+      const sub = this.loadedStatus$.subscribe(() => {
+        subscriber.next(true);
+      });
+      return () => {
+        sub.unsubscribe();
+      }
+    })
   }
 
   hasRequiredAttachments(): boolean {

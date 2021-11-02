@@ -2,7 +2,7 @@
   <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
 </div>
 <div class="row">
-  <tabs-list (onTabChange)="onTabChange($event)">
+  <tabs-list (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
     <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
          [title]="lang.map.project_category_info"></tab>
@@ -273,10 +273,10 @@
       </div>
       <div class="row">
         <div class="col-sm-12 mb-4 position-relative">
-          <label class="form-label" for="goals" asteriskIfRequired="goals">{{lang.map.project_goals}}</label>
-          <textarea name="goals" formControlName="goals" validationClasses="goals" id="goals" rows="4"
+          <label class="form-label" for="goal" asteriskIfRequired="goal">{{lang.map.project_goals}}</label>
+          <textarea name="goal" formControlName="goal" validationClasses="goal" id="goal" rows="4"
                     class="form-control"></textarea>
-          <app-field-error-message controlName="goals"></app-field-error-message>
+          <app-field-error-message controlName="goal"></app-field-error-message>
         </div>
       </div>
       <div class="row">
@@ -516,7 +516,7 @@
                   [readonly]="readonly"></app-comments>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
+    <attachments #attachmentsComponent [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
                  [service]="service.documentService"
                  [load]="loadAttachments"></attachments>
   </ng-template>

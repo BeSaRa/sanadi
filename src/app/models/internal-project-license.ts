@@ -96,8 +96,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   thirdSDGoalInfo!: AdminResult;
   targetNationalitiesInfo!: AdminResult[] | null;
   className!: string;
-  usedInProjectCompletion!: boolean;
-
+  usedInProjectCompletion: boolean = false;
   // temp properties
   projectNameInfo!: AdminResult;
 

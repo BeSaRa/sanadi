@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -6,10 +6,10 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {ProjectModel} from "@app/models/project-model";
 import {LangService} from '@app/services/lang.service';
 import {ProjectModelService} from "@app/services/project-model.service";
-import {Observable, Subject} from 'rxjs';
+import {iif, Observable, of, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {takeUntil, tap} from "rxjs/operators";
+import {map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {DacOchaService} from "@app/services/dac-ocha.service";
@@ -27,7 +27,9 @@ import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {EmployeeService} from "@app/services/employee.service";
+import {AttachmentsComponent} from "@app/shared/components/attachments/attachments.component";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'project-model',
   templateUrl: './project-model.component.html',
@@ -54,6 +56,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
   projectListFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
   currentEditedProjectComponent?: ProjectComponent;
+  tabIndex$: Subject<number> = new Subject<number>();
+
+  @ViewChild(AttachmentsComponent)
+  attachmentComponent!: AttachmentsComponent;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -94,8 +100,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }),
       description: this.fb.control(model.description, CustomValidators.required)
     });
-
-    console.log(this.form.get('componentBudgetInfo'));
   }
 
   _afterBuildForm(): void {
@@ -103,10 +107,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    const validAttachments$ = this.attachmentComponent
+      .reload()
+      .pipe(map(_ => !this.attachmentComponent.hasRequiredAttachments()))
+      .pipe(tap(valid => this.displayAttachmentsMessage(valid)));
+
     if (saveType === SaveTypes.DRAFT) {
       return true;
     }
-    return this.form.valid;
+    return of(this.form.valid)
+      .pipe(
+        switchMap((valid) => iif(() => !!(valid && this.model?.id), validAttachments$, of(valid)))
+      )
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -121,9 +133,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _prepareModel(): ProjectModel | Observable<ProjectModel> {
     return new ProjectModel().clone({
       ...this.model,
-      ...this.basicInfoTab.value,
-      ...this.categoryInfoTab.value,
-      ...this.summaryInfoTab.value,
+      ...this.basicInfoTab.getRawValue(),
+      ...this.categoryInfoTab.getRawValue(),
+      ...this.summaryInfoTab.getRawValue(),
       description: this.descriptionTab.value
     });
   }
@@ -184,16 +196,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('componentBudgetInfo')?.get('componentList') as FormArray;
   }
 
-  get basicInfoTab(): AbstractControl {
-    return this.form.get('basicInfo') as AbstractControl
+  get basicInfoTab(): FormGroup {
+    return this.form.get('basicInfo') as FormGroup
   }
 
-  get categoryInfoTab(): AbstractControl {
-    return this.form.get('categoryInfo') as AbstractControl
+  get categoryInfoTab(): FormGroup {
+    return this.form.get('categoryInfo') as FormGroup
   }
 
-  get summaryInfoTab(): AbstractControl {
-    return this.form.get('summaryInfo') as AbstractControl
+  get summaryInfoTab(): FormGroup {
+    return this.form.get('summaryInfo') as FormGroup
   }
 
   get descriptionTab(): AbstractControl {
@@ -299,6 +311,37 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.subOchaCategories = [];
   }
 
+
+  private listenToProjectComponentChange() {
+    this.projectComponentChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
+        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
+      })
+  }
+
+  private createProjectComponentForm(model: ProjectComponent): void {
+    !this.componentBudgetArray.length ? this.componentBudgetArray.push(this.fb.group(model.buildForm(true))) : null;
+  }
+
+  private removeProjectComponentForm(model: ProjectComponent) {
+    this.componentBudgetArray.removeAt(0);
+    this.model?.componentList.splice(this.model?.componentList.indexOf(model), 1);
+    this.model && (this.model.componentList = this.model?.componentList.slice());
+  }
+
+  get currentProjectComponent(): AbstractControl {
+    return this.componentBudgetArray.get('0') as AbstractControl;
+  }
+
+  private displayAttachmentsMessage(validAttachments: boolean): void {
+    if (!validAttachments) {
+      this.dialog.error(this.lang.map.kindly_check_required_attachments);
+      this.tabIndex$.next(6);
+    }
+  }
+
   tabHasError(tabName: string): boolean {
     const field = this.form.get(tabName);
     return !!(field && field.invalid && (field.touched || field.dirty))
@@ -371,29 +414,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   onClickDeleteProjectComponent(model: ProjectComponent): void {
     this.projectComponentChange$.next({operation: OperationTypes.DELETE, model: model})
-  }
-
-  private listenToProjectComponentChange() {
-    this.projectComponentChange$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((event) => {
-        event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
-        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
-      })
-  }
-
-  private createProjectComponentForm(model: ProjectComponent): void {
-    !this.componentBudgetArray.length ? this.componentBudgetArray.push(this.fb.group(model.buildForm(true))) : null;
-  }
-
-  private removeProjectComponentForm(model: ProjectComponent) {
-    this.componentBudgetArray.removeAt(0);
-    this.model?.componentList.splice(this.model?.componentList.indexOf(model), 1);
-    this.model && (this.model.componentList = this.model?.componentList.slice());
-  }
-
-  get currentProjectComponent(): AbstractControl {
-    return this.componentBudgetArray.get('0') as AbstractControl;
   }
 
   saveProjectComponent(): void {
