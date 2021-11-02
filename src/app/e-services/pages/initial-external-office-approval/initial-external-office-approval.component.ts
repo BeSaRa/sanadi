@@ -25,8 +25,6 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
-import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -36,7 +34,7 @@ import {FinalExternalOfficeApproval} from '@app/models/final-external-office-app
 export class InitialExternalOfficeApprovalComponent extends EServicesGenericComponent<InitialExternalOfficeApproval, InitialExternalOfficeApprovalService> {
 
   form!: FormGroup;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = []
   regions: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();

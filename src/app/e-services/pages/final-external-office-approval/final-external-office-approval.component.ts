@@ -91,7 +91,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     }
   };
 
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   serviceRequestTypes = ServiceRequestTypes;
 
   operation: OperationTypes = OperationTypes.CREATE;

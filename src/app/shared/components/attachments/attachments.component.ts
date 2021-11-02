@@ -1,5 +1,4 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AttachmentType} from "@app/models/attachment-type";
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {FileNetDocument} from "@app/models/file-net-document";
@@ -12,6 +11,7 @@ import {ConfigurationService} from "@app/services/configuration.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ToastService} from "@app/services/toast.service";
 import {TableComponent} from "@app/shared/components/table/table.component";
+import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
 
 @Component({
   selector: 'attachments',
@@ -19,7 +19,7 @@ import {TableComponent} from "@app/shared/components/table/table.component";
   styleUrls: ['./attachments.component.scss']
 })
 export class AttachmentsComponent implements OnInit, OnDestroy {
-  attachmentTypes: AttachmentType[] = [];
+  attachmentTypes: AttachmentTypeServiceData[] = [];
   attachments: FileNetDocument[] = [];
 
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
@@ -85,7 +85,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         tap(_ => this.loaded = true),
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType)
           .pipe(tap(types => this.attachmentTypes = types)) : of([])),
-        map<AttachmentType[], FileNetDocument[]>(attachmentTypes => attachmentTypes.map(type => type.convertToAttachment())),
+        map<AttachmentTypeServiceData[], FileNetDocument[]>(attachmentTypes => attachmentTypes.map(type => type.convertToAttachment())),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
         takeUntil(this.destroy$)
       )
@@ -108,6 +108,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
+    if (this.disabled) {
+      return;
+    }
     uploader.click();
     this.selectedFile = row;
     this.selectedIndex = this.attachments.indexOf(row);
@@ -136,8 +139,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
             .addSingleDocument(this.caseId!, (new FileNetDocument()).clone({
               documentTitle: this.selectedFile?.documentTitle,
               description: this.selectedFile?.description,
-              attachmentTypeId: this.selectedFile?.attachmentTypeId
-              , files: input.files!
+              attachmentTypeId: this.selectedFile?.attachmentTypeId,
+              required: this.selectedFile?.required,
+              files: input.files!
             }))
         }),
         takeUntil(this.destroy$)
@@ -170,7 +174,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
             documentTitle: file.documentTitle,
             description: file.description,
             attachmentTypeId: file.attachmentTypeId,
-            attachmentTypeInfo: file.attachmentTypeInfo
+            attachmentTypeInfo: file.attachmentTypeInfo,
+            required: file.required
           }))
           this.attachments = this.attachments.slice();
         })

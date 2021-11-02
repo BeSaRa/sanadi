@@ -13,7 +13,8 @@ import {DialogService} from './dialog.service';
 import {AttachmentTypesPopupComponent} from '../administration/popups/attachment-types-popup/attachment-types-popup.component';
 import {Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {Generator} from "@app/decorators/generator";
+import {AttachmentTypeServiceDataService} from "@app/services/attachment-type-service-data.service";
+import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class AttachmentTypeService extends BackendGenericService<AttachmentType>
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
+              private attachmentTypeServiceDataService: AttachmentTypeServiceDataService,
               private dialogService: DialogService) {
     super();
     FactoryService.registerService('AttachmentTypeService', this);
@@ -45,13 +47,8 @@ export class AttachmentTypeService extends BackendGenericService<AttachmentType>
     return this.urlService.URLS.ATTACHMENT_TYPES;
   }
 
-  @Generator(undefined, true)
-  private _loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {
-    return this.http.get<AttachmentType[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/attachment-types-by-case-type/' + caseId);
-  }
-
-  loadTypesByCaseType(caseId: number): Observable<AttachmentType[]> {
-    return this._loadTypesByCaseType(caseId);
+  loadTypesByCaseType(caseId: number): Observable<AttachmentTypeServiceData[]> {
+    return this.attachmentTypeServiceDataService.loadByCaseType(caseId);
   }
 
   openCreateDialog(): DialogRef {

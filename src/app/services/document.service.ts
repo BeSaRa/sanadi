@@ -47,6 +47,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.creatorInfo;
     delete clonedDocument.ouInfo;
     delete clonedDocument.required;
+    delete clonedDocument.langService;
     if (!clonedDocument.description) {
       delete clonedDocument.description;
     }
@@ -73,7 +74,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
                    files: FileList,
                    progressCallback?: (percentage: number) => void): Observable<FileNetDocument[]> {
 
-    const clonedDocument = document.clone();
+    const clonedDocument = document.clone() as Partial<FileNetDocument>;
     const formData = new FormData();
     delete clonedDocument.files;
     for (let i = 0; i < files.length; i++) {
@@ -81,6 +82,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     }
     delete clonedDocument.dialog;
     delete clonedDocument.required;
+    delete clonedDocument.langService;
     clonedDocument.attachmentTypeId = 1;
     return this.service.http.post(this.service._getServiceURL() + '/' + caseId + '/document/bulk', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),

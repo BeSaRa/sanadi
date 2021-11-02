@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ProjectModel} from "@app/models/project-model";
 import {LangService} from '@app/services/lang.service';
 import {ProjectModelService} from "@app/services/project-model.service";
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
 import {takeUntil, tap} from "rxjs/operators";
@@ -23,6 +23,10 @@ import {ProjectTypes} from "@app/enums/project-types";
 import {DomainTypes} from "@app/enums/domain-types";
 import {IDacOchaFields} from "@app/interfaces/idac-ocha-fields";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {ToastService} from "@app/services/toast.service";
+import {DialogService} from "@app/services/dialog.service";
+import {OpenFrom} from "@app/enums/open-from.enum";
+import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
   selector: 'project-model',
@@ -36,22 +40,26 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().reverse();
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
-
   mainOchaCategories: DacOcha[] = [];
   subOchaCategories: DacOcha[] = [];
   mainDacCategories: DacOcha[] = [];
   subDacCategories: DacOcha[] = [];
-
   isDacOchaLoaded: boolean = false;
-
   goals: SDGoal[] = [];
-
   loadAttachments: boolean = false;
+
+  projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
+  projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
+  projectListFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
+  currentEditedProjectComponent?: ProjectComponent;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
+              private toast: ToastService,
+              private dialog: DialogService,
+              private employeeService: EmployeeService,
               private dacOchaService: DacOchaService,
               private lookupService: LookupService,
               private countyService: CountryService,
@@ -67,43 +75,69 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _initComponent(): void {
     this.loadCountries();
     this.loadGoals();
+    this.listenToProjectComponentChange();
   }
 
   _buildForm(): void {
-    let model = new ProjectModel();
+    let model = (new ProjectModel()).clone({
+      requestType: this.requestTypes[0].lookupKey,
+      implementingAgencyType: this.implementingAgencyTypes[0].lookupKey
+    });
+
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfoTab(true)),
       categoryInfo: this.fb.group(model.buildCategoryTab(true)),
       summaryInfo: this.fb.group(model.buildSummaryTab(true)),
-      componentBudgetInfo: this.fb.array([this.fb.group(new ProjectComponent().buildForm(true))]),
+      componentBudgetInfo: this.fb.group({
+        projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
+        componentList: this.fb.array([])
+      }),
       description: this.fb.control(model.description, CustomValidators.required)
     });
+
+    console.log(this.form.get('componentBudgetInfo'));
   }
 
   _afterBuildForm(): void {
-    // throw new Error('Method not implemented.');
+
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    // throw new Error('Method not implemented.');
-    return true;
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    return this.form.valid;
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    // throw new Error('Method not implemented.');
-    return true;
+    return this.form.valid;
   }
 
   _afterLaunch(): void {
-    // throw new Error('Method not implemented.');
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
   _prepareModel(): ProjectModel | Observable<ProjectModel> {
-    return new ProjectModel().clone({});
+    return new ProjectModel().clone({
+      ...this.model,
+      ...this.basicInfoTab.value,
+      ...this.categoryInfoTab.value,
+      ...this.summaryInfoTab.value,
+      description: this.descriptionTab.value
+    });
   }
 
   _afterSave(model: ProjectModel, saveType: SaveTypes, operation: OperationTypes): void {
-    // throw new Error('Method not implemented.');
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   _saveFail(error: any): void {
@@ -118,19 +152,36 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     // throw new Error('Method not implemented.');
   }
 
-  _updateForm(model: ProjectModel | undefined): void {
-    // throw new Error('Method not implemented.');
+  _updateForm(model: ProjectModel): void {
+    this.model = model;
+    this.form.patchValue({
+      basicInfo: model.buildBasicInfoTab(true),
+      categoryInfo: model.buildCategoryTab(true),
+      summaryInfo: model.buildSummaryTab(true),
+      componentBudgetInfo: {
+        projectTotalCost: model.projectTotalCost,
+        componentList: []
+      },
+      description: model.description
+    });
   }
 
   _resetForm(): void {
-    // throw new Error('Method not implemented.');
+    this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = this.operationTypes.CREATE;
   }
 
   /**
    *  list of getters for most used FormController/FormGroup
    */
+
+  get projectTotalCostField(): AbstractControl {
+    return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
+  }
+
   get componentBudgetArray(): FormArray {
-    return this.form.get('componentBudgetInfo') as FormArray;
+    return this.form.get('componentBudgetInfo')?.get('componentList') as FormArray;
   }
 
   get basicInfoTab(): AbstractControl {
@@ -259,6 +310,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.projectType.setValue(ProjectTypes.SOFTWARE);
       this.projectType.disable({emitEvent: false});
       this.domain.setValue(DomainTypes.HUMANITARIAN);
+      this.onDomainChange();
       this.domain.disable();
     } else if (this.modelType.value === ProjectModelTypes.PROJECT_MODEL) {
       this.projectType.enable({emitEvent: false});
@@ -295,5 +347,71 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === 'attachments';
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
+  }
+
+  onClickAddProjectComponent(): void {
+    this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()})
+  }
+
+  onClickEditProjectComponent(model: ProjectComponent): void {
+    this.projectComponentChange$.next({operation: OperationTypes.UPDATE, model: model});
+    this.currentEditedProjectComponent = model;
+  }
+
+  onClickDeleteProjectComponent(model: ProjectComponent): void {
+    this.projectComponentChange$.next({operation: OperationTypes.DELETE, model: model})
+  }
+
+  private listenToProjectComponentChange() {
+    this.projectComponentChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
+        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
+      })
+  }
+
+  private createProjectComponentForm(model: ProjectComponent): void {
+    !this.componentBudgetArray.length ? this.componentBudgetArray.push(this.fb.group(model.buildForm(true))) : null;
+  }
+
+  private removeProjectComponentForm(model: ProjectComponent) {
+    this.componentBudgetArray.removeAt(0);
+    this.model?.componentList.splice(this.model?.componentList.indexOf(model), 1);
+    this.model && (this.model.componentList = this.model?.componentList.slice());
+  }
+
+  get currentProjectComponent(): AbstractControl {
+    return this.componentBudgetArray.get('0') as AbstractControl;
+  }
+
+  saveProjectComponent(): void {
+    if (this.currentProjectComponent.invalid) {
+      return;
+    }
+    if (this.currentEditedProjectComponent) {
+      this.model && this.model.componentList.splice(this.model.componentList.indexOf(this.currentEditedProjectComponent), 1, (new ProjectComponent()).clone({...this.currentProjectComponent.value}))
+      this.model && (this.model.componentList = this.model.componentList.slice());
+    } else {
+      this.model && (this.model.componentList = this.model?.componentList.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})))
+    }
+    this.toast.success(this.lang.map.msg_save_success);
+    this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
+    this.cancelProjectComponent();
+  }
+
+  cancelProjectComponent(): void {
+    this.componentBudgetArray.removeAt(0);
   }
 }

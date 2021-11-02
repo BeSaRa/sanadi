@@ -4,6 +4,7 @@ import {AdminResult} from "@app/models/admin-result";
 import {ProjectComponent} from "@app/models/project-component";
 import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {CommonUtils} from "@app/helpers/common-utils";
 
 // noinspection JSUnusedGlobalSymbols
 export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
@@ -31,7 +32,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   firstSDGoalPercentage!: number;
   secondSDGoalPercentage!: number;
   thirdSDGoalPercentage!: number;
-  goal!: string;
+  goals!: string;
   outputs!: string;
   successItems!: string;
   sustainabilityItems!: string;
@@ -54,7 +55,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
-  componentList!: ProjectComponent[];
+  componentList: ProjectComponent[] = [];
   requestTypeInfo!: AdminResult;
   projectTypeInfo!: AdminResult;
   templateTypeInfo!: AdminResult;
@@ -150,7 +151,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   buildSummaryTab(controls: boolean = false): any {
     const {
       needsAssessment,
-      goal,
+      goals,
       directFemaleBeneficiaries,
       directMaleBeneficiaries,
       indirectFemaleBeneficiaries,
@@ -167,7 +168,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     } = this;
     return {
       needsAssessment: controls ? [needsAssessment, CustomValidators.required] : needsAssessment,
-      goal: controls ? [goal, CustomValidators.required] : goal,
+      goals: controls ? [goals, CustomValidators.required] : goals,
       directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, CustomValidators.required] : directFemaleBeneficiaries,
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, CustomValidators.required] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, CustomValidators.required] : indirectFemaleBeneficiaries,
@@ -182,5 +183,11 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       expectedResults: controls ? [expectedResults, CustomValidators.required] : expectedResults,
       sustainabilityItems: controls ? [sustainabilityItems, CustomValidators.required] : sustainabilityItems
     }
+  }
+  getTotalProjectComponentCost(): number {
+    if (!CommonUtils.isValidValue(this.componentList)) {
+      return 0;
+    }
+    return this.componentList.filter(x => CommonUtils.isValidValue(x.totalCost)).map(t => t.totalCost).reduce((a, b) => Number(a) + Number(b), 0) || 0;
   }
 }

@@ -51,7 +51,7 @@
             *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <div class="d-flex gap-2">
-            <button [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
+            <button [disabled]="disabled" [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
                     (click)="uploadAttachment(row , uploader)"
                     [class.btn-success]="row.id"
                     class="btn shadow-sm btn-secondary d-flex align-items-center justify-content-start">

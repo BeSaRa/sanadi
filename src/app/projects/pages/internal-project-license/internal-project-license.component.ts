@@ -57,8 +57,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
 
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
-  projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   mainCategoriesList: AidLookup[] = [];
   subCategories1List: AidLookup[] = [];
   subCategories2List: AidLookup[] = [];

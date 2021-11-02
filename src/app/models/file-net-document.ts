@@ -9,7 +9,7 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
   description!: string;
   isInternal!: boolean;
-  isPublished!: boolean;
+  isPublished: boolean = false;
   documentTitle!: string;
   mimeType!: string;
   contentSize!: number;

@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {Observable, of, Subject} from "rxjs";
 import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
@@ -7,7 +7,7 @@ import {PartnerApprovalService} from "@app/services/partner-approval.service";
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
-import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
 import {DateUtils} from "@app/helpers/date-utils";
@@ -46,7 +46,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   countries: Country[] = [];
   jobTitles: JobTitle[] = [];
   regions: Country[] = [];
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
   organizations: OrgUnit[] = [];
@@ -306,7 +306,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   listenToCountryChange(): void {
     this.country?.valueChanges.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(value => {
+    ).subscribe(_ => {
       this.region?.reset();
       this.loadRegions(this.country?.value);
     });
