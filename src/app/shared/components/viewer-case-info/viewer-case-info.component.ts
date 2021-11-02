@@ -49,7 +49,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
 
   private _setShowFinalGeneratedLicense(): void {
     let caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
-    this.showFinalGeneratedLicense = (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
+    this.showFinalGeneratedLicense = caseStatusEnum && (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
     if (this.showFinalGeneratedLicense) {
       this.loadFinalLicencesByCriteria(this.loadedModel.licenseNumber)
         .pipe(

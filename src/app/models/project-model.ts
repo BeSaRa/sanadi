@@ -32,7 +32,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   firstSDGoalPercentage!: number;
   secondSDGoalPercentage!: number;
   thirdSDGoalPercentage!: number;
-  goal!: string;
+  goals!: string;
   outputs!: string;
   successItems!: string;
   sustainabilityItems!: string;
@@ -151,7 +151,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   buildSummaryTab(controls: boolean = false): any {
     const {
       needsAssessment,
-      goal,
+      goals,
       directFemaleBeneficiaries,
       directMaleBeneficiaries,
       indirectFemaleBeneficiaries,
@@ -168,7 +168,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     } = this;
     return {
       needsAssessment: controls ? [needsAssessment, CustomValidators.required] : needsAssessment,
-      goal: controls ? [goal, CustomValidators.required] : goal,
+      goals: controls ? [goals, CustomValidators.required] : goals,
       directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, CustomValidators.required] : directFemaleBeneficiaries,
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, CustomValidators.required] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, CustomValidators.required] : indirectFemaleBeneficiaries,
@@ -184,6 +184,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       sustainabilityItems: controls ? [sustainabilityItems, CustomValidators.required] : sustainabilityItems
     }
   }
+
   getTotalProjectComponentCost(): number {
     if (!CommonUtils.isValidValue(this.componentList)) {
       return 0;

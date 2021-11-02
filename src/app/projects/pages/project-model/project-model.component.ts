@@ -107,8 +107,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    const validAttachments$ = this.attachmentComponent
-      .reload()
+    const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
+    validAttachments$
       .pipe(map(_ => !this.attachmentComponent.hasRequiredAttachments()))
       .pipe(tap(valid => this.displayAttachmentsMessage(valid)));
 
@@ -167,9 +167,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _updateForm(model: ProjectModel): void {
     this.model = model;
     this.form.patchValue({
-      basicInfo: model.buildBasicInfoTab(true),
-      categoryInfo: model.buildCategoryTab(true),
-      summaryInfo: model.buildSummaryTab(true),
+      basicInfo: model.buildBasicInfoTab(false),
+      categoryInfo: model.buildCategoryTab(false),
+      summaryInfo: model.buildSummaryTab(false),
       componentBudgetInfo: {
         projectTotalCost: model.projectTotalCost,
         componentList: []

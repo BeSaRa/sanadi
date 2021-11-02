@@ -16,7 +16,7 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   customProperties: string = '';
   caseType!: number;
   serviceInfo!: AdminResult;
-  attachmentTyepInfo!: AttachmentType;
+  attachmentTypeInfo!: AttachmentType;
 
   constructor() {
     super();
@@ -25,7 +25,7 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   }
 
   convertToAttachment(): FileNetDocument {
-    let attachment = this.attachmentTyepInfo.convertToAttachment();
+    let attachment = this.attachmentTypeInfo.convertToAttachment();
     attachment.required = this.isRequired;
     return attachment;
   }

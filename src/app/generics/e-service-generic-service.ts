@@ -66,7 +66,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
     [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
     [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
-    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
+    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus
   };
 
   getCFR(): ComponentFactoryResolver {

@@ -20,7 +20,7 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
   serviceKey: keyof ILanguageKeys = 'menu_projects_models';
   interceptor: IModelInterceptor<ProjectModel> = new ProjectModelInterceptor();
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['domainInfo', 'caseStatus', 'projectTypeInfo', 'requestTypeInfo', 'createdOn', 'templateTypeInfo'];
+  searchColumns: string[] = ['fullSerial', 'domainInfo', 'caseStatus', 'projectTypeInfo', 'requestTypeInfo', 'createdOn', 'templateTypeInfo'];
 
   _getModel() {
     return ProjectModel;

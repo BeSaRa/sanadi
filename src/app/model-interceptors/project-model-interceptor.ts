@@ -9,6 +9,13 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
       delete (item as Partial<ProjectComponent>).searchFields;
       return item;
     });
+    delete model.domainInfo;
+    delete model.caseStatusInfo;
+    delete model.implementingAgencyTypeInfo;
+    delete model.projectTypeInfo;
+    delete model.requestTypeInfo;
+    delete model.templateTypeInfo;
+    delete model.creatorInfo;
     return model;
   }
 
@@ -19,6 +26,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.projectTypeInfo = AdminResult.createInstance(model.projectTypeInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.templateTypeInfo = AdminResult.createInstance(model.templateTypeInfo);
+    model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     return model;
   }
 }

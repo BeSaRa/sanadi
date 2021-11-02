@@ -101,7 +101,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.loadedAttachments = attachments.reduce((record, attachment) => {
       return {...record, [attachment.attachmentTypeId]: attachment};
     }, {} as Record<number, FileNetDocument>);
-
+    console.log(this.loadedAttachments);
     return types.map(attachment => {
       attachment.id = this.loadedAttachments[attachment.attachmentTypeId]?.id;
       attachment.createdOn = this.loadedAttachments[attachment.attachmentTypeId]?.createdOn;
@@ -196,7 +196,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  reload(): Observable<any> {
+  reload(): Observable<boolean> {
     this.loaded = false;
     return new Observable((subscriber) => {
       this.loadingStatus.next(true);

@@ -27,9 +27,9 @@
   {
     "fields": [
       {
-        "key": "templateSerial",
+        "key": "fullSerial",
         "type": "maskInput",
-        "label": "template_serial",
+        "label": "serial_number",
         "validations": {
           "required": false
         },
