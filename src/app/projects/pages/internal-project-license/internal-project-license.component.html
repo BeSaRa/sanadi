@@ -26,8 +26,8 @@
       </tabs-list>
       <ng-template #basicInfoTabTemplate>
         <div formGroupName="basicInfo">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="requestType" asteriskIfRequired="requestType"
                      class="form-label">{{lang.map.request_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
@@ -42,7 +42,7 @@
               </ng-select>
               <app-field-error-message controlName="requestType"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="projectType" asteriskIfRequired="projectType"
                      class="form-label">{{lang.map.project_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="projectType" [clearable]="true"
@@ -56,7 +56,7 @@
               </ng-select>
               <app-field-error-message controlName="requestType"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="oldLicenseFullserial" asteriskIfRequired="oldLicenseFullserial"
                      class="form-label">{{lang.map.license_number}}</label>
               <div class="input-group">
@@ -115,15 +115,15 @@
               </table>
             </app-table>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="arName" asteriskIfRequired="arName"
                      class="form-label">{{lang.map.arabic_name}}</label>
               <input id="arName" validationClasses="arName" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="arName" trimInput class="form-control" type="text">
               <app-field-error-message controlName="arName"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="enName" asteriskIfRequired="enName"
                      class="form-label">{{lang.map.english_name}}</label>
               <input id="enName" validationClasses="enName" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
@@ -131,8 +131,8 @@
               <app-field-error-message controlName="enName"></app-field-error-message>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-12 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 mb-4 position-relative">
               <label for="projectDescription" asteriskIfRequired="projectDescription"
                      class="form-label">{{lang.map.project_description}}</label>
               <textarea rows="5" id="projectDescription" validationClasses="projectDescription"
@@ -146,8 +146,8 @@
 
       <ng-template #projectCategoryTabTemplate>
         <div formGroupName="projectCategory">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="domain" asteriskIfRequired="domain"
                      class="form-label">{{lang.map.main_category}}</label>
               <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true"
@@ -162,7 +162,7 @@
               </ng-select>
               <app-field-error-message controlName="domain"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="firstSubDomain" asteriskIfRequired="firstSubDomain"
                      class="form-label">{{lang.map.sub_category1}}</label>
               <ng-select [selectOnTab]="true" labelForId="firstSubDomain" [clearable]="true"
@@ -177,7 +177,7 @@
               </ng-select>
               <app-field-error-message controlName="firstSubDomain"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="secondSubDomain" asteriskIfRequired="secondSubDomain"
                      class="form-label">{{lang.map.sub_category2}}</label>
               <ng-select [selectOnTab]="true" labelForId="secondSubDomain" [clearable]="true"
@@ -192,8 +192,8 @@
               <app-field-error-message controlName="secondSubDomain"></app-field-error-message>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="firstSDGoal" asteriskIfRequired="firstSDGoal"
                      class="form-label">{{lang.map.first_sd_goal}}</label>
               <ng-select [selectOnTab]="true" labelForId="firstSDGoal" [clearable]="true"
@@ -209,7 +209,7 @@
               </ng-select>
               <app-field-error-message controlName="firstSDGoal"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="secondSDGoal" asteriskIfRequired="secondSDGoal"
                      class="form-label">{{lang.map.second_sd_goal}}</label>
               <ng-select [selectOnTab]="true" labelForId="secondSDGoal" [clearable]="true"
@@ -225,7 +225,7 @@
               </ng-select>
               <app-field-error-message controlName="secondSDGoal"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="thirdSDGoal" asteriskIfRequired="thirdSDGoal"
                      class="form-label">{{lang.map.third_sd_goal}}</label>
               <ng-select [selectOnTab]="true" labelForId="thirdSDGoal" [clearable]="true"
@@ -244,9 +244,9 @@
           </div>
         </div>
 
-        <div formGroupName="projectCategoryPercent" class="position-relative">
-          <div class="row mb-4" validationGroupClasses>
-            <div class="col-sm-12 col-md-4 position-relative">
+        <div formGroupName="projectCategoryPercent" class="position-relative mb-2">
+          <div class="row" validationGroupClasses>
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="firstSDGoalPercentage" asteriskIfRequired="firstSDGoalPercentage"
                      class="form-label">{{lang.map.first_sd_goal_percentage}}</label>
               <div class="input-group">
@@ -260,7 +260,7 @@
                 <app-field-error-message controlName="firstSDGoalPercentage"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="secondSDGoalPercentage" asteriskIfRequired="secondSDGoalPercentage"
                      class="form-label">{{lang.map.second_sd_goal_percentage}}</label>
               <div class="input-group">
@@ -274,7 +274,7 @@
                 <app-field-error-message controlName="secondSDGoalPercentage"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="thirdSDGoalPercentage" asteriskIfRequired="thirdSDGoalPercentage"
                      class="form-label">{{lang.map.third_sd_goal_percentage}}</label>
               <div class="input-group">
@@ -295,8 +295,8 @@
 
       <ng-template #projectSummaryTabTemplate>
         <div formGroupName="projectSummary">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-6 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="needsAssessment" asteriskIfRequired="needsAssessment"
                      class="form-label">{{lang.map.project_needs_assessment}}</label>
               <textarea rows="2" id="needsAssessment" validationClasses="needsAssessment"
@@ -304,7 +304,7 @@
                         formControlName="needsAssessment" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="needsAssessment"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="goals" asteriskIfRequired="goals"
                      class="form-label">{{lang.map.project_goals}}</label>
               <textarea rows="2" id="goals" validationClasses="goals"
@@ -314,7 +314,7 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="outputs" asteriskIfRequired="outputs"
                      class="form-label">{{lang.map.project_outputs}}</label>
               <textarea rows="2" id="outputs" validationClasses="outputs"
@@ -322,7 +322,7 @@
                         formControlName="outputs" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="outputs"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="successItems" asteriskIfRequired="successItems"
                      class="form-label">{{lang.map.project_success_items}}</label>
               <textarea rows="2" id="successItems" validationClasses="successItems"
@@ -332,7 +332,7 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="expectedResults" asteriskIfRequired="expectedResults"
                      class="form-label">{{lang.map.project_expected_results}}</label>
               <textarea rows="2" id="expectedResults" validationClasses="expectedResults"
@@ -340,7 +340,7 @@
                         formControlName="expectedResults" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="expectedResults"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="expectedImpact" asteriskIfRequired="expectedImpact"
                      class="form-label">{{lang.map.project_expected_impacts}}</label>
               <textarea rows="2" id="expectedImpact" validationClasses="expectedImpact"
@@ -350,7 +350,7 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-sm-12 col-md-6 position-relative">
+            <div class="col-sm-12 col-md-6 mb-4 position-relative">
               <label for="sustainabilityItems" asteriskIfRequired="sustainabilityItems"
                      class="form-label">{{lang.map.project_sustainability_items}}</label>
               <textarea rows="2" id="sustainabilityItems" validationClasses="sustainabilityItems"
@@ -364,15 +364,15 @@
 
       <ng-template #beneficiaryAnalysisTabTemplate>
         <div formGroupName="beneficiaryAnalysis">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <div class="form-check form-switch">
                 <input type="checkbox" id="hasFamilyBeneficiaries" formControlName="hasFamilyBeneficiaries"
                        class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('FAMILY')">
                 <label for="hasFamilyBeneficiaries" class="cursor-pointer">{{lang.map.family_beneficiary}}</label>
               </div>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <div class="form-check form-switch">
                 <input type="checkbox" id="hasIndividualBeneficiaries" formControlName="hasIndividualBeneficiaries"
                        class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('INDIVIDUAL')">
@@ -380,7 +380,7 @@
                        class="cursor-pointer">{{lang.map.individual_beneficiary}}</label>
               </div>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="targetedNationalities" asteriskIfRequired="targetedNationalities"
                      class="form-label">{{lang.map.lbl_nationality}}</label>
               <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="targetedNationalities"
@@ -417,8 +417,8 @@
               <hr>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="beneficiaryFamiliesNumber" asteriskIfRequired="beneficiaryFamiliesNumber"
                      class="form-label">{{lang.map.number_of_target_families}}</label>
               <input id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
@@ -427,7 +427,7 @@
                      formControlName="beneficiaryFamiliesNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="individualsAverageNumber" asteriskIfRequired="individualsAverageNumber"
                      class="form-label">{{lang.map.average_number_of_people}}</label>
               <input id="individualsAverageNumber" validationClasses="individualsAverageNumber"
@@ -436,7 +436,7 @@
                      formControlName="individualsAverageNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="individualsAverageNumber"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="ageAverageCategory" asteriskIfRequired="ageAverageCategory"
                      class="form-label">{{lang.map.average_age_group}}</label>
               <input id="ageAverageCategory" validationClasses="ageAverageCategory"
@@ -452,8 +452,8 @@
               <hr>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
               <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
@@ -462,7 +462,7 @@
                      formControlName="directBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
               <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
@@ -471,7 +471,7 @@
                      formControlName="indirectBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="handicappedBeneficiaryNumber" asteriskIfRequired="handicappedBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
               <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
@@ -488,9 +488,9 @@
             <hr>
           </div>
         </div>
-        <div formGroupName="beneficiaryAnalysisIndividualPercent" class="position-relative">
-          <div class="row mb-4" validationGroupClasses>
-            <div class="col-sm-12 col-md-3 position-relative">
+        <div formGroupName="beneficiaryAnalysisIndividualPercent" class="position-relative mb-2">
+          <div class="row" validationGroupClasses>
+            <div class="col-sm-12 col-md-3 mb-4 position-relative">
               <label for="beneficiaries0to5" asteriskIfRequired="beneficiaries0to5"
                      class="form-label">{{lang.map.number_of_0_to_5}}</label>
               <div class="input-group">
@@ -504,7 +504,7 @@
                 <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-3 position-relative">
+            <div class="col-sm-12 col-md-3 mb-4 position-relative">
               <label for="beneficiaries5to18" asteriskIfRequired="beneficiaries5to18"
                      class="form-label">{{lang.map.number_of_5_to_18}}</label>
               <div class="input-group">
@@ -518,7 +518,7 @@
                 <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-3 position-relative">
+            <div class="col-sm-12 col-md-3 mb-4 position-relative">
               <label for="beneficiaries19to60" asteriskIfRequired="beneficiaries19to60"
                      class="form-label">{{lang.map.number_of_19_to_60}}</label>
               <div class="input-group">
@@ -532,7 +532,7 @@
                 <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-3 position-relative">
+            <div class="col-sm-12 col-md-3 mb-4 position-relative">
               <label for="beneficiariesOver60" asteriskIfRequired="beneficiariesOver60"
                      class="form-label">{{lang.map.number_of_above_60}}</label>
               <div class="input-group">
@@ -560,8 +560,8 @@
           </div>
         </div>
         <div formGroupName="projectBudget">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="licenseDuration" asteriskIfRequired="licenseDuration"
                      class="form-label">{{lang.map.license_duration}}</label>
               <input id="licenseDuration" validationClasses="licenseDuration"
@@ -570,7 +570,7 @@
                      formControlName="licenseDuration" trimInput class="form-control" type="text">
               <app-field-error-message controlName="licenseDuration"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="expectedImpactDate" asteriskIfRequired="expectedImpactDate"
                      class="form-label">{{lang.map.expected_date_of_impact_evaluation}}</label>
               <div class="input-group">
@@ -584,7 +584,7 @@
                 <app-field-error-message controlName="expectedImpactDate"></app-field-error-message>
               </div>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="deductionPercent" asteriskIfRequired="deductionPercent"
                      class="form-label">{{lang.map.deduction_ratio}}</label>
               <div class="input-group">
@@ -599,8 +599,8 @@
               </div>
             </div>
           </div>
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-4 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="administrativedeductionAmount" asteriskIfRequired="administrativedeductionAmount"
                      class="form-label">{{lang.map.total_value_of_admin_deduction}}</label>
               <input id="administrativedeductionAmount" validationClasses="administrativedeductionAmount"
@@ -609,7 +609,7 @@
                      formControlName="administrativedeductionAmount" trimInput class="form-control" type="text">
               <app-field-error-message controlName="administrativedeductionAmount"></app-field-error-message>
             </div>
-            <div class="col-sm-12 col-md-4 position-relative">
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="targetAmount" class="form-label">{{lang.map.target_cost}}</label>
               <span id="targetAmount" class="form-control input-disabled">{{model?.targetAmount || '&nbsp;'}}</span>
             </div>
@@ -631,8 +631,8 @@
         <div formGroupName="projectComponents">
           <ng-container *ngFor="let account of projectComponentsFormArray.controls; let i = index">
             <div [formGroupName]="i">
-              <div class="row mb-4">
-                <div class="col-sm-12 col-md-4 position-relative">
+              <div class="row">
+                <div class="col-sm-12 col-md-4 mb-4 position-relative">
                   <label for="componentName" asteriskIfRequired="componentName"
                          class="form-label">{{lang.map.component_name}}</label>
                   <input id="componentName" validationClasses="componentName"
@@ -640,7 +640,7 @@
                          formControlName="componentName" class="form-control">
                   <app-field-error-message controlName="componentName"></app-field-error-message>
                 </div>
-                <div class="col-sm-12 col-md-4 position-relative">
+                <div class="col-sm-12 col-md-4 mb-4 position-relative">
                   <label for="details" asteriskIfRequired="details"
                          class="form-label">{{lang.map.details}}</label>
                   <input id="details" validationClasses="details"
@@ -648,7 +648,7 @@
                          formControlName="details" class="form-control">
                   <app-field-error-message controlName="details"></app-field-error-message>
                 </div>
-                <div class="col-sm-12 col-md-4 position-relative">
+                <div class="col-sm-12 col-md-4 mb-4 position-relative">
                   <label for="totalCost" asteriskIfRequired="totalCost"
                          class="form-label">{{lang.map.total_cost}}</label>
                   <input id="totalCost" validationClasses="totalCost"
@@ -722,8 +722,8 @@
 
       <ng-template #specialExplanationsTabTemplate>
         <div formGroupName="specialExplanations">
-          <div class="row mb-4">
-            <div class="col-sm-12 col-md-12 position-relative">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 mb-4 position-relative">
               <label for="description" asteriskIfRequired="description"
                      class="form-label">{{lang.map.special_explanations}}</label>
               <textarea rows="5" id="description" validationClasses="description" [readOnly]="(readonly)"
