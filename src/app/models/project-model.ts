@@ -5,6 +5,7 @@ import {ProjectComponent} from "@app/models/project-component";
 import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {CommonUtils} from "@app/helpers/common-utils";
+import {Validators} from '@angular/forms';
 
 // noinspection JSUnusedGlobalSymbols
 export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
@@ -149,9 +150,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       thirdSDGoalPercentage
     } = this;
     return {
-      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : firstSDGoalPercentage,
-      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : secondSDGoalPercentage,
-      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : thirdSDGoalPercentage
+      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
+      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
+      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
     }
   }
 
@@ -172,10 +173,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     return {
       needsAssessment: controls ? [needsAssessment, CustomValidators.required] : needsAssessment,
       goals: controls ? [goals, CustomValidators.required] : goals,
-      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : directFemaleBeneficiaries,
-      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : directMaleBeneficiaries,
-      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectMaleBeneficiaries,
+      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
+      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
+      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
+      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectMaleBeneficiaries,
       successItems: controls ? [successItems, CustomValidators.required] : successItems,
       outputs: controls ? [outputs, CustomValidators.required] : outputs,
       expectedImpact: controls ? [expectedImpact, CustomValidators.required] : expectedImpact,
@@ -192,10 +193,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiariesOver60
     } = this;
     return {
-      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
-      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
-      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
-      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60
+      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries0to5,
+      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries5to18,
+      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
+      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
     }
   }
 
