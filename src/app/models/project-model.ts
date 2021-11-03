@@ -140,11 +140,11 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       firstSDGoal: controls ? [firstSDGoal, CustomValidators.required] : firstSDGoal,
-      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, CustomValidators.required] : firstSDGoalPercentage,
+      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : firstSDGoalPercentage,
       secondSDGoal: controls ? [secondSDGoal, CustomValidators.required] : secondSDGoal,
-      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, CustomValidators.required] : secondSDGoalPercentage,
+      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : secondSDGoalPercentage,
       thirdSDGoal: controls ? [thirdSDGoal, CustomValidators.required] : thirdSDGoal,
-      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, CustomValidators.required] : thirdSDGoalPercentage
+      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : thirdSDGoalPercentage
     }
   }
 
@@ -169,14 +169,14 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     return {
       needsAssessment: controls ? [needsAssessment, CustomValidators.required] : needsAssessment,
       goals: controls ? [goals, CustomValidators.required] : goals,
-      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, CustomValidators.required] : directFemaleBeneficiaries,
-      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, CustomValidators.required] : directMaleBeneficiaries,
-      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, CustomValidators.required] : indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, CustomValidators.required] : indirectMaleBeneficiaries,
-      beneficiaries0to5: controls ? [beneficiaries0to5, CustomValidators.required] : beneficiaries0to5,
-      beneficiaries5to18: controls ? [beneficiaries5to18, CustomValidators.required] : beneficiaries5to18,
-      beneficiaries19to60: controls ? [beneficiaries19to60, CustomValidators.required] : beneficiaries19to60,
-      beneficiariesOver60: controls ? [beneficiariesOver60, CustomValidators.required] : beneficiariesOver60,
+      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : directFemaleBeneficiaries,
+      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : directMaleBeneficiaries,
+      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectFemaleBeneficiaries,
+      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectMaleBeneficiaries,
+      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
+      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
+      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
+      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60,
       successItems: controls ? [successItems, CustomValidators.required] : successItems,
       outputs: controls ? [outputs, CustomValidators.required] : outputs,
       expectedImpact: controls ? [expectedImpact, CustomValidators.required] : expectedImpact,

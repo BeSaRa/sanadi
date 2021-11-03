@@ -223,10 +223,10 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      beneficiaries0to5: control ? [beneficiaries0to5, [CustomValidators.decimal(2)]] : beneficiaries0to5,
-      beneficiaries5to18: control ? [beneficiaries5to18, [CustomValidators.decimal(2)]] : beneficiaries5to18,
-      beneficiaries19to60: control ? [beneficiaries19to60, [CustomValidators.decimal(2)]] : beneficiaries19to60,
-      beneficiariesOver60: control ? [beneficiariesOver60, [CustomValidators.decimal(2)]] : beneficiariesOver60
+      beneficiaries0to5: control ? [beneficiaries0to5, [CustomValidators.number]] : beneficiaries0to5,
+      beneficiaries5to18: control ? [beneficiaries5to18, [CustomValidators.number]] : beneficiaries5to18,
+      beneficiaries19to60: control ? [beneficiaries19to60, [CustomValidators.number]] : beneficiaries19to60,
+      beneficiariesOver60: control ? [beneficiariesOver60, [CustomValidators.number]] : beneficiariesOver60
     }
   }
 

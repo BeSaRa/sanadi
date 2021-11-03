@@ -52,6 +52,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   isDacOchaLoaded: boolean = false;
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];

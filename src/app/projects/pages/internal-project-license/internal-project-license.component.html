@@ -251,6 +251,7 @@
                      class="form-label">{{lang.map.first_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="firstSDGoalPercentage" validationClasses="firstSDGoalPercentage"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="firstSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -264,6 +265,7 @@
                      class="form-label">{{lang.map.second_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="secondSDGoalPercentage" validationClasses="secondSDGoalPercentage"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="secondSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -277,6 +279,7 @@
                      class="form-label">{{lang.map.third_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="thirdSDGoalPercentage" validationClasses="thirdSDGoalPercentage"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="thirdSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -303,7 +306,7 @@
             </div>
             <div class="col-sm-12 col-md-6 position-relative">
               <label for="goals" asteriskIfRequired="goals"
-                     class="form-label">{{lang.map.goal}}</label>
+                     class="form-label">{{lang.map.project_goals}}</label>
               <textarea rows="2" id="goals" validationClasses="goals"
                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                         formControlName="goals" trimInput class="form-control"></textarea>
@@ -419,6 +422,7 @@
               <label for="beneficiaryFamiliesNumber" asteriskIfRequired="beneficiaryFamiliesNumber"
                      class="form-label">{{lang.map.number_of_target_families}}</label>
               <input id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="beneficiaryFamiliesNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
@@ -427,6 +431,7 @@
               <label for="individualsAverageNumber" asteriskIfRequired="individualsAverageNumber"
                      class="form-label">{{lang.map.average_number_of_people}}</label>
               <input id="individualsAverageNumber" validationClasses="individualsAverageNumber"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="individualsAverageNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="individualsAverageNumber"></app-field-error-message>
@@ -435,6 +440,7 @@
               <label for="ageAverageCategory" asteriskIfRequired="ageAverageCategory"
                      class="form-label">{{lang.map.average_age_group}}</label>
               <input id="ageAverageCategory" validationClasses="ageAverageCategory"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="ageAverageCategory" trimInput class="form-control" type="text">
               <app-field-error-message controlName="ageAverageCategory"></app-field-error-message>
@@ -451,6 +457,7 @@
               <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
               <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="directBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
@@ -459,6 +466,7 @@
               <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
               <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="indirectBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
@@ -467,6 +475,7 @@
               <label for="handicappedBeneficiaryNumber" asteriskIfRequired="handicappedBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
               <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="handicappedBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
@@ -486,6 +495,7 @@
                      class="form-label">{{lang.map.number_of_0_to_5}}</label>
               <div class="input-group">
                 <input id="beneficiaries0to5" validationClasses="beneficiaries0to5"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries0to5" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -499,6 +509,7 @@
                      class="form-label">{{lang.map.number_of_5_to_18}}</label>
               <div class="input-group">
                 <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries5to18" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -512,6 +523,7 @@
                      class="form-label">{{lang.map.number_of_19_to_60}}</label>
               <div class="input-group">
                 <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries19to60" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -525,6 +537,7 @@
                      class="form-label">{{lang.map.number_of_above_60}}</label>
               <div class="input-group">
                 <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiariesOver60" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -552,6 +565,7 @@
               <label for="licenseDuration" asteriskIfRequired="licenseDuration"
                      class="form-label">{{lang.map.license_duration}}</label>
               <input id="licenseDuration" validationClasses="licenseDuration"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="licenseDuration" trimInput class="form-control" type="text">
               <app-field-error-message controlName="licenseDuration"></app-field-error-message>
@@ -575,6 +589,7 @@
                      class="form-label">{{lang.map.deduction_ratio}}</label>
               <div class="input-group">
                 <input id="deductionPercent" validationClasses="deductionPercent"
+                       [mask]="inputMaskPatterns.NUMBER_ONLY"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="deductionPercent" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -589,6 +604,7 @@
               <label for="administrativedeductionAmount" asteriskIfRequired="administrativedeductionAmount"
                      class="form-label">{{lang.map.total_value_of_admin_deduction}}</label>
               <input id="administrativedeductionAmount" validationClasses="administrativedeductionAmount"
+                     [mask]="inputMaskPatterns.NUMBER_ONLY"
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="administrativedeductionAmount" trimInput class="form-control" type="text">
               <app-field-error-message controlName="administrativedeductionAmount"></app-field-error-message>
@@ -607,7 +623,7 @@
         </div>
         <div class="d-flex flex-row align-items-center justify-content-start"
              *ngIf="(!projectComponentsFormArray.controls.length) && !(isExtendOrCancelRequestType() || readonly)">
-          <button (click)="addProjectComponent$.next()" tooltip="{{lang.map.btn_add}}"
+          <button type="button" (click)="addProjectComponent()" tooltip="{{lang.map.btn_add}}"
                   class="d-inline-block btn p-0 icon-btn"><i
             class="mdi mdi-plus-box text-primary"></i></button>
         </div>
@@ -625,14 +641,6 @@
                   <app-field-error-message controlName="componentName"></app-field-error-message>
                 </div>
                 <div class="col-sm-12 col-md-4 position-relative">
-                  <label for="totalCost" asteriskIfRequired="totalCost"
-                         class="form-label">{{lang.map.total_cost}}</label>
-                  <input id="totalCost" validationClasses="totalCost"
-                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                         formControlName="totalCost" class="form-control">
-                  <app-field-error-message controlName="totalCost"></app-field-error-message>
-                </div>
-                <div class="col-sm-12 col-md-4 position-relative">
                   <label for="details" asteriskIfRequired="details"
                          class="form-label">{{lang.map.details}}</label>
                   <input id="details" validationClasses="details"
@@ -640,11 +648,19 @@
                          formControlName="details" class="form-control">
                   <app-field-error-message controlName="details"></app-field-error-message>
                 </div>
+                <div class="col-sm-12 col-md-4 position-relative">
+                  <label for="totalCost" asteriskIfRequired="totalCost"
+                         class="form-label">{{lang.map.total_cost}}</label>
+                  <input id="totalCost" validationClasses="totalCost"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="totalCost" class="form-control">
+                  <app-field-error-message controlName="totalCost"></app-field-error-message>
+                </div>
               </div>
               <div class="d-flex flex-row align-items-center justify-content-center">
                 <button (click)="saveProjectComponent()" [disabled]="(isExtendOrCancelRequestType() || readonly)"
                         *ngIf="!(isExtendOrCancelRequestType() || readonly)"
-                        class="btn btn-primary m-2">{{(editProjectComponentIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+                        class="btn btn-primary m-2">{{lang.map.btn_save}}</button>
                 <button (click)="cancelProjectComponent()"
                         class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
               </div>

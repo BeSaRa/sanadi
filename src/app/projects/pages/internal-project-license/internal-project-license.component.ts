@@ -17,7 +17,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {Lookup} from '@app/models/lookup';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {catchError, delay, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {AidLookup} from '@app/models/aid-lookup';
@@ -56,6 +56,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   form!: FormGroup;
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -121,8 +122,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InternalProjectLicenseResult;
 
-  showAddComponentForm: boolean = false;
-
   datepickerOptionsMap: IKeyValue = {
     expectedImpactDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
@@ -141,14 +140,14 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       basicInfo: this.fb.group(objInternalProjectLicense.getBasicFormFields(true)),
       projectCategory: this.fb.group(objInternalProjectLicense.getProjectCategoryFields(true)),
       projectCategoryPercent: this.fb.group(objInternalProjectLicense.getProjectCategoryPercentFields(true), {
-        validators: CustomValidators.validateSum(100,
+        validators: CustomValidators.validateSum(100, 2,
           ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
           [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')])
       }),
       projectSummary: this.fb.group(objInternalProjectLicense.getProjectSummaryFields(true)),
       beneficiaryAnalysis: this.fb.group(objInternalProjectLicense.getBeneficiaryAnalysisFields(true)),
       beneficiaryAnalysisIndividualPercent: this.fb.group(objInternalProjectLicense.getBeneficiaryAnalysisDirectPercentFields(true), {
-        validators: CustomValidators.validateSum(100,
+        validators: CustomValidators.validateSum(100, 2,
           [
             'beneficiaries0to5',
             'beneficiaries5to18',
@@ -286,10 +285,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.handleChangeMainCategory(model.domain, false);
     this.handleChangeSubCategory1(model.firstSubDomain, false);
     this.updateBeneficiaryValidations();
-
-    console.log('basicInfo.oldLicenseFullserial', this.form.get('basicInfo.oldLicenseFullserial')?.value);
-    console.log('basicInfo.oldLicenseId', this.form.get('basicInfo.oldLicenseId')?.value);
-    console.log('basicInfo.oldLicenseSerial', this.form.get('basicInfo.oldLicenseSerial')?.value);
 
     this.cd.detectChanges();
   }
@@ -553,10 +548,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_19To60_Field, validators.concat([CustomValidators.decimal(2)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_60Above_Field, validators.concat([CustomValidators.decimal(2)]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.number]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.number]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_19To60_Field, validators.concat([CustomValidators.number]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_60Above_Field, validators.concat([CustomValidators.number]));
   }
 
   private _updateFamilyBeneficiaryValidations(): void {
@@ -787,6 +782,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
     this.editProjectComponentIndex = index;
     this.projectComponentChanged$.next(record);
+  }
+
+  addProjectComponent(){
+    this.addProjectComponent$.next()
   }
 
   deleteProjectComponent($event: MouseEvent, record: ProjectComponent, index: number): any {
