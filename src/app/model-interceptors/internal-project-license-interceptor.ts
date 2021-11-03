@@ -12,6 +12,9 @@ import {TaskDetails} from '@app/models/task-details';
 
 export class InternalProjectLicenseInterceptor implements IModelInterceptor<InternalProjectLicense> {
   receive(model: InternalProjectLicense): InternalProjectLicense {
+    model.hasFamilyBeneficiaries = model.hasFamilyBeneficiaries ?? false;
+    model.hasIndividualBeneficiaries = model.hasIndividualBeneficiaries ?? false;
+
     model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
     // if targetedNationalities = null, set it to empty array
     if (!CommonUtils.isValidValue(model.targetedNationalities)) {
@@ -52,6 +55,9 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
   }
 
   send(model: Partial<InternalProjectLicense>): Partial<InternalProjectLicense> {
+    model.hasFamilyBeneficiaries = model.hasFamilyBeneficiaries ?? false;
+    model.hasIndividualBeneficiaries = model.hasIndividualBeneficiaries ?? false;
+
     // if targetedNationalities = null || [], set it to null
     if (!model.targetedNationalities || model.targetedNationalities.length === 0) {
       model.targetedNationalities = null;

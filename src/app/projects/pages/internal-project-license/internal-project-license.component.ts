@@ -95,7 +95,17 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     beneficiaryAnalysis: {
       name: 'beneficiaryAnalysisTab',
       langKey: 'beneficiary_analysis',
-      validStatus: () => this.beneficiaryAnalysisGroup && this.beneficiaryAnalysisGroup.valid && this.beneficiaryAnalysisIndividualPercentGroup && this.beneficiaryAnalysisIndividualPercentGroup.valid
+      validStatus: () => {
+        // if groups don't exist or beneficiaryAnalysisGroup is inValid, return false
+        if (!(this.beneficiaryAnalysisGroup && this.beneficiaryAnalysisGroup.valid && this.beneficiaryAnalysisIndividualPercentGroup)) {
+          return false;
+        }
+        // if beneficiaryAnalysisIndividualPercentGroup is disabled, means its valid => return true
+        if (this.beneficiaryAnalysisIndividualPercentGroup.disabled) {
+          return true;
+        }
+        return this.beneficiaryAnalysisIndividualPercentGroup.valid;
+      }
     },
     projectComponentsAndBudget: {
       name: 'projectComponentsAndBudgetTab',
@@ -134,34 +144,49 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.cd.detectChanges();
   }
 
+  private _getGroupPercentageValidations(groupName: 'NONE' | 'projectCategoryPercent' | 'beneficiaryAnalysisIndividualPercent'): (ValidatorFn | ValidatorFn[] | null) {
+    let validators: (ValidatorFn | ValidatorFn[] | null) = null;
+
+    if (groupName === 'projectCategoryPercent') {
+      validators = CustomValidators.validateSum(100, 2,
+        ['firstSDGoalPercentage',
+          'secondSDGoalPercentage',
+          'thirdSDGoalPercentage'
+        ], [
+          this.lang.getLocalByKey('first_sd_goal_percentage'),
+          this.lang.getLocalByKey('second_sd_goal_percentage'),
+          this.lang.getLocalByKey('third_sd_goal_percentage')
+        ])
+    } else if (groupName === 'beneficiaryAnalysisIndividualPercent') {
+      validators = CustomValidators.validateSum(100, 2,
+        [
+          'beneficiaries0to5',
+          'beneficiaries5to18',
+          'beneficiaries19to60',
+          'beneficiariesOver60'
+        ],
+        [
+          this.lang.getLocalByKey('number_of_0_to_5'),
+          this.lang.getLocalByKey('number_of_5_to_18'),
+          this.lang.getLocalByKey('number_of_19_to_60'),
+          this.lang.getLocalByKey('number_of_above_60')
+        ]
+      );
+    }
+    return validators;
+  }
+
   _buildForm(): void {
     let objInternalProjectLicense = new InternalProjectLicense();
     this.form = this.fb.group({
       basicInfo: this.fb.group(objInternalProjectLicense.getBasicFormFields(true)),
       projectCategory: this.fb.group(objInternalProjectLicense.getProjectCategoryFields(true)),
       projectCategoryPercent: this.fb.group(objInternalProjectLicense.getProjectCategoryPercentFields(true), {
-        validators: CustomValidators.validateSum(100, 2,
-          ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
-          [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')])
+        validators: this._getGroupPercentageValidations('projectCategoryPercent')
       }),
       projectSummary: this.fb.group(objInternalProjectLicense.getProjectSummaryFields(true)),
       beneficiaryAnalysis: this.fb.group(objInternalProjectLicense.getBeneficiaryAnalysisFields(true)),
-      beneficiaryAnalysisIndividualPercent: this.fb.group(objInternalProjectLicense.getBeneficiaryAnalysisDirectPercentFields(true), {
-        validators: CustomValidators.validateSum(100, 2,
-          [
-            'beneficiaries0to5',
-            'beneficiaries5to18',
-            'beneficiaries19to60',
-            'beneficiariesOver60'
-          ],
-          [
-            this.lang.getLocalByKey('number_of_0_to_5'),
-            this.lang.getLocalByKey('number_of_5_to_18'),
-            this.lang.getLocalByKey('number_of_19_to_60'),
-            this.lang.getLocalByKey('number_of_above_60')
-          ]
-        )
-      }),
+      beneficiaryAnalysisIndividualPercent: this.fb.group(objInternalProjectLicense.getBeneficiaryAnalysisDirectPercentFields(true)),
       projectComponents: this.fb.array([]),
       projectBudget: this.fb.group(objInternalProjectLicense.getProjectBudgetFields(true)),
       specialExplanations: this.fb.group(objInternalProjectLicense.getSpecialExplanationFields(true))
@@ -187,6 +212,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       this.listenToAddProjectComponent();
       this.listenToProjectComponentChange();
       this.listenToSaveProjectComponent();
+
+      this.updateBeneficiaryValidations();
 
       if (this.fromDialog) {
         const oldLicenseFullSerial = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
@@ -253,7 +280,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       ...this.form.value.projectCategoryPercent,
       ...this.form.value.projectSummary,
       ...this.form.value.beneficiaryAnalysis,
-      ...this.form.value.beneficiaryAnalysisIndividualPercent,
+      ...this.beneficiaryAnalysisIndividualPercentGroup.value,
       ...this.form.value.projectBudget,
       ...this.form.value.specialExplanations,
     });
@@ -261,6 +288,11 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
 
   _saveFail(error: any): void {
     console.log('problem in save');
+  }
+
+  private _touchPercentGroups(): void {
+    this.projectCategoryPercentGroup.markAsTouched();
+    this.beneficiaryAnalysisIndividualPercentGroup.markAsTouched();
   }
 
   _updateForm(model: InternalProjectLicense | undefined): void {
@@ -563,11 +595,13 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this._updateIndividualBeneficiaryValidations();
         this._updateFamilyBeneficiaryValidations();
     }
+
+    this._touchPercentGroups();
   }
 
-  private static _setFieldValidationAndUpdate(field: FormControl, validations: ValidatorFn | ValidatorFn[] | null) {
-    field.setValidators(validations);
-    field.updateValueAndValidity();
+  private static _setFieldValidationAndUpdate(fieldOrGroup: (FormControl | FormGroup), validations: (ValidatorFn | ValidatorFn[] | null)) {
+    fieldOrGroup.setValidators(validations);
+    fieldOrGroup.updateValueAndValidity();
   }
 
   private _updateIndividualBeneficiaryValidations(): void {
@@ -577,10 +611,27 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.number]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.number]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_19To60_Field, validators.concat([CustomValidators.number]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_60Above_Field, validators.concat([CustomValidators.number]));
+    /*
+    // not emitting event because we are updating fields value and validation is updating manually after this enable/disable
+    if (isEnabled) {
+      this.individual_0To5_Field.enable();
+      this.individual_5To18_Field.enable();
+      this.individual_19To60_Field.enable();
+      this.individual_60Above_Field.enable();
+    } else {
+      this.individual_0To5_Field.disable();
+      this.individual_5To18_Field.disable();
+      this.individual_19To60_Field.disable();
+      this.individual_60Above_Field.disable();
+    }*/
+
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2)]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2)]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_19To60_Field, validators.concat([CustomValidators.decimal(2)]));
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_60Above_Field, validators.concat([CustomValidators.decimal(2)]));
+
+    // update the validators for group
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.beneficiaryAnalysisIndividualPercentGroup, this._getGroupPercentageValidations(isEnabled ? 'beneficiaryAnalysisIndividualPercent' : 'NONE'));
   }
 
   private _updateFamilyBeneficiaryValidations(): void {
@@ -813,7 +864,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.projectComponentChanged$.next(record);
   }
 
-  addProjectComponent(){
+  addProjectComponent() {
     this.addProjectComponent$.next()
   }
 

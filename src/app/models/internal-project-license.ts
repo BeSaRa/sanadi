@@ -7,6 +7,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {AdminResult} from '@app/models/admin-result';
 import {DateUtils} from '@app/helpers/date-utils';
+import {Validators} from '@angular/forms';
 
 export class InternalProjectLicense extends LicenseApprovalModel<InternalProjectLicenseService, InternalProjectLicense> {
   service: InternalProjectLicenseService;
@@ -19,19 +20,18 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   caseType: number = CaseTypes.INTERNAL_PROJECT_LICENSE;
   organizationId!: number;
   administrativedeductionAmount!: number;
-  ageAverageCategory!: number;
+  ageAverageCategory: number = 0;
   arName!: string;
-  beneficiaries0to5!: number;
-  beneficiaries5to18!: number;
-  beneficiaries19to60!: number;
-  beneficiariesOver60!: number;
-  beneficiaryFamiliesNumber!: number;
+  beneficiaries0to5: number = 0;
+  beneficiaries5to18: number = 0;
+  beneficiaries19to60: number = 0;
+  beneficiariesOver60: number = 0;
+  beneficiaryFamiliesNumber: number = 0;
   chiefDecision?: number;
   chiefJustification: string = '';
   componentList: ProjectComponent[] = [];
-  // deductionPercent!: number;
   description!: string;
-  directBeneficiaryNumber!: number;
+  directBeneficiaryNumber: number = 0;
   domain!: number;
   enName!: string;
   expectedImpact!: string;
@@ -41,17 +41,17 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   exportedLicenseId!: string;
   exportedLicenseSerial!: number;
   firstSDGoal!: number;
-  firstSDGoalPercentage!: number;
+  firstSDGoalPercentage: number = 0;
   firstSubDomain!: number;
   followUpDate!: string;
   generalManagerDecision?: number;
   generalManagerJustification: string = ''
   goals!: string;
-  handicappedBeneficiaryNumber!: number;
-  hasFamilyBeneficiaries!: boolean;
-  hasIndividualBeneficiaries!: boolean;
-  indirectBeneficiaryNumber!: number;
-  individualsAverageNumber!: number;
+  handicappedBeneficiaryNumber: number = 0;
+  hasFamilyBeneficiaries: boolean = false;
+  hasIndividualBeneficiaries: boolean = false;
+  indirectBeneficiaryNumber: number = 0;
+  individualsAverageNumber: number = 0; // (family average number of people)
   licenseVSID?: string;
   managerDecision?: number;
   managerJustification: string = '';
@@ -67,7 +67,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   reviewerDepartmentDecision?: number;
   reviewerDepartmentJustification: string = '';
   secondSDGoal!: number;
-  secondSDGoalPercentage!: number;
+  secondSDGoalPercentage: number = 0;
   secondSubDomain!: number;
   specialistDecision?: number;
   specialistJustification: string = '';
@@ -77,7 +77,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   targetAmount!: string;
   targetedNationalities: number[] | null = [];
   thirdSDGoal!: number;
-  thirdSDGoalPercentage!: number;
+  thirdSDGoalPercentage: number = 0;
   targetedCategory!: number;
   year!: number;
   inRenewalPeriod!: boolean;
@@ -156,9 +156,9 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      firstSDGoalPercentage: control ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2)]] : firstSDGoalPercentage,
-      secondSDGoalPercentage: control ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2)]] : secondSDGoalPercentage,
-      thirdSDGoalPercentage: control ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2)]] : thirdSDGoalPercentage
+      firstSDGoalPercentage: control ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
+      secondSDGoalPercentage: control ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
+      thirdSDGoalPercentage: control ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
     }
   }
 
@@ -203,14 +203,14 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
       targetedNationalities: control ? [targetedNationalities] : targetedNationalities,
       // individual
       hasIndividualBeneficiaries: control ? [directBeneficiaryNumber] : hasIndividualBeneficiaries,
-      directBeneficiaryNumber: control ? [directBeneficiaryNumber, [CustomValidators.number]] : directBeneficiaryNumber,
-      indirectBeneficiaryNumber: control ? [indirectBeneficiaryNumber, [CustomValidators.number]] : indirectBeneficiaryNumber,
-      handicappedBeneficiaryNumber: control ? [handicappedBeneficiaryNumber, [CustomValidators.number]] : handicappedBeneficiaryNumber,
+      directBeneficiaryNumber: control ? [directBeneficiaryNumber, [CustomValidators.number, CustomValidators.maxLength(20)]] : directBeneficiaryNumber,
+      indirectBeneficiaryNumber: control ? [indirectBeneficiaryNumber, [CustomValidators.number, CustomValidators.maxLength(20)]] : indirectBeneficiaryNumber,
+      handicappedBeneficiaryNumber: control ? [handicappedBeneficiaryNumber, [CustomValidators.number, CustomValidators.maxLength(20)]] : handicappedBeneficiaryNumber,
       // family
       hasFamilyBeneficiaries: control ? [hasFamilyBeneficiaries] : hasFamilyBeneficiaries,
-      beneficiaryFamiliesNumber: control ? [beneficiaryFamiliesNumber, [CustomValidators.number]] : beneficiaryFamiliesNumber,
-      individualsAverageNumber: control ? [individualsAverageNumber, [CustomValidators.number]] : individualsAverageNumber,
-      ageAverageCategory: control ? [ageAverageCategory, [CustomValidators.number]] : ageAverageCategory
+      beneficiaryFamiliesNumber: control ? [beneficiaryFamiliesNumber, [CustomValidators.number, CustomValidators.maxLength(20)]] : beneficiaryFamiliesNumber,
+      individualsAverageNumber: control ? [individualsAverageNumber, [CustomValidators.number, CustomValidators.maxLength(20)]] : individualsAverageNumber,
+      ageAverageCategory: control ? [ageAverageCategory, [CustomValidators.number, CustomValidators.maxLength(20)]] : ageAverageCategory
     }
   }
 
@@ -223,10 +223,10 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      beneficiaries0to5: control ? [beneficiaries0to5, [CustomValidators.number]] : beneficiaries0to5,
-      beneficiaries5to18: control ? [beneficiaries5to18, [CustomValidators.number]] : beneficiaries5to18,
-      beneficiaries19to60: control ? [beneficiaries19to60, [CustomValidators.number]] : beneficiaries19to60,
-      beneficiariesOver60: control ? [beneficiariesOver60, [CustomValidators.number]] : beneficiariesOver60
+      beneficiaries0to5: control ? [beneficiaries0to5, [CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries0to5,
+      beneficiaries5to18: control ? [beneficiaries5to18, [CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries5to18,
+      beneficiaries19to60: control ? [beneficiaries19to60, [CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
+      beneficiariesOver60: control ? [beneficiariesOver60, [CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
     }
   }
 

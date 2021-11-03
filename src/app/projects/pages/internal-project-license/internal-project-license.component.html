@@ -251,7 +251,8 @@
                      class="form-label">{{lang.map.first_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="firstSDGoalPercentage" validationClasses="firstSDGoalPercentage"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="firstSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -265,7 +266,8 @@
                      class="form-label">{{lang.map.second_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="secondSDGoalPercentage" validationClasses="secondSDGoalPercentage"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="secondSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -279,7 +281,8 @@
                      class="form-label">{{lang.map.third_sd_goal_percentage}}</label>
               <div class="input-group">
                 <input id="thirdSDGoalPercentage" validationClasses="thirdSDGoalPercentage"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="thirdSDGoalPercentage" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -495,7 +498,8 @@
                      class="form-label">{{lang.map.number_of_0_to_5}}</label>
               <div class="input-group">
                 <input id="beneficiaries0to5" validationClasses="beneficiaries0to5"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries0to5" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -509,7 +513,8 @@
                      class="form-label">{{lang.map.number_of_5_to_18}}</label>
               <div class="input-group">
                 <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries5to18" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -523,7 +528,8 @@
                      class="form-label">{{lang.map.number_of_19_to_60}}</label>
               <div class="input-group">
                 <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiaries19to60" trimInput class="form-control" type="text">
                 <div class="input-group-append">
@@ -537,7 +543,8 @@
                      class="form-label">{{lang.map.number_of_above_60}}</label>
               <div class="input-group">
                 <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
-                       [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="beneficiariesOver60" trimInput class="form-control" type="text">
                 <div class="input-group-append">

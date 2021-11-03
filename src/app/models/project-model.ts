@@ -29,28 +29,28 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   firstSDGoal!: number;
   secondSDGoal!: number;
   thirdSDGoal!: number;
-  firstSDGoalPercentage!: number;
-  secondSDGoalPercentage!: number;
-  thirdSDGoalPercentage!: number;
+  firstSDGoalPercentage: number = 0;
+  secondSDGoalPercentage: number = 0;
+  thirdSDGoalPercentage: number = 0;
   goals!: string;
   outputs!: string;
   successItems!: string;
   sustainabilityItems!: string;
   expectedResults!: string;
   expectedImpact!: string;
-  directMaleBeneficiaries!: number;
-  directFemaleBeneficiaries!: number;
-  indirectMaleBeneficiaries!: number;
-  indirectFemaleBeneficiaries!: number;
-  beneficiaries0to5!: number;
-  beneficiaries5to18!: number;
-  beneficiaries19to60!: number;
-  beneficiariesOver60!: number;
+  directMaleBeneficiaries: number = 0;
+  directFemaleBeneficiaries: number = 0;
+  indirectMaleBeneficiaries: number = 0;
+  indirectFemaleBeneficiaries: number = 0;
+  beneficiaries0to5: number = 0;
+  beneficiaries5to18: number = 0;
+  beneficiaries19to60: number = 0;
+  beneficiariesOver60: number = 0;
   projectTotalCost!: number;
   description!: string;
   year!: number;
   needsAssessment!: string;
-  handicappedBeneficiaryNumber!: number;
+  handicappedBeneficiaryNumber: number = 0;
   templateSerial!: number;
   templateFullSerial!: string;
   templateId!: string;
@@ -128,10 +128,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       subUNOCHACategory,
       firstSDGoal,
       secondSDGoal,
-      thirdSDGoal,
-      firstSDGoalPercentage,
-      secondSDGoalPercentage,
-      thirdSDGoalPercentage
+      thirdSDGoal
     } = this;
     return {
       domain: controls ? [domain, CustomValidators.required] : domain,
@@ -140,11 +137,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       firstSDGoal: controls ? [firstSDGoal, CustomValidators.required] : firstSDGoal,
-      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : firstSDGoalPercentage,
       secondSDGoal: controls ? [secondSDGoal, CustomValidators.required] : secondSDGoal,
-      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : secondSDGoalPercentage,
-      thirdSDGoal: controls ? [thirdSDGoal, CustomValidators.required] : thirdSDGoal,
-      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : thirdSDGoalPercentage
+      thirdSDGoal: controls ? [thirdSDGoal, CustomValidators.required] : thirdSDGoal
     }
   }
 
