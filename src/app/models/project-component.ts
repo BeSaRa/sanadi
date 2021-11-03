@@ -15,8 +15,8 @@ export class ProjectComponent extends SearchableCloneable<ProjectComponent> {
 
     return {
       componentName: control ? [componentName, [CustomValidators.required, CustomValidators.maxLength(100)]] : componentName,
-      details: control ? [details, [CustomValidators.required, CustomValidators.maxLength(1200)]] : details,
-      totalCost: control ? [totalCost, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2))] : totalCost
+      details: control ? [details, [CustomValidators.required, CustomValidators.maxLength(250)]] : details,
+      totalCost: control ? [totalCost, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2), CustomValidators.maxLength(20))] : totalCost
     }
   }
 }
