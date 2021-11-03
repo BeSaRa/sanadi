@@ -10,7 +10,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 })
 export class GroupErrorMessageComponent implements OnInit {
   @Input() group?: FormGroup;
-  @HostBinding('class') containerClass = 'invalid-feedback position-absolute mt-4';
+  @HostBinding('class') containerClass = 'invalid-feedback position-absolute';
 
   constructor(private langService: LangService, @Optional() private parent: ControlContainer) { }
 
