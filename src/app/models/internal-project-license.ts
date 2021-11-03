@@ -115,16 +115,16 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       projectType: control ? [projectType, [CustomValidators.required]] : projectType,
-      oldLicenseFullserial: control ? [oldLicenseFullserial] : oldLicenseFullserial,
+      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       arName: control ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.maxLength(250),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : arName,
       enName: control ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.maxLength(250),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
-      projectDescription: control ? [projectDescription, [CustomValidators.maxLength(1200)]] : projectDescription
+      projectDescription: control ? [projectDescription, [CustomValidators.maxLength(250)]] : projectDescription
     }
   }
 
