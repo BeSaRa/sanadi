@@ -138,7 +138,7 @@ export class InboxService {
 
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
-    return service.openDocumentDialog(caseId);
+    return service.openDocumentDialog(caseId, caseType);
   }
 
   openRecommendationDialog(caseId: string, caseType: number): DialogRef {
@@ -176,11 +176,11 @@ export class InboxService {
     return this.takeActionOnTask(taskId, info, service);
   }
 
-  sendTaskToMultiple(taskId: string, info: {taskName: string, departments: number[], users: number[]}, service: EServiceGenericService<any>): Observable<boolean> {
+  sendTaskToMultiple(taskId: string, info: { taskName: string, departments: number[], users: number[] }, service: EServiceGenericService<any>): Observable<boolean> {
     return this.startTaskToMultiple(taskId, info, service);
   }
 
-  startTaskToMultiple(taskId: string, info: {taskName: string, departments: number[], users: number[]}, service: EServiceGenericService<any>): Observable<boolean> {
+  startTaskToMultiple(taskId: string, info: { taskName: string, departments: number[], users: number[] }, service: EServiceGenericService<any>): Observable<boolean> {
     return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/start', info)
       .pipe(map(response => response.rs));
   }

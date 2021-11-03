@@ -203,8 +203,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId, onlyLogs});
   }
 
-  openDocumentDialog(caseId: string): DialogRef {
-    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId});
+  openDocumentDialog(caseId: string , caseType?: number): DialogRef {
+    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId , caseType});
   }
 
   downloadDocument(): void {
