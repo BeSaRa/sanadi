@@ -104,7 +104,29 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfoTab(true)),
       categoryInfo: this.fb.group(model.buildCategoryTab(true)),
+      categoryGoalPercentGroup: this.fb.group(model.buildCategoryGoalPercentGroup(true), {
+        validators: CustomValidators.validateSum(100, 2,
+          ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
+          [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')]
+        )
+      }),
       summaryInfo: this.fb.group(model.buildSummaryTab(true)),
+      summaryPercentGroup: this.fb.group(model.buildSummaryPercentGroup(true), {
+        validators: CustomValidators.validateSum(100, 2,
+          [
+            'beneficiaries0to5',
+            'beneficiaries5to18',
+            'beneficiaries19to60',
+            'beneficiariesOver60'
+          ],
+          [
+            this.lang.getLocalByKey('number_of_0_to_5'),
+            this.lang.getLocalByKey('number_of_5_to_18'),
+            this.lang.getLocalByKey('number_of_19_to_60'),
+            this.lang.getLocalByKey('number_of_above_60')
+          ]
+        )
+      }),
       componentBudgetInfo: this.fb.group({
         projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
         componentList: this.fb.array([])
@@ -156,7 +178,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ...this.model,
       ...this.basicInfoTab.getRawValue(),
       ...this.categoryInfoTab.getRawValue(),
+      ...this.categoryGoalPercentGroup.getRawValue(),
       ...this.summaryInfoTab.getRawValue(),
+      ...this.summaryPercentGroup.getRawValue(),
       description: this.descriptionTab.value
     });
   }
@@ -190,7 +214,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form.patchValue({
       basicInfo: model.buildBasicInfoTab(false),
       categoryInfo: model.buildCategoryTab(false),
+      categoryGoalPercentGroup: model.buildCategoryGoalPercentGroup(false),
       summaryInfo: model.buildSummaryTab(false),
+      summaryPercentGroup: model.buildSummaryPercentGroup(false),
       componentBudgetInfo: {
         projectTotalCost: model.projectTotalCost,
         componentList: []
@@ -234,8 +260,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('categoryInfo') as FormGroup
   }
 
+  get categoryGoalPercentGroup(): FormGroup {
+    return this.form.get('categoryGoalPercentGroup') as FormGroup
+  }
+
   get summaryInfoTab(): FormGroup {
     return this.form.get('summaryInfo') as FormGroup
+  }
+
+  get summaryPercentGroup(): FormGroup {
+    return this.form.get('summaryPercentGroup') as FormGroup
   }
 
   get descriptionTab(): AbstractControl {

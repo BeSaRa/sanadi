@@ -148,6 +148,19 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     }
   }
 
+  buildCategoryGoalPercentGroup(controls: boolean = false): any {
+    const {
+      firstSDGoalPercentage,
+      secondSDGoalPercentage,
+      thirdSDGoalPercentage
+    } = this;
+    return {
+      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : firstSDGoalPercentage,
+      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : secondSDGoalPercentage,
+      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.number]] : thirdSDGoalPercentage
+    }
+  }
+
   buildSummaryTab(controls: boolean = false): any {
     const {
       needsAssessment,
@@ -156,10 +169,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       directMaleBeneficiaries,
       indirectFemaleBeneficiaries,
       indirectMaleBeneficiaries,
-      beneficiaries0to5,
-      beneficiaries5to18,
-      beneficiaries19to60,
-      beneficiariesOver60,
       successItems,
       outputs,
       expectedImpact,
@@ -173,15 +182,26 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectFemaleBeneficiaries,
       indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number]] : indirectMaleBeneficiaries,
-      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
-      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
-      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
-      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60,
       successItems: controls ? [successItems, CustomValidators.required] : successItems,
       outputs: controls ? [outputs, CustomValidators.required] : outputs,
       expectedImpact: controls ? [expectedImpact, CustomValidators.required] : expectedImpact,
       expectedResults: controls ? [expectedResults, CustomValidators.required] : expectedResults,
       sustainabilityItems: controls ? [sustainabilityItems, CustomValidators.required] : sustainabilityItems
+    }
+  }
+
+  buildSummaryPercentGroup(controls: boolean = false): any {
+    const {
+      beneficiaries0to5,
+      beneficiaries5to18,
+      beneficiaries19to60,
+      beneficiariesOver60
+    } = this;
+    return {
+      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
+      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
+      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
+      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60
     }
   }
 
