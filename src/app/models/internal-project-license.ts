@@ -241,12 +241,12 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2)]] : deductionPercent,
+      deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(10)]] : deductionPercent,
       projectTotalCost: control ? [projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : projectTotalCost,
-      administrativedeductionAmount: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2)]] : deductionPercent,
+      administrativedeductionAmount: control ? [administrativedeductionAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : administrativedeductionAmount,
       targetAmount: control ? [targetAmount] : targetAmount,
       expectedImpactDate: control ? [expectedImpactDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(expectedImpactDate),
-      licenseDuration: control ? [licenseDuration, [CustomValidators.required, CustomValidators.number]] : licenseDuration
+      licenseDuration: control ? [licenseDuration, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : licenseDuration
     }
   }
 
