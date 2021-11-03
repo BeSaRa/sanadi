@@ -30,14 +30,28 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
   };
 }
 
-export function validateSum(expectedSum: number, fields: string[], fieldLocalizationMap: any[]): ValidatorFn {
+export function validateSum(expectedSum: number, numberOfPlaces: number, fields: string[], fieldLocalizationMap: any[]): ValidatorFn {
   return (formGroup): ValidationErrors | null => {
-    const values = fields.map((fieldName: string) => {
+    /*const values = fields.map((fieldName: string) => {
       let control = formGroup.get(fieldName);
       return CommonUtils.isValidValue(control?.value) ? Number(control?.value) : 0;
     });
     let isValid = (values.reduce((a, b) => (a + b), 0) === expectedSum);
-    return !isValid ? {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}} : null;
+    return !isValid ? {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}} : null;*/
+
+    const values = fields.map((fieldName: string) => {
+      let control = formGroup.get(fieldName);
+      if (control && CommonUtils.isValidValue(control.value)) {
+        return numberOfPlaces === 0 ? control.value : Number(Number(control.value).toFixed(numberOfPlaces));
+      }
+      return 0;
+    });
+
+    let sum = values.reduce((a, b) => (a + b), 0);
+
+    expectedSum = numberOfPlaces === 0 ? expectedSum : Number(expectedSum.toFixed(numberOfPlaces));
+    sum = numberOfPlaces === 0 ? sum : Number(sum.toFixed(numberOfPlaces));
+    return (expectedSum === sum) ? null : {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}};
   };
 }
 

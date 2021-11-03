@@ -49,6 +49,14 @@ const commonValidations = {
 
 const inputMaskPatterns = {
   NUMBER_ONLY: '0*',
+  DECIMAL: (numberOfPlaces: number = 2): string => {
+    // if numberOfPlaces < 1, use number mask instead of decimal
+    if (numberOfPlaces < 1) {
+      return '0*';
+    }
+    return '0*.' + ('0'.padEnd(numberOfPlaces, '0'));
+  },
+  PERCENT: 'percent',
   SEPARATOR: 'separator',
   THOUSAND_SEPARATOR: ','
 }
