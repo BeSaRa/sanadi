@@ -182,6 +182,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
 
   _afterBuildForm(): void {
     setTimeout(() => {
+      this.handleReadonly();
       this.loadAidLookup(AidTypes.CLASSIFICATIONS);
       this.listenToAddProjectComponent();
       this.listenToProjectComponentChange();
@@ -438,6 +439,34 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return (this.projectBudgetGroup?.get('projectTotalCost')) as FormControl;
   }
 
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
 
   isEditRequestTypeAllowed(): boolean {
     // allow edit if new record or saved as draft
