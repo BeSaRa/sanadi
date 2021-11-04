@@ -111,9 +111,9 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
         CustomValidators.maxLength(1200)]
       ] : projectDescription,
       beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
-      beneficiaryRegion: controls ? [beneficiaryRegion, CustomValidators.required] : beneficiaryRegion,
+      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
-      executionRegion: controls ? [executionRegion, CustomValidators.required] : executionRegion,
+      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       year: controls ? [year, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(4)]] : year,
       implementationPeriod: controls ? [implementationPeriod, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(4)]] : implementationPeriod
@@ -171,17 +171,17 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       sustainabilityItems
     } = this;
     return {
-      needsAssessment: controls ? [needsAssessment, CustomValidators.required] : needsAssessment,
-      goals: controls ? [goals, CustomValidators.required] : goals,
+      needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(1200)]] : needsAssessment,
+      goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(1200)]] : goals,
       directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
       indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectMaleBeneficiaries,
-      successItems: controls ? [successItems, CustomValidators.required] : successItems,
-      outputs: controls ? [outputs, CustomValidators.required] : outputs,
-      expectedImpact: controls ? [expectedImpact, CustomValidators.required] : expectedImpact,
-      expectedResults: controls ? [expectedResults, CustomValidators.required] : expectedResults,
-      sustainabilityItems: controls ? [sustainabilityItems, CustomValidators.required] : sustainabilityItems
+      successItems: controls ? [successItems, [CustomValidators.required, CustomValidators.maxLength(1200)]] : successItems,
+      outputs: controls ? [outputs, [CustomValidators.required, CustomValidators.maxLength(1200)]] : outputs,
+      expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedImpact,
+      expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedResults,
+      sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(1200)]] : sustainabilityItems
     }
   }
 
