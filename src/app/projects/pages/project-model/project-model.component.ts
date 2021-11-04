@@ -318,6 +318,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.categoryInfoTab.get('subUNOCHACategory') as AbstractControl;
   }
 
+  get sustainabilityItems(): AbstractControl {
+    return this.summaryInfoTab.get('sustainabilityItems') as AbstractControl;
+  }
+
   private loadCountries(): void {
     this.countyService.loadCountries()
       .pipe(takeUntil(this.destroy$))
@@ -437,7 +441,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     if (this.domain.value === DomainTypes.HUMANITARIAN) {
       this.emptyFieldsAndValidation(['mainDACCategory', 'subDACCategory']);
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
+      this.sustainabilityItems.setValidators(CustomValidators.maxLength(1200))
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
+      this.sustainabilityItems.setValidators([CustomValidators.required,CustomValidators.maxLength(1200)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory'])
     } else {
@@ -448,6 +454,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'subDACCategory'
       ])
     }
+    this.sustainabilityItems.updateValueAndValidity();
   }
 
   onMainDacOchaChanged(): void {

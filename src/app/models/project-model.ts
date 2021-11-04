@@ -181,7 +181,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       outputs: controls ? [outputs, [CustomValidators.required, CustomValidators.maxLength(1200)]] : outputs,
       expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedImpact,
       expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedResults,
-      sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(1200)]] : sustainabilityItems
+      sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(1200)]] : sustainabilityItems
     }
   }
 
