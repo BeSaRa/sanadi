@@ -6,7 +6,7 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" style="width: 90vw">
+<div class="dialog-content" id="case-viewer" style="width: 90vw">
   <viewer-case-info [model]="model" [loadedModel]="loadedModel"
                     [componentService]="data.componentService"></viewer-case-info>
   <ng-template #template></ng-template>
@@ -20,6 +20,8 @@
     </button>
   </ng-container>
   <div class="flex-grow-1"></div>
+  <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="validateForm()"><i
+    class="mdi mdi-information-outline text-info"></i></button>
   <button [disabled]="component?.form?.invalid || component?.readonly" (click)="saveCase()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>

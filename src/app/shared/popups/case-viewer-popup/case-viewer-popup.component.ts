@@ -100,4 +100,8 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
       return false;
     }
   }
+
+  validateForm(): void {
+    this.component && this.component.formValidity$?.next('case-viewer');
+  }
 }

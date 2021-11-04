@@ -14,4 +14,5 @@ export interface IESComponent {
   operation: OperationTypes;
   openFrom: OpenFrom;
   handleReadonly?: any;
+  formValidity$?: Subject<any>
 }
