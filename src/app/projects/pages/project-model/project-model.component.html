@@ -202,9 +202,9 @@
             <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="year"
+            <label class="form-label"  asteriskIfRequired="year"
                    for="year">{{lang.map.year}}</label>
-            <input id="year" validationClasses="year" formControlName="year"
+            <input id="year" maxlength="4" validationClasses="year" formControlName="year"
                    [mask]="inputMaskPatterns.NUMBER_ONLY"
                    class="form-control">
             <app-field-error-message controlName="year"></app-field-error-message>
@@ -212,7 +212,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="implementationPeriod"
                    for="implementationPeriod">{{lang.map.implementation_period}}</label>
-            <input id="implementationPeriod" validationClasses="implementationPeriod"
+            <input maxlength="4" id="implementationPeriod" validationClasses="implementationPeriod"
                    [mask]="inputMaskPatterns.NUMBER_ONLY"
                    formControlName="implementationPeriod"
                    class="form-control">
