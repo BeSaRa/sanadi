@@ -442,6 +442,20 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-sm-12">
+            <h2 class="h6 text-primary">{{lang.map.number_of_beneficiaries_with_special_needs}}</h2>
+            <hr>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="handicappedBeneficiaryNumber"
+                   for="handicappedBeneficiaryNumber">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
+            <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   formControlName="handicappedBeneficiaryNumber" class="form-control">
+            <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-sm-12"><h2
             class="h6 text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h2>
             <hr>

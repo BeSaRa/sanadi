@@ -164,6 +164,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       directMaleBeneficiaries,
       indirectFemaleBeneficiaries,
       indirectMaleBeneficiaries,
+      handicappedBeneficiaryNumber,
       successItems,
       outputs,
       expectedImpact,
@@ -173,6 +174,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     return {
       needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(1200)]] : needsAssessment,
       goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(1200)]] : goals,
+      handicappedBeneficiaryNumber: controls ? [handicappedBeneficiaryNumber, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : handicappedBeneficiaryNumber,
       directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
