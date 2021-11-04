@@ -763,6 +763,8 @@
         <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
                 class="btn btn-primary">{{lang.map.launch}}</button>
         <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
+        <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="formValidity$.next('main-content')"><i
+          class="mdi mdi-information-outline text-info"></i></button>
       </div>
     </form>
   </div>
