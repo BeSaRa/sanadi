@@ -139,7 +139,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _afterBuildForm(): void {
     setTimeout(() => {
       if (this.fromDialog) {
-
         this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
 
         this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
@@ -148,6 +147,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
             this.displayTemplateSerialField = true;
             this.templateSerialControl.setValue(template.templateFullSerial);
           })
+        this.onModelTypeChange();
       }
     })
   }
