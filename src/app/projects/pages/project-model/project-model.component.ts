@@ -29,6 +29,7 @@ import {EmployeeService} from "@app/services/employee.service";
 import {AttachmentsComponent} from "@app/shared/components/attachments/attachments.component";
 import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {CaseStatus} from "@app/enums/case-status.enum";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -138,10 +139,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _afterBuildForm(): void {
     setTimeout(() => {
       if (this.fromDialog) {
-        // final approved
-        if (this.model?.getCaseStatus() !== 4) {
-          this.readonly = false;
-        }
+
+        this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
 
         this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
           .pipe(takeUntil(this.destroy$)).subscribe((template) => {
