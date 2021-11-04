@@ -101,11 +101,13 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return !!Object.keys(this.filterSearchFields()).length;
   }
 
-  filterSearchFields(): Partial<CaseModel<any, any>> {
+  filterSearchFields(fields?: string[]): Partial<CaseModel<any, any>> {
     const self = this as unknown as any;
-    return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null)).reduce((acc, current) => {
-      return (current === 'service' || current === 'caseType') ? acc : {...acc, [current]: self[current]};
-    }, {});
+    return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
+      .filter(field => fields ? fields.indexOf(field) !== -1 : field)
+      .reduce((acc, current) => {
+        return (current === 'service' || current === 'caseType') ? acc : {...acc, [current]: self[current]};
+      }, {});
   }
 
   viewLogs(): DialogRef {
@@ -113,7 +115,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   }
 
   manageAttachments(): DialogRef {
-    return this.service.openDocumentDialog(this.id , this.caseType);
+    return this.service.openDocumentDialog(this.id, this.caseType);
   }
 
   manageRecommendations(onlyLogs: boolean = false): DialogRef {

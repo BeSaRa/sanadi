@@ -47,6 +47,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   search$: Subject<any> = new Subject<any>();
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
+  fieldsNames: string[] = [];
 
   get criteriaTitle(): string {
     return this.lang.map.search_result + (this.results.length ? " (" + this.results.length + ")" : '');
@@ -78,7 +79,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   private search(value: Partial<CaseModel<any, any>>) {
     this.selectedService
-      .search(this.selectedService.getSearchCriteriaModel().clone(value))
+      .search(this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames))
       .subscribe((results: CaseModel<any, any>[]) => {
         this.results = results;
         if (this.results.length) {
@@ -108,6 +109,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
             this.form.reset();
             this.stringifyDefaultDates(fields[0]);
             this.fields = fields;
+            this.getFieldsNames(fields);
           });
       });
   }
@@ -150,7 +152,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   exportSearchResult(): void {
-    const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields();
+    const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
     this.selectedService
       .exportSearch(criteria)
       .subscribe((blob) => window.open(blob.url));
@@ -311,6 +313,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     return this.allowedServicesForExternalUser.indexOf(number) !== -1;
   }
 
+  // noinspection JSUnusedLocalSymbols
   private listenToRouteParams() {
     this.activatedRoute.fragment.subscribe((serviceNumber) => {
       let service = serviceNumber ? Number(serviceNumber.split('-').pop()) : -1
@@ -318,10 +321,16 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     })
   }
 
+  // noinspection JSUnusedLocalSymbols
   private updateRoute() {
-    console.log(this.serviceControl.value);
     this.router.navigate([this.activatedRoute], {
       fragment: ("service-" + this.serviceControl.value)
     }).then((val) => console.log(val))
+  }
+
+  private getFieldsNames(fields: FormlyFieldConfig[]) {
+    this.fieldsNames = fields.map(group => group.fieldGroup).reduce((list, row) => {
+      return row ? list.concat(row.map(field => (field.key as string))) : list;
+    }, [] as string[])
   }
 }

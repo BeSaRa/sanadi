@@ -443,7 +443,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
       this.sustainabilityItems.setValidators(CustomValidators.maxLength(1200))
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
-      this.sustainabilityItems.setValidators([CustomValidators.required,CustomValidators.maxLength(1200)])
+      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(1200)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory'])
     } else {

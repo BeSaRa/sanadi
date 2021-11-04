@@ -177,7 +177,21 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _buildForm(): void {
-    let objInternalProjectLicense = new InternalProjectLicense();
+    let objInternalProjectLicense = (new InternalProjectLicense()).clone({
+      ageAverageCategory: 0,
+      beneficiaries0to5: 0,
+      beneficiaries5to18: 0,
+      beneficiaries19to60: 0,
+      beneficiariesOver60: 0,
+      beneficiaryFamiliesNumber: 0,
+      directBeneficiaryNumber: 0,
+      firstSDGoalPercentage: 0,
+      handicappedBeneficiaryNumber: 0,
+      indirectBeneficiaryNumber: 0,
+      individualsAverageNumber: 0,
+      thirdSDGoalPercentage: 0,
+      secondSDGoalPercentage: 0
+    });
     this.form = this.fb.group({
       basicInfo: this.fb.group(objInternalProjectLicense.getBasicFormFields(true)),
       projectCategory: this.fb.group(objInternalProjectLicense.getProjectCategoryFields(true)),
