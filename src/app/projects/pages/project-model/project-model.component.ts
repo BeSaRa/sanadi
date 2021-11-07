@@ -57,7 +57,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
-  projectListFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
+  projectListTotalCostFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
   currentEditedProjectComponent?: ProjectComponent;
   tabIndex$: Subject<number> = new Subject<number>();
 
@@ -412,7 +412,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
-        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
+        this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
       })
   }
 
@@ -516,7 +516,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.model && (this.model.componentList = list.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})))
     }
     this.toast.success(this.lang.map.msg_save_success);
-    this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost() ?? 0);
+    this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
     this.cancelProjectComponent();
   }
 

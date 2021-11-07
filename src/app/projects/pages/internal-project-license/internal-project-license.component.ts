@@ -74,7 +74,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   private saveProjectComponent$: Subject<any> = new Subject<any>();
   editProjectComponentIndex: number = -1;
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
-  projectListFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
+  projectListTotalCostFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
+  projectListAdminTotalCostFooterColumns: string[] = ['adminTotalCostLabel', 'adminTotalCost'];
+  projectListTargetCostFooterColumns: string[] = ['targetCostLabel', 'targetCost'];
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -481,8 +483,20 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiariesOver60')) as FormControl;
   }
 
+  get deductionPercentField(): FormControl {
+    return (this.projectBudgetGroup?.get('deductionPercent')) as FormControl;
+  }
+
   get projectTotalCostField(): FormControl {
     return (this.projectBudgetGroup?.get('projectTotalCost')) as FormControl;
+  }
+
+  get adminTotalDeductionCostField(): FormControl {
+    return (this.projectBudgetGroup?.get('administrativedeductionAmount')) as FormControl;
+  }
+
+  get targetCostField(): FormControl {
+    return (this.projectBudgetGroup?.get('targetAmount')) as FormControl;
   }
 
   handleReadonly(): void {
@@ -858,8 +872,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         }
 
         this.model.componentList = this.model.componentList.slice();
-        this.projectTotalCostField.setValue(this.model.getTotalProjectComponentCost());
-        this.projectTotalCostField.updateValueAndValidity();
+
+        this._updateProjectTotalCost();
+        this.updateTotalAdminDeductionAndTargetCost();
       }
 
       this.toastService.success(this.lang.map.msg_save_success);
@@ -909,6 +924,29 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         }
         return this.licenseService.openLicenseFullContentDialog(file, license);
       });
+  }
+
+  private _updateProjectTotalCost(): void {
+    this.projectTotalCostField.setValue(this.model!.getTotalProjectComponentCost(2));
+    this.projectTotalCostField.updateValueAndValidity();
+  }
+
+  private _updateTotalAdminDeductionCost(): void {
+    let adminTotalDeductionCost = this.model!.getAdminDeductionCost(this.deductionPercentField.value!, 2);
+    this.adminTotalDeductionCostField.setValue(adminTotalDeductionCost);
+    this.adminTotalDeductionCostField.updateValueAndValidity();
+  }
+
+  private _updateTargetCost(): void {
+    let targetCost = this.model!.getTargetCost(this.deductionPercentField.value!, 2);
+
+    this.targetCostField.setValue(targetCost);
+    this.targetCostField.updateValueAndValidity();
+  }
+
+  updateTotalAdminDeductionAndTargetCost(): void {
+    this._updateTotalAdminDeductionCost();
+    this._updateTargetCost();
   }
 
   searchNgSelect(term: string, item: any): boolean {

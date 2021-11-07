@@ -260,11 +260,26 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     }
   }
 
-  getTotalProjectComponentCost(): number {
+  getTotalProjectComponentCost(numberOfDecimalPlaces: number = 2): number {
     if (!CommonUtils.isValidValue(this.componentList)) {
       return 0;
     }
-    return this.componentList.filter(x => CommonUtils.isValidValue(x.totalCost)).map(t => t.totalCost).reduce((a, b) => Number(a) + Number(b), 0) || 0;
+    let total = this.componentList.filter(x => CommonUtils.isValidValue(x.totalCost))
+      .map(t => t.totalCost)
+      .reduce((a, b) => Number(Number(a).toFixed(numberOfDecimalPlaces)) + Number(Number(b).toFixed(numberOfDecimalPlaces)), 0) || 0;
+    return Number(total.toFixed(numberOfDecimalPlaces));
+  }
+
+  getAdminDeductionCost(deductionPercent: number, numberOfDecimalPlaces: number = 2): number {
+    if (!CommonUtils.isValidValue(deductionPercent) || this.getTotalProjectComponentCost(2) === 0) {
+      return 0;
+    }
+    deductionPercent = Number(Number(deductionPercent).toFixed(numberOfDecimalPlaces));
+    return Number(((deductionPercent / 100) * (this.getTotalProjectComponentCost(2))).toFixed(numberOfDecimalPlaces));
+  }
+
+  getTargetCost(deductionPercent: number, numberOfDecimalPlaces: number = 2): number {
+    return Number((this.getAdminDeductionCost(deductionPercent, numberOfDecimalPlaces) + this.getTotalProjectComponentCost(numberOfDecimalPlaces)).toFixed(numberOfDecimalPlaces));
   }
 
 }

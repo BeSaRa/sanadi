@@ -572,21 +572,21 @@
               <label class="form-label" asteriskIfRequired="componentName"
                      for="componentName">{{lang.map.component_name}}</label>
               <input id="componentName" validationClasses="componentName" formControlName="componentName"
-                     class="form-control">
+                     class="form-control" maxlength="100">
               <app-field-error-message controlName="componentName"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label class="form-label" asteriskIfRequired="details"
                      for="details">{{lang.map.details}}</label>
               <input id="details" validationClasses="details" formControlName="details"
-                     class="form-control">
+                     class="form-control" maxlength="250">
               <app-field-error-message controlName="details"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label class="form-label" asteriskIfRequired="totalCost"
                      for="totalCost">{{lang.map.total_cost}}</label>
               <input id="totalCost" validationClasses="totalCost" formControlName="totalCost"
-                     class="form-control">
+                     class="form-control" maxlength="20">
               <app-field-error-message controlName="totalCost"></app-field-error-message>
             </div>
           </div>
@@ -641,7 +641,7 @@
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="projectListColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: projectListColumns;"></tr>
-        <tr cdk-footer-row *cdkFooterRowDef="projectListFooterColumns"
+        <tr cdk-footer-row *cdkFooterRowDef="projectListTotalCostFooterColumns"
             [hidden]="model && model.componentList && model.componentList.length === 0"></tr>
         <tr *cdkNoDataRow>
           <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
