@@ -138,8 +138,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       firstSDGoal: controls ? [firstSDGoal, CustomValidators.required] : firstSDGoal,
-      secondSDGoal: controls ? [secondSDGoal, CustomValidators.required] : secondSDGoal,
-      thirdSDGoal: controls ? [thirdSDGoal, CustomValidators.required] : thirdSDGoal
+      secondSDGoal: controls ? [secondSDGoal] : secondSDGoal,
+      thirdSDGoal: controls ? [thirdSDGoal] : thirdSDGoal
     }
   }
 
@@ -151,8 +151,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     } = this;
     return {
       firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
-      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
-      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
+      secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
+      thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
     }
   }
 

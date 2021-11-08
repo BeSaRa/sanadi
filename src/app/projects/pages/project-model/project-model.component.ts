@@ -68,6 +68,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   selectedModel?: ProjectModel;
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'templateTypeInfo'];
   displayTemplateSerialField: boolean = false;
+  displayDevGoals: boolean = false;
 
   templateSerialControl: FormControl = new FormControl(null);
 
@@ -138,6 +139,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterBuildForm(): void {
+    this.listenToOptionalGoalsChanges();
     setTimeout(() => {
       if (this.fromDialog) {
         this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
@@ -310,16 +312,28 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.basicInfoTab.get('projectType') as AbstractControl;
   }
 
-  get firstGoal(): AbstractControl {
+  get firstSDGoal(): AbstractControl {
     return this.categoryInfoTab.get('firstSDGoal') as AbstractControl;
   }
 
-  get secondGoal(): AbstractControl {
+  get secondSDGoal(): AbstractControl {
     return this.categoryInfoTab.get('secondSDGoal') as AbstractControl;
   }
 
-  get thirdGoal(): AbstractControl {
+  get thirdSDGoal(): AbstractControl {
     return this.categoryInfoTab.get('thirdSDGoal') as AbstractControl;
+  }
+
+  get firstSDGoalPercentage(): AbstractControl {
+    return this.categoryGoalPercentGroup?.get('firstSDGoalPercentage') as AbstractControl;
+  }
+
+  get secondSDGoalPercentage(): AbstractControl {
+    return this.categoryGoalPercentGroup?.get('secondSDGoalPercentage') as AbstractControl;
+  }
+
+  get thirdSDGoalPercentage(): AbstractControl {
+    return this.categoryGoalPercentGroup?.get('thirdSDGoalPercentage') as AbstractControl;
   }
 
   get domain(): AbstractControl {
@@ -465,19 +479,37 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   onDomainChange() {
     this.loadDacMainOcha();
     if (this.domain.value === DomainTypes.HUMANITARIAN) {
-      this.emptyFieldsAndValidation(['mainDACCategory', 'subDACCategory']);
+      this.emptyFieldsAndValidation([
+        'mainDACCategory',
+        'subDACCategory',
+        'firstSDGoal',
+        'secondSDGoal',
+        'thirdSDGoal',
+        'firstSDGoalPercentage',
+        'secondSDGoalPercentage',
+        'thirdSDGoalPercentage'
+      ]);
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
       this.sustainabilityItems.setValidators(CustomValidators.maxLength(1200))
+      this.displayDevGoals = false;
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
       this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(1200)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
-      this.setRequiredValidator(['mainDACCategory', 'subDACCategory'])
+      this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
+      this.displayDevGoals = true;
     } else {
+      this.displayDevGoals = false;
       this.emptyFieldsAndValidation([
         'mainUNOCHACategory',
         'subUNOCHACategory',
         'mainDACCategory',
-        'subDACCategory'
+        'subDACCategory',
+        'firstSDGoal',
+        'secondSDGoal',
+        'thirdSDGoal',
+        'firstSDGoalPercentage',
+        'secondSDGoalPercentage',
+        'thirdSDGoalPercentage'
       ])
     }
     this.sustainabilityItems.updateValueAndValidity();
@@ -578,5 +610,22 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
 
     return isAllowed;
+  }
+
+  private static updatePercentageRequired(control: AbstractControl, isRequired: boolean = false): AbstractControl {
+    control.setValidators(isRequired ? CustomValidators.required : null);
+    control.updateValueAndValidity();
+    return control;
+  }
+
+  private listenToOptionalGoalsChanges() {
+    const fields: (keyof Pick<IDacOchaFields, "secondSDGoal" | "thirdSDGoal">)[] = ["secondSDGoal", "thirdSDGoal"];
+    fields.forEach((field) => {
+      this[field].valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .pipe(switchMap(value => of(ProjectModelComponent.updatePercentageRequired(this[(field + 'Percentage') as unknown as keyof IDacOchaFields], !!value))))
+        .subscribe()
+    });
+
   }
 }
