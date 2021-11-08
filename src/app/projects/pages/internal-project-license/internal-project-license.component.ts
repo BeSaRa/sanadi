@@ -67,8 +67,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   goalsList: SDGoal[] = [];
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
 
-  selectedLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
-
   private projectComponentChanged$: Subject<ProjectComponent | null> = new Subject<ProjectComponent | null>();
   private currentProjectComponentRecord?: ProjectComponent;
   addProjectComponent$: Subject<any> = new Subject<any>();
@@ -716,7 +714,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model, true, this.selectedLicenseDisplayColumns).onAfterClose$),
+        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model, true, this.service.selectLicenseDisplayColumns).onAfterClose$),
         // allow only if the user select license
         filter<{ selected: InternalProjectLicenseResult, details: InternalProjectLicense }, any>
         ((selection): selection is { selected: InternalProjectLicenseResult, details: InternalProjectLicense } => {

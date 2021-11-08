@@ -27,6 +27,7 @@ import {SearchInternalProjectLicenseCriteria} from '@app/models/search-internal-
 })
 export class InternalProjectLicenseService extends EServiceGenericService<InternalProjectLicense> {
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
+  selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   interceptor: IModelInterceptor<InternalProjectLicense> = new InternalProjectLicenseInterceptor();
   projectComponentInterceptor: IModelInterceptor<ProjectComponent> = new ProjectComponentInterceptor();
