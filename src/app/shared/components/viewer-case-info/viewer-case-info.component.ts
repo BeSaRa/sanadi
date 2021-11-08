@@ -90,6 +90,14 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     return this.loadedModel.managerDecision ? this.loadedModel.managerDecisionInfo : null;
   }
 
+  get generalManagerJustification(): string | null {
+    return this.loadedModel.generalManagerJustification ? this.loadedModel.generalManagerJustification : null;
+  }
+
+  get generalManagerDecisionInfo(): AdminResult | null {
+    return this.loadedModel.generalManagerDecision ? this.loadedModel.generalManagerDecisionInfo : null;
+  }
+
   viewLicense(): void {
     if (!this.selectedFinalLicense)
       return;
