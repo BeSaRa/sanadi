@@ -31,6 +31,7 @@ import {ProjectComponent} from '@app/models/project-component';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {LicenseService} from '@app/services/license.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 
 @Component({
   selector: 'internal-project-license',
@@ -239,7 +240,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       if (this.fromDialog) {
         const oldLicenseFullSerial = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
         if (oldLicenseFullSerial) {
-          this.loadSelectedLicense(oldLicenseFullSerial);
+          this.loadSelectedLicense(oldLicenseFullSerial, () => {
+            this.oldLicenseFullSerialField.updateValueAndValidity();
+          });
         }
       }
     })
@@ -655,19 +658,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number]));
-    /*
-    // not emitting event because we are updating fields value and validation is updating manually after this enable/disable
-    if (isEnabled) {
-      this.individual_0To5_Field.enable();
-      this.individual_5To18_Field.enable();
-      this.individual_19To60_Field.enable();
-      this.individual_60Above_Field.enable();
-    } else {
-      this.individual_0To5_Field.disable();
-      this.individual_5To18_Field.disable();
-      this.individual_19To60_Field.disable();
-      this.individual_60Above_Field.disable();
-    }*/
 
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2)]));
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2)]));
@@ -687,19 +677,20 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.familyAverageAgeGroupField, validators.concat([CustomValidators.number]));
   }
 
-  private loadSelectedLicense(oldLicenseFullSerial: string): void {
+  private loadSelectedLicense(oldLicenseFullSerial: string, callback?: any): void {
     if (!this.model || !oldLicenseFullSerial) {
       return;
     }
-    this.service
-      .licenseSearch({licenseNumber: oldLicenseFullSerial})
+    this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
       .pipe(
         filter(list => !!list.length),
         map(list => list[0]),
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license, undefined)
+        this.setSelectedLicense(license, undefined);
+
+        callback && callback();
       })
   }
 
@@ -716,8 +707,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
-        return this.service
-          .licenseSearch({fullSerial: oldLicenseFullSerial})
+        return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
           .pipe(catchError(() => of([])))
       }))
       .pipe(
@@ -757,8 +747,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
   }
 
-  loadLicencesByCriteria(value: any): Observable<InternalProjectLicenseResult[]> {
-    return this.service.licenseSearch({licenseNumber: value});
+  loadLicencesByCriteria(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
+    return this.service.licenseSearch(criteria);
   }
 
   isNewRequestType(): boolean {
