@@ -21,6 +21,8 @@ import {InternalProjectLicenseResult} from '@app/models/internal-project-license
 import {ProjectComponent} from '@app/models/project-component';
 import {ProjectComponentInterceptor} from '@app/model-interceptors/project-component-interceptor';
 import {SearchInternalProjectLicenseCriteria} from '@app/models/search-internal-project-license-criteria';
+import {map} from 'rxjs/operators';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +73,10 @@ export class InternalProjectLicenseService extends EServiceGenericService<Intern
 
   licenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria> = {}): Observable<InternalProjectLicenseResult[]> {
     return this.licenseService.internalProjectLicenseSearch(criteria);
+  }
+
+  checkFinalApproveNotificationByMatrix(caseId: string): Observable<boolean> {
+    return this.http.get<IDefaultResponse<boolean>>(this._getServiceURL() + '/matrix-approval/' + caseId)
+      .pipe(map(response => response.rs));
   }
 }

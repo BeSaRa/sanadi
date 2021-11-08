@@ -198,4 +198,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.caseStatus === this.service.caseStatusEnumMap[this.caseType].FINAL_APPROVE;
   }
 
+  getCaseId(): any {
+    return this.id;
+  }
+
 }

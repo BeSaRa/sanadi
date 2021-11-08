@@ -12,6 +12,9 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CaseModel} from '@app/models/case-model';
 import {QueryResult} from '@app/models/query-result';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -26,6 +29,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   viewInit: Subject<any> = new Subject<any>();
   _component!: IESComponent;
   openedFrom!: OpenFrom;
+  showFinalApprovalByMatrixNotification: boolean = false;
 
   set component(component: IESComponent) {
     this.zone.onStable
@@ -57,6 +61,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
               },
               private zone: NgZone,
               private dialogRef: DialogRef,
+              private empService: EmployeeService,
               public lang: LangService) {
 
     this.model = this.data.model;
@@ -66,6 +71,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.actions = this.data.actions.filter((action) => this.filterAction(action));
+    this.checkForFinalApproveByMatrixNotification();
   }
 
   ngAfterViewInit(): void {
@@ -76,6 +82,24 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   displayLabel(action: IMenuItem<CaseModel<any, any> | QueryResult>): string {
     return typeof action.label === 'function' ? action.label(this.model) : this.lang.map[action.label as unknown as keyof ILanguageKeys];
+  }
+
+  get internalProjectLicenseService(): InternalProjectLicenseService | undefined {
+    if (!this.data.componentService) {
+      return undefined;
+    }
+
+    return (this.data.componentService as unknown as InternalProjectLicenseService);
+  }
+
+  checkForFinalApproveByMatrixNotification(): void {
+    if (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.internalProjectLicenseService &&
+      (this.empService.isLicensingManager() || this.empService.isLicensingGeneralManager() || this.empService.isLicensingChiefManager())) {
+      this.internalProjectLicenseService.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
+        .subscribe((result: boolean) => {
+          this.showFinalApprovalByMatrixNotification = result;
+        });
+    }
   }
 
   takeAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {
