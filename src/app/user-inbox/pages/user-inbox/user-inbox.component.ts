@@ -4,13 +4,12 @@ import {InboxService} from '@app/services/inbox.service';
 import {QueryResultSet} from '@app/models/query-result-set';
 import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {QueryResult} from '@app/models/query-result';
-import {BehaviorSubject, of, Subject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {FormControl} from '@angular/forms';
 import {EmployeeService} from '@app/services/employee.service';
 import {CaseModel} from '@app/models/case-model';
 import {WFActions} from '@app/enums/wfactions.enum';
@@ -23,6 +22,7 @@ import {CommonUtils} from "@app/helpers/common-utils";
 import {IInboxCriteria} from "@app/interfaces/i-inbox-criteria";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {SortEvent} from '@app/interfaces/sort-event';
+import {CaseTypes} from "@app/enums/case-types.enum";
 
 @Component({
   selector: 'app-user-inbox',
@@ -355,7 +355,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
         show: (item: QueryResult) => {
-         return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
@@ -367,7 +367,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
         show: (item: QueryResult) => {
-         return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
@@ -401,7 +401,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       {
         type: 'action',
         icon: 'mdi-check-underline',
-        label: 'final_approve_task',
+        label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: QueryResult) => {
           return item.RESPONSES.includes(WFResponseType.FINAL_APPROVE);
         },

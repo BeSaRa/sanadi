@@ -25,6 +25,7 @@ import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteri
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SortEvent} from '@app/interfaces/sort-event';
+import {CaseTypes} from "@app/enums/case-types.enum";
 
 @Component({
   selector: 'team-inbox',
@@ -539,7 +540,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         type: 'action',
         icon: 'mdi-check-underline',
-        label: 'final_approve_task',
+        label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {

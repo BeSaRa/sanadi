@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  final_approve_task_based_on_matrix: string;
   kindly_choose_model: string;
   template_serial: string;
   kindly_check_required_attachments: string;
