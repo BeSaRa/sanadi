@@ -42,7 +42,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
-    this.showManagerRequestStatus = !!this.loadedModel.managerDecision;
+    // this.showManagerRequestStatus = !!this.loadedModel.managerDecision;
   }
 
   ngOnDestroy(): void {

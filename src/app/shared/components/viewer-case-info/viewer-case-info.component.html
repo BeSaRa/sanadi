@@ -29,6 +29,53 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <div class="col-md-6 col-sm-12">
+      <div class="row">
+        <label for="caseStatusInfo" class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_status}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <span id="caseStatusInfo"
+                class="form-control input-disabled">{{loadedModel.caseStatusInfo ? loadedModel.caseStatusInfo.getName() : ''}}</span>
+        </div>
+      </div>
+    </div>
+    <!-- Final External Office Generated License -->
+    <div class="col-md-6 col-sm-12" *ngIf="canShowFinalExternalOfficeGeneratedLicense()">
+      <div class="row">
+        <label for="generatedLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-numeric"></i></span>
+            <input readonly [value]="finalExternalOfficeGeneratedLicenseNumber" id="generatedLicenseNumber"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view_license" (click)="viewFinalExternalOfficeGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Internal Project Generated License -->
+    <div class="col-md-6 col-sm-12" *ngIf="canShowInternalProjectGeneratedLicense()">
+      <div class="row">
+        <label for="generatedInternalProjectLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
+            <input readonly [value]="internalProjectGeneratedLicenseNumber" id="generatedInternalProjectLicenseNumber"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view_license" (click)="viewInternalProjectGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manager Decision -->
   <div class="row mb-3" *ngIf="showManagerRequestStatus">
     <div class="col-md-6 col-sm-12">
       <div class="row">
@@ -46,42 +93,6 @@
                class="col-md-4 col-sm-12 col-form-label">{{lang.map.reason}}</label>
         <div class="col-md-8 mb-3 col-sm-12 position-relative" disabled>
           <input id="managerJustification" readonly disabled [value]="managerJustification" class="form-control">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3" *ngIf="canShowFinalExternalOfficeGeneratedLicense()">
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="generatedLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
-               disabled>{{lang.map.generated_license_number}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="text-primary mdi mdi-numeric"></i></span>
-            <input readonly [value]="finalExternalOfficeGeneratedLicenseNumber" id="generatedLicenseNumber" class="form-control">
-            <a type="button" [tooltip]="lang.map.view_license" (click)="viewFinalExternalOfficeGeneratedLicense()"
-               class="input-group-text"><i
-              class="mdi mdi-eye text-primary"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3" *ngIf="canShowInternalProjectGeneratedLicense()">
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="generatedInternalProjectLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
-               disabled>{{lang.map.generated_license_number}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
-            <input readonly [value]="internalProjectGeneratedLicenseNumber" id="generatedInternalProjectLicenseNumber" class="form-control">
-            <a type="button" [tooltip]="lang.map.view_license" (click)="viewInternalProjectGeneratedLicense()"
-               class="input-group-text"><i
-              class="mdi mdi-eye text-primary"></i></a>
-          </div>
         </div>
       </div>
     </div>
