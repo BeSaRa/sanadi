@@ -124,7 +124,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
       enName: control ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
         CustomValidators.maxLength(250),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
-      projectDescription: control ? [projectDescription, [CustomValidators.maxLength(250)]] : projectDescription
+      projectDescription: control ? [projectDescription, [CustomValidators.maxLength(1200)]] : projectDescription
     }
   }
 
