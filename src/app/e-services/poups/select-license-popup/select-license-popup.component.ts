@@ -23,11 +23,25 @@ export class SelectLicensePopupComponent {
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
-              @Inject(DIALOG_DATA_TOKEN) public data: { licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select: boolean }) {
+              @Inject(DIALOG_DATA_TOKEN) public data: {
+                licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]),
+                caseRecord: any | undefined,
+                select: boolean,
+                displayedColumns: string[]
+              }) {
     // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
-    this.displayedColumns = [...this.displayedColumns, 'action'];
+    if (this.data.displayedColumns.length > 0) {
+      this.displayedColumns = [...this.data.displayedColumns];
+    } else {
+      this.displayedColumns = [...this.displayedColumns];
+    }
+
+    if (!this.displayedColumns.includes('actions')){
+      this.displayedColumns.push('actions');
+    }
+
     if (this.data.select) {
       this.label = "select_license";
     }

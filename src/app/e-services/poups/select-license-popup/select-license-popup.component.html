@@ -20,6 +20,11 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.licenseNumber}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="fullSerial">
+        <!-- full serial will be shown as License number, so label is license number -->
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
+      </ng-container>
       <ng-container cdkColumnDef="status">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_status}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
@@ -28,7 +33,7 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date: 'mediumDate'}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="action">
+      <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <button (click)="selectLicense(row)" *ngIf="data.select" class="btn btn-primary">{{lang.map.select}}</button>

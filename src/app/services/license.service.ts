@@ -141,11 +141,12 @@ export class LicenseService {
     return this._loadInternalProjectLicenseByLicenseId(licenseId);
   }
 
-  openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true): DialogRef {
+  openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
-      caseRecord
+      caseRecord,
+      displayedColumns
     });
   }
 
