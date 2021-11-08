@@ -1,7 +1,7 @@
 export enum ServiceRequestTypes {
   NEW = 1,
-  RENEW,
-  EXTEND,
-  UPDATE,
-  CANCEL
+  RENEW = 2,
+  EXTEND = 3,
+  UPDATE = 4,
+  CANCEL = 5
 }

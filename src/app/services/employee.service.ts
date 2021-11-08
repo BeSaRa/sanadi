@@ -29,6 +29,45 @@ export class EmployeeService {
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
 
+
+  private userTeamsMap = {
+    charityUser: {
+      authName: 'Charity Organization',
+      ldapGroupName: 'Charity Organization'
+    },
+    charityManager: {
+      authName: 'Charity Organization Manager',
+      ldapGroupName: 'Charity_Organization_Manager'
+    },
+    licenseUser: {
+      authName: 'Licenses',
+      ldapGroupName: 'Licenses'
+    },
+    licenseManager: {
+      authName: 'Licenses Manager',
+      ldapGroupName: 'Licenses_Manager'
+    },
+    licenseChiefManager: {
+      authName: 'Licenses Chief',
+      ldapGroupName: 'Licenses_Chief'
+    },
+    licenseGeneralManager: {
+      authName: 'Licenses General Manager',
+      ldapGroupName: 'Licenses_General_Manager'
+    },
+    riskAndComplianceUser: {
+      authName: 'Risk and Compliance',
+      ldapGroupName: 'Risk and Compliance'
+    },
+    constructionExpert: {
+      authName: 'Construction Experts',
+      ldapGroupName: 'Construction_Experts'
+    },
+    developmentalExpert: {
+      authName: 'Developmental Experts',
+      ldapGroupName: 'Developmental_ Experts'
+    }
+  };
   private userRoleTeamAuthMap = {
     charityUser: 'Charity Organization',
     charityManager: 'Charity Organization Manager',
@@ -36,7 +75,20 @@ export class EmployeeService {
     licenseManager: 'Licenses Manager',
     licenseChiefManager: 'Licenses Chief',
     licenseGeneralManager: 'Licenses General Manager',
-    riskAndComplianceUser: 'Risk and Compliance'
+    riskAndComplianceUser: 'Risk and Compliance',
+    constructionExpert: 'Construction Experts',
+    developmentalExpert: 'Developmental Experts'
+  };
+  private userRoleTeamLDAPGroupMap = {
+    charityUser: 'Charity Organization',
+    charityManager: 'Charity_Organization_Manager',
+    licenseUser: 'Licenses',
+    licenseManager: 'Licenses_Manager',
+    licenseChiefManager: 'Licenses_Chief',
+    licenseGeneralManager: 'Licenses_General_Manager',
+    riskAndComplianceUser: 'Risk and Compliance',
+    constructionExpert: 'Construction_Experts',
+    developmentalExpert: 'Developmental_ Experts'
   };
 
   constructor(private configService: ConfigurationService) {
@@ -244,31 +296,53 @@ export class EmployeeService {
     return this.teams.some(x => CommonUtils.isValidValue(x.authName) && x.authName.toLowerCase() === teamName.toLowerCase());
   }
 
-  isCharityUser(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.charityUser);
+  private _isInTeam(team: { authName: string, ldapGroupName: string }, compareBy: 'authName' | 'ldapGroupName' = 'authName') {
+    if (!this.teams.length || !CommonUtils.isValidValue(team)) {
+      return false;
+    }
+    return this.teams.some(x => {
+      if (compareBy === 'authName') {
+        return CommonUtils.isValidValue(x.authName) && CommonUtils.isValidValue(team.authName) && x.authName.toLowerCase() === team.authName.toLowerCase();
+      } else if (compareBy === 'ldapGroupName') {
+        return CommonUtils.isValidValue(x.ldapGroupName) && CommonUtils.isValidValue(team.ldapGroupName) && x.ldapGroupName.toLowerCase() === team.ldapGroupName.toLowerCase();
+      }
+      return false;
+    });
   }
 
-  isCharityManager(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.charityManager);
+  isCharityUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.charityUser, compareBy);
   }
 
-  isLicensingUser(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseUser);
+  isCharityManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.charityManager, compareBy);
   }
 
-  isLicensingManager(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseManager);
+  isLicensingUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.licenseUser, compareBy);
   }
 
-  isLicensingGeneralManager(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseGeneralManager);
+  isLicensingManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.licenseManager, compareBy);
   }
 
-  isLicensingChiefManager(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.licenseChiefManager);
+  isLicensingGeneralManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.licenseGeneralManager, compareBy);
   }
 
-  isRiskAndComplianceUser(): boolean {
-    return this._isInTeamByAuthName(this.userRoleTeamAuthMap.riskAndComplianceUser);
+  isLicensingChiefManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.licenseChiefManager, compareBy);
+  }
+
+  isRiskAndComplianceUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.riskAndComplianceUser, compareBy);
+  }
+
+  isConstructionExpert(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.constructionExpert, compareBy);
+  }
+
+  isDevelopmentalExpert(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.developmentalExpert, compareBy);
   }
 }

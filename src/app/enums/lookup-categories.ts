@@ -67,6 +67,7 @@ export enum LookupCategories {
   INTERNAL_PROJECT_TYPE = 'InternalProjectType',
   INTERNAL_PROJECT_STATUS = 'InternalProjectStatus',
   EXPERTS = 'Experts',
+  INTERNAL_SERVICE_REQUEST_TYPE = 'InternalServiceRequestType',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',
@@ -135,6 +136,7 @@ export enum LookupCategories {
   TRAINING_LANG_CAT_ID = '',
   INTERNAL_PROJECT_TYPE_CAT_ID = '131',
   INTERNAL_PROJECT_STATUS_CAT_ID = '132',
-  EXPERTS_CAT_ID = '133'
+  EXPERTS_CAT_ID = '133',
+  INTERNAL_SERVICE_REQUEST_TYPE_CAT_ID = '134'
 
 }
