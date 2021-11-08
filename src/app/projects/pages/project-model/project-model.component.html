@@ -205,7 +205,7 @@
             <label class="form-label"  asteriskIfRequired="year"
                    for="year">{{lang.map.year}}</label>
             <input id="year" maxlength="4" validationClasses="year" formControlName="year"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   onlyNumbers
                    class="form-control">
             <app-field-error-message controlName="year"></app-field-error-message>
           </div>
@@ -213,7 +213,7 @@
             <label class="form-label" asteriskIfRequired="implementationPeriod"
                    for="implementationPeriod">{{lang.map.implementation_period}}</label>
             <input maxlength="4" id="implementationPeriod" validationClasses="implementationPeriod"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   onlyNumbers
                    formControlName="implementationPeriod"
                    class="form-control">
             <app-field-error-message controlName="implementationPeriod"></app-field-error-message>
@@ -406,7 +406,7 @@
             <label class="form-label" asteriskIfRequired="directMaleBeneficiaries"
                    for="directMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
             <input id="directMaleBeneficiaries" validationClasses="directMaleBeneficiaries"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   onlyNumbers
                    formControlName="directMaleBeneficiaries" class="form-control">
             <app-field-error-message controlName="directMaleBeneficiaries"></app-field-error-message>
           </div>
@@ -427,7 +427,7 @@
             <label class="form-label" asteriskIfRequired="indirectMaleBeneficiaries"
                    for="indirectMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
             <input id="indirectMaleBeneficiaries" validationClasses="indirectMaleBeneficiaries"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   onlyNumbers
                    formControlName="indirectMaleBeneficiaries" class="form-control">
             <app-field-error-message controlName="indirectMaleBeneficiaries"></app-field-error-message>
           </div>
@@ -435,7 +435,7 @@
             <label class="form-label" asteriskIfRequired="indirectFemaleBeneficiaries"
                    for="indirectFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
             <input id="indirectFemaleBeneficiaries" validationClasses="indirectFemaleBeneficiaries"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   onlyNumbers
                    formControlName="indirectFemaleBeneficiaries" class="form-control">
             <app-field-error-message controlName="indirectFemaleBeneficiaries"></app-field-error-message>
           </div>
@@ -448,8 +448,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="handicappedBeneficiaryNumber"
                    for="handicappedBeneficiaryNumber">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
-            <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+            <input id="handicappedBeneficiaryNumber" onlyNumbers validationClasses="handicappedBeneficiaryNumber"
                    formControlName="handicappedBeneficiaryNumber" class="form-control">
             <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
           </div>
