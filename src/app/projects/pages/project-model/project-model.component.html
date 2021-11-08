@@ -664,7 +664,7 @@
     </fieldset>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments #attachmentsComponent [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
+    <attachments [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
                  [service]="service.documentService"
                  [load]="loadAttachments"></attachments>
   </ng-template>
