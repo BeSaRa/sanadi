@@ -25,7 +25,7 @@ export enum FieldsPerRow {
 
 export enum CriteriaFieldType {
   TEXT = 'input',
-  MASK = 'inputMask',
+  MASK = 'maskInput',
   DATE = 'dateField',
   SELECT = 'selectField'
 }
