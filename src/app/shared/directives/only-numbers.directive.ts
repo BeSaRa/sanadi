@@ -1,21 +1,9 @@
 import {Directive, HostListener} from '@angular/core';
-import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from "@angular/forms";
-import {CustomValidators} from "@app/validators/custom-validators";
 
 @Directive({
-  selector: '[onlyNumbers]',
-  providers: [{
-    provide: NG_VALIDATORS,
-    useExisting: OnlyNumbersDirective,
-    multi: true
-  }]
+  selector: '[onlyNumbers]'
 })
-export class OnlyNumbersDirective implements Validator {
-
-  validate(control: AbstractControl): ValidationErrors | null {
-    return CustomValidators.number(control);
-  }
-
+export class OnlyNumbersDirective {
   @HostListener('keypress', ['$event'])
   onKeyPress(event: KeyboardEvent): void {
     const key = (event.key).trim();
