@@ -6,10 +6,13 @@ import {AdminResult} from "@app/models/admin-result";
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
-import {Observable, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
-import {filter, map, takeUntil} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {LicenseService} from '@app/services/license.service';
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 
 @Component({
   selector: 'viewer-case-info',
@@ -17,57 +20,35 @@ import {LicenseService} from '@app/services/license.service';
   styleUrls: ['./viewer-case-info.component.scss']
 })
 export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
+  // the model that the user clicked on it
   @Input()
   model!: CaseModel<any, any> | QueryResult;
+  // the model that we load to display inside the viewer
   @Input()
   loadedModel!: any;
 
   @Input() componentService?: EServiceGenericService<any>;
   showManagerRequestStatus: boolean = false;
 
-  showFinalGeneratedLicense: boolean = false;
-  selectedFinalLicense?: FinalApprovalDocument;
+  finalExternalOfficeGeneratedLicense?: FinalApprovalDocument;
+  internalProjectGeneratedLicense?: InternalProjectLicenseResult;
 
   destroy$: Subject<any> = new Subject<any>();
-
+  caseStatusEnum: any;
 
   constructor(public lang: LangService,
-              private licenseService: LicenseService,
-              private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService) {
+              private licenseService: LicenseService) {
   }
 
   ngOnInit(): void {
+    this.caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
     this.showManagerRequestStatus = !!this.loadedModel.managerDecision;
-    this._setShowFinalGeneratedLicense();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(null);
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-  }
-
-  private _setShowFinalGeneratedLicense(): void {
-    let caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
-    this.showFinalGeneratedLicense = caseStatusEnum && (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
-    if (this.showFinalGeneratedLicense) {
-      this.loadFinalLicencesByCriteria(this.loadedModel.licenseNumber)
-        .pipe(
-          filter(list => !!list.length),
-          map(list => list[0]),
-          takeUntil(this.destroy$)
-        ).subscribe((license) => {
-        this.selectedFinalLicense = license;
-      });
-    }
-  }
-
-  loadFinalLicencesByCriteria(value: any): Observable<FinalApprovalDocument[]> {
-    return this.finalExternalOfficeApprovalService.licenseSearch({licenseNumber: value});
-  }
-
-  get finalGeneratedLicenseNumber(): string {
-    return this.loadedModel.licenseNumber;
   }
 
   get username(): string {
@@ -98,12 +79,85 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     return this.loadedModel.generalManagerDecision ? this.loadedModel.generalManagerDecisionInfo : null;
   }
 
-  viewLicense(): void {
-    if (!this.selectedFinalLicense)
-      return;
-
-    this.licenseService.openSelectLicenseDialog([this.selectedFinalLicense], this.model, false)
+  get finalExternalOfficeGeneratedLicenseNumber(): string {
+    return this.loadedModel.licenseNumber || '';
   }
+
+  get finalExternalOfficeApprovalService(): FinalExternalOfficeApprovalService | undefined {
+    if (!this.componentService) {
+      return undefined;
+    }
+
+    return (this.componentService as unknown as FinalExternalOfficeApprovalService);
+  }
+
+  canShowFinalExternalOfficeGeneratedLicense(): boolean {
+    let caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
+    return caseStatusEnum && (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
+  }
+
+  loadFinalExternalOfficeLicenceByCriteria(value: any): Observable<FinalApprovalDocument[]> {
+    if (!this.componentService) {
+      return of([]);
+    }
+    return this.finalExternalOfficeApprovalService!.licenseSearch({licenseNumber: value});
+  }
+
+  viewFinalExternalOfficeGeneratedLicense(): void {
+    let loadedLicense$ = of(this.finalExternalOfficeGeneratedLicense)
+      .pipe(switchMap(license => license ? of([license]) : this.loadFinalExternalOfficeLicenceByCriteria(this.finalExternalOfficeGeneratedLicenseNumber)));
+
+    loadedLicense$.pipe(
+      filter(list => !!list.length),
+      map(list => list[0]),
+      takeUntil(this.destroy$)
+    ).subscribe((license) => {
+      this.finalExternalOfficeGeneratedLicense = license;
+      this.licenseService.openSelectLicenseDialog([this.finalExternalOfficeGeneratedLicense], this.model, false)
+    })
+  }
+
+  get internalProjectGeneratedLicenseNumber(): string {
+    return this.loadedModel.exportedLicenseFullserial || '';
+  }
+
+  get internalProjectLicenseService(): InternalProjectLicenseService | undefined {
+    if (!this.componentService) {
+      return undefined;
+    }
+
+    return (this.componentService as unknown as InternalProjectLicenseService);
+  }
+
+  canShowInternalProjectGeneratedLicense(): boolean {
+    return this.model.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+  }
+
+  loadInternalProjectLicenceByCriteria(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
+    if (!this.componentService) {
+      return of([]);
+    }
+    return this.internalProjectLicenseService!.licenseSearch(criteria);
+  }
+
+  viewInternalProjectGeneratedLicense(): void {
+    if (!this.internalProjectLicenseService) {
+      return;
+    }
+
+    let loadedLicense$ = of(this.internalProjectGeneratedLicense)
+      .pipe(switchMap(license => license ? of([license]) : this.loadInternalProjectLicenceByCriteria({fullSerial: this.internalProjectGeneratedLicenseNumber})));
+
+    loadedLicense$.pipe(
+      filter(list => !!list.length),
+      map(list => list[0]),
+      takeUntil(this.destroy$)
+    ).subscribe((license) => {
+      this.internalProjectGeneratedLicense = license;
+      this.licenseService.openSelectLicenseDialog([this.internalProjectGeneratedLicense], this.model, false, this.internalProjectLicenseService!.selectLicenseDisplayColumns)
+    })
+  }
+
 
   isTemplateModelServiceAndApproved() {
     return this.model.getCaseType() === CaseTypes.EXTERNAL_PROJECT_MODELS && this.model.getCaseStatus() === 4 // approved
