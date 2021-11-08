@@ -22,6 +22,7 @@ import {IPartialRequestCriteria} from "@app/interfaces/i-partial-request-criteri
 import {CommonUtils} from "@app/helpers/common-utils";
 import {IInboxCriteria} from "@app/interfaces/i-inbox-criteria";
 import {TableComponent} from "@app/shared/components/table/table.component";
+import {SortEvent} from '@app/interfaces/sort-event';
 
 @Component({
   selector: 'app-user-inbox',
@@ -68,7 +69,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           })
       }
     },
-    sortingCallbacks: {}
+    sortingCallbacks: {
+      displayNameInfo: (a: QueryResult, b: QueryResult, dir: SortEvent) => {
+        let value1 = !CommonUtils.isValidValue(a) ? '' : a.displayNameInfo?.getName().toLowerCase(),
+          value2 = !CommonUtils.isValidValue(b) ? '' : b.displayNameInfo?.getName().toLowerCase();
+        return CommonUtils.getSortValue(value1, value2, dir.direction);
+      }
+    }
   };
 
   constructor(public lang: LangService,

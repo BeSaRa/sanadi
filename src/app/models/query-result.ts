@@ -72,6 +72,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   fromUserInfo!: AdminResult;
   orgInfo!: AdminResult;
   riskStatusInfo!: AdminResult;
+  displayNameInfo!: AdminResult;
 
   service!: InboxService;
   dialog!: DialogService;
@@ -95,10 +96,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
     },
     BD_SUBJECT: 'BD_SUBJECT',
-    action: (text, model) => {
+    /*action: (text, model) => {
       let local = this.lang.map[model.TAD_DISPLAY_NAME] || model.TAD_DISPLAY_NAME;
       return local ? local.toLowerCase().indexOf(text) !== -1 : false;
-    }
+    },*/
+    action: (text, model) => model.displayNameInfo && (model.displayNameInfo.getName() + '').toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {

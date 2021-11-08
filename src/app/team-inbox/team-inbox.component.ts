@@ -24,6 +24,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {SortEvent} from '@app/interfaces/sort-event';
 
 @Component({
   selector: 'team-inbox',
@@ -80,7 +81,13 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           })
       }
     },
-    sortingCallbacks: {}
+    sortingCallbacks: {
+      displayNameInfo: (a: QueryResult, b: QueryResult, dir: SortEvent) => {
+        let value1 = !CommonUtils.isValidValue(a) ? '' : a.displayNameInfo?.getName().toLowerCase(),
+          value2 = !CommonUtils.isValidValue(b) ? '' : b.displayNameInfo?.getName().toLowerCase();
+        return CommonUtils.getSortValue(value1, value2, dir.direction);
+      }
+    }
   };
 
   ngAfterViewInit(): void {
@@ -171,7 +178,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         // push the cancel claim action to the actions array to display the RELEASE ACTION.
         loadedModel && loadedModel.taskDetails.actions.push(WFActions.ACTION_CANCEL_CLAIM);
         component && this.employeeService.isInternalUser() && (component.allowEditRecommendations = true);
-        if (component && component.handleReadonly && typeof component?.handleReadonly === 'function'){
+        if (component && component.handleReadonly && typeof component?.handleReadonly === 'function') {
           component.handleReadonly();
         }
       });
@@ -426,7 +433,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'send_to_multi_departments',
         data: {
           hideFromContext: true,
-          hideFromViewer:(loadedModel: CaseModel<any, any>) => {
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
             return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
           }
         },

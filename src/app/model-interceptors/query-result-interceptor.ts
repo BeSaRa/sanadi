@@ -4,6 +4,10 @@ import {AdminResult} from '../models/admin-result';
 
 export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
   send(model: Partial<QueryResult>): Partial<QueryResult> {
+    delete model.fromUserInfo;
+    delete model.orgInfo;
+    delete model.riskStatusInfo;
+    delete model.displayNameInfo;
     return model;
   }
 
@@ -11,6 +15,7 @@ export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
     model.fromUserInfo = AdminResult.createInstance(model.fromUserInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.riskStatusInfo = AdminResult.createInstance(model.riskStatusInfo);
+    model.displayNameInfo = AdminResult.createInstance(model.displayNameInfo);
     return model;
   }
 }
