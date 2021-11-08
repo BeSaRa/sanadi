@@ -589,6 +589,26 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     return isAllowed;
   }
 
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus(),
+        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+      if (caseStatusEnum) {
+        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
+      }
+    }
+
+    return !isAllowed;
+  }
+
   isAddCommentAllowed(): boolean {
     if (!this.model?.id || this.employeeService.isExternalUser()) {
       return false;

@@ -411,7 +411,7 @@
               class="mdi mdi-plus-box text-primary"></i></button>
           </div>
           <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                         [readonly]="readonly"></app-documents>
+                         [readonly]="isAttachmentReadonly()"></app-documents>
         </ng-template>
         <ng-template #recommendationsTemplate>
           <request-recommendations [record]="model"></request-recommendations>
