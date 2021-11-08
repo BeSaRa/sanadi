@@ -72,6 +72,7 @@ import {GroupErrorMessageComponent} from './components/group-error-message/group
 import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multiple.component';
 import { AttachmentsComponent } from './components/attachments/attachments.component';
+import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 
 @NgModule({
   declarations: [
@@ -135,7 +136,8 @@ import { AttachmentsComponent } from './components/attachments/attachments.compo
     GroupErrorMessageComponent,
     SendToMultipleComponent,
     CustomTermPopupComponent,
-    AttachmentsComponent
+    AttachmentsComponent,
+    OnlyNumbersDirective
   ],
   imports: [
     CommonModule,
@@ -204,7 +206,8 @@ import { AttachmentsComponent } from './components/attachments/attachments.compo
     RequestRecommendationsComponent,
     ValidationGroupClassesDirective,
     GroupErrorMessageComponent,
-    AttachmentsComponent
+    AttachmentsComponent,
+    OnlyNumbersDirective
   ]
 })
 export class SharedModule {

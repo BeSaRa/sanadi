@@ -413,8 +413,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="directFemaleBeneficiaries"
                    for="directFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
-            <input id="directFemaleBeneficiaries" validationClasses="directFemaleBeneficiaries"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+            <input onlyNumbers id="directFemaleBeneficiaries" validationClasses="directFemaleBeneficiaries"
                    formControlName="directFemaleBeneficiaries" class="form-control">
             <app-field-error-message controlName="directFemaleBeneficiaries"></app-field-error-message>
           </div>
