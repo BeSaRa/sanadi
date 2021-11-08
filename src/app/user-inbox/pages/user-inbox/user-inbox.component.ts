@@ -168,6 +168,12 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionSendToSupervisionAndControlDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToSupervisionAndControlDepartment().subscribe((_) => {
+      this.reloadInbox$.next(null);
+    });
+  }
+
   actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.complete().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
@@ -335,6 +341,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);
+        }
+      },
+      // send to Supervision and control department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_supervision_and_control_department',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);
         }
       },
       // send to user

@@ -647,4 +647,5 @@ export interface ILanguageKeys {
   send_to_multi_departments: string;
   send_to_structure_expert: string;
   send_to_development_expert: string;
+  send_to_supervision_and_control_department: string;
 }

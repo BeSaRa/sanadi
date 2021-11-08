@@ -242,6 +242,12 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  actionSendToSupervisionAndControlDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToSupervisionAndControlDepartment().subscribe((_) => {
+      this.reloadSelectedInbox();
+    });
+  }
+
   actionSendToMultiDepartments(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToMultiDepartments().onAfterClose$.subscribe(actionTaken => {
       actionTaken ? viewDialogRef?.close() : null;
@@ -443,6 +449,24 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);
+        }
+      },
+      // send to Supervision and control department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_supervision_and_control_department',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);
         }
       },
       // send to user

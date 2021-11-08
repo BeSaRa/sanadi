@@ -163,6 +163,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.sendToMultiDepartments(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
+  sendToSupervisionAndControlDepartment(claimBefore: boolean = false): Observable<boolean> {
+    let service = this.service.getService(this.BD_CASE_TYPE);
+    return this.service.sendTaskToMultiple(this.TKIID, {taskName: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT}, service);
+  }
+
   sendToManager(claimBefore: boolean = false): DialogRef {
     return this.service.sendToManager(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }

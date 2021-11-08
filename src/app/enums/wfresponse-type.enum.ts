@@ -11,5 +11,6 @@ export enum WFResponseType {
   FINAL_APPROVE = 'finalApprove',
   ASK_FOR_CONSULTATION = 'launch:',
   INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewInternalProjectlicensing',
+  INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalProjectlicensing',
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview',
 }
