@@ -425,7 +425,7 @@
               <label for="beneficiaryFamiliesNumber" asteriskIfRequired="beneficiaryFamiliesNumber"
                      class="form-label">{{lang.map.number_of_target_families}}</label>
               <input id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="beneficiaryFamiliesNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
@@ -434,7 +434,7 @@
               <label for="individualsAverageNumber" asteriskIfRequired="individualsAverageNumber"
                      class="form-label">{{lang.map.average_number_of_people}}</label>
               <input id="individualsAverageNumber" validationClasses="individualsAverageNumber"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="individualsAverageNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="individualsAverageNumber"></app-field-error-message>
@@ -443,7 +443,7 @@
               <label for="ageAverageCategory" asteriskIfRequired="ageAverageCategory"
                      class="form-label">{{lang.map.average_age_group}}</label>
               <input id="ageAverageCategory" validationClasses="ageAverageCategory"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="ageAverageCategory" trimInput class="form-control" type="text">
               <app-field-error-message controlName="ageAverageCategory"></app-field-error-message>
@@ -460,7 +460,7 @@
               <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
               <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="directBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
@@ -469,7 +469,7 @@
               <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
               <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="indirectBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
@@ -478,7 +478,7 @@
               <label for="handicappedBeneficiaryNumber" asteriskIfRequired="handicappedBeneficiaryNumber"
                      class="form-label">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
               <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="handicappedBeneficiaryNumber" trimInput class="form-control" type="text">
               <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
@@ -573,7 +573,7 @@
                      class="form-label">{{lang.map.license_duration}}</label>
               <input id="licenseDuration" validationClasses="licenseDuration"
                      maxlength="3"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     onlyNumbers
                      [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                      formControlName="licenseDuration" trimInput class="form-control" type="text">
               <app-field-error-message controlName="licenseDuration"></app-field-error-message>
