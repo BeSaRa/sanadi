@@ -119,6 +119,11 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       langKey: 'special_explanations',
       validStatus: () => this.specialExplanationsGroup && this.specialExplanationsGroup.valid
     },
+    comments: {
+      name: 'commentsTab',
+      langKey: 'comments',
+      validStatus: () => true
+    },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
@@ -349,6 +354,17 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.projectTotalCostField.updateValueAndValidity();
 
     this.updateBeneficiaryValidations();
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
   }
 
   isAddAttachmentAllowed(): boolean {

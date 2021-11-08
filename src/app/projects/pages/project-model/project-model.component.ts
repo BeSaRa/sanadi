@@ -30,6 +30,7 @@ import {AttachmentsComponent} from "@app/shared/components/attachments/attachmen
 import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CaseStatus} from "@app/enums/case-status.enum";
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -554,5 +555,28 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           }))
         }
       });
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
+  }
+
+  isAddAttachmentAllowed(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+
+    return isAllowed;
   }
 }

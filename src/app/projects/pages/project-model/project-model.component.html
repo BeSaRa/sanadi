@@ -11,6 +11,7 @@
     <tab [template]="componentsBudgetsTab" [title]="lang.map.project_components_budgets"></tab>
     <tab [hasError]="tabHasError('description')" [template]="specialExplanationTab"
          [title]="lang.map.special_explanations"></tab>
+    <tab [template]="commentsTabTemplate" [title]="lang.map.comments"></tab>
     <tab [template]="attachmentsTab" name="attachments" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
@@ -202,7 +203,7 @@
             <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label"  asteriskIfRequired="year"
+            <label class="form-label" asteriskIfRequired="year"
                    for="year">{{lang.map.year}}</label>
             <input id="year" maxlength="4" validationClasses="year" formControlName="year"
                    onlyNumbers
@@ -383,7 +384,8 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="needsAssessment"
                    for="needsAssessment">{{lang.map.project_needs_assessment}}</label>
-            <textarea maxlength="1200" name="needsAssessment" formControlName="needsAssessment" validationClasses="needsAssessment"
+            <textarea maxlength="1200" name="needsAssessment" formControlName="needsAssessment"
+                      validationClasses="needsAssessment"
                       id="needsAssessment" rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="needsAssessment"></app-field-error-message>
@@ -392,7 +394,8 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="goals" asteriskIfRequired="goals">{{lang.map.project_goals}}</label>
-            <textarea maxlength="1200" name="goals" formControlName="goals" validationClasses="goals" id="goals" rows="4"
+            <textarea maxlength="1200" name="goals" formControlName="goals" validationClasses="goals" id="goals"
+                      rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="goals"></app-field-error-message>
           </div>
@@ -518,7 +521,8 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="outputs" asteriskIfRequired="outputs">{{lang.map.project_outputs}}</label>
-            <textarea maxlength="1200" name="outputs" id="outputs" formControlName="outputs" validationClasses="outputs" rows="4"
+            <textarea maxlength="1200" name="outputs" id="outputs" formControlName="outputs" validationClasses="outputs"
+                      rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="outputs"></app-field-error-message>
           </div>
@@ -655,13 +659,23 @@
         <div class="col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="description"
                  for="description">{{lang.map.special_explanations}}</label>
-          <textarea maxlength="1200" name="description" formControlName="description" validationClasses="description" id="description"
+          <textarea maxlength="1200" name="description" formControlName="description" validationClasses="description"
+                    id="description"
                     rows="4"
                     class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>
     </fieldset>
+  </ng-template>
+  <ng-template #commentsTabTemplate>
+    <div class="d-flex flex-row align-items-center justify-content-start">
+      <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
+              class="d-inline-block btn p-0 icon-btn"><i
+        class="mdi mdi-plus-box text-primary"></i></button>
+    </div>
+    <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
+                  [readonly]="readonly"></app-comments>
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
