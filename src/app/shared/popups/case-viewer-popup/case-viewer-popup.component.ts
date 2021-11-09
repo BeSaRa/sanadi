@@ -15,6 +15,8 @@ import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {EmployeeService} from '@app/services/employee.service';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {InternalProjectLicense} from '@app/models/internal-project-license';
 
 @Component({
   selector: 'case-viewer-popup',
@@ -71,10 +73,11 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.actions = this.data.actions.filter((action) => this.filterAction(action));
-    this.checkForFinalApproveByMatrixNotification();
   }
 
   ngAfterViewInit(): void {
+    this.checkForFinalApproveByMatrixNotification();
+
     this.viewInit.next();
     this.viewInit.complete();
     this.viewInit.unsubscribe();
@@ -93,9 +96,32 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   checkForFinalApproveByMatrixNotification(): void {
-    if (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.internalProjectLicenseService &&
-      (this.empService.isLicensingManager() || this.empService.isLicensingGeneralManager() || this.empService.isLicensingChiefManager())) {
-      this.internalProjectLicenseService.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
+    let canShowNotification: boolean = (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && !!this.internalProjectLicenseService),
+      totalProjectComponentCost: number = (this.loadedModel as unknown as InternalProjectLicense).projectTotalCost;
+
+    if (CommonUtils.isValidValue(totalProjectComponentCost)) {
+      totalProjectComponentCost = Number(Number(totalProjectComponentCost).toFixed(2));
+    } else {
+      totalProjectComponentCost = 0;
+    }
+
+    if (!canShowNotification || totalProjectComponentCost === 0) {
+      this.showFinalApprovalByMatrixNotification = false;
+      return;
+    }
+
+    if (this.empService.isLicensingChiefManager()) {
+      canShowNotification = (totalProjectComponentCost > 0 && totalProjectComponentCost <= 500000);
+    } else if (this.empService.isLicensingManager()) {
+      canShowNotification = (totalProjectComponentCost >= 500001 && totalProjectComponentCost <= 2000000);
+    } else if (this.empService.isLicensingGeneralManager()) {
+      canShowNotification = (totalProjectComponentCost >= 2000001);
+    } else {
+      canShowNotification = false;
+    }
+
+    if (canShowNotification) {
+      this.internalProjectLicenseService!.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
         .subscribe((result: boolean) => {
           this.showFinalApprovalByMatrixNotification = result;
         });
