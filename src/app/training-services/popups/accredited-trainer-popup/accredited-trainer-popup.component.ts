@@ -11,7 +11,6 @@ import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
-import {TrainerService} from '@app/services/trainer.service';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Lookup} from '@app/models/lookup';
@@ -50,8 +49,7 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
               public lookupService: LookupService,
               public toast: ToastService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService,
-              public trainerService: TrainerService) {
+              public dialogService: DialogService) {
     super();
     this.operation = data.operation;
     this.model = data.model;

@@ -1,1 +1,300 @@
-<p>training-program-popup works!</p>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+    <tabs-list>
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+      <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
+           [title]="lang.map.training_program_organizations"></tab>
+      <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
+           [title]="lang.map.training_program_trainers"></tab>
+    </tabs-list>
+    <ng-template #basicTabTemplate>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="activityName" for="activityName"
+                 class="form-label">{{lang.map.training_program_activity_name}}</label>
+          <input id="activityName"
+                 validationClasses="activityName"
+                 formControlName="activityName" class="form-control">
+          <app-field-error-message controlName="activityName"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="trainingType" for="trainingType"
+                   class="form-label">{{lang.map.training_type_name}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="trainingType"
+                         formControlName="trainingType"
+                         id="trainingType">
+                <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
+                           [disabled]="trainingType.isRetiredCommonStatus()">{{trainingType.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="trainingType"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 position-relative">
+          <label asteriskIfRequired="trainingObjective" for="trainingObjective"
+                 class="form-label">{{lang.map.training_objective}}</label>
+          <textarea id="trainingObjective"
+                    validationClasses="trainingObjective"
+                    formControlName="trainingObjective"
+                    class="form-control"
+                    rows="3">
+            </textarea>
+          <app-field-error-message controlName="trainingObjective"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 position-relative">
+          <label asteriskIfRequired="trainingTopics" for="trainingTopics"
+                 class="form-label">{{lang.map.training_topics}}</label>
+          <textarea id="trainingTopics"
+                    validationClasses="trainingTopics"
+                    formControlName="trainingTopics"
+                    class="form-control"
+                    rows="3">
+            </textarea>
+          <app-field-error-message controlName="trainingTopics"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="durationInDays" for="durationInDays"
+                 class="form-label">{{lang.map.duration_in_days}}</label>
+          <input id="durationInDays"
+                 validationClasses="durationInDays"
+                 formControlName="durationInDays" class="form-control">
+          <app-field-error-message controlName="durationInDays"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="durationInHours" for="durationInHours"
+                 class="form-label">{{lang.map.duration_in_hours}}</label>
+          <input id="durationInHours"
+                 validationClasses="durationInHours"
+                 formControlName="durationInHours" class="form-control">
+          <app-field-error-message controlName="durationInHours"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="averageDurationInHours" for="averageDurationInHours"
+                 class="form-label">{{lang.map.average_duration_in_hours}}</label>
+          <input id="averageDurationInHours"
+                 validationClasses="averageDurationInHours"
+                 formControlName="averageDurationInHours" class="form-control">
+          <app-field-error-message controlName="averageDurationInHours"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
+                   class="form-label">{{lang.map.target_audience}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="targetAudienceListIds"
+                         formControlName="targetAudienceListIds"
+                         id="targetAudienceListIds"
+                         [multiple]="true">
+                <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
+                           [disabled]="targetAudience.isRetiredCommonStatus()">{{targetAudience.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label for="startDate" asteriskIfRequired="startDate"
+                 class="form-label">{{lang.map.training_start_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="startDate"
+                 id="startDate"
+                 (click)="dpStartDate.toggleCalendar()" #dpStartDate="angular-mydatepicker"
+                 [options]="datepickerOptionsMap.trainingStartDate"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('startDate')"></div>
+            <app-field-error-message [control]="fm.getFormField('startDate')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label for="endDate" asteriskIfRequired="endDate"
+                 class="form-label">{{lang.map.training_end_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="endDate"
+                 id="endDate"
+                 (click)="dpendDate.toggleCalendar()" #dpendDate="angular-mydatepicker"
+                 [options]="datepickerOptionsMap.trainingEndDate"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('endDate')"></div>
+            <app-field-error-message [control]="fm.getFormField('endDate')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
+                   class="form-label">{{lang.map.session_start_time}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="sessionStartTime"
+                         formControlName="sessionStartTime"
+                         id="sessionStartTime">
+                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
+                   class="form-label">{{lang.map.session_end_time}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="sessionEndTime"
+                         formControlName="sessionEndTime"
+                         id="sessionEndTime">
+                <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label for="registerationStartDate" asteriskIfRequired="registerationStartDate"
+                 class="form-label">{{lang.map.registration_start_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="registerationStartDate"
+                 id="registerationStartDate"
+                 (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
+                 [options]="datepickerOptionsMap.registerationStartDate"
+                 (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('registerationStartDate')"></div>
+            <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label for="registerationClosureDate" asteriskIfRequired="registerationClosureDate"
+                 class="form-label">{{lang.map.registration_end_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="registerationClosureDate"
+                 id="registerationClosureDate"
+                 (click)="dpregisterationClosureDate.toggleCalendar()" #dpregisterationClosureDate="angular-mydatepicker"
+                 [options]="datepickerOptionsMap.registerationClosureDate"
+                 (inputFieldChanged)="registrationEndDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
+                 angular-mydatepicker [ngClass]="fm.getStatusClass('registerationClosureDate')"></div>
+            <app-field-error-message [control]="fm.getFormField('registerationClosureDate')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="trainingLocation" for="trainingLocation"
+                 class="form-label">{{lang.map.training_location}}</label>
+          <input id="trainingLocation"
+                 validationClasses="trainingLocation"
+                 formControlName="trainingLocation" class="form-control">
+          <app-field-error-message controlName="trainingLocation"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="contactPerson" for="contactPerson"
+                 class="form-label">{{lang.map.contact_person}}</label>
+          <input id="contactPerson"
+                 validationClasses="contactPerson"
+                 formControlName="contactPerson" class="form-control">
+          <app-field-error-message controlName="contactPerson"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="attendenceMethod" for="attendenceMethod"
+                   class="form-label">{{lang.map.attendance_method}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="attendenceMethod"
+                         formControlName="attendenceMethod"
+                         id="attendenceMethod">
+                <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
+                           [disabled]="attendanceMethod.isRetiredCommonStatus()">{{attendanceMethod.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="attendenceMethod"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="trainingLang" for="trainingLang"
+                   class="form-label">{{lang.map.training_languages}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="trainingLang"
+                         formControlName="trainingLang"
+                         id="trainingLang">
+                <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
+                           [disabled]="trainingLanguage.isRetiredCommonStatus()">{{trainingLanguage.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="trainingLang"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="numberOfSeats" for="numberOfSeats"
+                 class="form-label">{{lang.map.number_of_seats}}</label>
+          <input id="numberOfSeats"
+                 validationClasses="numberOfSeats"
+                 formControlName="numberOfSeats" class="form-control">
+          <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="totalTrainingCost" for="totalTrainingCost"
+                 class="form-label">{{lang.map.total_training_cost}}</label>
+          <input id="totalTrainingCost"
+                 validationClasses="totalTrainingCost"
+                 formControlName="totalTrainingCost" class="form-control">
+          <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+      <div class="col-sm-12 position-relative">
+        <label asteriskIfRequired="comments" for="comments"
+               class="form-label">{{lang.map.training_comments}}</label>
+        <textarea id="comments"
+                  validationClasses="comments"
+                  formControlName="comments"
+                  class="form-control"
+                  rows="3">
+          </textarea>
+        <app-field-error-message controlName="comments"></app-field-error-message>
+      </div>
+    </div>
+    </ng-template>
+    <ng-template #organizationsTabTemplate>
+      Orgs
+    </ng-template>
+    <ng-template #trainersTabTemplate>
+      trainers
+    </ng-template>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
