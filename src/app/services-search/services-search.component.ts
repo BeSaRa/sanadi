@@ -194,7 +194,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         data: {hideFromViewer: true},
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() &&
-            ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL, CaseTypes.PARTNER_APPROVAL, CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL].includes(item.caseType);
+            ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+              CaseTypes.PARTNER_APPROVAL,
+              CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+              CaseTypes.INTERNAL_PROJECT_LICENSE,
+              CaseTypes.EXTERNAL_PROJECT_MODELS].includes(item.caseType);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
