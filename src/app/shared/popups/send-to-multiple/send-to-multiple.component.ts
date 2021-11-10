@@ -92,12 +92,14 @@ export class SendToMultipleComponent implements OnInit {
   }
 
   private buildForm(): void {
-    let response: string = this.data.sendToResponse,
+    let taskName: string = this.data.sendToResponse,
       departmentsValidators: ValidatorFn[] | null = null,
       usersValidators: ValidatorFn[] | null = null;
 
-    if (response.startsWith('ask:')) {
-      response = response.split('ask:')[1];
+    if (taskName.startsWith('ask:')) {
+      taskName = taskName.split('ask:')[1];
+    } else if (taskName.startsWith('askSingle:')) {
+      taskName = taskName.split('askSingle:')[1];
     }
 
     if (this.isSendToDepartments()) {
@@ -109,7 +111,7 @@ export class SendToMultipleComponent implements OnInit {
     }
 
     this.form = this.fb.group({
-      taskName: [response, CustomValidators.required],
+      taskName: [taskName, CustomValidators.required],
       departments: [[], departmentsValidators],
       users: [[], usersValidators]
     });

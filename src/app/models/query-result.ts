@@ -164,8 +164,14 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   sendToSupervisionAndControlDepartment(claimBefore: boolean = false): Observable<boolean> {
-    let service = this.service.getService(this.BD_CASE_TYPE);
-    return this.service.sendTaskToMultiple(this.TKIID, {taskName: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT}, service);
+    let service = this.service.getService(this.BD_CASE_TYPE),
+      taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+    if (taskName.startsWith('ask:')) {
+      taskName = taskName.split('ask:')[1];
+    } else if (taskName.startsWith('askSingle:')) {
+      taskName = taskName.split('askSingle:')[1];
+    }
+    return this.service.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
   }
 
   sendToManager(claimBefore: boolean = false): DialogRef {
