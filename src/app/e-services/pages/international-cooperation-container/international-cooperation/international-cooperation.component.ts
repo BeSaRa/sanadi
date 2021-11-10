@@ -19,6 +19,7 @@ import {Country} from '@app/models/country';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'international-cooperation',
@@ -62,6 +63,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
               private dialog: DialogService,
               private toast: ToastService,
               private countryService: CountryService,
+              public employeeService: EmployeeService,
               public lang: LangService) {
   }
 

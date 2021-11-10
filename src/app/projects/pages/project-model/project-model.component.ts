@@ -78,7 +78,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               public fb: FormBuilder,
               private toast: ToastService,
               private dialog: DialogService,
-              private employeeService: EmployeeService,
+              public employeeService: EmployeeService,
               private dacOchaService: DacOchaService,
               private lookupService: LookupService,
               private countyService: CountryService,

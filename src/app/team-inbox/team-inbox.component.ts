@@ -390,6 +390,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
         data: {hideFromViewer: true},
+        show: (item: QueryResult) => {
+          return this.employeeService.isInternalUser();
+        },
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);
         }

@@ -25,7 +25,8 @@
         <tab [name]="tabsData.approvalReasons.name" [template]="approvalReasonsTemplate"
              [title]="lang.map.approval_reasons" [hasError]="getTabInvalidStatus('approvalReasons')"></tab>
         <tab [name]="tabsData.comments.name" [template]="commentsTemplate"
-             [hasError]="getTabInvalidStatus('comments')" [title]="lang.map.comments">{{lang.map.comments}}</tab>
+             [hasError]="getTabInvalidStatus('comments')" [title]="lang.map.comments"
+             *ngIf="employeeService.isInternalUser()">{{lang.map.comments}}</tab>
         <tab [name]="tabsData.attachments.name" [template]="attachmentsTemplate"
              [hasError]="getTabInvalidStatus('attachments')"
              [title]="lang.map.attachments">{{lang.map.attachments}}</tab>

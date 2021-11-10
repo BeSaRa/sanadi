@@ -19,7 +19,8 @@
         <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
              [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
         <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
-             [template]="commentsTabTemplate" [title]="lang.map.comments"></tab>
+             [template]="commentsTabTemplate" [title]="lang.map.comments"
+             *ngIf="employeeService.isInternalUser()"></tab>
         <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
              [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
         <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
@@ -758,7 +759,8 @@
             <div class="col-sm-12 col-md-12 mb-4 position-relative">
               <label for="description" asteriskIfRequired="description"
                      class="form-label">{{lang.map.special_explanations}}</label>
-              <textarea maxlength="1200" rows="5" id="description" validationClasses="description" [readOnly]="(readonly)"
+              <textarea maxlength="1200" rows="5" id="description" validationClasses="description"
+                        [readOnly]="(readonly)"
                         formControlName="description" trimInput class="form-control"></textarea>
               <app-field-error-message controlName="description"></app-field-error-message>
             </div>
@@ -798,8 +800,9 @@
         <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
                 class="btn btn-primary">{{lang.map.launch}}</button>
         <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
-        <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="formValidity$.next('main-content')"><i
-          class="mdi mdi-information-outline text-info"></i></button>
+        <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="formValidity$.next('main-content')">
+          <i
+            class="mdi mdi-information-outline text-info"></i></button>
       </div>
     </form>
   </div>

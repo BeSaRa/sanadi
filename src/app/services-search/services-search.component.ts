@@ -206,6 +206,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
         data: {hideFromViewer: true},
+        show: (item: CaseModel<any, any>) => {
+          return this.employeeService.isInternalUser();
+        },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageComments(item);
         }

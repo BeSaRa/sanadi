@@ -106,7 +106,7 @@
   </div>
   <hr>
   <div class="row">
-    <div class="col-md-6 col-sm-12">
+    <div [ngClass]="{'col-md-12': employeeService.isExternalUser()}" class="col-md-6 col-sm-12">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
         <button [disabled]="!model?.id" (click)="attachmentsCtrl.openUploadDialog()"
@@ -115,7 +115,7 @@
       </div>
       <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"></app-documents>
     </div>
-    <div class="col-md-6 col-sm-12">
+    <div *ngIf="employeeService.isInternalUser()" class="col-md-6 col-sm-12">
       <div class="d-flex flex-row align-items-center justify-content-start">
         <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
         <button [disabled]="!model?.id" (click)="commentsCtrl.openCommentDialog()"

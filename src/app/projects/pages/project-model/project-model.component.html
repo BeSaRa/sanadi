@@ -11,7 +11,8 @@
     <tab [template]="componentsBudgetsTab" [title]="lang.map.project_components_budgets"></tab>
     <tab [hasError]="tabHasError('description')" [template]="specialExplanationTab"
          [title]="lang.map.special_explanations"></tab>
-    <tab [template]="commentsTabTemplate" [title]="lang.map.comments"></tab>
+    <tab [template]="commentsTabTemplate" [title]="lang.map.comments"
+         *ngIf="employeeService.isInternalUser()"></tab>
     <tab [template]="attachmentsTab" name="attachments" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>

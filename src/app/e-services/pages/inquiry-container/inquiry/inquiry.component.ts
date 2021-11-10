@@ -20,6 +20,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'inquiry-component',
@@ -65,6 +66,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
               private fb: FormBuilder,
               private dialog: DialogService,
               private lookupService: LookupService,
+              public employeeService: EmployeeService,
               private toast: ToastService,
               public lang: LangService) {
 

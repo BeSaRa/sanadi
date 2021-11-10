@@ -14,7 +14,8 @@
         <tab [name]="tabsData.branches.name" [hasError]="getTabInvalidStatus('branches')"
              [template]="branchesTabTemplate" [title]="lang.map.branches"></tab>
         <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
-             [template]="commentsTabTemplate" [title]="lang.map.comments"></tab>
+             [template]="commentsTabTemplate" [title]="lang.map.comments"
+             *ngIf="employeeService.isInternalUser()"></tab>
         <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
              [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
         <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
