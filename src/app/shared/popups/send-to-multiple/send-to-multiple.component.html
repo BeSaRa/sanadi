@@ -5,14 +5,14 @@
 </div>
 <div [formGroup]="form" class="dialog-content no-fixed-height" style="width: 500px">
   <div *ngIf="data.sendToResponse === WFResponse.INTERNAL_PROJECT_SEND_TO_EXPERT" class="col-12 mb-4 position-relative">
-    <label asteriskIfRequired="user" for="user" class="form-label">{{lang.map.select_user}}</label>
-    <ng-select [selectOnTab]="true" [items]="users" labelForId="user"
+    <label asteriskIfRequired="users" for="users" class="form-label">{{lang.map.select_user}}</label>
+    <ng-select appendTo="body" [selectOnTab]="true" [items]="users" labelForId="users"
                bindValue="id" [clearable]="true"
                [searchFn]="searchNgSelect"
-               placeholder="{{lang.map.select}}" id="user"
+               placeholder="{{lang.map.select}}" id="users"
                [notFoundText]="lang.map.msg_not_found"
                [multiple]="true" [closeOnSelect]="false"
-               formControlName="user" validationClasses="user">
+               formControlName="users" validationClasses="users">
       <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
         <span class="custom-option" [ngOptionHighlight]="search">{{item.getName()}}</span>
       </ng-template>
@@ -30,7 +30,7 @@
         </div>
       </ng-template>
     </ng-select>
-    <app-field-error-message controlName="user"></app-field-error-message>
+    <app-field-error-message controlName="users"></app-field-error-message>
   </div>
   <div *ngIf="data.sendToResponse === WFResponse.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS"
        class="col-12 mb-4 position-relative ng-select-wrapper">

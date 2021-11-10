@@ -23,8 +23,8 @@ import {ConsultationService} from './consultation.service';
 import {InternationalCooperationService} from './international-cooperation.service';
 import {CaseTypes} from '../enums/case-types.enum';
 import {ExceptionHandlerService} from './exception-handler.service';
-import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
-import {PartnerApprovalService} from "@app/services/partner-approval.service";
+import {InitialExternalOfficeApprovalService} from '@app/services/initial-external-office-approval.service';
+import {PartnerApprovalService} from '@app/services/partner-approval.service';
 import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {FilterInboxRequestPopupComponent} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
@@ -33,7 +33,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
 import {ExpertsEnum} from '@app/enums/experts-enum';
-import {ProjectModelService} from "@app/services/project-model.service";
+import {ProjectModelService} from '@app/services/project-model.service';
 
 @Injectable({
   providedIn: 'root'
@@ -194,7 +194,7 @@ export class InboxService {
     return this.dialog.show(SendToComponent,
       {
         inboxService: this,
-        taskId: taskId,
+        taskId,
         sendToResponse,
         service,
         claimBefore,
@@ -212,7 +212,7 @@ export class InboxService {
     return this.dialog.show(SendToMultipleComponent,
       {
         inboxService: this,
-        taskId: taskId,
+        taskId,
         sendToResponse,
         service,
         claimBefore,

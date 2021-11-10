@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {InboxService} from '@app/services/inbox.service';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
@@ -25,7 +25,7 @@ import {ExpertsEnum} from '@app/enums/experts-enum';
   templateUrl: './send-to-multiple.component.html',
   styleUrls: ['./send-to-multiple.component.scss']
 })
-export class SendToMultipleComponent implements OnInit {
+export class SendToMultipleComponent implements OnInit, OnDestroy {
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
   form!: FormGroup;
