@@ -134,7 +134,11 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         ...value
       })))
       .pipe(map((value) => {
-        value.actions = value.actions.filter(action => {
+        value.actions = value.actions.filter((action, index, arr) => {
+          const isConsecutiveDivider = (action.type === 'divider' && (index > 0 && arr[index - 1].type === 'divider'));
+          if (isConsecutiveDivider) {
+            return false;
+          }
           return !(action.data && action.data.hideFromContext);
         });
         return value;
