@@ -200,7 +200,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           this.actionManageRecommendations(item);
         }
       },
-      // comments
+      // manage comments
       {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
@@ -210,6 +210,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           this.actionManageComments(item);
         }
       },
+      // print
       {
         type: 'action',
         icon: 'mdi-printer',
@@ -219,6 +220,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         }
       },
       {type: 'divider'},
+      // launch
       {
         type: 'action',
         icon: 'mdi-rocket-launch-outline',

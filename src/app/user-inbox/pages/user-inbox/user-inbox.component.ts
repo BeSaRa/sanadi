@@ -391,6 +391,19 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
       },
+      // send to Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_manager',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.TO_MANAGER);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToManager(item, viewDialogRef);
+        }
+      },
+      {type: 'divider'},
       // complete
       {
         type: 'action',
@@ -485,18 +498,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
-        }
-      },
-      // send to Manager
-      {
-        type: 'action',
-        icon: 'mdi-card-account-details-star',
-        label: 'send_to_manager',
-        show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_MANAGER);
-        },
-        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
-          this.actionSendToManager(item, viewDialogRef);
         }
       }
     ];

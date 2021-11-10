@@ -523,6 +523,25 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
         }
       },
+      // send to Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_manager',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToManager(item, viewDialogRef);
+        }
+      },
+      {type: 'divider'},
       // complete
       {
         type: 'action',
@@ -578,7 +597,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           this.actionFinalApprove(item, viewDialogRef);
         }
       },
-      //ask for consultation
+      // ask for consultation
       {
         type: 'action',
         icon: 'mdi-help-rhombus-outline',
@@ -666,24 +685,6 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
-        }
-      },
-      //to Manager
-      {
-        type: 'action',
-        icon: 'mdi-card-account-details-star',
-        label: 'send_to_manager',
-        data: {
-          hideFromContext: true,
-          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
-          }
-        },
-        show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_MANAGER) !== -1;
-        },
-        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
-          this.actionSendToManager(item, viewDialogRef);
         }
       }
     ];
