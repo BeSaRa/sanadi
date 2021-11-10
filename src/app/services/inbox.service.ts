@@ -251,6 +251,11 @@ export class InboxService {
     return this.openSendToDialog(taskId, WFResponseType.TO_MANAGER, service, claimBefore, task);
   }
 
+  sendToGeneralManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.TO_GM, service, claimBefore, task);
+  }
+
 
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);

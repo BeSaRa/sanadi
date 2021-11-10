@@ -336,6 +336,13 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  actionSendToGeneralManager(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadSelectedInbox();
+    });
+  }
+
   private buildGridActions() {
     this.actions = [
       // open
@@ -539,6 +546,24 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
+        }
+      },
+      // send to general Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_general_manager',
+        data: {
+          hideFromContext: true,
+          hideFromViewer: (loadedModel: CaseModel<any, any>) => {
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+          }
+        },
+        show: (item: QueryResult) => {
+          return item.RESPONSES.indexOf(WFResponseType.TO_GM) !== -1;
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToGeneralManager(item, viewDialogRef);
         }
       },
       {type: 'divider'},

@@ -125,6 +125,7 @@ export interface ILanguageKeys {
   updated_by: string;
   updated_date: string;
   send_to_manager: string;
+  send_to_general_manager: string;
   this_action_cannot_be_performed_before_saving_the_request: string;
   edit_logs: string;
   show_edit_logs: string;

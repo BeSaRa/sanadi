@@ -178,6 +178,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.sendToManager(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
+  sendToGeneralManager(claimBefore: boolean = false): DialogRef {
+    return this.service.sendToGeneralManager(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
+  }
+
   private actionOnTask(actionType: WFResponseType, claimBefore: boolean = false): DialogRef {
     return this.service.takeActionWithComment(this.TKIID, this.BD_CASE_TYPE, actionType, claimBefore, this);
   }

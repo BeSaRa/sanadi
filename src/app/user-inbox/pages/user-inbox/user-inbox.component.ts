@@ -257,6 +257,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionSendToGeneralManager(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken ? viewDialogRef?.close() : null;
+      this.reloadInbox$.next(null);
+    });
+  }
+
   private buildGridActions() {
     this.actions = [
       // open
@@ -401,6 +408,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
+        }
+      },
+      // send to general Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_general_manager',
+        show: (item: QueryResult) => {
+          return item.RESPONSES.includes(WFResponseType.TO_GM);
+        },
+        onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
+          this.actionSendToGeneralManager(item, viewDialogRef);
         }
       },
       {type: 'divider'},

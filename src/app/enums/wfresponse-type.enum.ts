@@ -13,4 +13,5 @@ export enum WFResponseType {
   INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewInternalProjectlicensing',
   INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalProjectlicensing',
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview',
+  TO_GM = 'toGM'
 }

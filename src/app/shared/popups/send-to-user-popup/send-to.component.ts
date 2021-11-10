@@ -58,7 +58,29 @@ export class SendToComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    if (this.data.sendToResponse === WFResponseType.TO_USER) {
+
+    switch (this.data.sendToResponse) {
+      case WFResponseType.TO_USER:
+        this.title = 'send_to_user';
+        this.loadUsers();
+        break;
+      case WFResponseType.TO_COMPETENT_DEPARTMENT:
+        this.title = 'send_to_competent_dep';
+        this.loadDepartments();
+        break;
+      case WFResponseType.TO_MANAGER:
+        this.title = 'send_to_manager';
+        break;
+      case WFResponseType.TO_GM:
+        this.title = 'send_to_general_manager';
+        break;
+      default:
+        this.title = 'send';
+    }
+    this.listenToSave();
+
+
+    /*if (this.data.sendToResponse === WFResponseType.TO_USER) {
       this.loadUsers();
       this.title = 'send_to_user';
     } else if (this.data.sendToResponse === WFResponseType.TO_COMPETENT_DEPARTMENT) {
@@ -67,7 +89,7 @@ export class SendToComponent implements OnInit, OnDestroy {
     } else {
       this.title = 'send_to_manager';
     }
-    this.listenToSave();
+    this.listenToSave();*/
   }
 
   ngOnDestroy(): void {
