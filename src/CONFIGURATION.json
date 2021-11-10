@@ -1,11 +1,8 @@
 {
   "VERSION": "v1.3.3-rc#1",
   "ENVIRONMENTS_URLS": {
-    "STAGING": "http://100.100.3.220:9010/sanadi-services/api/",
-    "TEST": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
-    "TEST2": "http://localhost:9080/sanadi-services/api/",
-    "RACA": "http://eblaepm.no-ip.org:9090/sanadi-services/api/",
-    "BAW_UI": "http://100.100.15.102:9011/sanadi-services/api/",
+    "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
+    "BAW_UI": "http://eblaepm.no-ip.org:9011/sanadi-services/api/",
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
