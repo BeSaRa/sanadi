@@ -134,13 +134,25 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         ...value
       })))
       .pipe(map((value) => {
-        value.actions = value.actions.filter((action, index, arr) => {
-          const isConsecutiveDivider = (action.type === 'divider' && (index > 0 && arr[index - 1].type === 'divider'));
-          if (isConsecutiveDivider) {
-            return false;
+        let actionsList: IMenuItem<any>[] = [], canShow = false;
+        value.actions.map((action, index, actions) => {
+          canShow = !(action.data && action.data.hideFromContext);
+          if (canShow) {
+            if (this.isAction(action)) {
+              actionsList.push(action);
+            } else if (this.isDivider(action)) {
+              let previousItem = actionsList[index - 1];
+              if (previousItem && !this.isDivider(previousItem)) {
+                actionsList.push(action);
+              }
+            }
           }
-          return !(action.data && action.data.hideFromContext);
         });
+
+        /*value.actions = value.actions.filter(action => {
+          return !(action.data && action.data.hideFromContext);
+        });*/
+        value.actions = actionsList;
         return value;
       }))
       .subscribe((data) => {
