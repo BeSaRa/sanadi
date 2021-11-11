@@ -163,7 +163,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) {
+  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent, caseViewerComponent?: any) {
     item.claim()
       .pipe(take(1))
       .subscribe((val) => {
@@ -182,6 +182,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         if (component && component.handleReadonly && typeof component?.handleReadonly === 'function') {
           component.handleReadonly();
         }
+        caseViewerComponent && caseViewerComponent.checkForFinalApproveByMatrixNotification();
       });
   }
 
@@ -194,6 +195,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.task_have_been_released_successfully);
+
         viewDialogRef?.close();
       });
   }
@@ -407,8 +409,8 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
           }
         },
-        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent) => {
-          this.actionClaim(item, dialogRef, loadedModel, component);
+        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent, caseViewerComponent?: any) => {
+          this.actionClaim(item, dialogRef, loadedModel, component, caseViewerComponent);
         }
       },
       // Release

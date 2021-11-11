@@ -31,7 +31,10 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   viewInit: Subject<any> = new Subject<any>();
   _component!: IESComponent;
   openedFrom!: OpenFrom;
-  showFinalApprovalByMatrixNotification: boolean = false;
+
+  canShowMatrixNotification: boolean = false;
+  matrixNotificationType!: 'success' | 'danger';
+  matrixNotificationMsg!: string;
 
   set component(component: IESComponent) {
     this.zone.onStable
@@ -96,40 +99,24 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   checkForFinalApproveByMatrixNotification(): void {
-    let canShowNotification: boolean = (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && !!this.internalProjectLicenseService),
-      totalProjectComponentCost: number = (this.loadedModel as unknown as InternalProjectLicense).projectTotalCost;
-
-    if (CommonUtils.isValidValue(totalProjectComponentCost)) {
-      totalProjectComponentCost = Number(Number(totalProjectComponentCost).toFixed(2));
-    } else {
-      totalProjectComponentCost = 0;
-    }
-
-    if (!canShowNotification || totalProjectComponentCost === 0) {
-      this.showFinalApprovalByMatrixNotification = false;
-      return;
-    }
-
-    if (this.empService.isLicensingChiefManager()) {
-      canShowNotification = (totalProjectComponentCost > 0 && totalProjectComponentCost <= 500000);
-    } else if (this.empService.isLicensingManager()) {
-      canShowNotification = (totalProjectComponentCost >= 500001 && totalProjectComponentCost <= 2000000);
-    } else if (this.empService.isLicensingGeneralManager()) {
-      canShowNotification = (totalProjectComponentCost >= 2000001);
-    } else {
-      canShowNotification = false;
-    }
+    let requestModel = (this.loadedModel as unknown as InternalProjectLicense),
+      canShowNotification: boolean = (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE)
+        && (this.openedFrom === OpenFrom.USER_INBOX || (this.openedFrom === OpenFrom.TEAM_INBOX && requestModel.taskDetails.isClaimed()))
+        && !!this.internalProjectLicenseService
+        && (this.empService.isLicensingManager() || this.empService.isLicensingGeneralManager() || this.empService.isLicensingChiefManager());
 
     if (canShowNotification) {
       this.internalProjectLicenseService!.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
         .subscribe((result: boolean) => {
-          this.showFinalApprovalByMatrixNotification = result;
+          this.canShowMatrixNotification = result;
+          this.matrixNotificationType = result ? 'success' : 'danger';
+          this.matrixNotificationMsg = result ? this.lang.map.msg_success_final_approve_task_based_on_matrix_notification : this.lang.map.msg_fail_final_approve_task_based_on_matrix_notification;
         });
     }
   }
 
   takeAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {
-    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component);
+    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component, this);
   }
 
   private filterAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {

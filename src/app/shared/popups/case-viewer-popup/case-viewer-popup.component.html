@@ -7,11 +7,11 @@
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content" id="case-viewer" style="width: 90vw">
-  <div class="alert alert-success alert-dismissible fade show" role="alert"
-       *ngIf="showFinalApprovalByMatrixNotification">
-    {{lang.map.msg_final_approve_task_based_on_matrix_notification}}
+  <div class="alert alert-{{matrixNotificationType}} alert-dismissible fade show" role="alert"
+       *ngIf="canShowMatrixNotification">
+    {{matrixNotificationMsg}}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-            (click)="showFinalApprovalByMatrixNotification = false;"></button>
+            (click)="canShowMatrixNotification = false;"></button>
   </div>
   <viewer-case-info [model]="model" [loadedModel]="loadedModel"
                     [componentService]="data.componentService"></viewer-case-info>
