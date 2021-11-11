@@ -170,6 +170,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   actionSendToSupervisionAndControlDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToSupervisionAndControlDepartment().subscribe((_) => {
+      viewDialogRef?.close();
       this.reloadInbox$.next(null);
     });
   }

@@ -246,6 +246,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   actionSendToSupervisionAndControlDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToSupervisionAndControlDepartment().subscribe((_) => {
+      viewDialogRef?.close();
       this.reloadSelectedInbox();
     });
   }
