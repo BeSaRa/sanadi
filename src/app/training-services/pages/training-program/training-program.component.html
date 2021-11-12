@@ -38,7 +38,7 @@
           </ng-container>
           <ng-container cdkColumnDef="trainingDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_date}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.startDate | date:'shortDate'}} - {{row.endDate | date:'shortDate'}}</td>
+            <td cdk-cell *cdkCellDef="let row">{{row.trainingDate}}</td>
           </ng-container>
           <ng-container cdkColumnDef="registrationDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_registration_date}}</th>

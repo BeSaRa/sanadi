@@ -18,6 +18,11 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {OrgUnit} from '@app/models/org-unit';
+import {takeUntil} from 'rxjs/operators';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {Trainer} from '@app/models/trainer';
+import {TrainerService} from '@app/services/trainer.service';
 
 @Component({
   selector: 'training-program-popup',
@@ -44,10 +49,25 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     registerationClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
   trainingTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_TYPE;
-  organizationTypes: Lookup[] = this.lookupService.listByCategory.ORG_UNIT_TYPE;
+  organizationTypes: Lookup[] = this.lookupService.listByCategory.OrgUnitType;
   targetAudienceList: Lookup[] = this.lookupService.listByCategory.TRAINING_AUDIENCE;
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
+
+  // organizations properties
+  selectedOrganizationType!: number;
+  selectedOrganizations: OrgUnit[] = [];
+  organizations: OrgUnit[] = [];
+  selectedOrganization!: number;
+  organizationColumns = ['arName', 'enName', 'actions'];
+  showAddOrganizationForm = false;
+
+  // trainers properties
+  selectedTrainers: Trainer[] = [];
+  trainers: Trainer[] = [];
+  selectedTrainer!: number;
+  trainerColumns = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
+  showAddTrainerForm = false;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
@@ -56,7 +76,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               public lookupService: LookupService,
               public toast: ToastService,
               public dialogRef: DialogRef,
-              public dialogService: DialogService) {
+              public dialogService: DialogService,
+              private organizationUnitService: OrganizationUnitService,
+              private trainerService: TrainerService) {
     super();
     this.operation = data.operation;
     this.model = data.model;
@@ -64,7 +86,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   initPopup(): void {
+    if(this.operation == OperationTypes.UPDATE) {
+      this.loadSelectedOrganizations();
+    }
 
+    this.loadTrainers();
+
+    this.loadSelectedTrainers();
   }
 
   setMinDate(): void {
@@ -81,40 +109,42 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
 
-
-    this.setRelatedDates(event, fromFieldName, toFieldName);
+    // to be uncommented
+    // this.setRelatedDates(event, fromFieldName, toFieldName);
 
   }
 
   trainingEndDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-
-    this.setRelatedDates(event, fromFieldName, toFieldName);
+    // to be uncommented
+    // this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   registrationStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    let trainingStartDate = this.trainingStartDateControl.value;
-    let validators = trainingStartDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
-
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
-
-    this.registrationStartDateControl.updateValueAndValidity();
-    this.registrationClosureDateControl.updateValueAndValidity();
-
-    this.setRelatedDates(event, fromFieldName, toFieldName);
+    // to be uncommented
+    // let trainingStartDate = this.trainingStartDateControl.value;
+    // let validators = trainingStartDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
+    //
+    // this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
+    // this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
+    //
+    // this.registrationStartDateControl.updateValueAndValidity();
+    // this.registrationClosureDateControl.updateValueAndValidity();
+    //
+    // this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   registrationEndDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    let trainingStartDate = this.trainingStartDateControl.value;
-    let validators = trainingStartDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
-
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
-
-    this.registrationStartDateControl.updateValueAndValidity();
-    this.registrationClosureDateControl.updateValueAndValidity();
-
-    this.setRelatedDates(event, fromFieldName, toFieldName);
+    // to be uncommented
+    // let trainingStartDate = this.trainingStartDateControl.value;
+    // let validators = trainingStartDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
+    //
+    // this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
+    // this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
+    //
+    // this.registrationStartDateControl.updateValueAndValidity();
+    // this.registrationClosureDateControl.updateValueAndValidity();
+    //
+    // this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   setRelatedDates(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -177,14 +207,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   afterSave(model: TrainingProgram, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     // @ts-ignore
-    this.toast.success(message.change({x: model.getName()}));
+    this.toast.success(message.change({x: model.activityName}));
     this.model = model;
-    const operationBeforeSave = this.operation;
-    this.operation = OperationTypes.UPDATE;
-
-    if (operationBeforeSave == OperationTypes.UPDATE) {
-      this.dialogRef.close(this.model);
-    }
+    this.dialogRef.close(this.model);
   }
 
   saveFail(error: Error): void {
@@ -197,6 +222,82 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   };
 
   destroyPopup(): void {
+  }
+
+  // Organizations functionality
+  openAddOrganizations() {
+    this.showAddOrganizationForm = true;
+  }
+
+  addOrganization() {
+    if(!this.hasDuplicatedId(this.selectedOrganization, this.selectedOrganizations)) {
+      let org = this.organizations.find(e => e.id == this.selectedOrganization)!;
+      const arr = [...this.selectedOrganizations, org];
+      this.selectedOrganizations = arr;
+      this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
+    }
+    // show message
+  }
+
+  removeOrganization(event: MouseEvent, org: OrgUnit) {
+    event.preventDefault();
+    this.selectedOrganizations = this.selectedOrganizations.filter(element => element.id != org.id);
+    this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
+  }
+
+  private loadSelectedOrganizations(): void {
+    this.organizationUnitService.load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(organizations => {
+        this.selectedOrganizations = organizations.filter(element => this.model.targetOrganizationListIds.includes(element.id));
+      });
+  }
+
+  onOrganizationTypeChange() {
+    this.organizationUnitService.getOrganizationUnitsByOrgType(this.selectedOrganizationType).subscribe(orgs => {
+      this.organizations = orgs;
+    })
+  }
+
+  // trainers functionality
+  openAddTrainers() {
+    this.showAddTrainerForm = true;
+  }
+
+  addTrainer() {
+    if(!this.hasDuplicatedId(this.selectedTrainer, this.selectedTrainers)) {
+      let trainer = this.trainers.find(e => e.id == this.selectedTrainer)!;
+      const arr = [...this.selectedTrainers, trainer];
+      this.selectedTrainers = arr;
+      this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
+    }
+    // show message
+  }
+
+  removeTrainer(event: MouseEvent, trainer: Trainer) {
+    event.preventDefault();
+    this.selectedTrainers = this.selectedTrainers.filter(element => element.id != trainer.id);
+    this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
+  }
+
+  private loadTrainers(): void {
+    this.trainerService.load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(trainers => {
+        this.trainers = trainers;
+      });
+  }
+
+  private loadSelectedTrainers(): void {
+    this.trainerService.load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(trainers => {
+        this.selectedTrainers = trainers.filter(element => this.model.trainerListIds.includes(element.id));
+      });
+  }
+
+  hasDuplicatedId(id: number, arr: any[]): boolean {
+    return arr.some(element => element.id == id);
   }
 
   hoursList: { val: number, key: string }[] = [

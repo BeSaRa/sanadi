@@ -6,10 +6,14 @@ import {DateUtils} from '@app/helpers/date-utils';
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram>{
   receive(model: TrainingProgram): TrainingProgram {
     model.registrationDate = DateUtils.getDateStringFromDate(model.registerationStartDate) + ' to ' + DateUtils.getDateStringFromDate(model.registerationClosureDate);
-    model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' - ' + DateUtils.getDateStringFromDate(model.endDate);
+    model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' to ' + DateUtils.getDateStringFromDate(model.endDate);
     model.trainingTypeInfo = AdminResult.createInstance(model.trainingTypeInfo);
 
-    // model.registerationStartDate = DateUtils.changeDateToDatepicker(model.registerationStartDate);
+    model.startDate = DateUtils.changeDateToDatepicker(model.startDate);
+    model.endDate = DateUtils.changeDateToDatepicker(model.endDate);
+
+    model.registerationStartDate = DateUtils.changeDateToDatepicker(model.registerationStartDate);
+    model.registerationClosureDate = DateUtils.changeDateToDatepicker(model.registerationClosureDate);
 
     model.targetOrganizationListIds = convertIdsStringToArray(model.targetOrganizationList);
 
@@ -24,6 +28,11 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.targetOrganizationList = JSON.stringify(model.targetOrganizationListIds);
     model.targetAudienceList = JSON.stringify(model.targetAudienceListIds);
     model.trainerList = JSON.stringify(model.trainerListIds);
+
+    model.startDate = DateUtils.getDateStringFromDate(model.startDate);
+    model.endDate = DateUtils.getDateStringFromDate(model.endDate);
+    model.registerationStartDate = DateUtils.getDateStringFromDate(model.registerationStartDate);
+    model.registerationClosureDate = DateUtils.getDateStringFromDate(model.registerationClosureDate);
 
     delete model.service;
     delete model.trainingDate;

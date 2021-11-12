@@ -8,6 +8,7 @@ import { AccreditedTrainerPopupComponent } from './popups/accredited-trainer-pop
 import { TrainerCvPopupComponent } from './popups/trainer-cv-popup/trainer-cv-popup.component';
 import { TrainingProgramComponent } from './pages/training-program/training-program.component';
 import { TrainingProgramPopupComponent } from './popups/training-program-popup/training-program-popup.component';
+import {FormsModule} from '@angular/forms';
 
 
 
@@ -23,7 +24,8 @@ import { TrainingProgramPopupComponent } from './popups/training-program-popup/t
   imports: [
     CommonModule,
     SharedModule,
-    TrainingServicesRoutingModule
+    TrainingServicesRoutingModule,
+    FormsModule
   ]
 })
 export class TrainingServicesModule { }

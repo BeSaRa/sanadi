@@ -64,6 +64,11 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     return this.http.post<boolean>(this._getServiceURL() + '/banner-logo?id=' + id, form);
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  getOrganizationUnitsByOrgType(orgType: number) {
+    return this.http.get<OrgUnit[]>(this._getServiceURL() + '?orgType=' + orgType);
+  }
+
   @Generator(undefined, false)
   loadOrgUnitByIdComposite(id: number): Observable<OrgUnit> {
     return this.http.get<OrgUnit>(this._getServiceURL() + '/' + id + '/composite');

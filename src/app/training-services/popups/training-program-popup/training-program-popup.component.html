@@ -8,11 +8,14 @@
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
     <tabs-list>
-      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
+           [hasError]="!form.valid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
-           [title]="lang.map.training_program_organizations"></tab>
+           [title]="lang.map.training_program_organizations"
+           [hasError]="model.targetOrganizationListIds.length < 1"></tab>
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
-           [title]="lang.map.training_program_trainers"></tab>
+           [title]="lang.map.training_program_trainers"
+           [hasError]="model.trainerListIds.length < 1"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -281,10 +284,188 @@
     </div>
     </ng-template>
     <ng-template #organizationsTabTemplate>
-      Orgs
+      <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
+<!--        <h1 class="h6 text-primary">{{lang.map.training_program_organizations}}</h1>-->
+<!--        <div>-->
+<!--          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i-->
+<!--            class="mdi mdi-reload"></i></button>-->
+<!--        </div>-->
+        <div>
+          <button (click)="openAddOrganizations()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+            class="mdi mdi-plus-box"></i></button>
+        </div>
+      </div>
+      <div class="row mb-3 add-to-list-container" *ngIf="showAddOrganizationForm">
+        <h1 class="h6 text-primary">{{lang.map.training_program_add_organization}}</h1>
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="organizationTypeId"
+                     class="form-label">{{lang.map.training_program_organization_types}}</label>
+              <div class="mb-3 position-relative ng-select-wrapper">
+                <ng-select
+                  labelForId="organizationTypeId"
+                  placeholder="{{lang.map.select}}"
+                  [(ngModel)]="selectedOrganizationType"
+                  [ngModelOptions]="{standalone: true}"
+                  id="organizationTypeId"
+                  appendTo="Body"
+                  (change)="onOrganizationTypeChange()">
+                  <ng-option [value]="organizationType.lookupKey" *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="organizationId"
+                     class="form-label">{{lang.map.training_program_organizations}}</label>
+              <div class="mb-3 position-relative ng-select-wrapper">
+                <ng-select
+                  labelForId="organizationId"
+                  placeholder="{{lang.map.select}}"
+                  [(ngModel)]="selectedOrganization"
+                  [ngModelOptions]="{standalone: true}"
+                  id="organizationId"
+                  appendTo="Body">
+                  <ng-option [value]="organization.id" *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="display: flex">
+              <span class="flex-grow-1"></span>
+              <button [disabled]="!selectedOrganization" *ngIf="saveVisible" (click)="addOrganization()"
+                      class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row add-to-list-container">
+        <h1 class="h6 text-primary">{{lang.map.training_program_selected_organizations}}</h1>
+        <div class="col-12">
+          <div class="table-responsive">
+            <app-table #table sortableTable style="margin-bottom: 0"
+                       [columns]="organizationColumns"
+                       [data]="selectedOrganizations">
+              <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+                <ng-container cdkColumnDef="arName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="enName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="actions">
+                  <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                  <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                    <div class="d-flex flex-row">
+                      <a href="#" (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                        <i class="mdi mdi-close-box"></i>
+                      </a>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr cdk-header-row *cdkHeaderRowDef="organizationColumns"></tr>
+                <tr cdk-row *cdkRowDef="let row; columns: organizationColumns;"></tr>
+                <tr *cdkNoDataRow>
+                  <td colspan="10">{{lang.map.no_records_to_display}}</td>
+                </tr>
+              </table>
+            </app-table>
+            <!--            <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>-->
+          </div>
+        </div>
+      </div>
     </ng-template>
     <ng-template #trainersTabTemplate>
-      trainers
+      <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
+        <!--        <h1 class="h6 text-primary">{{lang.map.training_program_organizations}}</h1>-->
+        <!--        <div>-->
+        <!--          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i-->
+        <!--            class="mdi mdi-reload"></i></button>-->
+        <!--        </div>-->
+        <div>
+          <button (click)="openAddTrainers()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+            class="mdi mdi-plus-box"></i></button>
+        </div>
+      </div>
+      <div class="row mb-3 add-to-list-container" *ngIf="showAddTrainerForm">
+        <h1 class="h6 text-primary">{{lang.map.training_program_add_trainer}}</h1>
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="trainerId"
+                     class="form-label">{{lang.map.training_program_trainers}}</label>
+              <div class="mb-3 position-relative ng-select-wrapper">
+                <ng-select
+                  labelForId="trainerId"
+                  placeholder="{{lang.map.select}}"
+                  [(ngModel)]="selectedTrainer"
+                  [ngModelOptions]="{standalone: true}"
+                  id="trainerId"
+                  appendTo="Body">
+                  <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.enName}} | {{trainer.arName}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div style="display: flex">
+              <span class="flex-grow-1"></span>
+              <button [disabled]="!selectedTrainer" *ngIf="saveVisible" (click)="addTrainer()"
+                      class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row add-to-list-container">
+        <h1 class="h6 text-primary">{{lang.map.training_program_selected_trainers}}</h1>
+        <div class="col-12">
+          <div class="table-responsive">
+            <app-table #table sortableTable style="margin-bottom: 0"
+                       [columns]="trainerColumns"
+                       [data]="selectedTrainers">
+              <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+                <ng-container cdkColumnDef="arName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="enName">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="specialization">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainer_specialization}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.specialization}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="jobTitle">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.trainer_job_title}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.jobTitle}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="actions">
+                  <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                  <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                    <div class="d-flex flex-row">
+                      <a href="#" (click)="removeTrainer($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                        <i class="mdi mdi-close-box"></i>
+                      </a>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr cdk-header-row *cdkHeaderRowDef="trainerColumns"></tr>
+                <tr cdk-row *cdkRowDef="let row; columns: trainerColumns;"></tr>
+                <tr *cdkNoDataRow>
+                  <td colspan="10">{{lang.map.no_records_to_display}}</td>
+                </tr>
+              </table>
+            </app-table>
+            <!--            <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>-->
+          </div>
+        </div>
+      </div>
     </ng-template>
   </form>
 </div>
@@ -294,7 +475,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+  <button [disabled]="form.invalid || model.targetOrganizationListIds.length <= 0 || model.trainerListIds.length <= 0" *ngIf="saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

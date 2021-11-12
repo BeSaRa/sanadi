@@ -3,6 +3,7 @@ import {TrainingProgramService} from '@app/services/training-program.service';
 import {FactoryService} from '@app/services/factory.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from '@app/models/admin-result';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
   service: TrainingProgramService;
@@ -22,8 +23,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   durationInDays!: string;
   durationInHours!: string;
   averageDurationInHours!: string;
-  startDate!: string;
-  endDate!: string;
+  startDate!: IMyDateModel | string;
+  endDate!: IMyDateModel | string;
   sessionStartTime!: number;
   sessionEndTime!: number;
   trainingLocation!: string;
@@ -35,11 +36,13 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   numberOfSeats!: number;
   comments!: string;
   status!: number;
-  registerationStartDate!: string;
-  registerationClosureDate!: string;
-  registeredTraineeNumber!: number;
-  acceptedTraineeNumber!: number;
+  registerationStartDate!: IMyDateModel | string;
+  registerationClosureDate!: IMyDateModel | string;
   totalTrainingCost!: number;
+
+  // to be removed
+  registeredTraineeNumber: number = 0;
+  acceptedTraineeNumber: number = 0;
 
   constructor() {
     super();
@@ -75,25 +78,19 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
     return {
       activityName: controls ? [activityName, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : activityName,
       trainingType: controls ? [trainingType, [
         CustomValidators.required
       ]] : trainingType,
       trainingObjective: controls ? [trainingObjective, [
         CustomValidators.required,
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : trainingObjective,
       trainingTopics: controls ? [trainingTopics, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : trainingTopics,
-      targetOrganizationListIds: controls ? [targetOrganizationListIds, [
-        CustomValidators.required
-      ]] : targetOrganizationListIds,
       targetAudienceListIds: controls ? [targetAudienceListIds, [
         CustomValidators.required
       ]] : targetAudienceListIds,
@@ -122,17 +119,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.required
       ]] : sessionEndTime,
       trainingLocation: controls ? [trainingLocation, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : trainingLocation,
-      trainerListIds: controls ? [trainerListIds, [
-        CustomValidators.required
-      ]] : trainerListIds,
       contactPerson: controls ? [contactPerson, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : contactPerson,
       attendenceMethod: controls ? [attendenceMethod, [
         CustomValidators.required
@@ -144,8 +136,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : numberOfSeats,
       comments: controls ? [comments, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : comments,
       registerationStartDate: controls ? [registerationStartDate, [
         CustomValidators.required
