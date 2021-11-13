@@ -525,12 +525,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onClickAddProjectComponent(): void {
+    this.currentEditedProjectComponent = undefined;
     this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()})
   }
 
   onClickEditProjectComponent(model: ProjectComponent): void {
-    this.projectComponentChange$.next({operation: OperationTypes.UPDATE, model: model});
     this.currentEditedProjectComponent = model;
+    this.projectComponentChange$.next({operation: OperationTypes.UPDATE, model: model});
   }
 
   onClickDeleteProjectComponent(model: ProjectComponent): void {
