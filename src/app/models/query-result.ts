@@ -305,9 +305,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   getRiskStatusColor(): string {
     const color: IKeyValue = {
-      [RiskStatus.NORMAL]: '',
-      [RiskStatus.AT_RISK]: 'text-danger',
-      [RiskStatus.OVER_DUE]: 'text-info'
+      [RiskStatus.NORMAL]: 'text-success',
+      [RiskStatus.AT_RISK]: 'text-warning',
+      [RiskStatus.OVER_DUE]: 'text-danger'
     }
 
     return color[this.RISK_STATUS];
