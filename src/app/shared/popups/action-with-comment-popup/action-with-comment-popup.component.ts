@@ -119,7 +119,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
     this.displayLicenseForm = this.data.task &&
-      (this.action === WFResponseType.APPROVE || this.action === WFResponseType.FINAL_APPROVE) &&
+      ((this.action === WFResponseType.APPROVE && !this.employeeService.isSupervisionAndControlUser()) || this.action === WFResponseType.FINAL_APPROVE) &&
       this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
       caseDetails.requestType !== ServiceRequestTypes.CANCEL;
   }

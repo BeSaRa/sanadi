@@ -66,29 +66,15 @@ export class EmployeeService {
     developmentalExpert: {
       authName: 'Developmental Experts',
       ldapGroupName: 'Developmental_ Experts'
+    },
+    supervisionAndControlUser: {
+      authName: 'Supervision and Control',
+      ldapGroupName: 'Supervision_and_Control'
+    },
+    supervisionAndControlManager: {
+      authName: 'Supervision and Control Manager',
+      ldapGroupName: 'Supervision_and_Control_Manager'
     }
-  };
-  private userRoleTeamAuthMap = {
-    charityUser: 'Charity Organization',
-    charityManager: 'Charity Organization Manager',
-    licenseUser: 'Licenses',
-    licenseManager: 'Licenses Manager',
-    licenseChiefManager: 'Licenses Chief',
-    licenseGeneralManager: 'Licenses General Manager',
-    riskAndComplianceUser: 'Risk and Compliance',
-    constructionExpert: 'Construction Experts',
-    developmentalExpert: 'Developmental Experts'
-  };
-  private userRoleTeamLDAPGroupMap = {
-    charityUser: 'Charity Organization',
-    charityManager: 'Charity_Organization_Manager',
-    licenseUser: 'Licenses',
-    licenseManager: 'Licenses_Manager',
-    licenseChiefManager: 'Licenses_Chief',
-    licenseGeneralManager: 'Licenses_General_Manager',
-    riskAndComplianceUser: 'Risk and Compliance',
-    constructionExpert: 'Construction_Experts',
-    developmentalExpert: 'Developmental_ Experts'
   };
 
   constructor(private configService: ConfigurationService) {
@@ -344,5 +330,13 @@ export class EmployeeService {
 
   isDevelopmentalExpert(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.developmentalExpert, compareBy);
+  }
+
+  isSupervisionAndControlUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.supervisionAndControlUser, compareBy);
+  }
+
+  isSupervisionAndControlManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.supervisionAndControlManager, compareBy);
   }
 }
