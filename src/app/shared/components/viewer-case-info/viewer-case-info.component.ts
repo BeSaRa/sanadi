@@ -11,8 +11,6 @@ import {FinalExternalOfficeApprovalService} from '@app/services/final-external-o
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {LicenseService} from '@app/services/license.service';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 
 @Component({
   selector: 'viewer-case-info',
@@ -121,41 +119,26 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     return this.loadedModel.exportedLicenseFullserial || '';
   }
 
-  get internalProjectLicenseService(): InternalProjectLicenseService | undefined {
-    if (!this.componentService) {
-      return undefined;
-    }
-
-    return (this.componentService as unknown as InternalProjectLicenseService);
+  get internalProjectGeneratedLicenseId(): string {
+    return this.loadedModel.exportedLicenseId || '';
   }
 
   canShowInternalProjectGeneratedLicense(): boolean {
     return this.model.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
   }
 
-  loadInternalProjectLicenceByCriteria(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
-    if (!this.componentService) {
-      return of([]);
-    }
-    return this.internalProjectLicenseService!.licenseSearch(criteria);
-  }
-
   viewInternalProjectGeneratedLicense(): void {
-    if (!this.internalProjectLicenseService) {
+    if (!this.internalProjectGeneratedLicenseId) {
       return;
     }
-
-    let loadedLicense$ = of(this.internalProjectGeneratedLicense)
-      .pipe(switchMap(license => license ? of([license]) : this.loadInternalProjectLicenceByCriteria({fullSerial: this.internalProjectGeneratedLicenseNumber})));
-
-    loadedLicense$.pipe(
-      filter(list => !!list.length),
-      map(list => list[0]),
-      takeUntil(this.destroy$)
-    ).subscribe((license) => {
-      this.internalProjectGeneratedLicense = license;
-      this.licenseService.openSelectLicenseDialog([this.internalProjectGeneratedLicense], this.model, false, this.internalProjectLicenseService!.selectLicenseDisplayColumns)
-    })
+    let license = {documentTitle: this.internalProjectGeneratedLicenseNumber, id: this.internalProjectGeneratedLicenseId} as InternalProjectLicenseResult;
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        if (file.blob.type === 'error') {
+          return;
+        }
+        return this.licenseService.openLicenseFullContentDialog(file, license);
+      });
   }
 
 
