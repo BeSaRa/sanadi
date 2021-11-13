@@ -6,6 +6,11 @@
     <tabs-list class="py-4">
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
+      <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
+           [template]="commentsTabTemplate" [title]="lang.map.comments"
+           *ngIf="employeeService.isInternalUser()"></tab>
+      <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+           [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
       <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
            [template]="recommendationsTemplate" [title]="lang.map.recommendations"
            *ngIf="employeeService.isInternalUser()"
@@ -117,30 +122,26 @@
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
-        <hr>
-        <div class="row">
-          <div [ngClass]="{'col-md-12': employeeService.isExternalUser()}" class="col-md-6 col-sm-12">
-            <div class="d-flex flex-row align-items-center justify-content-start">
-              <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
-              <button [disabled]="!isAddAttachmentAllowed()" (click)="attachmentsCtrl.openUploadDialog()"
-                      class="d-inline-block btn p-0 icon-btn"><i
-                class="mdi mdi-plus-box text-primary"></i></button>
-            </div>
-            <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                           [readonly]="isAttachmentReadonly()"></app-documents>
-          </div>
-          <div *ngIf="employeeService.isInternalUser()" class="col-md-6 col-sm-12">
-            <div class="d-flex flex-row align-items-center justify-content-start">
-              <h6 class="text-primary d-inline-block">{{lang.map.comments}}</h6>
-              <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
-                      class="d-inline-block btn p-0 icon-btn"><i
-                class="mdi mdi-plus-box text-primary"></i></button>
-            </div>
-            <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
-                          [readonly]="readonly"></app-comments>
-          </div>
-        </div>
       </form>
+    </ng-template>
+    <ng-template #commentsTabTemplate>
+      <div class="d-flex flex-row align-items-center justify-content-start">
+        <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
+                class="d-inline-block btn p-0 icon-btn"><i
+          class="mdi mdi-plus-box text-primary"></i></button>
+      </div>
+      <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
+                    [readonly]="readonly"></app-comments>
+    </ng-template>
+    <ng-template #attachmentsTabTemplate>
+      <div class="d-flex flex-row align-items-center justify-content-start">
+        <h6 class="text-primary d-inline-block">{{lang.map.attachments}}</h6>
+        <button [disabled]="!isAddAttachmentAllowed()" (click)="attachmentsCtrl.openUploadDialog()"
+                class="d-inline-block btn p-0 icon-btn"><i
+          class="mdi mdi-plus-box text-primary"></i></button>
+      </div>
+      <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
+                     [readonly]="isAttachmentReadonly()"></app-documents>
     </ng-template>
     <ng-template #recommendationsTemplate>
       <request-recommendations [record]="model"></request-recommendations>

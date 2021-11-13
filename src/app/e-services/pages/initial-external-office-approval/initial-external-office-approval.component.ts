@@ -47,6 +47,16 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       langKey: 'lbl_basic_info',
       validStatus: () => this.form && this.form.valid
     },
+    comments: {
+      name: 'commentsTab',
+      langKey: 'comments',
+      validStatus: () => true
+    },
+    attachments: {
+      name: 'attachments',
+      langKey: 'attachments',
+      validStatus: () => true
+    },
     recommendations: {
       name: 'recommendations',
       langKey: 'recommendations',
