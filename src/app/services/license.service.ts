@@ -141,6 +141,63 @@ export class LicenseService {
     return this._loadInternalProjectLicenseByLicenseId(licenseId);
   }
 
+  @Generator(InitialExternalOfficeApproval, false, {
+    property: 'rs',
+    interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
+  })
+  _validateInitialApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InitialExternalOfficeApproval> {
+    return this.http.post<InitialExternalOfficeApproval>(this.urlService.URLS.INITIAL_OFFICE_APPROVAL + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @Generator(PartnerApproval, false, {
+    property: 'rs',
+    interceptReceive: (new PartnerApprovalInterceptor()).receive
+  })
+  _validatePartnerApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<PartnerApproval> {
+    return this.http.post<PartnerApproval>(this.urlService.URLS.E_PARTNER_APPROVAL + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @Generator(FinalExternalOfficeApproval, false, {
+    property: 'rs',
+    interceptReceive: (new FinalExternalOfficeApprovalInterceptor()).receive
+  })
+  _validateFinalExternalOfficeLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<FinalExternalOfficeApproval> {
+    return this.http.post<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @Generator(InternalProjectLicense, false, {
+    property: 'rs',
+    interceptReceive: (new InternalProjectLicenseInterceptor()).receive
+  })
+  _validateInternalProjectLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InternalProjectLicense> {
+    return this.http.post<InternalProjectLicense>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  validateLicenseByRequestType(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | undefined> {
+    if (caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) {
+      return this._validateInitialApprovalLicenseByRequestType(requestType, licenseId);
+    } else if (caseType === CaseTypes.PARTNER_APPROVAL) {
+      return this._validatePartnerApprovalLicenseByRequestType(requestType, licenseId);
+    } else if (caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) {
+      return this._validateFinalExternalOfficeLicenseByRequestType(requestType, licenseId);
+    } else if (caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
+      return this._validateInternalProjectLicenseByRequestType(requestType, licenseId);
+    }
+    return of(undefined);
+  }
+
   openSelectLicenseDialog(licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,

@@ -20,6 +20,7 @@ export class SelectLicensePopupComponent {
   label: keyof ILanguageKeys = "license";
   caseType: number;
   caseStatus: number;
+  requestType: number;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
@@ -29,16 +30,17 @@ export class SelectLicensePopupComponent {
                 select: boolean,
                 displayedColumns: string[]
               }) {
-    // this.data.select && (this.displayedColumns = [...this.displayedColumns, 'action']) && (this.label = "select_license");
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
+    this.requestType = this.data.caseRecord?.getRequestType();
+
     if (this.data.displayedColumns.length > 0) {
       this.displayedColumns = [...this.data.displayedColumns];
     } else {
       this.displayedColumns = [...this.displayedColumns];
     }
 
-    if (!this.displayedColumns.includes('actions')){
+    if (!this.displayedColumns.includes('actions')) {
       this.displayedColumns.push('actions');
     }
 
@@ -47,30 +49,38 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {
-    let loadedLicense: Observable<any>;
+  selectLicense(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)): void {
+    if (license instanceof InternalProjectLicenseResult) {
+      this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
+        .subscribe((licenseDetails) => {
+          if (!licenseDetails) {
+            return;
+          }
+          this.dialogRef.close({selected: license, details: licenseDetails});
+        });
+    } else {
+      let loadedLicense: Observable<any>;
 
-    if (license instanceof InitialApprovalDocument) {
-      loadedLicense = this.licenseService.loadInitialLicenseByLicenseId(license.id);
-    } else if (license instanceof PartnerApproval) {
-      loadedLicense = this.licenseService.loadPartnerLicenseByLicenseId(license.id);
-    } else if (license instanceof FinalApprovalDocument) {
-      loadedLicense = this.licenseService.loadFinalLicenseByLicenseId(license.id);
-    } else { //if (license instanceof InternalProjectLicenseResult) {
-      loadedLicense = this.licenseService.loadInternalProjectLicenseByLicenseId(license.id);
+      if (license instanceof InitialApprovalDocument) {
+        loadedLicense = this.licenseService.loadInitialLicenseByLicenseId(license.id);
+      } else if (license instanceof PartnerApproval) {
+        loadedLicense = this.licenseService.loadPartnerLicenseByLicenseId(license.id);
+      } else { //if (license instanceof FinalApprovalDocument)
+        loadedLicense = this.licenseService.loadFinalLicenseByLicenseId(license.id);
+      }
+
+      if (!loadedLicense) {
+        return;
+      }
+
+      loadedLicense
+        .subscribe((licenseDetails) => {
+          if (!licenseDetails) {
+            return;
+          }
+          this.dialogRef.close({selected: license, details: licenseDetails});
+        })
     }
-
-    if (!loadedLicense) {
-      return;
-    }
-
-    loadedLicense
-      .subscribe((licenseDetails) => {
-        if (!licenseDetails) {
-          return;
-        }
-        this.dialogRef.close({selected: license, details: licenseDetails});
-      })
   }
 
   viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {

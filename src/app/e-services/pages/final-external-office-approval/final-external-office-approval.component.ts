@@ -409,7 +409,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
+        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null})).onAfterClose$),
         // allow only if the user select license
         filter<{ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
         ((selection): selection is ({ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }) => {

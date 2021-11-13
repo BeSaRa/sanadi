@@ -423,7 +423,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model).onAfterClose$),
+        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$),
         // allow only if the user select license
         filter<{ selected: PartnerApproval, details: PartnerApproval }, any>
         ((selection): selection is { selected: PartnerApproval, details: PartnerApproval } => {
