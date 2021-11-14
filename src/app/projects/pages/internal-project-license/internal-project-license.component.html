@@ -376,22 +376,7 @@
       <ng-template #beneficiaryAnalysisTabTemplate>
         <div formGroupName="beneficiaryAnalysis">
           <div class="row">
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <div class="form-check form-switch">
-                <input type="checkbox" id="hasFamilyBeneficiaries" formControlName="hasFamilyBeneficiaries"
-                       class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('FAMILY')">
-                <label for="hasFamilyBeneficiaries" class="cursor-pointer">{{lang.map.family_beneficiary}}</label>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <div class="form-check form-switch">
-                <input type="checkbox" id="hasIndividualBeneficiaries" formControlName="hasIndividualBeneficiaries"
-                       class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('INDIVIDUAL')">
-                <label for="hasIndividualBeneficiaries"
-                       class="cursor-pointer">{{lang.map.individual_beneficiary}}</label>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <div class="col-sm-12 col-md-12 mb-4 position-relative">
               <label for="targetedNationalities" asteriskIfRequired="targetedNationalities"
                      class="form-label">{{lang.map.lbl_nationality}}</label>
               <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="targetedNationalities"
@@ -420,6 +405,27 @@
                 </ng-template>
               </ng-select>
               <app-field-error-message controlName="targetedNationalities"></app-field-error-message>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-4 position-relative">
+              <div class="form-check form-switch">
+                <input type="checkbox" id="hasFamilyBeneficiaries" formControlName="hasFamilyBeneficiaries"
+                       class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('FAMILY')">
+                <label for="hasFamilyBeneficiaries" class="cursor-pointer">{{lang.map.family_beneficiary}}</label>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4 position-relative">
+              <div class="form-check form-switch">
+                <input type="checkbox" id="hasIndividualBeneficiaries" formControlName="hasIndividualBeneficiaries"
+                       class="form-check-input cursor-pointer"
+                       (change)="updateBeneficiaryValidations('INDIVIDUAL')">
+                <label for="hasIndividualBeneficiaries"
+                       class="cursor-pointer">{{lang.map.individual_beneficiary}}</label>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-12 mb-2">
+              <span class="text-danger font-12" [innerHTML]="validFamilyOrIndividualSwitchMsg"></span>
             </div>
           </div>
           <div class="row">

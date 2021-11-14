@@ -58,6 +58,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  validFamilyOrIndividualSwitchMsg: string = '&nbsp;';
 
   requestTypesList: Lookup[] = this.lookupService.listByCategory.InternalServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -101,6 +102,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         if (!(this.beneficiaryAnalysisGroup && this.beneficiaryAnalysisGroup.valid && this.beneficiaryAnalysisIndividualPercentGroup)) {
           return false;
         }
+        if (!this._checkValidFamilyOrIndividualSwitch()) {
+          return false;
+        }
+
         // if beneficiaryAnalysisIndividualPercentGroup is disabled, means its valid => return true
         if (this.beneficiaryAnalysisIndividualPercentGroup.disabled) {
           return true;
@@ -260,6 +265,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this.dialogService.error(listHtml.outerHTML);
         return false;
       } else {
+        if (!this._checkValidFamilyOrIndividualSwitch()) {
+          this.toastService.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary}));
+          return false;
+        }
         // if project component total cost is 0, mark it invalid
         if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
           this.toastService.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
@@ -637,6 +646,12 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
   }
 
+  private _checkValidFamilyOrIndividualSwitch(): boolean {
+    const validFamilyOrIndividual = this.familyBeneficiarySwitchField.value || this.individualBeneficiarySwitchField.value;
+    this.validFamilyOrIndividualSwitchMsg = validFamilyOrIndividual ? '&nbsp;' : this.lang.map.at_least_one_field_should_be_filled.change({fields: '(' + this.lang.map.family_beneficiary + ', ' + this.lang.map.individual_beneficiary + ')'});
+    return validFamilyOrIndividual;
+  }
+
   updateBeneficiaryValidations(type: 'FAMILY' | 'INDIVIDUAL' | 'BOTH' = 'BOTH'): void {
     switch (type) {
       case 'FAMILY':
@@ -651,6 +666,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
 
     this._touchPercentGroups();
+    this._checkValidFamilyOrIndividualSwitch();
   }
 
   private static _setFieldValidationAndUpdate(fieldOrGroup: (FormControl | FormGroup), validations: (ValidatorFn | ValidatorFn[] | null)) {
