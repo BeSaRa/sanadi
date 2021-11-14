@@ -40,6 +40,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
+  availableControls: string[] = [];
 
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
@@ -256,8 +257,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       if (data.followUpDate) {
         data.followUpDate = DateUtils.changeDateFromDatepicker(data.followUpDate);
       }
-
-      return data;
+      let fields =Object.keys(this.form.value).concat(['id']);
+      return Object.keys(data).filter(field => fields.includes(field)).reduce((acc , field)=> {
+        return {...acc , [field]: data[field] , ignoreInterceptor: true};
+      }, {});
     }) : of(null);
   }
 

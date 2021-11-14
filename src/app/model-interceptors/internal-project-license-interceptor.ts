@@ -57,6 +57,10 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
   }
 
   send(model: Partial<InternalProjectLicense>): Partial<InternalProjectLicense> {
+    if (model.ignoreInterceptor) {
+      InternalProjectLicenseInterceptor._deleteBeforeSend(model);
+      return model;
+    }
     model.hasFamilyBeneficiaries = model.hasFamilyBeneficiaries ?? false;
     model.hasIndividualBeneficiaries = model.hasIndividualBeneficiaries ?? false;
 
@@ -74,6 +78,13 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
       })
     }
 
+    InternalProjectLicenseInterceptor._deleteBeforeSend(model);
+
+    return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<InternalProjectLicense>): void {
+    delete model.ignoreInterceptor;
     delete model.allNationalities;
     delete model.service;
     delete model.employeeService;
@@ -97,8 +108,6 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     delete model.secondSDGoalInfo;
     delete model.thirdSDGoalInfo;
     delete model.targetNationalitiesInfo;
-
-    return model;
   }
 
 }
