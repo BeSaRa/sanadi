@@ -24,7 +24,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 export class ConsultationService extends EServiceGenericService<Consultation> {
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organizationId', 'fullName', 'category', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
     [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
     [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
     [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],

@@ -1,5 +1,5 @@
 export enum CaseStatus {
-  CANCELED,
+  CANCELLED,
   DRAFT,
   CREATED,
   STARTED,

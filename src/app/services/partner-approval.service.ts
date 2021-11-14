@@ -57,7 +57,7 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
   serviceKey: keyof ILanguageKeys = "menu_partner_approval";
 
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
     [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
     [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
     [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],

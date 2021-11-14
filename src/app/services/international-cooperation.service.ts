@@ -24,7 +24,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 export class InternationalCooperationService extends EServiceGenericService<InternationalCooperation> {
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organization', 'fullName', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELED, 'mdi mdi-cancel'],
+    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
     [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
     [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
     [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],

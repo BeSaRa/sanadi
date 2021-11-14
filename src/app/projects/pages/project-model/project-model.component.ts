@@ -142,7 +142,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.listenToOptionalGoalsChanges();
     setTimeout(() => {
       if (this.fromDialog) {
-        this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
+        this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELLED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
 
         this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
           .pipe(takeUntil(this.destroy$)).subscribe((template) => {
