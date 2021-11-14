@@ -563,6 +563,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this.readonly = false;
       }
     }
+    this._handleRequestTypeDependentControls();
   }
 
   isEditRequestTypeAllowed(): boolean {
