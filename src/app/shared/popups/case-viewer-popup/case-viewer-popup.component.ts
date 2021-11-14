@@ -15,7 +15,6 @@ import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {EmployeeService} from '@app/services/employee.service';
-import {CommonUtils} from '@app/helpers/common-utils';
 import {InternalProjectLicense} from '@app/models/internal-project-license';
 
 @Component({
@@ -110,6 +109,10 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
         .subscribe((result: boolean) => {
           this.canShowMatrixNotification = result;
           this.matrixNotificationType = result ? 'success' : 'danger';
+          if (this.empService.isLicensingManager()) {
+            this.matrixNotificationMsg = result ? this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
+            return;
+          }
           this.matrixNotificationMsg = result ? this.lang.map.msg_success_final_approve_task_based_on_matrix_notification : this.lang.map.msg_fail_final_approve_task_based_on_matrix_notification;
         });
     }
