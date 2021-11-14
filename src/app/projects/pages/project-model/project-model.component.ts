@@ -31,7 +31,6 @@ import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {QueryResult} from '@app/models/query-result';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
