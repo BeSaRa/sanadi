@@ -679,7 +679,7 @@
                   [readonly]="readonly"></app-comments>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments [disabled]="!model?.id" [caseId]="model?.id" [caseType]="model?.caseType"
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
                  [service]="service.documentService"
                  [load]="loadAttachments"></attachments>
   </ng-template>

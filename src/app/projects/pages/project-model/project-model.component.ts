@@ -31,6 +31,7 @@ import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {QueryResult} from '@app/models/query-result';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -601,7 +602,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return isAllowed;
   }
 
-  isAddAttachmentAllowed(): boolean {
+  isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;
     }
@@ -609,8 +610,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     if (this.openFrom === OpenFrom.TEAM_INBOX) {
       isAllowed = this.model.taskDetails.isClaimed();
     }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus(),
+        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()] || CaseStatus;
 
-    return isAllowed;
+      if (caseStatusEnum) {
+        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE); // && caseStatus !== caseStatusEnum.FINAL_REJECTION
+      }
+    }
+
+    return !isAllowed;
   }
 
   private static updatePercentageRequired(control: AbstractControl, isRequired: boolean = false): AbstractControl {

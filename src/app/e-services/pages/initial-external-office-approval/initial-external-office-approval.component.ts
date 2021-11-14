@@ -473,18 +473,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     return allowEdit;
   }
 
-  isAddAttachmentAllowed(): boolean {
-    if (!this.model?.id) {
-      return false;
-    }
-    let isAllowed = true;
-    if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.model.taskDetails.isClaimed();
-    }
-
-    return isAllowed;
-  }
-
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;

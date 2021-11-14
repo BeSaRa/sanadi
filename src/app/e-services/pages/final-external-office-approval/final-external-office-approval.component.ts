@@ -577,18 +577,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     return (this.form.get('basicInfo')?.get('description')) as FormControl;
   }
 
-  isAddAttachmentAllowed(): boolean {
-    if (!this.model?.id) {
-      return false;
-    }
-    let isAllowed = true;
-    if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.model.taskDetails.isClaimed();
-    }
-
-    return isAllowed;
-  }
-
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;

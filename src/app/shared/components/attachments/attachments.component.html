@@ -63,7 +63,7 @@
               <i [class.mdi-eye-off]="!row.id" [class.mdi-eye]="row.id" class="mdi text-white"></i>
             </button>
             <button [tooltip]="lang.map.btn_delete" (click)="deleteFile(row)"
-                    [disabled]="!row.id"
+                    [disabled]="disabled"
                     class="btn shadow-sm btn-danger d-flex align-items-center justify-content-start">
               <i [class.mdi-delete-off]="!row.id" [class.mdi-delete]="row.id" class="mdi"></i>
             </button>
