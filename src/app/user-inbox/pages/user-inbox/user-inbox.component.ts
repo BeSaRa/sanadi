@@ -23,6 +23,7 @@ import {IInboxCriteria} from "@app/interfaces/i-inbox-criteria";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from "@app/enums/case-types.enum";
+import {CaseStatus} from '@app/enums/case-status.enum';
 
 @Component({
   selector: 'app-user-inbox',
@@ -265,6 +266,14 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  private _getCaseStatusEnum(item: QueryResult) {
+    let caseStatusEnum = this.inboxService.getService(item.getCaseType()).caseStatusEnumMap[item.getCaseType()];
+    if (!caseStatusEnum) {
+      caseStatusEnum = CaseStatus;
+    }
+    return caseStatusEnum;
+  }
+
   private buildGridActions() {
     this.actions = [
       // open
@@ -288,6 +297,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
         data: {hideFromViewer: true},
+        show: (item: QueryResult) => {
+          let caseStatusEnum = this._getCaseStatusEnum(item);
+          return item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+        },
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);
         }
@@ -310,7 +323,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         label: 'manage_comments',
         data: {hideFromViewer: true},
         show: (item: QueryResult) => {
-          return this.employeeService.isInternalUser();
+          let caseStatusEnum = this._getCaseStatusEnum(item);
+          return this.employeeService.isInternalUser() && item.getCaseStatus() !== caseStatusEnum.CANCELLED;
         },
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);

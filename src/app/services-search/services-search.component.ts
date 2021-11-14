@@ -18,6 +18,7 @@ import {CaseTypes} from '../enums/case-types.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigurationService} from '@app/services/configuration.service';
+import {CaseStatus} from '@app/enums/case-status.enum';
 
 @Component({
   selector: 'services-search',
@@ -158,6 +159,13 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .subscribe((blob) => window.open(blob.url));
   }
 
+  private _getCaseStatusEnum(item: CaseModel<any, any>) {
+    let caseStatusEnum = this.selectedService.caseStatusEnumMap[item.caseType];
+    if (!caseStatusEnum) {
+      caseStatusEnum = CaseStatus;
+    }
+    return caseStatusEnum;
+  }
 
   private buildGridActions() {
     this.actions = [
@@ -182,6 +190,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
         data: {hideFromViewer: true},
+        show: (item: CaseModel<any, any>) => {
+          let caseStatusEnum = this._getCaseStatusEnum(item);
+          return item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+        },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageAttachments(item);
         }
@@ -211,7 +223,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         label: 'manage_comments',
         data: {hideFromViewer: true},
         show: (item: CaseModel<any, any>) => {
-          return this.employeeService.isInternalUser();
+          let caseStatusEnum = this._getCaseStatusEnum(item);
+          return this.employeeService.isInternalUser() && item.getCaseStatus() !== caseStatusEnum.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageComments(item);
