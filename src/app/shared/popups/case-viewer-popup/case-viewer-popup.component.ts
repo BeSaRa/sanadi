@@ -75,10 +75,10 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.actions = this.data.actions.filter((action) => this.filterAction(action));
+    this.checkForFinalApproveByMatrixNotification();
   }
 
   ngAfterViewInit(): void {
-    this.checkForFinalApproveByMatrixNotification();
 
     this.viewInit.next();
     this.viewInit.complete();
@@ -104,10 +104,11 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
         && !!this.internalProjectLicenseService
         && (this.empService.isLicensingManager() || this.empService.isLicensingChiefManager());
 
+    this.canShowMatrixNotification = canShowNotification;
+
     if (canShowNotification) {
       this.internalProjectLicenseService!.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
         .subscribe((result: boolean) => {
-          this.canShowMatrixNotification = result;
           this.matrixNotificationType = result ? 'success' : 'danger';
           if (this.empService.isLicensingManager()) {
             this.matrixNotificationMsg = result ? this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
