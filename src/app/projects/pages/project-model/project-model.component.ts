@@ -258,6 +258,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.templateSerialControl.updateValueAndValidity();
     this.selectedModel = undefined;
     this.displayTemplateSerialField = false;
+    this.cancelProjectComponent();
   }
 
   /**
