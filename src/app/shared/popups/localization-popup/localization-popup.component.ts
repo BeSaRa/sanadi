@@ -53,7 +53,7 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       localizationKey: [{
         value: this.model.localizationKey,
-        disabled: false
+        disabled: (this.operation === OperationTypes.UPDATE)
       }, [CustomValidators.required, Validators.minLength(2), Validators.maxLength(150)]],
       arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(1000)]],
       enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(1000)]]
