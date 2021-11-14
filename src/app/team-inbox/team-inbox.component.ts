@@ -379,8 +379,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'manage_attachments',
         data: {hideFromViewer: true},
         show: (item: QueryResult) => {
-          let caseStatusEnum = this._getCaseStatusEnum(item);
-          return item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+          let caseStatus = item.getCaseStatus(),
+            caseStatusEnum = this._getCaseStatusEnum(item);
+          return (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
         },
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);

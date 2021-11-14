@@ -191,8 +191,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         label: 'manage_attachments',
         data: {hideFromViewer: true},
         show: (item: CaseModel<any, any>) => {
-          let caseStatusEnum = this._getCaseStatusEnum(item);
-          return item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+          let caseStatus = item.getCaseStatus(),
+            caseStatusEnum = this._getCaseStatusEnum(item);
+          return (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageAttachments(item);
