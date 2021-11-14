@@ -477,6 +477,10 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return (this.beneficiaryAnalysisGroup?.get('targetedNationalities')) as FormControl;
   }
 
+  get allNationalitiesField(): FormControl {
+    return (this.beneficiaryAnalysisGroup?.get('allNationalities')) as FormControl;
+  }
+
   get familyNumberOfTargetedFamiliesField(): FormControl {
     return (this.beneficiaryAnalysisGroup?.get('beneficiaryFamiliesNumber')) as FormControl;
   }
@@ -976,6 +980,11 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   updateTotalAdminDeductionAndTargetCost(): void {
     this._updateTotalAdminDeductionCost();
     this._updateTargetCost();
+  }
+
+  resetAllNationalities(): void {
+    this.targetedNationalitiesField.setValue([]);
+    this.targetedNationalitiesField.updateValueAndValidity();
   }
 
   searchNgSelect(term: string, item: any): boolean {

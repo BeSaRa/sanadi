@@ -99,6 +99,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   usedInProjectCompletion: boolean = false;
   // temp properties
   projectNameInfo!: AdminResult;
+  allNationalities: boolean = true;
 
   getBasicFormFields(control: boolean = false): any {
     const {
@@ -186,6 +187,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   getBeneficiaryAnalysisFields(control: boolean = false): any {
     const {
+      allNationalities,
       targetedNationalities,
       // individual
       hasIndividualBeneficiaries,
@@ -200,6 +202,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
+      allNationalities: control ? [allNationalities] : allNationalities,
       targetedNationalities: control ? [targetedNationalities] : targetedNationalities,
       // individual
       hasIndividualBeneficiaries: control ? [directBeneficiaryNumber] : hasIndividualBeneficiaries,

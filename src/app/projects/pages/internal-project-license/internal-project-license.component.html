@@ -376,7 +376,14 @@
       <ng-template #beneficiaryAnalysisTabTemplate>
         <div formGroupName="beneficiaryAnalysis">
           <div class="row">
-            <div class="col-sm-12 col-md-12 mb-4 position-relative">
+            <div class="col-sm-12 col-md-4 position-relative">
+              <div class="form-check form-switch">
+                <input type="checkbox" id="allNationalities" formControlName="allNationalities"
+                       class="form-check-input cursor-pointer" (change)="resetAllNationalities()">
+                <label for="allNationalities" class="cursor-pointer">{{lang.map.all_nationalities}}</label>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-8 mb-4 position-relative">
               <label for="targetedNationalities" asteriskIfRequired="targetedNationalities"
                      class="form-label">{{lang.map.lbl_nationality}}</label>
               <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="targetedNationalities"
@@ -385,7 +392,7 @@
                          placeholder="{{lang.map.select}}" id="targetedNationalities"
                          [notFoundText]="lang.map.msg_not_found"
                          [multiple]="true" [closeOnSelect]="false"
-                         [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                         [readonly]="(isExtendOrCancelRequestType() || readonly || allNationalitiesField.value)"
                          formControlName="targetedNationalities" validationClasses="targetedNationalities">
                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
                   <span class="custom-option" [ngOptionHighlight]="search">{{item.getName()}}</span>

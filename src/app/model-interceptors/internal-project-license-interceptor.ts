@@ -21,6 +21,8 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
       model.targetedNationalities = [];
       model.targetNationalitiesInfo = [];
     }
+    model.allNationalities = (!model.targetedNationalities || model.targetedNationalities.length === 0);
+
     if (CommonUtils.isValidValue(model.targetNationalitiesInfo)) {
       model.targetNationalitiesInfo = model.targetNationalitiesInfo!.map(x => AdminResult.createInstance(isValidAdminResult(x) ? x : {}));
     }
@@ -72,6 +74,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
       })
     }
 
+    delete model.allNationalities;
     delete model.service;
     delete model.employeeService;
     delete model.taskDetails;
