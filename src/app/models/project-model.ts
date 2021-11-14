@@ -137,7 +137,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       subDACCategory: controls ? [subDACCategory] : subDACCategory,
       mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
-      firstSDGoal: controls ? [firstSDGoal, CustomValidators.required] : firstSDGoal,
+      firstSDGoal: controls ? [firstSDGoal] : firstSDGoal,
       secondSDGoal: controls ? [secondSDGoal] : secondSDGoal,
       thirdSDGoal: controls ? [thirdSDGoal] : thirdSDGoal
     }
@@ -150,7 +150,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       thirdSDGoalPercentage
     } = this;
     return {
-      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
+      firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
       secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
       thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
     }

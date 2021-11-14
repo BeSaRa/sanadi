@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
@@ -108,12 +108,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfoTab(true)),
       categoryInfo: this.fb.group(model.buildCategoryTab(true)),
-      categoryGoalPercentGroup: this.fb.group(model.buildCategoryGoalPercentGroup(true), {
-        validators: CustomValidators.validateSum(100, 2,
-          ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
-          [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')]
-        )
-      }),
+      categoryGoalPercentGroup: this.fb.group(model.buildCategoryGoalPercentGroup(true)),
       summaryInfo: this.fb.group(model.buildSummaryTab(true)),
       summaryPercentGroup: this.fb.group(model.buildSummaryPercentGroup(true), {
         validators: CustomValidators.validateSum(100, 2,
@@ -363,6 +358,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.summaryInfoTab.get('sustainabilityItems') as AbstractControl;
   }
 
+  getPercentageSumValidation(): ValidatorFn {
+    return CustomValidators.validateSum(100, 2,
+      ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
+      [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')]
+    )
+  }
+
   private loadCountries(): void {
     this.countyService.loadCountries()
       .pipe(takeUntil(this.destroy$))
@@ -493,13 +495,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
       this.sustainabilityItems.setValidators(CustomValidators.maxLength(1200))
       this.displayDevGoals = false;
+      this.categoryGoalPercentGroup.setValidators(null);
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
       this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(1200)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
       this.displayDevGoals = true;
+      this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
     } else {
       this.displayDevGoals = false;
+      this.categoryGoalPercentGroup.setValidators(null)
       this.emptyFieldsAndValidation([
         'mainUNOCHACategory',
         'subUNOCHACategory',
@@ -514,6 +519,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ])
     }
     this.sustainabilityItems.updateValueAndValidity();
+    this.categoryGoalPercentGroup.updateValueAndValidity();
   }
 
   onMainDacOchaChanged(): void {
