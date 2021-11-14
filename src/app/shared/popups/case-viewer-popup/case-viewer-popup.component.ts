@@ -103,7 +103,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
       canShowNotification: boolean = (this.loadedModel.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE)
         && (this.openedFrom === OpenFrom.USER_INBOX || (this.openedFrom === OpenFrom.TEAM_INBOX && requestModel.taskDetails.isClaimed()))
         && !!this.internalProjectLicenseService
-        && (this.empService.isLicensingManager() || this.empService.isLicensingGeneralManager() || this.empService.isLicensingChiefManager());
+        && (this.empService.isLicensingManager() || this.empService.isLicensingChiefManager());
 
     if (canShowNotification) {
       this.internalProjectLicenseService!.checkFinalApproveNotificationByMatrix(this.loadedModel.getCaseId())
