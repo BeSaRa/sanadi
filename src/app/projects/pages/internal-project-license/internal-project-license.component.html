@@ -618,7 +618,8 @@
                      class="form-label">{{lang.map.deduction_ratio}}</label>
               <div class="input-group">
                 <input id="deductionPercent" validationClasses="deductionPercent"
-                       maxlength="10"
+                       [mask]="inputMaskPatterns.PERCENT"
+                       [dropSpecialCharacters]="false"
                        (change)="updateTotalAdminDeductionAndTargetCost()"
                        [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="deductionPercent" trimInput class="form-control" type="text">

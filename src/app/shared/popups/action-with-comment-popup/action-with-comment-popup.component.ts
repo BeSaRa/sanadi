@@ -40,7 +40,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
-  availableControls: string[] = [];
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
@@ -134,7 +134,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
       followUpDate: ['', [CustomValidators.required]],
-      deductionPercent: ['', [CustomValidators.required, CustomValidators.decimal(2)]]
+      deductionPercent: ['', [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
     if (!this.canShowDeductionRatio) {

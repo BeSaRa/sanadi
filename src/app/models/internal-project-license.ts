@@ -245,7 +245,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(10)]] : deductionPercent,
+      deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : deductionPercent,
       projectTotalCost: control ? [projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : projectTotalCost,
       administrativedeductionAmount: control ? [administrativedeductionAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : administrativedeductionAmount,
       targetAmount: control ? [targetAmount] : targetAmount,

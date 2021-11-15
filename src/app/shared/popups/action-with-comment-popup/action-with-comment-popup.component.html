@@ -36,6 +36,8 @@
                  class="form-label">{{lang.map.deduction_ratio}}</label>
           <div class="input-group">
             <input id="deductionPercent" validationClasses="deductionPercent"
+                   [mask]="inputMaskPatterns.PERCENT"
+                   [dropSpecialCharacters]="false"
                    formControlName="deductionPercent" trimInput class="form-control" type="text">
             <div class="input-group-append">
               <span class="input-group-text">%</span>
