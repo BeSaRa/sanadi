@@ -72,7 +72,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.editDialog(model).pipe(catchError(_ => of(null)))
+          return (this.useCompositeToLoad ?
+            this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
+            this.service.editDialog(model).pipe(catchError(_ => of(null))))
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))

@@ -40,6 +40,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     delete model.targetAudienceListIds;
     delete model.trainerListIds;
     delete model.trainingTypeInfo;
+    delete model.trainerInfoList;
     return model;
   }
 

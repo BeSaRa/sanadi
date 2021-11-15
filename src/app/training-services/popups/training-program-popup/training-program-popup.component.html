@@ -122,7 +122,8 @@
             <div class="form-control" formControlName="startDate"
                  id="startDate"
                  (click)="dpStartDate.toggleCalendar()" #dpStartDate="angular-mydatepicker"
-                 [options]="datepickerOptionsMap.trainingStartDate"
+                 [options]="datepickerOptionsMap.startDate"
+                 (inputFieldChanged)="trainingStartDateChange($event, 'startDate', 'endDate')"
                  angular-mydatepicker [ngClass]="fm.getStatusClass('startDate')"></div>
             <app-field-error-message [control]="fm.getFormField('startDate')"></app-field-error-message>
           </div>
@@ -135,7 +136,8 @@
             <div class="form-control" formControlName="endDate"
                  id="endDate"
                  (click)="dpendDate.toggleCalendar()" #dpendDate="angular-mydatepicker"
-                 [options]="datepickerOptionsMap.trainingEndDate"
+                 [options]="datepickerOptionsMap.endDate"
+                 (inputFieldChanged)="trainingEndDateChange($event, 'startDate', 'endDate')"
                  angular-mydatepicker [ngClass]="fm.getStatusClass('endDate')"></div>
             <app-field-error-message [control]="fm.getFormField('endDate')"></app-field-error-message>
           </div>

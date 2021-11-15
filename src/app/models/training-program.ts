@@ -44,6 +44,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   registeredTraineeNumber: number = 0;
   acceptedTraineeNumber: number = 0;
 
+  // unused properties
+  trainerInfoList: any;
+
   constructor() {
     super();
     this.service = FactoryService.getService('TrainingProgramService');
