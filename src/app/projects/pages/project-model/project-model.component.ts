@@ -204,6 +204,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ...this.categoryGoalPercentGroup.getRawValue(),
       ...this.summaryInfoTab.getRawValue(),
       ...this.summaryPercentGroup.getRawValue(),
+      projectTotalCost: this.projectTotalCostField.value,
       description: this.descriptionTab.value
     });
   }
