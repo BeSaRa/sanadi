@@ -379,7 +379,7 @@
             <div class="col-sm-12 col-md-4 position-relative">
               <div class="form-check form-switch">
                 <input type="checkbox" id="allNationalities" formControlName="allNationalities"
-                       class="form-check-input cursor-pointer" (change)="resetAllNationalities()">
+                       class="form-check-input cursor-pointer" (change)="handleAllNationalitiesChange($event)">
                 <label for="allNationalities" class="cursor-pointer">{{lang.map.all_nationalities}}</label>
               </div>
             </div>

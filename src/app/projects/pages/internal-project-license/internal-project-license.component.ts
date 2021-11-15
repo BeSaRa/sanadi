@@ -349,6 +349,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.handleChangeMainCategory(model.domain, false);
     this.handleChangeSubCategory1(model.firstSubDomain, false);
     this.updateBeneficiaryValidations();
+    this.handleAllNationalitiesChange();
 
     this.cd.detectChanges();
   }
@@ -982,9 +983,13 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this._updateTargetCost();
   }
 
-  resetAllNationalities(): void {
-    this.targetedNationalitiesField.setValue([]);
-    this.targetedNationalitiesField.updateValueAndValidity();
+  handleAllNationalitiesChange($event?: Event): void {
+    // $event is available if user toggle the switch
+    if ($event) {
+      this.targetedNationalitiesField.setValue([]);
+    }
+    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]));
+    this.targetedNationalitiesField.markAsTouched();
   }
 
   searchNgSelect(term: string, item: any): boolean {
