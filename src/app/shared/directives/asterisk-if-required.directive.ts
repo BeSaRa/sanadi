@@ -22,7 +22,8 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   private requiredElement: HTMLSpanElement = this.document.createElement('span') as HTMLSpanElement;
   readonly requiredArray = [
     CustomValidators.required,
-    Validators.required
+    Validators.required,
+    CustomValidators.requiredArray
   ];
   readonly element: HTMLElement;
 

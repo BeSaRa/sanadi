@@ -5,6 +5,7 @@ import {
   decimalValidator as decimal,
   patternValidator as pattern,
   requiredValidator as required,
+  requiredArrayValidator as requiredArray,
   validateFieldsStatus,
   validateSum,
   maxDateValidator as maxDate,
@@ -63,6 +64,7 @@ const inputMaskPatterns = {
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},
+  requiredArray: {key: 'err_required_field', replaceValues: null},
   email: {key: 'err_invalid_email', replaceValues: null},
   number: {key: 'err_number_only', replaceValues: null},
   decimal: {
@@ -178,6 +180,7 @@ export const CustomValidators = {
   validateFieldsStatus,
   validateSum,
   required,
+  requiredArray,
   pattern,
   number,
   decimal,

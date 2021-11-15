@@ -134,6 +134,10 @@ export function requiredValidator(control: AbstractControl): ValidationErrors | 
   return !isValidValue(control.value) ? {required: true} : null;
 }
 
+export function requiredArrayValidator(control: AbstractControl): ValidationErrors | null {
+  return (!isValidValue(control.value) || control.value.length === 0) ? {requiredArray: true} : null;
+}
+
 export function patternValidator(patternName: customValidationTypes): ValidatorFn {
   if (!patternName || !validationPatterns.hasOwnProperty(patternName)) {
     return Validators.nullValidator;
