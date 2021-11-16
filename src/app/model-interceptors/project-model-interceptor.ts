@@ -2,6 +2,7 @@ import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {ProjectModel} from "@app/models/project-model";
 import {ProjectComponent} from "@app/models/project-component";
 import {AdminResult} from "@app/models/admin-result";
+import {TaskDetails} from '@app/models/task-details';
 
 export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> {
   send(model: Partial<ProjectModel>): Partial<ProjectModel> {
@@ -30,6 +31,8 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
   }
 
   receive(model: ProjectModel): ProjectModel {
+    model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
+    model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.templateTypeInfo = AdminResult.createInstance(model.templateTypeInfo);
     model.templateStatusInfo = AdminResult.createInstance(model.templateStatusInfo);
