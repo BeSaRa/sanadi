@@ -25,6 +25,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ProjectModel} from '@app/models/project-model';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -127,8 +128,20 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     return (new InitialExternalOfficeApproval()).clone({...this.model, ...this.form.value})
   }
 
+  private _updateModelAfterSave(model: InitialExternalOfficeApproval): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        })
+    } else {
+      this.model = model;
+    }
+  }
+
   _afterSave(model: InitialExternalOfficeApproval, saveType: SaveTypes, operation: OperationTypes) {
-    this.model = model;
+    this._updateModelAfterSave(model);
+
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -405,9 +418,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
-      /*if (this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
-        this.readonly = false;
-      }*/
     }
   }
 

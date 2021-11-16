@@ -31,6 +31,7 @@ import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {InternalProjectLicense} from '@app/models/internal-project-license';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -235,8 +236,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  _afterSave(model: ProjectModel, saveType: SaveTypes, operation: OperationTypes): void {
-    if (this.model?.taskDetails) {
+  private _updateModelAfterSave(model: ProjectModel) : void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
@@ -244,6 +245,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     } else {
       this.model = model;
     }
+  }
+
+  _afterSave(model: ProjectModel, saveType: SaveTypes, operation: OperationTypes): void {
+    this._updateModelAfterSave(model);
+
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)

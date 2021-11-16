@@ -34,6 +34,7 @@ import {CommonUtils} from "@app/helpers/common-utils";
 import {JobTitleService} from "@app/services/job-title.service";
 import {JobTitle} from "@app/models/job-title";
 import {OpenFrom} from "@app/enums/open-from.enum";
+import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 
 @Component({
   selector: 'partner-approval',
@@ -194,8 +195,20 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     });
   }
 
+  private _updateModelAfterSave(model: PartnerApproval): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        })
+    } else {
+      this.model = model;
+    }
+  }
+
   _afterSave(model: PartnerApproval, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model;
+    this._updateModelAfterSave(model);
+
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
