@@ -566,6 +566,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       }
     }
     this._handleRequestTypeDependentControls();
+    this._handleAllNationalityReadonly();
   }
 
   isEditRequestTypeAllowed(): boolean {
@@ -981,6 +982,14 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   updateTotalAdminDeductionAndTargetCost(): void {
     this._updateTotalAdminDeductionCost();
     this._updateTargetCost();
+  }
+
+  private _handleAllNationalityReadonly(): void {
+    if (this.employeeService.isInternalUser() || this.isExtendOrCancelRequestType() || this.readonly) {
+      this.allNationalitiesField.disable();
+    } else {
+      this.allNationalitiesField.enable();
+    }
   }
 
   handleAllNationalitiesChange($event?: Event): void {
