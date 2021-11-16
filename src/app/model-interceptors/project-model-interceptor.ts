@@ -27,6 +27,8 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     delete model.thirdSDGoalInfo;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
+    delete model.taskDetails;
+    delete model.ouInfo;
     return model;
   }
 
