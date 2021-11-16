@@ -720,9 +720,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       InternalProjectLicenseComponent._setFieldValue(this.individual_60Above_Field, newModel.beneficiariesOver60);
     }
 
-    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidation(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
     InternalProjectLicenseComponent._setFieldValidation(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
     InternalProjectLicenseComponent._setFieldValidation(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
     InternalProjectLicenseComponent._setFieldValidation(this.individual_19To60_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
@@ -1037,7 +1037,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     if ($event) {
       this.targetedNationalitiesField.setValue([]);
     }
-    InternalProjectLicenseComponent._setFieldValidation(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]));
+    InternalProjectLicenseComponent._setFieldValidation(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]), true);
     this.targetedNationalitiesField.markAsTouched();
   }
 
