@@ -1,0 +1,185 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1
+    class="h6 text-white">{{lang.map.filter}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content">
+  <form class="min-w400px w600px" autocomplete="off" [formGroup]="form">
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="activityName" for="activityName"
+               class="form-label">{{lang.map.training_program_activity_name}}</label>
+        <input id="activityName"
+               validationClasses="activityName"
+               formControlName="activityName" class="form-control">
+        <app-field-error-message controlName="activityName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <label asteriskIfRequired="trainingProgramFullSerial" for="trainingProgramFullSerial"
+               class="form-label">{{lang.map.training_program_code}}</label>
+        <input id="trainingProgramFullSerial"
+               validationClasses="trainingProgramFullSerial"
+               formControlName="trainingProgramFullSerial" class="form-control">
+        <app-field-error-message controlName="trainingProgramFullSerial"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="startFromDate" for="startFromDate"
+               class="form-label">{{lang.map.training_start_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="startFromDate"
+               id="startFromDate" [options]="datepickerOptionsMap.startFromDate"
+               (click)="dpStartFromDate.toggleCalendar()" #dpStartFromDate="angular-mydatepicker"
+               angular-mydatepicker validationClasses="startFromDate"
+               (inputFieldChanged)="onDateChange($event, 'startFromDate', 'startToDate')"></div>
+          <app-field-error-message controlName="startFromDate"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="startToDate" for="startToDate"
+               class="form-label">{{lang.map.training_end_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="startToDate"
+               id="startToDate" [options]="datepickerOptionsMap.startToDate"
+               (click)="dpStartToDate.toggleCalendar()" #dpStartToDate="angular-mydatepicker"
+               angular-mydatepicker validationClasses="startToDate"
+               (inputFieldChanged)="onDateChange($event, 'startFromDate', 'startToDate')"></div>
+          <app-field-error-message controlName="startToDate"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="registerationFromDate" for="registerationFromDate"
+               class="form-label">{{lang.map.registration_start_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="registerationFromDate"
+               id="registerationFromDate" [options]="datepickerOptionsMap.registerationFromDate"
+               (click)="dpRegisterationFromDate.toggleCalendar()" #dpRegisterationFromDate="angular-mydatepicker"
+               angular-mydatepicker validationClasses="registerationFromDate"
+               (inputFieldChanged)="onDateChange($event, 'registerationFromDate', 'registerationToDate')"></div>
+          <app-field-error-message controlName="registerationFromDate"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 mb-3 position-relative">
+        <label asteriskIfRequired="registerationToDate" for="registerationToDate"
+               class="form-label">{{lang.map.registration_end_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="registerationToDate"
+               id="registerationToDate" [options]="datepickerOptionsMap.registerationToDate"
+               (click)="dpRegisterationToDate.toggleCalendar()" #dpRegisterationToDate="angular-mydatepicker"
+               angular-mydatepicker validationClasses="registerationToDate"
+               (inputFieldChanged)="onDateChange($event, 'registerationFromDate', 'registerationToDate')"></div>
+          <app-field-error-message controlName="registerationToDate"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="attendenceMethod" for="attendenceMethod"
+                 class="form-label">{{lang.map.attendance_method}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="attendenceMethod"
+                       formControlName="attendenceMethod"
+                       id="attendenceMethod">
+              <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
+                         [disabled]="attendanceMethod.isRetiredCommonStatus()">{{attendanceMethod.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="attendenceMethod"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="trainingType" for="trainingType"
+                 class="form-label">{{lang.map.training_type_name}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="trainingType"
+                       formControlName="trainingType"
+                       id="trainingType">
+              <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
+                         [disabled]="trainingType.isRetiredCommonStatus()">{{trainingType.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="trainingType"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="targetOrganizationListIds" for="targetOrganizationListIds"
+                 class="form-label">{{lang.map.training_program_organizations}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="targetOrganizationListIds"
+                       formControlName="targetOrganizationListIds"
+                       id="targetOrganizationListIds"
+                       [multiple]="true">
+              <ng-option [value]="organization.id" *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="organization"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="trainer" for="trainer"
+                 class="form-label">{{lang.map.training_program_trainers}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="trainer"
+                       formControlName="trainer"
+                       id="trainer">
+              <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="trainer"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="targetAudience" for="targetAudience"
+                 class="form-label">{{lang.map.target_audience}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="targetAudience"
+                       formControlName="targetAudience"
+                       id="targetAudience">
+              <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudiences"
+                         [disabled]="targetAudience.isRetiredCommonStatus()">{{targetAudience.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="targetAudience"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 position-relative">
+        <div class="row">
+          <label asteriskIfRequired="status" for="status"
+                 class="form-label">{{lang.map.lbl_status}}</label>
+          <div class="position-relative ng-select-wrapper">
+            <ng-select validationClasses="status"
+                       formControlName="status"
+                       id="status">
+              <ng-option [value]="status.lookupKey" *ngFor="let status of statuses">{{status.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="organization"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button [disabled]="!hasFilterCriteria" (click)="filterRecords()"
+          class="btn btn-primary">{{lang.map.filter}}</button>
+  <button (click)="resetFilter()"
+          class="btn btn-primary">{{lang.map.btn_reset}}</button>
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

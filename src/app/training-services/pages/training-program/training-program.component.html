@@ -4,7 +4,9 @@
   <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
                     [selectedRecords]="selectedRecords"
                     [actionsList]="actionsList"></app-bulk-actions>
-  <app-grid-search (searchTextEvent)="searchText = $event" *ngIf="!selectedRecords.length"></app-grid-search>
+  <app-grid-search (searchTextEvent)="searchText = $event" *ngIf="!selectedRecords.length"
+                   [filterButton]="true" (filterEvent)="filterCallback($event)"
+                   [filterCriteria]="filterCriteria"></app-grid-search>
 </div>
 <div class="row">
   <div class="col-12">
@@ -13,7 +15,7 @@
                  [columns]="displayedColumns"
                  [data]="models"
                  [filter]="searchText"
-                 [filterCallback]="filterCallback">
+                 [filterCallback]="searchCallback">
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell *cdkHeaderCellDef class="text-center">

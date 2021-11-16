@@ -3,7 +3,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
 import {FormManager} from '@app/models/form-manager';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -30,6 +30,8 @@ import {TrainerService} from '@app/services/trainer.service';
   styleUrls: ['./training-program-popup.component.scss']
 })
 export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
+  loadTrainers$ = new BehaviorSubject<any>(null);
+  loadSelectedTrainers$ = new BehaviorSubject<any>(null);
   form!: FormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
@@ -54,18 +56,20 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
   // organizations properties
   selectedOrganizationType!: number;
   selectedOrganizations: OrgUnit[] = [];
   organizations: OrgUnit[] = [];
-  selectedOrganization!: number;
+  selectedOrganization?: number;
   organizationColumns = ['arName', 'enName', 'actions'];
   showAddOrganizationForm = false;
 
   // trainers properties
   selectedTrainers: Trainer[] = [];
   trainers: Trainer[] = [];
-  selectedTrainer!: number;
+  selectedTrainer?: number;
   trainerColumns = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
   showAddTrainerForm = false;
 
@@ -91,20 +95,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     }
 
     this.loadTrainers();
-
     this.loadSelectedTrainers();
-  }
-
-  setMinDate(): void {
-    let controlsMap = {},
-      optionsMap = {},
-
-      startDate = '',
-      endDate = '',
-      regisStartDate = '',
-      regisEndDate = '';
-
-    // DateUtils.setRelatedMaxDate({fromFieldName: 'trainignStartDate', toFieldName: 'endDate'})
   }
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -264,13 +255,16 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   addOrganization() {
-    if(!this.hasDuplicatedId(this.selectedOrganization, this.selectedOrganizations)) {
+    if(!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {
       let org = this.organizations.find(e => e.id == this.selectedOrganization)!;
-      const arr = [...this.selectedOrganizations, org];
-      this.selectedOrganizations = arr;
+      this.selectedOrganizations = [...this.selectedOrganizations, org];
       this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
+      this.selectedOrganization = undefined;
+      this.toast.success(this.lang.map.msg_added_x_success.change({x: org.getName()}));
+      return;
     }
-    // show message
+
+    this.toast.alert(this.lang.map.msg_duplicated_item);
   }
 
   removeOrganization(event: MouseEvent, org: OrgUnit) {
@@ -288,6 +282,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   onOrganizationTypeChange() {
+    this.selectedOrganization = undefined;
     this.organizationUnitService.getOrganizationUnitsByOrgType(this.selectedOrganizationType).subscribe(orgs => {
       this.organizations = orgs;
     })
@@ -299,13 +294,16 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   addTrainer() {
-    if(!this.hasDuplicatedId(this.selectedTrainer, this.selectedTrainers)) {
+    if(!this.hasDuplicatedId(this.selectedTrainer!, this.selectedTrainers)) {
       let trainer = this.trainers.find(e => e.id == this.selectedTrainer)!;
-      const arr = [...this.selectedTrainers, trainer];
-      this.selectedTrainers = arr;
+      this.selectedTrainers = [...this.selectedTrainers, trainer];
       this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
+      this.selectedTrainer = undefined;
+      this.toast.success(this.lang.map.msg_added_x_success.change({x: trainer.getName()}));
+      return;
     }
-    // show message
+
+    this.toast.alert(this.lang.map.msg_duplicated_item);
   }
 
   removeTrainer(event: MouseEvent, trainer: Trainer) {
@@ -315,19 +313,20 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   private loadTrainers(): void {
-    this.trainerService.load()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(trainers => {
-        this.trainers = trainers;
-      });
+    this.loadTrainers$.subscribe(() => {
+      this.trainerService.load()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(trainers => {
+          this.trainers = trainers;
+          this.loadSelectedTrainers$.next(null);
+        });
+    })
   }
 
   private loadSelectedTrainers(): void {
-    this.trainerService.load()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(trainers => {
-        this.selectedTrainers = trainers.filter(element => this.model.trainerListIds.includes(element.id));
-      });
+    this.loadSelectedTrainers$.subscribe(() => {
+      this.selectedTrainers = this.trainers.filter(element => this.model.trainerListIds.includes(element.id));
+    });
   }
 
   hasDuplicatedId(id: number, arr: any[]): boolean {

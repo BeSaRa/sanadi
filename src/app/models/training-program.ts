@@ -4,6 +4,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from '@app/models/admin-result';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {searchFunctionType} from '@app/types/types';
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
   service: TrainingProgramService;
@@ -46,6 +47,10 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
 
   // unused properties
   trainerInfoList: any;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    activityName: 'activityName'
+  };
 
   constructor() {
     super();

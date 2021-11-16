@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {TrainingProgram} from '@app/models/training-program';
 import {TrainingProgramService} from '@app/services/training-program.service';
@@ -10,13 +10,20 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {cloneDeep as _deepClone} from 'lodash';
+import {FilterEventTypes} from '@app/types/types';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
+import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'training-program',
   templateUrl: './training-program.component.html',
   styleUrls: ['./training-program.component.scss']
 })
-export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService>{
+export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements  OnInit{
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
     {
@@ -44,12 +51,20 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     }
   ];
 
+  filterCriteria: Partial<ITrainingProgramCriteria> = {};
+
   constructor(public lang: LangService,
               public service: TrainingProgramService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               private toast: ToastService) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.listenToReload();
+    this.listenToAdd();
+    this.listenToEdit();
   }
 
   edit(trainingProgram: TrainingProgram, event: MouseEvent) {
@@ -97,8 +112,80 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     }
   }
 
-  filterCallback = (record: any, searchText: string) => {
+  searchCallback = (record: any, searchText: string) => {
     return record.search(searchText);
+  };
+
+  filterCallback = (type: FilterEventTypes = 'OPEN') => {
+    if (type === 'CLEAR') {
+      this.filterCriteria = {};
+      this.reload$.next(null);
+    } else if (type === 'OPEN') {
+      this.filterCriteria = this.prepareFilterCriteriaForReceive(this.filterCriteria);
+      const sub = this.service.openFilterDialog(this.filterCriteria)
+        .subscribe((dialog: DialogRef) => {
+          dialog.onAfterClose$.subscribe((result: UserClickOn | Partial<any>) => {
+            if (!CommonUtils.isValidValue(result) || result === UserClickOn.CLOSE) {
+              return;
+            }
+            this.filterCriteria = this.prepareFilterCriteriaForSend(result as Partial<ITrainingProgramCriteria>);
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        });
+    }
+  };
+
+  prepareFilterCriteriaForSend(criteria: Partial<ITrainingProgramCriteria>) {
+    if(criteria.targetOrganizationListIds && criteria.targetOrganizationListIds.length > 0) {
+      criteria.targetOrganizationList = JSON.stringify(criteria.targetOrganizationListIds);
+    }
+    delete criteria.targetOrganizationListIds;
+    criteria = this.deleteEmptyProperties(criteria);
+
+    return criteria;
+  }
+
+  prepareFilterCriteriaForReceive(criteria: Partial<ITrainingProgramCriteria>) {
+    if(criteria.targetOrganizationList) {
+      criteria.targetOrganizationListIds = JSON.parse(this.filterCriteria.targetOrganizationList!);
+    }
+    if(criteria.startFromDate) {
+      criteria.startFromDate = DateUtils.changeDateToDatepicker(this.filterCriteria.startFromDate);
+    }
+    if(criteria.startToDate) {
+      criteria.startToDate = DateUtils.changeDateToDatepicker(this.filterCriteria.startToDate);
+    }
+    if(criteria.registerationFromDate) {
+      criteria.registerationFromDate = DateUtils.changeDateToDatepicker(this.filterCriteria.registerationFromDate);
+    }
+    if(criteria.registerationToDate) {
+      criteria.registerationToDate = DateUtils.changeDateToDatepicker(this.filterCriteria.registerationToDate);
+    }
+
+    return criteria;
+  }
+
+  deleteEmptyProperties(obj: any) {
+    for (let propName in obj) {
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
+    return obj
+  }
+
+  listenToReload() {
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(switchMap(() => {
+        const load = this.service.filterTrainingPrograms(this.filterCriteria);
+        return load.pipe(catchError(_ => of([])));
+      }))
+      .subscribe((list: TrainingProgram[]) => {
+        this.models = list;
+        console.log('models', this.models);
+      })
   }
 
   private _addSelected(record: TrainingProgram): void {

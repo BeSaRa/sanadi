@@ -75,7 +75,8 @@
                  class="form-label">{{lang.map.duration_in_days}}</label>
           <input id="durationInDays"
                  validationClasses="durationInDays"
-                 formControlName="durationInDays" class="form-control">
+                 formControlName="durationInDays" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="durationInDays"></app-field-error-message>
         </div>
         <div class="col-sm-6 position-relative">
@@ -83,7 +84,8 @@
                  class="form-label">{{lang.map.duration_in_hours}}</label>
           <input id="durationInHours"
                  validationClasses="durationInHours"
-                 formControlName="durationInHours" class="form-control">
+                 formControlName="durationInHours" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
       </div>
@@ -93,7 +95,8 @@
                  class="form-label">{{lang.map.average_duration_in_hours}}</label>
           <input id="averageDurationInHours"
                  validationClasses="averageDurationInHours"
-                 formControlName="averageDurationInHours" class="form-control">
+                 formControlName="averageDurationInHours" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="averageDurationInHours"></app-field-error-message>
         </div>
         <div class="col-sm-6 position-relative">
@@ -259,7 +262,8 @@
                  class="form-label">{{lang.map.number_of_seats}}</label>
           <input id="numberOfSeats"
                  validationClasses="numberOfSeats"
-                 formControlName="numberOfSeats" class="form-control">
+                 formControlName="numberOfSeats" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
         </div>
         <div class="col-sm-6 position-relative">
@@ -267,7 +271,8 @@
                  class="form-label">{{lang.map.total_training_cost}}</label>
           <input id="totalTrainingCost"
                  validationClasses="totalTrainingCost"
-                 formControlName="totalTrainingCost" class="form-control">
+                 formControlName="totalTrainingCost" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>

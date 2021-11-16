@@ -9,6 +9,7 @@ import { TrainerCvPopupComponent } from './popups/trainer-cv-popup/trainer-cv-po
 import { TrainingProgramComponent } from './pages/training-program/training-program.component';
 import { TrainingProgramPopupComponent } from './popups/training-program-popup/training-program-popup.component';
 import {FormsModule} from '@angular/forms';
+import { FilterTrainingProgramsComponent } from './popups/filter-training-programs/filter-training-programs.component';
 
 
 
@@ -19,7 +20,8 @@ import {FormsModule} from '@angular/forms';
     AccreditedTrainerPopupComponent,
     TrainerCvPopupComponent,
     TrainingProgramComponent,
-    TrainingProgramPopupComponent
+    TrainingProgramPopupComponent,
+    FilterTrainingProgramsComponent
   ],
   imports: [
     CommonModule,

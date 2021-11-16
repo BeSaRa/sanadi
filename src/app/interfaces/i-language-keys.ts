@@ -8,6 +8,9 @@ export interface ILanguageKeys {
   total_cost: string;
   quantity: string;
   component_name: string;
+  msg_added_x_success: string;
+  msg_duplicated_item: string;
+  training_program_code: string;
   training_program_selected_trainers: string;
   training_program_add_trainer: string;
   training_program_selected_organizations: string;
