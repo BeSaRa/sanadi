@@ -418,7 +418,7 @@
             <div class="col-sm-12 col-md-4 position-relative">
               <div class="form-check form-switch">
                 <input type="checkbox" id="hasFamilyBeneficiaries" formControlName="hasFamilyBeneficiaries"
-                       class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('FAMILY')">
+                       class="form-check-input cursor-pointer" (change)="updateBeneficiaryValidations('FAMILY', true)">
                 <label for="hasFamilyBeneficiaries" class="cursor-pointer">{{lang.map.family_beneficiary}}</label>
               </div>
             </div>
@@ -426,7 +426,7 @@
               <div class="form-check form-switch">
                 <input type="checkbox" id="hasIndividualBeneficiaries" formControlName="hasIndividualBeneficiaries"
                        class="form-check-input cursor-pointer"
-                       (change)="updateBeneficiaryValidations('INDIVIDUAL')">
+                       (change)="updateBeneficiaryValidations('INDIVIDUAL', true)">
                 <label for="hasIndividualBeneficiaries"
                        class="cursor-pointer">{{lang.map.individual_beneficiary}}</label>
               </div>
@@ -435,147 +435,153 @@
               <span class="text-danger font-12" [innerHTML]="validFamilyOrIndividualSwitchMsg"></span>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <h6 class="text-primary">{{lang.map.family_beneficiary}}</h6>
-              <hr>
+          <div *ngIf="familyBeneficiarySwitchField.value">
+            <div class="row">
+              <div class="col-sm-12">
+                <h6 class="text-primary">{{lang.map.family_beneficiary}}</h6>
+                <hr>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="beneficiaryFamiliesNumber" asteriskIfRequired="beneficiaryFamiliesNumber"
+                       class="form-label">{{lang.map.number_of_target_families}}</label>
+                <input id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="beneficiaryFamiliesNumber" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
+              </div>
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="individualsAverageNumber" asteriskIfRequired="individualsAverageNumber"
+                       class="form-label">{{lang.map.average_number_of_people}}</label>
+                <input id="individualsAverageNumber" validationClasses="individualsAverageNumber"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="individualsAverageNumber" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="individualsAverageNumber"></app-field-error-message>
+              </div>
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="ageAverageCategory" asteriskIfRequired="ageAverageCategory"
+                       class="form-label">{{lang.map.average_age_group}}</label>
+                <input id="ageAverageCategory" validationClasses="ageAverageCategory"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="ageAverageCategory" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="ageAverageCategory"></app-field-error-message>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="beneficiaryFamiliesNumber" asteriskIfRequired="beneficiaryFamiliesNumber"
-                     class="form-label">{{lang.map.number_of_target_families}}</label>
-              <input id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="beneficiaryFamiliesNumber" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
+          <div *ngIf="individualBeneficiarySwitchField.value">
+            <div class="row">
+              <div class="col-sm-12">
+                <h6 class="text-primary">{{lang.map.individual_beneficiary}}</h6>
+                <hr>
+              </div>
             </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="individualsAverageNumber" asteriskIfRequired="individualsAverageNumber"
-                     class="form-label">{{lang.map.average_number_of_people}}</label>
-              <input id="individualsAverageNumber" validationClasses="individualsAverageNumber"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="individualsAverageNumber" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="individualsAverageNumber"></app-field-error-message>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="ageAverageCategory" asteriskIfRequired="ageAverageCategory"
-                     class="form-label">{{lang.map.average_age_group}}</label>
-              <input id="ageAverageCategory" validationClasses="ageAverageCategory"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="ageAverageCategory" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="ageAverageCategory"></app-field-error-message>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <h6 class="text-primary">{{lang.map.individual_beneficiary}}</h6>
-              <hr>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
-                     class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
-              <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="directBeneficiaryNumber" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
-                     class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
-              <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="indirectBeneficiaryNumber" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="handicappedBeneficiaryNumber" asteriskIfRequired="handicappedBeneficiaryNumber"
-                     class="form-label">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
-              <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
-                     onlyNumbers
-                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                     formControlName="handicappedBeneficiaryNumber" trimInput class="form-control" type="text">
-              <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
+            <div class="row">
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="directBeneficiaryNumber" asteriskIfRequired="directBeneficiaryNumber"
+                       class="form-label">{{lang.map.number_of_direct_beneficiaries}}</label>
+                <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="directBeneficiaryNumber" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
+              </div>
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="indirectBeneficiaryNumber" asteriskIfRequired="indirectBeneficiaryNumber"
+                       class="form-label">{{lang.map.number_of_indirect_beneficiaries}}</label>
+                <input id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="indirectBeneficiaryNumber" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
+              </div>
+              <div class="col-sm-12 col-md-4 mb-4 position-relative">
+                <label for="handicappedBeneficiaryNumber" asteriskIfRequired="handicappedBeneficiaryNumber"
+                       class="form-label">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
+                <input id="handicappedBeneficiaryNumber" validationClasses="handicappedBeneficiaryNumber"
+                       onlyNumbers
+                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                       formControlName="handicappedBeneficiaryNumber" trimInput class="form-control" type="text">
+                <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h6 class="text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h6>
-            <hr>
-          </div>
-        </div>
-        <div formGroupName="beneficiaryAnalysisIndividualPercent" class="position-relative mb-2">
-          <div class="row" validationGroupClasses>
-            <div class="col-sm-12 col-md-3 mb-4 position-relative">
-              <label for="beneficiaries0to5" asteriskIfRequired="beneficiaries0to5"
-                     class="form-label">{{lang.map.number_of_0_to_5}}</label>
-              <div class="input-group">
-                <input id="beneficiaries0to5" validationClasses="beneficiaries0to5"
-                       [mask]="inputMaskPatterns.PERCENT"
-                       [dropSpecialCharacters]="false"
-                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                       formControlName="beneficiaries0to5" trimInput class="form-control" type="text">
-                <div class="input-group-append">
-                  <span class="input-group-text">%</span>
-                </div>
-                <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-3 mb-4 position-relative">
-              <label for="beneficiaries5to18" asteriskIfRequired="beneficiaries5to18"
-                     class="form-label">{{lang.map.number_of_5_to_18}}</label>
-              <div class="input-group">
-                <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
-                       [mask]="inputMaskPatterns.PERCENT"
-                       [dropSpecialCharacters]="false"
-                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                       formControlName="beneficiaries5to18" trimInput class="form-control" type="text">
-                <div class="input-group-append">
-                  <span class="input-group-text">%</span>
-                </div>
-                <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-3 mb-4 position-relative">
-              <label for="beneficiaries19to60" asteriskIfRequired="beneficiaries19to60"
-                     class="form-label">{{lang.map.number_of_19_to_60}}</label>
-              <div class="input-group">
-                <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
-                       [mask]="inputMaskPatterns.PERCENT"
-                       [dropSpecialCharacters]="false"
-                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                       formControlName="beneficiaries19to60" trimInput class="form-control" type="text">
-                <div class="input-group-append">
-                  <span class="input-group-text">%</span>
-                </div>
-                <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-3 mb-4 position-relative">
-              <label for="beneficiariesOver60" asteriskIfRequired="beneficiariesOver60"
-                     class="form-label">{{lang.map.number_of_above_60}}</label>
-              <div class="input-group">
-                <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
-                       [mask]="inputMaskPatterns.PERCENT"
-                       [dropSpecialCharacters]="false"
-                       [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                       formControlName="beneficiariesOver60" trimInput class="form-control" type="text">
-                <div class="input-group-append">
-                  <span class="input-group-text">%</span>
-                </div>
-                <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
-              </div>
+        <div *ngIf="individualBeneficiarySwitchField.value">
+          <div class="row">
+            <div class="col-sm-12">
+              <h6 class="text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h6>
+              <hr>
             </div>
           </div>
-          <group-error-message></group-error-message>
+          <div formGroupName="beneficiaryAnalysisIndividualPercent" class="position-relative mb-2">
+            <div class="row" validationGroupClasses>
+              <div class="col-sm-12 col-md-3 mb-4 position-relative">
+                <label for="beneficiaries0to5" asteriskIfRequired="beneficiaries0to5"
+                       class="form-label">{{lang.map.number_of_0_to_5}}</label>
+                <div class="input-group">
+                  <input id="beneficiaries0to5" validationClasses="beneficiaries0to5"
+                         [mask]="inputMaskPatterns.PERCENT"
+                         [dropSpecialCharacters]="false"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="beneficiaries0to5" trimInput class="form-control" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                  <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-3 mb-4 position-relative">
+                <label for="beneficiaries5to18" asteriskIfRequired="beneficiaries5to18"
+                       class="form-label">{{lang.map.number_of_5_to_18}}</label>
+                <div class="input-group">
+                  <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
+                         [mask]="inputMaskPatterns.PERCENT"
+                         [dropSpecialCharacters]="false"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="beneficiaries5to18" trimInput class="form-control" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                  <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-3 mb-4 position-relative">
+                <label for="beneficiaries19to60" asteriskIfRequired="beneficiaries19to60"
+                       class="form-label">{{lang.map.number_of_19_to_60}}</label>
+                <div class="input-group">
+                  <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
+                         [mask]="inputMaskPatterns.PERCENT"
+                         [dropSpecialCharacters]="false"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="beneficiaries19to60" trimInput class="form-control" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                  <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-3 mb-4 position-relative">
+                <label for="beneficiariesOver60" asteriskIfRequired="beneficiariesOver60"
+                       class="form-label">{{lang.map.number_of_above_60}}</label>
+                <div class="input-group">
+                  <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
+                         [mask]="inputMaskPatterns.PERCENT"
+                         [dropSpecialCharacters]="false"
+                         [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="beneficiariesOver60" trimInput class="form-control" type="text">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                  <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+                </div>
+              </div>
+            </div>
+            <group-error-message></group-error-message>
+          </div>
         </div>
       </ng-template>
 

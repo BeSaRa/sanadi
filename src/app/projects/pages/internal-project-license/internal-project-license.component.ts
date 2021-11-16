@@ -201,7 +201,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       indirectBeneficiaryNumber: 0,
       individualsAverageNumber: 0,
       thirdSDGoalPercentage: 0,
-      secondSDGoalPercentage: 0
+      secondSDGoalPercentage: 0,
+      allNationalities: true
     });
     this.form = this.fb.group({
       basicInfo: this.fb.group(objInternalProjectLicense.getBasicFormFields(true)),
@@ -222,7 +223,22 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _getNewInstance(): InternalProjectLicense {
-    return new InternalProjectLicense();
+    return (new InternalProjectLicense()).clone({
+      ageAverageCategory: 0,
+      beneficiaries0to5: 0,
+      beneficiaries5to18: 0,
+      beneficiaries19to60: 0,
+      beneficiariesOver60: 0,
+      beneficiaryFamiliesNumber: 0,
+      directBeneficiaryNumber: 0,
+      firstSDGoalPercentage: 0,
+      handicappedBeneficiaryNumber: 0,
+      indirectBeneficiaryNumber: 0,
+      individualsAverageNumber: 0,
+      thirdSDGoalPercentage: 0,
+      secondSDGoalPercentage: 0,
+      allNationalities: true
+    });
   }
 
   _initComponent(): void {
@@ -658,52 +674,76 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return validFamilyOrIndividual;
   }
 
-  updateBeneficiaryValidations(type: 'FAMILY' | 'INDIVIDUAL' | 'BOTH' = 'BOTH'): void {
+  updateBeneficiaryValidations(type: 'FAMILY' | 'INDIVIDUAL' | 'BOTH' = 'BOTH', resetValues: boolean = false): void {
     switch (type) {
       case 'FAMILY':
-        this._updateFamilyBeneficiaryValidations();
+        this._updateFamilyBeneficiaryValidations(resetValues);
         break;
       case 'INDIVIDUAL':
-        this._updateIndividualBeneficiaryValidations();
+        this._updateIndividualBeneficiaryValidations(resetValues);
         break;
       default:
-        this._updateIndividualBeneficiaryValidations();
-        this._updateFamilyBeneficiaryValidations();
+        this._updateIndividualBeneficiaryValidations(resetValues);
+        this._updateFamilyBeneficiaryValidations(resetValues);
     }
 
     this._touchPercentGroups();
     this._checkValidFamilyOrIndividualSwitch();
   }
 
-  private static _setFieldValidationAndUpdate(fieldOrGroup: (FormControl | FormGroup), validations: (ValidatorFn | ValidatorFn[] | null)) {
+  private static _setFieldValidation(fieldOrGroup: (FormControl | FormGroup), validations: (ValidatorFn | ValidatorFn[] | null), updateValueAndValidity: boolean = false) {
     fieldOrGroup.setValidators(validations);
-    fieldOrGroup.updateValueAndValidity();
+    if (updateValueAndValidity) {
+      fieldOrGroup.updateValueAndValidity();
+    }
   }
 
-  private _updateIndividualBeneficiaryValidations(): void {
+  private static _setFieldValue(field: FormControl, value: any, updateValueAndValidity: boolean = false): void {
+    field.setValue(value);
+    if (updateValueAndValidity) {
+      field.updateValueAndValidity();
+    }
+  }
+
+  private _updateIndividualBeneficiaryValidations(resetValues: boolean): void {
     let isEnabled = this.individualBeneficiarySwitchField.value,
-      validators = isEnabled ? [CustomValidators.required] : [];
+      validators = isEnabled ? [CustomValidators.required] : [],
+      newModel = this._getNewInstance();
 
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+    if (resetValues) {
+      InternalProjectLicenseComponent._setFieldValue(this.individualNumberOfDirectBeneficiaryField, newModel.directBeneficiaryNumber);
+      InternalProjectLicenseComponent._setFieldValue(this.individualNumberOfInDirectBeneficiaryField, newModel.indirectBeneficiaryNumber);
+      InternalProjectLicenseComponent._setFieldValue(this.individualSpecialNeedsBeneficiaryField, newModel.handicappedBeneficiaryNumber);
+      InternalProjectLicenseComponent._setFieldValue(this.individual_0To5_Field, newModel.beneficiaries0to5);
+      InternalProjectLicenseComponent._setFieldValue(this.individual_5To18_Field, newModel.beneficiaries5to18);
+      InternalProjectLicenseComponent._setFieldValue(this.individual_19To60_Field, newModel.beneficiaries19to60);
+      InternalProjectLicenseComponent._setFieldValue(this.individual_60Above_Field, newModel.beneficiariesOver60);
+    }
 
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_19To60_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.individual_60Above_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]));
+    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+    InternalProjectLicenseComponent._setFieldValidation(this.individualNumberOfInDirectBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+    InternalProjectLicenseComponent._setFieldValidation(this.individualSpecialNeedsBeneficiaryField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+    InternalProjectLicenseComponent._setFieldValidation(this.individual_0To5_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.individual_5To18_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.individual_19To60_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.individual_60Above_Field, validators.concat([CustomValidators.decimal(2), Validators.max(100)]), true);
 
     // update the validators for group
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.beneficiaryAnalysisIndividualPercentGroup, this._getGroupPercentageValidations(isEnabled ? 'beneficiaryAnalysisIndividualPercent' : 'NONE'));
+    InternalProjectLicenseComponent._setFieldValidation(this.beneficiaryAnalysisIndividualPercentGroup, this._getGroupPercentageValidations(isEnabled ? 'beneficiaryAnalysisIndividualPercent' : 'NONE'), true);
   }
 
-  private _updateFamilyBeneficiaryValidations(): void {
+  private _updateFamilyBeneficiaryValidations(resetValues: boolean): void {
     let isEnabled = this.familyBeneficiarySwitchField.value,
-      validators = isEnabled ? [CustomValidators.required] : [];
-
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.familyNumberOfTargetedFamiliesField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.familyAverageNumberOfPeopleField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.familyAverageAgeGroupField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]));
+      validators = isEnabled ? [CustomValidators.required] : [],
+      newModel = this._getNewInstance();
+    if (resetValues) {
+      InternalProjectLicenseComponent._setFieldValue(this.familyNumberOfTargetedFamiliesField, newModel.beneficiaryFamiliesNumber);
+      InternalProjectLicenseComponent._setFieldValue(this.familyAverageNumberOfPeopleField, newModel.individualsAverageNumber);
+      InternalProjectLicenseComponent._setFieldValue(this.familyAverageAgeGroupField, newModel.ageAverageCategory);
+    }
+    InternalProjectLicenseComponent._setFieldValidation(this.familyNumberOfTargetedFamiliesField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.familyAverageNumberOfPeopleField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
+    InternalProjectLicenseComponent._setFieldValidation(this.familyAverageAgeGroupField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
   }
 
   private loadSelectedLicense(oldLicenseFullSerial: string, callback?: any): void {
@@ -997,7 +1037,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     if ($event) {
       this.targetedNationalitiesField.setValue([]);
     }
-    InternalProjectLicenseComponent._setFieldValidationAndUpdate(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]));
+    InternalProjectLicenseComponent._setFieldValidation(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]));
     this.targetedNationalitiesField.markAsTouched();
   }
 
