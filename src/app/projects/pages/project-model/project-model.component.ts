@@ -133,12 +133,38 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    if (this.model?.getCaseStatus() === CaseStatus.CANCELLED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE) {
+      this.readonly = true;
+    } else {
+
+      if (this.openFrom === OpenFrom.USER_INBOX) {
+        this.readonly = false;
+      } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+        // after claim, consider it same as user inbox and use same condition
+        if (this.model.taskDetails.isClaimed()) {
+          this.readonly = false;
+        }
+      } else if (this.openFrom === OpenFrom.SEARCH) {
+        // if saved as draft, then no readonly
+        if (this.model?.canCommit()) {
+          this.readonly = false;
+        }
+      }
+    }
+  }
+
   _afterBuildForm(): void {
     this.listenToOptionalGoalsChanges();
     setTimeout(() => {
-      if (this.fromDialog) {
-        this.readonly = this.model?.getCaseStatus() === CaseStatus.CANCELLED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE;
+      this.handleReadonly();
 
+      if (this.fromDialog) {
         this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
           .pipe(takeUntil(this.destroy$)).subscribe((template) => {
             this.selectedModel = template;
@@ -210,7 +236,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterSave(model: ProjectModel, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model;
+    if (this.model?.taskDetails) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        })
+    } else {
+      this.model = model;
+    }
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)

@@ -82,7 +82,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   }
 
   canStart(): boolean {
-    return this.caseStatus < CaseStatus.STARTED && this.caseStatus === CaseStatus.CREATED;
+    return this.caseStatus === CaseStatus.CREATED;
   }
 
   alreadyStarted(): boolean {

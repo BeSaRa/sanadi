@@ -296,7 +296,14 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterSave(model: InternalProjectLicense, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model;
+    if (this.model?.taskDetails) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        })
+    } else {
+      this.model = model;
+    }
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
