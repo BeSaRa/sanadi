@@ -236,7 +236,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  private _updateModelAfterSave(model: ProjectModel) : void {
+  private _updateModelAfterSave(model: ProjectModel): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
@@ -507,7 +507,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.projectType.setValue(ProjectTypes.SOFTWARE);
       this.projectType.disable({emitEvent: false});
       this.domain.setValue(DomainTypes.HUMANITARIAN);
-      this.onDomainChange();
       this.domain.disable();
     } else if (this.modelType.value === ProjectModelTypes.PROJECT_MODEL) {
       this.projectType.enable({emitEvent: false});
@@ -517,6 +516,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.projectType.setValue(null);
       this.domain.enable();
     }
+    this.onDomainChange();
   }
 
   onDomainChange() {
