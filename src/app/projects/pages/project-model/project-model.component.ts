@@ -192,7 +192,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
             enName: this.model?.mainUNOCHACategoryInfo.enName,
             id: this.model?.mainUNOCHACategoryInfo.id,
           })]
-          this.subDacCategories = [(new DacOcha()).clone({
+          this.subOchaCategories = [(new DacOcha()).clone({
             arName: this.model?.subUNOCHACategoryInfo.arName,
             enName: this.model?.subUNOCHACategoryInfo.enName,
             id: this.model?.subUNOCHACategoryInfo.id,
