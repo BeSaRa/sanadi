@@ -2,7 +2,7 @@
   <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
 </div>
 <div class="row">
-  <tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+  <!--<tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
     <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
          [title]="lang.map.project_category_info"></tab>
@@ -14,6 +14,24 @@
     <tab [template]="commentsTabTemplate" [title]="lang.map.comments"
          *ngIf="employeeService.isInternalUser()"></tab>
     <tab [template]="attachmentsTab" name="attachments" [title]="lang.map.attachments"></tab>
+  </tabs-list>-->
+  <tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+         [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.projectCategory.name" [hasError]="getTabInvalidStatus('projectCategory')"
+         [template]="categoryInfoTab" [title]="lang.map.project_category_info"></tab>
+    <tab [name]="tabsData.projectSummary.name" [hasError]="getTabInvalidStatus('projectSummary')"
+         [template]="summaryInfoTab" [title]="lang.map.project_summary_info"></tab>
+    <tab [name]="tabsData.projectComponentsAndBudget.name"
+         [hasError]="getTabInvalidStatus('projectComponentsAndBudget')"
+         [template]="componentsBudgetsTab" [title]="lang.map.project_components_budgets"></tab>
+    <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
+         [template]="specialExplanationTab" [title]="lang.map.special_explanations"></tab>
+    <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
+         [template]="commentsTabTemplate" [title]="lang.map.comments"
+         *ngIf="employeeService.isInternalUser()"></tab>
+    <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+         [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">

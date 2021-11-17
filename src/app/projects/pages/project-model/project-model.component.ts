@@ -31,7 +31,9 @@ import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {InternalProjectLicense} from '@app/models/internal-project-license';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -74,6 +76,53 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   templateSerialControl: FormControl = new FormControl(null);
 
   searchTemplate$: Subject<string> = new Subject<string>();
+
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: 'basicInfoTab',
+      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      validStatus: () => this.basicInfoTab && this.basicInfoTab.valid
+    },
+    projectCategory: {
+      name: 'projectCategoryTab',
+      langKey: 'project_category_info',
+      validStatus: () => {
+        if (!(this.categoryInfoTab && this.categoryInfoTab.valid)) {
+          return false;
+        }
+        return this.categoryGoalPercentGroup.valid;
+      }
+    },
+    projectSummary: {
+      name: 'projectSummaryTab',
+      langKey: 'project_summary_info',
+      validStatus: () => this.summaryInfoTab && this.summaryInfoTab.valid && this.summaryPercentGroup && this.summaryPercentGroup.valid
+    },
+    projectComponentsAndBudget: {
+      name: 'projectComponentsAndBudgetTab',
+      langKey: 'project_components_budgets',
+      validStatus: () => (this.model && this.model.componentList && this.model.componentList.length > 0) && this.projectTotalCostField && this.projectTotalCostField.value > 0
+    },
+    specialExplanations: {
+      name: 'specialExplanationsTab',
+      langKey: 'special_explanations',
+      validStatus: () => this.descriptionTab.valid
+    },
+    comments: {
+      name: 'commentsTab',
+      langKey: 'comments',
+      validStatus: () => true
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      validStatus: () => true
+    }
+  };
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -204,14 +253,31 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
     if (saveType === SaveTypes.DRAFT) {
       return true;
     }
-    return of(this.form.valid)
+
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialog.error(listHtml.outerHTML);
+      return false;
+    } else {
+      // if project component total cost is 0, mark it invalid
+      if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
+        this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
+        return false;
+      }
+    }
+
+    const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
+    return (this.model?.id ? validAttachments$ : of(true));
+
+
+    /*return of(this.form.valid)
       .pipe(
         switchMap((valid) => iif(() => !!(valid && this.model?.id), validAttachments$, of(valid)))
-      )
+      )*/
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -568,7 +634,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onTabChange($event: TabComponent) {
-    this.loadAttachments = $event.name === 'attachments';
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
 
   onClickAddProjectComponent(): void {
@@ -683,5 +749,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         .subscribe()
     });
 
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
   }
 }
