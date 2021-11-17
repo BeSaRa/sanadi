@@ -133,7 +133,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       publicTerms: [{value: '', disabled: true}, [CustomValidators.required]],
       customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
-      followUpDate: ['', [CustomValidators.required]],
+      followUpDate: ['', [CustomValidators.required, CustomValidators.minDate(new Date())]],
       deductionPercent: ['', [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]]
     };
 
