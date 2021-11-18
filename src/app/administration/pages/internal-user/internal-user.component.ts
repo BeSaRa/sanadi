@@ -11,7 +11,7 @@ import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
   styleUrls: ['./internal-user.component.scss']
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
-  displayedColumns: string[] = ['select', 'username', 'arName', 'enName', 'defaultDepartment', 'status'];
+  displayedColumns: string[] = ['select', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
   actions: IMenuItem<InternalUser>[] = [
     {
       type: 'action',
@@ -22,7 +22,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: 'mdi-account-edit',
       onClick: (user) => this.edit$.next(user)
     }
   ];

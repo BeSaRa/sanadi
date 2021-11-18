@@ -2,10 +2,10 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SortableTableDirective} from '../directives/sortable-table.directive';
-import {SortEvent} from '../../interfaces/sort-event';
+import {SortEvent} from '@app/interfaces/sort-event';
 import {_isNumberValue} from '@angular/cdk/coercion';
 import {PaginatorComponent} from '../components/paginator/paginator.component';
-import {PageEvent} from '../../interfaces/page-event';
+import {PageEvent} from '@app/interfaces/page-event';
 
 export class TableDataSource extends DataSource<any> {
   _data: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);

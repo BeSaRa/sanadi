@@ -1,7 +1,7 @@
 import {BackendServiceInterface} from '../interfaces/backend-service-interface';
-import {Observable, Subject} from 'rxjs';
+import {iif, Observable, of, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {map, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {IKeyValue} from '../interfaces/i-key-value';
@@ -11,6 +11,9 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
+  // 15 min in milliseconds
+  protected _timeRange: number = 15 * 60 * 1000;
+  protected _lastLoadTime!: number;
 
   @Generator(undefined, true, {property: 'rs'})
   private _load(): Observable<T[]> {
@@ -42,6 +45,21 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
       tap(result => this.list = result),
       tap(result => this._loadDone$.next(result))
     );
+  }
+
+  loadByTime(prepare?: boolean): Observable<T[]> {
+    const reload$ = this.load(prepare).pipe(tap(_ => this._lastLoadTime = Date.now()));
+    return of(this.list)
+      .pipe(switchMap(list => {
+        return iif(() => {
+          return !!list.length && (Date.now() - this._lastLoadTime < this._timeRange)
+        }, of(list), reload$)
+      }));
+  }
+
+  loadIfNotExists(prepare?: boolean): Observable<T[]> {
+    return of(this.list)
+      .pipe(switchMap(list => iif(() => !!list.length, of(list), this.load(prepare))))
   }
 
   @Generator(undefined, true, {property: 'rs'})

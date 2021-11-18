@@ -3,7 +3,7 @@ import {SortableTableDirective} from '../../directives/sortable-table.directive'
 import {CdkColumnDef} from '@angular/cdk/table';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {SortEvent} from '../../../interfaces/sort-event';
+import {SortEvent} from '@app/interfaces/sort-event';
 
 @Component({
   selector: '[sortable-header]',

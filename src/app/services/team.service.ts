@@ -15,10 +15,12 @@ import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {DialogService} from './dialog.service';
 import {TeamPopupComponent} from '../administration/popups/team-popup/team-popup.component';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {ITeamCriteria} from '../interfaces/i-team-criteria';
 import {InternalDepartmentService} from './internal-department.service';
 import {InternalDepartment} from '../models/internal-department';
+import {UserTeam} from "@app/models/user-team";
+import {UserTeamService} from "@app/services/user-team.service";
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +33,7 @@ export class TeamService extends BackendGenericService<Team> {
               private userService: UserService,
               private urlService: UrlService,
               private dialogService: DialogService,
+              private userTeamService: UserTeamService,
               private internalDepartmentService: InternalDepartmentService) {
     super();
     FactoryService.registerService('TeamService', this);
@@ -105,5 +108,21 @@ export class TeamService extends BackendGenericService<Team> {
           }))
         })
       );
+  }
+
+  createTeamUserLink(userTeam: Partial<UserTeam>): Observable<UserTeam> {
+    return this.userTeamService.createUserTeam(userTeam).pipe(map(id => new UserTeam().clone({...userTeam, id})));
+  }
+
+  loadUserTeamsByUserId(generalUserId: number) {
+    return this.userTeamService.loadUserTeamByUserId(generalUserId);
+  }
+
+  deleteUserTeam(id: number) {
+    return this.userTeamService.delete(id);
+  }
+
+  deleteUserTeamBulk(id: number[]) {
+    return this.userTeamService.deleteBulk(id);
   }
 }

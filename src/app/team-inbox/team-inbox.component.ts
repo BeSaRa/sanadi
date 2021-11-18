@@ -16,7 +16,7 @@ import {OpenFrom} from '../enums/open-from.enum';
 import {CaseModel} from '../models/case-model';
 import {WFActions} from '../enums/wfactions.enum';
 import {IESComponent} from '../interfaces/iescomponent';
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ITableOptions} from '@app/interfaces/i-table-options';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {FilterEventTypes} from '@app/types/types';
@@ -25,7 +25,7 @@ import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteri
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SortEvent} from '@app/interfaces/sort-event';
-import {CaseTypes} from "@app/enums/case-types.enum";
+import {CaseTypes} from '@app/enums/case-types.enum';
 import {CaseStatus} from '@app/enums/case-status.enum';
 
 @Component({
@@ -44,6 +44,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('table') table!: TableComponent;
   filterCriteria: Partial<IInboxCriteria> = {};
+
   // filterControl: FormControl = new FormControl('');
 
   constructor(public lang: LangService,
@@ -80,13 +81,13 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
               this.reloadSelectedInbox();
               sub.unsubscribe();
             });
-          })
+          });
       }
     },
     sortingCallbacks: {
       displayNameInfo: (a: QueryResult, b: QueryResult, dir: SortEvent) => {
-        let value1 = !CommonUtils.isValidValue(a) ? '' : a.displayNameInfo?.getName().toLowerCase(),
-          value2 = !CommonUtils.isValidValue(b) ? '' : b.displayNameInfo?.getName().toLowerCase();
+        const value1 = !CommonUtils.isValidValue(a) ? '' : a.displayNameInfo?.getName().toLowerCase();
+        const value2 = !CommonUtils.isValidValue(b) ? '' : b.displayNameInfo?.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       }
     }
@@ -324,7 +325,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   actionClaimBeforeOpen(item: QueryResult) {
     item.claim()
       .pipe(switchMap(_ => {
-        return item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$))
+        return item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$));
       }))
       .subscribe(() => this.reloadSelectedInbox());
   }
@@ -436,7 +437,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'release_task',
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return loadedModel.taskDetails.actions && !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return loadedModel.taskDetails.actions && !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           },
           hideFromContext: true,
         },
@@ -451,7 +452,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -469,7 +470,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -487,7 +488,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -505,7 +506,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -523,7 +524,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -541,7 +542,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -559,7 +560,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -577,7 +578,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -596,7 +597,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
 
         },
@@ -615,7 +616,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -633,7 +634,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -651,7 +652,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -669,7 +670,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -687,7 +688,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -705,7 +706,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -715,7 +716,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           this.actionReject(item, viewDialogRef);
         }
       },
-      //close/cancel task
+      // close/cancel task
       {
         type: 'action',
         icon: 'mdi-close-circle-outline',
@@ -723,7 +724,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           hideFromContext: true,
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
-            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM)
+            return !loadedModel.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
           }
         },
         show: (item: QueryResult) => {
@@ -745,7 +746,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       serviceKey = this.inboxService.getService(service).serviceKey;
     } catch (e) {
-      return "";
+      return '';
     }
     return this.lang.getLocalByKey(serviceKey).getName();
   }

@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  please_select_team_to_link: string;
+  select_team: string;
   final_approve_task_based_on_matrix: string;
   kindly_choose_model: string;
   template_serial: string;

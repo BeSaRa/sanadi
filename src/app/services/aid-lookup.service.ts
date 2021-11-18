@@ -31,13 +31,8 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   @Generator(AidLookup, true)
-  load(prepare?: boolean): Observable<AidLookup[]> {
-    return super.load(prepare);
-  }
-
-  @Generator(AidLookup, true)
   loadByCriteria(criteria: IAidLookupCriteria): Observable<AidLookup[]> {
-    const queryParams = this.buildCriteriaQueryParams(criteria);
+    const queryParams = AidLookupService.buildCriteriaQueryParams(criteria);
 
     return this.http.get<AidLookup[]>(this.urlService.URLS.AID_LOOKUPS_CRITERIA, {
       params: queryParams
@@ -86,7 +81,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     return this.urlService.URLS.AID_LOOKUPS;
   }
 
-  private buildCriteriaQueryParams(criteria: IAidLookupCriteria): HttpParams {
+  private static buildCriteriaQueryParams(criteria: IAidLookupCriteria): HttpParams {
     let queryParams = new HttpParams();
 
     if (criteria.aidType) {
@@ -108,7 +103,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     return AidLookupInterceptor.receive;
   }
 
-  openAuditLogsById(id: number):Observable<DialogRef> {
+  openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
 }
