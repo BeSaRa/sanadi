@@ -228,12 +228,12 @@ export class InboxService {
 
   sendToStructureExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT, service, claimBefore, task, {teamType: ExpertsEnum.STRUCTURAL});
+    return this.openSendToDialog(taskId, WFResponseType.TO_CONSTRUCTION_EXPERT, service, claimBefore, task);
   }
 
   sendToDevelopmentExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
     const service = this.getService(caseType);
-    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT, service, claimBefore, task, {teamType: ExpertsEnum.DEVELOPMENTAL});
+    return this.openSendToDialog(taskId, WFResponseType.TO_DEVELOPMENT_EXPERT, service, claimBefore, task);
   }
 
   sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {

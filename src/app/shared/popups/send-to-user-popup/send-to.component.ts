@@ -74,22 +74,16 @@ export class SendToComponent implements OnInit, OnDestroy {
       case WFResponseType.TO_GM:
         this.title = 'send_to_general_manager';
         break;
+      case WFResponseType.TO_DEVELOPMENT_EXPERT:
+        this.title = 'send_to_development_expert';
+        break;
+      case WFResponseType.TO_CONSTRUCTION_EXPERT:
+        this.title = 'send_to_structure_expert';
+        break;
       default:
         this.title = 'send';
     }
     this.listenToSave();
-
-
-    /*if (this.data.sendToResponse === WFResponseType.TO_USER) {
-      this.loadUsers();
-      this.title = 'send_to_user';
-    } else if (this.data.sendToResponse === WFResponseType.TO_COMPETENT_DEPARTMENT) {
-      this.loadDepartments();
-      this.title = 'send_to_competent_dep';
-    } else {
-      this.title = 'send_to_manager';
-    }
-    this.listenToSave();*/
   }
 
   ngOnDestroy(): void {

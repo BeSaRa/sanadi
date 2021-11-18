@@ -2,19 +2,6 @@
   <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
 </div>
 <div class="row">
-  <!--<tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
-    <tab [hasError]="tabHasError('basicInfo')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [hasError]="tabHasError('categoryInfo')" [template]="categoryInfoTab"
-         [title]="lang.map.project_category_info"></tab>
-    <tab [hasError]="tabHasError('summaryInfo')" [template]="summaryInfoTab"
-         [title]="lang.map.project_summary_info"></tab>
-    <tab [template]="componentsBudgetsTab" [title]="lang.map.project_components_budgets"></tab>
-    <tab [hasError]="tabHasError('description')" [template]="specialExplanationTab"
-         [title]="lang.map.special_explanations"></tab>
-    <tab [template]="commentsTabTemplate" [title]="lang.map.comments"
-         *ngIf="employeeService.isInternalUser()"></tab>
-    <tab [template]="attachmentsTab" name="attachments" [title]="lang.map.attachments"></tab>
-  </tabs-list>-->
   <tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>

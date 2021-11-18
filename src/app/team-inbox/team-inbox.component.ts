@@ -527,7 +527,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
@@ -545,7 +545,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);

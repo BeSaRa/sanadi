@@ -399,7 +399,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
@@ -411,7 +411,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT);
+          return item.RESPONSES.includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
