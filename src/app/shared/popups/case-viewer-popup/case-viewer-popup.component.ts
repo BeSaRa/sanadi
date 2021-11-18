@@ -111,7 +111,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
         .subscribe((result: boolean) => {
           this.matrixNotificationType = result ? 'success' : 'danger';
           if (this.empService.isLicensingManager()) {
-            this.matrixNotificationMsg = result ? this.lang.map.based_on_matrix_should_send_to_general_manager : this.lang.map.based_on_matrix_should_not_send_to_general_manager;
+            this.matrixNotificationMsg = result ?  this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
             return;
           }
           this.matrixNotificationMsg = result ? this.lang.map.msg_success_final_approve_task_based_on_matrix_notification : this.lang.map.msg_fail_final_approve_task_based_on_matrix_notification;
