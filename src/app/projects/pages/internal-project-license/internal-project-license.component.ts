@@ -247,7 +247,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterBuildForm(): void {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.handleReadonly();
       this.loadAidLookup(AidTypes.CLASSIFICATIONS);
       this.listenToAddProjectComponent();
@@ -261,7 +261,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
           this.oldLicenseFullSerialField.updateValueAndValidity();
         });
       }
-    })
+    // })
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

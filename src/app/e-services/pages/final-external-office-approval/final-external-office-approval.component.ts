@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {LangService} from '@app/services/lang.service';
@@ -112,7 +112,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   readonly: boolean = false;
 
   public isInternalUser: boolean = this.employeeService.isInternalUser();
-  private changeModel: BehaviorSubject<FinalExternalOfficeApproval | undefined> = new BehaviorSubject<FinalExternalOfficeApproval | undefined>(new FinalExternalOfficeApproval());
 
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   managersTabStatus: ReadinessStatus = 'READY';
@@ -158,14 +157,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   _afterBuildForm(): void {
     // this.listenToRequestTypeChange();
-    setTimeout(() => {
+    // setTimeout(() => {
       this.listenToCountryChange();
       this.handleReadonly();
       if (this.fromDialog) {
         this.loadSelectedLicense(this.requestTypeField?.value === ServiceRequestTypes.NEW ? this.model?.initialLicenseNumber! : this.model?.licenseNumber!);
       }
       this.listenToRequestTypeChange();
-    });
+    // });
   }
 
   private _getInvalidTabs(): any {
@@ -381,7 +380,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   listenToRequestTypeChange(): void {
     this.requestTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(value => {
+    ).subscribe(_ => {
 
       this._handleLicenseValidationsByRequestType();
       this._handleRequestTypeDependentValidations();

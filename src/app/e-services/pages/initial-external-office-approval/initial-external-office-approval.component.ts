@@ -100,7 +100,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   _afterBuildForm(): void {
     this.setDefaultOrganization();
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.handleReadonly();
       if (this.fromDialog) {
         // if license number exists, load it and regions will be loaded inside
@@ -112,7 +112,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         }
       }
       this.listenToRequestTypeChange();
-    });
+    // });
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

@@ -4,7 +4,18 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {IESComponent} from "@app/interfaces/iescomponent";
 import {BehaviorSubject, isObservable, Observable, of, Subject} from "rxjs";
-import {catchError, exhaustMap, filter, map, skip, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
+import {
+  catchError,
+  delay,
+  exhaustMap,
+  filter,
+  map,
+  skip,
+  switchMap,
+  takeUntil,
+  tap,
+  withLatestFrom
+} from "rxjs/operators";
 import {ICaseModel} from "@app/interfaces/icase-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
@@ -49,14 +60,17 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   }
 
   ngOnInit(): void {
-    this._initComponent();
-    this._buildForm();
-    this._afterBuildForm();
-    this._listenToSave();
-    this._listenToModelChange();
-    this._listenToResetForm();
-    this._listenToLaunch();
-    this._listenToValidateForms();
+    of(null)
+      .pipe(tap(_ => this._initComponent()))
+      .pipe(tap(_ => this._buildForm()))
+      .pipe(tap(_ => this._listenToSave()))
+      .pipe(tap(_ => this._listenToModelChange()))
+      .pipe(tap(_ => this._listenToResetForm()))
+      .pipe(tap(_ => this._listenToLaunch()))
+      .pipe(tap(_ => this._listenToValidateForms()))
+      .pipe(delay(0))// delay
+      .pipe(tap(_ => this._afterBuildForm()))
+      .subscribe()
   }
 
   @Input()

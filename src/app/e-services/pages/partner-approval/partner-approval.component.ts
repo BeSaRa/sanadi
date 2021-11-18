@@ -182,7 +182,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.setDefaultOrganization();
     this.listenToCountryChange();
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.handleReadonly();
       if (this.fromDialog) {
         // if license number exists, load it and regions will be loaded inside
@@ -192,7 +192,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         }
       }
       this.listenToRequestTypeChange();
-    });
+    // });
   }
 
   private _updateModelAfterSave(model: PartnerApproval): void {

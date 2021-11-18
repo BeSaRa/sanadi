@@ -211,9 +211,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _afterBuildForm(): void {
     this.listenToOptionalGoalsChanges();
-    setTimeout(() => {
+    // setTimeout(() => {
       this.handleReadonly();
-
       if (this.fromDialog) {
         this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
           .pipe(takeUntil(this.destroy$)).subscribe((template) => {
@@ -249,7 +248,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         }
 
       }
-    })
+    // })
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
