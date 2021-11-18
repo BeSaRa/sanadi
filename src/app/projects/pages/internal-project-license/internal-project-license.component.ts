@@ -141,7 +141,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   };
 
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: InternalProjectLicenseResult;
+  selectedLicense?: InternalProjectLicense;
 
   datepickerOptionsMap: IKeyValue = {
     expectedImpactDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
@@ -257,12 +257,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       this.updateBeneficiaryValidations();
 
       if (this.fromDialog) {
-        const oldLicenseFullSerial = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
-        if (oldLicenseFullSerial) {
-          this.loadSelectedLicense(oldLicenseFullSerial, () => {
-            this.oldLicenseFullSerialField.updateValueAndValidity();
-          });
-        }
+        this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
+          this.oldLicenseFullSerialField.updateValueAndValidity();
+        });
       }
     })
   }
@@ -295,7 +292,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
   }
 
-  private _updateModelAfterSave(model: InternalProjectLicense) : void {
+  private _updateModelAfterSave(model: InternalProjectLicense): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
@@ -386,6 +383,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+
+    this.selectedLicense = undefined;
 
     this.subCategories1List = [];
     this.subCategories2List = [];
@@ -632,7 +631,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       if (!this.model?.id || this.model.canCommit()) {
         this.oldLicenseFullSerialField.reset();
         this.oldLicenseFullSerialField.setValidators([]);
-        this.setSelectedLicense(undefined, undefined);
+        this.setSelectedLicense(undefined, true);
 
         if (this.model) {
           this.model.licenseNumber = '';
@@ -758,18 +757,17 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     InternalProjectLicenseComponent._setFieldValidation(this.familyAverageAgeGroupField, validators.concat([CustomValidators.number, CustomValidators.maxLength(20)]), true);
   }
 
-  private loadSelectedLicense(oldLicenseFullSerial: string, callback?: any): void {
-    if (!this.model || !oldLicenseFullSerial) {
+  private loadSelectedLicenseById(id: string, callback?: any): void {
+    if (!id) {
       return;
     }
-    this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
+    this.licenseService.loadInternalProjectLicenseByLicenseId(id)
       .pipe(
-        filter(list => !!list.length),
-        map(list => list[0]),
+        filter(license => !!license),
         takeUntil(this.destroy$)
       )
       .subscribe((license) => {
-        this.setSelectedLicense(license, undefined);
+        this.setSelectedLicense(license, true);
 
         callback && callback();
       })
@@ -806,19 +804,19 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
-        this.setSelectedLicense(selection.selected, selection.details);
+        this.setSelectedLicense(selection.details, false);
       })
   }
 
-  private setSelectedLicense(selectedLicense?: InternalProjectLicenseResult, licenseDetails?: InternalProjectLicense) {
-    this.selectedLicense = selectedLicense;
+  private setSelectedLicense(licenseDetails: InternalProjectLicense | undefined, ignoreUpdateForm: boolean) {
+    this.selectedLicense = licenseDetails;
     // update form fields if i have license
-    if (selectedLicense && licenseDetails) {
+    if (licenseDetails && !ignoreUpdateForm) {
       let value: any = (new InternalProjectLicense()).clone(licenseDetails);
       value.requestType = this.requestTypeField.value;
-      value.oldLicenseFullserial = selectedLicense.fullSerial;
-      value.oldLicenseId = selectedLicense.id;
-      value.oldLicenseSerial = selectedLicense.serial;
+      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseId = licenseDetails.id;
+      value.oldLicenseSerial = licenseDetails.serial;
 
       // delete id because license details contains old license id and we are adding new, so no id is needed
       delete value.id;
