@@ -83,7 +83,9 @@ export class UserInboxComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private employeeService: EmployeeService,
               private inboxService: InboxService) {
-
+    if (this.employeeService.isExternalUser()) {
+      this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
+    }
   }
 
 

@@ -36,7 +36,6 @@ import {CaseStatus} from '@app/enums/case-status.enum';
 export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   queryResultSet?: QueryResultSet;
   inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
-  displayedColumns: string[] = ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'];
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
   selectControl: FormControl = new FormControl();
@@ -51,6 +50,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
               private toast: ToastService,
               private inboxService: InboxService,
               public employeeService: EmployeeService) {
+    if (this.employeeService.isExternalUser()) {
+      this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
+    }
   }
 
   tableOptions: ITableOptions = {
