@@ -212,42 +212,42 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _afterBuildForm(): void {
     this.listenToOptionalGoalsChanges();
     // setTimeout(() => {
-      this.handleReadonly();
-      if (this.fromDialog) {
-        this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
-          .pipe(takeUntil(this.destroy$)).subscribe((template) => {
-            this.selectedModel = template;
-            this.displayTemplateSerialField = true;
-            this.templateSerialControl.setValue(template.templateFullSerial);
-          })
+    this.handleReadonly();
+    if (this.fromDialog) {
+      this.model && this.model.templateId && this.service.getTemplateById(this.model?.templateId)
+        .pipe(takeUntil(this.destroy$)).subscribe((template) => {
+          this.selectedModel = template;
+          this.displayTemplateSerialField = true;
+          this.templateSerialControl.setValue(template.templateFullSerial);
+        })
 
-        this.onModelTypeChange();
+      this.onModelTypeChange();
 
-        if (this.model?.domain === DomainTypes.DEVELOPMENT) {
-          this.mainDacCategories = [(new DacOcha()).clone({
-            arName: this.model.mainDACCategoryInfo.arName,
-            enName: this.model.mainDACCategoryInfo.enName,
-            id: this.model.mainDACCategoryInfo.id,
-          })]
-          this.subDacCategories = [(new DacOcha()).clone({
-            arName: this.model.subDACCategoryInfo.arName,
-            enName: this.model.subDACCategoryInfo.enName,
-            id: this.model.subDACCategoryInfo.id,
-          })]
-        } else {
-          this.mainOchaCategories = [(new DacOcha()).clone({
-            arName: this.model?.mainUNOCHACategoryInfo.arName,
-            enName: this.model?.mainUNOCHACategoryInfo.enName,
-            id: this.model?.mainUNOCHACategoryInfo.id,
-          })]
-          this.subOchaCategories = [(new DacOcha()).clone({
-            arName: this.model?.subUNOCHACategoryInfo.arName,
-            enName: this.model?.subUNOCHACategoryInfo.enName,
-            id: this.model?.subUNOCHACategoryInfo.id,
-          })]
-        }
-
+      if (this.model?.domain === DomainTypes.DEVELOPMENT) {
+        this.mainDacCategories = [(new DacOcha()).clone({
+          arName: this.model.mainDACCategoryInfo.arName,
+          enName: this.model.mainDACCategoryInfo.enName,
+          id: this.model.mainDACCategoryInfo.id,
+        })]
+        this.subDacCategories = [(new DacOcha()).clone({
+          arName: this.model.subDACCategoryInfo.arName,
+          enName: this.model.subDACCategoryInfo.enName,
+          id: this.model.subDACCategoryInfo.id,
+        })]
+      } else {
+        this.mainOchaCategories = [(new DacOcha()).clone({
+          arName: this.model?.mainUNOCHACategoryInfo.arName,
+          enName: this.model?.mainUNOCHACategoryInfo.enName,
+          id: this.model?.mainUNOCHACategoryInfo.id,
+        })]
+        this.subOchaCategories = [(new DacOcha()).clone({
+          arName: this.model?.subUNOCHACategoryInfo.arName,
+          enName: this.model?.subUNOCHACategoryInfo.enName,
+          id: this.model?.subUNOCHACategoryInfo.id,
+        })]
       }
+
+    }
     // })
   }
 
@@ -726,7 +726,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()] || CaseStatus;
 
       if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE); // && caseStatus !== caseStatusEnum.FINAL_REJECTION
+        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
       }
     }
 

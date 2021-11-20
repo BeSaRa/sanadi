@@ -251,4 +251,24 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     this.form.get('email')?.patchValue(this.employeeService.getUser()?.email);
     this.form.get('mobileNo')?.patchValue(this.employeeService.getUser()?.phoneNumber);
   }
+
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus(),
+        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+      if (caseStatusEnum) {
+        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
+      }
+    }
+
+    return !isAllowed;
+  }
 }

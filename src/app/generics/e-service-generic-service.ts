@@ -31,6 +31,9 @@ import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-
 import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
 import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
 import {InternalProjectLicenseCaseStatus} from '@app/enums/internal-project-license-case-status';
+import {ConsultationCaseStatus} from '@app/enums/consultation-case-status.enum';
+import {InquiryCaseStatus} from '@app/enums/inquiry-case-status.enum';
+import {InternationalCaseStatus} from '@app/enums/international-case-status.enum';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -63,6 +66,9 @@ export abstract class EServiceGenericService<T extends { id: string }>
   searchService: SearchService = new SearchService(this);
 
   caseStatusEnumMap: any = {
+    [CaseTypes.CONSULTATION]: ConsultationCaseStatus,
+    [CaseTypes.INQUIRY]: InquiryCaseStatus,
+    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCaseStatus,
     [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
     [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
