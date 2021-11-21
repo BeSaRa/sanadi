@@ -59,6 +59,21 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     });
   }
 
+  @Generator(undefined, false, {property: 'rs'})
+  approve(trainingId: number) {
+    return this.http.put(this._getServiceURL() + '/approve/' + trainingId, {trainingProgramId: trainingId} );
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  publish(trainingId: number) {
+    return this.http.put(this._getServiceURL() + '/publish/' + trainingId, {trainingProgramId: trainingId} );
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  cancel(trainingId: number) {
+    return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, {trainingProgramId: trainingId} );
+  }
+
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {
     return of(this.dialog.show(FilterTrainingProgramsComponent, {
       criteria: filterCriteria

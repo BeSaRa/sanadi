@@ -482,7 +482,11 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid || model.targetOrganizationListIds.length <= 0 || model.trainerListIds.length <= 0" *ngIf="saveVisible" (click)="save$.next(null)"
-          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="save$.next(null)" class="btn btn-primary">{{lang.map.btn_save}}</button>
+<!--  <button [disabled]="saveDisabled()" *ngIf="showApproveButton()" (click)="approve$.next()" class="btn btn-primary">{{lang.map.training_program_approve}}</button>-->
+  <button [disabled]="saveDisabled()" *ngIf="showSaveAndApproveButton()" (click)="saveAndApprove()" class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
+<!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
+  <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()" class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
+  <button *ngIf="showCancelButton()" (click)="cancelProgram($event)" class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

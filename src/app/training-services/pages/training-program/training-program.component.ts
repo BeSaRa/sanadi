@@ -15,8 +15,8 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
-import {of} from 'rxjs';
 import {DateUtils} from '@app/helpers/date-utils';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'training-program',
@@ -39,7 +39,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       onClick: (trainingProgram) => this.edit$.next(trainingProgram)
     }
   ];
-  displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingDate', 'registrationDate', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
   selectedRecords: TrainingProgram[] = [];
   actionsList: IGridAction[] = [
     {
@@ -184,7 +184,6 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       }))
       .subscribe((list: TrainingProgram[]) => {
         this.models = list;
-        console.log('models', this.models);
       })
   }
 

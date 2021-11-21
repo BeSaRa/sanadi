@@ -13,6 +13,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainingProgramFullSerial!: string;
   trainingType!: number;
   trainingTypeInfo!: AdminResult;
+  statusInfo!: AdminResult;
   trainingDate!: string;
   registrationDate!: string;
   trainingObjective!: string;
@@ -157,5 +158,17 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : totalTrainingCost
     }
+  }
+
+  approve() {
+    return this.service.approve(this.id);
+  }
+
+  publish() {
+    return this.service.publish(this.id);
+  }
+
+  cancel() {
+    return this.service.cancel(this.id);
   }
 }

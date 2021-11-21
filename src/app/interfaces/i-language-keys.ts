@@ -6,6 +6,16 @@ export interface ILanguageKeys {
   services_related_to_the_selected_team: string;
   please_select_team_to_link: string;
   select_team: string;
+  training_program_save_and_approve: string;
+  training_x_canceled_successfully: string;
+  training_x_published_successfully: string;
+  training_x_approved_successfully: string;
+  msg_confirm_cancel_x: string;
+  training_program_save_and_publish: string;
+  cancel_training_program: string;
+  training_program_status: string;
+  training_program_publish: string;
+  training_program_approve: string;
   final_approve_task_based_on_matrix: string;
   kindly_choose_model: string;
   template_serial: string;

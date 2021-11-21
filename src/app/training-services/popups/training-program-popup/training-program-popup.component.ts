@@ -3,7 +3,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
 import {FormManager} from '@app/models/form-manager';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -19,10 +19,12 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {OrgUnit} from '@app/models/org-unit';
-import {takeUntil} from 'rxjs/operators';
+import {exhaustMap, takeUntil, tap} from 'rxjs/operators';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
+import {TrainingStatus} from '@app/enums/training-status';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'training-program-popup',
@@ -30,6 +32,12 @@ import {TrainerService} from '@app/services/trainer.service';
   styleUrls: ['./training-program-popup.component.scss']
 })
 export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
+  approve$ = new Subject<any>();
+  saveAndApprove$ = new Subject<any>();
+  saveAndApproveClicked = false;
+  publish$ = new Subject<any>();
+  saveAndPublish$ = new Subject<any>();
+  saveAndPublishClicked = false;
   loadTrainers$ = new BehaviorSubject<any>(null);
   loadSelectedTrainers$ = new BehaviorSubject<any>(null);
   form!: FormGroup;
@@ -38,6 +46,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   model!: TrainingProgram;
   validateFieldsVisible = true;
   saveVisible = true;
+  trainingStatus = TrainingStatus;
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
     organizations: {name: 'organizations'},
@@ -86,16 +95,78 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     super();
     this.operation = data.operation;
     this.model = data.model;
-    console.log('model training', this.model);
   }
 
   initPopup(): void {
-    if(this.operation == OperationTypes.UPDATE) {
+    if (this.operation == OperationTypes.UPDATE) {
       this.loadSelectedOrganizations();
     }
 
     this.loadTrainers();
     this.loadSelectedTrainers();
+    this.listenToApprove();
+    // this.listenToSaveAndApprove();
+    this.listenToPublish();
+  }
+
+  listenToApprove() {
+    this.approve$
+      .pipe(
+        tap(() => this.saveAndApproveClicked = false),
+        takeUntil(this.destroy$)
+      )
+      .pipe(exhaustMap(() => {
+        return this.model.approve();
+      }))
+      .subscribe(() => {
+        const message = this.lang.map.training_x_approved_successfully.change({x: this.model.activityName});
+        this.toast.success(message);
+        this.dialogRef.close(this.model);
+      });
+  }
+
+  saveAndApprove() {
+    this.saveAndApproveClicked = true;
+    this.save$.next();
+  }
+
+  saveAndPublish() {
+    this.saveAndPublishClicked = true;
+    this.save$.next();
+  }
+
+  listenToPublish() {
+    this.publish$
+      .pipe(
+        tap(() => this.saveAndPublishClicked = false),
+        takeUntil(this.destroy$)
+      )
+      .pipe(exhaustMap(() => {
+        return this.model.publish();
+      }))
+      .subscribe(() => {
+        const message = this.lang.map.training_x_published_successfully.change({x: this.model.activityName});
+        this.toast.success(message);
+        this.dialogRef.close(this.model);
+      });
+  }
+
+  cancelProgram(event: MouseEvent): void {
+    event.preventDefault();
+    // @ts-ignore
+    const confirmMessage = this.lang.map.msg_confirm_cancel_x.change({x: this.model.activityName});
+    this.dialogService.confirm(confirmMessage)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = this.model.cancel().subscribe(() => {
+          // @ts-ignore
+          const message = this.lang.map.training_x_canceled_successfully.change({x: this.model.activityName});
+          this.toast.success(message);
+          this.dialogRef.close(this.model);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -230,11 +301,17 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   afterSave(model: TrainingProgram, dialogRef: DialogRef): void {
-    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-    // @ts-ignore
-    this.toast.success(message.change({x: model.activityName}));
     this.model = model;
-    this.dialogRef.close(this.model);
+    if(this.saveAndApproveClicked) {
+      this.approve$.next();
+    } else if(this.saveAndPublishClicked) {
+      this.publish$.next();
+    } else {
+      const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+      // @ts-ignore
+      this.toast.success(message.change({x: model.activityName}));
+      this.dialogRef.close(this.model);
+    }
   }
 
   saveFail(error: Error): void {
@@ -255,7 +332,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   addOrganization() {
-    if(!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {
+    if (!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {
       let org = this.organizations.find(e => e.id == this.selectedOrganization)!;
       this.selectedOrganizations = [...this.selectedOrganizations, org];
       this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
@@ -285,7 +362,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.selectedOrganization = undefined;
     this.organizationUnitService.getOrganizationUnitsByOrgType(this.selectedOrganizationType).subscribe(orgs => {
       this.organizations = orgs;
-    })
+    });
   }
 
   // trainers functionality
@@ -294,7 +371,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   addTrainer() {
-    if(!this.hasDuplicatedId(this.selectedTrainer!, this.selectedTrainers)) {
+    if (!this.hasDuplicatedId(this.selectedTrainer!, this.selectedTrainers)) {
       let trainer = this.trainers.find(e => e.id == this.selectedTrainer)!;
       this.selectedTrainers = [...this.selectedTrainers, trainer];
       this.model.trainerListIds = this.selectedTrainers.map(trainer => trainer.id);
@@ -320,7 +397,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
           this.trainers = trainers;
           this.loadSelectedTrainers$.next(null);
         });
-    })
+    });
   }
 
   private loadSelectedTrainers(): void {
@@ -331,6 +408,28 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   hasDuplicatedId(id: number, arr: any[]): boolean {
     return arr.some(element => element.id == id);
+  }
+
+  saveDisabled() {
+    return this.form.invalid || this.model.targetOrganizationListIds.length <= 0 || this.model.trainerListIds.length <= 0;
+  }
+
+  showSaveButton() {
+    return this.saveVisible;
+  }
+
+  showSaveAndApproveButton() {
+    return this.saveVisible && this.model.status == this.trainingStatus.DATA_ENTERED;
+  }
+
+  showSaveAndPublishButton() {
+    return this.saveVisible && (this.model.status == this.trainingStatus.TRAINING_PUBLISHED || this.model.status == this.trainingStatus.PROGRAM_APPROVED);
+  }
+
+  showCancelButton() {
+    return this.operation != this.operationTypes.CREATE &&
+      this.model.status != this.trainingStatus.TRAINING_FINISHED &&
+      this.model.status != this.trainingStatus.TRAINING_CANCELED;
   }
 
   hoursList: { val: number, key: string }[] = [
