@@ -1,12 +1,12 @@
 {
-  "VERSION": "v1.3.3-rc#2",
+  "VERSION": "v1.3.3-rc#3",
   "ENVIRONMENTS_URLS": {
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "BAW_UI": "http://eblaepm.no-ip.org:9011/sanadi-services/api/",
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
-  "BASE_ENVIRONMENT": "BAW_UI",
+  "BASE_ENVIRONMENT": "BAW_QA",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
