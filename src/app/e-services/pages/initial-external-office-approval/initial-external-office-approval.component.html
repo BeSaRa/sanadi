@@ -13,8 +13,7 @@
            [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
       <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
            [template]="recommendationsTemplate" [title]="lang.map.recommendations"
-           *ngIf="employeeService.isInternalUser()"
-           [disabled]="!model?.id">{{lang.map.recommendations}}</tab>
+           *ngIf="fromDialog && employeeService.isInternalUser()" [disabled]="!model?.id"></tab>
     </tabs-list>
     <ng-template #basicInfoTabTemplate>
       <form [formGroup]="form">

@@ -20,6 +20,8 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'international-cooperation',
@@ -55,6 +57,33 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable();
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
+
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: 'basicInfoTab',
+      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      validStatus: () => this.form.valid
+    },
+    comments: {
+      name: 'commentsTab',
+      langKey: 'comments',
+      validStatus: () => true
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      validStatus: () => true
+    },
+    recommendations: {
+      name: 'recommendations',
+      langKey: 'recommendations',
+      validStatus: () => true
+    }
+  };
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
 
   constructor(private http: HttpClient,
               public intDepService: InternalDepartmentService,
@@ -218,6 +247,17 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       .load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
+  }
+
+  isAddCommentAllowed(): boolean {
+    if (!this.model?.id || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    return isAllowed;
   }
 
   isAttachmentReadonly(): boolean {
