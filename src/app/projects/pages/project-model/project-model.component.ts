@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {ProjectModel} from "@app/models/project-model";
 import {LangService} from '@app/services/lang.service';
 import {ProjectModelService} from "@app/services/project-model.service";
-import {iif, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
 import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
@@ -487,16 +487,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.sdgService.load().subscribe((goals) => this.goals = goals);
   }
 
-  private loadDacMainOcha(forceLoad: boolean = false): void {
+  private loadDacMainOcha(forceLoad: boolean = false): Observable<DacOcha[]> {
     if (this.isDacOchaLoaded && !forceLoad) {
-      return;
+      return of([]);
     }
 
-    this.dacOchaService
+    return this.dacOchaService
       .load() //TODO: later we can filter the deactivated in case if it is new request
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(_ => this.isDacOchaLoaded = true))
-      .subscribe((list) => this.separateDacFromOcha(list))
+      .pipe(tap(list => this.separateDacFromOcha(list)))
   }
 
   private loadSubDacOcha(parent: number): void {
@@ -522,6 +522,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private setRequiredValidator(fields: (keyof IDacOchaFields)[]) {
     fields.forEach((field) => {
       this[field].setValidators(CustomValidators.required);
+      this[field].updateValueAndValidity();
+    });
+  }
+
+  private setZeroValue(fields: (keyof IDacOchaFields)[]): void {
+    fields.forEach((field) => {
+      this[field].patchValue(this.model ? (this.model[field] ?? 0) : 0);
       this[field].updateValueAndValidity();
     });
   }
@@ -592,7 +599,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onDomainChange() {
-    this.loadDacMainOcha();
+    this.loadDacMainOcha().subscribe();
     if (this.domain.value === DomainTypes.HUMANITARIAN) {
       this.emptyFieldsAndValidation([
         'mainDACCategory',
@@ -612,6 +619,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(1200)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
+      this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
       this.displayDevGoals = true;
       this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
     } else {
@@ -632,6 +640,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
     this.sustainabilityItems.updateValueAndValidity();
     this.categoryGoalPercentGroup.updateValueAndValidity();
+  }
+
+  getSelectedMainDacOchId(): number {
+    return this.domain.value === DomainTypes.HUMANITARIAN ? this.mainUNOCHACategory.value : this.mainDACCategory.value;
   }
 
   onMainDacOchaChanged(): void {
@@ -700,6 +712,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         if (result instanceof ProjectModel) {
           this.selectedModel = result;
           this.templateSerialControl.setValue(result.templateFullSerial);
+          //TODO Need to refactor here
+          of(null)
+            .pipe(
+              switchMap(_ => {
+                return this.loadDacMainOcha(true);
+              }),
+              switchMap(_ => {
+                this.loadSubDacOcha(this.getSelectedMainDacOchId())
+                return of(null);
+              })
+            ).subscribe()
+
           this._updateForm(result.clone({
             id: undefined,
             templateId: result.id,
