@@ -81,11 +81,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      index: 0,
       validStatus: () => this.basicInfoTab && this.basicInfoTab.valid
     },
     projectCategory: {
       name: 'projectCategoryTab',
       langKey: 'project_category_info',
+      index: 1,
       validStatus: () => {
         if (!(this.categoryInfoTab && this.categoryInfoTab.valid)) {
           return false;
@@ -96,26 +98,31 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     projectSummary: {
       name: 'projectSummaryTab',
       langKey: 'project_summary_info',
+      index: 2,
       validStatus: () => this.summaryInfoTab && this.summaryInfoTab.valid && this.summaryPercentGroup && this.summaryPercentGroup.valid
     },
     projectComponentsAndBudget: {
       name: 'projectComponentsAndBudgetTab',
       langKey: 'project_components_budgets',
+      index: 3,
       validStatus: () => (this.model && this.model.componentList && this.model.componentList.length > 0) && this.projectTotalCostField && this.projectTotalCostField.value > 0
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
       langKey: 'special_explanations',
+      index: 4,
       validStatus: () => this.descriptionTab.valid
     },
     comments: {
       name: 'commentsTab',
       langKey: 'comments',
+      index: 5,
       validStatus: () => true
     },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
+      index: 6,
       validStatus: () => true
     }
   };
@@ -557,7 +564,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private displayAttachmentsMessage(validAttachments: boolean): void {
     if (!validAttachments) {
       this.dialog.error(this.lang.map.kindly_check_required_attachments);
-      this.tabIndex$.next(5);
+      this.tabIndex$.next(this.tabsData.attachments.index);
     }
   }
 

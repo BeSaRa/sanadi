@@ -32,6 +32,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {LicenseService} from '@app/services/license.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'internal-project-license',
@@ -67,6 +68,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   subCategories2List: AidLookup[] = [];
   goalsList: SDGoal[] = [];
   nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
+  loadAttachments: boolean = false;
 
   private projectComponentChanged$: Subject<ProjectComponent | null> = new Subject<ProjectComponent | null>();
   private currentProjectComponentRecord?: ProjectComponent;
@@ -82,21 +84,25 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      index: 0,
       validStatus: () => this.basicInfoGroup && this.basicInfoGroup.valid
     },
     projectCategory: {
       name: 'projectCategoryTab',
       langKey: 'project_category_info',
+      index: 1,
       validStatus: () => this.projectCategoryGroup && this.projectCategoryGroup.valid && this.projectCategoryPercentGroup && this.projectCategoryPercentGroup.valid
     },
     projectSummary: {
       name: 'projectSummaryTab',
       langKey: 'project_summary_info',
+      index: 2,
       validStatus: () => this.projectSummaryGroup && this.projectSummaryGroup.valid
     },
     beneficiaryAnalysis: {
       name: 'beneficiaryAnalysisTab',
       langKey: 'beneficiary_analysis',
+      index: 3,
       validStatus: () => {
         // if groups don't exist or beneficiaryAnalysisGroup is inValid, return false
         if (!(this.beneficiaryAnalysisGroup && this.beneficiaryAnalysisGroup.valid && this.beneficiaryAnalysisIndividualPercentGroup)) {
@@ -116,29 +122,39 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     projectComponentsAndBudget: {
       name: 'projectComponentsAndBudgetTab',
       langKey: 'project_components_budgets',
+      index: 4,
       validStatus: () => this.projectBudgetGroup && this.projectBudgetGroup.valid && (this.model && this.model.componentList.length > 0) && this.projectTotalCostField && this.projectTotalCostField.value > 0
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
       langKey: 'special_explanations',
+      index: 5,
       validStatus: () => this.specialExplanationsGroup && this.specialExplanationsGroup.valid
     },
     comments: {
       name: 'commentsTab',
       langKey: 'comments',
+      index: 6,
       validStatus: () => true
     },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
+      index: 7,
       validStatus: () => true
     },
     recommendations: {
       name: 'recommendations',
       langKey: 'recommendations',
+      index: 8,
       validStatus: () => true
     }
   };
+  tabIndex$: Subject<number> = new Subject<number>();
+
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
+  }
 
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InternalProjectLicense;
@@ -248,19 +264,19 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
 
   _afterBuildForm(): void {
     // setTimeout(() => {
-      this.handleReadonly();
-      this.loadAidLookup(AidTypes.CLASSIFICATIONS);
-      this.listenToAddProjectComponent();
-      this.listenToProjectComponentChange();
-      this.listenToSaveProjectComponent();
+    this.handleReadonly();
+    this.loadAidLookup(AidTypes.CLASSIFICATIONS);
+    this.listenToAddProjectComponent();
+    this.listenToProjectComponentChange();
+    this.listenToSaveProjectComponent();
 
-      this.updateBeneficiaryValidations();
+    this.updateBeneficiaryValidations();
 
-      if (this.fromDialog) {
-        this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
-          this.oldLicenseFullSerialField.updateValueAndValidity();
-        });
-      }
+    if (this.fromDialog) {
+      this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+      });
+    }
     // })
   }
 
@@ -1049,6 +1065,13 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
     InternalProjectLicenseComponent._setFieldValidation(this.targetedNationalitiesField, (this.allNationalitiesField.value ? null : [CustomValidators.requiredArray]), true);
     this.targetedNationalitiesField.markAsTouched();
+  }
+
+  private displayAttachmentsMessage(validAttachments: boolean): void {
+    if (!validAttachments) {
+      this.dialogService.error(this.lang.map.kindly_check_required_attachments);
+      this.tabIndex$.next(this.tabsData.attachments.index);
+    }
   }
 
   searchNgSelect(term: string, item: any): boolean {
