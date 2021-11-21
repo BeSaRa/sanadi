@@ -26,9 +26,11 @@
     </button>
   </ng-container>
   <div class="flex-grow-1"></div>
-  <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="validateForm()"><i
+  <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
+          *ngIf="isValidateAvailable()" (click)="validateForm()"><i
     class="mdi mdi-information-outline text-info"></i></button>
-  <button [disabled]="component?.form?.invalid || component?.readonly" (click)="saveCase()"
+  <button [disabled]="component?.form?.invalid || component?.readonly"
+          *ngIf="isSaveAvailable()" (click)="saveCase()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

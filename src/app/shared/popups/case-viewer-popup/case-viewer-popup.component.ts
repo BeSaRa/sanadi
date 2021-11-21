@@ -111,7 +111,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
         .subscribe((result: boolean) => {
           this.matrixNotificationType = result ? 'success' : 'danger';
           if (this.empService.isLicensingManager()) {
-            this.matrixNotificationMsg = result ?  this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
+            this.matrixNotificationMsg = result ? this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
             return;
           }
           this.matrixNotificationMsg = result ? this.lang.map.msg_success_final_approve_task_based_on_matrix_notification : this.lang.map.msg_fail_final_approve_task_based_on_matrix_notification;
@@ -120,7 +120,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   takeAction(action: IMenuItem<CaseModel<any, any> | QueryResult>): void {
-    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component , this);
+    action.onClick && action.onClick(this.model, this.dialogRef, this.loadedModel, this.component, this);
   }
 
   private filterAction(action: IMenuItem<CaseModel<any, any> | QueryResult>) {
@@ -128,7 +128,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   }
 
   saveCase(): void {
-    if (this.component.readonly) {
+    if (!this.isSaveAvailable()) {
       return;
     }
     this.component?.save?.next(this.saveTypes.FINAL);
@@ -144,5 +144,13 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
 
   validateForm(): void {
     this.component && this.component.formValidity$?.next('case-viewer');
+  }
+
+  isSaveAvailable(): boolean {
+    return this.component && !this.component.readonly;
+  }
+
+  isValidateAvailable(): boolean {
+    return this.component && !this.component.readonly;
   }
 }
