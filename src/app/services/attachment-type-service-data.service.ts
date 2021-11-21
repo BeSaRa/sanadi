@@ -109,7 +109,7 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
 
   @Generator(undefined, true)
   private _loadByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
-    return this.http.get<AttachmentTypeServiceData[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/attachment-service-by-case-type/' + caseType)
+    return this.http.get<AttachmentTypeServiceData[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/attachment-service/case-type/' + caseType)
   }
 
   loadByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
