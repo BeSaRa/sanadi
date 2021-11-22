@@ -691,4 +691,5 @@ export interface ILanguageKeys {
   based_on_matrix_should_not_send_to_general_manager:string;
   based_on_matrix_should_send_to_general_manager:string;
   all_nationalities: string;
+  content: string;
 }

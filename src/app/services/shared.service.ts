@@ -6,6 +6,9 @@ import {ToastService} from './toast.service';
 import {BulkOperationTypes, BulkResponseTypes} from '../types/types';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {BlobModel} from '@app/models/blob-model';
+import {ViewDocumentPopupComponent} from '@app/shared/popups/view-document-popup/view-document-popup.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Injectable({
   providedIn: 'root'
@@ -54,4 +57,18 @@ export class SharedService {
       );
     }
   }
+
+  openViewContentDialog(blobFile: BlobModel, data: any): DialogRef | Observable<boolean> {
+    if (blobFile.blob.type === 'error') {
+      console.log('INVALID_CONTENT');
+      return of(false);
+    }
+    return this.dialogService.show(ViewDocumentPopupComponent, {
+      model: data,
+      blob: blobFile
+    }, {
+      escToClose: true
+    });
+  }
+
 }
