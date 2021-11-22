@@ -722,7 +722,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
                 this.loadSubDacOcha(this.getSelectedMainDacOchId())
                 return of(null);
               })
-            ).subscribe()
+            ).subscribe(()=> this.onDomainChange())
 
           this._updateForm(result.clone({
             id: undefined,
