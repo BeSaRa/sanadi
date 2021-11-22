@@ -115,11 +115,23 @@ export class LookupService extends BackendGenericService<Lookup> {
   getStringOperators(): Lookup[] {
     return ['equal', 'contains', 'start_with', 'end_with'].map((item, index) => {
       return (new Lookup().setValues(
-        this.langService.getArabicLocalByKey(<keyof ILanguageKeys> item),
-        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys> item),
+        this.langService.getArabicLocalByKey(<keyof ILanguageKeys>item),
+        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys>item),
         index,
         index + 1
       ));
     });
+  }
+
+  private static _changeLookupToEnum(lookupArray: Lookup[], showInUpperCase: boolean = true): void {
+    let value = [];
+    for (let i = 0; i < lookupArray.length; i++) {
+      let key = (lookupArray[i].enName || '').split(' ').join('_');
+      if (showInUpperCase) {
+        key = key.toUpperCase();
+      }
+      value.push(key.trim() + ' = ' + lookupArray[i].lookupKey);
+    }
+    console.log(value.join(',\n'));
   }
 }
