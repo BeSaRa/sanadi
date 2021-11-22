@@ -58,9 +58,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       langKey: 'attachments',
       validStatus: () => true
     },
-    recommendations: {
-      name: 'recommendations',
-      langKey: 'recommendations',
+    logs: {
+      name: 'logs',
+      langKey: 'logs',
       validStatus: () => true
     }
   };

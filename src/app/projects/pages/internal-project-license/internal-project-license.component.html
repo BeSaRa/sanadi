@@ -23,9 +23,8 @@
              *ngIf="employeeService.isInternalUser()"></tab>
         <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
              [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
-        <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-             [template]="recommendationsTemplate" [title]="lang.map.recommendations"
-             *ngIf="fromDialog && employeeService.isInternalUser()" [disabled]="!model?.id"></tab>
+        <tab [name]="tabsData.logs.name" [hasError]="getTabInvalidStatus('logs')"
+             [template]="logsTemplate" [title]="lang.map.logs" *ngIf="fromDialog" [disabled]="!model?.id"></tab>
       </tabs-list>
       <ng-template #basicInfoTabTemplate>
         <div formGroupName="basicInfo">
@@ -812,8 +811,10 @@
                      [load]="loadAttachments"></attachments>
       </ng-template>
 
-      <ng-template #recommendationsTemplate>
-        <request-recommendations [record]="model"></request-recommendations>
+      <ng-template #logsTemplate>
+        <!--<request-recommendations [record]="model"></request-recommendations>-->
+        <log-viewer [caseId]="model!.getCaseId()" [service]="service.actionLogService"
+                    [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
       </ng-template>
 
       <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2 mb-3">

@@ -1,11 +1,12 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActionLogService} from '../../../services/action-log.service';
-import {Subject} from 'rxjs';
-import {ActionRegistry} from '../../../models/action-registry';
+import {ActionLogService} from '@app/services/action-log.service';
+import {iif, of, Subject} from 'rxjs';
+import {ActionRegistry} from '@app/models/action-registry';
 import {concatMap, takeUntil, tap} from 'rxjs/operators';
-import {LangService} from '../../../services/lang.service';
-import {AdminResult} from '../../../models/admin-result';
+import {LangService} from '@app/services/lang.service';
+import {AdminResult} from '@app/models/admin-result';
 import {TabComponent} from '../tab/tab.component';
+import {ServiceActionType} from '@app/enums/service-action-type.enum';
 
 @Component({
   selector: 'log-viewer',
@@ -19,6 +20,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   @Input()
   caseId: string = '';
+
+  @Input() hideViewedAction: boolean = false;
+  @Input() hideItemLocation: boolean = false;
 
   @Input()
   service!: ActionLogService;
@@ -39,8 +43,13 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     this.service.load(this.caseId)
       .pipe(
         takeUntil(this.destroy$),
-        tap(logs => this.logs = logs),
-        concatMap(() => this.service.loadCaseLocation(this.caseId))
+        tap(logs => {
+          if (this.hideViewedAction) {
+            logs = logs.filter(x => x.actionId !== ServiceActionType.Viewed);
+          }
+          this.logs = logs;
+        }),
+        concatMap(() => iif(()=> this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId)))
       )
       .subscribe(locations => this.locations = locations);
   }

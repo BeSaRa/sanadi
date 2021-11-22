@@ -207,7 +207,8 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
     ValidationGroupClassesDirective,
     GroupErrorMessageComponent,
     AttachmentsComponent,
-    OnlyNumbersDirective
+    OnlyNumbersDirective,
+    LogViewerComponent
   ]
 })
 export class SharedModule {

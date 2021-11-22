@@ -135,9 +135,9 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       langKey: 'attachments',
       validStatus: () => true
     },
-    recommendations: {
-      name: 'recommendations',
-      langKey: 'recommendations',
+    logs: {
+      name: 'logs',
+      langKey: 'logs',
       validStatus: () => true
     }
   }

@@ -1,7 +1,15 @@
-<tabs-list (onTabChange)="tabChanged($event)">
-  <tab [template]="logTemplate" [title]="lang.map.logs"></tab>
-  <tab name="location" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
-</tabs-list>
+<ng-container *ngIf="hideItemLocation">
+  <ng-container *ngTemplateOutlet="logTemplate">
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="!hideItemLocation">
+  <tabs-list (onTabChange)="tabChanged($event)">
+    <tab [template]="logTemplate" [title]="lang.map.logs"></tab>
+    <tab name="location" *ngIf="!hideItemLocation" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
+  </tabs-list>
+</ng-container>
+
 <ng-template #locationTemplate>
   <div class="table-responsive">
     <app-table #table2 [data]="locations">
@@ -57,3 +65,4 @@
     </app-table>
   </div>
 </ng-template>
+

@@ -145,9 +145,9 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       index: 7,
       validStatus: () => true
     },
-    recommendations: {
-      name: 'recommendations',
-      langKey: 'recommendations',
+    logs: {
+      name: 'logs',
+      langKey: 'logs',
       index: 8,
       validStatus: () => true
     }
