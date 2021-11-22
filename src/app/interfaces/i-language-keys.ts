@@ -692,4 +692,7 @@ export interface ILanguageKeys {
   based_on_matrix_should_send_to_general_manager:string;
   all_nationalities: string;
   content: string;
+  role_second_specialist: string;
+  role_development_expert: string;
+  role_construction_expert: string;
 }

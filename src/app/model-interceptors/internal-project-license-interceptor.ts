@@ -37,10 +37,13 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     model.creatorInfo = AdminResult.createInstance(isValidAdminResult(model.creatorInfo) ? model.creatorInfo : {});
 
     model.specialistDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.specialistDecisionInfo) ? model.specialistDecisionInfo : {});
+    model.secondSpecialistDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.secondSpecialistDecisionInfo) ? model.secondSpecialistDecisionInfo : {});
     model.chiefDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.chiefDecisionInfo) ? model.chiefDecisionInfo : {});
     model.managerDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.managerDecisionInfo) ? model.managerDecisionInfo : {});
     model.generalManagerDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.generalManagerDecisionInfo) ? model.generalManagerDecisionInfo : {});
     model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.reviewerDepartmentDecisionInfo) ? model.reviewerDepartmentDecisionInfo : {});
+    model.developmentExpertDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.developmentExpertDecisionInfo) ? model.developmentExpertDecisionInfo : {});
+    model.constructionExpertDecisionInfo = AdminResult.createInstance(isValidAdminResult(model.constructionExpertDecisionInfo) ? model.constructionExpertDecisionInfo : {});
 
     model.licenseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.licenseStatusInfo) ? model.licenseStatusInfo : {});
     model.projectTypeInfo = AdminResult.createInstance(isValidAdminResult(model.projectTypeInfo) ? model.projectTypeInfo : {});
@@ -95,6 +98,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     delete model.categoryInfo;
     delete model.ouInfo;
     delete model.specialistDecisionInfo;
+    delete model.secondSpecialistDecisionInfo;
     delete model.chiefDecisionInfo;
     delete model.managerDecisionInfo;
     delete model.generalManagerDecisionInfo;
@@ -108,6 +112,8 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     delete model.secondSDGoalInfo;
     delete model.thirdSDGoalInfo;
     delete model.targetNationalitiesInfo;
+    delete model.developmentExpertDecisionInfo;
+    delete model.constructionExpertDecisionInfo;
   }
 
 }

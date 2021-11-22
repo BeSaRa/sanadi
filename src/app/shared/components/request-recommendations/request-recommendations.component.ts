@@ -37,54 +37,94 @@ export class RequestRecommendationsComponent implements OnInit {
   }
 
   private _buildData(): void {
-    this.data = [
-      {
+    const specialist = {
         roleInfo: AdminResult.createInstance({
           arName: this.langService.getArabicLocalByKey('role_specialist'),
           enName: this.langService.getEnglishLocalByKey('role_specialist')
         }),
         comment: !this.record ? '' : this.record.specialistJustification,
         actionInfo: !this.record ? null : this.record.specialistDecisionInfo,
+        order: 1,
         show: true
       },
-      {
+      secondSpecialist = {
+        roleInfo: AdminResult.createInstance({
+          arName: this.langService.getArabicLocalByKey('role_second_specialist'),
+          enName: this.langService.getEnglishLocalByKey('role_second_specialist')
+        }),
+        comment: !this.record ? '' : this.record.secondSpecialistJustification,
+        actionInfo: !this.record ? null : this.record.secondSpecialistDecisionInfo,
+        order:2 ,
+        show: true
+      },
+      reviewerDepartment = {
         roleInfo: AdminResult.createInstance({
           arName: this.langService.getArabicLocalByKey('role_reviewer_department'),
           enName: this.langService.getEnglishLocalByKey('role_reviewer_department')
         }),
         comment: !this.record ? '' : this.record.reviewerDepartmentJustification,
         actionInfo: !this.record ? null : this.record.reviewerDepartmentDecisionInfo,
+        order: 3,
         show: true
       },
-      {
+      chief = {
         roleInfo: AdminResult.createInstance({
           arName: this.langService.getArabicLocalByKey('role_chief'),
           enName: this.langService.getEnglishLocalByKey('role_chief')
         }),
         comment: !this.record ? '' : this.record.chiefJustification,
         actionInfo: !this.record ? null : this.record.chiefDecisionInfo,
+        order: 4,
         show: true
       },
-      {
+      generalManager = {
         roleInfo: AdminResult.createInstance({
           arName: this.langService.getArabicLocalByKey('role_general_manager'),
           enName: this.langService.getEnglishLocalByKey('role_general_manager')
         }),
         comment: !this.record ? '' : this.record.generalManagerJustification,
         actionInfo: !this.record ? null : this.record.generalManagerDecisionInfo,
-        show: this.record.caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL
+        order: 5,
+        show: true
       },
-      {
+      manager = {
         roleInfo: AdminResult.createInstance({
           arName: this.langService.getArabicLocalByKey('role_manager'),
           enName: this.langService.getEnglishLocalByKey('role_manager')
         }),
         comment: !this.record ? '' : this.record.managerJustification,
         actionInfo: !this.record ? null : this.record.managerDecisionInfo,
+        order: 6,
+        show: true
+      },
+      developmentExpert = {
+        roleInfo: AdminResult.createInstance({
+          arName: this.langService.getArabicLocalByKey('role_development_expert'),
+          enName: this.langService.getEnglishLocalByKey('role_development_expert')
+        }),
+        comment: !this.record ? '' : this.record.developmentExpertJustification,
+        actionInfo: !this.record ? null : this.record.developmentExpertDecisionInfo,
+        order: 7,
+        show: true
+      },
+      constructionExpert = {
+        roleInfo: AdminResult.createInstance({
+          arName: this.langService.getArabicLocalByKey('role_construction_expert'),
+          enName: this.langService.getEnglishLocalByKey('role_construction_expert')
+        }),
+        comment: !this.record ? '' : this.record.constructionExpertJustification,
+        actionInfo: !this.record ? null : this.record.constructionExpertDecisionInfo,
+        order: 8,
         show: true
       }
-    ];
 
-    this.data = this.data.filter(item => item.show)
+    this.data = [specialist, reviewerDepartment, chief, manager];
+    if (this.record.caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) {
+      this.data.push(generalManager);
+    }
+    if (this.record.caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
+      this.data.push(secondSpecialist, developmentExpert, constructionExpert);
+    }
+    this.data = this.data.filter(item => item.show).slice().sort((a, b) => a.order - b.order);
   }
 }

@@ -19,6 +19,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   caseType: number = CaseTypes.INTERNAL_PROJECT_LICENSE;
   organizationId!: number;
+  serviceSteps!: string[];
   administrativedeductionAmount!: number;
   ageAverageCategory: number = 0;
   arName!: string;
@@ -69,6 +70,8 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   secondSDGoal!: number;
   secondSDGoalPercentage: number = 0;
   secondSubDomain!: number;
+  secondSpecialistDecision?: number;
+  secondSpecialistJustification: string = '';
   specialistDecision?: number;
   specialistJustification: string = '';
   subject!: string;
@@ -81,10 +84,16 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   targetedCategory!: number;
   year!: number;
   inRenewalPeriod!: boolean;
+  usedInProjectCompletion: boolean = false;
+  developmentExpertDecision?: number;
+  developmentExpertJustification: string = '';
+  constructionExpertDecision?: number;
+  constructionExpertJustification: string = '';
   managerDecisionInfo!: AdminResult
   reviewerDepartmentDecisionInfo!: AdminResult
   licenseStatusInfo!: AdminResult
   specialistDecisionInfo!: AdminResult
+  secondSpecialistDecisionInfo!: AdminResult
   chiefDecisionInfo!: AdminResult
   generalManagerDecisionInfo!: AdminResult
   projectTypeInfo!: AdminResult
@@ -95,8 +104,9 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
   targetNationalitiesInfo!: AdminResult[] | null;
+  developmentExpertDecisionInfo!: AdminResult;
+  constructionExpertDecisionInfo!: AdminResult;
   className!: string;
-  usedInProjectCompletion: boolean = false;
   // temp properties
   projectNameInfo!: AdminResult;
   allNationalities: boolean = true;
