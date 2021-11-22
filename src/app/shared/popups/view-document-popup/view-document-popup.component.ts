@@ -29,6 +29,14 @@ export class ViewDocumentPopupComponent implements OnInit, OnDestroy {
     }, 300);
   }
 
+  get title(): string {
+    if (!this.model || !this.model.documentTitle) {
+      return this.lang.map.content;
+    }
+
+    return this.model.documentTitle;
+  }
+
   fullscreen() {
     this.iframe.nativeElement.requestFullscreen().then();
   }
