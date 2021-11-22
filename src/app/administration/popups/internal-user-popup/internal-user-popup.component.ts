@@ -10,7 +10,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from "@app/services/internal-department.service";
 import {InternalDepartment} from "@app/models/internal-department";
-import {map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
+import {filter, map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from '@app/services/lookup.service';
 import {LookupCategories} from '@app/enums/lookup-categories';
@@ -29,6 +29,10 @@ import {Team} from "@app/models/team";
 import {UserTeam} from "@app/models/user-team";
 import {AdminResult} from "@app/models/admin-result";
 import {TableComponent} from "@app/shared/components/table/table.component";
+import {IGridAction} from "@app/interfaces/i-grid-action";
+import {DialogService} from "@app/services/dialog.service";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {SharedService} from "@app/services/shared.service";
 
 @Component({
   selector: 'internal-user-popup',
@@ -52,7 +56,15 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   selectedTeamsIds: number[] = [];
   displayedColumns: string[] = ['checkbox', 'arName', 'enName', 'status', 'actions'];
   filterControl: FormControl = new FormControl();
-
+  actions: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      callback: _ => {
+        this.deleteBulkUserTeams();
+      },
+      icon: 'mdi mdi-delete'
+    }
+  ]
   @ViewChild(TableComponent)
   teamsTable!: TableComponent;
 
@@ -61,12 +73,14 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private internalDep: InternalDepartmentService,
               public fb: FormBuilder,
               private teamService: TeamService,
+              private sharedService: SharedService,
               private lookupService: LookupService,
               private jobTitleService: JobTitleService,
               private customRoleService: CustomRoleService,
               private userPermissionService: UserPermissionService,
               private permissionService: PermissionService,
               private toast: ToastService,
+              private dialog: DialogService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
     this.model = this.data.model;
@@ -247,6 +261,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         teamInfo: AdminResult.createInstance(this.selectedTeamControl.value)
       }).denormalize())
       .subscribe((userTeam) => {
+        this.toast.success(this.lang.map.msg_create_x_success.change({x: userTeam.teamInfo.getName()}))
         this.userTeamsChanged$.next(this.userTeams.concat([userTeam]));
         this.selectedTeamControl.setValue(null);
       });
@@ -265,21 +280,47 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   deleteUserTeam(userTeam: UserTeam): void {
-    this.teamService
-      .deleteUserTeam(userTeam.id)
-      .subscribe(() => {
+    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: userTeam.teamInfo.getName()})))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(ref => ref.onAfterClose$))
+      .pipe(filter((answer: UserClickOn) => answer === UserClickOn.YES))
+      .pipe(switchMap(_ => userTeam.delete()))
+      .subscribe((result) => {
         // TODO : delete anything related to the teamId with the current user in the nex tab
-      });
+        if (result) {
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: userTeam.teamInfo.getName()}))
+          this.userTeamsChanged$.next(this.userTeams.filter(uTeam => uTeam.id !== userTeam.id))
+        } else {
+          this.toast.error(this.lang.map.msg_delete_fail.change({x: userTeam.teamInfo.getName()}))
+        }
+      })
   }
 
   deleteBulkUserTeams(): void {
     if (!this.teamsTable.selection.hasValue()) {
       return;
     }
-    this.teamService
-      .deleteUserTeamBulk(this.teamsTable.selection.selected.map<number>((item: UserTeam) => item.id))
+    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_selected))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(ref => ref.onAfterClose$))
+      .pipe(filter((answer: UserClickOn) => answer === UserClickOn.YES))
+      .pipe(map((_) => {
+        return this.teamsTable.selection.selected.map<number>(userTeam => userTeam.id)
+      }))
+      .pipe(switchMap(ids => this.teamService.deleteUserTeamBulk(ids)))
+      .pipe(map(result => this.sharedService.mapBulkResponseMessages(this.teamsTable.selection.selected, 'id', result)))
       .subscribe(() => {
         // TODO: delete anything related to deleted teams from next tab
+        const ides = this.teamsTable.selection.selected.map(i => i.id);
+        this.teamsTable.selection.clear();
+        this.userTeamsChanged$.next(this.userTeams.filter(uTeam => !ides.includes(uTeam.id)));
       });
+  }
+
+  toggleTeamUser(userTeam: UserTeam): void {
+    userTeam.toggleStatus()
+      .subscribe(() =>
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: userTeam.teamInfo.getName()}))
+      )
   }
 }

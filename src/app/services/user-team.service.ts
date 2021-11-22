@@ -51,12 +51,21 @@ export class UserTeamService extends BackendGenericService<UserTeam> {
       .pipe(map((res) => res.rs))
   }
 
-  delete(userTeamId: number): Observable<boolean> {
-    return this.http.delete<boolean>(this.urlService.URLS.TEAMS + '/remove-user/' + userTeamId);
+  deleteBulk(userTeamIds: number[]): Observable<Record<number, boolean>> {
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('DELETE', this.urlService.URLS.TEAMS + '/remove-users/bulk', {
+      body: userTeamIds
+    }).pipe(map(res => res.rs));
   }
 
-  deleteBulk(userTeamIds: number[]): Observable<boolean> {
-    return this.http.delete<boolean>(this.urlService.URLS.TEAMS + '/remove-user/bulk' + userTeamIds);
+  deactivate(userTeamsIds: number[]): Observable<Record<number, boolean>> {
+    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/de-activate-users/bulk', userTeamsIds)
+      .pipe(map(res => res.rs));
   }
+
+  activate(userTeamsIds: number[]): Observable<Record<number, boolean>> {
+    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/activate-users/bulk', userTeamsIds)
+      .pipe(map(res => res.rs));
+  }
+
 
 }

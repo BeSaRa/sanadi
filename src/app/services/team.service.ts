@@ -111,18 +111,18 @@ export class TeamService extends BackendGenericService<Team> {
   }
 
   createTeamUserLink(userTeam: Partial<UserTeam>): Observable<UserTeam> {
-    return this.userTeamService.createUserTeam(userTeam).pipe(map(id => new UserTeam().clone({...userTeam, id})));
+    return this.userTeamService.createUserTeam(userTeam).pipe(map(id => new UserTeam().clone({
+      ...userTeam,
+      status: 1,
+      id
+    })));
   }
 
   loadUserTeamsByUserId(generalUserId: number) {
     return this.userTeamService.loadUserTeamByUserId(generalUserId);
   }
 
-  deleteUserTeam(id: number) {
-    return this.userTeamService.delete(id);
-  }
-
-  deleteUserTeamBulk(id: number[]) {
-    return this.userTeamService.deleteBulk(id);
+  deleteUserTeamBulk(ids: number[]): Observable<Record<number, boolean>> {
+    return this.userTeamService.deleteBulk(ids);
   }
 }

@@ -170,6 +170,13 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-12 mb-3">
+        <app-bulk-actions *ngIf="(table.selection?.selected || []).length"
+                          [selectedRecords]="(table.selection?.selected || [])"
+                          [actionsList]="actions"></app-bulk-actions>
+        <app-grid-search style="height: 42px" *ngIf="!(table.selection?.selected || []).length"
+                         (searchTextEvent)="filterControl.patchValue($event)"></app-grid-search>
+      </div>
       <app-table #table sortableTable [paginator]="paginator"
                  [filter]="filterControl.value"
                  [useSearchToFilter]="true"
@@ -178,7 +185,7 @@
                  [columns]="displayedColumns">
         <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
           <ng-container cdkColumnDef="checkbox">
-            <th cdk-header-cell *cdkHeaderCellDef>
+            <th cdk-header-cell style="width: 20px;" *cdkHeaderCellDef>
               <input type="checkbox"
                      [indeterminate]="table.selection.hasValue() && !table.allSelected()"
                      (change)="$event ? table.toggleAll() : null"
@@ -203,7 +210,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <div class="form-check form-switch">
-                <input type="checkbox" (change)="deleteBulkUserTeams()" [checked]="row.status" class="form-check-input">
+                <input type="checkbox" (change)="toggleTeamUser(row)" [checked]="row.status" class="form-check-input">
               </div>
             </td>
           </ng-container>
