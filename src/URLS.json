@@ -1,4 +1,6 @@
 {
+  "TEAM_SECURITY": "/admin/team-sec-config",
+  "USER_SECURITY": "/admin/user-sec-config",
   "PROJECT_MODELING": "/external-project-modeling",
   "TRAINING_PROGRAM": "training/training-program",
   "TRAINER": "training/trainer",

@@ -1,4 +1,6 @@
 export interface IAppUrls {
+  USER_SECURITY: string;
+  TEAM_SECURITY: string;
   PROJECT_MODELING: string;
   TRAINING_PROGRAM: string;
   INTERNAL_USER_PERMISSIONS: string;

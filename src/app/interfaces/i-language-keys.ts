@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  service_name: string;
+  services_related_to_the_selected_team: string;
   please_select_team_to_link: string;
   select_team: string;
   final_approve_task_based_on_matrix: string;

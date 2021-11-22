@@ -7,10 +7,10 @@ import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {IDialogData} from "@app/interfaces/i-dialog-data";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {Observable, of, Subject} from 'rxjs';
+import {iif, Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from "@app/services/internal-department.service";
 import {InternalDepartment} from "@app/models/internal-department";
-import {filter, map, share, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
+import {catchError, filter, map, share, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from '@app/services/lookup.service';
 import {LookupCategories} from '@app/enums/lookup-categories';
@@ -33,6 +33,11 @@ import {IGridAction} from "@app/interfaces/i-grid-action";
 import {DialogService} from "@app/services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {SharedService} from "@app/services/shared.service";
+import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
+import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
+import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
+import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
+import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'internal-user-popup',
@@ -69,6 +74,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   @ViewChild(TableComponent)
   teamsTable!: TableComponent;
 
+  teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
+
+  teamSecurity: TeamSecurityConfiguration[] = [];
+  userSecurity: UserSecurityConfiguration[] = [];
+  userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox'];
+  displaySaveBtn: boolean = true;
+
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
@@ -80,6 +92,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private customRoleService: CustomRoleService,
               private userPermissionService: UserPermissionService,
               private permissionService: PermissionService,
+              private teamSecurityService: TeamSecurityConfigurationService,
+              private userSecurityService: UserSecurityConfigurationService,
               private toast: ToastService,
               private dialog: DialogService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
@@ -180,12 +194,36 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     const selected$ = selectedTeam$.pipe(takeUntil(this.destroy$), filter(value => !!value));
 
     clear$
-      .pipe(tap(_ => console.log(_)))
       .subscribe()
 
+    const insertDefaultTeamSecurity$ = () => {
+      const securityConfigurations = this.teamSecurity.map(t => t.convertToUserSecurity(this.model.generalUserId));
+      return this.userSecurityService.createBulk(securityConfigurations).pipe(catchError(_ => of([])))
+        .pipe(map(result => result.map((item, index) => {
+          item.teamInfo = this.teamSecurity[index].teamInfo;
+          item.serviceInfo = this.teamSecurity[index].serviceInfo;
+          return item;
+        })))
+    }
+
     selected$
-      .pipe(tap(_ => console.log(_)))
-      .subscribe()
+      .pipe(
+        // get the team security configuration
+        switchMap(teamId => this.teamSecurityService.loadSecurityByTeamId(teamId)),
+        tap((teamSecurity) => this.teamSecurity = teamSecurity),
+        // create team security map based on caseType to use it later in grid
+        tap(_ => {
+          this.teamSecurityMap = this.teamSecurity.reduce((acc, item) => {
+            return {...acc, [item.caseType]: item}
+          }, {}) || {}
+        }),
+        // get the user security configuration
+        switchMap(() => this.userSecurityService.loadSecurityByTeamId(this.selectedUserTeam.value, this.model.generalUserId)),
+        // if there is length for the user security configurations we have to display the right mapping on the view
+        switchMap((userSecurity => iif(() => !userSecurity.length, insertDefaultTeamSecurity$(), of(userSecurity)))),
+        tap((userSecurity) => this.userSecurity = userSecurity)
+      )
+      .subscribe((result) => console.log(result))
   }
 
   initPopup(): void {
@@ -343,4 +381,26 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       )
   }
 
+  canManage(userSecurity: UserSecurityConfiguration): boolean {
+    return this.teamSecurityMap[userSecurity.caseType]?.canManage;
+  }
+
+  canAdd(userSecurity: UserSecurityConfiguration): boolean {
+    return this.teamSecurityMap[userSecurity.caseType]?.canAdd;
+  }
+
+  canView(userSecurity: UserSecurityConfiguration): boolean {
+    return this.teamSecurityMap[userSecurity.caseType]?.canView;
+  }
+
+  updateUserSecurity(userSecurity: UserSecurityConfiguration): void {
+    userSecurity.save()
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_update_success);
+      });
+  }
+
+  onTabChange($event: TabComponent) {
+    this.displaySaveBtn = (!['services', 'teams'].includes($event.name))
+  }
 }
