@@ -119,10 +119,18 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
-    this.displayLicenseForm = this.data.task &&
+    /*this.displayLicenseForm = this.data.task &&
       ((this.action === WFResponseType.APPROVE && !this.employeeService.isSupervisionAndControlUser()) || this.action === WFResponseType.FINAL_APPROVE) &&
       this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
-      caseDetails.requestType !== ServiceRequestTypes.CANCEL;
+      caseDetails.requestType !== ServiceRequestTypes.CANCEL;*/
+
+    this.displayLicenseForm = this.data.task &&
+      this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
+      caseDetails.requestType !== ServiceRequestTypes.CANCEL &&
+      (
+        this.action === WFResponseType.FINAL_APPROVE ||
+        (this.action === WFResponseType.APPROVE && !this.employeeService.isSupervisionAndControlUser() && !this.employeeService.isDevelopmentalExpert() && !this.employeeService.isConstructionExpert())
+      );
   }
 
   buildForm() {
@@ -154,7 +162,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       deductionPercent: caseDetails.deductionPercent
     };
 
-    if (!this.canShowDeductionRatio){
+    if (!this.canShowDeductionRatio) {
       delete data.deductionPercent
     }
 
@@ -257,9 +265,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       if (data.followUpDate) {
         data.followUpDate = DateUtils.changeDateFromDatepicker(data.followUpDate);
       }
-      let fields =Object.keys(this.form.value).concat(['id']);
-      return Object.keys(data).filter(field => fields.includes(field)).reduce((acc , field)=> {
-        return {...acc , [field]: data[field] , ignoreInterceptor: true};
+      let fields = Object.keys(this.form.value).concat(['id']);
+      return Object.keys(data).filter(field => fields.includes(field)).reduce((acc, field) => {
+        return {...acc, [field]: data[field], ignoreInterceptor: true};
       }, {});
     }) : of(null);
   }
