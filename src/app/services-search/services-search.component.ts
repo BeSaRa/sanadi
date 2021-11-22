@@ -104,7 +104,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
         if (this.employeeService.isExternalUser()) {
-          this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x!=='organizationId' && x!== 'ouInfo');
+          this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
         }
         this.results = [];
         this.selectedService

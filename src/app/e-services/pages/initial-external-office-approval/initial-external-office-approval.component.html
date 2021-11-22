@@ -16,7 +16,7 @@
     </tabs-list>
     <ng-template #basicInfoTabTemplate>
       <form [formGroup]="form">
-        <div class="row mb-3">
+        <div class="row mb-3" *ngIf="employeeService.isInternalUser()">
           <div class="col-md-6 col-sm-12">
             <div class="row">
               <label asteriskIfRequired="organizationId"

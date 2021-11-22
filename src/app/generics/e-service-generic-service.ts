@@ -34,9 +34,16 @@ import {InternalProjectLicenseCaseStatus} from '@app/enums/internal-project-lice
 import {ConsultationCaseStatus} from '@app/enums/consultation-case-status.enum';
 import {InquiryCaseStatus} from '@app/enums/inquiry-case-status.enum';
 import {InternationalCaseStatus} from '@app/enums/international-case-status.enum';
+import {FactoryService} from '@app/services/factory.service';
+import {EmployeeService} from '@app/services/employee.service';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
+
+  protected constructor() {
+    this.employeeService = FactoryService.getService('EmployeeService');
+  }
+
   abstract _getModel(): any;
 
   abstract _getServiceURL(): string;
@@ -59,6 +66,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   abstract searchColumns: string[];
   abstract dynamicService: DynamicOptionsService;
 
+  employeeService: EmployeeService;
   commentService: CommentService = new CommentService(this);
   recommendationService: RecommendationService = new RecommendationService(this);
   documentService: DocumentService = new DocumentService(this);
@@ -154,7 +162,20 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   loadSearchFields(): Observable<FormlyFieldConfig[]> {
     return this.jsonSearchFile ? this.http.get<IFormRowGroup[]>('assets/search/' + this.jsonSearchFile)
-      .pipe(map((rows: IFormRowGroup[]) => FBuilder.castFormlyFields(rows))) : of([]);
+      .pipe(
+        map((rows: IFormRowGroup[]) => {
+          for (const row of rows) {
+            if (!row.fields) {
+              row.fields = [];
+            }
+
+            row.fields = row.fields.filter(x => {
+              return !(x.key === 'organizationId' && this.employeeService.isExternalUser());
+            });
+          }
+          rows = rows.filter(x => x.fields && x.fields.length > 0);
+          return FBuilder.castFormlyFields(rows)
+        })) : of([]);
   }
 
   getComments(caseId: string): Observable<CaseComment[]> {
@@ -209,8 +230,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId, onlyLogs});
   }
 
-  openDocumentDialog(caseId: string , caseType?: number): DialogRef {
-    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId , caseType});
+  openDocumentDialog(caseId: string, caseType?: number): DialogRef {
+    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId, caseType});
   }
 
   downloadDocument(): void {
