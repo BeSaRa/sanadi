@@ -9,6 +9,7 @@ import {PartnerApproval} from "@app/models/partner-approval";
 import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {Observable} from 'rxjs';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {SharedService} from '@app/services/shared.service';
 
 @Component({
   selector: 'select-license-popup',
@@ -24,6 +25,7 @@ export class SelectLicensePopupComponent {
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
+              private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
                 licenses: (InitialApprovalDocument[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]),
                 caseRecord: any | undefined,
@@ -86,10 +88,7 @@ export class SelectLicensePopupComponent {
   viewLicenseAsPDF(license: (InitialApprovalDocument | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {
     return this.licenseService.showLicenseContent(license, this.caseType)
       .subscribe((file) => {
-        if (file.blob.type === 'error') {
-          return;
-        }
-        return this.licenseService.openLicenseFullContentDialog(file, license);
+        return this.sharedService.openViewContentDialog(file, license);
       });
   }
 }

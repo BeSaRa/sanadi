@@ -33,6 +33,7 @@ import {LicenseService} from '@app/services/license.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {SharedService} from '@app/services/shared.service';
 
 @Component({
   selector: 'internal-project-license',
@@ -51,6 +52,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
               private aidLookupService: AidLookupService,
               private sdGoalService: SDGoalService,
               private licenseService: LicenseService,
+              private sharedService: SharedService,
               public fb: FormBuilder) {
     super();
   }
@@ -1022,10 +1024,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   viewLicenseAsPDF(license: InternalProjectLicenseResult) {
     return this.licenseService.showLicenseContent(license, CaseTypes.INTERNAL_PROJECT_LICENSE)
       .subscribe((file) => {
-        if (file.blob.type === 'error') {
-          return;
-        }
-        return this.licenseService.openLicenseFullContentDialog(file, license);
+        return this.sharedService.openViewContentDialog(file, license);
       });
   }
 
