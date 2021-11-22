@@ -833,6 +833,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       value.oldLicenseFullserial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
+      value.documentTitle = '';
+      value.fullSerial = null;
 
       // delete id because license details contains old license id and we are adding new, so no id is needed
       delete value.id;
