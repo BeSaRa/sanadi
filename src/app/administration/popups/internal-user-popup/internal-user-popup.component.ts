@@ -10,7 +10,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from "@app/services/internal-department.service";
 import {InternalDepartment} from "@app/models/internal-department";
-import {filter, map, switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
+import {filter, map, share, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from '@app/services/lookup.service';
 import {LookupCategories} from '@app/enums/lookup-categories';
@@ -51,6 +51,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   customRoles: CustomRole[] = [];
   teams: Team[] = [];
   selectedTeamControl: FormControl = new FormControl();
+  selectedUserTeam: FormControl = new FormControl();
   userTeams: UserTeam[] = [];
   userTeamsChanged$: Subject<UserTeam[]> = new Subject<UserTeam[]>();
   selectedTeamsIds: number[] = [];
@@ -170,6 +171,23 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       });
   }
 
+  private listenToTeamSecurityChange() {
+    const selectedTeam$ = this.selectedUserTeam
+      .valueChanges
+      .pipe(share());
+
+    const clear$ = selectedTeam$.pipe(takeUntil(this.destroy$), filter(value => !value));
+    const selected$ = selectedTeam$.pipe(takeUntil(this.destroy$), filter(value => !!value));
+
+    clear$
+      .pipe(tap(_ => console.log(_)))
+      .subscribe()
+
+    selected$
+      .pipe(tap(_ => console.log(_)))
+      .subscribe()
+  }
+
   initPopup(): void {
     this.loadDepartments();
     this.loadJobTitles();
@@ -177,6 +195,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.loadCustomRoles();
     this.loadTeams();
     this.listenToUserTeamsChange();
+    this.listenToTeamSecurityChange();
     if (this.operation === OperationTypes.UPDATE) {
       this.loadUserTeams();
     }
@@ -323,4 +342,5 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: userTeam.teamInfo.getName()}))
       )
   }
+
 }

@@ -13,7 +13,7 @@
     <tab [hasError]="basicInfoHasError()" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [hasError]="permissionTabHasError()" [template]="permissionsTab" [title]="lang.map.lbl_permissions"></tab>
     <tab [title]="lang.map.link_teams" [template]="teamsTab"></tab>
-    <tab [title]="lang.map.link_services"></tab>
+    <tab [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <form [formGroup]="form" novalidate>
@@ -165,7 +165,7 @@
               </ng-option>
             </ng-select>
           </div>
-          <button (click)="addUserTeam()" class="btn btn-primary">add</button>
+          <button (click)="addUserTeam()" class="btn btn-primary">{{lang.map.lbl_add_team}}</button>
         </div>
       </div>
     </div>
@@ -230,6 +230,25 @@
         </table>
       </app-table>
       <app-paginator #paginator></app-paginator>
+    </div>
+  </ng-template>
+  <ng-template #serviceTab>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="d-flex align-items-center justify-content-start gap-2">
+          <div class="mb-4 ng-select-wrapper flex-grow-1 ">
+            <label for="teamSecurity">{{lang.map.select_team}}</label>
+            <ng-select [formControl]="selectedUserTeam" [selectOnTab]="true" labelForId="teamSecurity"
+                       [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="teamSecurity"
+                       [notFoundText]="lang.map.msg_not_found">
+              <ng-option *ngFor="let team of userTeams" [value]="team.teamId">
+                {{team.teamInfo.getName()}}
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-template>
 </div>
