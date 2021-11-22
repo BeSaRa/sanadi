@@ -12,11 +12,11 @@ import {FactoryService} from "@app/services/factory.service";
 import {UrlService} from "@app/services/url.service";
 import {ProjectModelSearchCriteria} from "@app/models/project-model-search-criteria";
 import {Observable, of} from "rxjs";
-import {map} from "rxjs/operators";
-import {ExternalProjectTemplate} from "@app/models/external-project-template";
+import {catchError, map} from "rxjs/operators";
 import {Generator} from "@app/decorators/generator";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {SelectTemplatePopupComponent} from "@app/e-services/poups/select-template-popup/select-template-popup.component";
+import {BlobModel} from '@app/models/blob-model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +64,8 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
       templateFullSerial: serial
     })
   }
-  @Generator(undefined , false)
+
+  @Generator(undefined, false)
   private _getTemplateById(id: string): Observable<ProjectModel> {
     return this.http.get<ProjectModel>(this._getServiceURL() + '/template/' + id + '/details')
   }
@@ -82,5 +83,15 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
       list,
       service: this
     })
+  }
+
+  exportTemplate(templateId: string): Observable<BlobModel> {
+    return this.http.get(this._getServiceURL() + '/template/' + templateId + '/export', {
+      responseType: 'blob'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+        })));
   }
 }

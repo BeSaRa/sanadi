@@ -11,6 +11,9 @@ import {FinalExternalOfficeApprovalService} from '@app/services/final-external-o
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {LicenseService} from '@app/services/license.service';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {ProjectModelService} from '@app/services/project-model.service';
+import {BlobModel} from '@app/models/blob-model';
+import {SharedService} from '@app/services/shared.service';
 
 @Component({
   selector: 'viewer-case-info',
@@ -35,7 +38,8 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   caseStatusEnum: any;
 
   constructor(public lang: LangService,
-              private licenseService: LicenseService) {
+              private licenseService: LicenseService,
+              private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -131,16 +135,25 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     if (!this.internalProjectGeneratedLicenseId) {
       return;
     }
-    let license = {documentTitle: this.internalProjectGeneratedLicenseNumber, id: this.internalProjectGeneratedLicenseId} as InternalProjectLicenseResult;
+    let license = {
+      documentTitle: this.internalProjectGeneratedLicenseNumber,
+      id: this.internalProjectGeneratedLicenseId
+    } as InternalProjectLicenseResult;
+
     this.licenseService.showLicenseContent(license, this.model.getCaseType())
       .subscribe((file) => {
-        if (file.blob.type === 'error') {
-          return;
-        }
-        return this.licenseService.openLicenseFullContentDialog(file, license);
+        this.sharedService.openViewContentDialog(file, license);
       });
   }
 
+
+  get projectsModelService(): ProjectModelService | undefined {
+    if (!this.componentService) {
+      return undefined;
+    }
+
+    return (this.componentService as unknown as ProjectModelService);
+  }
 
   isTemplateModelServiceAndApproved() {
     return this.model.getCaseType() === CaseTypes.EXTERNAL_PROJECT_MODELS && this.model.getCaseStatus() === 4 // approved
@@ -148,5 +161,19 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
 
   get templateSerial(): string {
     return this.isTemplateModelServiceAndApproved() && this.model.isCase() ? (this.model as any).templateFullSerial + '' : ''
+  }
+
+  get generatedTemplateId(): string {
+    return this.isTemplateModelServiceAndApproved() && this.model.isCase() ? (this.model as any).templateId + '' : ''
+  }
+
+  viewProjectModelTemplate(): void {
+    if (!this.templateSerial || !this.projectsModelService) {
+      return;
+    }
+    this.projectsModelService.exportTemplate(this.generatedTemplateId)
+      .subscribe((file: BlobModel) => {
+        this.sharedService.openViewContentDialog(file, {documentTitle: this.templateSerial});
+      });
   }
 }

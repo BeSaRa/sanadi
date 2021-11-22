@@ -49,7 +49,7 @@
             <span class="input-group-text"><i class="text-primary mdi mdi-numeric"></i></span>
             <input readonly [value]="finalExternalOfficeGeneratedLicenseNumber" id="generatedLicenseNumber"
                    class="form-control">
-            <a type="button" [tooltip]="lang.map.view_license" (click)="viewFinalExternalOfficeGeneratedLicense()"
+            <a type="button" [tooltip]="lang.map.view" (click)="viewFinalExternalOfficeGeneratedLicense()"
                class="input-group-text"><i
               class="mdi mdi-eye text-primary"></i></a>
           </div>
@@ -66,7 +66,23 @@
             <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
             <input readonly [value]="internalProjectGeneratedLicenseNumber" id="generatedInternalProjectLicenseNumber"
                    class="form-control">
-            <a type="button" [tooltip]="lang.map.view_license" (click)="viewInternalProjectGeneratedLicense()"
+            <a type="button" [tooltip]="lang.map.view" (click)="viewInternalProjectGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Template Model Approved -->
+    <div class="col-md-6 col-sm-12" *ngIf="isTemplateModelServiceAndApproved()">
+      <div class="row">
+        <label for="templateSerial1" class="col-md-4 col-sm-12 col-form-label">{{lang.map.template_serial}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
+            <input id="templateSerial1" readonly [readOnly]="true" [value]="templateSerial"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view" (click)="viewProjectModelTemplate()"
                class="input-group-text"><i
               class="mdi mdi-eye text-primary"></i></a>
           </div>
@@ -93,21 +109,6 @@
                class="col-md-4 col-sm-12 col-form-label">{{lang.map.reason}}</label>
         <div class="col-md-8 mb-3 col-sm-12 position-relative" disabled>
           <input id="managerJustification" readonly disabled [value]="managerJustification" class="form-control">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="isTemplateModelServiceAndApproved()" class="row mb-3">
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="managerDecisionInfo" class="col-md-4 col-sm-12 col-form-label">{{lang.map.template_serial}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="text-primary mdi mdi-numeric"></i></span>
-            <input id="templateSerial" readonly [readOnly]="true" [value]="templateSerial"
-                   class="form-control">
-          </div>
         </div>
       </div>
     </div>
