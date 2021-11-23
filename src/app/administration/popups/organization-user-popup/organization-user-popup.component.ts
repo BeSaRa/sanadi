@@ -61,7 +61,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     basic: {name: 'basic'},
     permissions: {name: 'permissions'}
   };
-  saveVisible = true;
   validateFieldsVisible = true;
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
