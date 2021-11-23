@@ -20,7 +20,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input() hideViewedAction: boolean = false;
   @Input() hideItemLocation: boolean = false;
   @Input() categorizeLogs: boolean = false;
-  @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'one-page';
+  @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'tabs';
 
   logsAll: ActionRegistry[] = [];
   logsViewed: ActionRegistry[] = [];
@@ -28,8 +28,8 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   logsOthers: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
-  displayedColumnsViewed: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
-  displayedColumnsUpdated: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+  displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'comment'];
+  displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
   displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
 
   locations: AdminResult[] = [];
