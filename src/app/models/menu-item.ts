@@ -27,6 +27,7 @@ export class MenuItem {
   svg?: string;
   safeSVG?: SafeHtml;
   itemOrder: number = 1;
+  caseType?: number;
   private domSanitizer: DomSanitizer;
 
   constructor() {

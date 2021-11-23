@@ -26,6 +26,6 @@ export class HeaderComponent implements OnInit {
 
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.langService.toggleLanguage().subscribe(value => console.log(value));
+    this.langService.toggleLanguage().subscribe();
   }
 }

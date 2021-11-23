@@ -85,6 +85,9 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   loadTeams(): void {
     this.teamService.loadIfNotExists()
       .pipe(takeUntil(this.destroy$))
+      .pipe(map(result => {
+        return this.model.isInternal() ? result.filter(item => item.parentDeptId > -1) : result;
+      }))
       .subscribe((teams) => this.teams = teams);
   }
 
@@ -94,7 +97,6 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((userTeams) => this.userTeamsChanged$.next(userTeams))
   }
-
 
   teamExistsBefore(team: Team): boolean {
     return this.selectedTeamsIds.includes(team.id);

@@ -6,7 +6,7 @@
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
-  "BASE_ENVIRONMENT": "BAW_QA",
+  "BASE_ENVIRONMENT": "BAW_UI",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
@@ -45,10 +45,13 @@
     "ADMIN_DELETE_USER"
   ],
   "E_SERVICES_PERMISSIONS_GROUP": [
-    "CREATE_CASE_INQUIRY_SERVICE",
-    "CREATE_CASE_CONSULTATION_SERVICE",
-    "CREATE_CASE_INTERNATIONAL_COOPERATION_SERVICE",
-    "NO_PERMISSION"
+    "INQUIRY",
+    "CONSULTATION",
+    "INTERNATIONAL_COOPERATION"
+  ],
+  "PROJECTS_PERMISSION_GROUP": [
+    "INTERNAL_PROJECT_LICENSE",
+    "EXTERNAL_PROJECT_MODELS"
   ],
   "SANADY_PERMISSIONS_GROUP": [
     "UNDER_PROCESSING_REQUESTS",
@@ -73,32 +76,5 @@
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
-  ],
-  "E_SERVICES_DENIED_USERS_INTERNAL": [
-    "RMANAGER",
-    "CMANAGER",
-    "CRMANAGER",
-    "Ruser1",
-    "Ruser2",
-    "Cuser1",
-    "Cuser2",
-    "CRuser1",
-    "CRuser2",
-    "eblaluser1",
-    "eblaluser2",
-    "eblalmanager",
-    "eblalgmanager",
-    "eblalchief",
-    "lchief",
-    "lgmanager",
-    "lmanager",
-    "luser1",
-    "luser2"
-  ],
-  "E_SERVICES_DENIED_USERS_EXTERNAL": [
-    "21000000000",
-    "22000000000"
-  ],
-  "E_SERVICES_RESTRICTED_CASE_TYPES": [
   ]
 }

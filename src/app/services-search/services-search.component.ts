@@ -29,19 +29,11 @@ import {CaseStatus} from '@app/enums/case-status.enum';
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: EServiceGenericService<any>;
-  private allowedServicesForExternalUser: number[] = [
-    CaseTypes.CONSULTATION,
-    CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
-    CaseTypes.PARTNER_APPROVAL,
-    CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-    CaseTypes.INTERNAL_PROJECT_LICENSE,
-    CaseTypes.EXTERNAL_PROJECT_MODELS,
-  ];
 
   searchColumns: string[] = [];
   form!: FormGroup;
   fields: FormlyFieldConfig[] = [];
-  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.filterServices(caseType));
+  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.employeeService.userCanManage(caseType));
   serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -324,19 +316,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       date.singleDate.jsDate = new Date(date.singleDate.jsDate);
       this.form.get(key)?.patchValue(date);
     });
-  }
-
-  private filterServices(number: number): boolean {
-    if (this.configService.CONFIG.hasOwnProperty('E_SERVICES_RESTRICTED_CASE_TYPES')) {
-      if (this.configService.CONFIG.E_SERVICES_RESTRICTED_CASE_TYPES.includes(number)) {
-        return false;
-      }
-    }
-    return this.employeeService.isInternalUser() ? true : this.isServiceAllowedForExternalToSearch(number);
-  }
-
-  private isServiceAllowedForExternalToSearch(number: number) {
-    return this.allowedServicesForExternalUser.indexOf(number) !== -1;
   }
 
   // noinspection JSUnusedLocalSymbols

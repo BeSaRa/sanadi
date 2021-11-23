@@ -24,6 +24,11 @@
                    (change)="onSelect($event , row)" class="form-check-input cursor-pointer">
           </td>
         </ng-container>
+
+        <ng-container cdkColumnDef="domainName">
+          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.login_name}}</th>
+          <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.domainName}}</span></td>
+        </ng-container>
         <ng-container cdkColumnDef="arName">
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.arName}}</span></td>

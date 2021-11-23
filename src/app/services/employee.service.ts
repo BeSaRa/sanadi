@@ -10,8 +10,10 @@ import {UserTypes} from '../enums/user-types.enum';
 import {InternalUser} from '../models/internal-user';
 import {InternalDepartment} from '../models/internal-department';
 import {Team} from '../models/team';
-import {ConfigurationService} from '@app/services/configuration.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {IUserSecurity} from "@app/interfaces/iuser-security";
+import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
+import {CaseTypes} from "@app/enums/case-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +30,8 @@ export class EmployeeService {
 
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
-
+  private userSecConfig?: Record<number, UserSecurityConfiguration[]>
+  public userSecurityMap: Map<number, IUserSecurity> = new Map<number, IUserSecurity>();
 
   private userTeamsMap = {
     charityUser: {
@@ -77,7 +80,7 @@ export class EmployeeService {
     }
   };
 
-  constructor(private configService: ConfigurationService) {
+  constructor() {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -173,55 +176,13 @@ export class EmployeeService {
   }
 
   fillCurrentEmployeeData(loginData: ILoginData) {
-    let permissionsMap: Record<string, Permission> = {
-      'public_relations': (new Permission().clone({
-        permissionKey: 'CREATE_CASE_INQUIRY_SERVICE'
-      })),
-      'international_cooperation': (new Permission().clone({
-        permissionKey: 'CREATE_CASE_INTERNATIONAL_COOPERATION_SERVICE'
-      })),
-      'charity_organization': (new Permission().clone({
-        permissionKey: 'CREATE_CASE_CONSULTATION_SERVICE'
-      })),
-      'risk_and_compliance': (new Permission().clone({
-        permissionKey: 'CREATE_CASE_CONSULTATION_SERVICE'
-      }))
-    };
-
     this.type = loginData.type;
     this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
-    this.teams.forEach(team => {
-      let authName = team.authName.toLowerCase().split(' ').join('_');
-      permissionsMap[authName] ? this.permissions?.push(permissionsMap[authName]) : null;
-    });
-
-    this.teams.length ? this.permissions.push((new Permission().clone({
-      permissionKey: 'TEAM_INBOX'
-    }))) : null;
-    /*this.permissions.push((new Permission().clone({
-      permissionKey: 'NO_PERMISSION'
-    })))*/
+    this.userSecConfig = loginData.userSecConfig;
     this.setUserData(loginData);
-    this.restrictUserFromEServices(loginData);
     this.preparePermissionMap();
-  }
-
-  private restrictUserFromEServices(loginData: ILoginData) {
-    // if user name is not in denied users list, add NO_PERMISSION to allow access to e-services
-    let deniedUsersList: string[] = [];
-    if (this.isExternalUser()) {
-      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_EXTERNAL;
-    } else if (this.isInternalUser()) {
-      deniedUsersList = this.configService.CONFIG.E_SERVICES_DENIED_USERS_INTERNAL;
-    }
-    deniedUsersList = deniedUsersList.map(x => x.toLowerCase());
-    // @ts-ignore
-    if (deniedUsersList.indexOf(this.getCurrentUser()?.domainName.toLowerCase()) === -1) {
-      this.permissions?.push((new Permission().clone({
-        permissionKey: 'NO_PERMISSION'
-      })))
-    }
+    this.prepareUserSecurityMap();
   }
 
   private setUserData(loginData: ILoginData) {
@@ -273,13 +234,6 @@ export class EmployeeService {
 
   getCurrentUser(): InternalUser | OrgUser {
     return this.isInternalUser() ? this.getInternalUser()! : this.getUser()!;
-  }
-
-  private _isInTeamByAuthName(teamName: string) {
-    if (!this.teams.length || !CommonUtils.isValidValue(teamName)) {
-      return false;
-    }
-    return this.teams.some(x => CommonUtils.isValidValue(x.authName) && x.authName.toLowerCase() === teamName.toLowerCase());
   }
 
   private _isInTeam(team: { authName: string, ldapGroupName: string }, compareBy: 'authName' | 'ldapGroupName' = 'authName') {
@@ -338,5 +292,68 @@ export class EmployeeService {
 
   isSupervisionAndControlManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.supervisionAndControlManager, compareBy);
+  }
+
+  private addUserSecurityToMap(item: UserSecurityConfiguration): void {
+    if (this.userSecurityMap.has(item.caseType)) {
+      const model = this.userSecurityMap.get(item.caseType)!;
+      const list = [...model.list].concat([item]);
+      this.userSecurityMap.set(item.caseType, {
+        list: list,
+        override: {
+          ...item,
+          canAdd: model.override.canAdd ? model.override.canAdd : list.some(i => i.canAdd),
+          canManage: model.override.canManage ? model.override.canManage : list.some(i => i.canManage),
+          canView: model.override.canView ? model.override.canView : list.some(i => i.canView)
+        }
+      });
+    } else {
+      this.userSecurityMap.set(item.caseType, {
+        list: [item],
+        override: item
+      });
+    }
+  }
+
+  private prepareUserSecurityMap(): void {
+    this.userSecurityMap.clear();
+    const keys = this.userSecConfig && Object.keys(this.userSecConfig);
+    if (!keys) {
+      return;
+    }
+
+    const securityArray = keys.reduce((acc, key: string) => {
+      const list = this.userSecConfig ? this.userSecConfig[key as unknown as number] : []
+      return [...acc, ...list];
+    }, [] as UserSecurityConfiguration[]);
+
+    securityArray.forEach((item) => this.addUserSecurityToMap(item));
+    this.generateEServicesPermissions();
+  }
+
+  private userCan(caseType: number, key: keyof (Pick<UserSecurityConfiguration, 'canAdd' | 'canView' | 'canManage'>)): boolean {
+    return !!(this.userSecurityMap.has(caseType) && this.userSecurityMap.get(caseType)!.override[key])
+  }
+
+  userCanAdd(caseType: number): boolean {
+    return this.userCan(caseType, 'canAdd');
+  }
+
+  userCanManage(caseType: number): boolean {
+    return this.userCan(caseType, 'canManage');
+  }
+
+  userCanView(caseType: number): boolean {
+    return this.userCan(caseType, 'canView');
+  }
+
+
+  private generateEServicesPermissions() {
+    this.userSecurityMap.forEach((value, key: CaseTypes) => {
+      const permissionKey = CaseTypes[key];
+      this.permissionMap.set(permissionKey.toLowerCase(), new Permission().clone({
+        permissionKey
+      }))
+    })
   }
 }

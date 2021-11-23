@@ -6,6 +6,7 @@ import {ErrorPageComponent} from './shared/components/error-page/error-page.comp
 import {AuthGuard} from './guards/auth-guard';
 import {GuestGuard} from './guards/guest-guard';
 import {PermissionGuard} from './guards/permission-guard';
+import {PermissionGroup} from "@app/enums/permission-group";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -18,7 +19,7 @@ const routes: Routes = [
       {
         path: 'administration',
         canActivate: [PermissionGuard],
-        data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
+        data: {configPermissionGroup: PermissionGroup.ADMIN_PERMISSIONS_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
@@ -26,7 +27,7 @@ const routes: Routes = [
         path: 'e-services',
         canActivate: [PermissionGuard],
         loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule),
-        data: {configPermissionGroup: 'E_SERVICES_PERMISSIONS_GROUP', checkAnyPermission: true}
+        data: {configPermissionGroup: PermissionGroup.E_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
       },
       {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
       {
@@ -40,7 +41,11 @@ const routes: Routes = [
         loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
-      {path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)},
+      {
+        path: 'projects',
+        data: {configPermissionGroup: PermissionGroup.PROJECTS_PERMISSION_GROUP, checkAnyPermission: true},
+        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)
+      },
       {
         path: 'training',
         canActivate: [PermissionGuard],
@@ -51,7 +56,6 @@ const routes: Routes = [
     ]
   },
   {path: 'error', component: ErrorPageComponent},
-
 ];
 
 @NgModule({

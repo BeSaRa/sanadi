@@ -105,4 +105,12 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     }
     return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
   }
+
+  isExternal(): boolean {
+    return false;
+  }
+
+  isInternal(): boolean {
+    return true;
+  }
 }

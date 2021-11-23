@@ -6,6 +6,7 @@ import {InternalUser} from '../models/internal-user';
 import {UserTypes} from '../enums/user-types.enum';
 import {Team} from '../models/team';
 import {InternalDepartment} from '../models/internal-department';
+import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
 
 export interface ILoginData {
   lookupMap: any;
@@ -18,5 +19,6 @@ export interface ILoginData {
   permissionSet: Permission[];
   teams: Team[];
   token: string;
-  type: UserTypes
+  type: UserTypes;
+  userSecConfig: Record<number, UserSecurityConfiguration[]>
 }

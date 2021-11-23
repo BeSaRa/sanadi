@@ -25,7 +25,7 @@ import {SharedService} from '@app/services/shared.service';
 export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
   orgUsers: OrgUser[] = [];
   orgUsersClone: OrgUser[] = [];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
