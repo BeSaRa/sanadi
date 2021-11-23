@@ -8,14 +8,17 @@ import {TeamService} from "@app/services/team.service";
 import {ToastService} from "@app/services/toast.service";
 import {InternalUser} from "@app/models/internal-user";
 import {OrgUser} from "@app/models/org-user";
-import {of, Subject} from "rxjs";
+import {iif, of, Subject} from "rxjs";
 import {IGridAction} from "@app/interfaces/i-grid-action";
-import {filter, map, switchMap, takeUntil} from "rxjs/operators";
+import {filter, map, share, switchMap, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {DialogService} from "@app/services/dialog.service";
 import {SharedService} from "@app/services/shared.service";
 import {OperationTypes} from "@app/enums/operation-types.enum";
+import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
+import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
+import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
 
 @Component({
   selector: 'user-team',
@@ -52,6 +55,8 @@ export class UserTeamComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private dialog: DialogService,
               private sharedService: SharedService,
+              private teamSecurityService: TeamSecurityConfigurationService,
+              private userSecurityService: UserSecurityConfigurationService,
               public teamService: TeamService) {
   }
 
@@ -101,17 +106,31 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       return;
     }
     // add team to the user
-    this.teamService
+    const addTeam$ = this.teamService
       .createTeamUserLink(new UserTeam().clone({
         generalUserId: this.model.generalUserId,
         teamId: this.selectedTeamControl.value.id,
         teamInfo: AdminResult.createInstance(this.selectedTeamControl.value)
       }).denormalize())
+      .pipe(share())
+
+    addTeam$
+      .pipe(takeUntil(this.destroy$))
       .subscribe((userTeam) => {
         this.toast.success(this.lang.map.msg_create_x_success.change({x: userTeam.teamInfo.getName()}))
         this.userTeamsChanged$.next(this.userTeams.concat([userTeam]));
         this.selectedTeamControl.setValue(null);
       });
+
+    const insertUserSecurity$ = (teamSecurity: TeamSecurityConfiguration[]) => this.userSecurityService.createBulk(teamSecurity.map(item => item.convertToUserSecurity(this.model.generalUserId)))
+
+    addTeam$
+      // load the team security by id
+      .pipe(switchMap((userTeam) => this.teamSecurityService.loadSecurityByTeamId(userTeam.teamId)))
+      // insert default user security
+      .pipe(switchMap((teamSecurity) => iif(() => !!teamSecurity.length, insertUserSecurity$(teamSecurity), of([]))))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe()
 
   }
 
