@@ -690,11 +690,14 @@ export interface ILanguageKeys {
   send_to_supervision_and_control_department: string;
   msg_success_final_approve_task_based_on_matrix_notification: string;
   msg_fail_final_approve_task_based_on_matrix_notification: string;
-  based_on_matrix_should_not_send_to_general_manager:string;
-  based_on_matrix_should_send_to_general_manager:string;
+  based_on_matrix_should_not_send_to_general_manager: string;
+  based_on_matrix_should_send_to_general_manager: string;
   all_nationalities: string;
   content: string;
   role_second_specialist: string;
   role_development_expert: string;
   role_construction_expert: string;
+  action_viewed: string;
+  action_updated: string;
+  action_others: string;
 }

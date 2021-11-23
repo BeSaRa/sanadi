@@ -1,35 +1,88 @@
 <ng-container *ngIf="hideItemLocation">
-  <ng-container *ngTemplateOutlet="logTemplate">
+  <ng-container [ngTemplateOutlet]="logTableTemplate"
+                [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
   </ng-container>
 </ng-container>
 
 <ng-container *ngIf="!hideItemLocation">
   <tabs-list (onTabChange)="tabChanged($event)">
     <tab [template]="logTemplate" [title]="lang.map.logs"></tab>
-    <tab name="location" *ngIf="!hideItemLocation" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
+    <tab name="location" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
   </tabs-list>
 </ng-container>
 
-<ng-template #locationTemplate>
-  <div class="table-responsive">
-    <app-table #table2 [data]="locations">
-      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table2.dataSource">
-        <ng-container cdkColumnDef="location">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.getName()}} </td>
+<ng-template #logTemplate>
+  <!-- Not Categorized -->
+  <div *ngIf="!categorizeLogs">
+    <ng-container [ngTemplateOutlet]="logTableTemplate"
+                  [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
+    </ng-container>
+  </div>
+
+  <!-- Categorized -->
+  <div *ngIf="categorizeLogs">
+    <div *ngIf="displayCategorizedAs === 'one-page'">
+      <div *ngIf="!hideViewedAction">
+        <div class="row">
+          <div class="col-sm-12">
+            <h6 class="text-primary">{{lang.map.action_viewed}}</h6>
+            <hr>
+          </div>
+        </div>
+        <ng-container [ngTemplateOutlet]="logTableTemplate"
+                      [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
         </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="displayLocationColumns"></tr>
-        <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>
-        <tr *cdkNoDataRow>
-          <td colspan="10">{{lang.map.no_records_to_display}}</td>
-        </tr>
-      </table>
-    </app-table>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h6 class="text-primary">{{lang.map.action_updated}}</h6>
+          <hr>
+        </div>
+      </div>
+      <ng-container [ngTemplateOutlet]="logTableTemplate"
+                    [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
+      </ng-container>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h6 class="text-primary">{{lang.map.action_others}}</h6>
+          <hr>
+        </div>
+      </div>
+      <ng-container [ngTemplateOutlet]="logTableTemplate"
+                    [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
+      </ng-container>
+    </div>
+
+    <div *ngIf="displayCategorizedAs === 'tabs'">
+      <tabs-list (onTabChange)="tabChanged($event)">
+        <tab [template]="logTemplateViewed" [title]="lang.map.action_viewed" *ngIf="!hideViewedAction"></tab>
+        <tab [template]="logTemplateUpdated" [title]="lang.map.action_updated"></tab>
+        <tab [template]="logTemplateOthers" [title]="lang.map.action_others"></tab>
+      </tabs-list>
+      <ng-template #logTemplateViewed>
+        <ng-container [ngTemplateOutlet]="logTableTemplate"
+                      [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
+        </ng-container>
+      </ng-template>
+      <ng-template #logTemplateUpdated>
+        <ng-container [ngTemplateOutlet]="logTableTemplate"
+                      [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
+        </ng-container>
+      </ng-template>
+      <ng-template #logTemplateOthers>
+        <ng-container [ngTemplateOutlet]="logTableTemplate"
+                      [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
+        </ng-container>
+      </ng-template>
+    </div>
   </div>
 </ng-template>
-<ng-template #logTemplate>
+
+<ng-template #logTableTemplate let-data="data" let-tableColumns="displayColumns">
   <div class="table-responsive">
-    <app-table #table [paginator]="paginator" [data]="logs">
+    <app-table #table [paginator]="paginator" [data]="data">
       <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
         <ng-container cdkColumnDef="action">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_type}}</th>
@@ -55,14 +108,31 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
         </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="tableColumns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: tableColumns;"></tr>
         <tr *cdkNoDataRow>
           <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
-      <app-paginator #paginator [length]="logs.length"></app-paginator>
+      <app-paginator #paginator [length]="data.length"></app-paginator>
     </app-table>
   </div>
 </ng-template>
 
+<ng-template #locationTemplate>
+  <div class="table-responsive">
+    <app-table #table2 [data]="locations">
+      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table2.dataSource">
+        <ng-container cdkColumnDef="location">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.getName()}} </td>
+        </ng-container>
+        <tr cdk-header-row *cdkHeaderRowDef="displayLocationColumns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>
+        <tr *cdkNoDataRow>
+          <td colspan="10">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+    </app-table>
+  </div>
+</ng-template>

@@ -14,23 +14,29 @@ import {ServiceActionType} from '@app/enums/service-action-type.enum';
   styleUrls: ['./log-viewer.component.scss']
 })
 export class LogViewerComponent implements OnInit, OnDestroy {
-  logs: ActionRegistry[] = [];
-  locations: AdminResult[] = [];
-  destroy$: Subject<any> = new Subject<any>();
-
-  @Input()
-  caseId: string = '';
+  @Input() caseId: string = '';
+  @Input() service!: ActionLogService;
 
   @Input() hideViewedAction: boolean = false;
   @Input() hideItemLocation: boolean = false;
+  @Input() categorizeLogs: boolean = false;
+  @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'one-page';
 
-  @Input()
-  service!: ActionLogService;
+  logsAll: ActionRegistry[] = [];
+  logsViewed: ActionRegistry[] = [];
+  logsUpdated: ActionRegistry[] = [];
+  logsOthers: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+  displayedColumnsViewed: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+  displayedColumnsUpdated: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+  displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
+
+  locations: AdminResult[] = [];
   displayLocationColumns: string[] = ['location'];
 
   displayPrintBtn: boolean = true;
+  destroy$: Subject<any> = new Subject<any>();
 
   constructor(public lang: LangService) {
   }
@@ -47,9 +53,12 @@ export class LogViewerComponent implements OnInit, OnDestroy {
           if (this.hideViewedAction) {
             logs = logs.filter(x => x.actionId !== ServiceActionType.Viewed);
           }
-          this.logs = logs;
+          if (this.categorizeLogs) {
+            this._categorizeLogsByActionType(logs);
+          }
+          this.logsAll = logs;
         }),
-        concatMap(() => iif(()=> this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId)))
+        concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId)))
       )
       .subscribe(locations => this.locations = locations);
   }
@@ -61,5 +70,18 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   tabChanged($event: TabComponent) {
     this.displayPrintBtn = $event.name !== 'location';
+  }
+
+  private _categorizeLogsByActionType(logs: any[]) {
+    logs.map(x => {
+      if (x.actionId === ServiceActionType.Viewed) {
+        this.logsViewed = this.logsViewed.concat(x);
+      } else if (x.actionId === ServiceActionType.Updated) {
+        this.logsUpdated = this.logsUpdated.concat(x);
+      } else {
+        this.logsOthers = this.logsOthers.concat(x);
+      }
+      return x;
+    });
   }
 }
