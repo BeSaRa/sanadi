@@ -2,6 +2,7 @@ import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {TrainingProgram} from '@app/models/training-program';
 import {AdminResult} from '@app/models/admin-result';
 import {DateUtils} from '@app/helpers/date-utils';
+import {Trainee} from '@app/models/trainee';
 
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram>{
   receive(model: TrainingProgram): TrainingProgram {
@@ -9,6 +10,10 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' to ' + DateUtils.getDateStringFromDate(model.endDate);
     model.trainingTypeInfo = AdminResult.createInstance(model.trainingTypeInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
+    model.traineeList = model.traineeList.map(tr => {
+      tr.trainee = (new Trainee()).clone(tr.trainee);
+      return tr;
+    });
 
     model.startDate = DateUtils.changeDateToDatepicker(model.startDate);
     model.endDate = DateUtils.changeDateToDatepicker(model.endDate);
@@ -43,6 +48,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     delete model.trainingTypeInfo;
     delete model.trainerInfoList;
     delete model.statusInfo;
+    delete model.traineeList;
     return model;
   }
 

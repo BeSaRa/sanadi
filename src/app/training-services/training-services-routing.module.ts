@@ -10,12 +10,14 @@ const routes: Routes = [
   {
     path: 'trainer', component: AccreditedTrainerComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'program', component: TrainingProgramComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 

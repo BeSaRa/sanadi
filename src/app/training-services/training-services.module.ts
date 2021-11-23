@@ -10,6 +10,8 @@ import { TrainingProgramComponent } from './pages/training-program/training-prog
 import { TrainingProgramPopupComponent } from './popups/training-program-popup/training-program-popup.component';
 import {FormsModule} from '@angular/forms';
 import { FilterTrainingProgramsComponent } from './popups/filter-training-programs/filter-training-programs.component';
+import { TrainingProgramAttendancePopupComponent } from './popups/training-program-attendance-popup/training-program-attendance-popup.component';
+import { TraineePopupComponent } from './popups/trainee-popup/trainee-popup.component';
 
 
 
@@ -21,7 +23,9 @@ import { FilterTrainingProgramsComponent } from './popups/filter-training-progra
     TrainerCvPopupComponent,
     TrainingProgramComponent,
     TrainingProgramPopupComponent,
-    FilterTrainingProgramsComponent
+    FilterTrainingProgramsComponent,
+    TrainingProgramAttendancePopupComponent,
+    TraineePopupComponent
   ],
   imports: [
     CommonModule,

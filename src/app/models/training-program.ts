@@ -5,6 +5,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from '@app/models/admin-result';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {searchFunctionType} from '@app/types/types';
+import {TraineeData} from '@app/models/trainee-data';
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
   service: TrainingProgramService;
@@ -41,6 +42,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   registerationStartDate!: IMyDateModel | string;
   registerationClosureDate!: IMyDateModel | string;
   totalTrainingCost!: number;
+  traineeList: TraineeData[] = [];
 
   // to be removed
   registeredTraineeNumber: number = 0;

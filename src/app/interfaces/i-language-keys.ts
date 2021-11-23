@@ -4,6 +4,10 @@ export interface ILanguageKeys {
   approve_inbox: string;
   service_name: string;
   services_related_to_the_selected_team: string;
+  attendance_applied_successfully: string;
+  attendance: string;
+  training_program_trainees: string;
+  training_program_attendance_proof: string;
   please_select_team_to_link: string;
   select_team: string;
   training_program_save_and_approve: string;

@@ -302,9 +302,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   afterSave(model: TrainingProgram, dialogRef: DialogRef): void {
     this.model = model;
-    if(this.saveAndApproveClicked) {
+    if (this.saveAndApproveClicked) {
       this.approve$.next();
-    } else if(this.saveAndPublishClicked) {
+    } else if (this.saveAndPublishClicked) {
       this.publish$.next();
     } else {
       const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
@@ -415,7 +415,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   showSaveButton() {
-    return this.saveVisible;
+    return this.saveVisible &&
+      this.model.status != this.trainingStatus.TRAINING_FINISHED &&
+      this.model.status != this.trainingStatus.TRAINING_CANCELED
   }
 
   showSaveAndApproveButton() {

@@ -17,13 +17,14 @@ import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-crite
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {DateUtils} from '@app/helpers/date-utils';
 import {of} from 'rxjs';
+import {TrainingStatus} from '@app/enums/training-status';
 
 @Component({
   selector: 'training-program',
   templateUrl: './training-program.component.html',
   styleUrls: ['./training-program.component.scss']
 })
-export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements  OnInit{
+export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements OnInit {
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
     {
@@ -52,6 +53,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   ];
 
   filterCriteria: Partial<ITrainingProgramCriteria> = {};
+  trainingStatus = TrainingStatus;
 
   constructor(public lang: LangService,
               public service: TrainingProgramService,
@@ -67,9 +69,22 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     this.listenToEdit();
   }
 
+  applyAttendance(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    const sub = this.service.openAttendanceDialog(trainingProgram).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        sub.unsubscribe();
+      });
+    });
+  }
+
   edit(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
     this.edit$.next(trainingProgram);
+  }
+
+  showAttendance(status: number) {
+    return this.trainingStatus.TRAINING_FINISHED == status;
   }
 
   delete(event: MouseEvent, model: TrainingProgram): void {
@@ -137,7 +152,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   };
 
   prepareFilterCriteriaForSend(criteria: Partial<ITrainingProgramCriteria>) {
-    if(criteria.targetOrganizationListIds && criteria.targetOrganizationListIds.length > 0) {
+    if (criteria.targetOrganizationListIds && criteria.targetOrganizationListIds.length > 0) {
       criteria.targetOrganizationList = JSON.stringify(criteria.targetOrganizationListIds);
     }
     delete criteria.targetOrganizationListIds;
@@ -147,19 +162,19 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   prepareFilterCriteriaForReceive(criteria: Partial<ITrainingProgramCriteria>) {
-    if(criteria.targetOrganizationList) {
+    if (criteria.targetOrganizationList) {
       criteria.targetOrganizationListIds = JSON.parse(this.filterCriteria.targetOrganizationList!);
     }
-    if(criteria.startFromDate) {
+    if (criteria.startFromDate) {
       criteria.startFromDate = DateUtils.changeDateToDatepicker(this.filterCriteria.startFromDate);
     }
-    if(criteria.startToDate) {
+    if (criteria.startToDate) {
       criteria.startToDate = DateUtils.changeDateToDatepicker(this.filterCriteria.startToDate);
     }
-    if(criteria.registerationFromDate) {
+    if (criteria.registerationFromDate) {
       criteria.registerationFromDate = DateUtils.changeDateToDatepicker(this.filterCriteria.registerationFromDate);
     }
-    if(criteria.registerationToDate) {
+    if (criteria.registerationToDate) {
       criteria.registerationToDate = DateUtils.changeDateToDatepicker(this.filterCriteria.registerationToDate);
     }
 
@@ -172,7 +187,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
         delete obj[propName];
       }
     }
-    return obj
+    return obj;
   }
 
   listenToReload() {
@@ -184,7 +199,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
       }))
       .subscribe((list: TrainingProgram[]) => {
         this.models = list;
-      })
+      });
   }
 
   private _addSelected(record: TrainingProgram): void {

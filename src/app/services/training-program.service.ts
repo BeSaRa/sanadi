@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {TrainingProgram} from '@app/models/training-program';
 import {ComponentType} from '@angular/cdk/portal';
@@ -16,17 +16,23 @@ import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-crite
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FilterTrainingProgramsComponent} from '@app/training-services/popups/filter-training-programs/filter-training-programs.component';
 import {formatDate} from '@angular/common';
+import {TrainingProgramAttendancePopupComponent} from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
+import {switchMap} from 'rxjs/operators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {TraineeService} from '@app/services/trainee.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TrainingProgramService extends BackendWithDialogOperationsGenericService<TrainingProgram>{
+export class TrainingProgramService extends BackendWithDialogOperationsGenericService<TrainingProgram> {
   list: TrainingProgram[] = [];
   interceptor: TrainingProgramInterceptor = new TrainingProgramInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+              private traineeService: TraineeService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }
@@ -61,17 +67,22 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
 
   @Generator(undefined, false, {property: 'rs'})
   approve(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/approve/' + trainingId, {trainingProgramId: trainingId} );
+    return this.http.put(this._getServiceURL() + '/approve/' + trainingId, {trainingProgramId: trainingId});
   }
 
   @Generator(undefined, false, {property: 'rs'})
   publish(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/publish/' + trainingId, {trainingProgramId: trainingId} );
+    return this.http.put(this._getServiceURL() + '/publish/' + trainingId, {trainingProgramId: trainingId});
   }
 
   @Generator(undefined, false, {property: 'rs'})
   cancel(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, {trainingProgramId: trainingId} );
+    return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, {trainingProgramId: trainingId});
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  applyAttendance(trainingId: number, traineeList: {first: number, second: boolean}[]) {
+    return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {
@@ -80,6 +91,17 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     }, {
       escToClose: true
     }));
+  }
+
+  openAttendanceDialog(trainingProgram: TrainingProgram): Observable<DialogRef> {
+    return this.getByIdComposite(trainingProgram.id).pipe(
+      switchMap((model: TrainingProgram) => {
+        return of(this.dialog.show<IDialogData<TrainingProgram>>(TrainingProgramAttendancePopupComponent, {
+          model: model,
+          operation: OperationTypes.UPDATE
+        }));
+      })
+    );
   }
 
   _getDialogComponent(): ComponentType<any> {

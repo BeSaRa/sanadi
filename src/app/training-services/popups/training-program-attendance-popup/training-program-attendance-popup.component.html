@@ -1,0 +1,39 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content">
+  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 class="h6">{{lang.map.training_program_trainees}}</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 form-check form-switch" *ngFor="let trainee of traineesFormArray.controls; let i = index">
+        <div class="ms-3">
+          <label formArrayName="trainees" class="cursor-pointer">
+            <input type="checkbox" [formControlName]="i" class="form-check-input cursor-pointer">
+            {{model.traineeList[i].trainee.getName()}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!--<input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"-->
+<!--       id="group-permission-id-{{permission.id}}"-->
+<!--       (change)="onPermissionClicked($event , permission , checkBoxGroup)"-->
+<!--       class="form-check-input cursor-pointer">-->
+<!--<label for="group-permission-id-{{permission.id}}"-->
+<!--       class="cursor-pointer">{{permission.getName()}}</label>-->
+
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button (click)="saveAttendance$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>
