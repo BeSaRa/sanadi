@@ -113,14 +113,18 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd'): void {
-    of(userSecurity.clone({[property]: !userSecurity[property]}))
+    userSecurity.clone({[property]: !userSecurity[property]})
+      .save()
       .pipe(takeUntil(this.destroy$))
-      .pipe(switchMap(model => model.save()))
-      .subscribe(() => {
+      .subscribe((updated) => {
+        this.userSecurity = this.userSecurity.map((item => {
+          item.id === userSecurity.id && (item[property] = updated[property])
+          return item;
+        }))
         this.toast.success(this.lang.map.msg_update_success);
       }, () => {
         userSecurity[property] = !userSecurity[property]
-      });
+      })
   }
 
 }

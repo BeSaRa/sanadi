@@ -5,12 +5,16 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
+    <tabs-list (onTabChange)="onTabChange($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
            [title]="langService.map.lbl_permissions"
            [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
+      <tab name="teams" [title]="langService.map.link_teams" [template]="teamsTab"></tab>
+      <tab [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" name="services"
+           [title]="langService.map.link_services"
+           [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -209,6 +213,12 @@
       </div>
     </ng-template>
   </form>
+  <ng-template #teamsTab>
+    <user-team [model]="model" [operation]="operation"></user-team>
+  </ng-template>
+  <ng-template #serviceTab>
+    <user-security [model]="model" [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+  </ng-template>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"

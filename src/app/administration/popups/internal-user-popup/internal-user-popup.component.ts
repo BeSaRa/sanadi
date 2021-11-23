@@ -24,7 +24,6 @@ import {CustomRole} from "@app/models/custom-role";
 import {CustomRoleService} from "@app/services/custom-role.service";
 import {UserPermissionService} from "@app/services/user-permission.service";
 import {ToastService} from "@app/services/toast.service";
-import {TableComponent} from "@app/shared/components/table/table.component";
 import {SharedService} from "@app/services/shared.service";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
@@ -44,8 +43,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   permissionGroups: CheckGroup<Permission>[] = [];
   groupHandler!: CheckGroupHandler<Permission>;
   customRoles: CustomRole[] = [];
-  @ViewChild(TableComponent)
-  teamsTable!: TableComponent;
   @ViewChild(UserTeamComponent)
   userTeamComponent!: UserTeamComponent
   displaySaveBtn: boolean = true;

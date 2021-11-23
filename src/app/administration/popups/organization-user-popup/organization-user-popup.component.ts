@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FormManager} from '@app/models/form-manager';
@@ -28,6 +28,8 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
+import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -64,6 +66,11 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
+  @ViewChild(UserTeamComponent)
+  userTeamComponent!: UserTeamComponent;
+
+  displaySaveBtn: boolean = true;
+
   static buildPermissionsByGroupId(permissions: Permission[]): any {
     return permissions.reduce((acc, current) => {
       if (!acc.hasOwnProperty(current.groupId)) {
@@ -94,10 +101,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
     this._setDefaultPermissions();
 
-  }
-
-  // noinspection JSUnusedLocalSymbols
-  setDialogButtonsVisibility(tab: any): void {
   }
 
   ngOnDestroy(): void {
@@ -314,5 +317,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.fm.getFormField('basic.customRoleId')?.setValue(value);
       });
+  }
+
+  onTabChange($event: TabComponent) {
+    this.displaySaveBtn = (!['services', 'teams'].includes($event.name))
   }
 }
