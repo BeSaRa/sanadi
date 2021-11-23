@@ -15,7 +15,8 @@
     <tab name="permissions" [hasError]="permissionTabHasError()" [template]="permissionsTab"
          [title]="lang.map.lbl_permissions"></tab>
     <tab name="teams" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
-    <tab [disabled]="!userTeams.length" name="services" [title]="lang.map.link_services"
+    <tab [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" name="services"
+         [title]="lang.map.link_services"
          [template]="serviceTab"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
@@ -157,79 +158,7 @@
     <user-team [model]="model" [operation]="operation"></user-team>
   </ng-template>
   <ng-template #serviceTab>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="d-flex align-items-center justify-content-start gap-2">
-          <div class="mb-4 ng-select-wrapper flex-grow-1 ">
-            <label for="teamSecurity">{{lang.map.select_team}}</label>
-            <ng-select [formControl]="selectedUserTeam" [selectOnTab]="true" labelForId="teamSecurity"
-                       [clearable]="true"
-                       placeholder="{{lang.map.select}}" id="teamSecurity"
-                       [notFoundText]="lang.map.msg_not_found">
-              <ng-option *ngFor="let team of userTeams" [value]="team.teamId">
-                {{team.teamInfo.getName()}}
-              </ng-option>
-            </ng-select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <app-table #table sortableTable
-                   [useSearchToFilter]="true"
-                   [data]="userSecurity"
-                   [columns]="userSecurityColumns">
-          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-            <ng-container cdkColumnDef="serviceName">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.service_name}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.serviceInfo.getName()}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="search">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_search}}</th>
-              <td cdk-cell *cdkCellDef="let row">
-                <div *ngIf="canManage(row)" class="form-check form-switch">
-                  <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canManage"
-                         class="form-check-input">
-                </div>
-              </td>
-            </ng-container>
-            <ng-container cdkColumnDef="teamInbox">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.menu_team_inbox}}</th>
-              <td cdk-cell *cdkCellDef="let row">
-                <div *ngIf="canView(row)" class="form-check form-switch">
-                  <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canView"
-                         class="form-check-input">
-                </div>
-              </td>
-            </ng-container>
-            <ng-container cdkColumnDef="add">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.btn_add}}</th>
-              <td cdk-cell *cdkCellDef="let row">
-                <div *ngIf="canAdd(row)" class="form-check form-switch">
-                  <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canAdd"
-                         class="form-check-input">
-                </div>
-              </td>
-            </ng-container>
-            <ng-container cdkColumnDef="header">
-              <th cdk-header-cell class="bg-primary text-white" [attr.colspan]="100"
-                  *cdkHeaderCellDef>
-                <div
-                  class="d-flex align-items-center justify-content-center">
-                  <span>{{lang.map.services_related_to_the_selected_team}}</span></div>
-              </th>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="['header']"></tr>
-            <tr cdk-header-row *cdkHeaderRowDef="userSecurityColumns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: userSecurityColumns;"></tr>
-            <tr *cdkNoDataRow>
-              <td colspan="20">{{lang.map.no_records_to_display}}</td>
-            </tr>
-          </table>
-        </app-table>
-      </div>
-    </div>
+    <user-security [model]="model" [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
   </ng-template>
 </div>
 <div class="dialog-actions">

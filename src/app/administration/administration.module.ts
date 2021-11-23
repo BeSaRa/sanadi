@@ -37,12 +37,13 @@ import { DacOchaComponent } from './pages/dac-ocha/dac-ocha.component';
 import { DacOchaPopupComponent } from './popups/dac-ocha-popup/dac-ocha-popup.component';
 import { SubDacOchaPopupComponent } from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
+import { UserSecurityComponent } from './shared/user-security/user-security.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, DacOchaComponent, DacOchaPopupComponent, SubDacOchaPopupComponent, UserTeamComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, DacOchaComponent, DacOchaPopupComponent, SubDacOchaPopupComponent, UserTeamComponent, UserSecurityComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,
