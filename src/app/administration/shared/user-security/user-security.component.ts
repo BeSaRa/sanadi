@@ -65,7 +65,10 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     const selected$ = selectedTeam$.pipe(takeUntil(this.destroy$), filter(value => !!value));
 
     clear$
-      .subscribe()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.userSecurity = [];
+      })
 
     const insertDefaultTeamSecurity$ = () => {
       const securityConfigurations = this.teamSecurity.map(t => t.convertToUserSecurity(this.model.generalUserId));
@@ -79,7 +82,6 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
 
     selected$
       .pipe(
-        tap(_ => console.log(_)),
         // get the team security configuration
         switchMap(teamId => this.teamSecurityService.loadSecurityByTeamId(teamId)),
         tap((teamSecurity) => this.teamSecurity = teamSecurity),
@@ -95,7 +97,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         switchMap((userSecurity => iif(() => !userSecurity.length, insertDefaultTeamSecurity$(), of(userSecurity)))),
         tap((userSecurity) => this.userSecurity = userSecurity)
       )
-      .subscribe((result) => console.log(result))
+      .subscribe()
   }
 
   canManage(userSecurity: UserSecurityConfiguration): boolean {
@@ -110,10 +112,14 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     return this.teamSecurityMap[userSecurity.caseType]?.canView;
   }
 
-  updateUserSecurity(userSecurity: UserSecurityConfiguration): void {
-    userSecurity.save()
+  toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd'): void {
+    of(userSecurity.clone({[property]: !userSecurity[property]}))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(model => model.save()))
       .subscribe(() => {
         this.toast.success(this.lang.map.msg_update_success);
+      }, () => {
+        userSecurity[property] = !userSecurity[property]
       });
   }
 

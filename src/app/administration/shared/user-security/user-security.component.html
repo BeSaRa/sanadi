@@ -30,7 +30,7 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_search}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canManage(row)" class="form-check form-switch">
-              <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canManage"
+              <input (change)="toggleUserSecurity(row , 'canManage')" type="checkbox" [checked]="row.canManage"
                      class="form-check-input">
             </div>
           </td>
@@ -39,7 +39,7 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.menu_team_inbox}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canView(row)" class="form-check form-switch">
-              <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canView"
+              <input (change)="toggleUserSecurity(row , 'canView')" type="checkbox" [checked]="row.canView"
                      class="form-check-input">
             </div>
           </td>
@@ -48,7 +48,7 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.btn_add}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canAdd(row)" class="form-check form-switch">
-              <input (change)="updateUserSecurity(row)" type="checkbox" [checked]="row.canAdd"
+              <input (change)="toggleUserSecurity(row , 'canAdd')" type="checkbox" [checked]="row.canAdd"
                      class="form-check-input">
             </div>
           </td>

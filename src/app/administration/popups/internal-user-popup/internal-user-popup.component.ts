@@ -24,12 +24,8 @@ import {CustomRole} from "@app/models/custom-role";
 import {CustomRoleService} from "@app/services/custom-role.service";
 import {UserPermissionService} from "@app/services/user-permission.service";
 import {ToastService} from "@app/services/toast.service";
-import {TeamService} from "@app/services/team.service";
-import {Team} from "@app/models/team";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {SharedService} from "@app/services/shared.service";
-import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
-import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
 
@@ -48,7 +44,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   permissionGroups: CheckGroup<Permission>[] = [];
   groupHandler!: CheckGroupHandler<Permission>;
   customRoles: CustomRole[] = [];
-  teams: Team[] = [];
   @ViewChild(TableComponent)
   teamsTable!: TableComponent;
   @ViewChild(UserTeamComponent)
@@ -59,15 +54,12 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               public lang: LangService,
               private internalDep: InternalDepartmentService,
               public fb: FormBuilder,
-              private teamService: TeamService,
               private sharedService: SharedService,
               private lookupService: LookupService,
               private jobTitleService: JobTitleService,
               private customRoleService: CustomRoleService,
               private userPermissionService: UserPermissionService,
               private permissionService: PermissionService,
-              private teamSecurityService: TeamSecurityConfigurationService,
-              private userSecurityService: UserSecurityConfigurationService,
               private toast: ToastService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
