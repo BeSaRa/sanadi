@@ -16,6 +16,8 @@
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
            [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1"></tab>
+      <tab [name]="tabsData.candidates.name" [template]="candidatesTabTemplate"
+           [title]="lang.map.training_program_add_candidates"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -292,11 +294,6 @@
     </ng-template>
     <ng-template #organizationsTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
-<!--        <h1 class="h6 text-primary">{{lang.map.training_program_organizations}}</h1>-->
-<!--        <div>-->
-<!--          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i-->
-<!--            class="mdi mdi-reload"></i></button>-->
-<!--        </div>-->
         <div>
           <button (click)="openAddOrganizations()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
@@ -381,18 +378,12 @@
                 </tr>
               </table>
             </app-table>
-            <!--            <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>-->
           </div>
         </div>
       </div>
     </ng-template>
     <ng-template #trainersTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
-        <!--        <h1 class="h6 text-primary">{{lang.map.training_program_organizations}}</h1>-->
-        <!--        <div>-->
-        <!--          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i-->
-        <!--            class="mdi mdi-reload"></i></button>-->
-        <!--        </div>-->
         <div>
           <button (click)="openAddTrainers()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
@@ -469,10 +460,12 @@
                 </tr>
               </table>
             </app-table>
-            <!--            <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>-->
           </div>
         </div>
       </div>
+    </ng-template>
+    <ng-template #candidatesTabTemplate>
+      <training-program-add-candidate-popup [trainingProgramId]="model.id"></training-program-add-candidate-popup>
     </ng-template>
   </form>
 </div>

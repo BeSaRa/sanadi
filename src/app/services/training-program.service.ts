@@ -20,7 +20,6 @@ import {TrainingProgramAttendancePopupComponent} from '@app/training-services/po
 import {switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {TraineeService} from '@app/services/trainee.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +30,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService,
-              private traineeService: TraineeService) {
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }

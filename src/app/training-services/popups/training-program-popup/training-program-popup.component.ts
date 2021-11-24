@@ -50,7 +50,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
     organizations: {name: 'organizations'},
-    trainers: {name: 'trainers'}
+    trainers: {name: 'trainers'},
+    candidates: {name: 'candidates'}
   };
   datepickerControlsMap: { [key: string]: FormControl } = {};
   datepickerOptionsMap: IKeyValue = {
@@ -417,7 +418,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   showSaveButton() {
     return this.saveVisible &&
       this.model.status != this.trainingStatus.TRAINING_FINISHED &&
-      this.model.status != this.trainingStatus.TRAINING_CANCELED
+      this.model.status != this.trainingStatus.TRAINING_CANCELED &&
+      this.model.status != this.trainingStatus.TRAINING_PUBLISHED &&
+      this.model.status != this.trainingStatus.EDITING_AFTER_PUBLISHING;
   }
 
   showSaveAndApproveButton() {

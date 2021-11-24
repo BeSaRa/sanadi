@@ -6,12 +6,18 @@ import {INames} from '@app/interfaces/i-names';
 
 export class Trainee extends BaseModel<Trainee, TraineeService>{
   generalUserId!: number;
+  jobType!: number;
+  department!: string;
+  trainingRecord!: string;
+  currentJob!: string;
+  employementPosition!: string;
+  email!: string;
+  phoneNumber!: string;
+  gender!: number;
+  nationality!: number;
   service: TraineeService;
   lang: LangService;
   status!: number;
-  enrollmentTime!: string;
-  acceptanceTime!: string;
-  isAttended!: boolean;
 
   constructor() {
     super();

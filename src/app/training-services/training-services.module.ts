@@ -12,6 +12,7 @@ import {FormsModule} from '@angular/forms';
 import { FilterTrainingProgramsComponent } from './popups/filter-training-programs/filter-training-programs.component';
 import { TrainingProgramAttendancePopupComponent } from './popups/training-program-attendance-popup/training-program-attendance-popup.component';
 import { TraineePopupComponent } from './popups/trainee-popup/trainee-popup.component';
+import { TrainingProgramAddCandidatePopupComponent } from './popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
 
 
 
@@ -25,7 +26,8 @@ import { TraineePopupComponent } from './popups/trainee-popup/trainee-popup.comp
     TrainingProgramPopupComponent,
     FilterTrainingProgramsComponent,
     TrainingProgramAttendancePopupComponent,
-    TraineePopupComponent
+    TraineePopupComponent,
+    TrainingProgramAddCandidatePopupComponent
   ],
   imports: [
     CommonModule,

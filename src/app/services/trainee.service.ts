@@ -8,6 +8,9 @@ import {TraineePopupComponent} from '@app/training-services/popups/trainee-popup
 import {UrlService} from '@app/services/url.service';
 import {FactoryService} from '@app/services/factory.service';
 import {TraineeInterceptor} from '@app/model-interceptors/trainee-interceptor';
+import {Generator} from '@app/decorators/generator';
+import {Observable} from 'rxjs';
+import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +20,15 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   interceptor: TraineeInterceptor = new TraineeInterceptor();
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              public dialog: DialogService,
-              private dialogService: DialogService) {
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('TraineeService', this);
+  }
+
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  enroll(trainingProgramId: number, @InterceptParam() model: Trainee): Observable<Trainee> {
+    return this.http.put<Trainee>(this._getServiceURL() + '/enroll-trainee/' + trainingProgramId, model);
   }
 
   _getDialogComponent(): ComponentType<any> {
@@ -28,6 +36,7 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   _getModel(): any {
+    return Trainee;
   }
 
   _getReceiveInterceptor(): any {
@@ -39,6 +48,6 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   _getServiceURL(): string {
-    return '';
+    return this.urlService.URLS.TRAINING_PROGRAM;
   }
 }
