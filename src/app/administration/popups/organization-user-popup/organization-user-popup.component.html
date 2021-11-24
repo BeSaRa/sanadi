@@ -11,8 +11,7 @@
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
            [title]="langService.map.lbl_permissions"
            [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
-      <tab name="teams" [title]="langService.map.link_teams" [template]="teamsTab"></tab>
-      <tab [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" name="services"
+      <tab name="services"
            [title]="langService.map.link_services"
            [template]="serviceTab"></tab>
     </tabs-list>
@@ -46,7 +45,7 @@
             <label for="qid" asteriskIfRequired="qid"
                    class="form-label">{{langService.map.lbl_qid}}</label>
             <input id="qid" [ngClass]="fm.getStatusClass('basic.qid')" formControlName="qid"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" >
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.qid')"></app-field-error-message>
           </div>
         </div>
@@ -213,11 +212,8 @@
       </div>
     </ng-template>
   </form>
-  <ng-template #teamsTab>
-    <user-team [model]="model" [operation]="operation"></user-team>
-  </ng-template>
   <ng-template #serviceTab>
-    <user-security [model]="model" [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+    <user-security [model]="model"></user-security>
   </ng-template>
 </div>
 <div class="dialog-actions">

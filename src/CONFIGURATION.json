@@ -76,5 +76,6 @@
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
-  ]
+  ],
+  "CHARITY_ORG_TEAM": "Charity Organization"
 }

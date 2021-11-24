@@ -180,6 +180,9 @@ export class EmployeeService {
     this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
     this.userSecConfig = loginData.userSecConfig;
+    this.teams.length ? this.permissions.push((new Permission().clone({
+      permissionKey: 'TEAM_INBOX'
+    }))) : null;
     this.setUserData(loginData);
     this.preparePermissionMap();
     this.prepareUserSecurityMap();

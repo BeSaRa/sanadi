@@ -76,8 +76,9 @@
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </div>
+    <context-menu-item #menu [actions]="actions"></context-menu-item>
   </div>
 </div>

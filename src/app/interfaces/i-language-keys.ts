@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  approve_inbox: string;
   service_name: string;
   services_related_to_the_selected_team: string;
   please_select_team_to_link: string;

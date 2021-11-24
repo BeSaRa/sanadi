@@ -16,6 +16,7 @@ import {IGridAction} from '@app/interfaces/i-grid-action';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
 
 @Component({
   selector: 'app-organization-user',
@@ -45,6 +46,15 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       }
     }
   ];
+
+  actions: IMenuItem<OrgUser>[] = [
+    {
+      type: 'action',
+      icon: 'mdi-account-edit',
+      label: 'btn_edit',
+      onClick: item => this.edit(item),
+    }
+  ]
 
   // noinspection JSUnusedLocalSymbols
   bindingKeys: IKeyValue = {
@@ -177,8 +187,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     }
   }
 
-  edit(orgUser: OrgUser, $event: MouseEvent): void {
-    $event.preventDefault();
+  edit(orgUser: OrgUser, $event?: MouseEvent): void {
+    $event?.preventDefault();
     const sub = this.orgUserService.openUpdateDialog(orgUser.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);

@@ -12,7 +12,7 @@ export class TeamSecurityConfiguration extends BaseModel<TeamSecurityConfigurati
   canView: boolean = false;
   canManage: boolean = false;
   writeOnly!: boolean;
-
+  approval!: boolean;
   service: TeamSecurityConfigurationService;
   serviceInfo!: AdminResult;
   teamInfo!: AdminResult;

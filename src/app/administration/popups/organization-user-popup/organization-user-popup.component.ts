@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FormManager} from '@app/models/form-manager';
@@ -28,7 +28,6 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
-import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
@@ -64,9 +63,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   validateFieldsVisible = true;
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
-  @ViewChild(UserTeamComponent)
-  userTeamComponent!: UserTeamComponent;
 
   displaySaveBtn: boolean = true;
 

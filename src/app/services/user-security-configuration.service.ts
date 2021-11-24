@@ -57,4 +57,21 @@ export class UserSecurityConfigurationService extends BackendGenericService<User
   createBulk(securityConfiguration: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.post<UserSecurityConfiguration[]>(this._getServiceURL() + '/bulk/full', securityConfiguration)
   }
+
+  @Generator(undefined, true)
+  createBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
+    return this.http.post<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk/full', securityConfigurations)
+  }
+
+  @Generator(undefined, true)
+  updateBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
+    return this.http.put<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk/update/full', securityConfigurations)
+  }
+
+  @Generator(undefined, true)
+  deleteBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
+    return this.http.delete<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk', {
+      body: securityConfigurations.map(i => i.id)
+    })
+  }
 }

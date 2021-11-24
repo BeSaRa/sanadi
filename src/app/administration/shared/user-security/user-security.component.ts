@@ -11,6 +11,9 @@ import {InternalUser} from "@app/models/internal-user";
 import {OrgUser} from "@app/models/org-user";
 import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
 import {ToastService} from "@app/services/toast.service";
+import {TeamService} from "@app/services/team.service";
+import {Team} from "@app/models/team";
+import {ConfigurationService} from "@app/services/configuration.service";
 
 @Component({
   selector: 'user-security',
@@ -39,10 +42,14 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];
   userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox'];
+  private teams: Team[] = [];
+
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private teamService: TeamService,
               private teamSecurityService: TeamSecurityConfigurationService,
+              private configService: ConfigurationService,
               private userSecurityService: UserSecurityConfigurationService) {
   }
 
@@ -54,6 +61,20 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToTeamSecurityChange();
+    if (this.model.isExternal()) {
+      this.userSecurityColumns = this.userSecurityColumns.concat(['approval'])
+      this.loadTeamsAndSecurity();
+    }
+  }
+
+  private loadTeamsAndSecurity(): void {
+    this.teamService
+      .loadIfNotExists()
+      .pipe(tap(teams => this.teams = teams))
+      .pipe(map(teams => teams.filter(team => this.configService.CONFIG.CHARITY_ORG_TEAM === team.authName)[0]))
+      .subscribe((team) => {
+        this.selectedUserTeam.setValue(team.id);
+      })
   }
 
   private listenToTeamSecurityChange() {
@@ -70,14 +91,20 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         this.userSecurity = [];
       })
 
-    const insertDefaultTeamSecurity$ = () => {
-      const securityConfigurations = this.teamSecurity.map(t => t.convertToUserSecurity(this.model.generalUserId));
-      return this.userSecurityService.createBulk(securityConfigurations).pipe(catchError(_ => of([])))
+    const insertDefaultTeamSecurity$ = (userSecurity: UserSecurityConfiguration[]) => {
+      let securityConfigurations: UserSecurityConfiguration[];
+      let caseTypeIds = userSecurity.map(item => item.caseType);
+      securityConfigurations = this.teamSecurity
+        .filter(team => !caseTypeIds.includes(team.caseType))
+        .map(t => t.convertToUserSecurity(this.model.generalUserId)) as UserSecurityConfiguration[];
+
+      return this.userSecurityService.createBulk(securityConfigurations).pipe(catchError(_ => of([] as UserSecurityConfiguration[])))
         .pipe(map(result => result.map((item, index) => {
           item.teamInfo = this.teamSecurity[index].teamInfo;
           item.serviceInfo = this.teamSecurity[index].serviceInfo;
           return item;
         })))
+        .pipe(map(list => caseTypeIds ? userSecurity.concat(list) : list))
     }
 
     selected$
@@ -94,7 +121,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         // get the user security configuration
         switchMap(() => this.userSecurityService.loadSecurityByTeamId(this.selectedUserTeam.value, this.model.generalUserId)),
         // if there is length for the user security configurations we have to display the right mapping on the view
-        switchMap((userSecurity => iif(() => !userSecurity.length, insertDefaultTeamSecurity$(), of(userSecurity)))),
+        switchMap((userSecurity => iif(() => !userSecurity.length || (userSecurity.length !== this.teamSecurity.length), insertDefaultTeamSecurity$(userSecurity), of(userSecurity)))),
         tap((userSecurity) => this.userSecurity = userSecurity)
       )
       .subscribe()
@@ -112,7 +139,33 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     return this.teamSecurityMap[userSecurity.caseType]?.canView;
   }
 
-  toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd'): void {
+  updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
+    userSecurity[property] = !userSecurity[property];
+    const list = this.userSecurity.map<Partial<UserSecurityConfiguration>>(item => ({
+      id: item.id,
+      canView: item.canView,
+      canAdd: item.canAdd,
+      canManage: item.canManage,
+      generalUserId: item.generalUserId,
+      teamId: item.teamId,
+      caseType: item.caseType,
+      serviceId: item.serviceId,
+      approval: item.approval
+    }));
+    this.userSecurityService.updateBulkExternal(list)
+      .subscribe((updated) => {
+        this.toast.success(this.lang.map.msg_update_success);
+        this.userSecurity = this.userSecurity.map(((item, index) => {
+          item.id = updated[index].id;
+          return item;
+        }))
+      })
+  }
+
+  toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
+    if (this.model.isExternal()) {
+      return this.updateBulkUserSecurity(userSecurity, property);
+    }
     userSecurity.clone({[property]: !userSecurity[property]})
       .save()
       .pipe(takeUntil(this.destroy$))
