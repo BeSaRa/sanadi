@@ -2,12 +2,12 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {AdminGenericDialog} from "@app/generics/admin-generic-dialog";
 import {InternalUser} from "@app/models/internal-user";
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {IDialogData} from "@app/interfaces/i-dialog-data";
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from "@app/services/internal-department.service";
 import {InternalDepartment} from "@app/models/internal-department";
 import {switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
@@ -27,6 +27,9 @@ import {ToastService} from "@app/services/toast.service";
 import {SharedService} from "@app/services/shared.service";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
+import {InternalUserDepartmentService} from "@app/services/internal-user-department.service";
+import {InternalUserDepartment} from "@app/models/internal-user-department";
+import {AdminResult} from "@app/models/admin-result";
 
 @Component({
   selector: 'internal-user-popup',
@@ -46,6 +49,11 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   @ViewChild(UserTeamComponent)
   userTeamComponent!: UserTeamComponent
   displaySaveBtn: boolean = true;
+  userDepartments: InternalUserDepartment[] = [];
+  displayedColumns: string [] = ['arabicName', 'englishName', 'default', 'actions']
+  selectedDepartment: FormControl = new FormControl();
+  private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
+  private userDepartmentsIds: number[] = [];
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
@@ -56,6 +64,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private jobTitleService: JobTitleService,
               private customRoleService: CustomRoleService,
               private userPermissionService: UserPermissionService,
+              private internalUserDepartmentService: InternalUserDepartmentService,
               private permissionService: PermissionService,
               private toast: ToastService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
@@ -75,6 +84,15 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       .subscribe((departments) => {
         this.departments = departments;
       });
+  }
+
+  private loadUserDepartments(): void {
+    this.internalUserDepartmentService
+      .criteria({internalUserId: this.model.id})
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((list) => {
+        this.userDepartmentsChanged$.next(list);
+      })
   }
 
   get basicFormTab() {
@@ -144,6 +162,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.loadJobTitles();
     this.loadPermissions();
     this.loadCustomRoles();
+    this.loadUserDepartments();
+    this.listenToUserDepartmentsChange();
   }
 
   destroyPopup(): void {
@@ -211,6 +231,76 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   addDepartment() {
+    if (!this.selectedDepartment.value) {
+      return;
+    }
+    const dep = this.selectedDepartment.value as InternalDepartment;
+    if (this.isDepExists(dep)) {
+      return;
+    }
+    (new InternalUserDepartment())
+      .clone({
+        internalUserId: this.model.id,
+        internalDepartmentId: dep.id
+      })
+      .save()
+      .subscribe((model) => {
+        this.toast.success(this.lang.map.msg_create_x_success.change({x: dep.getName()}))
+        this.userDepartments = this.userDepartments.concat([model.clone({
+          id: model.id,
+          departmentInfo: AdminResult.createInstance({
+            id: dep.id,
+            arName: dep.arName,
+            enName: dep.enName,
+          })
+        })])
+        this.selectedDepartment.patchValue(null);
 
+        if (this.userDepartments.length === 1) {
+          this.toggleDefaultDepartment(this.userDepartments[0], undefined, true);
+        }
+      })
+  }
+
+  deleteDepartment(userDep: InternalUserDepartment) {
+    if (this.canNotDeleteDepartment(userDep)) {
+      return;
+    }
+    userDep.delete()
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_delete_x_success.change({x: userDep.departmentInfo.getName()}))
+        this.userDepartments = this.userDepartments.filter(item => item.id !== userDep.id);
+      })
+  }
+
+  canNotDeleteDepartment(userDep: InternalUserDepartment): boolean {
+    return userDep.internalDepartmentId === this.model.defaultDepartmentId;
+  }
+
+  canNotToggleItOff(row: InternalUserDepartment): boolean {
+    return this.model.defaultDepartmentId === row.internalDepartmentId;
+  }
+
+  toggleDefaultDepartment(row: InternalUserDepartment, input?: HTMLInputElement, mute: boolean = false) {
+    if (this.canNotToggleItOff(row)) {
+      input && (input.checked = true);
+      return;
+    }
+    this.model.defaultDepartmentId = row.internalDepartmentId;
+    this.model.save().subscribe(() => {
+      !mute ? this.toast.success(this.lang.map.msg_update_success) : null;
+    })
+  }
+
+  isDepExists(dep: InternalDepartment): boolean {
+    return this.userDepartmentsIds.includes(dep.id);
+  }
+
+  private listenToUserDepartmentsChange() {
+    this.userDepartmentsChanged$
+      .subscribe((list) => {
+        this.userDepartmentsIds = list.map(item => item.internalDepartmentId);
+        this.userDepartments = list;
+      })
   }
 }

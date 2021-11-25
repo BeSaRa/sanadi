@@ -7,6 +7,7 @@ import {AuthGuard} from './guards/auth-guard';
 import {GuestGuard} from './guards/guest-guard';
 import {PermissionGuard} from './guards/permission-guard';
 import {PermissionGroup} from "@app/enums/permission-group";
+import {EServicePermissions} from "@app/enums/e-service-permissions";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -38,7 +39,9 @@ const routes: Routes = [
       },
       {
         path: 'services-search',
-        loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule)
+        canActivate: [PermissionGuard],
+        loadChildren: () => import('./services-search/services-search.module').then(m => m.ServicesSearchModule),
+        data: {permissionKey: EServicePermissions.E_SERVICES_SEARCH},
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
       {

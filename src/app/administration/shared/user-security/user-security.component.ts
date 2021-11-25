@@ -15,6 +15,7 @@ import {TeamService} from "@app/services/team.service";
 import {Team} from "@app/models/team";
 import {ConfigurationService} from "@app/services/configuration.service";
 import {OperationTypes} from "@app/enums/operation-types.enum";
+import {UserTeamService} from "@app/services/user-team.service";
 
 @Component({
   selector: 'user-security',
@@ -58,6 +59,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toast: ToastService,
               private teamService: TeamService,
+              private userTeamService: UserTeamService,
               private teamSecurityService: TeamSecurityConfigurationService,
               private configService: ConfigurationService,
               private userSecurityService: UserSecurityConfigurationService) {
@@ -162,9 +164,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       serviceId: item.serviceId,
       approval: item.approval
     }));
-    // for testing purpose
-    // this.userSecurityService.deleteBulkExternal(list).subscribe();
-
+    // // for testing purpose
+    // // this.userSecurityService.deleteBulkExternal(list).subscribe();
+    //
     this.userSecurityService.updateBulkExternal(list)
       .subscribe((updated) => {
         this.toast.success(this.lang.map.msg_update_success);

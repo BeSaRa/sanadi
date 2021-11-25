@@ -14,6 +14,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {IUserSecurity} from "@app/interfaces/iuser-security";
 import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
 import {CaseTypes} from "@app/enums/case-types.enum";
+import {EServicePermissions} from "@app/enums/e-service-permissions";
 
 @Injectable({
   providedIn: 'root'
@@ -352,11 +353,19 @@ export class EmployeeService {
 
 
   private generateEServicesPermissions() {
+    let canSearch = false;
     this.userSecurityMap.forEach((value, key: CaseTypes) => {
       const permissionKey = CaseTypes[key];
-      this.permissionMap.set(permissionKey.toLowerCase(), new Permission().clone({
-        permissionKey
-      }))
-    })
+      this.userCanAdd(key) && this.permissionMap
+        .set(permissionKey.toLowerCase(), new Permission().clone({
+          permissionKey
+        }));
+      if (!canSearch) {
+        canSearch = this.userCanManage(key);
+      }
+    });
+    canSearch && this.permissionMap.set(EServicePermissions.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
+      permissionKey: EServicePermissions.E_SERVICES_SEARCH
+    }))
   }
 }

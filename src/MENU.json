@@ -239,7 +239,7 @@
     "path": "/home/services-search",
     "icon": "mdi-text-box-search-outline",
     "isSvg": false,
-    "permission": null,
+    "permission": "E_SERVICES_SEARCH",
     "permissionGroup": null,
     "parent": null,
     "group": "main",

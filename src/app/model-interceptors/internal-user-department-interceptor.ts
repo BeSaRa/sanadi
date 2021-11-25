@@ -11,6 +11,7 @@ export class InternalUserDepartmentInterceptor implements IModelInterceptor<Inte
 
   receive(model: InternalUserDepartment): InternalUserDepartment {
     model.departmentInfo = AdminResult.createInstance(model.departmentInfo);
+    model.interalUserInfo = AdminResult.createInstance(model.interalUserInfo);
     return model;
   }
 }

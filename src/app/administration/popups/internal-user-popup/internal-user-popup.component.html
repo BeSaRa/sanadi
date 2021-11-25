@@ -157,14 +157,60 @@
       <div class="col-12 mb-4 position-relative">
         <div class="d-flex align-items-center justify-content-start gap-2">
           <div class="mb-4 ng-select-wrapper flex-grow-1">
-            <label for="defaultDepartmentId">{{lang.map.select_department}}</label>
-            <ng-select appendTo="body" [clearable]="true"
-                       id="defaultDepartmentId">
-              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+            <label for="department">{{lang.map.select_department}}</label>
+            <ng-select [formControl]="selectedDepartment" appendTo="body" [clearable]="true"
+                       id="department">
+              <ng-option [disabled]="isDepExists(dep)" [value]="dep"
+                         *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
             </ng-select>
           </div>
-          <button (click)="addDepartment()" class="btn btn-primary">{{lang.map.btn_add}}</button>
+          <button [disabled]="!selectedDepartment.value" (click)="addDepartment()"
+                  class="btn btn-primary">{{lang.map.btn_add}}</button>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-table #table sortableTable [paginator]="paginator"
+                   [useSearchToFilter]="true"
+                   [data]="userDepartments"
+                   [columns]="displayedColumns">
+          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+            <ng-container cdkColumnDef="arabicName">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.departmentInfo.arName}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="englishName">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.departmentInfo.enName}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="default">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.default_dep}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <div class="form-switch form-check">
+                  <input #input [disabled]="canNotToggleItOff(row)" (change)="toggleDefaultDepartment(row , input)"
+                         class="form-check-input" type="checkbox"
+                         [checked]="model.defaultDepartmentId === row.internalDepartmentId">
+                </div>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <button [disabled]="canNotDeleteDepartment(row)" (click)="deleteDepartment(row)"
+                        class="btn p-0 icon-btn"><i
+                  class="mdi text-primary mdi-delete"></i>
+                </button>
+              </td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="20">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+        <app-paginator #paginator></app-paginator>
       </div>
     </div>
   </ng-template>

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {InboxService} from '@app/services/inbox.service';
 import {QueryResultSet} from '@app/models/query-result-set';
-import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import {switchMap, takeUntil} from 'rxjs/operators';
 import {QueryResult} from '@app/models/query-result';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
@@ -102,7 +102,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           }
         ),
         takeUntil(this.destroy$),
-        tap(items => console.log(items))
+        // tap(items => console.log(items))
       )
       .subscribe((value) => {
         this.queryResultSet = value;
@@ -541,10 +541,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         }
       }
     ];
-  }
-
-  displayStepName(row: QueryResult) {
-    return this.lang.map[row.TAD_DISPLAY_NAME];
   }
 
   getServiceName(service: number) {

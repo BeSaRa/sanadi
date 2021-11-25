@@ -60,4 +60,8 @@ export class ConfigurationService {
   private static getYearsStart(startYear: number) {
     return range(startYear, ConfigurationService.CURRENT_FULL_YEAR + 1);
   }
+
+  getPermissionGroup(groupName: string): string[] {
+    return this.CONFIG[groupName as keyof IAppConfig] as string[] || [];
+  }
 }
