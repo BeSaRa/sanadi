@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {InternalDepartment} from '@app/models/internal-department';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
@@ -7,15 +7,19 @@ import {LangService} from '@app/services/lang.service';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {ToastService} from '@app/services/toast.service';
 
 @Component({
   selector: 'internal-department',
   templateUrl: './internal-department.component.html',
   styleUrls: ['./internal-department.component.scss']
 })
-export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService>{
+export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService> {
   searchText = '';
   view$: Subject<InternalDepartment> = new Subject<InternalDepartment>();
+  commonStatusEnum = CommonStatusEnum;
+
   actions: IMenuItem<InternalDepartment>[] = [
     {
       type: 'action',
@@ -28,11 +32,32 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       label: 'btn_edit',
       icon: 'mdi-pen',
       onClick: (user) => this.edit$.next(user)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item) => this.activateDepartment(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item) => this.deactivateDepartment(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.ACTIVATED;
+      }
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
 
-  constructor(public lang: LangService, public service: InternalDepartmentService) {
+  constructor(public lang: LangService, public service: InternalDepartmentService,
+              private toast: ToastService) {
     super();
   }
 
@@ -66,5 +91,23 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
 
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
+  }
+
+  activateDepartment(model: InternalDepartment): void {
+    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
+  deactivateDepartment(model: InternalDepartment): void {
+    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
   }
 }

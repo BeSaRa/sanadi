@@ -10,6 +10,7 @@ import {Validators} from '@angular/forms';
 import {searchFunctionType} from '@app/types/types';
 import {Observable} from 'rxjs';
 import {BlobModel} from '@app/models/blob-model';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class InternalDepartment extends BaseModel<InternalDepartment, InternalDepartmentService> {
   service!: InternalDepartmentService;
@@ -96,5 +97,9 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
       return true;
     }
     return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

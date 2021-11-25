@@ -17,6 +17,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FactoryService} from '@app/services/factory.service';
 import {BlobModel} from '@app/models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -102,5 +103,17 @@ export class InternalDepartmentService extends BackendWithDialogOperationsGeneri
       catchError(_ => {
         return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
       })));
+  }
+
+  updateStatus(departmentId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(departmentId) : this._deactivate(departmentId);
+  }
+
+  private _activate(departmentId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + departmentId + '/activate', {});
+  }
+
+  private _deactivate(departmentId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + departmentId + '/de-activate', {});
   }
 }
