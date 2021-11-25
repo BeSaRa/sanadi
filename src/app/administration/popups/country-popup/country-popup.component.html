@@ -20,14 +20,14 @@
             <label for="arName" asteriskIfRequired="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')"
-                   formControlName="arName" class="form-control">
+                   formControlName="arName" class="form-control" maxlength="100">
             <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="enName" asteriskIfRequired="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')"
-                   formControlName="enName" class="form-control">
+                   formControlName="enName" class="form-control" maxlength="100">
             <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>

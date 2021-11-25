@@ -97,7 +97,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
           disabled: !this.model.id // disabled while adding
         }],
         status: [this.model.status, [CustomValidators.required]],
-        riskLevel: [this.model.riskLevel, [CustomValidators.decimal(5)]]
+        riskLevel: [this.model.riskLevel, [CustomValidators.decimal(5), CustomValidators.maxLength(10)]]
       },
       validators: string[] = ['arName', 'enName', 'parentId', 'status', 'riskLevel'];
 
