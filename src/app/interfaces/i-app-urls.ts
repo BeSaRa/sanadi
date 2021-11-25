@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  INTERNAL_USER_DEPARTMENT: string;
   EXTERNAL_USER_SECURITY: string;
   USER_SECURITY: string;
   TEAM_SECURITY: string;
