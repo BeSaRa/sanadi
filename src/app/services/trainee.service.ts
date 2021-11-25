@@ -9,8 +9,12 @@ import {UrlService} from '@app/services/url.service';
 import {FactoryService} from '@app/services/factory.service';
 import {TraineeInterceptor} from '@app/model-interceptors/trainee-interceptor';
 import {Generator} from '@app/decorators/generator';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {TrainingProgramAddCandidatePopupComponent} from '@app/training-services/popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +53,12 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
 
   _getServiceURL(): string {
     return this.urlService.URLS.TRAINING_PROGRAM;
+  }
+
+  openAddTrainingProgramCandidateDialog(trainingProgramId: number): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<number>>(TrainingProgramAddCandidatePopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE
+    }));
   }
 }

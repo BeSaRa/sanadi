@@ -1,214 +1,227 @@
-<div class="form-check form-check-inline">
-  <input (change)="onEmployeeTypeChange()" [(ngModel)]="employeeType" class="form-check-input" id="authority"
-         name="employeeType" type="radio"
-         value="authority">
-  <label class="form-check-label" for="authority">
-    {{lang.map.training_program_add_authority_employee}}
-  </label>
-</div>
-<div class="form-check form-check-inline mb-3">
-  <input (change)="onEmployeeTypeChange()" [(ngModel)]="employeeType" class="form-check-input" id="organization"
-         name="employeeType" type="radio"
-         value="organization">
-  <label class="form-check-label" for="organization">
-    {{lang.map.training_program_add_organization_employee}}
-  </label>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="trainingProgramId" aria-label="Close"></button>
+  </div>
 </div>
 
-<div *ngIf="showAuthorityTemplate()">
-  <div class="row mb-3 add-to-list-container">
-    <div class="col-sm-12">
-      <div class="row">
-        <div class="col-sm-6">
-          <label class="form-label"
-                 for="authorityId">{{lang.map.training_program_authority_employees}}</label>
-          <div class="mb-3 position-relative ng-select-wrapper">
-            <ng-select
-              (change)="onSelectAuthorityUser()"
-              [(ngModel)]="selectedAuthorityUser"
-              [ngModelOptions]="{standalone: true}"
-              appendTo="Body"
-              id="authorityId"
-              placeholder="{{lang.map.select}}">
-              <ng-option *ngFor="let authorityUser of authorityUsers"
-                         [value]="authorityUser.id">{{authorityUser.enName}}
-                | {{authorityUser.arName}}</ng-option>
-            </ng-select>
+<div class="dialog-content">
+  <div *ngIf="employeeService.isInternalUser()">
+    <div class="form-check form-check-inline">
+      <input (change)="onEmployeeTypeChange()" [(ngModel)]="employeeType" class="form-check-input" id="authority"
+             name="employeeType" type="radio"
+             value="authority">
+      <label class="form-check-label" for="authority">
+        {{lang.map.training_program_add_authority_employee}}
+      </label>
+    </div>
+    <div class="form-check form-check-inline mb-3">
+      <input (change)="onEmployeeTypeChange()" [(ngModel)]="employeeType" class="form-check-input" id="organization"
+             name="employeeType" type="radio"
+             value="organization">
+      <label class="form-check-label" for="organization">
+        {{lang.map.training_program_add_organization_employee}}
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="showAuthorityTemplate()">
+    <div class="row mb-3 add-to-list-container">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="form-label"
+                   for="authorityId">{{lang.map.training_program_authority_employees}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select
+                (change)="onSelectAuthorityUser()"
+                [(ngModel)]="selectedAuthorityUser"
+                [ngModelOptions]="{standalone: true}"
+                appendTo="Body"
+                id="authorityId"
+                placeholder="{{lang.map.select}}">
+                <ng-option *ngFor="let authorityUser of authorityUsers"
+                           [value]="authorityUser.id">{{authorityUser.enName}}
+                  | {{authorityUser.arName}}</ng-option>
+              </ng-select>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="showOrganizationsTemplate()">
-  <div class="row mb-3 add-to-list-container">
-    <div class="col-sm-12">
-      <div class="row">
-        <div class="col-sm-6">
-          <label class="form-label"
-                 for="organizationId">{{lang.map.training_program_organizations}}</label>
-          <div class="mb-3 position-relative ng-select-wrapper">
-            <ng-select
-              (change)="onOrganizationChange()"
-              [(ngModel)]="selectedOrganization"
-              [ngModelOptions]="{standalone: true}"
-              appendTo="Body"
-              id="organizationId"
-              placeholder="{{lang.map.select}}">
-              <ng-option *ngFor="let organization of organizations"
-                         [value]="organization.id">{{organization.enName}}
-                | {{organization.arName}}</ng-option>
-            </ng-select>
+  <div *ngIf="showOrganizationsTemplate()">
+    <div class="row mb-3 add-to-list-container">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-6" *ngIf="employeeService.isInternalUser()">
+            <label class="form-label"
+                   for="organizationId">{{lang.map.training_program_organizations}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select
+                (change)="onOrganizationChange()"
+                [(ngModel)]="selectedOrganization"
+                [ngModelOptions]="{standalone: true}"
+                appendTo="Body"
+                id="organizationId"
+                placeholder="{{lang.map.select}}">
+                <ng-option *ngFor="let organization of organizations"
+                           [value]="organization.id">{{organization.enName}}
+                  | {{organization.arName}}</ng-option>
+              </ng-select>
+            </div>
           </div>
-        </div>
-        <div class="col-sm-6">
-          <label class="form-label"
-                 for="organizationUserId">{{lang.map.training_program_authority_employees}}</label>
-          <div class="mb-3 position-relative ng-select-wrapper">
-            <ng-select
-              (change)="onSelectOrganizationUser()"
-              [(ngModel)]="selectedOrganizationUser"
-              appendTo="Body"
-              id="organizationUserId"
-              placeholder="{{lang.map.select}}">
-              <ng-option *ngFor="let organizationUser of organizationUsers"
-                         [value]="organizationUser.id">{{organizationUser.enName}}
-                | {{organizationUser.arName}}</ng-option>
-            </ng-select>
+          <div class="col-sm-6">
+            <label class="form-label"
+                   for="organizationUserId">{{lang.map.training_program_organization_employees}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select
+                (change)="onSelectOrganizationUser()"
+                [(ngModel)]="selectedOrganizationUser"
+                appendTo="Body"
+                id="organizationUserId"
+                placeholder="{{lang.map.select}}">
+                <ng-option *ngFor="let organizationUser of organizationUsers"
+                           [value]="organizationUser.id">{{organizationUser.enName}}
+                  | {{organizationUser.arName}}</ng-option>
+              </ng-select>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div>
-  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="arName" for="arName"
-               class="form-label">{{lang.map.arabic_name}}</label>
-        <input id="arName"
-               validationClasses="arName"
-               formControlName="arName" class="form-control">
-        <app-field-error-message controlName="arName"></app-field-error-message>
+  <div>
+    <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="arName" for="arName"
+                 class="form-label">{{lang.map.arabic_name}}</label>
+          <input id="arName"
+                 validationClasses="arName"
+                 formControlName="arName" class="form-control">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="enName" for="enName"
+                 class="form-label">{{lang.map.english_name}}</label>
+          <input id="enName"
+                 validationClasses="enName"
+                 formControlName="enName" class="form-control">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
       </div>
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="enName" for="enName"
-               class="form-label">{{lang.map.english_name}}</label>
-        <input id="enName"
-               validationClasses="enName"
-               formControlName="enName" class="form-control">
-        <app-field-error-message controlName="enName"></app-field-error-message>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="employementPosition" for="employementPosition"
+                 class="form-label">{{lang.map.training_program_trainee_employment_position}}</label>
+          <input id="employementPosition"
+                 validationClasses="employementPosition"
+                 formControlName="employementPosition" class="form-control">
+          <app-field-error-message controlName="employementPosition"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="department" for="department"
+                 class="form-label">{{lang.map.training_program_trainee_department}}</label>
+          <input id="department"
+                 validationClasses="department"
+                 formControlName="department" class="form-control">
+          <app-field-error-message controlName="department"></app-field-error-message>
+        </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="employementPosition" for="employementPosition"
-               class="form-label">{{lang.map.training_program_trainee_employment_position}}</label>
-        <input id="employementPosition"
-               validationClasses="employementPosition"
-               formControlName="employementPosition" class="form-control">
-        <app-field-error-message controlName="employementPosition"></app-field-error-message>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="trainingRecord" for="trainingRecord"
+                 class="form-label">{{lang.map.training_program_trainee_training_record}}</label>
+          <input id="trainingRecord"
+                 validationClasses="trainingRecord"
+                 formControlName="trainingRecord" class="form-control">
+          <app-field-error-message controlName="trainingRecord"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="currentJob" for="currentJob"
+                 class="form-label">{{lang.map.training_program_trainee_current_job}}</label>
+          <input id="currentJob"
+                 validationClasses="currentJob"
+                 formControlName="currentJob" class="form-control">
+          <app-field-error-message controlName="currentJob"></app-field-error-message>
+        </div>
       </div>
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="department" for="department"
-               class="form-label">{{lang.map.training_program_trainee_department}}</label>
-        <input id="department"
-               validationClasses="department"
-               formControlName="department" class="form-control">
-        <app-field-error-message controlName="department"></app-field-error-message>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="email" for="email"
+                 class="form-label">{{lang.map.lbl_email}}</label>
+          <input id="email"
+                 validationClasses="email"
+                 formControlName="email" class="form-control">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="phoneNumber" for="phoneNumber"
+                 class="form-label">{{lang.map.home_phone_number}}</label>
+          <input id="phoneNumber"
+                 validationClasses="phoneNumber"
+                 formControlName="phoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <app-field-error-message controlName="phoneNumber"></app-field-error-message>
+        </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="trainingRecord" for="trainingRecord"
-               class="form-label">{{lang.map.training_program_trainee_training_record}}</label>
-        <input id="trainingRecord"
-               validationClasses="trainingRecord"
-               formControlName="trainingRecord" class="form-control">
-        <app-field-error-message controlName="trainingRecord"></app-field-error-message>
-      </div>
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="currentJob" for="currentJob"
-               class="form-label">{{lang.map.training_program_trainee_current_job}}</label>
-        <input id="currentJob"
-               validationClasses="currentJob"
-               formControlName="currentJob" class="form-control">
-        <app-field-error-message controlName="currentJob"></app-field-error-message>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="email" for="email"
-               class="form-label">{{lang.map.lbl_email}}</label>
-        <input id="email"
-               validationClasses="email"
-               formControlName="email" class="form-control">
-        <app-field-error-message controlName="email"></app-field-error-message>
-      </div>
-      <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="phoneNumber" for="phoneNumber"
-               class="form-label">{{lang.map.home_phone_number}}</label>
-        <input id="phoneNumber"
-               validationClasses="phoneNumber"
-               formControlName="phoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-        <app-field-error-message controlName="phoneNumber"></app-field-error-message>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <div class="row">
-          <label asteriskIfRequired="gender" for="gender"
-                 class="form-label">{{lang.map.gender}}</label>
-          <div class="position-relative ng-select-wrapper">
-            <ng-select validationClasses="gender"
-                       formControlName="gender"
-                       id="gender">
-              <ng-option [value]="gender.lookupKey" *ngFor="let gender of genders"
-                         [disabled]="gender.isRetiredCommonStatus()">{{gender.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="gender"></app-field-error-message>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="gender" for="gender"
+                   class="form-label">{{lang.map.gender}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="gender"
+                         formControlName="gender"
+                         id="gender">
+                <ng-option [value]="gender.lookupKey" *ngFor="let gender of genders"
+                           [disabled]="gender.isRetiredCommonStatus()">{{gender.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="gender"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="nationality" for="nationality"
+                   class="form-label">{{lang.map.lbl_nationality}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="nationality"
+                         formControlName="nationality"
+                         id="nationality">
+                <ng-option [value]="nationality.lookupKey" *ngFor="let nationality of nationalities"
+                           [disabled]="nationality.isRetiredCommonStatus()">{{nationality.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="nationality"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-6 position-relative">
-        <div class="row">
-          <label asteriskIfRequired="nationality" for="nationality"
-                 class="form-label">{{lang.map.lbl_nationality}}</label>
-          <div class="position-relative ng-select-wrapper">
-            <ng-select validationClasses="nationality"
-                       formControlName="nationality"
-                       id="nationality">
-              <ng-option [value]="nationality.lookupKey" *ngFor="let nationality of nationalities"
-                         [disabled]="nationality.isRetiredCommonStatus()">{{nationality.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="nationality"></app-field-error-message>
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <div class="row">
+            <label asteriskIfRequired="jobType" for="jobType"
+                   class="form-label">{{lang.map.training_program_job_type}}</label>
+            <div class="position-relative ng-select-wrapper">
+              <ng-select validationClasses="jobType"
+                         formControlName="jobType"
+                         id="jobType">
+                <ng-option [value]="jobType.lookupKey" *ngFor="let jobType of jobTypes"
+                           [disabled]="jobType.isRetiredCommonStatus()">{{jobType.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="nationality"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 position-relative">
-        <div class="row">
-          <label asteriskIfRequired="jobType" for="jobType"
-                 class="form-label">{{lang.map.training_program_job_type}}</label>
-          <div class="position-relative ng-select-wrapper">
-            <ng-select validationClasses="jobType"
-                       formControlName="jobType"
-                       id="jobType">
-              <ng-option [value]="jobType.lookupKey" *ngFor="let jobType of jobTypes"
-                         [disabled]="jobType.isRetiredCommonStatus()">{{jobType.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="nationality"></app-field-error-message>
-          </div>
-        </div>
+      <div class="save-btn-container">
+        <span class="flex-grow-1"></span>
+        <button [disabled]="form.invalid" (click)="saveCandidate$.next()"
+                class="btn btn-primary">{{lang.map.btn_save}}</button>
       </div>
-    </div>
-    <div class="save-btn-container">
-      <span class="flex-grow-1"></span>
-      <button [disabled]="form.invalid" (click)="saveCandidate$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

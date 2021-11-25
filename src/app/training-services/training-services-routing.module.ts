@@ -4,6 +4,7 @@ import {PermissionGuard} from '@app/guards/permission-guard';
 import {TrainingServicesComponent} from '@app/training-services/training-services.component';
 import {AccreditedTrainerComponent} from '@app/training-services/pages/accredited-trainer/accredited-trainer.component';
 import {TrainingProgramComponent} from '@app/training-services/pages/training-program/training-program.component';
+import {AvailableProgramsComponent} from '@app/training-services/pages/available-programs/available-programs.component';
 
 const routes: Routes = [
   {path: '', component: TrainingServicesComponent},
@@ -15,6 +16,12 @@ const routes: Routes = [
   },
   {
     path: 'program', component: TrainingProgramComponent,
+    canActivate: [PermissionGuard],
+    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'available-for-registration', component: AvailableProgramsComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
     data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}

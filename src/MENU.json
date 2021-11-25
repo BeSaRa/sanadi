@@ -478,5 +478,18 @@
     "group": "training-services",
     "itemOrder": 2,
     "svg": null
+  },
+  {
+    "id": 38,
+    "langKey": "menu_available_programs",
+    "path": "/home/training/available-for-registration",
+    "icon": "mdi-new-box",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 35,
+    "group": "training-services",
+    "itemOrder": 3,
+    "svg": null
   }
 ]

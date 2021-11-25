@@ -1,6 +1,6 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {of, Subject} from 'rxjs';
+import {BehaviorSubject, of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
@@ -16,6 +16,10 @@ import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {Trainee} from '@app/models/trainee';
 import {TraineeService} from '@app/services/trainee.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
@@ -24,14 +28,14 @@ import {TraineeService} from '@app/services/trainee.service';
 })
 export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject();
-  employeeTypeChanged$: Subject<string> = new Subject<string>();
+  employeeTypeChanged$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   loadAuthorityUsers$: Subject<void> = new Subject<void>();
   loadOrganizations$: Subject<void> = new Subject<void>();
   loadOrganizationUsers$: Subject<void> = new Subject<void>();
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
   saveCandidate$: Subject<void> = new Subject<void>();
-  employeeType: string = '';
+  employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUser!: number;
   organizations: OrgUnit[] = [];
@@ -45,27 +49,40 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   jobTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_JOB_TYPE;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  @Input() trainingProgramId!: number;
+  trainingProgramId!: number;
+  operation!: OperationTypes;
 
-  constructor(public lang: LangService,
-              public fb: FormBuilder,
-              private internalUserService: InternalUserService,
-              private organizationUnitService: OrganizationUnitService,
-              private organizationUserService: OrganizationUserService,
-              private lookupService: LookupService,
-              private traineeService: TraineeService) {
+  constructor(
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
+    public lang: LangService,
+    public fb: FormBuilder,
+    private internalUserService: InternalUserService,
+    private organizationUnitService: OrganizationUnitService,
+    private organizationUserService: OrganizationUserService,
+    private lookupService: LookupService,
+    private traineeService: TraineeService,
+    public employeeService: EmployeeService) {
+    this.trainingProgramId = data.model;
+    this.operation = data.operation;
   }
 
   ngOnInit(): void {
     console.log('training program id = ', this.trainingProgramId);
-    this.listenToEmployeeTypeChange();
     this.listenToLoadAuthorityUsers();
     this.listenToLoadOrganizations();
     this.listenToLoadOrganizationUsers();
     this.listenToSelectAuthorityUser();
     this.listenToSelectOrganizationUser();
     this.listenToSaveCandidate();
+    this.listenToEmployeeTypeChange();
     this.buildForm();
+
+    if(!this.employeeService.isInternalUser()) {
+      this.selectedOrganization = this.employeeService.getOrgUnit()?.id!;
+      this.loadOrganizationUsers$.next();
+    }
+
+    console.log('ana', this.employeeService.isInternalUser());
   }
 
   buildForm() {
@@ -184,21 +201,21 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
       .subscribe(() => {
         this.selectedOrganizationUser = undefined;
         this.form.reset();
-      console.log('new user done');
-    })
+        console.log('new user done');
+      });
   }
 
   mapUserToForm(user: OrgUser | InternalUser) {
     this.form.patchValue({
-      id: user.id,
-      generalUserId: user.generalUserId,
-      arName: user.arName,
-      enName: user.enName,
-      phoneNumber: user.phoneNumber,
-      email: user.email,
-      employementPosition: user.jobTitleInfo?.enName,
+      id: user?.id,
+      generalUserId: user?.generalUserId,
+      arName: user?.arName,
+      enName: user?.enName,
+      phoneNumber: user?.phoneNumber,
+      email: user?.email,
+      employementPosition: user?.jobTitleInfo?.enName,
       department: (user as InternalUser)?.defaultDepartmentInfo?.enName
-    })
+    });
   }
 
   showAuthorityTemplate() {
@@ -255,6 +272,10 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
 
   get nationalityControl(): FormControl {
     return this.form.get('nationality') as FormControl;
+  }
+
+  get popupTitle() {
+    return this.lang.map.training_program_create_candidate;
   }
 
   ngOnDestroy() {

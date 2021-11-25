@@ -20,6 +20,7 @@ import {TrainingProgramAttendancePopupComponent} from '@app/training-services/po
 import {switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {TrainingProgramCandidatesPopupComponent} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,11 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  loadAvailablePrograms(): Observable<TrainingProgram[]> {
+    return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/open-for-registeration');
+  }
+
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {
     return of(this.dialog.show(FilterTrainingProgramsComponent, {
       criteria: filterCriteria
@@ -100,6 +106,13 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
         }));
       })
     );
+  }
+
+  openOrganizationCandidatesDialog(trainingProgramId: number): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE
+    }));
   }
 
   _getDialogComponent(): ComponentType<any> {
