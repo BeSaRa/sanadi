@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  departments: string;
+  ldap_user_not_exists: string;
   approve_inbox: string;
   service_name: string;
   services_related_to_the_selected_team: string;

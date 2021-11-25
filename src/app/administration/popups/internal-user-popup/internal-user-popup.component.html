@@ -14,7 +14,8 @@
          [title]="lang.map.lbl_basic_info"></tab>
     <tab name="permissions" [hasError]="permissionTabHasError()" [template]="permissionsTab"
          [title]="lang.map.lbl_permissions"></tab>
-    <tab name="teams" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
+    <tab name="departments" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
+    <tab name="teams" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
     <tab [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" name="services"
          [title]="lang.map.link_services"
          [template]="serviceTab"></tab>
@@ -48,16 +49,6 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="defaultDepartmentId"
-                   for="defaultDepartmentId">{{lang.map.default_dep}}</label>
-            <ng-select validationClasses="defaultDepartmentId" appendTo="body" [clearable]="true"
-                       id="defaultDepartmentId"
-                       formControlName="defaultDepartmentId">
-              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="defaultDepartmentId"></app-field-error-message>
-          </div>
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="jobTitle"
                    for="jobTitle">{{lang.map.job_title}}</label>
@@ -158,7 +149,24 @@
     <user-team [model]="model" [operation]="operation"></user-team>
   </ng-template>
   <ng-template #serviceTab>
-    <user-security [model]="model" [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+    <user-security [operation]="operation" [model]="model"
+                   [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+  </ng-template>
+  <ng-template #departmentsTab>
+    <div class="row">
+      <div class="col-12 mb-4 position-relative">
+        <div class="d-flex align-items-center justify-content-start gap-2">
+          <div class="mb-4 ng-select-wrapper flex-grow-1">
+            <label for="defaultDepartmentId">{{lang.map.select_department}}</label>
+            <ng-select appendTo="body" [clearable]="true"
+                       id="defaultDepartmentId">
+              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+            </ng-select>
+          </div>
+          <button (click)="addDepartment()" class="btn btn-primary">{{lang.map.btn_add}}</button>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </div>
 <div class="dialog-actions">

@@ -12,6 +12,7 @@
            [title]="langService.map.lbl_permissions"
            [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
       <tab name="services"
+           [disabled]="!model.id"
            [title]="langService.map.link_services"
            [template]="serviceTab"></tab>
     </tabs-list>
@@ -213,7 +214,7 @@
     </ng-template>
   </form>
   <ng-template #serviceTab>
-    <user-security [model]="model"></user-security>
+    <user-security [operation]="operation" [model]="model"></user-security>
   </ng-template>
 </div>
 <div class="dialog-actions">

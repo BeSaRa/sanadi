@@ -1,17 +1,13 @@
 <div class="row pb-3">
-  <div class="col-12 d-flex align-items-center">
-    <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.menu_users}}</h1>
-    <button (click)="add$.next(null)" class="btn btn-link outline-none"
-            tooltip="{{lang.map.btn_add}}">
-      <i class="mdi mdi-plus-box"></i></button>
-    <button (click)="reload$.next(null)" class="btn btn-link outline-none"
-            tooltip="{{lang.map.btn_reload}}">
-      <i class="mdi mdi-reload"></i></button>
-  </div>
+  <app-page-header [pageTitle]="'menu_users'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+  </app-page-header>
+  <!--  <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"-->
+  <!--                    [selectedRecords]="selectedRecords"-->
+  <!--                    [actionsList]="actionsList"></app-bulk-actions>-->
+  <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
 </div>
 <div class="row">
   <div class="col-12">
-    <app-paginator #paginator2></app-paginator>
     <app-table #table [paginator]="paginator"
                [filter]="filterControl.value"
                [useSearchToFilter]="true"
@@ -58,6 +54,8 @@
           <td cdk-cell *cdkCellDef="let row">
             <button (click)="edit$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-edit"></i>
             </button>
+<!--            <button (click)="delete$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-remove"></i>-->
+<!--            </button>-->
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
@@ -67,7 +65,7 @@
         </tr>
       </table>
     </app-table>
-    <app-paginator [slaves]="[paginator2]" #paginator></app-paginator>
+    <app-paginator #paginator></app-paginator>
     <context-menu-item #menu [actions]="actions"></context-menu-item>
   </div>
 </div>

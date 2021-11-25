@@ -1,11 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
-import {iif, of, Subject} from "rxjs";
+import {BehaviorSubject, iif, of, Subject} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {UserTeam} from "@app/models/user-team";
 import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
 import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
-import {catchError, filter, map, share, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, distinctUntilChanged, filter, map, share, switchMap, takeUntil, tap} from "rxjs/operators";
 import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
 import {InternalUser} from "@app/models/internal-user";
 import {OrgUser} from "@app/models/org-user";
@@ -14,6 +14,7 @@ import {ToastService} from "@app/services/toast.service";
 import {TeamService} from "@app/services/team.service";
 import {Team} from "@app/models/team";
 import {ConfigurationService} from "@app/services/configuration.service";
+import {OperationTypes} from "@app/enums/operation-types.enum";
 
 @Component({
   selector: 'user-security',
@@ -24,6 +25,15 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   selectedUserTeam: FormControl = new FormControl();
   private _userTeams: UserTeam[] = [];
+  private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);
+  @Input()
+  set operation(value: OperationTypes) {
+    this._operation.next(value);
+  };
+
+  get operation(): OperationTypes {
+    return this._operation.value;
+  }
 
   @Input()
   set userTeams(value: UserTeam[]) {
@@ -63,8 +73,8 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     this.listenToTeamSecurityChange();
     if (this.model.isExternal()) {
       this.userSecurityColumns = this.userSecurityColumns.concat(['approval'])
-      this.loadTeamsAndSecurity();
     }
+    this.listenToOperationChange();
   }
 
   private loadTeamsAndSecurity(): void {
@@ -152,6 +162,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       serviceId: item.serviceId,
       approval: item.approval
     }));
+    // for testing purpose
+    // this.userSecurityService.deleteBulkExternal(list).subscribe();
+
     this.userSecurityService.updateBulkExternal(list)
       .subscribe((updated) => {
         this.toast.success(this.lang.map.msg_update_success);
@@ -180,4 +193,13 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       })
   }
 
+  private listenToOperationChange() {
+    this._operation
+      .pipe(takeUntil(this.destroy$))
+      .pipe(distinctUntilChanged())
+      .pipe(filter(val => val === OperationTypes.UPDATE && this.model.isExternal()))
+      .subscribe(() => {
+        this.loadTeamsAndSecurity();
+      })
+  }
 }

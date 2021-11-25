@@ -109,6 +109,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.buildForm();
     this._saveModel();
     this.listenToCustomRoleChange();
+
+    setTimeout(() => this.operation = OperationTypes.UPDATE, 5000);
   }
 
   buildForm(): void {

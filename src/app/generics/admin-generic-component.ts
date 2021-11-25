@@ -35,6 +35,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   }
 
   ngOnInit(): void {
+    this._init();
     this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
@@ -72,12 +73,16 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-          return (this.useCompositeToLoad ?
-            this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
-            this.service.editDialog(model).pipe(catchError(_ => of(null))))
+        return (this.useCompositeToLoad ?
+          this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
+          this.service.editDialog(model).pipe(catchError(_ => of(null))))
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null))
+  }
+
+  protected _init(): void {
+
   }
 }

@@ -209,4 +209,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   onTabChange($event: TabComponent) {
     this.displaySaveBtn = (!['services', 'teams'].includes($event.name))
   }
+
+  addDepartment() {
+
+  }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="model.isInternal()" class="row">
+<div *ngIf="model?.isInternal()" class="row">
   <div class="col-sm-12">
     <div class="d-flex align-items-center justify-content-start gap-2">
       <div class="mb-4 ng-select-wrapper flex-grow-1 ">
@@ -70,7 +70,7 @@
               <span>{{lang.map.services_related_to_the_selected_team}}</span></div>
           </th>
         </ng-container>
-        <ng-container *ngIf="model.isInternal()">
+        <ng-container *ngIf="model?.isInternal()">
           <tr cdk-header-row *cdkHeaderRowDef="['header']"></tr>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="userSecurityColumns"></tr>
