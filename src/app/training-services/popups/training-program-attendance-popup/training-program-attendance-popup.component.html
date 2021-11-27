@@ -6,7 +6,7 @@
   </div>
 </div>
 <div class="dialog-content">
-  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+  <form style="width: 1000px;" novalidate autocomplete="off" [formGroup]="form">
     <div class="row pb-3">
       <app-page-header [pageTitle]="'training_program_trainees'">
       </app-page-header>
@@ -32,14 +32,14 @@
                     sortable-header>{{lang.map.training_program_trainee_department}}</th>
                 <td cdk-cell *cdkCellDef="let row">{{row.trainee.department}}</td>
               </ng-container>
-              <!--                <ng-container cdkColumnDef="status">-->
-              <!--                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>-->
-              <!--                  <td cdk-cell *cdkCellDef="let row">{{row.trainee.statusInfo.getName()}}</td>-->
-              <!--                </ng-container>-->
-              <!--                <ng-container cdkColumnDef="nationality">-->
-              <!--                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_nationality}}</th>-->
-              <!--                  <td cdk-cell *cdkCellDef="let row">{{row.trainee.nationalityInfo.getName()}}</td>-->
-              <!--                </ng-container>-->
+              <ng-container cdkColumnDef="status">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>
+                <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
+              </ng-container>
+              <ng-container cdkColumnDef="nationality">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_nationality}}</th>
+                <td cdk-cell *cdkCellDef="let row">{{row.trainee.nationalityInfo.getName()}}</td>
+              </ng-container>
               <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.attendance}}</th>
                 <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">

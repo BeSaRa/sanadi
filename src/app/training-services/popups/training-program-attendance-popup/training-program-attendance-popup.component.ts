@@ -23,7 +23,7 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
   model!: TrainingProgram;
   operation!: OperationTypes;
   form!: FormGroup;
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,

@@ -3,15 +3,23 @@ import {TrainingProgram} from '@app/models/training-program';
 import {AdminResult} from '@app/models/admin-result';
 import {DateUtils} from '@app/helpers/date-utils';
 import {Trainee} from '@app/models/trainee';
+import {LookupService} from '@app/services/lookup.service';
+import {FactoryService} from '@app/services/factory.service';
 
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram>{
   receive(model: TrainingProgram): TrainingProgram {
+    const lookupService = FactoryService.getService('LookupService') as LookupService;
+
     model.registrationDate = DateUtils.getDateStringFromDate(model.registerationStartDate) + ' to ' + DateUtils.getDateStringFromDate(model.registerationClosureDate);
     model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' to ' + DateUtils.getDateStringFromDate(model.endDate);
     model.trainingTypeInfo = AdminResult.createInstance(model.trainingTypeInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.traineeList = model.traineeList.map(tr => {
+      let statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!);
+      tr.statusInfo = statusInfo;
       tr.trainee = (new Trainee()).clone(tr.trainee);
+      let nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == tr.trainee.nationality)!);
+      tr.trainee.nationalityInfo = nationalityInfo;
       return tr;
     });
 

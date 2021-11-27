@@ -1,4 +1,5 @@
 import {Trainee} from '@app/models/trainee';
+import {Lookup} from '@app/models/lookup';
 
 export class TraineeData {
   id!: number;
@@ -6,6 +7,7 @@ export class TraineeData {
   enrollmentTime!: string;
   isAttended!: boolean;
   status!: number;
+  statusInfo!: Lookup;
   trainingProgramId!: number;
   trainee!: Trainee;
 }

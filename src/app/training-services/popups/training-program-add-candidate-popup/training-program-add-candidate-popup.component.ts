@@ -53,6 +53,7 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   trainingProgramId!: number;
   operation!: OperationTypes;
+  forceClose = false;
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
@@ -210,13 +211,20 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
         this.toast.success(message);
         this.selectedOrganizationUserId = undefined;
         this.form.reset();
-        console.log('new user done');
+        if(this.forceClose) {
+          this.dialogRef.close(this.trainingProgramId);
+        }
       });
   }
 
-  saveCandidateAndClose() {
+  saveCandidate() {
+    this.forceClose = false;
     this.saveCandidate$.next();
-    this.dialogRef.close(this.trainingProgramId);
+  }
+
+  saveCandidateAndClose() {
+    this.forceClose = true;
+    this.saveCandidate$.next();
   }
 
   mapUserToForm(user: OrgUser | InternalUser) {

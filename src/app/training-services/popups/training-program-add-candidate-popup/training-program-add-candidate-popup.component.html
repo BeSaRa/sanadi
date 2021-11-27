@@ -219,7 +219,7 @@
 </div>
 <div class="dialog-actions">
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveCandidate$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [disabled]="form.invalid" (click)="saveCandidate()" class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [disabled]="form.invalid" (click)="saveCandidateAndClose()" class="btn btn-primary">{{lang.map.btn_save_and_close}}</button>
   <button [dialogClose]="trainingProgramId" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
