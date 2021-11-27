@@ -9,9 +9,10 @@ import {ToastService} from '@app/services/toast.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, switchMap, takeUntil} from 'rxjs/operators';
 import {TraineeService} from '@app/services/trainee.service';
-import {EmployeeService} from '@app/services/employee.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {TraineeData} from '@app/models/trainee-data';
 
 @Component({
   selector: 'training-program-candidates',
@@ -31,7 +32,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       onClick: _ => this.reload$.next(null),
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'department', 'currentJob', 'nationality', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
   models: Trainee[] = [];
   trainingProgramId: number;
   operation!: OperationTypes;
@@ -40,8 +41,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
               public lang: LangService,
               public service: TraineeService,
               private dialogService: DialogService,
-              private toast: ToastService,
-              private employeeService: EmployeeService) {
+              private toast: ToastService) {
     this.operation = data.operation;
     this.trainingProgramId = data.model;
   }
@@ -52,8 +52,11 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   }
 
   listenToAdd() {
-    this.add$.subscribe(() => {
-      this.service.openAddTrainingProgramCandidateDialog(this.trainingProgramId);
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openAddTrainingProgramCandidateDialog(this.trainingProgramId).onAfterClose$))
+      .subscribe(() => {
+      this.reload$.next(this.trainingProgramId);
     })
   }
 
@@ -61,21 +64,38 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        // const load = this.service.loadAvailablePrograms(); // to be uncommented
-        let load = this.employeeService.isInternalUser() ? of([new Trainee(), new Trainee()]) : of([new Trainee(), new Trainee(), new Trainee()])
-        // const load = this.service.loadComposite();
+        let load = this.service.trainingProgramCandidates(this.trainingProgramId);
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: Trainee[]) => {
+        console.log('candidates = ', list);
         this.models = list;
       })
   }
 
   searchCallback = (record: any, searchText: string) => {
-    return record.search(searchText);
+    return record.trainee.search(searchText);
   };
 
   get popupTitle(): string {
-    return this.lang.map.menu_training_programs;
+    return this.lang.map.training_program_candidates;
   };
+
+  delete(event: MouseEvent, model: TraineeData): void {
+    event.preventDefault();
+    const traineeModel = (new Trainee()).clone(model.trainee);
+    // @ts-ignore
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.trainee.getName()});
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = traineeModel.deleteTrainee(this.trainingProgramId).subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.trainee.getName()}));
+          this.reload$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
+  }
 }

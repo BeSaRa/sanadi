@@ -21,6 +21,7 @@ import {switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {TrainingProgramCandidatesPopupComponent} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
+import {TrainingProgramAddCandidatePopupComponent} from '@app/training-services/popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +114,13 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
       model: trainingProgramId,
       operation: OperationTypes.CREATE
     }));
+  }
+
+  openAddTrainingProgramCandidateDialog(trainingProgramId: number): DialogRef {
+    return this.dialog.show<IDialogData<number>>(TrainingProgramAddCandidatePopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE
+    });
   }
 
   _getDialogComponent(): ComponentType<any> {

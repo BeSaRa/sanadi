@@ -5,9 +5,9 @@
             tabindex="-1" [dialogClose]="models" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" style="width: 800px">
+<div class="dialog-content" style="width: 1000px">
   <div class="row pb-3">
-    <app-page-header [pageTitle]="'menu_available_programs'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
     </app-page-header>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
@@ -22,31 +22,31 @@
           <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
             <ng-container cdkColumnDef="arName">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.arName}}</td>
             </ng-container>
             <ng-container cdkColumnDef="enName">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.enName}}</td>
             </ng-container>
             <ng-container cdkColumnDef="department">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_department}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.department}}</td>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.department}}</td>
             </ng-container>
-            <ng-container cdkColumnDef="currentJob">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_trainee_current_job}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.currentJob}}</td>
+            <ng-container cdkColumnDef="status">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.candidate_status}}</th>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.statusInfo.getName()}}</td>
             </ng-container>
             <ng-container cdkColumnDef="nationality">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_nationality}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.nationality}}</td>
+              <td cdk-cell *cdkCellDef="let row">{{row.trainee.nationalityInfo.getName()}}</td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <!--                <a href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.attendance}}" class="icon-btn">-->
-                  <!--                  Candidates-->
-                  <!--                </a>-->
+                  <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                    <i class="mdi mdi-close-box"></i>
+                  </a>
                 </div>
               </td>
             </ng-container>
@@ -62,4 +62,8 @@
       </div>
     </div>
   </div>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button [dialogClose]="models" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

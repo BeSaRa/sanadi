@@ -420,7 +420,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.model.status != this.trainingStatus.TRAINING_FINISHED &&
       this.model.status != this.trainingStatus.TRAINING_CANCELED &&
       this.model.status != this.trainingStatus.TRAINING_PUBLISHED &&
-      this.model.status != this.trainingStatus.EDITING_AFTER_PUBLISHING;
+      this.model.status != this.trainingStatus.EDITING_AFTER_PUBLISHING &&
+      this.model.status != this.trainingStatus.REGISTRATION_OPEN &&
+      this.model.status != this.trainingStatus.REGISTRATION_CLOSED;
   }
 
   showSaveAndApproveButton() {
@@ -428,7 +430,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   showSaveAndPublishButton() {
-    return this.saveVisible && (this.model.status == this.trainingStatus.TRAINING_PUBLISHED || this.model.status == this.trainingStatus.PROGRAM_APPROVED);
+    return this.saveVisible &&
+      (this.model.status ==
+        this.trainingStatus.TRAINING_PUBLISHED ||
+        this.model.status == this.trainingStatus.PROGRAM_APPROVED ||
+        this.model.status == this.trainingStatus.EDITING_AFTER_PUBLISHING ||
+        this.model.status == this.trainingStatus.REGISTRATION_OPEN ||
+        this.model.status == this.trainingStatus.REGISTRATION_CLOSED);
   }
 
   showCancelButton() {

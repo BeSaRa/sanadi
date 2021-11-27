@@ -1,5 +1,4 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Trainee} from '@app/models/trainee';
 import {TrainingProgram} from '@app/models/training-program';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -10,7 +9,6 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {AdminResult} from '@app/models/admin-result';
 import {switchMap} from 'rxjs/operators';
 import {TrainingProgramService} from '@app/services/training-program.service';
 import {TraineeStatus} from '@app/enums/trainee-status';
@@ -25,7 +23,7 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
   model!: TrainingProgram;
   operation!: OperationTypes;
   form!: FormGroup;
-  allTrainees: AdminResult[] = [];
+  displayedColumns: string[] = ['arName', 'enName', 'department', 'actions'];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
@@ -78,13 +76,5 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
 
   get traineesFormArray() {
     return this.form.controls.trainees as FormArray;
-  }
-
-  fakeTraineeList(): AdminResult[] {
-    const traineeOne = {id: 1, arName: 'متدرب 1', enName: 'Trainer 1'} as Trainee;
-    const traineeTwo = {id: 2, arName: 'متدرب 2', enName: 'Trainer 2'} as Trainee;
-    const traineeThree = {id: 3, arName: 'متدرب 2', enName: 'Trainer 3'} as Trainee;
-
-    return [AdminResult.createInstance(traineeOne), AdminResult.createInstance(traineeTwo), AdminResult.createInstance(traineeThree)];
   }
 }

@@ -16,8 +16,6 @@
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
            [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1"></tab>
-      <tab [name]="tabsData.candidates.name" [template]="candidatesTabTemplate"
-           [title]="lang.map.training_program_add_candidates"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -295,6 +293,7 @@
     <ng-template #organizationsTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <div>
+          <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_organization}}</h1>
           <button (click)="openAddOrganizations()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
@@ -308,7 +307,6 @@
                      class="form-label">{{lang.map.training_program_organization_types}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
                 <ng-select
-                  labelForId="organizationTypeId"
                   placeholder="{{lang.map.select}}"
                   [(ngModel)]="selectedOrganizationType"
                   [ngModelOptions]="{standalone: true}"
@@ -324,7 +322,6 @@
                      class="form-label">{{lang.map.training_program_organizations}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
                 <ng-select
-                  labelForId="organizationId"
                   placeholder="{{lang.map.select}}"
                   [(ngModel)]="selectedOrganization"
                   [ngModelOptions]="{standalone: true}"
@@ -385,6 +382,7 @@
     <ng-template #trainersTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <div>
+          <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_trainer}}</h1>
           <button (click)="openAddTrainers()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
@@ -404,7 +402,7 @@
                   [ngModelOptions]="{standalone: true}"
                   id="trainerId"
                   appendTo="Body">
-                  <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.enName}} | {{trainer.arName}}</ng-option>
+                  <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.getName()}}</ng-option>
                 </ng-select>
               </div>
             </div>
@@ -463,9 +461,6 @@
           </div>
         </div>
       </div>
-    </ng-template>
-    <ng-template #candidatesTabTemplate>
-      <training-program-add-candidate-popup></training-program-add-candidate-popup>
     </ng-template>
   </form>
 </div>

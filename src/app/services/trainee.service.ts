@@ -9,7 +9,7 @@ import {UrlService} from '@app/services/url.service';
 import {FactoryService} from '@app/services/factory.service';
 import {TraineeInterceptor} from '@app/model-interceptors/trainee-interceptor';
 import {Generator} from '@app/decorators/generator';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
@@ -35,6 +35,10 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
     return this.http.put<Trainee>(this._getServiceURL() + '/enroll-trainee/' + trainingProgramId, model);
   }
 
+  deleteTrainee(trainingProgramId: number, traineeId: number): Observable<boolean> {
+    return this.http.delete<boolean>(this._getServiceURL() + '/delete-trainee/training-program-id/' + trainingProgramId + '/trainee-id/' + traineeId);
+  }
+
   _getDialogComponent(): ComponentType<any> {
     return TraineePopupComponent;
   }
@@ -55,10 +59,15 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
     return this.urlService.URLS.TRAINING_PROGRAM;
   }
 
-  openAddTrainingProgramCandidateDialog(trainingProgramId: number): Observable<DialogRef> {
-    return of(this.dialog.show<IDialogData<number>>(TrainingProgramAddCandidatePopupComponent, {
+  @Generator(undefined, true, {property: 'rs'})
+  trainingProgramCandidates(trainingProgramId: number): Observable<Trainee[]> {
+    return this.http.get<Trainee[]>(this._getServiceURL() + '/participants/training-program-id/' + trainingProgramId);
+  }
+
+  openAddTrainingProgramCandidateDialog(trainingProgramId: number): DialogRef {
+    return this.dialog.show<IDialogData<number>>(TrainingProgramAddCandidatePopupComponent, {
       model: trainingProgramId,
       operation: OperationTypes.CREATE
-    }));
+    });
   }
 }

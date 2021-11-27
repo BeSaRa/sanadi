@@ -3,6 +3,8 @@ import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {TraineeService} from '@app/services/trainee.service';
 import {INames} from '@app/interfaces/i-names';
+import {Lookup} from '@app/models/lookup';
+import {searchFunctionType} from '@app/types/types';
 
 export class Trainee extends BaseModel<Trainee, TraineeService>{
   generalUserId!: number;
@@ -18,11 +20,22 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
   service: TraineeService;
   lang: LangService;
   status!: number;
+  statusInfo!: Lookup;
+  nationalityInfo!: Lookup;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName'
+  };
 
   constructor() {
     super();
     this.service = FactoryService.getService('TraineeService');
     this.lang = FactoryService.getService('LangService');
+  }
+
+  deleteTrainee(trainingProgramId: number) {
+    return this.service.deleteTrainee(trainingProgramId, this.id);
   }
 
   getName(): string {

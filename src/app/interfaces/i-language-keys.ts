@@ -2,6 +2,10 @@ export interface ILanguageKeys {
   departments: string;
   ldap_user_not_exists: string;
   approve_inbox: string;
+  btn_save_and_close: string;
+  candidate_status: string;
+  training_program_candidate: string;
+  lbl_trainer: string;
   training_program_organization_employees: string;
   training_program_create_candidate: string;
   training_program_candidates: string;

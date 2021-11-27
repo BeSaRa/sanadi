@@ -20,6 +20,8 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from '@app/services/employee.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
@@ -37,11 +39,11 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   saveCandidate$: Subject<void> = new Subject<void>();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
-  selectedAuthorityUser!: number;
+  selectedAuthorityUserId?: number;
   organizations: OrgUnit[] = [];
   organizationUsers: OrgUser[] = [];
-  selectedOrganizationUser?: number;
-  selectedOrganization!: number;
+  selectedOrganizationUserId?: number;
+  selectedOrganizationId?: number;
   trainer!: Trainer;
   form!: FormGroup;
   fm!: FormManager;
@@ -55,6 +57,8 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   constructor(
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
     public lang: LangService,
+    public toast: ToastService,
+    public dialogRef: DialogRef,
     public fb: FormBuilder,
     private internalUserService: InternalUserService,
     private organizationUnitService: OrganizationUnitService,
@@ -78,7 +82,7 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     this.buildForm();
 
     if(!this.employeeService.isInternalUser()) {
-      this.selectedOrganization = this.employeeService.getOrgUnit()?.id!;
+      this.selectedOrganizationId = this.employeeService.getOrgUnit()?.id!;
       this.loadOrganizationUsers$.next();
     }
 
@@ -113,6 +117,9 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     this.employeeTypeChanged$
       .pipe(takeUntil(this.destroy$))
       .subscribe((type) => {
+        this.selectedAuthorityUserId = undefined;
+        this.selectedOrganizationId = undefined;
+        this.selectedOrganizationUserId = undefined;
         type == 'authority' ? this.loadAuthorityUsers$.next() : this.loadOrganizations$.next();
       });
   }
@@ -143,7 +150,7 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
 
   onOrganizationChange() {
     this.form.reset();
-    this.selectedOrganizationUser = undefined;
+    this.selectedOrganizationUserId = undefined;
     this.loadOrganizationUsers$.next();
   }
 
@@ -154,8 +161,8 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
       }))
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
-        if (this.selectedOrganization != null) {
-          return this.organizationUserService.getByCriteria({'org-id': this.selectedOrganization});
+        if (this.selectedOrganizationId != null) {
+          return this.organizationUserService.getByCriteria({'org-id': this.selectedOrganizationId});
         } else {
           return of([]);
         }
@@ -177,7 +184,7 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   listenToSelectAuthorityUser() {
     this.selectAuthorityUser$.subscribe(() => {
       this.form.reset();
-      const user = this.authorityUsers.find(x => x.id == this.selectedAuthorityUser)!;
+      const user = this.authorityUsers.find(x => x.id == this.selectedAuthorityUserId)!;
       this.mapUserToForm(user);
     });
   }
@@ -185,9 +192,9 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   listenToSelectOrganizationUser() {
     this.selectOrganizationUser$.subscribe(() => {
       this.form.reset();
-      const user = this.organizationUsers.find(x => x.id == this.selectedOrganizationUser)!;
+      const user = this.organizationUsers.find(x => x.id == this.selectedOrganizationUserId)!;
       this.mapUserToForm(user);
-      console.log('selected org user', this.selectedOrganizationUser);
+      console.log('selected org user', this.selectedOrganizationUserId);
     });
   }
 
@@ -199,10 +206,17 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
         return this.traineeService.enroll(this.trainingProgramId, trainee);
       }))
       .subscribe(() => {
-        this.selectedOrganizationUser = undefined;
+        const message = this.lang.map.msg_save_success;
+        this.toast.success(message);
+        this.selectedOrganizationUserId = undefined;
         this.form.reset();
         console.log('new user done');
       });
+  }
+
+  saveCandidateAndClose() {
+    this.saveCandidate$.next();
+    this.dialogRef.close(this.trainingProgramId);
   }
 
   mapUserToForm(user: OrgUser | InternalUser) {

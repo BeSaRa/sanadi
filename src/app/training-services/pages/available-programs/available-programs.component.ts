@@ -36,7 +36,7 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
         // const load = this.service.loadAvailablePrograms(); // to be uncommented
-        const load = this.service.loadComposite();
+        const load = this.service.loadAvailablePrograms();
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: TrainingProgram[]) => {

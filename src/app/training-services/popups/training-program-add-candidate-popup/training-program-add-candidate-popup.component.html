@@ -36,14 +36,13 @@
             <div class="mb-3 position-relative ng-select-wrapper">
               <ng-select
                 (change)="onSelectAuthorityUser()"
-                [(ngModel)]="selectedAuthorityUser"
+                [(ngModel)]="selectedAuthorityUserId"
                 [ngModelOptions]="{standalone: true}"
                 appendTo="Body"
                 id="authorityId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let authorityUser of authorityUsers"
-                           [value]="authorityUser.id">{{authorityUser.enName}}
-                  | {{authorityUser.arName}}</ng-option>
+                           [value]="authorityUser.id">{{authorityUser.getName()}}</ng-option>
               </ng-select>
             </div>
           </div>
@@ -62,14 +61,13 @@
             <div class="mb-3 position-relative ng-select-wrapper">
               <ng-select
                 (change)="onOrganizationChange()"
-                [(ngModel)]="selectedOrganization"
+                [(ngModel)]="selectedOrganizationId"
                 [ngModelOptions]="{standalone: true}"
                 appendTo="Body"
                 id="organizationId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let organization of organizations"
-                           [value]="organization.id">{{organization.enName}}
-                  | {{organization.arName}}</ng-option>
+                           [value]="organization.id">{{organization.getName()}}</ng-option>
               </ng-select>
             </div>
           </div>
@@ -79,13 +77,12 @@
             <div class="mb-3 position-relative ng-select-wrapper">
               <ng-select
                 (change)="onSelectOrganizationUser()"
-                [(ngModel)]="selectedOrganizationUser"
+                [(ngModel)]="selectedOrganizationUserId"
                 appendTo="Body"
                 id="organizationUserId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let organizationUser of organizationUsers"
-                           [value]="organizationUser.id">{{organizationUser.enName}}
-                  | {{organizationUser.arName}}</ng-option>
+                           [value]="organizationUser.id">{{organizationUser.getName()}}</ng-option>
               </ng-select>
             </div>
           </div>
@@ -217,11 +214,12 @@
           </div>
         </div>
       </div>
-      <div class="save-btn-container">
-        <span class="flex-grow-1"></span>
-        <button [disabled]="form.invalid" (click)="saveCandidate$.next()"
-                class="btn btn-primary">{{lang.map.btn_save}}</button>
-      </div>
     </form>
   </div>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" (click)="saveCandidate$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [disabled]="form.invalid" (click)="saveCandidateAndClose()" class="btn btn-primary">{{lang.map.btn_save_and_close}}</button>
+  <button [dialogClose]="trainingProgramId" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
