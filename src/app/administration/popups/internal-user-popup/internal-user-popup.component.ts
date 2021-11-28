@@ -162,7 +162,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.loadJobTitles();
     this.loadPermissions();
     this.loadCustomRoles();
-    this.loadUserDepartments();
+    if (this.operation === OperationTypes.UPDATE) {
+      this.loadUserDepartments();
+    }
     this.listenToUserDepartmentsChange();
   }
 
