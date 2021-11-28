@@ -183,4 +183,105 @@ export class DateUtils {
     }
     return DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)?.valueOf() || null;
   }
+
+  static getHoursList(): { val: number, key: string }[] {
+    return [
+      {
+        val: 0,
+        key: '12:00 AM'
+      },
+      {
+        val: 1,
+        key: '01:00 AM'
+      },
+      {
+        val: 2,
+        key: '02:00 AM'
+      },
+      {
+        val: 3,
+        key: '03:00 AM'
+      },
+      {
+        val: 4,
+        key: '04:00 AM'
+      },
+      {
+        val: 5,
+        key: '05:00 AM'
+      },
+      {
+        val: 6,
+        key: '06:00 AM'
+      },
+      {
+        val: 7,
+        key: '07:00 AM'
+      },
+      {
+        val: 8,
+        key: '08:00 AM'
+      },
+      {
+        val: 9,
+        key: '09:00 AM'
+      },
+      {
+        val: 10,
+        key: '10:00 AM'
+      },
+      {
+        val: 11,
+        key: '11:00 AM'
+      },
+      {
+        val: 12,
+        key: '12:00 PM'
+      },
+      {
+        val: 13,
+        key: '01:00 PM'
+      },
+      {
+        val: 14,
+        key: '02:00 PM'
+      },
+      {
+        val: 15,
+        key: '03:00 PM'
+      },
+      {
+        val: 16,
+        key: '04:00 PM'
+      },
+      {
+        val: 17,
+        key: '05:00 PM'
+      },
+      {
+        val: 18,
+        key: '06:00 PM'
+      },
+      {
+        val: 19,
+        key: '07:00 PM'
+      },
+      {
+        val: 20,
+        key: '08:00 PM'
+      },
+      {
+        val: 21,
+        key: '09:00 PM'
+      },
+      {
+        val: 22,
+        key: '10:00 PM'
+      },
+      {
+        val: 23,
+        key: '11:00 PM'
+      }
+    ];
+  }
 }

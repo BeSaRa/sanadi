@@ -66,7 +66,6 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       trainingType,
       trainingObjective,
       trainingTopics,
-      targetOrganizationListIds,
       targetAudienceListIds,
       durationInDays,
       durationInHours,
@@ -76,7 +75,6 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       sessionStartTime,
       sessionEndTime,
       trainingLocation,
-      trainerListIds,
       contactPerson,
       attendenceMethod,
       trainingLang,
@@ -103,7 +101,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : trainingTopics,
       targetAudienceListIds: controls ? [targetAudienceListIds, [
-        CustomValidators.required
+        CustomValidators.requiredArray
       ]] : targetAudienceListIds,
       durationInDays: controls ? [durationInDays, [
         CustomValidators.required,

@@ -66,6 +66,9 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
 
   @Generator(undefined, true, {property: 'rs'})
   getOrganizationUnitsByOrgType(orgType: number) {
+    if (!orgType) {
+      return of([]);
+    }
     return this.http.get<OrgUnit[]>(this._getServiceURL() + '/org-unit-type' + '?orgUnitType[]=' + orgType);
   }
 
