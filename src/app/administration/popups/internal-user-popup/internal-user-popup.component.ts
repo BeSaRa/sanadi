@@ -2,7 +2,7 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {AdminGenericDialog} from "@app/generics/admin-generic-dialog";
 import {InternalUser} from "@app/models/internal-user";
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {IDialogData} from "@app/interfaces/i-dialog-data";
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -178,6 +178,19 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         customRoleId: [this.model?.customRoleId, Validators.required]
       })
     });
+    this.preventUserDomain();
+  }
+
+  get domainName(): AbstractControl {
+    return this.form.get('user.domainName') as AbstractControl;
+  }
+
+  preventUserDomain(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.domainName.disable();
+    } else {
+      this.domainName.enable();
+    }
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
@@ -191,6 +204,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         this.operation === OperationTypes.UPDATE && dialogRef.close(model);
         // here i change operation to UPDATE after first save
         this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
+        this.preventUserDomain();
       });
   }
 

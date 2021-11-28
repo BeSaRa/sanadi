@@ -58,29 +58,6 @@
             </ng-select>
             <app-field-error-message controlName="jobTitle"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
-            <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
-            <app-field-error-message controlName="email"></app-field-error-message>
-          </div>
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="officialPhoneNumber"
-                   for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
-            <input validationClasses="officialPhoneNumber" formControlName="officialPhoneNumber" type="text"
-                   id="officialPhoneNumber" class="form-control">
-            <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="phoneNumber"
-                   for="phoneNumber">{{lang.map.mobile_number}}</label>
-            <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
-                   class="form-control">
-            <app-field-error-message controlName="phoneNumber"></app-field-error-message>
-          </div>
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
@@ -94,6 +71,29 @@
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="status"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
+            <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
+            <app-field-error-message controlName="email"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="phoneNumber"
+                   for="phoneNumber">{{lang.map.mobile_number}}</label>
+            <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
+                   class="form-control">
+            <app-field-error-message controlName="phoneNumber"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="officialPhoneNumber"
+                   for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
+            <input validationClasses="officialPhoneNumber" formControlName="officialPhoneNumber" type="text"
+                   id="officialPhoneNumber" class="form-control">
+            <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
           </div>
         </div>
       </ng-container>
