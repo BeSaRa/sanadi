@@ -8,6 +8,7 @@ import {InternalDepartment} from "@app/models/internal-department";
 import {InternalUserService} from "@app/services/internal-user.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {Validators} from "@angular/forms";
+import {Observable} from "rxjs";
 
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
@@ -110,5 +111,9 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
 
   isInternal(): boolean {
     return true;
+  }
+
+  updateDefaultDepartment(): Observable<boolean> {
+    return this.service.updateDefaultDepartment({id: this.id, defaultDepartmentId: this.defaultDepartmentId});
   }
 }

@@ -303,7 +303,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       return;
     }
     this.model.defaultDepartmentId = row.internalDepartmentId;
-    this.model.save().subscribe(() => {
+    this.model.updateDefaultDepartment().subscribe(() => {
       !mute ? this.toast.success(this.lang.map.msg_update_success) : null;
     })
   }

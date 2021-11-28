@@ -8,6 +8,9 @@ import {DialogService} from "@app/services/dialog.service";
 import {ComponentType} from "@angular/cdk/overlay";
 import {InternalUserPopupComponent} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
 import {FactoryService} from "@app/services/factory.service";
+import {Observable} from "rxjs";
+import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +44,10 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
 
   _getDialogComponent(): ComponentType<any> {
     return InternalUserPopupComponent
+  }
+
+  updateDefaultDepartment(data: { id: number, defaultDepartmentId: number }): Observable<boolean> {
+    return this.http.put<IDefaultResponse<boolean>>(this._getServiceURL() + '/default-department/update', data)
+      .pipe(map(res => res.rs));
   }
 }
