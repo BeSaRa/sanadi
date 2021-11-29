@@ -1,6 +1,6 @@
 <div class="row" *ngIf="selectedRecords.length > 0">
   <div class="col-12 d-flex align-items-center justify-content-end">
-    <h1 class="h6 text-primary m-0 d-inline-block"
+    <h1 class="h6 text-primary m-0 d-inline-block" *ngIf="!hideSelectCount"
         id="selected-record-count">{{selectedRecords.length}} {{langService.map.items_selected}}</h1>
     <ng-container *ngFor="let action of actions">
       <button *ngIf="!action.children || action.children.length === 0"

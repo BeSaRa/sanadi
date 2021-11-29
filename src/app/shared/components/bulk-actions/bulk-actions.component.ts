@@ -1,7 +1,7 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {CommonUtils} from '../../../helpers/common-utils';
+import {LangService} from '@app/services/lang.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-bulk-actions',
@@ -13,6 +13,7 @@ export class BulkActionsComponent implements OnInit {
 
   @Input() actionsList!: IGridAction[];
   @Input() selectedRecords!: any[];
+  @Input() hideSelectCount: boolean = false;
 
   actions: IGridAction[] = [];
 
