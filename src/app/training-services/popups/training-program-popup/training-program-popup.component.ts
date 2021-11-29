@@ -48,11 +48,24 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   saveVisible = true;
   trainingStatus = TrainingStatus;
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    organizations: {name: 'organizations'},
-    trainers: {name: 'trainers'},
-    candidates: {name: 'candidates'}
+    basic: {
+      name: 'basic',
+      validStatus: () => this.form && this.form.valid
+    },
+    organizations: {
+      name: 'organizations',
+      validStatus: () => this.model && this.model.targetOrganizationListIds.length < 1
+    },
+    trainers: {
+      name: 'trainers',
+      validStatus: () => this.model && this.model.trainerListIds.length < 1
+    },
+    briefcase: {
+      name: 'briefcase',
+      validStatus: () => true
+    }
   };
+  tabIndex$: Subject<number> = new Subject<number>();
   datepickerControlsMap: { [key: string]: FormControl } = {};
   datepickerOptionsMap: IKeyValue = {
     startDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
@@ -436,15 +449,14 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   showSaveAndPublishButton() {
     return this.saveVisible &&
-      (this.model.status ==
-        this.trainingStatus.TRAINING_PUBLISHED ||
+      (this.model.status == this.trainingStatus.TRAINING_PUBLISHED ||
         this.model.status == this.trainingStatus.PROGRAM_APPROVED ||
         this.model.status == this.trainingStatus.EDITING_AFTER_PUBLISHING ||
         this.model.status == this.trainingStatus.REGISTRATION_OPEN ||
         this.model.status == this.trainingStatus.REGISTRATION_CLOSED);
   }
 
-  showCancelButton() {
+  showCancelTrainingProgramButton() {
     return this.operation != this.operationTypes.CREATE &&
       this.model.status != this.trainingStatus.TRAINING_FINISHED &&
       this.model.status != this.trainingStatus.TRAINING_CANCELED;

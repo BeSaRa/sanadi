@@ -18,6 +18,7 @@ import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {DateUtils} from '@app/helpers/date-utils';
 import {of} from 'rxjs';
 import {TrainingStatus} from '@app/enums/training-status';
+import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 
 @Component({
   selector: 'training-program',
@@ -42,7 +43,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   ];
   displayedColumns: string[] = ['rowSelection', 'activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
   selectedRecords: TrainingProgram[] = [];
-  actionsList: IGridAction[] = [
+  bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -57,6 +58,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   constructor(public lang: LangService,
               public service: TrainingProgramService,
+              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               private toast: ToastService) {
@@ -81,6 +83,15 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   candidates(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
     const sub = this.service.openOrganizationCandidatesDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        sub.unsubscribe();
+      });
+    });
+  }
+
+  openTrainingBriefcasesDialog($event: MouseEvent, record: TrainingProgram): void {
+    $event.preventDefault();
+    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcasesDialog(record).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });

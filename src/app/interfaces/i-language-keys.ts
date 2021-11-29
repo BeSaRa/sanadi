@@ -500,6 +500,9 @@ export interface ILanguageKeys {
   msg_update_success: string;
   msg_update_success_except: string;
   msg_update_fail: string;
+  msg_save_fail: string;
+  msg_save_success_except: string;
+  msg_save_success_except_some: string;
   btn_add: string;
   btn_reload: string;
   btn_edit: string;
@@ -734,4 +737,7 @@ export interface ILanguageKeys {
   action_viewed: string;
   action_updated: string;
   action_others: string;
+  training_program_briefcases: string;
+  file_pdf: string;
+  file_video: string;
 }

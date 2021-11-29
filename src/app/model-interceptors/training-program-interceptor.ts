@@ -5,8 +5,10 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {Trainee} from '@app/models/trainee';
 import {LookupService} from '@app/services/lookup.service';
 import {FactoryService} from '@app/services/factory.service';
+import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
+import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 
-export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram>{
+export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram> {
   receive(model: TrainingProgram): TrainingProgram {
     const lookupService = FactoryService.getService('LookupService') as LookupService;
 
@@ -35,6 +37,8 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
 
     model.trainerListIds = convertIdsStringToArray(model.trainerList);
 
+    let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
+    model.trainingBundleList = model.trainingBundleList.map(item => trainingProgramBriefcaseService._getReceiveInterceptor()(new TrainingProgramBriefcase().clone(item)));
     return model;
   }
 
@@ -47,6 +51,9 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.endDate = DateUtils.getDateStringFromDate(model.endDate);
     model.registerationStartDate = DateUtils.getDateStringFromDate(model.registerationStartDate);
     model.registerationClosureDate = DateUtils.getDateStringFromDate(model.registerationClosureDate);
+
+    let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
+    model.trainingBundleList = !model.trainingBundleList ? [] : model.trainingBundleList.map(item => trainingProgramBriefcaseService._getSendInterceptor()(new TrainingProgramBriefcase().clone(item)));
 
     delete model.service;
     delete model.trainingDate;
@@ -68,8 +75,8 @@ function convertIdsStringToArray(val: string): any[] {
 
   try {
     arr = JSON.parse(val);
+  } catch (err) {
   }
-  catch (err) {}
 
   return arr;
 }

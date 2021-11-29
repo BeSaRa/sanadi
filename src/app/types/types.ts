@@ -21,7 +21,7 @@ export type searchFunctionType<T = any> = (text: string, model: T) => boolean;
 
 export type CanNavigateOptions = 'ALLOW' | 'DISALLOW' | 'CONFIRM_UNSAVED_CHANGES';
 
-export type BulkOperationTypes = 'DELETE' | 'UPDATE';
+export type BulkOperationTypes = 'DELETE' | 'UPDATE' | 'SAVE';
 
 export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';
 

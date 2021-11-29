@@ -7,7 +7,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list>
+    <tabs-list [tabByIndex$]="tabIndex$">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="!form.valid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
@@ -16,6 +16,9 @@
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
            [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1"></tab>
+      <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcasesTabTemplate"
+           *ngIf="model.id"
+           [title]="lang.map.training_program_briefcases"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -198,7 +201,8 @@
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="registerationClosureDate"
                  id="registerationClosureDate"
-                 (click)="dpregisterationClosureDate.toggleCalendar()" #dpregisterationClosureDate="angular-mydatepicker"
+                 (click)="dpregisterationClosureDate.toggleCalendar()"
+                 #dpregisterationClosureDate="angular-mydatepicker"
                  [options]="datepickerOptionsMap.registerationClosureDate"
                  (inputFieldChanged)="registrationEndDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
                  angular-mydatepicker [ngClass]="fm.getStatusClass('registerationClosureDate')"></div>
@@ -277,18 +281,18 @@
         </div>
       </div>
       <div class="row mb-3">
-      <div class="col-sm-12 position-relative">
-        <label asteriskIfRequired="comments" for="comments"
-               class="form-label">{{lang.map.training_comments}}</label>
-        <textarea id="comments"
-                  validationClasses="comments"
-                  formControlName="comments"
-                  class="form-control"
-                  rows="3">
+        <div class="col-sm-12 position-relative">
+          <label asteriskIfRequired="comments" for="comments"
+                 class="form-label">{{lang.map.training_comments}}</label>
+          <textarea id="comments"
+                    validationClasses="comments"
+                    formControlName="comments"
+                    class="form-control"
+                    rows="3">
           </textarea>
-        <app-field-error-message controlName="comments"></app-field-error-message>
+          <app-field-error-message controlName="comments"></app-field-error-message>
+        </div>
       </div>
-    </div>
     </ng-template>
     <ng-template #organizationsTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
@@ -313,7 +317,8 @@
                   id="organizationTypeId"
                   appendTo="Body"
                   (change)="onOrganizationTypeChange()">
-                  <ng-option [value]="organizationType.lookupKey" *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
+                  <ng-option [value]="organizationType.lookupKey"
+                             *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
                 </ng-select>
               </div>
             </div>
@@ -327,7 +332,8 @@
                   [ngModelOptions]="{standalone: true}"
                   id="organizationId"
                   appendTo="Body">
-                  <ng-option [value]="organization.id" *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
+                  <ng-option [value]="organization.id"
+                             *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
                 </ng-select>
               </div>
             </div>
@@ -361,7 +367,8 @@
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
-                      <a href="#" (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                      <a href="#" (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_delete}}"
+                         class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
                     </div>
@@ -444,7 +451,8 @@
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
-                      <a href="#" (click)="removeTrainer($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                      <a href="#" (click)="removeTrainer($event, row)" tooltip="{{lang.map.btn_delete}}"
+                         class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
                     </div>
@@ -462,6 +470,10 @@
         </div>
       </div>
     </ng-template>
+    <ng-template #trainingBriefcasesTabTemplate>
+      <training-program-briefcases [trainingProgramId]="model.id"
+                                   [bundlesList]="model.trainingBundleList"></training-program-briefcases>
+    </ng-template>
   </form>
 </div>
 <div class="dialog-actions">
@@ -470,11 +482,15 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="save$.next(null)" class="btn btn-primary">{{lang.map.btn_save}}</button>
-<!--  <button [disabled]="saveDisabled()" *ngIf="showApproveButton()" (click)="approve$.next()" class="btn btn-primary">{{lang.map.training_program_approve}}</button>-->
-  <button [disabled]="saveDisabled()" *ngIf="showSaveAndApproveButton()" (click)="saveAndApprove()" class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
-<!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
-  <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()" class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
-  <button *ngIf="showCancelButton()" (click)="cancelProgram($event)" class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
+  <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <!--  <button [disabled]="saveDisabled()" *ngIf="showApproveButton()" (click)="approve$.next()" class="btn btn-primary">{{lang.map.training_program_approve}}</button>-->
+  <button [disabled]="saveDisabled()" *ngIf="showSaveAndApproveButton()" (click)="saveAndApprove()"
+          class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
+  <!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
+  <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()"
+          class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
+  <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"
+          class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

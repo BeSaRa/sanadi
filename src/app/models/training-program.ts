@@ -6,6 +6,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {searchFunctionType} from '@app/types/types';
 import {TraineeData} from '@app/models/trainee-data';
+import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
   service: TrainingProgramService;
@@ -43,6 +44,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   registerationClosureDate!: IMyDateModel | string;
   totalTrainingCost!: number;
   traineeList: TraineeData[] = [];
+  trainingBundleList: TrainingProgramBriefcase[] = [];
 
   // to be removed
   registeredTraineeNumber: number = 0;

@@ -15,6 +15,8 @@ import { TraineePopupComponent } from './popups/trainee-popup/trainee-popup.comp
 import { TrainingProgramAddCandidatePopupComponent } from './popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
 import { AvailableProgramsComponent } from './pages/available-programs/available-programs.component';
 import { TrainingProgramCandidatesPopupComponent } from './popups/training-program-candidates-popup/training-program-candidates-popup.component';
+import { TrainingBriefcasesPopupComponent } from './popups/training-briefcases-popup/training-briefcases-popup.component';
+import { TrainingBriefcasesComponent } from './pages/training-briefcases/training-briefcases.component';
 
 
 
@@ -31,7 +33,9 @@ import { TrainingProgramCandidatesPopupComponent } from './popups/training-progr
     TraineePopupComponent,
     TrainingProgramAddCandidatePopupComponent,
     AvailableProgramsComponent,
-    TrainingProgramCandidatesPopupComponent
+    TrainingProgramCandidatesPopupComponent,
+    TrainingBriefcasesPopupComponent,
+    TrainingBriefcasesComponent
   ],
   imports: [
     CommonModule,

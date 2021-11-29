@@ -22,6 +22,9 @@ export class SharedService {
 
 
   private bulkMessagesMap = {
+    SAVE: this.langService.map.msg_added_successfully,
+    SAVE_PARTIAL: this.langService.map.msg_save_success_except,
+    SAVE_FAIL: this.langService.map.msg_save_fail,
     DELETE: this.langService.map.msg_delete_success,
     DELETE_PARTIAL: this.langService.map.msg_delete_success_except,
     DELETE_FAIL: this.langService.map.msg_delete_fail,

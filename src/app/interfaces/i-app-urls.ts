@@ -61,6 +61,7 @@ export interface IAppUrls {
   SERVICE_DATA: string;
   E_FINAL_EXTERNAL_OFFICE_APPROVAL: string;
   INTERNAL_PROJECT_LICENSE: string;
+  TRAINING_PROGRAM_BUNDLE: string;
 
   [index: string]: string;
 }

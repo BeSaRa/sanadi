@@ -5,6 +5,7 @@
   "EXTERNAL_USER_SECURITY": "/admin/org-user-service-permission",
   "PROJECT_MODELING": "/external-project-modeling",
   "TRAINING_PROGRAM": "training/training-program",
+  "TRAINING_PROGRAM_BUNDLE": "training/training-program/bundle",
   "TRAINER": "training/trainer",
   "DAC_OCHA": "admin/work-field",
   "SD_GOAL": "admin/sdg",
