@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  candidate_x_has_been_rejected: string;
+  candidate_x_has_been_accepted: string;
+  lbl_reject: string;
+  lbl_accept: string;
+  training_program_accept_or_reject: string;
   departments: string;
   ldap_user_not_exists: string;
   approve_inbox: string;

@@ -68,6 +68,10 @@
                    class="icon-btn">
                   <i class="mdi mdi-account-plus"></i>
                 </a>
+                <a *ngIf="showEvaluateCandidates(row.status)" href="#" (click)="evaluateCandidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"
+                   class="icon-btn">
+                  <i class="mdi mdi-account-check"></i>
+                </a>
                 <a *ngIf="showAttendance(row.status)" href="#" (click)="applyAttendance(row , $event)"
                    tooltip="{{lang.map.attendance}}" class="icon-btn">
                   <i class="mdi mdi-account-clock"></i>

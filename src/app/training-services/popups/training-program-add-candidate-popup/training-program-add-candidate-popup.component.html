@@ -7,7 +7,7 @@
 </div>
 
 <div class="dialog-content">
-  <div *ngIf="employeeService.isInternalUser()">
+  <div *ngIf="employeeService.isInternalUser() && !this.isEvaluate">
     <div class="form-check form-check-inline">
       <input (change)="onEmployeeTypeChange()" [(ngModel)]="employeeType" class="form-check-input" id="authority"
              name="employeeType" type="radio"
@@ -219,7 +219,11 @@
 </div>
 <div class="dialog-actions">
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveCandidate()" class="btn btn-primary">{{lang.map.btn_save}}</button>
-  <button [disabled]="form.invalid" (click)="saveCandidateAndClose()" class="btn btn-primary">{{lang.map.btn_save_and_close}}</button>
+  <button *ngIf="!isEvaluate" [disabled]="form.invalid" (click)="saveCandidate()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button *ngIf="!isEvaluate" [disabled]="form.invalid" (click)="saveCandidateAndClose()" class="btn btn-primary">{{lang.map.btn_save_and_close}}</button>
+
+  <button *ngIf="isEvaluate" [disabled]="form.invalid" (click)="acceptTrainee$.next()" class="btn btn-primary">{{lang.map.lbl_accept}}</button>
+  <button *ngIf="isEvaluate" [disabled]="form.invalid" (click)="rejectTrainee$.next()" class="btn btn-primary">{{lang.map.lbl_reject}}</button>
+
   <button [dialogClose]="trainingProgramId" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

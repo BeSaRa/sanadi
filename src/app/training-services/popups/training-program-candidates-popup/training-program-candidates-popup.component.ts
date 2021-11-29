@@ -9,10 +9,11 @@ import {ToastService} from '@app/services/toast.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {catchError, exhaustMap, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {TraineeService} from '@app/services/trainee.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {TraineeData} from '@app/models/trainee-data';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'training-program-candidates',
@@ -22,6 +23,7 @@ import {TraineeData} from '@app/models/trainee-data';
 export class TrainingProgramCandidatesPopupComponent implements OnInit {
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   add$: Subject<any> = new Subject<any>();
+  reviewCandidate$: Subject<number> = new Subject<number>();
   destroy$: Subject<any> = new Subject<any>();
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
@@ -36,6 +38,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   models: Trainee[] = [];
   trainingProgramId: number;
   operation!: OperationTypes;
+  isEvaluate!: boolean;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
               public lang: LangService,
@@ -44,11 +47,14 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
               private toast: ToastService) {
     this.operation = data.operation;
     this.trainingProgramId = data.model;
+    this.isEvaluate = data.isEvaluate;
   }
 
   ngOnInit(): void {
+    console.log('is evaluate = ', this.isEvaluate);
     this.listenToAdd();
     this.listenToReload();
+    this.listenToReviewCandidate();
   }
 
   listenToAdd() {
@@ -58,6 +64,22 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       .subscribe(() => {
       this.reload$.next(this.trainingProgramId);
     })
+  }
+
+  reviewCandidate(event: MouseEvent, model: TraineeData) {
+    event.preventDefault();
+    this.reviewCandidate$.next(model.trainee.id);
+  }
+
+  listenToReviewCandidate(): void {
+    this.reviewCandidate$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((traineeId) => {
+        return this.service.openEvaluateTrainingProgramCandidateDialog(this.trainingProgramId, traineeId).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   listenToReload() {

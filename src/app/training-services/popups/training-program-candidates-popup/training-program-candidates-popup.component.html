@@ -44,8 +44,11 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                  <a *ngIf="!isEvaluate" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                     <i class="mdi mdi-close-box"></i>
+                  </a>
+                  <a *ngIf="isEvaluate" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
+                    {{lang.map.training_program_accept_or_reject}}
                   </a>
                 </div>
               </td>

@@ -41,4 +41,12 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
   getName(): string {
     return this[(this.lang.map.lang + 'Name') as keyof INames];
   }
+
+  accept(trainingProgramId: number) {
+    return this.service.accept(trainingProgramId, this.id);
+  }
+
+  reject(trainingProgramId: number) {
+    return this.service.reject(trainingProgramId, this.id);
+  }
 }

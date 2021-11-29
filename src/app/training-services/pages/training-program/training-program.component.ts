@@ -98,6 +98,15 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     });
   }
 
+  evaluateCandidates(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    const sub = this.service.openEvaluateOrganizationCandidatesDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        sub.unsubscribe();
+      });
+    });
+  }
+
   edit(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
     this.edit$.next(trainingProgram);
@@ -111,6 +120,10 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     return status == this.trainingStatus.REGISTRATION_OPEN ||
       status == this.trainingStatus.TRAINING_PUBLISHED ||
       status == this.trainingStatus.EDITING_AFTER_PUBLISHING
+  }
+
+  showEvaluateCandidates(status: number) {
+    return status == this.trainingStatus.REGISTRATION_CLOSED
   }
 
   delete(event: MouseEvent, model: TrainingProgram): void {

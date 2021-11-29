@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {BehaviorSubject, of, Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
@@ -22,6 +22,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {TraineeData} from '@app/models/trainee-data';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
@@ -30,13 +31,15 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 })
 export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject();
-  employeeTypeChanged$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  employeeTypeChanged$: Subject<string> = new Subject<string>();
   loadAuthorityUsers$: Subject<void> = new Subject<void>();
   loadOrganizations$: Subject<void> = new Subject<void>();
   loadOrganizationUsers$: Subject<void> = new Subject<void>();
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
   saveCandidate$: Subject<void> = new Subject<void>();
+  acceptTrainee$ = new Subject<any>();
+  rejectTrainee$ = new Subject<any>();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUserId?: number;
@@ -54,9 +57,11 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
   trainingProgramId!: number;
   operation!: OperationTypes;
   forceClose = false;
+  isEvaluate!: boolean;
+  model!: TraineeData;
 
   constructor(
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<TraineeData>,
     public lang: LangService,
     public toast: ToastService,
     public dialogRef: DialogRef,
@@ -67,12 +72,15 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     private lookupService: LookupService,
     private traineeService: TraineeService,
     public employeeService: EmployeeService) {
-    this.trainingProgramId = data.model;
+    this.model = data.model;
+    this.trainingProgramId = data.trainingProgramId;
     this.operation = data.operation;
+    this.isEvaluate = data.isEvaluate;
   }
 
   ngOnInit(): void {
-    console.log('training program id = ', this.trainingProgramId);
+    console.log('is evaluate trainee = ', this.isEvaluate);
+    console.log('model trainee = ', this.isEvaluate);
     this.listenToLoadAuthorityUsers();
     this.listenToLoadOrganizations();
     this.listenToLoadOrganizationUsers();
@@ -80,14 +88,21 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     this.listenToSelectOrganizationUser();
     this.listenToSaveCandidate();
     this.listenToEmployeeTypeChange();
+    this.listenToAcceptTrainee();
+    this.listenToRejectTrainee();
     this.buildForm();
 
-    if(!this.employeeService.isInternalUser()) {
+    if (!this.employeeService.isInternalUser() && !this.isEvaluate) {
       this.selectedOrganizationId = this.employeeService.getOrgUnit()?.id!;
       this.loadOrganizationUsers$.next();
+    } else if (this.employeeService.isInternalUser() && !this.isEvaluate) {
+      this.loadOrganizations$.next();
     }
 
-    console.log('ana', this.employeeService.isInternalUser());
+    if (this.model.trainee?.id) {
+      this.mapTraineeToForm(this.model.trainee);
+      this.form.disable();
+    }
   }
 
   buildForm() {
@@ -145,7 +160,6 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
       }))
       .subscribe((organizations) => {
         this.organizations = organizations;
-        console.log('organizations', this.organizations);
       });
   }
 
@@ -211,7 +225,7 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
         this.toast.success(message);
         this.selectedOrganizationUserId = undefined;
         this.form.reset();
-        if(this.forceClose) {
+        if (this.forceClose) {
           this.dialogRef.close(this.trainingProgramId);
         }
       });
@@ -227,6 +241,36 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     this.saveCandidate$.next();
   }
 
+  listenToAcceptTrainee() {
+    this.acceptTrainee$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .pipe(exhaustMap(() => {
+        return this.model.trainee.accept(this.trainingProgramId);
+      }))
+      .subscribe(() => {
+        const message = this.lang.map.candidate_x_has_been_accepted.change({x: this.model.trainee.getName()});
+        this.toast.success(message);
+        this.dialogRef.close(this.model);
+      });
+  }
+
+  listenToRejectTrainee() {
+    this.rejectTrainee$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .pipe(exhaustMap(() => {
+        return this.model.trainee.reject(this.trainingProgramId);
+      }))
+      .subscribe(() => {
+        const message = this.lang.map.candidate_x_has_been_rejected.change({x: this.model.trainee.getName()});
+        this.toast.success(message);
+        this.dialogRef.close(this.model);
+      });
+  }
+
   mapUserToForm(user: OrgUser | InternalUser) {
     this.form.patchValue({
       id: user?.id,
@@ -240,12 +284,30 @@ export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDest
     });
   }
 
+  mapTraineeToForm(trainee: Trainee) {
+    this.form.patchValue({
+      id: trainee?.id,
+      generalUserId: trainee?.generalUserId,
+      arName: trainee?.arName,
+      enName: trainee?.enName,
+      jobType: trainee?.jobType,
+      department: trainee?.department,
+      trainingRecord: trainee?.trainingRecord,
+      currentJob: trainee?.currentJob,
+      employementPosition: trainee?.employementPosition,
+      phoneNumber: trainee?.phoneNumber,
+      email: trainee?.email,
+      gender: trainee?.gender,
+      nationality: trainee?.nationality
+    });
+  }
+
   showAuthorityTemplate() {
-    return this.employeeType == 'authority';
+    return this.employeeType == 'authority' && !this.isEvaluate;
   }
 
   showOrganizationsTemplate() {
-    return this.employeeType == 'organization';
+    return this.employeeType == 'organization' && !this.isEvaluate;
   }
 
   get idControl(): FormControl {
