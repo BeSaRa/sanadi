@@ -63,7 +63,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   validFamilyOrIndividualSwitchMsg: string = '&nbsp;';
 
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.InternalServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   mainCategoriesList: AidLookup[] = [];
   subCategories1List: AidLookup[] = [];

@@ -80,5 +80,5 @@ export interface ILookupMap {
   TemplateType: Lookup[];
   ExternalModelingReqType: Lookup[];
   ExternalModelingStatus: Lookup[];
-  InternalServiceRequestType: Lookup[];
+  ServiceRequestTypeNoRenew: Lookup[];
 }
