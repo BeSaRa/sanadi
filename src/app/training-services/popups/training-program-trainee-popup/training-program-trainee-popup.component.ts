@@ -26,10 +26,10 @@ import {TraineeData} from '@app/models/trainee-data';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
-  templateUrl: './training-program-add-candidate-popup.component.html',
-  styleUrls: ['./training-program-add-candidate-popup.component.scss']
+  templateUrl: './training-program-trainee-popup.component.html',
+  styleUrls: ['./training-program-trainee-popup.component.scss']
 })
-export class TrainingProgramAddCandidatePopupComponent implements OnInit, OnDestroy {
+export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject();
   employeeTypeChanged$: Subject<string> = new Subject<string>();
   loadAuthorityUsers$: Subject<void> = new Subject<void>();

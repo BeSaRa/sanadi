@@ -11,8 +11,7 @@ import { TrainingProgramPopupComponent } from './popups/training-program-popup/t
 import {FormsModule} from '@angular/forms';
 import { FilterTrainingProgramsComponent } from './popups/filter-training-programs/filter-training-programs.component';
 import { TrainingProgramAttendancePopupComponent } from './popups/training-program-attendance-popup/training-program-attendance-popup.component';
-import { TraineePopupComponent } from './popups/trainee-popup/trainee-popup.component';
-import { TrainingProgramAddCandidatePopupComponent } from './popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
+import { TrainingProgramTraineePopupComponent } from './popups/training-program-trainee-popup/training-program-trainee-popup.component';
 import { AvailableProgramsComponent } from './pages/available-programs/available-programs.component';
 import { TrainingProgramCandidatesPopupComponent } from './popups/training-program-candidates-popup/training-program-candidates-popup.component';
 import { TrainingBriefcasesPopupComponent } from './popups/training-briefcases-popup/training-briefcases-popup.component';
@@ -30,8 +29,7 @@ import { TrainingBriefcasesComponent } from './pages/training-briefcases/trainin
     TrainingProgramPopupComponent,
     FilterTrainingProgramsComponent,
     TrainingProgramAttendancePopupComponent,
-    TraineePopupComponent,
-    TrainingProgramAddCandidatePopupComponent,
+    TrainingProgramTraineePopupComponent,
     AvailableProgramsComponent,
     TrainingProgramCandidatesPopupComponent,
     TrainingBriefcasesPopupComponent,

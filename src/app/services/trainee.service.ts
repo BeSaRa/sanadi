@@ -12,7 +12,7 @@ import {Observable, of} from 'rxjs';
 import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {TrainingProgramAddCandidatePopupComponent} from '@app/training-services/popups/training-program-add-candidate-popup/training-program-add-candidate-popup.component';
+import {TrainingProgramTraineePopupComponent} from '@app/training-services/popups/training-program-trainee-popup/training-program-trainee-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {exhaustMap} from 'rxjs/operators';
 import {TraineeData} from '@app/models/trainee-data';
@@ -53,7 +53,7 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return TrainingProgramAddCandidatePopupComponent;
+    return TrainingProgramTraineePopupComponent;
   }
 
   _getModel(): any {
@@ -83,7 +83,7 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   openAddTrainingProgramCandidateDialog(trainingProgramId: number): DialogRef {
-    return this.dialog.show<IDialogData<Trainee>>(TrainingProgramAddCandidatePopupComponent, {
+    return this.dialog.show<IDialogData<Trainee>>(TrainingProgramTraineePopupComponent, {
       model: new Trainee(),
       operation: OperationTypes.CREATE,
       trainingProgramId: trainingProgramId,
