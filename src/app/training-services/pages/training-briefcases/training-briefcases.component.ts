@@ -61,12 +61,12 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   uploadedFilePath: string = '';
   uploadedFile: any;
-  allowedFileExtensions: string[] = ['.pdf'];
+  allowedFileExtensions: string[] = ['.pdf', '.pptx'];
 
   @ViewChild('videoUploader') videoUploader!: ElementRef;
   uploadedVideoFilePath: string = '';
   uploadedVideoFile: any;
-  allowedVideoExtensions: string[] = ['.mp4'];
+  allowedVideoExtensions: string[] = ['.mp4', '.mkv'];
 
   documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
   trainingProgramBriefcaseVsId: string = '';
