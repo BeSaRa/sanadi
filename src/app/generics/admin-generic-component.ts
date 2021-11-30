@@ -23,9 +23,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // main service that will serve component needs.
   abstract service: S;
   // grid actions override it if you need to add context-menu on your grid
-  abstract actions: IMenuItem<M>[] = [];
+  abstract actions: IMenuItem<M>[];
   // grid columns override it in your component to display your custom columns on your grid
-  abstract displayedColumns: string[] = [];
+  abstract displayedColumns: string[];
   //  you can override this property from child class to use load or loadComposite
   useCompositeToLoad: boolean = true;
 

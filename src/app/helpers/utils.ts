@@ -111,8 +111,9 @@ function generateHtmlList(title: string, namesList: string[]): HTMLDivElement {
  * @param fileName?:string
  */
 function printBlobData(data: Blob, fileName?: string): void {
-  if (window.navigator.msSaveOrOpenBlob) {
-    window.navigator.msSaveOrOpenBlob(data, fileName ?? 'sanadi-' + new Date().valueOf() + '.pdf');
+
+  if ((window.navigator as any).msSaveOrOpenBlob) {
+    (window.navigator as any).msSaveOrOpenBlob(data, fileName ?? 'sanadi-' + new Date().valueOf() + '.pdf');
   } else {
     const a: HTMLAnchorElement = document.createElement('a');
     const url = URL.createObjectURL(data);
