@@ -7,6 +7,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {FactoryService} from '@app/services/factory.service';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
+import {Lookup} from '@app/models/lookup';
 
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram> {
   receive(model: TrainingProgram): TrainingProgram {
@@ -18,10 +19,10 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.traineeList = model.traineeList.map(tr => {
       let statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!);
-      tr.statusInfo = statusInfo;
+      tr.statusInfo = statusInfo || new Lookup();
       tr.trainee = (new Trainee()).clone(tr.trainee);
       let nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == tr.trainee.nationality)!);
-      tr.trainee.nationalityInfo = nationalityInfo;
+      tr.trainee.nationalityInfo = nationalityInfo || new Lookup();
       return tr;
     });
 
