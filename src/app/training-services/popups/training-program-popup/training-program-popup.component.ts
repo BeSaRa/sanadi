@@ -33,10 +33,8 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 })
 export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
   approve$ = new Subject<any>();
-  saveAndApprove$ = new Subject<any>();
   saveAndApproveClicked = false;
   publish$ = new Subject<any>();
-  saveAndPublish$ = new Subject<any>();
   saveAndPublishClicked = false;
   loadTrainers$ = new BehaviorSubject<any>(null);
   loadSelectedTrainers$ = new BehaviorSubject<any>(null);

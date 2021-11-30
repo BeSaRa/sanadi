@@ -38,8 +38,8 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
   saveCandidate$: Subject<void> = new Subject<void>();
-  acceptTrainee$ = new Subject<any>();
-  rejectTrainee$ = new Subject<any>();
+  acceptCandidate$ = new Subject<any>();
+  rejectCandidate$ = new Subject<any>();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUserId?: number;
@@ -59,6 +59,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   forceClose = false;
   isEvaluate!: boolean;
   model!: TraineeData;
+  rejectionComment: string = '';
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<TraineeData>,
@@ -89,7 +90,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.listenToSaveCandidate();
     this.listenToEmployeeTypeChange();
     this.listenToAcceptTrainee();
-    this.listenToRejectTrainee();
     this.buildForm();
 
     if (!this.employeeService.isInternalUser() && !this.isEvaluate) {
@@ -242,7 +242,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   listenToAcceptTrainee() {
-    this.acceptTrainee$
+    this.acceptCandidate$
       .pipe(
         takeUntil(this.destroy$)
       )
@@ -256,18 +256,14 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       });
   }
 
-  listenToRejectTrainee() {
-    this.rejectTrainee$
-      .pipe(
-        takeUntil(this.destroy$)
-      )
-      .pipe(exhaustMap(() => {
-        return this.model.trainee.reject(this.trainingProgramId);
-      }))
-      .subscribe(() => {
-        const message = this.lang.map.candidate_x_has_been_rejected.change({x: this.model.trainee.getName()});
-        this.toast.success(message);
-        this.dialogRef.close(this.model);
+  rejectCandidate() {
+    const sub = this.model.trainee.openRejectCandidateDialog(this.trainingProgramId, this.rejectionComment)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.dialogRef.close();
+          sub.unsubscribe();
+        })
       });
   }
 
@@ -359,7 +355,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   get popupTitle() {
-    return this.lang.map.training_program_create_candidate;
+    return this.operation == OperationTypes.CREATE ? this.lang.map.training_program_create_candidate : this.lang.map.training_program_review_candidate;
   }
 
   ngOnDestroy() {

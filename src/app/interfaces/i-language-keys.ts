@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  training_program_review_candidate: string;
+  confirm_reject_candidate: string;
   candidate_x_has_been_rejected: string;
   candidate_x_has_been_accepted: string;
   lbl_reject: string;

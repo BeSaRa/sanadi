@@ -7,7 +7,9 @@
 </div>
 <div class="dialog-content" style="width: 1000px">
   <div class="row pb-3">
-    <app-page-header [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header *ngIf="!isEvaluate" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    </app-page-header>
+    <app-page-header *ngIf="isEvaluate" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$">
     </app-page-header>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
@@ -48,7 +50,7 @@
                     <i class="mdi mdi-close-box"></i>
                   </a>
                   <a *ngIf="isEvaluate" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
-                    {{lang.map.training_program_accept_or_reject}}
+                    <i class="mdi mdi-eye"></i>
                   </a>
                 </div>
               </td>

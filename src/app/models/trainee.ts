@@ -46,7 +46,11 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
     return this.service.accept(trainingProgramId, this.id);
   }
 
-  reject(trainingProgramId: number) {
-    return this.service.reject(trainingProgramId, this.id);
+  reject(trainingProgramId: number, comment: string) {
+    return this.service.reject(trainingProgramId, this.id, comment);
+  }
+
+  openRejectCandidateDialog(trainingProgramId: number, comment: string) {
+    return this.service.openRejectCandidateDialog(this, trainingProgramId, comment);
   }
 }

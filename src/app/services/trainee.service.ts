@@ -16,6 +16,7 @@ import {TrainingProgramTraineePopupComponent} from '@app/training-services/popup
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {exhaustMap} from 'rxjs/operators';
 import {TraineeData} from '@app/models/trainee-data';
+import {RejectTraineePopupComponent} from '@app/training-services/popups/reject-trainee-popup/reject-trainee-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -39,13 +40,16 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
 
   @Generator(undefined, false, {property: 'rs'})
   accept(trainingProgramId: number, traineeId: number) {
-    return this.http.put(this._getServiceURL() + '/accept-trainee/training-program-id/' + trainingProgramId + '/trainee-id/' + traineeId, {trainingProgramId: trainingProgramId, traineeId: traineeId});
+    return this.http.put(this._getServiceURL() + '/accept-trainee/training-program-id/' + trainingProgramId + '/trainee-id/' + traineeId, {
+      trainingProgramId: trainingProgramId,
+      traineeId: traineeId
+    });
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  reject(trainingProgramId: number, traineeId: number) {
-    return this.http.put(this._getServiceURL() + '/refuse-trainee',
-      {trainingProgramId: trainingProgramId, traineeId: traineeId, refusalComment: 'Keda'});
+  reject(trainingProgramId: number, traineeId: number, refusalComment: string) : Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/refuse-trainee',
+      {trainingProgramId: trainingProgramId, traineeId: traineeId, refusalComment: refusalComment});
   }
 
   deleteTrainee(trainingProgramId: number, traineeId: number): Observable<boolean> {
@@ -78,7 +82,7 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  traineeByTrainingIdAndTraineeId(trainingProgramId: number, traineeId: number){
+  traineeByTrainingIdAndTraineeId(trainingProgramId: number, traineeId: number) {
     return this.http.get<TraineeData>(this._getServiceURL() + '/training-program-id/' + trainingProgramId + '/trainee-id/' + traineeId);
   }
 
@@ -89,6 +93,15 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
       trainingProgramId: trainingProgramId,
       isEvaluate: false
     });
+  }
+
+  openRejectCandidateDialog(model: Trainee, trainingProgramId: number, comment: string): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<Trainee>>(RejectTraineePopupComponent, {
+      model: model,
+      operation: OperationTypes.UPDATE,
+      trainingProgramId: trainingProgramId,
+      comment: comment
+    }));
   }
 
   private openEvaluateCandidateDialog(model: TraineeData, trainingProgramId: number, operation: OperationTypes): DialogRef {
