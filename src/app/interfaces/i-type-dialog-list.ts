@@ -5,6 +5,7 @@ export interface ITypeDialogList {
   info: IPredefinedDialogType;
   success: IPredefinedDialogType;
   error: IPredefinedDialogType;
-  confirm: IPredefinedDialogType,
-  confirmWithThree: IPredefinedDialogType
+  confirm: IPredefinedDialogType;
+  confirmWithThree: IPredefinedDialogType;
+  confirmWithDynamicButtons: IPredefinedDialogType;
 }

@@ -26,13 +26,14 @@ export class DialogService {
   private _showDialog(component: ComponentType<any>,
                       data?: any,
                       config?: IDialogConfig,
-                      predefinedDialog?: keyof ITypeDialogList): DialogRef {
+                      predefinedDialog?: keyof ITypeDialogList,
+                      buttonsList?: any[]): DialogRef {
     const overlay = this.overlay.create({
       hasBackdrop: true,
       panelClass: 'dialog-pan-class',
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
     });
-    return new DialogRef(overlay, this.langService, this.injector, component, data, config, predefinedDialog);
+    return new DialogRef(overlay, this.langService, this.injector, component, data, config, predefinedDialog, buttonsList);
   }
 
   show<D>(component: ComponentType<any>, data?: D, config?: IDialogConfig): DialogRef {
@@ -65,6 +66,12 @@ export class DialogService {
     thirdBtn: 'btn_save'
   }): DialogRef {
     return this._showDialog(PredefinedDialogComponent, data, config, 'confirmWithThree');
+  }
+
+  confirmWithDynamicButtons(data?: string, buttonsList: any[] = [], config: Partial<IDialogPredefinedConfig> = {
+    cancelBtn: 'btn_cancel'
+  }): DialogRef {
+    return this._showDialog(PredefinedDialogComponent, data, config, 'confirmWithDynamicButtons', buttonsList);
   }
 
 

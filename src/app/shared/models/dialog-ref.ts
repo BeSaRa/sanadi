@@ -1,14 +1,14 @@
 import {OverlayRef} from '@angular/cdk/overlay/overlay-ref';
-import {LangService} from '../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {ComponentRef, Injector, Renderer2} from '@angular/core';
 import {DialogContainerComponent} from '../components/dialog-container/dialog-container.component';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {DIALOG_CONFIG_TOKEN, DIALOG_DATA_TOKEN} from '../tokens/tokens';
 import {ComponentType} from '@angular/cdk/overlay';
-import {IDialogConfig} from '../../interfaces/i-dialog-config';
+import {IDialogConfig} from '@app/interfaces/i-dialog-config';
 import {pluck} from 'rxjs/operators';
-import {ITypeDialogList} from '../../interfaces/i-type-dialog-list';
+import {ITypeDialogList} from '@app/interfaces/i-type-dialog-list';
 import {PredefinedDialogComponent} from '../popups/predefined-dialog/predefined-dialog.component';
 
 export class DialogRef {
@@ -29,7 +29,8 @@ export class DialogRef {
               private component: ComponentType<any>,
               private data?: any,
               private dialogConfig?: IDialogConfig,
-              private predefinedDialogType?: keyof ITypeDialogList) {
+              private predefinedDialogType?: keyof ITypeDialogList,
+              private buttonsList?: any[]) {
     this.watchLanguage();
     this.startShowDialog();
   }
@@ -61,6 +62,7 @@ export class DialogRef {
     if (this.predefinedDialogType) {
       const component: ComponentRef<PredefinedDialogComponent> = this.componentRef as ComponentRef<PredefinedDialogComponent>;
       component.instance.type = this.predefinedDialogType;
+      component.instance.buttonsList = this.buttonsList || [];
     }
     this.instance = this.componentRef?.instance;
   }

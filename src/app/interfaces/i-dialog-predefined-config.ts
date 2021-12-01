@@ -9,3 +9,11 @@ export interface IDialogPredefinedConfig extends IDialogConfig {
   showCloseIcon?: boolean;
   hideIcon?: boolean
 }
+
+export interface IDialogButton {
+  index: number;
+  key: string;
+  langKey?: keyof ILanguageKeys;
+  text?: string;
+  cssClass?: string;
+}
