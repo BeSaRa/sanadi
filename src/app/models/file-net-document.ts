@@ -4,6 +4,7 @@ import {DialogService} from '../services/dialog.service';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {AdminResult} from "@app/models/admin-result";
 import {LangService} from "@app/services/lang.service";
+import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeId!: number;
@@ -34,8 +35,12 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
     this.langService = FactoryService.getService('LangService');
   }
 
+  isPdfItem(): boolean {
+    return (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.PDF.toLowerCase();
+  }
+
   getIcon(): string {
-    return this.mimeType === 'application/pdf' ? 'mdi-file-pdf-outline' : 'mdi-file-image-outline';
+    return this.isPdfItem() ? FileIconsEnum.PDF : FileIconsEnum.IMAGE;
   }
 
   getInternalExternalIcon(): string {

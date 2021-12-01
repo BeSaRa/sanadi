@@ -94,7 +94,7 @@
                 <div class="input-group">
                   <button [disabled]="!isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
                           class="input-group-text"><i
-                    class="mdi mdi-file-search text-primary"></i></button>
+                    class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                   <input (keydown.enter)="licenseSearch()" formControlName="licenseNumber"
                          type="text" [readOnly]="!isEditLicenseAllowed()"
                          validationClasses="licenseNumber" [onlyInvalid]="false" class="form-control"

@@ -35,6 +35,7 @@ import {JobTitle} from '@app/models/job-title';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {PartnerApproval} from '@app/models/partner-approval';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'final-external-office-approval',
@@ -43,6 +44,7 @@ import {PartnerApproval} from '@app/models/partner-approval';
 })
 export class FinalExternalOfficeApprovalComponent extends EServicesGenericComponent<FinalExternalOfficeApproval, FinalExternalOfficeApprovalService> implements AfterViewInit {
   form!: FormGroup;
+  fileIconsEnum = FileIconsEnum;
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('managersTab') executiveManagementComponentRef!: ExecutiveManagementComponent;

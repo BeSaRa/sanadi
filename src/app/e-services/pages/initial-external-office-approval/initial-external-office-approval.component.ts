@@ -26,6 +26,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ProjectModel} from '@app/models/project-model';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -41,6 +42,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialApprovalDocument;
   organizations: OrgUnit[] = [];
+  fileIconsEnum = FileIconsEnum;
 
   tabsData: IKeyValue = {
     basicInfo: {

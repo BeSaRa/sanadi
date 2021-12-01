@@ -11,7 +11,7 @@
           <td cdk-cell *cdkCellDef="let row" class="serial-column">
             <div class="d-flex flex-row">
               <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
-              <i class="mdi mdi-file-hidden text-primary" *ngIf="row.isPartial"
+              <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="row.isPartial"
                  tooltip="{{langService.map.partial_request}}"></i>
             </div>
           </td>

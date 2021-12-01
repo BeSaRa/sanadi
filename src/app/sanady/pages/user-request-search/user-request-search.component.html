@@ -425,7 +425,7 @@
                   <div class="d-flex flex-row">
                     <a href="#" (click)="showRequestDetails(request , $event)"
                        class="dir-ltr d-inline-block flex-grow-1 text-start"> {{request.requestFullSerial}} </a>
-                    <i class="mdi mdi-file-hidden text-primary" *ngIf="request.isPartial"
+                    <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="request.isPartial"
                        tooltip="{{langService.map.partial_request}}"></i>
                   </div>
                 </td>

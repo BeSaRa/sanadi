@@ -35,6 +35,7 @@ import {JobTitleService} from "@app/services/job-title.service";
 import {JobTitle} from "@app/models/job-title";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'partner-approval',
@@ -43,6 +44,7 @@ import {InitialExternalOfficeApproval} from '@app/models/initial-external-office
 })
 export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerApproval, PartnerApprovalService> implements AfterViewInit {
   form!: FormGroup;
+  fileIconsEnum = FileIconsEnum;
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
   jobTitles: JobTitle[] = [];

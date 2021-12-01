@@ -10,6 +10,7 @@ import {FinalApprovalDocument} from '@app/models/final-approval-document';
 import {Observable} from 'rxjs';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@app/services/shared.service';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'select-license-popup',
@@ -22,6 +23,7 @@ export class SelectLicensePopupComponent {
   caseType: number;
   caseStatus: number;
   requestType: number;
+  fileIconsEnum = FileIconsEnum;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,

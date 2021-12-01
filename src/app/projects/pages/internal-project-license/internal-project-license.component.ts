@@ -34,6 +34,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {SharedService} from '@app/services/shared.service';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'internal-project-license',
@@ -62,6 +63,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   readonly: boolean = false;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   validFamilyOrIndividualSwitchMsg: string = '&nbsp;';
+  fileIconsEnum = FileIconsEnum;
 
   requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   projectTypesList: Lookup[] = this.lookupService.listByCategory.ProjectType.slice().sort((a, b) => a.lookupKey - b.lookupKey);

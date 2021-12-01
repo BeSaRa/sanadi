@@ -34,6 +34,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -58,6 +59,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  fileIconsEnum = FileIconsEnum;
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];

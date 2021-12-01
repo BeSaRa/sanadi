@@ -12,6 +12,7 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ToastService} from "@app/services/toast.service";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'attachments',
@@ -21,6 +22,7 @@ import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-dat
 export class AttachmentsComponent implements OnInit, OnDestroy {
   attachmentTypes: AttachmentTypeServiceData[] = [];
   attachments: FileNetDocument[] = [];
+  fileIconsEnum = FileIconsEnum;
 
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   // only the true value will emit

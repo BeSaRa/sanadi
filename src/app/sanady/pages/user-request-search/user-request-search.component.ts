@@ -29,6 +29,7 @@ import {AidLookup} from '../../../models/aid-lookup';
 import {AidLookupService} from '../../../services/aid-lookup.service';
 import {ECookieService} from '../../../services/e-cookie.service';
 import {DateUtils} from '../../../helpers/date-utils';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-user-request-search',
@@ -55,6 +56,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private skipQueryParamSearch: boolean = true;
   requests: SubventionRequestAid[] = [];
   subAidLookupsArray: AidLookup[] = [];
+  fileIconsEnum = FileIconsEnum;
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,

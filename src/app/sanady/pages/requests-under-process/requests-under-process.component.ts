@@ -8,6 +8,7 @@ import {SubventionRequest} from '../../../models/subvention-request';
 import {ToastService} from '../../../services/toast.service';
 import {EmployeeService} from '../../../services/employee.service';
 import {CustomValidators} from '../../../validators/custom-validators';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -24,6 +25,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   displayedColumns: string[] = ['requestSerial', 'requestDate', 'organization', 'requestStatus', 'requestAmount', 'actions'];
+  fileIconsEnum = FileIconsEnum;
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
