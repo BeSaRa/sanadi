@@ -27,4 +27,5 @@ export interface IAppConfig {
   SANADY_PERMISSIONS_GROUP: string[];
   CHARITY_ORG_TEAM: string;
   SEARCH_PERMISSION_GROUP: string[];
+  GIVE_USERS_PERMISSIONS: string[];
 }

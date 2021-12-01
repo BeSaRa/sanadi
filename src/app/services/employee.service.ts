@@ -15,6 +15,7 @@ import {IUserSecurity} from "@app/interfaces/iuser-security";
 import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {EServicePermissions} from "@app/enums/e-service-permissions";
+import {ConfigurationService} from "@app/services/configuration.service";
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,7 @@ export class EmployeeService {
     }
   };
 
-  constructor() {
+  constructor(private configService: ConfigurationService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -184,6 +185,14 @@ export class EmployeeService {
     this.teams.length ? this.permissions.push((new Permission().clone({
       permissionKey: 'TEAM_INBOX'
     }))) : null;
+
+    this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.forEach((permission) => {
+      console.log(permission);
+      this.permissions?.push(new Permission().clone({
+        permissionKey: permission
+      }));
+    })
+    this.permissions.push()
     this.setUserData(loginData);
     this.preparePermissionMap();
     this.prepareUserSecurityMap();
