@@ -4,7 +4,7 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="comment" aria-label="Close"></button>
 </div>
-<div class="dialog-content">
+<div class="dialog-content no-fixed-height">
   <form style="width: 500px;" novalidate autocomplete="off" [formGroup]="form">
     <div class="row mb-3">
       <div class="col-sm-12 position-relative">
@@ -19,5 +19,5 @@
 </div>
 <div class="dialog-actions">
   <button [disabled]="form.invalid" (click)="rejectCandidate$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
-  <button [dialogClose]="comment" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  <button [dialogClose]="userClick.CANCEL" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

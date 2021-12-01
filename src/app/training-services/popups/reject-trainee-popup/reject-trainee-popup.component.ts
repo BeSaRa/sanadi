@@ -9,6 +9,7 @@ import {of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Trainee} from '@app/models/trainee';
 import {ToastService} from '@app/services/toast.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'reject-trainee-popup',
@@ -22,6 +23,7 @@ export class RejectTraineePopupComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject();
   model!: Trainee;
   trainingProgramId!: number;
+  userClick: typeof UserClickOn = UserClickOn;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Trainee>,
               public lang: LangService,
@@ -55,7 +57,7 @@ export class RejectTraineePopupComponent implements OnInit, OnDestroy {
           const message = this.lang.map.candidate_x_has_been_rejected.change({x: this.model.getName()});
           this.toast.success(message);
         }
-        this.dialogRef.close();
+        this.dialogRef.close(this.userClick.YES);
       });
   }
 

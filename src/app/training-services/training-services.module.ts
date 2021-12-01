@@ -17,6 +17,8 @@ import { TrainingProgramCandidatesPopupComponent } from './popups/training-progr
 import { TrainingBriefcasesPopupComponent } from './popups/training-briefcases-popup/training-briefcases-popup.component';
 import { TrainingBriefcasesComponent } from './pages/training-briefcases/training-briefcases.component';
 import { RejectTraineePopupComponent } from './popups/reject-trainee-popup/reject-trainee-popup.component';
+import { CertificatesComponent } from './pages/certificates/certificates.component';
+import { CertificatePopupComponent } from './popups/certificate-popup/certificate-popup.component';
 
 
 
@@ -35,7 +37,9 @@ import { RejectTraineePopupComponent } from './popups/reject-trainee-popup/rejec
     TrainingProgramCandidatesPopupComponent,
     TrainingBriefcasesPopupComponent,
     TrainingBriefcasesComponent,
-    RejectTraineePopupComponent
+    RejectTraineePopupComponent,
+    CertificatesComponent,
+    CertificatePopupComponent
   ],
   imports: [
     CommonModule,

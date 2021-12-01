@@ -1,4 +1,5 @@
 {
+  "CERTIFICATE_TEMPLATE": "/training/training-certificate/template",
   "INTERNAL_USER_DEPARTMENT": "/admin/internal-user-department",
   "TEAM_SECURITY": "/admin/team-sec-config",
   "USER_SECURITY": "/admin/user-sec-config",

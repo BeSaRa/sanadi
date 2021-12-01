@@ -140,8 +140,6 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
 
       reader.onload = (event) => {
         // @ts-ignore
-        this.resumePath = event.target.result as string;
-        // @ts-ignore
         this.resumeFile = files[0];
 
         // save resume file to trainer

@@ -68,7 +68,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
-    this.listenToEdit();
+    super.listenToEdit();
   }
 
   applyAttendance(trainingProgram: TrainingProgram, event: MouseEvent) {

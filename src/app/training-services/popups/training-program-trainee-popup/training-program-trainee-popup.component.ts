@@ -6,7 +6,7 @@ import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
-import {exhaustMap, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {OrgUnit} from '@app/models/org-unit';
@@ -23,6 +23,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {TraineeData} from '@app/models/trainee-data';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
@@ -259,11 +260,14 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   rejectCandidate() {
     const sub = this.model.trainee.openRejectCandidateDialog(this.trainingProgramId, this.rejectionComment)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe(() => {
+      .pipe(switchMap((dialogRef) => {
+        return dialogRef.onAfterClose$;
+      }))
+      .subscribe((userClick: UserClickOn) => {
+        if(userClick == UserClickOn.YES) {
           this.dialogRef.close();
-          sub.unsubscribe();
-        })
+        }
+        sub.unsubscribe();
       });
   }
 

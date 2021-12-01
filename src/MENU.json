@@ -492,5 +492,18 @@
     "group": "training-services",
     "itemOrder": 3,
     "svg": null
+  },
+  {
+    "id": 39,
+    "langKey": "menu_certificate_template",
+    "path": "/home/training/certificate-templates",
+    "icon": "mdi-certificate",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 35,
+    "group": "training-services",
+    "itemOrder": 3,
+    "svg": null
   }
 ]

@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  certificate_template_title: string;
+  certificate_template_status: string;
+  certificate_template_name: string;
+  menu_certificate_template: string;
   training_program_review_candidate: string;
   confirm_reject_candidate: string;
   candidate_x_has_been_rejected: string;

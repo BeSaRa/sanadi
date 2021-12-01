@@ -5,6 +5,7 @@ import {TrainingServicesComponent} from '@app/training-services/training-service
 import {AccreditedTrainerComponent} from '@app/training-services/pages/accredited-trainer/accredited-trainer.component';
 import {TrainingProgramComponent} from '@app/training-services/pages/training-program/training-program.component';
 import {AvailableProgramsComponent} from '@app/training-services/pages/available-programs/available-programs.component';
+import {CertificatesComponent} from '@app/training-services/pages/certificates/certificates.component';
 
 const routes: Routes = [
   {path: '', component: TrainingServicesComponent},
@@ -22,6 +23,12 @@ const routes: Routes = [
   },
   {
     path: 'available-for-registration', component: AvailableProgramsComponent,
+    canActivate: [PermissionGuard],
+    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'certificate-templates', component: CertificatesComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
     data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
