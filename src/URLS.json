@@ -1,5 +1,6 @@
 {
   "TRAINING_PROGRAM_CERTIFICATE": "/training/training-certificate/certificate",
+  "SURVEY_QUESTION": "/training/training-survey-quest",
   "CERTIFICATE_TEMPLATE": "/training/training-certificate/template",
   "INTERNAL_USER_DEPARTMENT": "/admin/internal-user-department",
   "TEAM_SECURITY": "/admin/team-sec-config",

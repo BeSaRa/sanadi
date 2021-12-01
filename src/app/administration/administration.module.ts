@@ -38,12 +38,14 @@ import { DacOchaPopupComponent } from './popups/dac-ocha-popup/dac-ocha-popup.co
 import { SubDacOchaPopupComponent } from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { UserSecurityComponent } from './shared/user-security/user-security.component';
+import { SurveyQuestionComponent } from './pages/survey-question/survey-question.component';
+import { SurveyQuestionPopupComponent } from './popups/survey-question-popup/survey-question-popup.component';
 
 @NgModule({
   declarations: [AdminHomeComponent, LocalizationComponent, CustomRoleComponent, CustomRolePopupComponent, AidLookupComponent,
     AidLookupPopupComponent, AidLookupContainerComponent, OrganizationUnitComponent, OrganizationUnitPopupComponent,
     OrganizationBranchPopupComponent, OrganizationBranchComponent, OrganizationUserComponent,
-    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, DacOchaComponent, DacOchaPopupComponent, SubDacOchaPopupComponent, UserTeamComponent, UserSecurityComponent],
+    OrganizationUserPopupComponent, OrganizationBranchUserComponent, AuditLogPopupComponent, AttachmentTypesComponent, AttachmentTypesPopupComponent, TeamComponent, TeamPopupComponent, ServiceDataComponent, ServiceDataPopupComponent, CountryComponent, CountryPopupComponent, ChangeCountryParentPopupComponent, AttachmentTypeServiceDataPopupComponent,InternalUserComponent,InternalUserPopupComponent, InternalDepartmentComponent, InternalDepartmentPopupComponent, JobTitleComponent, JobTitlePopupComponent, DacOchaComponent, DacOchaPopupComponent, SubDacOchaPopupComponent, UserTeamComponent, UserSecurityComponent, SurveyQuestionComponent, SurveyQuestionPopupComponent],
   imports: [
     SharedModule,
     AdminRoutingModule,

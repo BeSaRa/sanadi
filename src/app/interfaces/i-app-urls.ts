@@ -1,5 +1,6 @@
 export interface IAppUrls {
   TRAINING_PROGRAM_CERTIFICATE: string;
+  SURVEY_QUESTION: string;
   CERTIFICATE_TEMPLATE: string;
   INTERNAL_USER_DEPARTMENT: string;
   EXTERNAL_USER_SECURITY: string;

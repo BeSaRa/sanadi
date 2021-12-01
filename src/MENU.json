@@ -518,5 +518,18 @@
     "group": "training-services",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 39,
+    "langKey": "menu_survey_questions",
+    "path": "/home/administration/survey-questions",
+    "icon": "mdi-new-box",
+    "isSvg": false,
+    "permission": "NO_PERMISSION",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 3,
+    "svg": null
   }
 ]

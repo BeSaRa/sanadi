@@ -1,0 +1,40 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{dialogTitle}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose="" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_text}}</label>
+        <textarea name="arName" maxlength="1024" formControlName="arName" validationClasses="arName" id="arName"
+                  rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_text}}</label>
+        <textarea name="enName" maxlength="1024" formControlName="enName" validationClasses="enName" id="enName"
+                  rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-check form-switch">
+          <label for="isFreeText">{{lang.map.free_text}}</label>
+          <input type="checkbox" id="isFreeText" class="form-check-input" formControlName="isFreeText">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button [disabled]="form.invalid" (click)="save$.next()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose="" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

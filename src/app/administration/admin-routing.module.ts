@@ -15,6 +15,7 @@ import {InternalUserComponent} from "./pages/internal-user/internal-user.compone
 import {InternalDepartmentComponent} from '@app/administration/pages/internal-department/internal-department.component';
 import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
 import {DacOchaComponent} from '@app/administration/pages/dac-ocha/dac-ocha.component';
+import {SurveyQuestionComponent} from "@app/administration/pages/survey-question/survey-question.component";
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -22,7 +23,7 @@ const routes: Routes = [
   {
     path: 'custom-role', component: CustomRoleComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'MANAGE_CUSTOM_ROLE', configPermissionGroup: null,  checkAnyPermission: false}
+    data: {permissionKey: 'MANAGE_CUSTOM_ROLE', configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'organizations', component: OrganizationUnitComponent,
@@ -32,7 +33,7 @@ const routes: Routes = [
   {
     path: 'aid', component: AidLookupContainerComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: 'MANAGE_AID_TYPE', configPermissionGroup: null,  checkAnyPermission: false}
+    data: {permissionKey: 'MANAGE_AID_TYPE', configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'users', component: OrganizationUserComponent,
@@ -54,7 +55,9 @@ const routes: Routes = [
   {path: 'internal-users', component: InternalUserComponent},
   {path: 'internal-departments', component: InternalDepartmentComponent},
   {path: 'job-titles', component: JobTitleComponent},
-  {path: 'ocha-dac-class', component: DacOchaComponent}
+  {path: 'ocha-dac-class', component: DacOchaComponent},
+  {path: 'survey-questions', component: SurveyQuestionComponent},
+
 ];
 
 @NgModule({

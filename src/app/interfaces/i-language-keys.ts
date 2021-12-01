@@ -16,6 +16,12 @@ export interface ILanguageKeys {
   certificates_has_been_created_successfully: string;
   lbl_passed_trainees: string;
   view_trainer_x_cv_title: string;
+  edit_question: string;
+  add_question: string;
+  english_text: string;
+  arabic_text: string;
+  free_text: string;
+  menu_survey_questions: string;
   certificate_template_title: string;
   certificate_template_status: string;
   certificate_template_name: string;

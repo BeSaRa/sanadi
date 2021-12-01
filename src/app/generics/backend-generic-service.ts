@@ -6,6 +6,7 @@ import {Generator} from '../decorators/generator';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 import {IKeyValue} from '../interfaces/i-key-value';
 import {isValidValue} from '../helpers/utils';
+import {IDefaultResponse} from "@app/interfaces/idefault-response";
 
 export abstract class BackendGenericService<T> implements BackendServiceInterface<T> {
   abstract list: T[];
@@ -81,8 +82,8 @@ export abstract class BackendGenericService<T> implements BackendServiceInterfac
     return this.http.delete<boolean>(this._getServiceURL() + '/' + modelId);
   }
 
-  deleteBulk(modelIds: any[]): Observable<any> {
-    return this.http.request('delete', this._getServiceURL() + '/bulk', {body: modelIds})
+  deleteBulk(modelIds: any[]): Observable<Record<number, boolean>> {
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this._getServiceURL() + '/bulk', {body: modelIds})
       .pipe(
         map((response: any) => {
           return response.rs;

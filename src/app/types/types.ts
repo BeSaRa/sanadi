@@ -25,6 +25,8 @@ export type BulkOperationTypes = 'DELETE' | 'UPDATE' | 'SAVE';
 
 export type BulkResponseTypes = 'SUCCESS' | 'FAIL' | 'PARTIAL_SUCCESS' | 'NONE';
 
+export type DeleteBulkResult<T = any> = { result: BulkResponseTypes, fails: T[], success: T[] };
+
 export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';
 
 export type ISearchFieldsMap<T = any> = { [key: string]: (string | searchFunctionType<T>) };

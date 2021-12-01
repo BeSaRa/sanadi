@@ -3,7 +3,7 @@ import {LangService} from './lang.service';
 import {DialogService} from './dialog.service';
 import {generateHtmlList} from '../helpers/utils';
 import {ToastService} from './toast.service';
-import {BulkOperationTypes, BulkResponseTypes} from '../types/types';
+import {BulkOperationTypes, DeleteBulkResult} from '../types/types';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlobModel} from '@app/models/blob-model';
@@ -33,7 +33,7 @@ export class SharedService {
     UPDATE_FAIL: this.langService.map.msg_update_fail
   }
 
-  mapBulkResponseMessages(selectedRecords: any[], key: string, resultMap: { [key: number]: boolean } | { [key: string]: boolean }, operation: BulkOperationTypes = 'DELETE'): Observable<BulkResponseTypes> {
+  mapBulkResponseMessages<T = any>(selectedRecords: T[], key: string, resultMap: { [p: number]: boolean } | { [p: string]: boolean }, operation: BulkOperationTypes = 'DELETE'): Observable<DeleteBulkResult<T>> {
     const failedRecords: any[] = [];
     // @ts-ignore
     resultMap = resultMap.hasOwnProperty('rs') ? resultMap.rs : resultMap;
@@ -45,17 +45,22 @@ export class SharedService {
     }
     if (failedRecords.length === 0) {
       this.toast.success(this.bulkMessagesMap[operation]);
-      return of('SUCCESS');
+      return of({result: 'SUCCESS', success: selectedRecords, fails: []});
     } else if (failedRecords.length === selectedRecords.length) {
       // @ts-ignore
       this.toast.error(this.bulkMessagesMap[operation.toString() + '_FAIL']);
-      return of('FAIL');
+      return of({result: 'FAIL', fails: selectedRecords, success: []});
     } else {
       // @ts-ignore
       const listHtml = generateHtmlList(this.bulkMessagesMap[operation + '_PARTIAL'], failedRecords.map((item) => item.getName()));
+      const failsIds = failedRecords.map(item => item[key]);
       return this.dialogService.info(listHtml.outerHTML).onAfterClose$.pipe(
         map(res => {
-          return 'PARTIAL_SUCCESS';
+          return {
+            result: 'PARTIAL_SUCCESS',
+            fails: failedRecords,
+            success: selectedRecords.filter(item => !failsIds.includes(item[key as keyof T]))
+          };
         })
       );
     }

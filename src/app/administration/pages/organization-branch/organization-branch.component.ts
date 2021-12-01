@@ -155,7 +155,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
                     });
                     const sub = this.organizationBranchService.deactivateBulk(ids).subscribe((response) => {
                         this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-                            .subscribe(() => {
+                          .subscribe(() => {
                                 this.reload$.next(null);
                                 sub.unsubscribe();
                             });
