@@ -3,7 +3,7 @@ import {FormControl} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {LangService} from '@app/services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {map, switchMap, take, takeUntil} from 'rxjs/operators';
+import {switchMap, take, takeUntil} from 'rxjs/operators';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
@@ -11,6 +11,8 @@ import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {printBlobData} from '@app/helpers/utils';
 import {IGridAction} from '@app/interfaces/i-grid-action';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'training-program-briefcases',
@@ -21,8 +23,6 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
 
   @Input() trainingProgramId!: number;
   @Input() bundlesList: TrainingProgramBriefcase[] = [];
-
-  selectedRecords: TrainingProgramBriefcase[] = [];
 
   constructor(public lang: LangService,
               private dialogService: DialogService,
@@ -45,7 +45,7 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
     {
       icon: 'mdi-download',
       langKey: 'btn_download',
-      callback: ($event: MouseEvent, action: IGridAction) => this.downloadBulkTrainingProgramBriefcase($event),
+      callback: ($event: MouseEvent, action: IGridAction) => this.downloadBriefcase($event),
       show: (items: TrainingProgramBriefcase[]) => {
         return this.bundlesList.length > 0;
       }
@@ -61,16 +61,20 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   uploadedFilePath: string = '';
   uploadedFile: any;
-  allowedFileExtensions: string[] = ['.pdf', '.pptx'];
+  allowedFileExtensions: string[] = [FileExtensionsEnum.PDF, FileExtensionsEnum.PPTX];
 
   @ViewChild('videoUploader') videoUploader!: ElementRef;
   uploadedVideoFilePath: string = '';
   uploadedVideoFile: any;
-  allowedVideoExtensions: string[] = ['.mp4', '.mkv'];
+  allowedVideoExtensions: string[] = [FileExtensionsEnum.MP4, FileExtensionsEnum.MKV];
 
   documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
   trainingProgramBriefcaseVsId: string = '';
   isPdfFileRequired: boolean = false;
+
+  get canUploadVideoFile(): boolean {
+    return !(this.bundlesList.find(item => item.isVideoItem()));
+  }
 
   listenToReload(): void {
     this.reload$.pipe(
@@ -113,19 +117,19 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
     this.fillAndShowForm(model);
   }
 
-  download($event: MouseEvent, model: TrainingProgramBriefcase): void {
+  downloadBriefcaseItem($event: MouseEvent, model: TrainingProgramBriefcase): void {
     $event.preventDefault();
-    this.trainingProgramBriefcaseService.downloadTrainingProgramBriefcase(model.vsId)
+    this.trainingProgramBriefcaseService.downloadBriefcaseItem(model.vsId)
       .subscribe((data) => {
-        printBlobData(data, 'download');
+        printBlobData(data, model.documentTitle + '_download');
       })
   }
 
-  downloadBulkTrainingProgramBriefcase($event: MouseEvent): void {
+  downloadBriefcase($event: MouseEvent): void {
     $event.preventDefault();
-    this.trainingProgramBriefcaseService.downloadBulkTrainingProgramBriefcase(this.trainingProgramId)
+    this.trainingProgramBriefcaseService.downloadBriefcase(this.trainingProgramId)
       .subscribe((data) => {
-        printBlobData(data, 'download');
+        printBlobData(data, 'briefcase_download');
       })
   }
 
@@ -155,12 +159,23 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
       trainingProgramId: this.trainingProgramId
     };
 
-    let files: any = {};
-    files.pdf = this.uploadedFile || null;
-    files.video = this.uploadedVideoFile || null;
+    let files: { [key: string]: File } = {};
+    this.uploadedFile ? (files.pdfFile = this.uploadedFile) : null;
+    this.uploadedVideoFile ? (files.videoFile = this.uploadedVideoFile) : null;
 
     this.trainingProgramBriefcaseService.saveTrainingProgramBriefcase(data, files)
       .subscribe((result) => {
+        // if requests were generated due to missing files
+        if (result === 'NO_REQUESTS_AVAILABLE') {
+          this.toast.error(this.lang.map.msg_save_fail);
+          return;
+        }
+        // if failed metadata only update
+        if (result.hasOwnProperty('metaDataOnly') && !result.metaDataOnly) {
+          this.toast.error(this.lang.map.msg_save_fail);
+          return;
+        }
+
         let failed = Object.values(result).filter((x: any) => !x);
         if (failed.length === 0) {
           this.toast.success(this.lang.map.msg_save_success);

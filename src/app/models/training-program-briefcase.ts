@@ -3,6 +3,7 @@ import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {Localization} from '@app/models/localization';
+import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 export class TrainingProgramBriefcase extends SearchableCloneable<TrainingProgramBriefcase> {
   service!: TrainingProgramBriefcaseService;
@@ -28,12 +29,41 @@ export class TrainingProgramBriefcase extends SearchableCloneable<TrainingProgra
   isCurrent!: boolean;
   classDescription: string = 'TrainingProgramBundle';
 
+  isPdfItem(): boolean {
+    return (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.PDF.toLowerCase();
+  }
+
+  isVideoItem(): boolean {
+    return (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.MP4.toLowerCase()
+      || (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.MKV.toLowerCase();
+  }
+
+  isPowerpointItem(): boolean {
+    return (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.PPT.toLowerCase()
+      || (this.mimeType + '').toLowerCase() === FileMimeTypesEnum.PPTX.toLowerCase();
+  }
 
   getIcon(): string {
-    return this.mimeType === 'application/pdf' ? 'mdi-file-pdf-outline' : 'mdi-file-video-outline';
+    let icon: string = FileIconsEnum.FILE;
+    if (this.isPdfItem()) {
+      icon = FileIconsEnum.PDF;
+    } else if (this.isVideoItem()) {
+      icon = FileIconsEnum.VIDEO;
+    } else if (this.isPowerpointItem()) {
+      icon = FileIconsEnum.PPTX;
+    }
+    return icon;
   }
 
   getIconTooltip(): Localization {
-    return this.mimeType === 'application/pdf' ? this.langService.getLocalByKey('file_pdf') : this.langService.getLocalByKey('file_video');
+    let localization: Localization = this.langService.getLocalByKey('file');
+    if (this.isPdfItem()) {
+      localization = this.langService.getLocalByKey('file_pdf');
+    } else if (this.isVideoItem()) {
+      localization = this.langService.getLocalByKey('file_video');
+    } else if (this.isPowerpointItem()) {
+      localization = this.langService.getLocalByKey('file_powerpoint');
+    }
+    return localization;
   }
 }

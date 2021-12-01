@@ -60,45 +60,41 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
     }));
   }
 
-  private _createBriefcase(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: any): Observable<any> {
-    let requestsList = {};
-    let entity: any = {...data};
-    delete entity.vsId;
+  private _prepareRequestList(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: { [key: string]: File }) {
+    let requestsList = {}, isNewRequest = !data.vsId,
+      entity: any = {...data},
+      totalFiles = !files ? 0 : Object.keys(files).length;
 
-    for (const filesKey in files) {
+    if (isNewRequest){
+      delete entity.vsId;
+    }
+
+    // if add, 1 file is mandatory
+    if (isNewRequest && totalFiles === 0) {
+      return requestsList;
+    }
+
+    let requestUrl = isNewRequest ? this._getServiceURL() : this._getServiceURL() + '/update';
+
+    // if update, files can be empty (update metadata only)
+    if (totalFiles === 0) {
       let form = new FormData();
       form.append('entity ', JSON.stringify(entity));
-      form.append('content', files[filesKey]);
-
       // @ts-ignore
-      requestsList[filesKey] = this.http.post(this._getServiceURL(), form)
+      requestsList['metaDataOnly'] = this.http.post(requestUrl, form)
         .pipe(
           // @ts-ignore
           map((res) => res.rs),
           catchError(e => of(false))
         );
-    }
-    return forkJoin(requestsList);
-  }
-
-  private _updateBriefcase(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: any): Observable<any> {
-    let requestsList = {};
-
-    if (files.length === 0) {
-      let form = new FormData();
-      form.append('entity ', JSON.stringify(data));
-      // @ts-ignore
-      requestsList['metaData'] = this.http.post(this._getServiceURL() + '/update', form);
     } else {
       for (const filesKey in files) {
         let form = new FormData();
-        form.append('entity ', JSON.stringify(data));
+        form.append('entity ', JSON.stringify(entity));
         form.append('content', files[filesKey]);
 
-        this.exceptionHandlerService.excludeHandlingForURL(this._getServiceURL());
-
         // @ts-ignore
-        requestsList[filesKey] = this.http.post(this._getServiceURL(), form)
+        requestsList[filesKey] = this.http.post(requestUrl, form)
           .pipe(
             // @ts-ignore
             map((res) => res.rs),
@@ -106,28 +102,26 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
           );
       }
     }
-    return forkJoin(requestsList);
+    return requestsList;
   }
 
-  saveTrainingProgramBriefcase(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: any): Observable<any> {
-    let result: any;
-    if (data.vsId) {
-      result = this._updateBriefcase(data, files);
-    } else {
-      result = this._createBriefcase(data, files);
+  saveTrainingProgramBriefcase(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: { [key: string]: File }): Observable<any> {
+    let requestsList = this._prepareRequestList(data, files);
+    if (Object.keys(requestsList).length === 0){
+      return of('NO_REQUESTS_AVAILABLE');
     }
-    return result;
+    return forkJoin(requestsList);
   }
 
   deleteTrainingProgramBriefcase(briefcaseVsId: string): Observable<boolean> {
     return this.http.delete<boolean>(this._getServiceURL() + '/' + briefcaseVsId);
   }
 
-  downloadTrainingProgramBriefcase(trainingProgramBriefcaseVsid: string): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/content/' + trainingProgramBriefcaseVsid, {responseType: 'blob'});
+  downloadBriefcaseItem(briefcaseItemVsid: string): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/content/' + briefcaseItemVsid, {responseType: 'blob'});
   }
 
-  downloadBulkTrainingProgramBriefcase(trainingProgramId: number): Observable<Blob> {
+  downloadBriefcase(trainingProgramId: number): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/download/training-program-id/' + trainingProgramId, {responseType: 'blob'});
   }
 }
