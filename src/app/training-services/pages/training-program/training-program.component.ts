@@ -67,7 +67,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   ngOnInit(): void {
     this.listenToReload();
-    this.listenToAdd();
+    super.listenToAdd();
     super.listenToEdit();
   }
 

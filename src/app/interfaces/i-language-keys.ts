@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  view_trainer_x_cv_title: string;
   certificate_template_title: string;
   certificate_template_status: string;
   certificate_template_name: string;

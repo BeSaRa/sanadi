@@ -1,10 +1,10 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Certificate} from '@app/models/certificate';
-import {Observable, of, Subject} from 'rxjs';
+import {isObservable, Observable, of, Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
@@ -13,7 +13,7 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'certificates-popup',
@@ -30,6 +30,7 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
   templateExtensions: string[] = ['.doc', '.docx'];
   templateFile: any;
   viewTemplate$: Subject<void> = new Subject<void>();
+  saveTemplate$: Subject<any> = new Subject<any>();
   @ViewChild('templateUploader') templateUploader!: ElementRef;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Certificate>,
@@ -45,11 +46,18 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
     this.model = data.model;
   }
 
+  ngOnInit(): void {
+    this.buildForm();
+    this.listenToSave();
+    this.initPopup();
+  }
+
   get popupTitle() {
     return 'Any';
   }
 
   initPopup(): void {
+    this.listenToViewTemplate();
   }
 
   buildForm(): void {
@@ -62,20 +70,47 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
   }
 
   prepareModel(model: Certificate, form: FormGroup): Observable<Certificate> | Certificate {
-    return (new Certificate()).clone({...model, ...form.value});
+    let certificate =  (new Certificate()).clone({...model, ...form.value});
+    certificate.file = this.templateFile;
+    return certificate;
   }
 
   afterSave(model: Certificate, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     // @ts-ignore
-    this.toast.success(message.change({x: model.documentTitle}));
+    this.toast.success(message.change({x: this.form.get('documentTitle').value}));
     this.model = model;
-    const operationBeforeSave = this.operation;
     this.operation = OperationTypes.UPDATE;
 
-    if (operationBeforeSave == OperationTypes.UPDATE) {
-      this.dialogRef.close(this.model);
-    }
+    this.dialogRef.close(this.model);
+  }
+
+  listenToSave() {
+    this.saveTemplate$
+      // call before Save callback
+      .pipe(switchMap(() => {
+        const result = this.beforeSave(this.model, this.form);
+        return isObservable(result) ? result : of(result)
+      }))
+      // filter the return value from saveBeforeCallback and allow only the true
+      .pipe(filter(value => value))
+      .pipe(switchMap(_ => {
+        const result = this.prepareModel(this.model, this.form);
+        return isObservable(result) ? result : of(result);
+      }))
+      .pipe(exhaustMap((model: Certificate) => {
+        return model.createTemplate().pipe(catchError(error => {
+          this.saveFail(error);
+          return of({
+            error: error,
+            model
+          })
+        }))
+      }))
+      .pipe(filter((value) => !value.hasOwnProperty('error')))
+      .subscribe((model: Certificate | any) => {
+        this.afterSave(model, this.dialogRef);
+      })
   }
 
   openFileBrowser($event: MouseEvent): void {
@@ -97,27 +132,7 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
       let reader = new FileReader();
       reader.readAsDataURL(files[0]);
 
-      reader.onload = (event) => {
-        // @ts-ignore
-        this.templateFile = files[0];
-      };
-    }
-  }
-
-  saveResumeAfterSelect($event: Event) {
-    let files = ($event.target as HTMLInputElement).files;
-    if (files && files[0]) {
-      const extension = files[0].name.getExtension().toLowerCase();
-      if (this.templateExtensions.indexOf(extension) === -1) {
-        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.templateExtensions.join(', ')}));
-        this._clearTemplateUploader();
-        return;
-      }
-
-      let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-
-      reader.onload = (event) => {
+      reader.onload = () => {
         // @ts-ignore
         this.templateFile = files[0];
       };
@@ -133,12 +148,9 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
     this.viewTemplate$.pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
-        // return this.model.viewResume()
-        return of(null);
+        return this.model.viewTemplate();
       })
-    ).subscribe(cv => {
-      console.log(cv);
-    });
+    ).subscribe();
   }
 
   saveFail(error: Error): void {

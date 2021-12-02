@@ -15,7 +15,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {TrainerCvPopupComponent} from '@app/training-services/popups/trainer-cv-popup/trainer-cv-popup.component';
+import {ViewDocumentPopupComponent} from '@app/training-services/popups/view-document-popup/view-document-popup.component';
+import {LangService} from '@app/services/lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -77,10 +78,13 @@ export class TrainerService extends BackendWithDialogOperationsGenericService<Tr
   viewResumeDialog(trainer: Trainer): Observable<DialogRef> {
     return this.getResume(trainer.trainerCV.vsId).pipe(
       switchMap((blobModel: BlobModel) => {
-        return of(this.dialogService.show<IDialogData<BlobModel>>(TrainerCvPopupComponent, {
-          model: blobModel,
-          trainer: trainer,
-          operation: OperationTypes.UPDATE
+        return of(this.dialogService.show<IDialogData<Trainer>>(ViewDocumentPopupComponent, {
+          model: trainer,
+          operation: OperationTypes.UPDATE,
+          blob: blobModel,
+          titleHasPlaceHolder: true,
+          titleKey: 'view_trainer_x_cv_title',
+          getNameFunc: trainer.getName.bind(trainer)
         }));
       })
     );

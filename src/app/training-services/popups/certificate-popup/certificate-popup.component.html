@@ -17,26 +17,25 @@
         <app-field-error-message controlName="documentTitle"></app-field-error-message>
       </div>
       <div class="col-sm-6 position-relative">
-        <label asteriskIfRequired="status" for="status"
-               class="form-label">{{lang.map.certificate_template_status}}</label>
-        <input id="status"
-               validationClasses="status"
-               formControlName="status" class="form-control">
-        <app-field-error-message controlName="status"></app-field-error-message>
+        <label for="status" class="form-label">{{lang.map.certificate_template_status}}</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" id="status" formControlName="status"
+                 class="form-check-input cursor-pointer">
+        </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-4">
       <input class="input-file" type="file" #templateUploader [hidden]="true" (change)="onTemplateSelected($event)"
              [accept]="templateExtensions.join(',')">
       <div class="col-sm-12">
         <div class="row mb-3">
           <div class="col-sm-12">
             <div>
-              <button class="btn btn-primary" style="margin-right: 10px"
+              <button class="btn btn-primary"
                       (click)="openFileBrowser($event)">
                 {{lang.map.upload_resume}}
               </button>
-              <button class="btn btn-primary" *ngIf="templateFile" style="margin-right: 10px"
+              <button class="btn btn-primary" *ngIf="model?.vsId" style="margin-right: 10px; margin-left: 10px"
                       (click)="viewTemplate$.next()">
                 {{lang.map.view_resume}}
               </button>
@@ -53,7 +52,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+  <button [disabled]="form.invalid || (!model.vsId && !templateFile)" *ngIf="saveVisible" (click)="saveTemplate$.next(null)"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

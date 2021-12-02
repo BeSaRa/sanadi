@@ -27,11 +27,11 @@
           </ng-container>
           <ng-container cdkColumnDef="documentTitle">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.certificate_template_name}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.name}}</td>
+            <td cdk-cell *cdkCellDef="let row">{{row.documentTitle}}</td>
           </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.certificate_template_status}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.status}}</td>
+            <td cdk-cell *cdkCellDef="let row">{{row.status ? lang.map.lbl_active : lang.map.lbl_inactive}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

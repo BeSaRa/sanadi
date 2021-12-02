@@ -2,12 +2,15 @@ import {BaseModel} from '@app/models/base-model';
 import {CertificateService} from '@app/services/certificate.service';
 import {FactoryService} from '@app/services/factory.service';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable} from 'rxjs';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 export class Certificate extends BaseModel<Certificate, CertificateService> {
   service: CertificateService;
   documentTitle!: string;
-  status!: boolean;
+  status: boolean = false;
   vsId!: string;
+  file: any;
 
   constructor() {
     super();
@@ -30,5 +33,17 @@ export class Certificate extends BaseModel<Certificate, CertificateService> {
       status: controls ? [status] : status,
       vsId: controls ? [vsId] : vsId,
     }
+  }
+
+  createTemplate() {
+    return this.vsId ? this.service.updateTemplate(this) : this.service.createTemplate(this);
+  }
+
+  viewTemplate(): Observable<DialogRef> {
+    return this.service.viewTemplateDialog(this);
+  }
+
+  deleteTemplate() {
+    return this.service.deleteTemplate(this.vsId);
   }
 }

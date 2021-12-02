@@ -10,6 +10,9 @@ import {SharedService} from '@app/services/shared.service';
 import {ToastService} from '@app/services/toast.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {cloneDeep as _deepClone} from 'lodash';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'certificates',
@@ -42,6 +45,7 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
       }
     }
   ];
+  editTemplate$: Subject<Certificate> = new Subject<Certificate>();
 
   constructor(public lang: LangService,
               public service: CertificateService,
@@ -51,21 +55,38 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
     super();
   }
 
+  ngOnInit(): void {
+    super.listenToReload();
+    super.listenToAdd();
+    this.listenToEdit();
+  }
+
+  listenToEdit(): void {
+    this.editTemplate$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.editTemplateDialog(model).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
   edit(certificate: Certificate, event: MouseEvent) {
     event.preventDefault();
-    this.edit$.next(certificate);
+    this.editTemplate$.next(certificate);
   }
 
   delete(event: MouseEvent, model: Certificate): void {
     event.preventDefault();
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.documentTitle});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = model.delete().subscribe(() => {
+        const sub = model.deleteTemplate().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.documentTitle}));
           this.reload$.next(null);
           sub.unsubscribe();
         });

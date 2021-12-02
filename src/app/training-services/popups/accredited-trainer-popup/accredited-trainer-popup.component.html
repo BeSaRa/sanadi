@@ -132,13 +132,13 @@
         <div class="col-sm-12">
           <div class="row mb-3">
             <div class="col-sm-12">
-              <button class="btn btn-primary" *ngIf="model.trainerCV?.vsId" style="margin-right: 10px"
-                      (click)="viewResume$.next()">
-                {{lang.map.view_resume}}
-              </button>
               <button class="btn btn-primary"
                       (click)="openFileBrowser($event)">
                 {{lang.map.upload_resume}}
+              </button>
+              <button class="btn btn-primary" *ngIf="model.trainerCV?.vsId" style="margin-right: 10px; margin-left: 10px"
+                      (click)="viewResume$.next()">
+                {{lang.map.view_resume}}
               </button>
             </div>
           </div>

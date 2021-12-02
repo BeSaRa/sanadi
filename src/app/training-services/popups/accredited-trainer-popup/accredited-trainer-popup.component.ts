@@ -138,7 +138,7 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
       let reader = new FileReader();
       reader.readAsDataURL(files[0]);
 
-      reader.onload = (event) => {
+      reader.onload = () => {
         // @ts-ignore
         this.resumeFile = files[0];
 
@@ -157,11 +157,9 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
     this.viewResume$.pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
-        return this.model.viewResume()
+        return this.model.viewResume();
       })
-    ).subscribe(cv => {
-      console.log(cv);
-    });
+    ).subscribe();
   }
 
   destroyPopup(): void {
