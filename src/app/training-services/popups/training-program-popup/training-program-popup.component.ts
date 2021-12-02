@@ -19,7 +19,7 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {OrgUnit} from '@app/models/org-unit';
-import {exhaustMap, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
@@ -61,6 +61,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     briefcase: {
       name: 'briefcase',
       validStatus: () => true
+    },
+    passedTrainees: {
+      name: 'passedTrainees',
+      validStatus: () => true
     }
   };
   tabIndex$: Subject<number> = new Subject<number>();
@@ -95,6 +99,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   trainerColumns = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
   showAddTrainerForm = false;
 
+  isCertification!: boolean;
+
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
               public fb: FormBuilder,
@@ -108,6 +114,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     super();
     this.operation = data.operation;
     this.model = data.model;
+    this.isCertification = data.isCertification;
   }
 
   initPopup(): void {
@@ -120,6 +127,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.listenToApprove();
     // this.listenToSaveAndApprove();
     this.listenToPublish();
+
+    if (this.isCertification) {
+      this.form.disable();
+    }
+    console.log(this.form);
   }
 
   listenToApprove() {
@@ -331,9 +343,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ?
-      this.lang.map.add_training_program :
-      this.lang.map.edit_training_program;
+    if (this.isCertification) {
+      return this.lang.map.view_training_program;
+    } else {
+      return this.operation === OperationTypes.CREATE ?
+        this.lang.map.add_training_program :
+        this.lang.map.edit_training_program;
+    }
   };
 
   destroyPopup(): void {
@@ -458,5 +474,23 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     return this.operation != this.operationTypes.CREATE &&
       this.model.status != this.trainingStatus.TRAINING_FINISHED &&
       this.model.status != this.trainingStatus.TRAINING_CANCELED;
+  }
+
+  showCertificateButton() {
+    return this.model.status == this.trainingStatus.TRAINING_FINISHED;
+  }
+
+  onSelectCertificateTemplateClicked() {
+    const sub = this.model.service.openSelectCertificateTemplateDialog(this.model.id)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap((dialogRef) => {
+        return dialogRef.onAfterClose$;
+      }))
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick == UserClickOn.YES) {
+          this.dialogRef.close();
+        }
+        sub.unsubscribe();
+      });
   }
 }

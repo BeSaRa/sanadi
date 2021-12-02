@@ -33,11 +33,11 @@
             <div>
               <button class="btn btn-primary"
                       (click)="openFileBrowser($event)">
-                {{lang.map.upload_resume}}
+                {{lang.map.training_program_upload_template}}
               </button>
               <button class="btn btn-primary" *ngIf="model?.vsId" style="margin-right: 10px; margin-left: 10px"
                       (click)="viewTemplate$.next()">
-                {{lang.map.view_resume}}
+                {{lang.map.training_program_view_template}}
               </button>
             </div>
           </div>

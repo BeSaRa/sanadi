@@ -17,11 +17,12 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FilterTrainingProgramsComponent} from '@app/training-services/popups/filter-training-programs/filter-training-programs.component';
 import {formatDate} from '@angular/common';
 import {TrainingProgramAttendancePopupComponent} from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
-import {switchMap} from 'rxjs/operators';
+import {exhaustMap, switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {TrainingProgramCandidatesPopupComponent} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
 import {TraineeService} from '@app/services/trainee.service';
+import {SelectCertificateTemplatePopupComponent} from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -124,6 +125,25 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
       operation: OperationTypes.CREATE,
       isEvaluate: true
     }));
+  }
+
+  openSelectCertificateTemplateDialog(trainingProgramId: number): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<number>>(SelectCertificateTemplatePopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE
+    }));
+  }
+
+  private getCertificationDialog(model: TrainingProgram, operation: OperationTypes): DialogRef {
+    return this.dialog.show<IDialogData<TrainingProgram>>(this._getDialogComponent(), {
+      operation,
+      model,
+      isCertification: true
+    })
+  }
+  certificationDialog(model: TrainingProgram): Observable<DialogRef> {
+    return this.getByIdComposite(model.id)
+      .pipe(exhaustMap((model) => of(this.getCertificationDialog(model, OperationTypes.UPDATE))));
   }
 
   _getDialogComponent(): ComponentType<any> {

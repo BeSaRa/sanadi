@@ -72,7 +72,10 @@
                    class="icon-btn">
                   <i class="mdi mdi-account-check"></i>
                 </a>
-                <a *ngIf="showAttendance(row.status)" href="#" (click)="applyAttendance(row , $event)"
+                <a *ngIf="showAttendanceOrCertificates(row.status)" href="#" (click)="certification(row , $event)" tooltip="{{lang.map.training_program_certification}}" class="icon-btn">
+                  <i class="mdi mdi-certificate"></i>
+                </a>
+                <a *ngIf="showAttendanceOrCertificates(row.status)" href="#" (click)="applyAttendance(row , $event)"
                    tooltip="{{lang.map.attendance}}" class="icon-btn">
                   <i class="mdi mdi-account-clock"></i>
                 </a>

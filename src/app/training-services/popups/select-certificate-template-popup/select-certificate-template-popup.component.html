@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="models" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" style="width: 500px">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table [paginator]="paginator" sortableTable
+                   [columns]="displayedColumns"
+                   [data]="models">
+          <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+            <ng-container cdkColumnDef="documentTitle">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <label class="form-check-label" [for]="row.vsId">
+                  {{row.documentTitle}}
+                </label>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                <div class="d-flex flex-row center">
+                  <input [(ngModel)]="selectedCertificateVsId" class="form-check-input right" [id]="row.vsId"
+                         name="selectedCertificate" type="radio"
+                         [value]="row.vsId">
+                  <button class="btn btn-primary" *ngIf="row?.vsId" style="margin-right: 10px; margin-left: 10px"
+                          (click)="viewTemplate(row.vsId)">
+                    {{lang.map.training_program_view_template}}
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="10">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+        <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button [disabled]="!selectedCertificateVsId" (click)="certifyTrainees$.next()"
+          class="btn btn-primary">{{lang.map.lbl_create_certificates}}</button>
+  <button [dialogClose]="models" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

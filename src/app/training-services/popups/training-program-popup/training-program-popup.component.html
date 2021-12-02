@@ -12,13 +12,18 @@
            [hasError]="!form.valid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
            [title]="lang.map.training_program_organizations"
-           [hasError]="model.targetOrganizationListIds.length < 1"></tab>
+           [hasError]="model.targetOrganizationListIds.length < 1"
+           *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.trainers.name" [template]="trainersTabTemplate"
            [title]="lang.map.training_program_trainers"
-           [hasError]="model.trainerListIds.length < 1"></tab>
+           [hasError]="model.trainerListIds.length < 1"
+           *ngIf="!isCertification"></tab>
       <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcasesTabTemplate"
-           *ngIf="model.id"
+           *ngIf="model.id && !isCertification"
            [title]="lang.map.training_program_briefcases"></tab>
+      <tab [name]="tabsData.passedTrainees.name" [template]="passedTraineesTabTemplate"
+           [title]="lang.map.lbl_passed_trainees"
+           *ngIf="isCertification"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row mb-3">
@@ -474,6 +479,9 @@
       <training-program-briefcases [trainingProgramId]="model.id"
                                    [bundlesList]="model.trainingBundleList"></training-program-briefcases>
     </ng-template>
+    <ng-template #passedTraineesTabTemplate>
+      <trainee-list [trainingProgram]="model"></trainee-list>
+    </ng-template>
   </form>
 </div>
 <div class="dialog-actions">
@@ -492,5 +500,7 @@
           class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
   <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"
           class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
+  <button [disabled]="saveDisabled()" *ngIf="showCertificateButton()" (click)="onSelectCertificateTemplateClicked()"
+          class="btn btn-primary">{{lang.map.choose_certificates_template}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

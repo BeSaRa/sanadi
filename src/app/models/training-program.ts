@@ -45,6 +45,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   totalTrainingCost!: number;
   traineeList: TraineeData[] = [];
   trainingBundleList: TrainingProgramBriefcase[] = [];
+  isOpenForCertification!: false;
 
   // to be removed
   registeredTraineeNumber: number = 0;

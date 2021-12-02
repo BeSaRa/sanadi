@@ -1,4 +1,12 @@
 export interface ILanguageKeys {
+  training_program_certification: string;
+  view_training_program: string;
+  training_program_view_template: string;
+  training_program_upload_template: string;
+  lbl_create_certificates: string;
+  choose_certificates_template: string;
+  certificates_has_been_created_successfully: string;
+  lbl_passed_trainees: string;
   view_trainer_x_cv_title: string;
   certificate_template_title: string;
   certificate_template_status: string;

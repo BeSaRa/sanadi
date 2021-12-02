@@ -19,6 +19,8 @@ import { TrainingBriefcasesComponent } from './pages/training-briefcases/trainin
 import { RejectTraineePopupComponent } from './popups/reject-trainee-popup/reject-trainee-popup.component';
 import { CertificatesComponent } from './pages/certificates/certificates.component';
 import { CertificatePopupComponent } from './popups/certificate-popup/certificate-popup.component';
+import { TraineeListComponent } from './popups/trainee-list/trainee-list.component';
+import { SelectCertificateTemplatePopupComponent } from './popups/select-certificate-template-popup/select-certificate-template-popup.component';
 
 
 
@@ -39,7 +41,9 @@ import { CertificatePopupComponent } from './popups/certificate-popup/certificat
     TrainingBriefcasesComponent,
     RejectTraineePopupComponent,
     CertificatesComponent,
-    CertificatePopupComponent
+    CertificatePopupComponent,
+    TraineeListComponent,
+    SelectCertificateTemplatePopupComponent
   ],
   imports: [
     CommonModule,

@@ -16,6 +16,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {BlobModel} from '@app/models/blob-model';
 import {ViewDocumentPopupComponent} from '@app/training-services/popups/view-document-popup/view-document-popup.component';
+import {Generator} from '@app/decorators/generator';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,11 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
               private dialogService: DialogService) {
     super();
     FactoryService.registerService('CertificateService', this);
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  activeCertificates(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(this._getServiceURL() + '/active');
   }
 
   createTemplate(certificate: Certificate): Observable<string> {
@@ -76,6 +82,12 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
         catchError(_ => {
           return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
         })));
+  }
+
+  createCertificatesForTrainingProgram(trainingProgramId: number, templateVsId: string): Observable<boolean> {
+    return this.http.get<any>(this.urlService.URLS.TRAINING_PROGRAM_CERTIFICATE + '/generate/training-program-id/' + trainingProgramId + '/template-vsid/' + templateVsId).pipe(
+      map(x => x.rs)
+    );
   }
 
   viewTemplateDialog(certificate: Certificate): Observable<DialogRef> {

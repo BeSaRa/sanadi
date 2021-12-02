@@ -14,9 +14,9 @@ import {FilterEventTypes} from '@app/types/types';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
-import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {DateUtils} from '@app/helpers/date-utils';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {TrainingStatus} from '@app/enums/training-status';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 
@@ -55,6 +55,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   filterCriteria: Partial<ITrainingProgramCriteria> = {};
   trainingStatus = TrainingStatus;
+  certification$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
 
   constructor(public lang: LangService,
               public service: TrainingProgramService,
@@ -69,6 +70,18 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     this.listenToReload();
     super.listenToAdd();
     super.listenToEdit();
+    this.listenToCertification();
+  }
+
+  listenToCertification(): void {
+    this.certification$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.certificationDialog(model).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   applyAttendance(trainingProgram: TrainingProgram, event: MouseEvent) {
@@ -112,7 +125,12 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     this.edit$.next(trainingProgram);
   }
 
-  showAttendance(status: number) {
+  certification(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    this.certification$.next(trainingProgram);
+  }
+
+  showAttendanceOrCertificates(status: number) {
     return status == this.trainingStatus.TRAINING_FINISHED;
   }
 
