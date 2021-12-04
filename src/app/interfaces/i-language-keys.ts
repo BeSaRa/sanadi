@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  certificates_templates: string;
+  menu_finished_programs: string;
   training_program_certification: string;
   view_training_program: string;
   training_program_view_template: string;

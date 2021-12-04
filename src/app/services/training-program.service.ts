@@ -23,6 +23,8 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {TrainingProgramCandidatesPopupComponent} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
 import {TraineeService} from '@app/services/trainee.service';
 import {SelectCertificateTemplatePopupComponent} from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
+import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
+import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,8 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   constructor(public http: HttpClient,
               private urlService: UrlService,
               public dialog: DialogService,
-              private traineeService: TraineeService) {
+              private traineeService: TraineeService,
+              private trainingProgramBriefcaseService : TrainingProgramBriefcaseService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }
@@ -92,6 +95,11 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/open-for-registeration');
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  loadFinishedPrograms(): Observable<TrainingProgram[]> {
+    return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/finished-programs');
+  }
+
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {
     return of(this.dialog.show(FilterTrainingProgramsComponent, {
       criteria: filterCriteria
@@ -115,7 +123,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
       model: trainingProgramId,
       operation: OperationTypes.CREATE,
-      isEvaluate: false
+      candidatesListType: CandidatesListTypeEnum.ADD
     }));
   }
 
@@ -123,7 +131,15 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
       model: trainingProgramId,
       operation: OperationTypes.CREATE,
-      isEvaluate: true
+      candidatesListType: CandidatesListTypeEnum.EVALUATE
+    }));
+  }
+
+  openDownloadCertificatesDialog(trainingProgramId: number): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE,
+      candidatesListType: CandidatesListTypeEnum.CERTIFY
     }));
   }
 

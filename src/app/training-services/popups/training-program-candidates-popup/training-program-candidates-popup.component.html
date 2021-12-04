@@ -7,9 +7,9 @@
 </div>
 <div class="dialog-content" style="width: 1000px">
   <div class="row pb-3">
-    <app-page-header *ngIf="!isEvaluate" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header *ngIf="candidatesListType == candidatesListTypeEnum.ADD" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
     </app-page-header>
-    <app-page-header *ngIf="isEvaluate" [pageTitle]="'training_program_candidate'" [clickOnReload$]="reload$">
+    <app-page-header *ngIf="candidatesListType != candidatesListTypeEnum.ADD" [pageTitle]="candidatesListType == candidatesListTypeEnum.CERTIFY ? 'training_program_trainees' : 'training_program_candidate'" [clickOnReload$]="reload$">
     </app-page-header>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
@@ -46,11 +46,14 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <a *ngIf="!isEvaluate" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                  <a *ngIf="candidatesListType == candidatesListTypeEnum.ADD" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                     <i class="mdi mdi-close-box"></i>
                   </a>
-                  <a *ngIf="isEvaluate" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
+                  <a *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
                     <i class="mdi mdi-eye"></i>
+                  </a>
+                  <a *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended" href="#" (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="icon-btn">
+                    <i class="mdi mdi-download"></i>
                   </a>
                 </div>
               </td>

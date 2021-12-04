@@ -503,7 +503,20 @@
     "permissionGroup": null,
     "parent": 35,
     "group": "training-services",
-    "itemOrder": 3,
+    "itemOrder": 4,
+    "svg": null
+  },
+  {
+    "id": 40,
+    "langKey": "menu_finished_programs",
+    "path": "/home/training/finished-programs",
+    "icon": "mdi-certificate",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 35,
+    "group": "training-services",
+    "itemOrder": 5,
     "svg": null
   }
 ]

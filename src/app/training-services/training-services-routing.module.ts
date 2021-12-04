@@ -25,13 +25,19 @@ const routes: Routes = [
     path: 'available-for-registration', component: AvailableProgramsComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false, isFinishedPrograms: false}
   },
   {
     path: 'certificate-templates', component: CertificatesComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
     data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'finished-programs', component: AvailableProgramsComponent,
+    canActivate: [PermissionGuard],
+    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false, isFinishedPrograms: true}
   }
 ];
 

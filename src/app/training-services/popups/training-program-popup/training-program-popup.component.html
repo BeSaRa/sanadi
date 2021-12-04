@@ -9,7 +9,7 @@
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
     <tabs-list [tabByIndex$]="tabIndex$">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
-           [hasError]="!form.valid"></tab>
+           [hasError]="form.invalid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"
            [title]="lang.map.training_program_organizations"
            [hasError]="model.targetOrganizationListIds.length < 1"

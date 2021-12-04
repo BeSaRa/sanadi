@@ -73,7 +73,7 @@ export class SelectCertificateTemplatePopupComponent implements OnInit, OnDestro
   }
 
   get popupTitle(): string {
-    return this.lang.map.training_program_trainees;
+    return this.lang.map.certificates_templates;
   };
 
   ngOnDestroy() {

@@ -7,6 +7,8 @@ import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {BehaviorSubject, of} from 'rxjs';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'available-programs',
@@ -25,23 +27,34 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
     }
   ];
   displayedColumns: string[] = ['activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
+  isFinishedPrograms!: boolean;
 
   constructor(public lang: LangService,
-              public service: TrainingProgramService) {
+              public service: TrainingProgramService,
+              private route: ActivatedRoute) {
     super();
+  }
+
+  ngOnInit() {
+    this.listenToReload();
+    super.listenToAdd();
+    super.listenToEdit();
   }
 
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        // const load = this.service.loadAvailablePrograms(); // to be uncommented
-        const load = this.service.loadAvailablePrograms();
+        return this.route.data
+      }))
+      .pipe(switchMap((data) => {
+        this.isFinishedPrograms = data.isFinishedPrograms;
+        const load = this.isFinishedPrograms ? this.service.loadFinishedPrograms() : this.service.loadAvailablePrograms();
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: TrainingProgram[]) => {
         this.models = list;
-      })
+      });
   }
 
   searchCallback = (record: any, searchText: string) => {
@@ -55,5 +68,20 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
         sub.unsubscribe();
       });
     });
+  }
+
+  onDownloadCertificatesClicked(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    const sub = this.service.openDownloadCertificatesDialog(trainingProgram.id)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap((dialogRef) => {
+        return dialogRef.onAfterClose$;
+      }))
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick == UserClickOn.YES) {
+          // this.dialogRef.close();
+        }
+        sub.unsubscribe();
+      });
   }
 }

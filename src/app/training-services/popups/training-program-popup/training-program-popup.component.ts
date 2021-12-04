@@ -130,8 +130,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
     if (this.isCertification) {
       this.form.disable();
+      this.form.updateValueAndValidity();
     }
-    console.log(this.form);
+    setTimeout(() => {
+      console.log(this.form);
+    }, 300);
   }
 
   listenToApprove() {

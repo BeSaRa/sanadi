@@ -7,11 +7,11 @@ import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {TrainingProgramService} from '@app/services/training-program.service';
-import {TraineeStatus} from '@app/enums/trainee-status';
+import {TraineeData} from '@app/models/trainee-data';
 
 @Component({
   selector: 'training-program-attendance-popup',
@@ -22,7 +22,6 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
   saveAttendance$: Subject<null> = new Subject();
   model!: TrainingProgram;
   operation!: OperationTypes;
-  form!: FormGroup;
   displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
@@ -38,24 +37,14 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.listenToSaveAttendance();
-    this.form = this.formBuilder.group({
-      trainees: new FormArray([])
-    });
-
-    // this.model.traineeList = this.fakeTraineeList();
-    this.addCheckboxesToForm();
   }
 
   listenToSaveAttendance() {
     this.saveAttendance$
       .pipe(switchMap(() => {
-        const selectedTrainees = this.form.value.trainees
-          .map((checked: boolean, i: number) => checked ? {
-            first: this.model.traineeList[i].trainee.id,
-            second: true
-          } : {first: this.model.traineeList[i].trainee.id, second: false});
-        console.log(selectedTrainees);
-        return this.trainingProgramService.applyAttendance(this.model.id, selectedTrainees);
+        return this.trainingProgramService.applyAttendance(this.model.id, this.model.traineeList.map(
+          (item) => ({first: item.trainee.id, second: item.isAttended})
+        ));
       }))
       .subscribe(() => {
         const message = this.lang.map.attendance_applied_successfully;
@@ -68,13 +57,9 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
     return this.lang.map.training_program_attendance_proof;
   };
 
-  private addCheckboxesToForm() {
-    this.model.traineeList
-      .filter(element => element.status == TraineeStatus.ACCEPTED_TRAINEE)
-      .forEach((el) => this.traineesFormArray.push(new FormControl(el.isAttended)));
-  }
+  toggleAttendance(event: Event, row: TraineeData) {
+    const input = event.target as HTMLInputElement;
+    row.isAttended = input.checked;
 
-  get traineesFormArray() {
-    return this.form.controls.trainees as FormArray;
   }
 }

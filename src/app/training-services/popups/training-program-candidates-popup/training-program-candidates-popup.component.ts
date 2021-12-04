@@ -14,6 +14,8 @@ import {TraineeService} from '@app/services/trainee.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {TraineeData} from '@app/models/trainee-data';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
+import {CertificateService} from '@app/services/certificate.service';
 
 @Component({
   selector: 'training-program-candidates',
@@ -38,20 +40,22 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   models: Trainee[] = [];
   trainingProgramId: number;
   operation!: OperationTypes;
-  isEvaluate!: boolean;
+  candidatesListType!: number;
+  candidatesListTypeEnum = CandidatesListTypeEnum;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
               public lang: LangService,
               public service: TraineeService,
               private dialogService: DialogService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private certificateService: CertificateService) {
     this.operation = data.operation;
     this.trainingProgramId = data.model;
-    this.isEvaluate = data.isEvaluate;
+    this.candidatesListType = data.candidatesListType;
   }
 
   ngOnInit(): void {
-    console.log('is evaluate = ', this.isEvaluate);
+    console.log('listType', this.candidatesListType);
     this.listenToAdd();
     this.listenToReload();
     this.listenToReviewCandidate();
@@ -62,8 +66,8 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => this.service.openAddTrainingProgramCandidateDialog(this.trainingProgramId).onAfterClose$))
       .subscribe(() => {
-      this.reload$.next(this.trainingProgramId);
-    })
+        this.reload$.next(this.trainingProgramId);
+      });
   }
 
   reviewCandidate(event: MouseEvent, model: TraineeData) {
@@ -75,11 +79,11 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     this.reviewCandidate$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((traineeId) => {
-        return this.service.openEvaluateTrainingProgramCandidateDialog(this.trainingProgramId, traineeId).pipe(catchError(_ => of(null)))
+        return this.service.openEvaluateTrainingProgramCandidateDialog(this.trainingProgramId, traineeId).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null))
+      .subscribe(() => this.reload$.next(null));
   }
 
   listenToReload() {
@@ -92,7 +96,17 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       .subscribe((list: Trainee[]) => {
         console.log('candidates = ', list);
         this.models = list;
-      })
+      });
+  }
+
+  downloadCertificate(event: MouseEvent, model: TraineeData) {
+    event.preventDefault();
+    return this.certificateService.downloadCertificate(this.trainingProgramId, model.trainee.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        let downloadURL = window.URL.createObjectURL(data.blob);
+        window.open(downloadURL);
+      });
   }
 
   searchCallback = (record: any, searchText: string) => {
@@ -100,7 +114,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   };
 
   get popupTitle(): string {
-    return this.lang.map.training_program_candidates;
+    return this.candidatesListType == this.candidatesListTypeEnum.CERTIFY ? this.lang.map.training_program_trainees : this.lang.map.training_program_candidates;
   };
 
   delete(event: MouseEvent, model: TraineeData): void {

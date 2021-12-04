@@ -42,7 +42,11 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
   createTemplate(certificate: Certificate): Observable<string> {
     const formData = new FormData();
     formData.append('content', certificate.file);
-    formData.append('entity', JSON.stringify({vsId: certificate.vsId, documentTitle: certificate.documentTitle, status: certificate.status}));
+    formData.append('entity', JSON.stringify({
+      vsId: certificate.vsId,
+      documentTitle: certificate.documentTitle,
+      status: certificate.status
+    }));
     return this.http.post<string>(this._getServiceURL(), formData).pipe(
       map((response: any) => {
         return response.rs;
@@ -53,7 +57,11 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
   updateTemplate(certificate: Certificate): Observable<string> {
     const formData = new FormData();
     formData.append('content', certificate.file);
-    formData.append('entity', JSON.stringify({vsId: certificate.vsId, documentTitle: certificate.documentTitle, status: certificate.status}));
+    formData.append('entity', JSON.stringify({
+      vsId: certificate.vsId,
+      documentTitle: certificate.documentTitle,
+      status: certificate.status
+    }));
     return this.http.post<string>(this._getServiceURL() + '/update', formData).pipe(
       map((response: any) => {
         return response.rs;
@@ -65,7 +73,7 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
     return this.dialog.show<IDialogData<Certificate>>(this._getDialogComponent(), {
       operation,
       model
-    })
+    });
   }
 
   editTemplateDialog(model: Certificate): Observable<DialogRef> {
@@ -75,10 +83,21 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
 
   getTemplate(vsId: string): Observable<BlobModel> {
     return this.http.get(this._getServiceURL() + '/preview/content/' + vsId, {
-      responseType : 'blob',
-      observe : 'body'
+      responseType: 'blob',
+      observe: 'body'
     }).pipe(
-      map(blob => new BlobModel(blob , this.domSanitizer ),
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+        })));
+  }
+
+  downloadCertificate(trainingProgramId: number, traineeId: number) {
+    return this.http.get(this.urlService.URLS.TRAINING_PROGRAM_CERTIFICATE + '/download/training-program-id/' + trainingProgramId + '/trainee-id/' + traineeId, {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
         catchError(_ => {
           return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
         })));
@@ -114,7 +133,7 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
   }
 
   _getModel(): any {
-    return Certificate
+    return Certificate;
   }
 
   _getReceiveInterceptor(): any {
