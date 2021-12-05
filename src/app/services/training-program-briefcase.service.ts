@@ -12,7 +12,6 @@ import {catchError, map} from 'rxjs/operators';
 import {TrainingBriefcasePopupComponent} from '@app/training-services/popups/training-briefcase-popup/training-briefcase-popup.component';
 import {Generator} from '@app/decorators/generator';
 import {BackendGenericService} from '@app/generics/backend-generic-service';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -112,7 +111,7 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
     return forkJoin(requestsList);
   }
 
-  deleteTrainingProgramBriefcase(briefcaseVsId: string): Observable<boolean> {
+  deleteTrainingProgramBriefcaseItem(briefcaseVsId: string): Observable<boolean> {
     return this.http.delete<boolean>(this._getServiceURL() + '/' + briefcaseVsId);
   }
 

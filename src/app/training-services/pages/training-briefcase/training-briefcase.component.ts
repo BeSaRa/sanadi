@@ -139,7 +139,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this.trainingProgramBriefcaseService.deleteTrainingProgramBriefcase(item.vsId)
+          this.trainingProgramBriefcaseService.deleteTrainingProgramBriefcaseItem(item.vsId)
             .subscribe(() => {
               this.reload$.next(null);
               this.toast.success(this.lang.map.msg_delete_success);
