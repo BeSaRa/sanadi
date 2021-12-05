@@ -69,7 +69,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
   documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
   trainingProgramBriefcaseVsId: string = '';
-  isPdfFileRequired: boolean = false;
+  isDocumentFileRequired: boolean = false;
 
   get canUploadVideoFile(): boolean {
     return !(this.bundlesList.find(item => item.isVideoItem()));
@@ -88,7 +88,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
   private fillAndShowForm(bundle?: any): void {
     this.trainingProgramBriefcaseVsId = bundle ? bundle.vsId : '';
-    this.isPdfFileRequired = !this.trainingProgramBriefcaseVsId; // required only if adding new
+    this.isDocumentFileRequired = !this.trainingProgramBriefcaseVsId; // required only if adding new
 
     this.documentTitleControl.setValue(bundle ? bundle.documentTitle : '');
     this.documentTitleControl.updateValueAndValidity();
@@ -99,7 +99,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   isValidForm(): boolean {
     let isValid = this.documentTitleControl.valid;
     if (isValid) {
-      isValid = this.isPdfFileRequired ? !!this.uploadedFile : true;
+      isValid = this.isDocumentFileRequired ? !!this.uploadedFile : true;
     }
     return isValid;
   }
@@ -159,7 +159,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     };
 
     let files: { [key: string]: File } = {};
-    this.uploadedFile ? (files.pdfFile = this.uploadedFile) : null;
+    this.uploadedFile ? (files.documentFile = this.uploadedFile) : null;
     this.uploadedVideoFile ? (files.videoFile = this.uploadedVideoFile) : null;
 
     this.trainingProgramBriefcaseService.saveTrainingProgramBriefcase(data, files)

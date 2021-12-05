@@ -14,8 +14,8 @@
     </div>
     <div class="col-sm-12 col-md-6 mb-4">
       <div class="row">
-        <label class="form-label">{{lang.map.file_pdf}}<span class="text-danger"
-                                                             *ngIf="isPdfFileRequired"> * </span></label>
+        <label class="form-label">{{lang.map.file_document}}<span class="text-danger"
+                                                             *ngIf="isDocumentFileRequired"> * </span></label>
         <input type="file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
                [accept]="allowedFileExtensions">
         <div class="col-md-6 col-sm-12">

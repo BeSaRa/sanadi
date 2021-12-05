@@ -761,6 +761,7 @@ export interface ILanguageKeys {
   action_others: string;
   training_program_briefcase: string;
   file: string;
+  file_document: string;
   file_pdf: string;
   file_video: string;
   file_powerpoint: string;
