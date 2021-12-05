@@ -34,14 +34,12 @@ export class SelectCertificateTemplatePopupComponent implements OnInit, OnDestro
               private certificateService: CertificateService,
               private dialogRef: DialogRef) {
     this.trainingProgramId = data.model;
+    this.models = data.list;
   }
 
   ngOnInit(): void {
     this.listenToViewTemplate();
     this.listenToCertifyTrainees();
-    this.certificateService.activeCertificates().subscribe(list => {
-      this.models = list;
-    });
   }
 
   listenToViewTemplate() {

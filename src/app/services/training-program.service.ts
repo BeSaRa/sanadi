@@ -25,6 +25,7 @@ import {TraineeService} from '@app/services/trainee.service';
 import {SelectCertificateTemplatePopupComponent} from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
+import {CertificateService} from '@app/services/certificate.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   constructor(public http: HttpClient,
               private urlService: UrlService,
               public dialog: DialogService,
+              private certificateService: CertificateService,
               private traineeService: TraineeService,
               private trainingProgramBriefcaseService : TrainingProgramBriefcaseService) {
     super();
@@ -144,10 +146,15 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   }
 
   openSelectCertificateTemplateDialog(trainingProgramId: number): Observable<DialogRef> {
-    return of(this.dialog.show<IDialogData<number>>(SelectCertificateTemplatePopupComponent, {
-      model: trainingProgramId,
-      operation: OperationTypes.CREATE
-    }));
+    return this.certificateService.activeCertificates().pipe(
+      exhaustMap(list => {
+        return of(this.dialog.show<IDialogData<number>>(SelectCertificateTemplatePopupComponent, {
+          model: trainingProgramId,
+          operation: OperationTypes.CREATE,
+          list: list
+        }));
+      })
+    )
   }
 
   private getCertificationDialog(model: TrainingProgram, operation: OperationTypes): DialogRef {

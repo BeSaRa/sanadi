@@ -39,8 +39,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
   saveCandidate$: Subject<void> = new Subject<void>();
-  acceptCandidate$ = new Subject<any>();
-  rejectCandidate$ = new Subject<any>();
+  acceptCandidate$: Subject<any> = new Subject<any>();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUserId?: number;
