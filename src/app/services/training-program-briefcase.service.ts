@@ -23,7 +23,6 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private exceptionHandlerService: ExceptionHandlerService,
               public dialog: DialogService) {
     super();
     FactoryService.registerService('TrainingProgramBriefcaseService', this);
@@ -105,7 +104,7 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
     return requestsList;
   }
 
-  saveTrainingProgramBriefcase(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: { [key: string]: File }): Observable<any> {
+  saveTrainingProgramBriefcaseItem(data: { vsId: string, trainingProgramId: number, documentTitle: string }, files: { [key: string]: File }): Observable<any> {
     let requestsList = this._prepareRequestList(data, files);
     if (Object.keys(requestsList).length === 0){
       return of('NO_REQUESTS_AVAILABLE');

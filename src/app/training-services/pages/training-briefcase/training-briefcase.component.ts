@@ -68,7 +68,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   allowedVideoExtensions: string[] = [FileExtensionsEnum.MP4, FileExtensionsEnum.MKV];
 
   documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
-  trainingProgramBriefcaseVsId: string = '';
+  trainingProgramBriefcaseItemVsId: string = '';
   isDocumentFileRequired: boolean = false;
 
   get canUploadVideoFile(): boolean {
@@ -86,11 +86,11 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fillAndShowForm(bundle?: any): void {
-    this.trainingProgramBriefcaseVsId = bundle ? bundle.vsId : '';
-    this.isDocumentFileRequired = !this.trainingProgramBriefcaseVsId; // required only if adding new
+  private fillAndShowForm(bundleItem?: any): void {
+    this.trainingProgramBriefcaseItemVsId = bundleItem ? bundleItem.vsId : '';
+    this.isDocumentFileRequired = !this.trainingProgramBriefcaseItemVsId; // required only if adding new
 
-    this.documentTitleControl.setValue(bundle ? bundle.documentTitle : '');
+    this.documentTitleControl.setValue(bundleItem ? bundleItem.documentTitle : '');
     this.documentTitleControl.updateValueAndValidity();
 
     this.showForm = true;
@@ -111,16 +111,16 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       });
   }
 
-  edit($event: MouseEvent, model: TrainingProgramBriefcase): void {
+  edit($event: MouseEvent, item: TrainingProgramBriefcase): void {
     $event.preventDefault();
-    this.fillAndShowForm(model);
+    this.fillAndShowForm(item);
   }
 
-  downloadBriefcaseItem($event: MouseEvent, model: TrainingProgramBriefcase): void {
+  downloadBriefcaseItem($event: MouseEvent, item: TrainingProgramBriefcase): void {
     $event.preventDefault();
-    this.trainingProgramBriefcaseService.downloadBriefcaseItem(model.vsId)
+    this.trainingProgramBriefcaseService.downloadBriefcaseItem(item.vsId)
       .subscribe((data) => {
-        printBlobData(data, model.documentTitle + '_download');
+        printBlobData(data, item.documentTitle + '_download');
       })
   }
 
@@ -132,14 +132,14 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       })
   }
 
-  delete($event: MouseEvent, model: TrainingProgramBriefcase): void {
+  delete($event: MouseEvent, item: TrainingProgramBriefcase): void {
     $event.preventDefault();
-    this.dialogService.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.documentTitle}))
+    this.dialogService.confirm(this.lang.map.msg_confirm_delete_x.change({x: item.documentTitle}))
       .onAfterClose$
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this.trainingProgramBriefcaseService.deleteTrainingProgramBriefcase(model.vsId)
+          this.trainingProgramBriefcaseService.deleteTrainingProgramBriefcase(item.vsId)
             .subscribe(() => {
               this.reload$.next(null);
               this.toast.success(this.lang.map.msg_delete_success);
@@ -148,12 +148,12 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       });
   }
 
-  saveBriefcase(): void {
+  saveBriefcaseItem(): void {
     if (!this.isValidForm()) {
       return;
     }
     let data = {
-      vsId: this.trainingProgramBriefcaseVsId,
+      vsId: this.trainingProgramBriefcaseItemVsId,
       documentTitle: this.documentTitleControl.value,
       trainingProgramId: this.trainingProgramId
     };
@@ -162,7 +162,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     this.uploadedFile ? (files.documentFile = this.uploadedFile) : null;
     this.uploadedVideoFile ? (files.videoFile = this.uploadedVideoFile) : null;
 
-    this.trainingProgramBriefcaseService.saveTrainingProgramBriefcase(data, files)
+    this.trainingProgramBriefcaseService.saveTrainingProgramBriefcaseItem(data, files)
       .subscribe((result) => {
         // if requests were generated due to missing files
         if (result === 'NO_REQUESTS_AVAILABLE') {
@@ -184,13 +184,13 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
           this.toast.info(this.lang.map.msg_save_success_except_some);
         }
         this.reload$.next(null);
-        this.cancelBriefcase();
+        this.cancelBriefcaseItem();
       });
   }
 
-  cancelBriefcase(): void {
+  cancelBriefcaseItem(): void {
     this.showForm = false;
-    this.trainingProgramBriefcaseVsId = '';
+    this.trainingProgramBriefcaseItemVsId = '';
     this.removeFile();
     this.removeVideoFile();
   }
