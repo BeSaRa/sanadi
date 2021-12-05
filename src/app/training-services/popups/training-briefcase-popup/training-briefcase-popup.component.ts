@@ -5,11 +5,11 @@ import {LangService} from '@app/services/lang.service';
 import {TrainingProgram} from '@app/models/training-program';
 
 @Component({
-  selector: 'training-briefcases-popup',
-  templateUrl: './training-briefcases-popup.component.html',
-  styleUrls: ['./training-briefcases-popup.component.scss']
+  selector: 'training-briefcase-popup',
+  templateUrl: './training-briefcase-popup.component.html',
+  styleUrls: ['./training-briefcase-popup.component.scss']
 })
-export class TrainingBriefcasesPopupComponent implements OnInit {
+export class TrainingBriefcasePopupComponent implements OnInit {
 
   trainingProgram: TrainingProgram;
 

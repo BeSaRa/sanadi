@@ -18,9 +18,9 @@
            [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1"
            *ngIf="!isCertification"></tab>
-      <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcasesTabTemplate"
+      <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcaseTabTemplate"
            *ngIf="model.id && !isCertification"
-           [title]="lang.map.training_program_briefcases"></tab>
+           [title]="lang.map.training_program_briefcase"></tab>
       <tab [name]="tabsData.passedTrainees.name" [template]="passedTraineesTabTemplate"
            [title]="lang.map.lbl_passed_trainees"
            *ngIf="isCertification"></tab>
@@ -475,9 +475,9 @@
         </div>
       </div>
     </ng-template>
-    <ng-template #trainingBriefcasesTabTemplate>
-      <training-program-briefcases [trainingProgramId]="model.id"
-                                   [bundlesList]="model.trainingBundleList"></training-program-briefcases>
+    <ng-template #trainingBriefcaseTabTemplate>
+      <training-program-briefcase [trainingProgramId]="model.id"
+                                   [bundlesList]="model.trainingBundleList"></training-program-briefcase>
     </ng-template>
     <ng-template #passedTraineesTabTemplate>
       <trainee-list [trainingProgram]="model"></trainee-list>

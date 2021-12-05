@@ -14,8 +14,8 @@ import { TrainingProgramAttendancePopupComponent } from './popups/training-progr
 import { TrainingProgramTraineePopupComponent } from './popups/training-program-trainee-popup/training-program-trainee-popup.component';
 import { AvailableProgramsComponent } from './pages/available-programs/available-programs.component';
 import { TrainingProgramCandidatesPopupComponent } from './popups/training-program-candidates-popup/training-program-candidates-popup.component';
-import { TrainingBriefcasesPopupComponent } from './popups/training-briefcases-popup/training-briefcases-popup.component';
-import { TrainingBriefcasesComponent } from './pages/training-briefcases/training-briefcases.component';
+import { TrainingBriefcasePopupComponent } from './popups/training-briefcase-popup/training-briefcase-popup.component';
+import { TrainingBriefcaseComponent } from './pages/training-briefcase/training-briefcase.component';
 import { RejectTraineePopupComponent } from './popups/reject-trainee-popup/reject-trainee-popup.component';
 import { CertificatesComponent } from './pages/certificates/certificates.component';
 import { CertificatePopupComponent } from './popups/certificate-popup/certificate-popup.component';
@@ -37,8 +37,8 @@ import { SelectCertificateTemplatePopupComponent } from './popups/select-certifi
     TrainingProgramTraineePopupComponent,
     AvailableProgramsComponent,
     TrainingProgramCandidatesPopupComponent,
-    TrainingBriefcasesPopupComponent,
-    TrainingBriefcasesComponent,
+    TrainingBriefcasePopupComponent,
+    TrainingBriefcaseComponent,
     RejectTraineePopupComponent,
     CertificatesComponent,
     CertificatePopupComponent,

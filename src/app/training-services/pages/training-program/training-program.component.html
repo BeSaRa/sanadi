@@ -60,8 +60,8 @@
                 <a href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
                   <i class="mdi mdi-pen"></i>
                 </a>
-                <a href="#" (click)="openTrainingBriefcasesDialog($event, row)"
-                   tooltip="{{lang.map.training_program_briefcases}}" class="icon-btn">
+                <a href="#" (click)="openTrainingBriefcaseDialog($event, row)"
+                   tooltip="{{lang.map.training_program_briefcase}}" class="icon-btn">
                   <i class="mdi mdi-bag-checked"></i>
                 </a>
                 <a *ngIf="showAddCandidates(row.status)" href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"

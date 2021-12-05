@@ -11,15 +11,14 @@ import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {printBlobData} from '@app/helpers/utils';
 import {IGridAction} from '@app/interfaces/i-grid-action';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
-  selector: 'training-program-briefcases',
-  templateUrl: './training-briefcases.component.html',
-  styleUrls: ['./training-briefcases.component.scss']
+  selector: 'training-program-briefcase',
+  templateUrl: './training-briefcase.component.html',
+  styleUrls: ['./training-briefcase.component.scss']
 })
-export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
+export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
   @Input() trainingProgramId!: number;
   @Input() bundlesList: TrainingProgramBriefcase[] = [];
@@ -80,7 +79,7 @@ export class TrainingBriefcasesComponent implements OnInit, OnDestroy {
     this.reload$.pipe(
       takeUntil(this.destroy$),
       switchMap(() => {
-        return this.trainingProgramBriefcaseService.loadTrainingBriefcasesByTrainingProgramId(this.trainingProgramId);
+        return this.trainingProgramBriefcaseService.loadTrainingBriefcaseByTrainingProgramId(this.trainingProgramId);
       })
     ).subscribe((bundles) => {
       this.bundlesList = bundles;

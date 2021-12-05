@@ -102,9 +102,9 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     });
   }
 
-  openTrainingBriefcasesDialog($event: MouseEvent, record: TrainingProgram): void {
+  openTrainingBriefcaseDialog($event: MouseEvent, record: TrainingProgram): void {
     $event.preventDefault();
-    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcasesDialog(record).subscribe((dialog: DialogRef) => {
+    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });

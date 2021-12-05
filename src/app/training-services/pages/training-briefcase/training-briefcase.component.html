@@ -1,6 +1,6 @@
 <div class="row">
   <app-page-header [clickOnReload$]="reload$" [clickOnNew$]="add$"
-                   pageTitle="training_program_briefcases"></app-page-header>
+                   pageTitle="training_program_briefcase"></app-page-header>
   <app-bulk-actions *ngIf="bundlesList.length" [actionsList]="bulkActions" [selectedRecords]="bundlesList" [hideSelectCount]="true"></app-bulk-actions>
 </div>
 <div class="row pt-3" *ngIf="showForm">

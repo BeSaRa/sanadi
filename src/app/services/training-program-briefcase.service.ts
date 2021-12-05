@@ -9,7 +9,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {TrainingProgram} from '@app/models/training-program';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {catchError, map} from 'rxjs/operators';
-import {TrainingBriefcasesPopupComponent} from '@app/training-services/popups/training-briefcases-popup/training-briefcases-popup.component';
+import {TrainingBriefcasePopupComponent} from '@app/training-services/popups/training-briefcase-popup/training-briefcase-popup.component';
 import {Generator} from '@app/decorators/generator';
 import {BackendGenericService} from '@app/generics/backend-generic-service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
@@ -46,16 +46,16 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
   }
 
   @Generator(undefined, true, {property: 'rs'})
-  private _loadTrainingBriefcasesByTrainingProgramId(trainingProgramId: number): Observable<TrainingProgramBriefcase[]> {
+  private _loadTrainingBriefcaseByTrainingProgramId(trainingProgramId: number): Observable<TrainingProgramBriefcase[]> {
     return this.http.get<TrainingProgramBriefcase[]>(this._getServiceURL() + '/training-program-id/' + trainingProgramId);
   }
 
-  loadTrainingBriefcasesByTrainingProgramId(trainingProgramId: number): Observable<any[]> {
-    return this._loadTrainingBriefcasesByTrainingProgramId(trainingProgramId);
+  loadTrainingBriefcaseByTrainingProgramId(trainingProgramId: number): Observable<any[]> {
+    return this._loadTrainingBriefcaseByTrainingProgramId(trainingProgramId);
   }
 
-  openTrainingBriefcasesDialog(trainingProgram: TrainingProgram): Observable<DialogRef> {
-    return of(this.dialog.show(TrainingBriefcasesPopupComponent, {
+  openTrainingBriefcaseDialog(trainingProgram: TrainingProgram): Observable<DialogRef> {
+    return of(this.dialog.show(TrainingBriefcasePopupComponent, {
       model: trainingProgram
     }));
   }
