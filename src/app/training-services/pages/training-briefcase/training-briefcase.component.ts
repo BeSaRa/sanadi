@@ -60,19 +60,17 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   @ViewChild('fileUploader') fileUploader!: ElementRef;
   uploadedFilePath: string = '';
   uploadedFile: any;
-  allowedFileExtensions: string[] = [FileExtensionsEnum.PDF, FileExtensionsEnum.PPTX];
 
-  @ViewChild('videoUploader') videoUploader!: ElementRef;
-  uploadedVideoFilePath: string = '';
-  uploadedVideoFile: any;
-  allowedVideoExtensions: string[] = [FileExtensionsEnum.MP4, FileExtensionsEnum.MKV];
+  allowedExtensions: string[] = [];
+  private _allowedFileExtensions: string[] = [FileExtensionsEnum.PDF, FileExtensionsEnum.PPT, FileExtensionsEnum.PPTX];
+  private _allowedVideoFileExtensions: string[] = [FileExtensionsEnum.MKV, FileExtensionsEnum.MP4];
 
   documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
   trainingProgramBriefcaseItemVsId: string = '';
   isDocumentFileRequired: boolean = false;
 
-  get canUploadVideoFile(): boolean {
-    return !(this.bundlesList.find(item => item.isVideoItem()));
+  isVideoFileExist(): boolean {
+    return !!(this.bundlesList.find(item => item.isVideoItem()));
   }
 
   listenToReload(): void {
@@ -86,13 +84,32 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fillAndShowForm(bundleItem?: any): void {
-    this.trainingProgramBriefcaseItemVsId = bundleItem ? bundleItem.vsId : '';
-    this.isDocumentFileRequired = !this.trainingProgramBriefcaseItemVsId; // required only if adding new
+  private _updateAllowedExtensions(bundleItem?: TrainingProgramBriefcase): void {
+    if (!bundleItem) {
+      this.allowedExtensions = this._allowedFileExtensions;
+      if (!this.isVideoFileExist()) {
+        this.allowedExtensions = this.allowedExtensions.concat(this._allowedVideoFileExtensions);
+      }
+    } else {
+      if (bundleItem.isVideoItem()) {
+        this.allowedExtensions = this._allowedVideoFileExtensions;
+      } else {
+        this.allowedExtensions = this._allowedFileExtensions;
+      }
+    }
+  }
 
-    this.documentTitleControl.setValue(bundleItem ? bundleItem.documentTitle : '');
-    this.documentTitleControl.updateValueAndValidity();
+  private fillAndShowForm(bundleItem?: TrainingProgramBriefcase): void {
+    this.isDocumentFileRequired = !bundleItem; // required only if adding new
+    this.trainingProgramBriefcaseItemVsId = '';
 
+    this._updateAllowedExtensions(bundleItem);
+
+    if (bundleItem) {
+      this.trainingProgramBriefcaseItemVsId = bundleItem.vsId;
+      this.documentTitleControl.setValue(bundleItem.documentTitle);
+      this.documentTitleControl.updateValueAndValidity();
+    }
     this.showForm = true;
   }
 
@@ -107,7 +124,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.fillAndShowForm();
+        this.fillAndShowForm(undefined);
       });
   }
 
@@ -160,7 +177,6 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
     let files: { [key: string]: File } = {};
     this.uploadedFile ? (files.documentFile = this.uploadedFile) : null;
-    this.uploadedVideoFile ? (files.videoFile = this.uploadedVideoFile) : null;
 
     this.trainingProgramBriefcaseService.saveTrainingProgramBriefcaseItem(data, files)
       .subscribe((result) => {
@@ -192,7 +208,6 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     this.showForm = false;
     this.trainingProgramBriefcaseItemVsId = '';
     this.removeFile();
-    this.removeVideoFile();
   }
 
   openFileBrowser($event: MouseEvent): void {
@@ -201,28 +216,17 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     this.fileUploader?.nativeElement.click();
   }
 
-  openVideoFileBrowser($event: MouseEvent): void {
-    $event?.stopPropagation();
-    $event?.preventDefault();
-    this.videoUploader?.nativeElement.click();
-  }
-
   private _clearFileUploader(): void {
     this.uploadedFile = null;
     this.fileUploader.nativeElement.value = "";
-  }
-
-  private _clearVideoFileUploader(): void {
-    this.uploadedVideoFile = null;
-    this.videoUploader.nativeElement.value = "";
   }
 
   onFileSelected($event: Event): void {
     let files = ($event.target as HTMLInputElement).files;
     if (files && files[0]) {
       const extension = files[0].name.getExtension().toLowerCase();
-      if (this.allowedFileExtensions.indexOf(extension) === -1) {
-        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.allowedFileExtensions.join(', ')}));
+      if (this.allowedExtensions.indexOf(extension) === -1) {
+        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.allowedExtensions.join(', ')}));
         this.uploadedFilePath = '';
         this._clearFileUploader();
         return;
@@ -241,39 +245,9 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  onVideoFileSelected($event: Event): void {
-    let files = ($event.target as HTMLInputElement).files;
-    if (files && files[0]) {
-      const extension = files[0].name.getExtension().toLowerCase();
-      if (this.allowedVideoExtensions.indexOf(extension) === -1) {
-        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.allowedVideoExtensions.join(', ')}));
-        this.uploadedVideoFilePath = '';
-        this._clearVideoFileUploader();
-        return;
-      }
-
-      var reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-
-      reader.onload = (event) => {
-        // @ts-ignore
-        this.uploadedVideoFile = files[0];
-        this.uploadedVideoFilePath = this.uploadedVideoFile.name;
-        // this.uploadedVideoFilePath = event.target.result as string;
-      };
-
-    }
-  }
-
   removeFile($event?: MouseEvent): void {
     $event?.preventDefault();
     this.uploadedFilePath = '';
     this._clearFileUploader();
-  }
-
-  removeVideoFile($event?: MouseEvent): void {
-    $event?.preventDefault();
-    this.uploadedVideoFilePath = '';
-    this._clearVideoFileUploader();
   }
 }
