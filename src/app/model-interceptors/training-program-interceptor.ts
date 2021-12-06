@@ -18,11 +18,9 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.trainingTypeInfo = AdminResult.createInstance(model.trainingTypeInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.traineeList = model.traineeList.map(tr => {
-      let statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!);
-      tr.statusInfo = statusInfo || new Lookup();
+      tr.statusInfo = (lookupService.listByCategory.TRAINING_TRAINEE_STATUS.find(s => s.lookupKey == tr.status)!) || new Lookup();
       tr.trainee = (new Trainee()).clone(tr.trainee);
-      let nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == tr.trainee.nationality)!);
-      tr.trainee.nationalityInfo = nationalityInfo || new Lookup();
+      tr.trainee.nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == tr.trainee.nationality)!) || new Lookup();
       return tr;
     });
 
@@ -52,6 +50,12 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.endDate = DateUtils.getDateStringFromDate(model.endDate);
     model.registerationStartDate = DateUtils.getDateStringFromDate(model.registerationStartDate);
     model.registerationClosureDate = DateUtils.getDateStringFromDate(model.registerationClosureDate);
+
+    model.durationInHours = +model.durationInHours!;
+    model.durationInDays = +model.durationInDays!;
+    model.averageDurationInHours = +model.averageDurationInHours!;
+    model.numberOfSeats = +model.numberOfSeats!;
+    model.totalTrainingCost = +model.totalTrainingCost!;
 
     let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
     model.trainingBundleList = !model.trainingBundleList ? [] : model.trainingBundleList.map(item => trainingProgramBriefcaseService._getSendInterceptor()(new TrainingProgramBriefcase().clone(item)));

@@ -500,7 +500,7 @@
           class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
   <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"
           class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
-  <button [disabled]="saveDisabled()" *ngIf="showCertificateButton()" (click)="onSelectCertificateTemplateClicked()"
+  <button [disabled]="disabledShowCertificateButton()" *ngIf="showCertificateButton()" (click)="onSelectCertificateTemplateClicked()"
           class="btn btn-primary">{{lang.map.choose_certificates_template}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

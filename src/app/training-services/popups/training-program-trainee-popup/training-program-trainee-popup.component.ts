@@ -4,7 +4,7 @@ import {of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
@@ -307,54 +307,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
 
   showOrganizationsTemplate() {
     return this.employeeType == 'organization' && !this.isEvaluate;
-  }
-
-  get idControl(): FormControl {
-    return this.form.get('id') as FormControl;
-  }
-
-  get generalUserIdControl(): FormControl {
-    return this.form.get('generalUserId') as FormControl;
-  }
-
-  get arNameControl(): FormControl {
-    return this.form.get('arName') as FormControl;
-  }
-
-  get enNameControl(): FormControl {
-    return this.form.get('enName') as FormControl;
-  }
-
-  get jobTypeControl(): FormControl {
-    return this.form.get('jobType') as FormControl;
-  }
-
-  get departmentControl(): FormControl {
-    return this.form.get('department') as FormControl;
-  }
-
-  get trainingRecordControl(): FormControl {
-    return this.form.get('trainingRecord') as FormControl;
-  }
-
-  get currentJobControl(): FormControl {
-    return this.form.get('currentJob') as FormControl;
-  }
-
-  get employementPositionControl(): FormControl {
-    return this.form.get('employementPosition') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.form.get('email') as FormControl;
-  }
-
-  get genderControl(): FormControl {
-    return this.form.get('gender') as FormControl;
-  }
-
-  get nationalityControl(): FormControl {
-    return this.form.get('nationality') as FormControl;
   }
 
   get popupTitle() {

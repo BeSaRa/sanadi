@@ -24,9 +24,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   targetOrganizationListIds: number[] = [];
   targetAudienceList!: string;
   targetAudienceListIds: number[] = [];
-  durationInDays!: string;
-  durationInHours!: string;
-  averageDurationInHours!: string;
+  durationInDays!: number;
+  durationInHours!: number;
+  averageDurationInHours!: number;
   startDate!: IMyDateModel | string;
   endDate!: IMyDateModel | string;
   sessionStartTime!: number;

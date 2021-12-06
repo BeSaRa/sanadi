@@ -114,7 +114,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     super();
     this.operation = data.operation;
     this.model = data.model;
-    this.isCertification = data.isCertification;
+    this.isCertification = !!data.isCertification;
   }
 
   initPopup(): void {
@@ -481,6 +481,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   showCertificateButton() {
     return this.model.status == this.trainingStatus.TRAINING_FINISHED;
+  }
+
+  disabledShowCertificateButton() {
+    return !this.model.traineeList.some(t => t.isAttended);
   }
 
   onSelectCertificateTemplateClicked() {

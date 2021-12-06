@@ -64,11 +64,11 @@
                    tooltip="{{lang.map.training_program_briefcase}}" class="icon-btn">
                   <i class="mdi mdi-bag-checked"></i>
                 </a>
-                <a *ngIf="showAddCandidates(row.status)" href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"
+                <a *ngIf="showAddCandidates(row.status)" href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.training_program_add_candidates}}"
                    class="icon-btn">
                   <i class="mdi mdi-account-plus"></i>
                 </a>
-                <a *ngIf="showEvaluateCandidates(row.status)" href="#" (click)="evaluateCandidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"
+                <a *ngIf="showEvaluateCandidates(row.status)" href="#" (click)="evaluateCandidates(row , $event)" tooltip="{{lang.map.training_program_accept_reject_candidates}}"
                    class="icon-btn">
                   <i class="mdi mdi-account-check"></i>
                 </a>
