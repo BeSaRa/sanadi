@@ -19,13 +19,15 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'dac-ocha',
   templateUrl: './dac-ocha.component.html',
   styleUrls: ['./dac-ocha.component.scss']
 })
-export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaService> implements OnInit{
+export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaService> implements OnInit {
   selectDacOchaType$: BehaviorSubject<number> = new BehaviorSubject<number>(DacOchaTypeEnum.ocha);
   selectedDacOchaTypeId: number = 1;
   searchText = '';
@@ -59,6 +61,14 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
       }
     }
   ];
+
+  sortingCallbacks = {
+    statusInfo: (a: DacOcha, b: DacOcha, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
 
   constructor(public lang: LangService,
               public service: DacOchaService,
@@ -166,17 +176,17 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
     this.selectDacOchaType$
       .pipe(takeUntil(this.destroy$))
       .subscribe(type => {
-      this.selectedDacOchaTypeId = type;
-      this.reload$.next(null);
-    })
+        this.selectedDacOchaTypeId = type;
+        this.reload$.next(null);
+      })
   }
 
   tabChanged(tab: TabComponent) {
-    if(tab.name.toLowerCase() === 'ocha') {
+    if (tab.name.toLowerCase() === 'ocha') {
       this.selectDacOchaType$.next(DacOchaTypeEnum.ocha);
     }
 
-    if(tab.name.toLowerCase() === 'dac') {
+    if (tab.name.toLowerCase() === 'dac') {
       this.selectDacOchaType$.next(DacOchaTypeEnum.dac);
     }
   }

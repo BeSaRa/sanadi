@@ -17,7 +17,8 @@ export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
   parentId?: number;
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
-    enName: 'enName'
+    enName: 'enName',
+    statusInfo: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {
