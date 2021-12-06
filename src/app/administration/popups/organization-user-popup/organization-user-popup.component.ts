@@ -82,7 +82,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private permissionService: PermissionService,
               private userPermissionService: OrganizationUserPermissionService,
               private lookupService: LookupService,
-              private employeeService: EmployeeService,
+              public employeeService: EmployeeService,
               private authService: AuthService,
               private fb: FormBuilder,
               private exceptionHandlerService: ExceptionHandlerService) {
@@ -105,6 +105,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (!this.model.id && this.employeeService.isExternalUser()) {
+      this.model.orgId = this.employeeService.getOrgUnit()?.id;
+    }
     this.buildPermissionGroups();
     this.buildForm();
     this._saveModel();

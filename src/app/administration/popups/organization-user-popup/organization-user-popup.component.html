@@ -23,14 +23,14 @@
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
             <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
-                   class="form-control"/>
+                   class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
             <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
-                   class="form-control"/>
+                   class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
           </div>
         </div>
@@ -39,7 +39,7 @@
             <label for="empNum" asteriskIfRequired="empNum"
                    class="form-label">{{langService.map.lbl_employee_number}}</label>
             <input id="empNum" [ngClass]="fm.getStatusClass('basic.empNum')" formControlName="empNum"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.empNum')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -55,13 +55,13 @@
             <label for="phoneNumber" asteriskIfRequired="phoneNumber"
                    class="form-label">{{langService.map.lbl_phone}}</label>
             <input id="phoneNumber" [ngClass]="fm.getStatusClass('basic.phoneNumber')" formControlName="phoneNumber"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
+                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
             <input id="phoneExtension" [ngClass]="fm.getStatusClass('basic.phoneExtension')"
-                   formControlName="phoneExtension" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
+                   formControlName="phoneExtension" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.phoneExtension')"></app-field-error-message>
           </div>
         </div>
@@ -69,13 +69,13 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="officialPhoneNumber" class="form-label">{{langService.map.lbl_official_phone_number}}</label>
             <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('basic.officialPhoneNumber')"
-                   formControlName="officialPhoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"/>
+                   formControlName="officialPhoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message [control]="fm.getFormField('basic.officialPhoneNumber')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="email" for="email" class="form-label">{{langService.map.lbl_email}}</label>
             <input id="email" [ngClass]="fm.getStatusClass('basic.email')" formControlName="email"
-                   class="form-control"/>
+                   class="form-control">
             <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
           </div>
         </div>
@@ -119,6 +119,7 @@
                        [notFoundText]="langService.map.msg_not_found"
                        (change)="onOrgUnitChange()"
                        formControlName="orgId"
+                       [readonly]="employeeService.isExternalUser()"
                        [ngClass]="fm.getStatusClass('basic.orgId')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitList" [value]="option.id">
