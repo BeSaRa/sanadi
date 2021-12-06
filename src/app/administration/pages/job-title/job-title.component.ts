@@ -19,8 +19,19 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   templateUrl: './job-title.component.html',
   styleUrls: ['./job-title.component.scss']
 })
-export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleService>{
+export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleService> {
+
+  constructor(public lang: LangService,
+              public service: JobTitleService,
+              private dialogService: DialogService,
+              private sharedService: SharedService,
+              private jobTitleService: JobTitleService,
+              private toast: ToastService) {
+    super();
+  }
+
   searchText = '';
+  commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<JobTitle>[] = [
     {
       type: 'action',
@@ -33,27 +44,61 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       label: 'btn_edit',
       icon: 'mdi-pen',
       onClick: (user) => this.edit$.next(user)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: JobTitle) => this.activateJobTitle(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: JobTitle) => this.deactivateJobTitle(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.ACTIVATED;
+      }
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   selectedRecords: JobTitle[] = [];
-  actionsList: IGridAction[] = [
+  bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (items: JobTitle[]) => {
+            return true;
+          }
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (items: JobTitle[]) => {
+            return true;
+          }
+        }
+      ],
     }
   ];
-
-  constructor(public lang: LangService,
-              public service: JobTitleService,
-              private dialogService: DialogService,
-              private sharedService: SharedService,
-              private toast: ToastService) {
-    super();
-  }
 
   edit(jobTitle: JobTitle, event: MouseEvent) {
     event.preventDefault();
@@ -100,6 +145,35 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     }
   }
 
+  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
+    const sub = this.jobTitleService.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
+      .subscribe((response) => {
+        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
+          .subscribe(() => {
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+      });
+  }
+
+  activateJobTitle(model: JobTitle): void {
+    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
+  deactivateJobTitle(model: JobTitle): void {
+    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
@@ -116,6 +190,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       }))
       .subscribe((list: JobTitle[]) => {
         this.models = list;
+        this.selectedRecords = [];
       })
   }
 

@@ -41,6 +41,10 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
     return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }
 
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
+  }
+
   buildForm(controls?: boolean): any {
     const {
       arName,
