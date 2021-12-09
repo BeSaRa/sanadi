@@ -1,23 +1,23 @@
-import {Component, ViewChild} from '@angular/core';
-import {AdminGenericComponent} from "@app/generics/admin-generic-component";
-import {SurveyQuestion} from "@app/models/survey-question";
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SurveyQuestionService} from "@app/services/survey-question.service";
-import {LangService} from "@app/services/lang.service";
-import {IGridAction} from "@app/interfaces/i-grid-action";
-import {TableComponent} from "@app/shared/components/table/table.component";
-import {DialogService} from "@app/services/dialog.service";
-import {Observable} from "rxjs";
-import {filter, switchMap} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {SharedService} from "@app/services/shared.service";
-import {DeleteBulkResult} from "@app/types/types";
-import {ToastService} from "@app/services/toast.service";
+import { Component, ViewChild } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { SurveyQuestion } from '@app/models/survey-question';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SurveyQuestionService } from '@app/services/survey-question.service';
+import { LangService } from '@app/services/lang.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogService } from '@app/services/dialog.service';
+import { Observable } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { SharedService } from '@app/services/shared.service';
+import { DeleteBulkResult } from '@app/types/types';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
   selector: 'survey-question',
   templateUrl: './survey-question.component.html',
-  styleUrls: ['./survey-question.component.scss']
+  styleUrls: ['./survey-question.component.scss'],
 })
 export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestion, SurveyQuestionService> {
   constructor(public service: SurveyQuestionService,
@@ -36,8 +36,8 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
     {
       icon: 'mdi-delete',
       callback: () => this.deleteBulk(),
-      langKey: 'btn_delete'
-    }
+      langKey: 'btn_delete',
+    },
   ];
   actions: IMenuItem<SurveyQuestion>[] = [
     {
@@ -45,8 +45,8 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
       label: 'btn_edit',
       icon: 'mdi-pen',
       onClick: (item) => {
-        this.edit$.next(item)
-      }
+        this.edit$.next(item);
+      },
     },
     {
       type: 'action',
@@ -54,8 +54,8 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
       icon: 'mdi-delete',
       onClick: (item) => {
         this.deleteQuestion(item);
-      }
-    }
+      },
+    },
   ];
 
   deleteQuestion(q: SurveyQuestion): void {
@@ -63,10 +63,10 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
       .onAfterClose$
       .pipe(filter(click => click === UserClickOn.YES))
       .pipe(switchMap(() => q.delete()))
-      .subscribe((val) => {
-        this.toast.success(this.lang.map.msg_delete_x_success.change({x: q.getName()}))
+      .subscribe((_) => {
+        this.toast.success(this.lang.map.msg_delete_x_success.change({ x: q.getName() }));
         this.models = this.models.filter(item => item.id !== q.id);
-      })
+      });
   }
 
   deleteBulk(): void {
@@ -85,8 +85,7 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
         if (result.result === 'SUCCESS' || result.result === 'PARTIAL_SUCCESS') {
           this.models = this.models.filter(item => !ids.includes(item.id));
         }
-      })
-
-
+        this.table.selection.clear();
+      });
   }
 }

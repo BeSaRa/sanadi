@@ -5,6 +5,11 @@ export interface ILanguageKeys {
   edit_certificate_template: string;
   add_certificate_template: string;
   training_program_accept_reject_candidates: string;
+  add_survey_template_section: string;
+  survey_sections: string;
+  add_survey_template: string;
+  edit_survey_template: string;
+  menu_survey_templates: string;
   certificates_templates: string;
   menu_finished_programs: string;
   training_program_certification: string;
@@ -210,7 +215,7 @@ export interface ILanguageKeys {
   lbl_global: string;
   lbl_mandatory: string;
   lbl_services: string;
-  default_dep: string
+  default_dep: string;
   application_name: string;
   date: string;
   action: string;
@@ -239,7 +244,7 @@ export interface ILanguageKeys {
   edit_comment: string;
   menu_service_search: string;
   menu_international_cooperation: string;
-  open_task: string
+  open_task: string;
   manage_comments: string;
   manage_recommendations: string;
   no_recommendations_to_show: string;
@@ -673,7 +678,7 @@ export interface ILanguageKeys {
   contact_officers: string;
   approval_reasons: string;
   request_classification: string;
-  headquarter_type: string
+  headquarter_type: string;
   latitude: string;
   longitude: string;
   social_media_1: string;

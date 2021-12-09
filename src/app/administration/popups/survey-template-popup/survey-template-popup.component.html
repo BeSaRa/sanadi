@@ -1,0 +1,57 @@
+<div class='dialog-toolbar bg-primary dialog-toolbar d-flex'>
+  <h1 class='h6 text-white'>{{dialogTitle}}</h1>
+  <span class='flex-grow-1'></span>
+  <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+          tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+  <button type='button' class='btn-close btn-close-white'
+          tabindex='-1' dialogClose='' aria-label='Close'></button>
+</div>
+<div class='dialog-content no-fixed-height' style='width: 600px'>
+  <tabs-list>
+    <tab [template]='basicInfoTab' [title]='lang.map.lbl_basic_info'></tab>
+    <tab [template]='sectionsTab' [title]='lang.map.survey_sections'></tab>
+  </tabs-list>
+  <ng-template #basicInfoTab>
+    <form [formGroup]='form'>
+      <div class='row'>
+        <div class='col-md-6 col-sm-12 mb-4 position-relative'>
+          <label class='form-label' asteriskIfRequired='arName'
+                 for='arName'>{{lang.map.arabic_name}}</label>
+          <input id='arName' validationClasses='arName' formControlName='arName' class='form-control'>
+          <app-field-error-message controlName='arName'></app-field-error-message>
+        </div>
+        <div class='col-md-6 col-sm-12 mb-4 position-relative'>
+          <label class='form-label' asteriskIfRequired='enName'
+                 for='enName'>{{lang.map.english_name}}</label>
+          <input id='enName' validationClasses='enName' formControlName='enName' class='form-control'>
+          <app-field-error-message controlName='enName'></app-field-error-message>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-12'>
+          <div class='form-check form-switch'>
+            <label for='status'>{{lang.map.lbl_status}}</label>
+            <input type='checkbox' id='status' class='form-check-input' formControlName='status'>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #sectionsTab>
+    <div class='row'>
+      <app-page-header [pageTitle]="'survey_sections'" [clickOnReload$]='reloadSections$' [clickOnNew$]='addSection$'>
+      </app-page-header>
+    </div>
+    <div class='row'>
+      <div (cdkDropListDropped)='dropSection($event)' id='sections-container' cdkDropList class='col-12'>
+        <div class='border border-1 p-2 bg-white' cdkDrag
+             *ngFor='let section of sections'>{{section.id}}</div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<div class='dialog-actions'>
+  <div class='flex-grow-1'></div>
+  <button [disabled]='form.invalid' (click)='save$.next()' class='btn btn-primary'>{{lang.map.btn_save}}</button>
+  <button dialogClose='' class='btn btn-secondary'>{{lang.map.btn_close}}</button>
+</div>

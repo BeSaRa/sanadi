@@ -520,9 +520,22 @@
     "svg": null
   },
   {
-    "id": 39,
+    "id": 41,
     "langKey": "menu_survey_questions",
     "path": "/home/administration/survey-questions",
+    "icon": "mdi-new-box",
+    "isSvg": false,
+    "permission": "NO_PERMISSION",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 3,
+    "svg": null
+  },
+  {
+    "id": 42,
+    "langKey": "menu_survey_templates",
+    "path": "/home/administration/survey-templates",
     "icon": "mdi-new-box",
     "isSvg": false,
     "permission": "NO_PERMISSION",

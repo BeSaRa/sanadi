@@ -1,28 +1,28 @@
 import {Component, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {ToastService} from '../../../services/toast.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {LookupService} from '../../../services/lookup.service';
+import {LookupService} from '@app/services/lookup.service';
 import {forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
-import {FormManager} from '../../../models/form-manager';
+import {FormManager} from '@app/models/form-manager';
 import {catchError, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {SubventionRequestPartialLog} from '../../../models/subvention-request-partial-log';
-import {SubventionRequestPartialLogService} from '../../../services/subvention-request-partial-log.service';
+import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
+import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
-import {isEmptyObject, printBlobData} from '../../../helpers/utils';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {DialogService} from '../../../services/dialog.service';
-import {ISubventionRequestPartialLogCriteria} from '../../../interfaces/i-subvention-request-partial-log-criteria';
+import {isEmptyObject, printBlobData} from '@app/helpers/utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DialogService} from '@app/services/dialog.service';
+import {ISubventionRequestPartialLogCriteria} from '@app/interfaces/i-subvention-request-partial-log-criteria';
 import * as dayjs from 'dayjs';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {OrgUnit} from '../../../models/org-unit';
-import {OrgUser} from '../../../models/org-user';
-import {OrganizationUnitService} from '../../../services/organization-unit.service';
-import {ReadModeService} from '../../../services/read-mode.service';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {OrgUnit} from '@app/models/org-unit';
+import {OrgUser} from '@app/models/org-user';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {ReadModeService} from '@app/services/read-mode.service';
 import {Router} from '@angular/router';
-import {OrganizationUserService} from '../../../services/organization-user.service';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {DateUtils} from '../../../helpers/date-utils';
+import {OrganizationUserService} from '@app/services/organization-user.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'app-partial-request-reports',

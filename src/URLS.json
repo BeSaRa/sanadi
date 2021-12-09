@@ -1,4 +1,6 @@
 {
+  "SURVEY_SECTION": "/training/training-survey-quest-section",
+  "SURVEY_TEMPLATE": "/training/training-survey-template",
   "TRAINING_PROGRAM_CERTIFICATE": "/training/training-certificate/certificate",
   "SURVEY_QUESTION": "/training/training-survey-quest",
   "CERTIFICATE_TEMPLATE": "/training/training-certificate/template",
