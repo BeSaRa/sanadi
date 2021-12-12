@@ -28,7 +28,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   durationInHours!: number;
   averageDurationInHours!: number;
   startDate!: IMyDateModel | string;
+  startDateString!: string;
   endDate!: IMyDateModel | string;
+  endDateString!: string;
   sessionStartTime!: number;
   sessionEndTime!: number;
   trainingLocation!: string;
@@ -41,7 +43,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   comments!: string;
   status!: number;
   registerationStartDate!: IMyDateModel | string;
+  registerationStartDateString!: string;
   registerationClosureDate!: IMyDateModel | string;
+  registerationClosureDateString!: | string;
   totalTrainingCost!: number;
   traineeList: TraineeData[] = [];
   trainingBundleList: TrainingProgramBriefcase[] = [];
@@ -98,10 +102,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       ]] : trainingType,
       trainingObjective: controls ? [trainingObjective, [
         CustomValidators.required,
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : trainingObjective,
       trainingTopics: controls ? [trainingTopics, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : trainingTopics,
       targetAudienceListIds: controls ? [targetAudienceListIds, [
         CustomValidators.requiredArray
@@ -119,10 +125,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : averageDurationInHours,
       startDate: controls ? [startDate, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.minDate((new Date()).toDateString())
       ]] : startDate,
       endDate: controls ? [endDate, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.minDate((new Date()).toDateString())
       ]] : endDate,
       sessionStartTime: controls ? [sessionStartTime, [
         CustomValidators.required
@@ -131,7 +139,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.required
       ]] : sessionEndTime,
       trainingLocation: controls ? [trainingLocation, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : trainingLocation,
       contactPerson: controls ? [contactPerson, [
         CustomValidators.required,
@@ -148,13 +157,16 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : numberOfSeats,
       comments: controls ? [comments, [
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : comments,
       registerationStartDate: controls ? [registerationStartDate, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.minDate((new Date()).toDateString())
       ]] : registerationStartDate,
       registerationClosureDate: controls ? [registerationClosureDate, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.minDate((new Date()).toDateString())
       ]] : registerationClosureDate,
       totalTrainingCost: controls ? [totalTrainingCost, [
         CustomValidators.required,

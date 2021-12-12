@@ -19,6 +19,7 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {of, Subject} from 'rxjs';
 import {TrainingStatus} from '@app/enums/training-status';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 @Component({
   selector: 'training-program',
@@ -26,6 +27,7 @@ import {TrainingProgramBriefcaseService} from '@app/services/training-program-br
   styleUrls: ['./training-program.component.scss']
 })
 export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements OnInit {
+  view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
     {
@@ -71,13 +73,25 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     super.listenToAdd();
     super.listenToEdit();
     this.listenToCertification();
+    this.listenToView();
   }
 
   listenToCertification(): void {
     this.certification$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.certificationDialog(model).pipe(catchError(_ => of(null)))
+        return this.service.certificationDialog(model).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.viewDialog(model).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -122,7 +136,15 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   edit(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
+    if (trainingProgram.status == this.trainingStatus.TRAINING_CANCELED || trainingProgram.status == this.trainingStatus.TRAINING_FINISHED) {
+      return;
+    }
     this.edit$.next(trainingProgram);
+  }
+
+  view(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    this.view$.next(trainingProgram);
   }
 
   certification(trainingProgram: TrainingProgram, event: MouseEvent) {
@@ -137,15 +159,55 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   showAddCandidates(status: number) {
     return status == this.trainingStatus.REGISTRATION_OPEN ||
       status == this.trainingStatus.TRAINING_PUBLISHED ||
-      status == this.trainingStatus.EDITING_AFTER_PUBLISHING
+      status == this.trainingStatus.EDITING_AFTER_PUBLISHING;
   }
 
   showEvaluateCandidates(status: number) {
-    return status == this.trainingStatus.REGISTRATION_CLOSED
+    return status == this.trainingStatus.REGISTRATION_CLOSED;
+  }
+
+  showBriefcases(status: number) {
+    return status != this.trainingStatus.TRAINING_FINISHED && status != this.trainingStatus.TRAINING_CANCELED;
+  }
+
+  setStatusColumnClass(status: number) {
+    switch (status) {
+      case this.trainingStatus.REGISTRATION_OPEN:
+        return {'status-container': true, 'open-for-registration-status': true};
+      case this.trainingStatus.REGISTRATION_CLOSED:
+        return {'status-container': true, 'closed-for-registration-status': true};
+      case this.trainingStatus.TRAINING_FINISHED:
+        return {'status-container': true, 'finished-status': true};
+      case this.trainingStatus.TRAINING_CANCELED:
+        return {'status-container': true, 'canceled-status': true};
+      default:
+        return {};
+    }
+  }
+
+  setIsDisabledClassOnDeleteButton(status: number) {
+    if (status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED) {
+      return {'isDisabled': true};
+    }
+    return {};
+  }
+
+  setIsDisabledClassOnEditButton(status: number) {
+    if (status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED) {
+      return {'isDisabled': true};
+    }
+    return {};
+  }
+
+  disableMultipleSelectionInput(status: number) {
+    return status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED;
   }
 
   delete(event: MouseEvent, model: TrainingProgram): void {
     event.preventDefault();
+    if (model.status == this.trainingStatus.TRAINING_CANCELED || model.status == this.trainingStatus.TRAINING_FINISHED) {
+      return;
+    }
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.activityName});
     this.dialogService.confirm(message)
@@ -255,11 +317,18 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: TrainingProgram[]) => {
+        list.map(element => {
+          element.registrationDate = this.getDateFromTo(element.registerationStartDate, element.registerationClosureDate);
+          element.trainingDate = this.getDateFromTo(element.startDate, element.endDate);
+        });
         this.models = list;
       });
   }
 
   private _addSelected(record: TrainingProgram): void {
+    if(record.status == this.trainingStatus.TRAINING_FINISHED || record.status == this.trainingStatus.TRAINING_CANCELED) {
+      return;
+    }
     this.selectedRecords.push(_deepClone(record));
   }
 
@@ -271,11 +340,17 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.models.length;
+    return this.selectedRecords.length > 0 &&
+      this.selectedRecords.length < this.models
+        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+        .length;
   }
 
   get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.models.length;
+    return this.selectedRecords.length > 0 &&
+      this.selectedRecords.length === this.models
+        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+        .length;
   }
 
   isSelected(record: TrainingProgram): boolean {
@@ -294,10 +369,17 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   onSelectAll(): void {
-    if (this.selectedRecords.length === this.models.length) {
+    if (this.selectedRecords.length === this.models
+      .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+      .length) {
       this.selectedRecords = [];
     } else {
-      this.selectedRecords = _deepClone(this.models);
+      this.selectedRecords = _deepClone(this.models
+        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED));
     }
+  }
+
+  getDateFromTo(dateFrom: string | IMyDateModel, dateTo: string | IMyDateModel) {
+    return DateUtils.getDateStringFromDate(dateFrom) + ' إلى ' + DateUtils.getDateStringFromDate(dateTo);
   }
 }

@@ -1,0 +1,40 @@
+.status-container {
+  padding: 2px 8px;
+  border: 1px solid #a41737;
+  border-radius: 3px;
+}
+
+.open-for-registration-status {
+  background-color: #7ed65e;
+}
+
+.closed-for-registration-status {
+  background-color: #ffdf54;
+}
+
+.finished-status {
+  background-color: #b3b0b0;
+}
+
+.canceled-status {
+  background-color: #b3b0b0;
+}
+
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
+
+.date-to:before {
+  position: absolute;
+  content: attr(lang);
+  left: 10px;
+}
+
+:host-context(html[dir="rtl"]) {
+  .date-to:before {
+    left: 7px;
+  }
+}

@@ -27,8 +27,7 @@ export class Certificate extends BaseModel<Certificate, CertificateService> {
       documentTitle: controls ? [documentTitle, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM')
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : documentTitle,
       status: controls ? [status] : status,
       vsId: controls ? [vsId] : vsId,

@@ -102,6 +102,11 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/finished-programs');
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  loadCharityPrograms(): Observable<TrainingProgram[]> {
+    return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/charity');
+  }
+
   openFilterDialog(filterCriteria: Partial<ITrainingProgramCriteria>): Observable<DialogRef> {
     return of(this.dialog.show(FilterTrainingProgramsComponent, {
       criteria: filterCriteria
@@ -164,9 +169,22 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
       isCertification: true
     })
   }
+
   certificationDialog(model: TrainingProgram): Observable<DialogRef> {
     return this.getByIdComposite(model.id)
       .pipe(exhaustMap((model) => of(this.getCertificationDialog(model, OperationTypes.UPDATE))));
+  }
+
+  getViewDialog(model: TrainingProgram, operation: OperationTypes): DialogRef {
+    return this.dialog.show<IDialogData<TrainingProgram>>(this._getDialogComponent(), {
+      operation,
+      model
+    })
+  }
+
+  viewDialog(model: TrainingProgram): Observable<DialogRef> {
+    return this.getByIdComposite(model.id)
+      .pipe(exhaustMap((model) => of(this.getViewDialog(model, OperationTypes.VIEW))));
   }
 
   _getDialogComponent(): ComponentType<any> {

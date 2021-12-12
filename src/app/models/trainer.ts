@@ -9,13 +9,16 @@ import {Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {BlobModel} from '@app/models/blob-model';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Lookup} from '@app/models/lookup';
 
 export class Trainer extends BaseModel<Trainer, TrainerService> {
   specialization!: string;
   jobTitle!: string;
   langList!: string;
+  langListInfo!: Lookup[];
   langListArr: number[] = [];
   nationality!: number;
+  nationalityInfo!: Lookup;
   email!: string;
   phoneNumber!: string;
   address!: string;
@@ -27,7 +30,10 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    specialization: 'specialization'
+    specialization: 'specialization',
+    jobTitle: 'jobTitle',
+    nationality: text => !this.nationalityInfo ? false : this.nationalityInfo.getName().toLowerCase().indexOf(text.toLowerCase()) !== -1,
+    trainingLanguages: text => !this.langListInfo || this.langListInfo.length == 0 ? false : this.langListInfo.some(lang => lang.getName().toLowerCase().indexOf(text.toLowerCase()) !== -1)
   };
 
   constructor() {
@@ -67,13 +73,16 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
       specialization: controls ? [specialization, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
       ]] : specialization,
       jobTitle: controls ? [jobTitle, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
       ]] : jobTitle,
       email: controls ? [email, [
         CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
         Validators.email
       ]] : email,
       phoneNumber: controls ? [phoneNumber, [
@@ -88,10 +97,11 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.required
       ]] : langListArr,
       organizationUnit: controls ? [organizationUnit, [
-        CustomValidators.required
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
       ]] : organizationUnit,
       address: controls ? [address, [
-        CustomValidators.maxLength(100)
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
       ]] : address,
     }
   }

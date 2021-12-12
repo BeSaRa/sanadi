@@ -18,6 +18,9 @@
            [title]="lang.map.training_program_trainers"
            [hasError]="model.trainerListIds.length < 1"
            *ngIf="!isCertification"></tab>
+      <tab [name]="tabsData.attendingTrainees.name" [template]="attendingTraineesTabTemplate"
+           [title]="lang.map.attendance"
+           *ngIf="operation == operationTypes.VIEW"></tab>
       <tab [name]="tabsData.briefcase.name" [template]="trainingBriefcaseTabTemplate"
            *ngIf="model.id && !isCertification"
            [title]="lang.map.training_program_briefcase"></tab>
@@ -84,6 +87,7 @@
           <input id="durationInDays"
                  validationClasses="durationInDays"
                  formControlName="durationInDays" class="form-control"
+                 maxlength="3"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="durationInDays"></app-field-error-message>
         </div>
@@ -93,6 +97,7 @@
           <input id="durationInHours"
                  validationClasses="durationInHours"
                  formControlName="durationInHours" class="form-control"
+                 maxlength="3"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
@@ -104,6 +109,7 @@
           <input id="averageDurationInHours"
                  validationClasses="averageDurationInHours"
                  formControlName="averageDurationInHours" class="form-control"
+                 maxlength="2"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="averageDurationInHours"></app-field-error-message>
         </div>
@@ -162,7 +168,8 @@
             <div class="position-relative ng-select-wrapper">
               <ng-select validationClasses="sessionStartTime"
                          formControlName="sessionStartTime"
-                         id="sessionStartTime">
+                         id="sessionStartTime"
+              (change)="trainingStartTimeChange()">
                 <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="sessionStartTime"></app-field-error-message>
@@ -176,7 +183,8 @@
             <div class="position-relative ng-select-wrapper">
               <ng-select validationClasses="sessionEndTime"
                          formControlName="sessionEndTime"
-                         id="sessionEndTime">
+                         id="sessionEndTime"
+              (change)="trainingEndTimeChange()">
                 <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="sessionEndTime"></app-field-error-message>
@@ -272,6 +280,7 @@
           <input id="numberOfSeats"
                  validationClasses="numberOfSeats"
                  formControlName="numberOfSeats" class="form-control"
+                 maxlength="3"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
         </div>
@@ -303,7 +312,7 @@
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <div>
           <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_organization}}</h1>
-          <button (click)="openAddOrganizations()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+          <button *ngIf="operation != operationTypes.VIEW" (click)="openAddOrganizations()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
       </div>
@@ -337,6 +346,7 @@
                   [ngModelOptions]="{standalone: true}"
                   id="organizationId"
                   appendTo="Body">
+                  <ng-option [value]="-1">{{lang.map.select_all}}</ng-option>
                   <ng-option [value]="organization.id"
                              *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
                 </ng-select>
@@ -346,7 +356,7 @@
           <div class="row">
             <div style="display: flex">
               <span class="flex-grow-1"></span>
-              <button [disabled]="!selectedOrganization" *ngIf="saveVisible" (click)="addOrganization()"
+              <button [disabled]="!selectedOrganization" *ngIf="saveVisible" (click)="onAddOrganization()"
                       class="btn btn-primary right mb-3">{{lang.map.btn_add}}</button>
             </div>
           </div>
@@ -372,7 +382,7 @@
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
-                      <a href="#" (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_delete}}"
+                      <a *ngIf="operation != operationTypes.VIEW" href="#" (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_delete}}"
                          class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
@@ -395,7 +405,7 @@
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <div>
           <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.lbl_trainer}}</h1>
-          <button (click)="openAddTrainers()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
+          <button *ngIf="operation != operationTypes.VIEW" (click)="openAddTrainers()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
       </div>
@@ -456,7 +466,7 @@
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
-                      <a href="#" (click)="removeTrainer($event, row)" tooltip="{{lang.map.btn_delete}}"
+                      <a *ngIf="operation != operationTypes.VIEW" href="#" (click)="removeTrainer($event, row)" tooltip="{{lang.map.btn_delete}}"
                          class="icon-btn">
                         <i class="mdi mdi-close-box"></i>
                       </a>
@@ -475,9 +485,12 @@
         </div>
       </div>
     </ng-template>
+    <ng-template #attendingTraineesTabTemplate>
+      <training-program-view-attendance [model]="model"></training-program-view-attendance>
+    </ng-template>
     <ng-template #trainingBriefcaseTabTemplate>
       <training-program-briefcase [trainingProgramId]="model.id"
-                                   [bundlesList]="model.trainingBundleList"></training-program-briefcase>
+                                   [bundlesList]="model.trainingBundleList" [operation]="operation"></training-program-briefcase>
     </ng-template>
     <ng-template #passedTraineesTabTemplate>
       <trainee-list [trainingProgram]="model"></trainee-list>

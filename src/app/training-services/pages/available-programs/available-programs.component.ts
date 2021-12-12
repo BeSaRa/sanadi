@@ -5,10 +5,11 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {TrainingProgramService} from '@app/services/training-program.service';
 import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {BehaviorSubject, of} from 'rxjs';
-import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {TrainingStatus} from '@app/enums/training-status';
 
 @Component({
   selector: 'available-programs',
@@ -16,6 +17,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./available-programs.component.scss']
 })
 export class AvailableProgramsComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> {
+  view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [
@@ -27,11 +29,10 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
     }
   ];
   displayedColumns: string[] = ['activityName', 'trainingType', 'trainingStatus', 'trainingDate', 'registrationDate', 'actions'];
-  isFinishedPrograms!: boolean;
+  trainingProgramStatus = TrainingStatus;
 
   constructor(public lang: LangService,
-              public service: TrainingProgramService,
-              private route: ActivatedRoute) {
+              public service: TrainingProgramService) {
     super();
   }
 
@@ -39,22 +40,30 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
     this.listenToReload();
     super.listenToAdd();
     super.listenToEdit();
+    this.listenToView();
   }
 
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        return this.route.data
-      }))
-      .pipe(switchMap((data) => {
-        this.isFinishedPrograms = data.isFinishedPrograms;
-        const load = this.isFinishedPrograms ? this.service.loadFinishedPrograms() : this.service.loadAvailablePrograms();
+        const load = this.service.loadCharityPrograms();
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: TrainingProgram[]) => {
         this.models = list;
       });
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.viewDialog(model).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   searchCallback = (record: any, searchText: string) => {
@@ -83,5 +92,10 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
         }
         sub.unsubscribe();
       });
+  }
+
+  view(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    this.view$.next(trainingProgram);
   }
 }

@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  video_has_been_already_added: string;
+  training_program_date_to: string;
+  training_program_date_from: string;
+  edit_certificate_template: string;
+  add_certificate_template: string;
   training_program_accept_reject_candidates: string;
   certificates_templates: string;
   menu_finished_programs: string;

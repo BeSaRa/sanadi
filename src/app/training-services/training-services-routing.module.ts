@@ -22,22 +22,16 @@ const routes: Routes = [
     data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
-    path: 'available-for-registration', component: AvailableProgramsComponent,
+    path: 'available-programs', component: AvailableProgramsComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false, isFinishedPrograms: false}
+    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'certificate-templates', component: CertificatesComponent,
     canActivate: [PermissionGuard],
     // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
     data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
-  },
-  {
-    path: 'finished-programs', component: AvailableProgramsComponent,
-    canActivate: [PermissionGuard],
-    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false, isFinishedPrograms: true}
   }
 ];
 

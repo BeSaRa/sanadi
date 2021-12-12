@@ -53,7 +53,7 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
   }
 
   get popupTitle() {
-    return 'Any';
+    return this.operation == OperationTypes.CREATE ? this.lang.map.add_certificate_template : this.lang.map.edit_certificate_template;
   }
 
   initPopup(): void {

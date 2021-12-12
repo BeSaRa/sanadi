@@ -15,6 +15,10 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
 
     model.registrationDate = DateUtils.getDateStringFromDate(model.registerationStartDate) + ' to ' + DateUtils.getDateStringFromDate(model.registerationClosureDate);
     model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' to ' + DateUtils.getDateStringFromDate(model.endDate);
+    model.startDateString = DateUtils.getDateStringFromDate(model.startDate);
+    model.endDateString = DateUtils.getDateStringFromDate(model.endDate);
+    model.registerationStartDateString = DateUtils.getDateStringFromDate(model.registerationStartDate);
+    model.registerationClosureDateString = DateUtils.getDateStringFromDate(model.registerationClosureDate);
     model.trainingTypeInfo = AdminResult.createInstance(model.trainingTypeInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.traineeList = model.traineeList.map(tr => {
@@ -69,6 +73,10 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     delete model.trainerInfoList;
     delete model.statusInfo;
     delete model.traineeList;
+    delete model.startDateString;
+    delete model.endDateString;
+    delete model.registerationStartDateString;
+    delete model.registerationClosureDateString;
     return model;
   }
 

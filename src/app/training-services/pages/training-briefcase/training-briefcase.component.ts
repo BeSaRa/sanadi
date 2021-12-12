@@ -12,6 +12,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {printBlobData} from '@app/helpers/utils';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'training-program-briefcase',
@@ -22,6 +23,9 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
   @Input() trainingProgramId!: number;
   @Input() bundlesList: TrainingProgramBriefcase[] = [];
+  @Input() operation!: number;
+  operationTypes = OperationTypes;
+  videoUploaded: boolean = false;
 
   constructor(public lang: LangService,
               private dialogService: DialogService,
@@ -32,6 +36,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
+    this.videoUploaded = this.isVideoFileExist();
   }
 
   ngOnDestroy(): void {
@@ -70,7 +75,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   isDocumentFileRequired: boolean = false;
 
   isVideoFileExist(): boolean {
-    return !!(this.bundlesList.find(item => item.isVideoItem()));
+    return (this.bundlesList.some(item => item.isVideoItem()));
   }
 
   listenToReload(): void {
@@ -85,6 +90,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   }
 
   private _updateAllowedExtensions(bundleItem?: TrainingProgramBriefcase): void {
+    this.videoUploaded = this.isVideoFileExist();
     if (!bundleItem) {
       this.allowedExtensions = this._allowedFileExtensions;
       if (!this.isVideoFileExist()) {
@@ -138,7 +144,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     this.trainingProgramBriefcaseService.downloadBriefcaseItem(item.vsId)
       .subscribe((data) => {
         printBlobData(data, item.documentTitle + '_download');
-      })
+      });
   }
 
   downloadBriefcase($event: MouseEvent): void {
@@ -146,7 +152,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     this.trainingProgramBriefcaseService.downloadBriefcase(this.trainingProgramId)
       .subscribe((data) => {
         printBlobData(data, 'briefcase_download');
-      })
+      });
   }
 
   delete($event: MouseEvent, item: TrainingProgramBriefcase): void {
@@ -160,7 +166,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
             .subscribe(() => {
               this.reload$.next(null);
               this.toast.success(this.lang.map.msg_delete_success);
-            })
+            });
         }
       });
   }
@@ -218,15 +224,16 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
 
   private _clearFileUploader(): void {
     this.uploadedFile = null;
-    this.fileUploader.nativeElement.value = "";
+    this.fileUploader.nativeElement.value = '';
   }
 
   onFileSelected($event: Event): void {
     let files = ($event.target as HTMLInputElement).files;
     if (files && files[0]) {
       const extension = files[0].name.getExtension().toLowerCase();
-      if (this.allowedExtensions.indexOf(extension) === -1) {
-        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.allowedExtensions.join(', ')}));
+      if (!this.allowedExtensions.includes(extension)) {
+        const message = this.videoAlreadyUploaded(extension) ? this.lang.map.video_has_been_already_added : this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
+        this.dialogService.error(message);
         this.uploadedFilePath = '';
         this._clearFileUploader();
         return;
@@ -243,6 +250,10 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       };
 
     }
+  }
+
+  videoAlreadyUploaded(extension: string): boolean {
+    return this._allowedVideoFileExtensions.includes(extension) && this.videoUploaded;
   }
 
   removeFile($event?: MouseEvent): void {

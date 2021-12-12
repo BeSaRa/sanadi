@@ -109,14 +109,25 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       id: null,
       generalUserId: null,
-      arName: [null, [CustomValidators.required]],
-      enName: [null, [CustomValidators.required]],
-      jobType: [null, [CustomValidators.required]],
-      department: [null, [CustomValidators.required]],
-      trainingRecord: [null, [CustomValidators.required]],
-      currentJob: [null, [CustomValidators.required]],
+      arName: [null, [CustomValidators.required,
+        CustomValidators.maxLength(200)
+      ]],
+      enName: [null, [CustomValidators.required,
+        CustomValidators.maxLength(200)
+      ]],
+      jobType: [null, [CustomValidators.required,
+        CustomValidators.maxLength(200)]],
+      department: [null, [CustomValidators.required,
+        CustomValidators.maxLength(200)
+      ]],
+      trainingRecord: [null, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
+      currentJob: [null, [CustomValidators.required,
+        CustomValidators.maxLength(200)
+      ]],
       employementPosition: [null, [CustomValidators.required]],
-      email: [null, [CustomValidators.required]],
+      email: [null, [CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
+        Validators.email]],
       phoneNumber: [null, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
       gender: [null, [CustomValidators.required]],
       nationality: [null, [CustomValidators.required]]
@@ -263,7 +274,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
         return dialogRef.onAfterClose$;
       }))
       .subscribe((userClick: UserClickOn) => {
-        if(userClick == UserClickOn.YES) {
+        if (userClick == UserClickOn.YES) {
           this.dialogRef.close();
         }
         sub.unsubscribe();

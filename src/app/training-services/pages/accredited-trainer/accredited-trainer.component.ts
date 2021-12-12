@@ -32,7 +32,7 @@ export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, T
       onClick: (trainer) => this.edit$.next(trainer)
     }
   ];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'specialization', 'jobTitle', 'actions'];
+  displayedColumns: string[] = [/*'rowSelection',*/ 'arName', 'enName', 'specialization', 'jobTitle', 'actions'];
   selectedRecords: Trainer[] = [];
   actionsList: IGridAction[] = [
     {

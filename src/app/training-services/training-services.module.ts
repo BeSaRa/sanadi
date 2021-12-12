@@ -21,6 +21,7 @@ import { CertificatesComponent } from './pages/certificates/certificates.compone
 import { CertificatePopupComponent } from './popups/certificate-popup/certificate-popup.component';
 import { TraineeListComponent } from './popups/trainee-list/trainee-list.component';
 import { SelectCertificateTemplatePopupComponent } from './popups/select-certificate-template-popup/select-certificate-template-popup.component';
+import { TrainingProgramViewAttendanceComponent } from './popups/training-program-view-attendance/training-program-view-attendance.component';
 
 
 
@@ -43,7 +44,8 @@ import { SelectCertificateTemplatePopupComponent } from './popups/select-certifi
     CertificatesComponent,
     CertificatePopupComponent,
     TraineeListComponent,
-    SelectCertificateTemplatePopupComponent
+    SelectCertificateTemplatePopupComponent,
+    TrainingProgramViewAttendanceComponent
   ],
   imports: [
     CommonModule,

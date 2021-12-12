@@ -65,6 +65,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     passedTrainees: {
       name: 'passedTrainees',
       validStatus: () => true
+    },
+    attendingTrainees: {
+      name: 'attendingTrainees',
+      validStatus: () => true
     }
   };
   tabIndex$: Subject<number> = new Subject<number>();
@@ -118,7 +122,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   initPopup(): void {
-    if (this.operation == OperationTypes.UPDATE) {
+    if (this.operation == OperationTypes.UPDATE || this.operation == OperationTypes.VIEW) {
       this.loadSelectedOrganizations();
     }
 
@@ -128,13 +132,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     // this.listenToSaveAndApprove();
     this.listenToPublish();
 
-    if (this.isCertification) {
+    if (this.isCertification || this.operation == OperationTypes.VIEW) {
       this.form.disable();
       this.form.updateValueAndValidity();
     }
     setTimeout(() => {
       console.log(this.form);
     }, 300);
+
+    console.log('operation', this.operation);
   }
 
   listenToApprove() {
@@ -198,10 +204,10 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-
-    // to be uncommented
     let registrationClosureDate = this.registrationClosureDateControl.value;
-    let trainingValidators = registrationClosureDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] : [];
+    let trainingValidators = registrationClosureDate ?
+      [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] :
+      [CustomValidators.minDate((new Date()).toDateString())];
 
     let trainingStartDate = event.value;
     let registrationValidators = trainingStartDate ? [CustomValidators.maxDate(trainingStartDate)] : [];
@@ -223,7 +229,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   trainingEndDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
     // to be uncommented
     let registrationClosureDate = this.registrationClosureDateControl.value;
-    let trainingValidators = registrationClosureDate ? [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] : [];
+    let trainingValidators = registrationClosureDate ?
+      [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] :
+      [CustomValidators.minDate((new Date()).toDateString())];
 
     let trainingStartDate = DateUtils.changeDateFromDatepicker(this.trainingStartDateControl.value);
     let registrationValidators = trainingStartDate ? [CustomValidators.maxDate(trainingStartDate)] : [];
@@ -247,8 +255,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     let trainingStartDate = this.trainingStartDateControl.value;
     let validators = trainingStartDate ? [CustomValidators.maxDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
 
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
+    this.registrationStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
+    this.registrationClosureDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
 
     this.trainingStartDateControl.updateValueAndValidity();
     this.trainingEndDateControl.updateValueAndValidity();
@@ -263,8 +271,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     let trainingStartDate = this.trainingStartDateControl.value;
     let validators = trainingStartDate ? [CustomValidators.maxDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
 
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validators));
+    this.registrationStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
+    this.registrationClosureDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
 
     this.trainingStartDateControl.updateValueAndValidity();
     this.trainingEndDateControl.updateValueAndValidity();
@@ -272,6 +280,28 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.registrationClosureDateControl.updateValueAndValidity();
 
     this.setRelatedDates(event, fromFieldName, toFieldName);
+  }
+
+  trainingStartTimeChange(): void {
+    let sessionEndTime = this.sessionEndTimeControl.value;
+    let validators = sessionEndTime ? [CustomValidators.timeEarlierThanOther(sessionEndTime)] : [];
+
+    this.sessionStartTimeControl.setValidators([CustomValidators.required].concat(validators));
+    this.sessionEndTimeControl.setValidators([CustomValidators.required].concat(validators));
+
+    this.sessionStartTimeControl.updateValueAndValidity();
+    this.sessionEndTimeControl.updateValueAndValidity();
+  }
+
+  trainingEndTimeChange(): void {
+    let sessionStartTime = this.sessionStartTimeControl.value;
+    let validators = sessionStartTime ? [CustomValidators.timeLaterThanOther(sessionStartTime)] : [];
+
+    this.sessionStartTimeControl.setValidators([CustomValidators.required].concat(validators));
+    this.sessionEndTimeControl.setValidators([CustomValidators.required].concat(validators));
+
+    this.sessionStartTimeControl.updateValueAndValidity();
+    this.sessionEndTimeControl.updateValueAndValidity();
   }
 
   setRelatedDates(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
@@ -314,6 +344,14 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     return this.form.get('registerationClosureDate') as FormControl;
   }
 
+  get sessionStartTimeControl(): FormControl {
+    return this.form.get('sessionStartTime') as FormControl;
+  }
+
+  get sessionEndTimeControl(): FormControl {
+    return this.form.get('sessionEndTime') as FormControl;
+  }
+
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
     this.fm = new FormManager(this.form, this.lang);
@@ -346,7 +384,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   get popupTitle(): string {
-    if (this.isCertification) {
+    if (this.isCertification || this.operation == OperationTypes.VIEW) {
       return this.lang.map.view_training_program;
     } else {
       return this.operation === OperationTypes.CREATE ?
@@ -363,17 +401,29 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this.showAddOrganizationForm = true;
   }
 
-  addOrganization() {
-    if (!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {
-      let org = this.organizations.find(e => e.id == this.selectedOrganization)!;
-      this.selectedOrganizations = [...this.selectedOrganizations, org];
-      this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
-      this.selectedOrganization = undefined;
-      this.toast.success(this.lang.map.msg_added_x_success.change({x: org.getName()}));
-      return;
-    }
+  onAddOrganization() {
+    if(this.selectedOrganization == -1) {
+      this.organizations.forEach(org => {
+        if (!this.hasDuplicatedId(org.id, this.selectedOrganizations)) {
+          let currentOrg: OrgUnit = this.organizations.find(e => e.id == org.id)!;
+          this.selectedOrganizations = [...this.selectedOrganizations, currentOrg];
+          this.model.targetOrganizationListIds = this.selectedOrganizations.map(selctedOrg => selctedOrg.id);
+          this.selectedOrganization = undefined;
+        }
+      })
+      this.toast.success(this.lang.map.msg_added_successfully);
+    } else {
+      if (!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {
+        let org = this.organizations.find(e => e.id == this.selectedOrganization)!;
+        this.selectedOrganizations = [...this.selectedOrganizations, org];
+        this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
+        this.selectedOrganization = undefined;
+        this.toast.success(this.lang.map.msg_added_x_success.change({x: org.getName()}));
+        return;
+      }
 
-    this.toast.alert(this.lang.map.msg_duplicated_item);
+      this.toast.alert(this.lang.map.msg_duplicated_item);
+    }
   }
 
   removeOrganization(event: MouseEvent, org: OrgUnit) {
@@ -457,15 +507,19 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.model.status != this.trainingStatus.TRAINING_PUBLISHED &&
       this.model.status != this.trainingStatus.EDITING_AFTER_PUBLISHING &&
       this.model.status != this.trainingStatus.REGISTRATION_OPEN &&
-      this.model.status != this.trainingStatus.REGISTRATION_CLOSED;
+      this.model.status != this.trainingStatus.REGISTRATION_CLOSED &&
+      this.operation != this.operationTypes.VIEW;
   }
 
   showSaveAndApproveButton() {
-    return this.saveVisible && this.model.status == this.trainingStatus.DATA_ENTERED;
+    return this.saveVisible &&
+      this.model.status == this.trainingStatus.DATA_ENTERED &&
+      this.operation != this.operationTypes.VIEW;
   }
 
   showSaveAndPublishButton() {
     return this.saveVisible &&
+      this.operation != this.operationTypes.VIEW &&
       (this.model.status == this.trainingStatus.TRAINING_PUBLISHED ||
         this.model.status == this.trainingStatus.PROGRAM_APPROVED ||
         this.model.status == this.trainingStatus.EDITING_AFTER_PUBLISHING ||
@@ -476,11 +530,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   showCancelTrainingProgramButton() {
     return this.operation != this.operationTypes.CREATE &&
       this.model.status != this.trainingStatus.TRAINING_FINISHED &&
-      this.model.status != this.trainingStatus.TRAINING_CANCELED;
+      this.model.status != this.trainingStatus.TRAINING_CANCELED &&
+      this.operation != this.operationTypes.VIEW;
   }
 
   showCertificateButton() {
-    return this.model.status == this.trainingStatus.TRAINING_FINISHED;
+    return this.model.status == this.trainingStatus.TRAINING_FINISHED &&
+      this.operation != this.operationTypes.VIEW;
   }
 
   disabledShowCertificateButton() {

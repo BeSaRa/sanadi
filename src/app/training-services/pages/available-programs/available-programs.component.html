@@ -1,5 +1,5 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="isFinishedPrograms ? 'menu_finished_programs' : 'menu_available_programs'" [clickOnReload$]="reload$">
+  <app-page-header [pageTitle]="'menu_training_programs'" [clickOnReload$]="reload$">
   </app-page-header>
   <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
 </div>
@@ -36,11 +36,14 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
-                <a *ngIf="!isFinishedPrograms" href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"
+                <a href="#" (click)="view(row , $event)" tooltip="{{lang.map.view}}" class="icon-btn">
+                  <i class="mdi mdi-eye"></i>
+                </a>
+                <a *ngIf="row.status == trainingProgramStatus.REGISTRATION_OPEN" href="#" (click)="candidates(row , $event)" tooltip="{{lang.map.training_program_candidates}}"
                    class="icon-btn">
                   <i class="mdi mdi-account-plus"></i>
                 </a>
-                <a *ngIf="isFinishedPrograms" href="#" (click)="onDownloadCertificatesClicked(row , $event)" tooltip="{{lang.map.training_program_certification}}"
+                <a *ngIf="row.status == trainingProgramStatus.TRAINING_FINISHED" href="#" (click)="onDownloadCertificatesClicked(row , $event)" tooltip="{{lang.map.training_program_certification}}"
                    class="icon-btn">
                   <i class="mdi mdi-certificate"></i>
                 </a>

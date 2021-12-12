@@ -25,7 +25,7 @@
                      class="form-check-input cursor-pointer">
             </th>
             <td cdk-cell *cdkCellDef="let row" class="text-center">
-              <input aria-label="select" type="checkbox" [value]="row" id="row-select-{{row.id}}"
+              <input [disabled]="disableMultipleSelectionInput(row.status)" aria-label="select" type="checkbox" [value]="row" id="row-select-{{row.id}}"
                      [checked]="isSelected(row)"
                      (change)="onSelect($event , row)" class="form-check-input cursor-pointer">
             </td>
@@ -40,27 +40,30 @@
           </ng-container>
           <ng-container cdkColumnDef="trainingStatus">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_status}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName()}}</td>
+            <td cdk-cell *cdkCellDef="let row"><div [ngClass]="setStatusColumnClass(row.status)">{{row.statusInfo?.getName()}}</div></td>
           </ng-container>
           <ng-container cdkColumnDef="trainingDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_date}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.trainingDate}}</td>
+            <td cdk-cell *cdkCellDef="let row"><span style="direction: ltr">{{row.startDateString}}</span> <span class="px-3 position-relative date-to" lang="{{lang.map.training_program_date_to}}"></span> <span style="direction: ltr">{{row.endDateString}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="registrationDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_registration_date}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.registrationDate}}</td>
+            <td cdk-cell *cdkCellDef="let row"><span style="direction: ltr">{{row.registerationStartDateString}}</span> <span class="px-3 position-relative date-to" lang="{{lang.map.training_program_date_to}}"></span> <span style="direction: ltr">{{row.registerationClosureDateString}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
-                <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                <a [ngClass]="setIsDisabledClassOnDeleteButton(row.status)" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                   <i class="mdi mdi-close-box"></i>
                 </a>
-                <a href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
+                <a [ngClass]="setIsDisabledClassOnEditButton(row.status)" href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
                   <i class="mdi mdi-pen"></i>
                 </a>
-                <a href="#" (click)="openTrainingBriefcaseDialog($event, row)"
+                <a href="#" (click)="view(row , $event)" tooltip="{{lang.map.view}}" class="icon-btn">
+                  <i class="mdi mdi-eye"></i>
+                </a>
+                <a *ngIf="showBriefcases(row.status)" href="#" (click)="openTrainingBriefcaseDialog($event, row)"
                    tooltip="{{lang.map.training_program_briefcase}}" class="icon-btn">
                   <i class="mdi mdi-bag-checked"></i>
                 </a>

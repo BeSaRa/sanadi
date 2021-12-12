@@ -19,6 +19,8 @@ import {IValidationInfo} from '../interfaces/i-validation-info';
 import {anyFieldsHasLength} from './any-fields-has-length';
 import {documentValidator as attachment} from './document-validator';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {timeLaterThanOther} from './time-later-than-other';
+import {timeEarlierThanOther} from './time-earlier-than-other';
 
 const defaultLengths = {
   MIN_LENGTH: 3,
@@ -144,7 +146,9 @@ const errorKeys: IKeyValue = {
         fields: errorValue.fieldLocalizationMap.map((local: any) => '<b>' + local.getName() + '</b>').join(', ')
       });
     }
-  }
+  },
+  invalidLaterTime: {key: 'err_invalid_later_time', replaceValues: null},
+  invalidEarlierTime: {key: 'err_invalid_earlier_time', replaceValues: null}
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
@@ -195,5 +199,7 @@ export const CustomValidators = {
   unique,
   inputMaskPatterns,
   validationPatterns,
-  attachment
+  attachment,
+  timeLaterThanOther,
+  timeEarlierThanOther
 };
