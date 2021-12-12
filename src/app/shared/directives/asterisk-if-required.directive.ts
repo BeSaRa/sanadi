@@ -1,6 +1,6 @@
 import {Directive, ElementRef, Host, Inject, Input, OnDestroy, OnInit, Optional, SkipSelf} from '@angular/core';
 import {AbstractControl, ControlContainer, ValidatorFn, Validators} from '@angular/forms';
-import {CustomValidators} from '../../validators/custom-validators';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {DOCUMENT} from '@angular/common';
@@ -60,10 +60,6 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
     if (!this._controlName && !this.control) {
       console.info(this.element);
       throw new Error('Please Provide Form control name or [formControl]');
-    }
-    if (this._controlName && !this._parentControl) {
-      console.info(this.element);
-      throw new Error('Please provide form group as parent for this control ' + this._controlName);
     }
     this.element.appendChild(this.requiredElement);
     this.valueOrValidityChanged$ = this.formControl.valueChanges.pipe(debounceTime(200));
