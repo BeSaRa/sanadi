@@ -51,6 +51,7 @@ import { SurveyQuestionPopupComponent } from './popups/survey-question-popup/sur
 import { SurveyTemplateComponent } from '@app/administration/pages/survey-template/survey-template.component';
 import { SurveyTemplatePopupComponent } from './popups/survey-template-popup/survey-template-popup.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SurveySectionPopupComponent } from './popups/survey-section-popup/survey-section-popup.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     SurveyQuestionPopupComponent,
     SurveyTemplateComponent,
     SurveyTemplatePopupComponent,
+    SurveySectionPopupComponent,
   ],
   imports: [
     SharedModule,

@@ -1,15 +1,20 @@
-import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
-import { SurveySection } from '@app/models/survey-section';
-import { SurveyTemplate } from '@app/models/survey-template';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {SurveyTemplate} from '@app/models/survey-template';
+import {SurveySectionInterceptor} from "@app/model-interceptors/survey-section-interceptor";
+import {SurveySection} from "@app/models/survey-section";
 
 export class SurveyTemplateInterceptor implements IModelInterceptor<SurveyTemplate> {
+  static sectionInterceptor = new SurveySectionInterceptor();
+
   send(model: Partial<SurveyTemplate>): Partial<SurveyTemplate> {
+    model.sectionSet = model.sectionSet?.map((item) => {
+      return SurveyTemplateInterceptor.sectionInterceptor.send(item) as SurveySection;
+    });
     return model;
   }
 
   receive(model: SurveyTemplate): SurveyTemplate {
-    model.questionSet.forEach((item) => model.sections = model.sections.concat([new SurveySection().clone({ ...item.section })]));
-    console.log(model.sections);
+    model.sectionSet = model.sectionSet.map((item) => new SurveySection().clone({...item}))
     return model;
   }
 }

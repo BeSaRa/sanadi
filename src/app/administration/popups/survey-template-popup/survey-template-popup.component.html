@@ -44,8 +44,21 @@
     </div>
     <div class='row'>
       <div (cdkDropListDropped)='dropSection($event)' id='sections-container' cdkDropList class='col-12'>
-        <div class='border border-1 p-2 bg-white' cdkDrag
-             *ngFor='let section of sections'>{{section.id}}</div>
+        <div cdkDrag class='border border-1 p-2 bg-white'
+             *ngFor='let section of model.sectionSet; index as i'>
+          <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-start">
+              <span>{{section.getName()}}</span>
+              <span class="flex-grow-1"></span>
+              <button cdkDragHandle class="btn icon-btn"><i class="mdi text-primary mdi-cursor-move"></i></button>
+              <button class="btn icon-btn"><i class="mdi text-primary mdi-plus-box"></i></button>
+              <button (click)="deleteSection$.next({index: i, model:section})" class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
+              <button [tooltip]="lang.map.edit_section" (click)="editSection$.next({index: i, model:section})"
+                      class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
+            </div>
+            <div class="card-body">{{section.getName()}}</div>
+          </div>
+        </div>
       </div>
     </div>
   </ng-template>

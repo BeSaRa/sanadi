@@ -1,14 +1,20 @@
-import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { SurveyTemplate } from '@app/models/survey-template';
-import { LangService } from '@app/services/lang.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {Component, Inject} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {SurveyTemplate} from '@app/models/survey-template';
+import {LangService} from '@app/services/lang.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {ToastService} from "@app/services/toast.service";
+import {SurveySection} from "@app/models/survey-section";
+import {SurveySectionService} from "@app/services/survey-section.service";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
+import {DialogService} from "@app/services/dialog.service";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
 
 @Component({
   selector: 'survey-template-popup',
@@ -21,18 +27,16 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   operation!: OperationTypes;
   reloadSections$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   addSection$: Subject<any> = new Subject<any>();
-  sections: any[] = [
-    { id: 1, start: true },
-    { id: 2, start: true },
-    { id: 3, start: true },
-    { id: 4, start: true },
-    { id: 5, start: true },
-  ];
+  editSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
+  deleteSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
 
   constructor(public lang: LangService,
               public dialogRef: DialogRef,
+              private toast: ToastService,
+              private surveySectionService: SurveySectionService,
               @Inject(DIALOG_DATA_TOKEN)
               private data: IDialogData<SurveyTemplate>,
+              private dialog: DialogService,
               public fb: FormBuilder) {
     super();
     this.model = this.data.model;
@@ -41,7 +45,9 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
 
 
   initPopup(): void {
-
+    this.listenToAddSection();
+    this.listenToEditSection();
+    this.listenToDeleteSection();
   }
 
   destroyPopup(): void {
@@ -49,7 +55,10 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   }
 
   afterSave(model: SurveyTemplate, dialogRef: DialogRef): void {
-
+    this.model = model;
+    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+    this.toast.success(message.change({x: model.getName()}));
+    this.operation === OperationTypes.UPDATE ? this.dialogRef.close(model) : (this.operation = OperationTypes.UPDATE);
   }
 
   beforeSave(model: SurveyTemplate, form: FormGroup): boolean | Observable<boolean> {
@@ -64,7 +73,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   }
 
   saveFail(error: Error): void {
-    console.log('FAIL');
+    console.log(error);
   }
 
   buildForm(): void {
@@ -76,6 +85,45 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   };
 
   dropSection($event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.sections, $event.previousIndex, $event.currentIndex);
+    moveItemInArray(this.model.sectionSet, $event.previousIndex, $event.currentIndex);
+  }
+
+  private listenToAddSection() {
+    this.addSection$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(_ => (this.surveySectionService.addDialog().onAfterClose$ as Observable<SurveySection>)))
+      .pipe(filter(value => !!value))
+      .subscribe((section) => {
+        this.model.sectionSet = this.model.sectionSet.concat(section);
+      })
+  }
+
+  private listenToEditSection() {
+    let editIndex: number = 0;
+    this.editSection$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(({index, model}) => {
+        editIndex = index;
+        return this.surveySectionService.editDialog(model, false)
+      }))
+      .pipe(switchMap(ref => ref.onAfterClose$ as Observable<SurveySection>))
+      .pipe(filter(value => !!value))
+      .subscribe((editedSection) => {
+        this.model.sectionSet = this.model.sectionSet.map((section, i) => {
+          return editIndex === i ? editedSection : section;
+        });
+      })
+  }
+
+  private listenToDeleteSection() {
+    let deleteIndex: number = 0;
+    this.deleteSection$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(({index}) => deleteIndex = index))
+      .pipe(switchMap(({model}) => this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$ as Observable<UserClickOn>))
+      .pipe(filter(click => click === UserClickOn.YES))
+      .subscribe(() => {
+        this.model.sectionSet = this.model.sectionSet.filter((item, index) => index !== deleteIndex);
+      })
   }
 }

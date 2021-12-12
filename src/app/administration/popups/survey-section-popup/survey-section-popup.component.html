@@ -1,0 +1,29 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.add_survey_template_section}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <form [formGroup]="form">
+    <div class='row'>
+      <div class='col-md-6 col-sm-12 mb-4 position-relative'>
+        <label class='form-label' asteriskIfRequired='arName'
+               for='sectionArName'>{{lang.map.arabic_name}}</label>
+        <input id='sectionArName' validationClasses='arName' formControlName='arName' class='form-control'>
+        <app-field-error-message controlName='arName'></app-field-error-message>
+      </div>
+      <div class='col-md-6 col-sm-12 mb-4 position-relative'>
+        <label class='form-label' asteriskIfRequired='enName'
+               for='sectionEnName'>{{lang.map.english_name}}</label>
+        <input id='sectionEnName' validationClasses='enName' formControlName='enName' class='form-control'>
+        <app-field-error-message controlName='enName'></app-field-error-message>
+      </div>
+    </div>
+    <div class="row mb-5"></div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="save$.next()" class="btn btn-primary">{{lang.map.btn_add}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

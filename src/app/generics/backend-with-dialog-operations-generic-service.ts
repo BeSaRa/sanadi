@@ -43,10 +43,11 @@ export abstract class BackendWithDialogOperationsGenericService<T extends { id: 
   /**
    * @description open edit dialog for the given model
    * @param model
+   * @param getById
    * @returns Observable<DialogRef> Observable of reference for opened dialog
    */
-  editDialog(model: T): Observable<DialogRef> {
-    return this.getById(model.id)
+  editDialog(model: T, getById: boolean = true): Observable<DialogRef> {
+    return (getById ? this.getById(model.id) : of(model))
       .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
   }
 

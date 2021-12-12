@@ -4,8 +4,10 @@ export interface ILanguageKeys {
   training_program_date_from: string;
   edit_certificate_template: string;
   add_certificate_template: string;
+  edit_section: string;
   training_program_accept_reject_candidates: string;
   add_survey_template_section: string;
+  edit_survey_template_section: string;
   survey_sections: string;
   add_survey_template: string;
   edit_survey_template: string;
