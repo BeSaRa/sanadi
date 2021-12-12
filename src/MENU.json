@@ -508,19 +508,6 @@
   },
   {
     "id": 40,
-    "langKey": "menu_finished_programs",
-    "path": "/home/training/finished-programs",
-    "icon": "mdi-certificate",
-    "isSvg": false,
-    "permission": null,
-    "permissionGroup": null,
-    "parent": 35,
-    "group": "training-services",
-    "itemOrder": 5,
-    "svg": null
-  },
-  {
-    "id": 41,
     "langKey": "menu_survey_questions",
     "path": "/home/administration/survey-questions",
     "icon": "mdi-new-box",
@@ -533,7 +520,7 @@
     "svg": null
   },
   {
-    "id": 42,
+    "id": 41,
     "langKey": "menu_survey_templates",
     "path": "/home/administration/survey-templates",
     "icon": "mdi-new-box",
