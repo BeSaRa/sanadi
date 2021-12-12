@@ -46,9 +46,9 @@ export class SurveyQuestionPopupComponent extends AdminGenericDialog<SurveyQuest
   }
 
   afterSave(model: SurveyQuestion, dialogRef: DialogRef): void {
-    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_added_successfully : this.lang.map.msg_update_success;
-    this.toast.success(message);
     this.model = model;
+    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+    this.toast.success(message.change({x: this.model.getName()}));
     if (this.operation === OperationTypes.UPDATE) {
       this.dialogRef.close(this.model);
     }

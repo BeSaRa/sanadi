@@ -18,6 +18,9 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
   @Input() customTemplate?: TemplateRef<any>;
   @Input() useReloadValue: boolean = false;
 
+  @Input() disableAdd: boolean = false;
+  @Input() disableReload: boolean = false;
+
   isReloadAvailable = false;
 
   constructor(public langService: LangService) {

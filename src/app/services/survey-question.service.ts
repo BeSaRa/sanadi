@@ -11,6 +11,10 @@ import {
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {SurveyQuestionInterceptor} from "@app/model-interceptors/survey-question-interceptor";
 import {UrlService} from "@app/services/url.service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {
+  SelectQuestionPopupComponent
+} from "@app/administration/popups/select-question-popup/select-question-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +47,12 @@ export class SurveyQuestionService extends BackendWithDialogOperationsGenericSer
   constructor(public dialog: DialogService, private urlService: UrlService, public http: HttpClient) {
     super();
     FactoryService.registerService('SurveyQuestionService', this);
+  }
+
+  openSelectQuestion(questions: SurveyQuestion[], selectedQuestionIds: number[]): DialogRef {
+    return this.dialog.show(SelectQuestionPopupComponent, {
+      questions,
+      selectedQuestionIds
+    });
   }
 }

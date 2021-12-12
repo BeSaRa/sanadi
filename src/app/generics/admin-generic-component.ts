@@ -49,7 +49,10 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
         const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(catchError(_ => of([])));
+        return load.pipe(catchError(_ => {
+          console.log('Error', _);
+          return of([])
+        }));
       }))
       .subscribe((list: M[]) => {
         this.models = list;

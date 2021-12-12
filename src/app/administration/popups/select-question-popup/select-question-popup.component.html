@@ -1,0 +1,23 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.select_question}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <div class="col-sm-12 mb-4 position-relative">
+    <label class="form-label" [control]="control" asteriskIfRequired
+           for="question">{{lang.map.select_question}}</label>
+    <ng-select validationClasses [control]="control"
+               appendTo="body" [clearable]="true" id="question"
+               [formControl]="control">
+      <ng-option [disabled]="isQuestionSelectedBefore(option)" [value]="option"
+                 *ngFor="let option of questions">{{option.getName()}}</ng-option>
+    </ng-select>
+    <app-field-error-message [control]="control"></app-field-error-message>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button [disabled]="control.invalid" (click)="selectQuestion()" class="btn btn-primary">{{lang.map.btn_add}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

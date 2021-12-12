@@ -5,7 +5,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SurveyTemplate} from '@app/models/survey-template';
 import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -15,6 +15,9 @@ import {SurveySectionService} from "@app/services/survey-section.service";
 import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {DialogService} from "@app/services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {SurveyQuestionService} from "@app/services/survey-question.service";
+import {SurveyQuestion} from "@app/models/survey-question";
+import {IQuestionSection} from "@app/interfaces/i-question-section";
 
 @Component({
   selector: 'survey-template-popup',
@@ -29,10 +32,12 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   addSection$: Subject<any> = new Subject<any>();
   editSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
   deleteSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
+  addQuestion$: Subject<number> = new Subject<number>();
 
   constructor(public lang: LangService,
               public dialogRef: DialogRef,
               private toast: ToastService,
+              private surveyQuestionService: SurveyQuestionService,
               private surveySectionService: SurveySectionService,
               @Inject(DIALOG_DATA_TOKEN)
               private data: IDialogData<SurveyTemplate>,
@@ -48,6 +53,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     this.listenToAddSection();
     this.listenToEditSection();
     this.listenToDeleteSection();
+    this.listenToAddQuestion();
   }
 
   destroyPopup(): void {
@@ -69,7 +75,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     return new SurveyTemplate().clone({
       ...this.model,
       ...this.form.value,
-    });
+    }).sortBasedOnIndex();
   }
 
   saveFail(error: Error): void {
@@ -84,7 +90,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     return this.operation === OperationTypes.CREATE ? this.lang.map.add_survey_template : this.lang.map.edit_survey_template;
   };
 
-  dropSection($event: CdkDragDrop<any[]>) {
+  dropSection($event: CdkDragDrop<SurveySection[]>) {
     moveItemInArray(this.model.sectionSet, $event.previousIndex, $event.currentIndex);
   }
 
@@ -125,5 +131,41 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
       .subscribe(() => {
         this.model.sectionSet = this.model.sectionSet.filter((item, index) => index !== deleteIndex);
       })
+  }
+
+  private listenToAddQuestion() {
+    let sectionIndex: number;
+    this.addQuestion$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(index => sectionIndex = index))
+      .pipe(switchMap(() => this.surveyQuestionService.loadIfNotExists()))
+      .pipe(switchMap(questions => (this.surveyQuestionService.openSelectQuestion(questions, this.model.getQuestionsIds()).onAfterClose$ as Observable<SurveyQuestion>)))
+      .pipe(filter(val => !!val))
+      .subscribe((question) => {
+        this.model.sectionSet = this.model.sectionSet.map((section, index) => {
+          if (sectionIndex === index) {
+            section.questionSet = section.questionSet.concat({question, questionOrder: 0});
+          }
+          return section;
+        })
+      })
+  }
+
+  deleteQuestion(q: IQuestionSection, questionIndex: number, sectionIndex: number) {
+    of(null)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(_ => this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: q.question.getName()})).onAfterClose$ as Observable<UserClickOn>))
+      .pipe(filter(val => val === UserClickOn.YES))
+      .subscribe(() => {
+        this.model.sectionSet[sectionIndex].questionSet = this.model.sectionSet[sectionIndex].questionSet.filter((q, index) => index !== questionIndex);
+      })
+  }
+
+  dropQuestion($event: CdkDragDrop<IQuestionSection[]>, sectionIndex: number) {
+    moveItemInArray(this.model.sectionSet[sectionIndex].questionSet, $event.previousIndex, $event.currentIndex);
+  }
+
+  cannotAddSections(): boolean {
+    return this.model.sectionSet.length >= 6;
   }
 }

@@ -2,6 +2,7 @@ import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {SurveyTemplate} from '@app/models/survey-template';
 import {SurveySectionInterceptor} from "@app/model-interceptors/survey-section-interceptor";
 import {SurveySection} from "@app/models/survey-section";
+import {SurveyQuestion} from "@app/models/survey-question";
 
 export class SurveyTemplateInterceptor implements IModelInterceptor<SurveyTemplate> {
   static sectionInterceptor = new SurveySectionInterceptor();
@@ -14,7 +15,14 @@ export class SurveyTemplateInterceptor implements IModelInterceptor<SurveyTempla
   }
 
   receive(model: SurveyTemplate): SurveyTemplate {
-    model.sectionSet = model.sectionSet.map((item) => new SurveySection().clone({...item}))
-    return model;
+    model.sectionSet = model.sectionSet.map((item) => {
+      const section = new SurveySection().clone({...item});
+      section.questionSet.map((q) => {
+        q.question = new SurveyQuestion().clone({...q.question});
+        return q
+      });
+      return section;
+    });
+    return model.sortSectionsAndQuestions();
   }
 }

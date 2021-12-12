@@ -38,25 +38,37 @@
     </form>
   </ng-template>
   <ng-template #sectionsTab>
-    <div class='row'>
-      <app-page-header [pageTitle]="'survey_sections'" [clickOnReload$]='reloadSections$' [clickOnNew$]='addSection$'>
+    <div class='row mb-2'>
+      <app-page-header [disableAdd]="cannotAddSections()" [pageTitle]="'survey_sections'" [clickOnNew$]='addSection$'>
       </app-page-header>
     </div>
     <div class='row'>
       <div (cdkDropListDropped)='dropSection($event)' id='sections-container' cdkDropList class='col-12'>
-        <div cdkDrag class='border border-1 p-2 bg-white'
-             *ngFor='let section of model.sectionSet; index as i'>
-          <div class="card">
-            <div class="card-header d-flex align-items-center justify-content-start">
-              <span>{{section.getName()}}</span>
-              <span class="flex-grow-1"></span>
-              <button cdkDragHandle class="btn icon-btn"><i class="mdi text-primary mdi-cursor-move"></i></button>
-              <button class="btn icon-btn"><i class="mdi text-primary mdi-plus-box"></i></button>
-              <button (click)="deleteSection$.next({index: i, model:section})" class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
-              <button [tooltip]="lang.map.edit_section" (click)="editSection$.next({index: i, model:section})"
-                      class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
+        <div cdkDrag *ngFor='let section of model.sectionSet; index as i' class="card mb-2">
+          <div class="card-header d-flex align-items-center justify-content-start">
+            <span>{{section.getName()}}</span>
+            <span class="flex-grow-1"></span>
+            <button cdkDragHandle [tooltip]="lang.map.change_order" class="btn icon-btn"><i
+              class="mdi text-primary mdi-cursor-move"></i></button>
+            <button (click)="addQuestion$.next(i)" [tooltip]="lang.map.add_question"
+                    class="btn icon-btn"><i
+              class="mdi text-primary mdi-plus-box"></i></button>
+            <button [tooltip]="lang.map.delete_section" (click)="deleteSection$.next({index: i, model:section})"
+                    class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
+            <button [tooltip]="lang.map.edit_section" (click)="editSection$.next({index: i, model:section})"
+                    class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
+          </div>
+          <div cdkDropList (cdkDropListDropped)="dropQuestion($event , i)" class="card-body">
+            <div cdkDrag *ngFor="let question of section.questionSet; let qIndex = index" class="card mb-2">
+              <div class="card-header d-flex align-items-center justify-content-start border-bottom-0">
+                <span> {{question.question.getName()}}</span>
+                <span class="flex-grow-1"></span>
+                <button cdkDragHandle [tooltip]="lang.map.change_order" class="btn icon-btn"><i
+                  class="mdi text-primary mdi-cursor-move"></i></button>
+                <button (click)="deleteQuestion(question , qIndex , i)" [tooltip]="lang.map.delete_question"
+                        class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
+              </div>
             </div>
-            <div class="card-body">{{section.getName()}}</div>
           </div>
         </div>
       </div>
