@@ -9,8 +9,6 @@ import {DialogService} from "@app/services/dialog.service";
 import {filter, switchMap} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ToastService} from "@app/services/toast.service";
-import {SurveySectionService} from "@app/services/survey-section.service";
-import {SurveyQuestionService} from "@app/services/survey-question.service";
 
 @Component({
   selector: 'survey-template',
@@ -39,8 +37,6 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
   constructor(
     public service: SurveyTemplateService,
     public lang: LangService,
-    private surveySectionService: SurveySectionService,
-    private surveyQuestionService: SurveyQuestionService,
     private toast: ToastService,
     private dialog: DialogService,
   ) {

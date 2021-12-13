@@ -7,6 +7,9 @@ export interface ILanguageKeys {
   training_program_serial_number: string;
   candidates_status: string;
   trainee_rejection_reason: string;
+  menu_surveys: string;
+  submit_your_survey: string;
+  survey: string;
   video_has_been_already_added: string;
   training_program_date_to: string;
   training_program_date_from: string;

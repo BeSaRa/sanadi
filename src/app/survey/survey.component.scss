@@ -1,0 +1,61 @@
+$border-color: #EEE;
+$border: 1px solid $border-color;
+.grid-question {
+  display: grid;
+  grid-template-columns: 30px 1fr repeat(5, 150px);
+}
+
+.grid-question-question {
+
+}
+
+.survey-question-row:not(:last-of-type) {
+  border-bottom: $border;
+}
+
+.grid-question-answer {
+  text-align: center;
+  border-right: $border;
+
+  &.last {
+    border: none;
+  }
+
+  &.first {
+    border-left: $border;
+  }
+}
+
+
+.grid-question-serial {
+  border-right: $border;
+}
+
+:host-context(html[dir=rtl]) {
+  .grid-question-answer {
+    border-left: $border;
+    border-right: none;
+    &.last {
+      border: none;
+    }
+
+    &.first {
+      border-left: $border;
+      border-right: $border;
+    }
+  }
+
+  .grid-question-serial {
+    border-left: $border;
+    border-right: none;
+  }
+}
+
+.question-header {
+  background-color: lighten(gray, 30);
+
+  &.question-section {
+    grid-template-columns: 30px 1fr !important;
+  }
+}
+

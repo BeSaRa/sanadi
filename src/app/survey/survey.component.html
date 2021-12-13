@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="container shadow mb-2">
+    <div class="row">
+      <div class="col-12 bg-primary  rounded-top">
+        <h5 class="m-0 p-2 text-white text-center rounded-top">{{lang.map.survey}}</h5>
+      </div>
+    </div>
+    <div *ngIf="false" class="row mb-2">
+      <div class="col-12 grid-question question-header">
+        <span class="grid-question-serial p-2">#</span>
+        <span class="grid-question-question p-2">The Questions</span>
+        <span *ngFor="let answer of answers; last as isLast; first as isFirst;"
+              [ngClass]="{last: isLast , first: isFirst}" class="grid-question-answer p-2">{{answer.getName()}}</span>
+      </div>
+    </div>
+    <div *ngFor="let section of [1,2,3,4,5,6]; let sectionIndex = index;">
+      <div class="row">
+        <div class="col-12 grid-question question-header"><!-- question-section -->
+          <span class="grid-question-serial p-2">{{sectionIndex + 1}}</span>
+          <span class="p-2">this is question number one ? </span>
+          <span *ngFor="let answer of answers; last as isLast; first as isFirst;"
+                [ngClass]="{last: isLast , first: isFirst}" class="grid-question-answer p-2">{{answer.getName()}}</span>
+        </div>
+      </div>
+      <div *ngFor="let item of [1,2,3,4,5]; let qIndex = index" class="row survey-question-row">
+        <div class="col-12 grid-question">
+          <span class="grid-question-serial p-2">{{qIndex + 1}}</span>
+          <span class="grid-question-question p-2">The Questions</span>
+          <span class="grid-question-answer first p-2">The Questions</span>
+          <span class="grid-question-answer p-2">The Questions</span>
+          <span class="grid-question-answer p-2">The Questions</span>
+          <span class="grid-question-answer p-2">The Questions</span>
+          <span class="grid-question-answer last p-2">The Questions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col mb-3 d-flex align-items-center justify-content-center">
+      <button class="btn btn-primary shadow">{{lang.map.submit_your_survey}}</button>
+    </div>
+  </div>
+</div>

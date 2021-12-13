@@ -11,6 +11,8 @@ import {SurveyTemplateInterceptor} from '@app/model-interceptors/survey-template
 import {
   SurveyTemplatePopupComponent,
 } from '@app/administration/popups/survey-template-popup/survey-template-popup.component';
+import {SurveySectionService} from "@app/services/survey-section.service";
+import {SurveyQuestionService} from "@app/services/survey-question.service";
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +22,8 @@ export class SurveyTemplateService extends BackendWithDialogOperationsGenericSer
   interceptor: IModelInterceptor<SurveyTemplate> = new SurveyTemplateInterceptor();
 
   constructor(public dialog: DialogService,
+              private _surveyQuestionService: SurveyQuestionService,
+              private _surveySectionService: SurveySectionService,
               private urlService: UrlService,
               public http: HttpClient) {
     super();
