@@ -51,6 +51,10 @@
                    class="icon-btn">
                   <i class="mdi mdi-certificate"></i>
                 </a>
+                <a *ngIf="row.status == trainingProgramStatus.REGISTRATION_CLOSED" href="#" (click)="viewCandidatesStatus(row , $event)" tooltip="{{lang.map.candidates_status}}"
+                   class="icon-btn">
+                  <i class="mdi mdi-account"></i>
+                </a>
               </div>
             </td>
           </ng-container>

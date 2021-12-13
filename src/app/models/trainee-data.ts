@@ -9,5 +9,6 @@ export class TraineeData {
   status!: number;
   statusInfo!: Lookup;
   trainingProgramId!: number;
+  refusalComment?: string;
   trainee!: Trainee;
 }

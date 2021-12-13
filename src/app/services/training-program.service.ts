@@ -150,6 +150,14 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     }));
   }
 
+  openViewCandidatesStatusDialog(trainingProgramId: number): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<number>>(TrainingProgramCandidatesPopupComponent, {
+      model: trainingProgramId,
+      operation: OperationTypes.CREATE,
+      candidatesListType: CandidatesListTypeEnum.VIEW_STATUS
+    }));
+  }
+
   openSelectCertificateTemplateDialog(trainingProgramId: number): Observable<DialogRef> {
     return this.certificateService.activeCertificates().pipe(
       exhaustMap(list => {

@@ -55,6 +55,9 @@
                   <a *ngIf="candidatesListType == candidatesListTypeEnum.CERTIFY && row.isAttended" href="#" (click)="downloadCertificate($event, row)" tooltip="{{lang.map.btn_download}}" class="icon-btn">
                     <i class="mdi mdi-download"></i>
                   </a>
+                  <a *ngIf="candidatesListType == candidatesListTypeEnum.VIEW_STATUS && row.status == traineeStatusEnum.REJECTED_TRAINEE" href="#" (click)="showRejectionReason($event, row)" class="icon-btn">
+                    {{lang.map.trainee_rejection_reason}}
+                  </a>
                 </div>
               </td>
             </ng-container>

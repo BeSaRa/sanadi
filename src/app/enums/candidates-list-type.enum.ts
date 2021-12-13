@@ -1,5 +1,6 @@
 export enum CandidatesListTypeEnum {
   ADD,
   EVALUATE,
-  CERTIFY
+  CERTIFY,
+  VIEW_STATUS
 }

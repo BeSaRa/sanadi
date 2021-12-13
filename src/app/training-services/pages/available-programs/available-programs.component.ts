@@ -109,4 +109,13 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
       });
     });
   }
+
+  viewCandidatesStatus(trainingProgram: TrainingProgram, event: MouseEvent) {
+    event.preventDefault();
+    const sub = this.service.openViewCandidatesStatusDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        sub.unsubscribe();
+      });
+    });
+  }
 }

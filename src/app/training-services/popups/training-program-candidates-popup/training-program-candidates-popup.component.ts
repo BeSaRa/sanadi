@@ -16,6 +16,7 @@ import {TraineeData} from '@app/models/trainee-data';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
 import {CertificateService} from '@app/services/certificate.service';
+import {TraineeStatus} from '@app/enums/trainee-status';
 
 @Component({
   selector: 'training-program-candidates',
@@ -42,7 +43,7 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   operation!: OperationTypes;
   candidatesListType!: number;
   candidatesListTypeEnum = CandidatesListTypeEnum;
-
+  traineeStatusEnum = TraineeStatus;
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
               public lang: LangService,
               public service: TraineeService,
@@ -107,6 +108,11 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
         let downloadURL = window.URL.createObjectURL(data.blob);
         window.open(downloadURL);
       });
+  }
+
+  showRejectionReason(event: MouseEvent, model: TraineeData) {
+    event.preventDefault();
+    this.dialogService.info(model.refusalComment);
   }
 
   searchCallback = (record: any, searchText: string) => {
