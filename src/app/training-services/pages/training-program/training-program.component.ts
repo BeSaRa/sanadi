@@ -187,7 +187,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   setIsDisabledClassOnDeleteButton(status: number) {
-    if (status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED) {
+    if (status != this.trainingStatus.DATA_ENTERED && status != this.trainingStatus.PROGRAM_APPROVED) {
       return {'isDisabled': true};
     }
     return {};
@@ -201,12 +201,12 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   disableMultipleSelectionInput(status: number) {
-    return status == this.trainingStatus.TRAINING_FINISHED || status == this.trainingStatus.TRAINING_CANCELED;
+    return status != this.trainingStatus.DATA_ENTERED && status != this.trainingStatus.PROGRAM_APPROVED;
   }
 
   delete(event: MouseEvent, model: TrainingProgram): void {
     event.preventDefault();
-    if (model.status == this.trainingStatus.TRAINING_CANCELED || model.status == this.trainingStatus.TRAINING_FINISHED) {
+    if (model.status != this.trainingStatus.DATA_ENTERED && model.status != this.trainingStatus.PROGRAM_APPROVED) {
       return;
     }
     // @ts-ignore
@@ -327,7 +327,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   private _addSelected(record: TrainingProgram): void {
-    if(record.status == this.trainingStatus.TRAINING_FINISHED || record.status == this.trainingStatus.TRAINING_CANCELED) {
+    if(record.status != this.trainingStatus.DATA_ENTERED && record.status != this.trainingStatus.PROGRAM_APPROVED) {
       return;
     }
     this.selectedRecords.push(_deepClone(record));
@@ -343,14 +343,14 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   get isIndeterminateSelection(): boolean {
     return this.selectedRecords.length > 0 &&
       this.selectedRecords.length < this.models
-        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
         .length;
   }
 
   get isFullSelection(): boolean {
     return this.selectedRecords.length > 0 &&
       this.selectedRecords.length === this.models
-        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
         .length;
   }
 
@@ -371,12 +371,12 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   onSelectAll(): void {
     if (this.selectedRecords.length === this.models
-      .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED)
+      .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED)
       .length) {
       this.selectedRecords = [];
     } else {
       this.selectedRecords = _deepClone(this.models
-        .filter(element => element.status != this.trainingStatus.TRAINING_FINISHED && element.status != this.trainingStatus.TRAINING_CANCELED));
+        .filter(element => element.status == this.trainingStatus.DATA_ENTERED || element.status == this.trainingStatus.PROGRAM_APPROVED));
     }
   }
 
