@@ -501,8 +501,8 @@
     "isSvg": false,
     "permission": null,
     "permissionGroup": null,
-    "parent": 35,
-    "group": "training-services",
+    "parent": 6,
+    "group": "administration",
     "itemOrder": 4,
     "svg": null
   },
