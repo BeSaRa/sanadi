@@ -1,0 +1,11 @@
+.date-to:before {
+  position: absolute;
+  content: attr(lang);
+  left: 10px;
+}
+
+:host-context(html[dir="rtl"]) {
+  .date-to:before {
+    left: 7px;
+  }
+}

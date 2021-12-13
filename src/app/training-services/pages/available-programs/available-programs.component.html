@@ -26,11 +26,15 @@
           </ng-container>
           <ng-container cdkColumnDef="trainingDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_date}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.trainingDate}}</td>
+            <td cdk-cell *cdkCellDef="let row">
+              <span style="direction: ltr">{{row.startDateString}}</span> <span class="px-3 position-relative date-to" lang="{{lang.map.training_program_date_to}}"></span> <span style="direction: ltr">{{row.endDateString}}</span>
+            </td>
           </ng-container>
           <ng-container cdkColumnDef="registrationDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_registration_date}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.registrationDate}}</td>
+            <td cdk-cell *cdkCellDef="let row">
+              <span style="direction: ltr">{{row.registerationStartDateString}}</span> <span class="px-3 position-relative date-to" lang="{{lang.map.training_program_date_to}}"></span> <span style="direction: ltr">{{row.registerationClosureDateString}}</span>
+            </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
