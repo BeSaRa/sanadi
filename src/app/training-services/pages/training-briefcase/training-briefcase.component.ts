@@ -181,6 +181,11 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       trainingProgramId: this.trainingProgramId
     };
 
+    if(this.bundlesList.map(b => b.documentTitle).includes(data.documentTitle)) {
+      this.toast.error(this.lang.map.can_not_add_element_with_the_same_title);
+      return;
+    }
+
     let files: { [key: string]: File } = {};
     this.uploadedFile ? (files.documentFile = this.uploadedFile) : null;
 

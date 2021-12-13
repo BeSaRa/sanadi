@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  can_not_add_element_with_the_same_title: string;
   training_program_serial_number: string;
   candidates_status: string;
   trainee_rejection_reason: string;
