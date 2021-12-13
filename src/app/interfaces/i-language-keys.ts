@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  training_program_serial_number: string;
   candidates_status: string;
   trainee_rejection_reason: string;
   video_has_been_already_added: string;

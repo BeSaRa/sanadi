@@ -29,6 +29,12 @@
            *ngIf="isCertification"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
+      <div class="row mb-3" *ngIf="model.id">
+        <div class="col-sm-6 position-relative">
+          <label class="form-label">{{lang.map.training_program_serial_number}}</label>
+          <input disabled id="trainingProgramFullSerial" [value]="model.trainingProgramFullSerial" class="form-control">
+        </div>
+      </div>
       <div class="row mb-3">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="activityName" for="activityName"
