@@ -20,6 +20,7 @@ import {of, Subject} from 'rxjs';
 import {TrainingStatus} from '@app/enums/training-status';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'training-program',
@@ -118,7 +119,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   openTrainingBriefcaseDialog($event: MouseEvent, record: TrainingProgram): void {
     $event.preventDefault();
-    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record).subscribe((dialog: DialogRef) => {
+    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record, OperationTypes.CREATE).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });

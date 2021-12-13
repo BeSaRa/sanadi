@@ -52,9 +52,10 @@ export class TrainingProgramBriefcaseService extends BackendGenericService<Train
     return this._loadTrainingBriefcaseByTrainingProgramId(trainingProgramId);
   }
 
-  openTrainingBriefcaseDialog(trainingProgram: TrainingProgram): Observable<DialogRef> {
+  openTrainingBriefcaseDialog(trainingProgram: TrainingProgram, operationType: number): Observable<DialogRef> {
     return of(this.dialog.show(TrainingBriefcasePopupComponent, {
-      model: trainingProgram
+      model: trainingProgram,
+      operation: operationType
     }));
   }
 

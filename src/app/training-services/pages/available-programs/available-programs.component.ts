@@ -7,9 +7,10 @@ import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {TrainingStatus} from '@app/enums/training-status';
+import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'available-programs',
@@ -32,7 +33,8 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
   trainingProgramStatus = TrainingStatus;
 
   constructor(public lang: LangService,
-              public service: TrainingProgramService) {
+              public service: TrainingProgramService,
+              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
     super();
   }
 
@@ -97,5 +99,14 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
   view(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
     this.view$.next(trainingProgram);
+  }
+
+  openTrainingBriefcaseDialog($event: MouseEvent, record: TrainingProgram): void {
+    $event.preventDefault();
+    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record, OperationTypes.VIEW).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        sub.unsubscribe();
+      });
+    });
   }
 }
