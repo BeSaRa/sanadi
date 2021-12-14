@@ -7,8 +7,10 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {searchFunctionType} from '@app/types/types';
 import {TraineeData} from '@app/models/trainee-data';
 import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
+import {TrainingStatus} from "@app/enums/training-status";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
-export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
+export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService> {
   service: TrainingProgramService;
   activityName!: string;
   trainingProgramSerial!: string;
@@ -49,7 +51,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   totalTrainingCost!: number;
   traineeList: TraineeData[] = [];
   trainingBundleList: TrainingProgramBriefcase[] = [];
-  isOpenForCertification!: false;
+  isOpenForCertification!: boolean;
+  trainingSurveyTemplateId!: number;
+  surveyPublished!: boolean;
 
   // to be removed
   registeredTraineeNumber: number = 0;
@@ -181,5 +185,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
 
   cancel() {
     return this.service.cancel(this.id);
+  }
+
+  isFinishedProgram(): boolean {
+    return this.status === TrainingStatus.TRAINING_FINISHED;
+  }
+  publishSurvey(): DialogRef {
+    return this.service.publishSurvey(this);
   }
 }

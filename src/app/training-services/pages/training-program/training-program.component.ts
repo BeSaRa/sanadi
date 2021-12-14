@@ -327,7 +327,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   private _addSelected(record: TrainingProgram): void {
-    if(record.status != this.trainingStatus.DATA_ENTERED && record.status != this.trainingStatus.PROGRAM_APPROVED) {
+    if (record.status != this.trainingStatus.DATA_ENTERED && record.status != this.trainingStatus.PROGRAM_APPROVED) {
       return;
     }
     this.selectedRecords.push(_deepClone(record));
@@ -382,5 +382,16 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   getDateFromTo(dateFrom: string | IMyDateModel, dateTo: string | IMyDateModel) {
     return DateUtils.getDateStringFromDate(dateFrom) + ' إلى ' + DateUtils.getDateStringFromDate(dateTo);
+  }
+
+  publishSurvey(program: TrainingProgram) {
+    if (program.surveyPublished) {
+      this.toast.error(this.lang.map.the_survey_for_this_program_has_been_published_before);
+      return;
+    }
+    program.publishSurvey()
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.reload$.next(null));
   }
 }

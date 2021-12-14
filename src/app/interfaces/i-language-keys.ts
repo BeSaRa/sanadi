@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  select_survey_template: string;
+  the_survey_has_been_successfully_published: string;
+  please_select_survey_template_to_publish: string;
+  btn_publish: string;
   registration_end_date_should_not_be_in_past: string;
   accepted_trainee_number: string;
   registered_trainee_number: string;
@@ -7,6 +11,7 @@ export interface ILanguageKeys {
   training_program_serial_number: string;
   candidates_status: string;
   trainee_rejection_reason: string;
+  the_survey_for_this_program_has_been_published_before: string;
   menu_surveys: string;
   submit_your_survey: string;
   survey: string;

@@ -2,7 +2,9 @@ import {Injectable} from '@angular/core';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {TrainingProgram} from '@app/models/training-program';
 import {ComponentType} from '@angular/cdk/portal';
-import {TrainingProgramPopupComponent} from '@app/training-services/popups/training-program-popup/training-program-popup.component';
+import {
+  TrainingProgramPopupComponent
+} from '@app/training-services/popups/training-program-popup/training-program-popup.component';
 import {TrainingProgramInterceptor} from '@app/model-interceptors/training-program-interceptor';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from '@app/services/url.service';
@@ -14,18 +16,29 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {DateUtils} from '@app/helpers/date-utils';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FilterTrainingProgramsComponent} from '@app/training-services/popups/filter-training-programs/filter-training-programs.component';
+import {
+  FilterTrainingProgramsComponent
+} from '@app/training-services/popups/filter-training-programs/filter-training-programs.component';
 import {formatDate} from '@angular/common';
-import {TrainingProgramAttendancePopupComponent} from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
+import {
+  TrainingProgramAttendancePopupComponent
+} from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
 import {exhaustMap, switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {TrainingProgramCandidatesPopupComponent} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
+import {
+  TrainingProgramCandidatesPopupComponent
+} from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
 import {TraineeService} from '@app/services/trainee.service';
-import {SelectCertificateTemplatePopupComponent} from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
+import {
+  SelectCertificateTemplatePopupComponent
+} from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
 import {CertificateService} from '@app/services/certificate.service';
+import {
+  SelectProgramSurveyPopupComponent
+} from "@app/training-services/popups/select-program-survey-popup/select-program-survey-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +52,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
               public dialog: DialogService,
               private certificateService: CertificateService,
               private traineeService: TraineeService,
-              private trainingProgramBriefcaseService : TrainingProgramBriefcaseService) {
+              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }
@@ -88,7 +101,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  applyAttendance(trainingId: number, traineeList: {first: number, second: boolean}[]) {
+  applyAttendance(trainingId: number, traineeList: { first: number, second: boolean }[]) {
     return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
@@ -213,5 +226,11 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
 
   _getServiceURL(): string {
     return this.urlService.URLS.TRAINING_PROGRAM;
+  }
+
+  publishSurvey(program: TrainingProgram): DialogRef {
+    return this.dialog.show(SelectProgramSurveyPopupComponent, {
+      program
+    });
   }
 }

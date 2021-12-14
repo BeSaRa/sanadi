@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  SURVEY: string;
   SURVEY_SECTION: string;
   SURVEY_TEMPLATE: string;
   TRAINING_PROGRAM_CERTIFICATE: string;
