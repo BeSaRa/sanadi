@@ -15,6 +15,8 @@ export class TraineeInterceptor implements IModelInterceptor<TraineeData> {
 
     let nationalityInfo = (lookupService.listByCategory.Nationality.find(s => s.lookupKey == model.trainee.nationality)!);
     model.trainee.nationalityInfo = (new Lookup()).clone(nationalityInfo);
+
+    model.trainee.addedByRACA = model.addedByRACA;
     return model;
   }
 

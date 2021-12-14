@@ -229,6 +229,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
         const trainee = (new Trainee()).clone({...this.form.value});
+        trainee.externalOrgId = this.selectedOrganizationId!;
         return this.traineeService.enroll(this.trainingProgramId, trainee);
       }))
       .subscribe(() => {
