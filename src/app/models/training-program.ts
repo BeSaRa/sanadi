@@ -125,12 +125,10 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.pattern('ENG_NUM_ONLY')
       ]] : averageDurationInHours,
       startDate: controls ? [startDate, [
-        CustomValidators.required,
-        CustomValidators.minDate((new Date()).toDateString())
+        CustomValidators.required
       ]] : startDate,
       endDate: controls ? [endDate, [
-        CustomValidators.required,
-        CustomValidators.minDate((new Date()).toDateString())
+        CustomValidators.required
       ]] : endDate,
       sessionStartTime: controls ? [sessionStartTime, [
         CustomValidators.required
@@ -161,12 +159,10 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : comments,
       registerationStartDate: controls ? [registerationStartDate, [
-        CustomValidators.required,
-        CustomValidators.minDate((new Date()).toDateString())
+        CustomValidators.required
       ]] : registerationStartDate,
       registerationClosureDate: controls ? [registerationClosureDate, [
-        CustomValidators.required,
-        CustomValidators.minDate((new Date()).toDateString())
+        CustomValidators.required
       ]] : registerationClosureDate,
       totalTrainingCost: controls ? [totalTrainingCost, [
         CustomValidators.required,

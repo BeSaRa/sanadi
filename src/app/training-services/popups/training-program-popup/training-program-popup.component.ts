@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
 import {FormManager} from '@app/models/form-manager';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -16,7 +16,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {Lookup} from '@app/models/lookup';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyDateModel, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {OrgUnit} from '@app/models/org-unit';
 import {exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -105,6 +105,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   showAddTrainerForm = false;
   isInternalUser!: boolean;
   isCertification!: boolean;
+  originalTrainingStartDate!: string | IMyDateModel;
+  originalRegisterationEndDate!: string | IMyDateModel;
+  originalTrainingOpenRegistrationDate!: string | IMyDateModel;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
@@ -129,6 +132,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.loadSelectedOrganizations();
     }
 
+    if (this.operation != OperationTypes.CREATE) {
+      this.originalTrainingStartDate = this.model.startDate;
+      this.originalTrainingOpenRegistrationDate = this.model.registerationStartDate;
+    }
+
     this.loadTrainers();
     this.loadSelectedTrainers();
     this.listenToApprove();
@@ -139,11 +147,6 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.form.disable();
       this.form.updateValueAndValidity();
     }
-    setTimeout(() => {
-      console.log(this.form);
-    }, 300);
-
-    console.log('operation', this.operation);
   }
 
   listenToApprove() {
@@ -162,12 +165,61 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       });
   }
 
+  onSaveClicked() {
+    let startDate = DateUtils.getDateStringFromDate(this.form.get('startDate')?.value);
+    let oldStartDate = DateUtils.getDateStringFromDate(this.originalTrainingStartDate);
+    let registerationStartDate = DateUtils.getDateStringFromDate(this.form.get('registerationStartDate')?.value);
+    let oldRegistrationStartDate = DateUtils.getDateStringFromDate(this.originalTrainingOpenRegistrationDate);
+
+    let registrationEndDate = DateUtils.getDateStringFromDate(this.form.get('registerationClosureDate')?.value);
+    let oldRegisterationClosureDate = DateUtils.getDateStringFromDate(this.originalRegisterationEndDate);
+    let today = DateUtils.getDateStringFromDate((new Date()));
+
+    if (this.operation != OperationTypes.CREATE) {
+      if(this.model.status == this.trainingStatus.DATA_ENTERED) {
+        if(registrationEndDate != oldRegisterationClosureDate && registrationEndDate < today) {
+          this.toast.error(this.lang.map.registration_end_date_should_not_be_in_past);
+          return;
+        }
+      }
+    }
+    this.save$.next();
+  }
+
   saveAndApprove() {
+    let startDate = DateUtils.getDateStringFromDate(this.form.get('startDate')?.value);
+    let oldStartDate = DateUtils.getDateStringFromDate(this.originalTrainingStartDate);
+    let registerationStartDate = DateUtils.getDateStringFromDate(this.form.get('registerationStartDate')?.value);
+    let oldRegistrationStartDate = DateUtils.getDateStringFromDate(this.originalTrainingOpenRegistrationDate);
+    let today = DateUtils.getDateStringFromDate((new Date()));
+
+    if (this.operation != OperationTypes.CREATE) {
+      if(this.model.status == this.trainingStatus.DATA_ENTERED) {
+        if(registerationStartDate != oldRegistrationStartDate && registerationStartDate < today) {
+          this.toast.error('Not equal startDate');
+          return;
+        }
+      }
+    }
     this.saveAndApproveClicked = true;
     this.save$.next();
   }
 
   saveAndPublish() {
+    let startDate = DateUtils.getDateStringFromDate(this.form.get('startDate')?.value);
+    let oldStartDate = DateUtils.getDateStringFromDate(this.originalTrainingStartDate);
+    let registerationStartDate = DateUtils.getDateStringFromDate(this.form.get('registerationStartDate')?.value);
+    let oldRegistrationStartDate = DateUtils.getDateStringFromDate(this.originalTrainingOpenRegistrationDate);
+    let today = DateUtils.getDateStringFromDate((new Date()));
+
+    if (this.operation != OperationTypes.CREATE) {
+      if(this.model.status == this.trainingStatus.DATA_ENTERED) {
+        if(registerationStartDate != oldRegistrationStartDate && registerationStartDate < today) {
+          this.toast.error('Not equal startDate');
+          return;
+        }
+      }
+    }
     this.saveAndPublishClicked = true;
     this.save$.next();
   }
@@ -207,82 +259,156 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   trainingStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    let registrationClosureDate = this.registrationClosureDateControl.value;
-    let trainingValidators = registrationClosureDate ?
-      [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] :
-      [CustomValidators.minDate((new Date()).toDateString())];
+    let registrationClosureDate = DateUtils.changeDateFromDatepicker(this.registrationClosureDateControl.value);
+    let trainingValidators: ValidatorFn[];
+
+    if (this.operation == OperationTypes.CREATE) {
+      if (registrationClosureDate && registrationClosureDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        trainingValidators = [CustomValidators.minDate(registrationClosureDate!)];
+      } else {
+        trainingValidators = [CustomValidators.minDate((new Date().toDateString()))];
+      }
+    } else {
+      if (registrationClosureDate) {
+        trainingValidators = [CustomValidators.minDate(registrationClosureDate!)];
+      } else {
+        trainingValidators = [];
+      }
+    }
+    this.setTrainingProgramDatesValidators(trainingValidators);
 
     let trainingStartDate = event.value;
-    let registrationValidators = trainingStartDate ? [CustomValidators.maxDate(trainingStartDate)] : [];
+    let registrationValidators: ValidatorFn[];
+    if (trainingStartDate) {
+      registrationValidators = [CustomValidators.maxDate(trainingStartDate)];
+    } else {
+      registrationValidators = [];
+    }
+    this.setRegistrationDatesValidators(registrationValidators);
 
-    this.trainingStartDateControl.setValidators([CustomValidators.required].concat(trainingValidators));
-    this.trainingEndDateControl.setValidators([CustomValidators.required].concat(trainingValidators));
-
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(registrationValidators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(registrationValidators));
-
-    this.trainingStartDateControl.updateValueAndValidity();
-    this.trainingEndDateControl.updateValueAndValidity();
-    this.registrationStartDateControl.updateValueAndValidity();
-    this.registrationClosureDateControl.updateValueAndValidity();
-
+    this.updateValueAndValidityForAllDateControls();
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   trainingEndDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    // to be uncommented
-    let registrationClosureDate = this.registrationClosureDateControl.value;
-    let trainingValidators = registrationClosureDate ?
-      [CustomValidators.minDate(DateUtils.changeDateFromDatepicker(registrationClosureDate)!)] :
-      [CustomValidators.minDate((new Date()).toDateString())];
+    let registrationClosureDate = DateUtils.changeDateFromDatepicker(this.registrationClosureDateControl.value);
+    let trainingValidators: ValidatorFn[];
+
+    if (this.operation == OperationTypes.CREATE) {
+      if (registrationClosureDate && registrationClosureDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        trainingValidators = [CustomValidators.minDate(registrationClosureDate!)];
+      } else {
+        trainingValidators = [CustomValidators.minDate((new Date().toDateString()))];
+      }
+    } else {
+      if (registrationClosureDate && registrationClosureDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        trainingValidators = [CustomValidators.minDate(registrationClosureDate!)];
+      } else {
+        trainingValidators = [];
+      }
+    }
+    this.setTrainingProgramDatesValidators(trainingValidators);
 
     let trainingStartDate = DateUtils.changeDateFromDatepicker(this.trainingStartDateControl.value);
-    let registrationValidators = trainingStartDate ? [CustomValidators.maxDate(trainingStartDate)] : [];
+    let registrationValidators: ValidatorFn[];
+    if (trainingStartDate) {
+      registrationValidators = [CustomValidators.maxDate(trainingStartDate)];
+    } else {
+      registrationValidators = [];
+    }
+    this.setRegistrationDatesValidators(registrationValidators);
 
-    this.trainingStartDateControl.setValidators([CustomValidators.required].concat(trainingValidators));
-    this.trainingEndDateControl.setValidators([CustomValidators.required].concat(trainingValidators));
-
-    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(registrationValidators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(registrationValidators));
-
-    this.trainingStartDateControl.updateValueAndValidity();
-    this.trainingEndDateControl.updateValueAndValidity();
-    this.registrationStartDateControl.updateValueAndValidity();
-    this.registrationClosureDateControl.updateValueAndValidity();
-
+    this.updateValueAndValidityForAllDateControls();
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   registrationStartDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    // to be uncommented
-    let trainingStartDate = this.trainingStartDateControl.value;
-    let validators = trainingStartDate ? [CustomValidators.maxDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
+    let trainingStartDate = DateUtils.changeDateFromDatepicker(this.trainingStartDateControl.value);
+    let registrationValidators: ValidatorFn[];
 
-    this.registrationStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
+    if (this.operation == OperationTypes.CREATE) {
+      if (trainingStartDate && trainingStartDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        registrationValidators = [CustomValidators.maxDate(trainingStartDate!)];
+      } else {
+        registrationValidators = [];
+      }
+      registrationValidators = registrationValidators.concat([CustomValidators.minDate((new Date()).toDateString())]);
+    } else {
+      if (trainingStartDate && trainingStartDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        registrationValidators = [CustomValidators.maxDate(trainingStartDate!)];
+      } else {
+        registrationValidators = [];
+      }
+    }
+    this.setRegistrationDatesValidators(registrationValidators);
 
-    this.trainingStartDateControl.updateValueAndValidity();
-    this.trainingEndDateControl.updateValueAndValidity();
-    this.registrationStartDateControl.updateValueAndValidity();
-    this.registrationClosureDateControl.updateValueAndValidity();
+    let registrationEndDate = DateUtils.changeDateFromDatepicker(this.registrationClosureDateControl.value);
+    let trainingValidators: ValidatorFn[];
+    if (registrationEndDate) {
+      trainingValidators = [CustomValidators.minDate(registrationEndDate)];
+    } else {
+      trainingValidators = [];
+    }
+    this.setTrainingProgramDatesValidators(trainingValidators);
 
+    this.updateValueAndValidityForAllDateControls();
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
 
   registrationEndDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    // to be uncommented
-    let trainingStartDate = this.trainingStartDateControl.value;
-    let validators = trainingStartDate ? [CustomValidators.maxDate(DateUtils.changeDateFromDatepicker(trainingStartDate)!)] : [];
+    let trainingStartDate = DateUtils.changeDateFromDatepicker(this.trainingStartDateControl.value);
+    let registrationValidators: ValidatorFn[];
+    if (this.operation == OperationTypes.CREATE) {
+      if (trainingStartDate && trainingStartDate.setHours(0, 0, 0, 0) > (new Date().setHours(0, 0, 0, 0))) {
+        registrationValidators = [CustomValidators.maxDate(trainingStartDate!)];
+      } else {
+        registrationValidators = [];
+      }
+      registrationValidators = registrationValidators.concat([CustomValidators.minDate((new Date()).toDateString())]);
+    } else {
+      if (trainingStartDate) {
+        registrationValidators = [CustomValidators.maxDate(trainingStartDate!)];
+      } else {
+        registrationValidators = [];
+      }
+    }
+    this.setRegistrationDatesValidators(registrationValidators);
 
-    this.registrationStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
-    this.registrationClosureDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validators));
+    let registrationEndDate = event.value;
+    let trainingValidators: ValidatorFn[];
+    if (registrationEndDate) {
+      trainingValidators = [CustomValidators.minDate(registrationEndDate)];
+    } else {
+      trainingValidators = [];
+    }
+    this.setTrainingProgramDatesValidators(trainingValidators);
 
+    this.updateValueAndValidityForAllDateControls();
+    this.setRelatedDates(event, fromFieldName, toFieldName);
+  }
+
+  setTrainingProgramDatesValidators(validatorsArr: ValidatorFn[]) {
+    this.trainingStartDateControl.setValidators([CustomValidators.required].concat(validatorsArr));
+    this.trainingEndDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())].concat(validatorsArr));
+  }
+
+  setRegistrationDatesValidators(validatorsArr: ValidatorFn[]) {
+    this.registrationStartDateControl.setValidators([CustomValidators.required].concat(validatorsArr));
+    this.registrationClosureDateControl.setValidators([CustomValidators.required].concat(validatorsArr));
+  }
+
+  updateValueAndValidityForAllDateControls() {
     this.trainingStartDateControl.updateValueAndValidity();
     this.trainingEndDateControl.updateValueAndValidity();
     this.registrationStartDateControl.updateValueAndValidity();
     this.registrationClosureDateControl.updateValueAndValidity();
+  }
 
-    this.setRelatedDates(event, fromFieldName, toFieldName);
+  applyValidationForPastDatesOnAllDateInputs() {
+    this.trainingStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())]);
+    this.trainingEndDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())]);
+    this.registrationStartDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())]);
+    this.registrationClosureDateControl.setValidators([CustomValidators.required, CustomValidators.minDate((new Date()).toDateString())]);
   }
 
   trainingStartTimeChange(): void {
@@ -358,6 +484,9 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
     this.fm = new FormManager(this.form, this.lang);
+    if (this.operation == OperationTypes.CREATE) {
+      this.applyValidationForPastDatesOnAllDateInputs();
+    }
     this._buildDatepickerControlsMap();
   }
 
@@ -405,7 +534,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   onAddOrganization() {
-    if(this.selectedOrganization == -1) {
+    if (this.selectedOrganization == -1) {
       this.organizations.forEach(org => {
         if (!this.hasDuplicatedId(org.id, this.selectedOrganizations)) {
           let currentOrg: OrgUnit = this.organizations.find(e => e.id == org.id)!;
@@ -413,7 +542,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
           this.model.targetOrganizationListIds = this.selectedOrganizations.map(selctedOrg => selctedOrg.id);
           this.selectedOrganization = undefined;
         }
-      })
+      });
       this.toast.success(this.lang.map.msg_added_successfully);
     } else {
       if (!this.hasDuplicatedId(this.selectedOrganization!, this.selectedOrganizations)) {

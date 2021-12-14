@@ -520,7 +520,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="save$.next(null)"
+  <button [disabled]="saveDisabled()" *ngIf="showSaveButton()" (click)="onSaveClicked()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <!--  <button [disabled]="saveDisabled()" *ngIf="showApproveButton()" (click)="approve$.next()" class="btn btn-primary">{{lang.map.training_program_approve}}</button>-->
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndApproveButton()" (click)="saveAndApprove()"

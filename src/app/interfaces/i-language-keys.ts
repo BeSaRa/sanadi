@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  registration_end_date_should_not_be_in_past: string;
   accepted_trainee_number: string;
   registered_trainee_number: string;
   training_program_number_of_seats: string;
