@@ -25,6 +25,7 @@ import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
 import {TrainingStatus} from '@app/enums/training-status';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'training-program-popup',
@@ -102,7 +103,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   selectedTrainer?: number;
   trainerColumns = ['arName', 'enName', 'specialization', 'jobTitle', 'actions'];
   showAddTrainerForm = false;
-
+  isInternalUser!: boolean;
   isCertification!: boolean;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
@@ -114,7 +115,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               public dialogRef: DialogRef,
               public dialogService: DialogService,
               private organizationUnitService: OrganizationUnitService,
-              private trainerService: TrainerService) {
+              private trainerService: TrainerService,
+              private employeeService: EmployeeService) {
     super();
     this.operation = data.operation;
     this.model = data.model;
@@ -122,6 +124,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   initPopup(): void {
+    this.isInternalUser = this.employeeService.isInternalUser();
     if (this.operation == OperationTypes.UPDATE || this.operation == OperationTypes.VIEW) {
       this.loadSelectedOrganizations();
     }

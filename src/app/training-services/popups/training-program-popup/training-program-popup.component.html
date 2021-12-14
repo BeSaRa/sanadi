@@ -279,10 +279,21 @@
           </div>
         </div>
       </div>
+      <div class="row mb-3" *ngIf="model.id">
+        <div class="col-sm-6 position-relative">
+          <label class="form-label">{{lang.map.registered_trainee_number}}</label>
+          <input disabled id="registeredTraineeNumber" [value]="model.registeredTraineeNumber" class="form-control">
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label class="form-label">{{lang.map.accepted_trainee_number}}</label>
+          <input disabled id="acceptedTraineeNumber" [value]="model.acceptedTraineeNumber" class="form-control">
+          <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
+        </div>
+      </div>
       <div class="row mb-3">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="numberOfSeats" for="numberOfSeats"
-                 class="form-label">{{lang.map.number_of_seats}}</label>
+                 class="form-label">{{lang.map.training_program_number_of_seats}}</label>
           <input id="numberOfSeats"
                  validationClasses="numberOfSeats"
                  formControlName="numberOfSeats" class="form-control"
@@ -290,7 +301,7 @@
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative">
+        <div class="col-sm-6 position-relative" *ngIf="isInternalUser">
           <label asteriskIfRequired="totalTrainingCost" for="totalTrainingCost"
                  class="form-label">{{lang.map.total_training_cost}}</label>
           <input id="totalTrainingCost"

@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  accepted_trainee_number: string;
+  registered_trainee_number: string;
+  training_program_number_of_seats: string;
   can_not_add_element_with_the_same_title: string;
   training_program_serial_number: string;
   candidates_status: string;
