@@ -4,6 +4,12 @@
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
+  <div class="d-flex flex-row align-items-center justify-content-start mb-2">
+    <h1 class="h6 text-primary">{{lang.map.aggregate_stats_report}}</h1>
+    <button (click)="printReport()" [tooltip]="lang.map.print" class="btn icon-btn">
+      <i class="mdi mdi-printer text-primary"></i>
+    </button>
+  </div>
   <app-table #table [paginator]="paginator" sortableTable
              [columns]="displayedColumns"
              [data]="program.traineeList">
@@ -37,7 +43,7 @@
               [tooltip]="row.surveyURL ? lang.map.view_survey : lang.map.the_selected_trainee_has_no_survey_to_display"
               [ngClass]="{isDisabled:!row.surveyURL}"
               (click)="viewTraineeSurvey(row)" class="btn icon-btn">
-              <i class="mdi mdi-chart-box text-primary"></i>
+              <i class="mdi mdi-eye text-primary"></i>
             </button>
           </div>
         </td>

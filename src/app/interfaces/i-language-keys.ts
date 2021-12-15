@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  aggregate_stats_report: string;
   view_survey: string;
   the_selected_trainee_has_no_survey_to_display: string;
   msg_survey_already_voted: string;

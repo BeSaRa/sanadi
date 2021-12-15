@@ -56,4 +56,12 @@ export class ViewSurveyPopupComponent implements OnInit {
 
 
   }
+
+  printReport(): void {
+    this.surveyService
+      .printReport(this.program.id)
+      .subscribe((blob) => {
+        window.open(blob.url);
+      });
+  }
 }

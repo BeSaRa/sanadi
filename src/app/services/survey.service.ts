@@ -17,6 +17,8 @@ import {TrainingProgramInterceptor} from "@app/model-interceptors/training-progr
 import {SurveyTemplateInterceptor} from "@app/model-interceptors/survey-template-interceptor";
 import {Generator} from "@app/decorators/generator";
 import {ExceptionHandlerService} from "@app/services/exception-handler.service";
+import {BlobModel} from "@app/models/blob-model";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,7 @@ export class SurveyService extends BackendGenericService<Survey> {
   constructor(public http: HttpClient,
               private trainingProgramService: TrainingProgramService,
               private exceptionHandlerService: ExceptionHandlerService,
+              private domSanitizer: DomSanitizer,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('SurveyService', this);
@@ -84,4 +87,10 @@ export class SurveyService extends BackendGenericService<Survey> {
     return this._loadSurveyByTraineeIdAndProgramId(traineeId, trainingProgramId).pipe(map(result => result[0]));
   }
 
+  printReport(programId: number): Observable<BlobModel> {
+    return this.http.get(this._getServiceURL() + `/stats/${programId}/export`, {
+      observe: 'body',
+      responseType: 'blob'
+    }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
+  }
 }
