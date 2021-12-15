@@ -531,18 +531,5 @@
     "group": "administration",
     "itemOrder": 3,
     "svg": null
-  },
-  {
-    "id": 43,
-    "langKey": "menu_surveys",
-    "path": "/home/survey",
-    "icon": "mdi-chart-box",
-    "isSvg": false,
-    "permission": "NO_PERMISSION",
-    "permissionGroup": null,
-    "parent": null,
-    "group": "main",
-    "itemOrder": 3,
-    "svg": null
   }
 ]
