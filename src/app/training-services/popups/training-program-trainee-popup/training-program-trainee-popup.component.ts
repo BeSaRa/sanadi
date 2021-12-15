@@ -110,10 +110,12 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       id: null,
       generalUserId: null,
       arName: [null, [CustomValidators.required,
-        CustomValidators.maxLength(200)
+        CustomValidators.maxLength(200),
+        CustomValidators.pattern('AR_NUM')
       ]],
       enName: [null, [CustomValidators.required,
-        CustomValidators.maxLength(200)
+        CustomValidators.maxLength(200),
+        CustomValidators.pattern('ENG_NUM')
       ]],
       jobType: [null, [CustomValidators.required,
         CustomValidators.maxLength(200)]],
@@ -122,7 +124,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       ]],
       trainingRecord: [null, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
       currentJob: [null, [CustomValidators.required,
-        CustomValidators.maxLength(200)
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]],
       employementPosition: [null, [CustomValidators.required]],
       email: [null, [CustomValidators.required,

@@ -131,24 +131,6 @@
       </div>
       <div class="row mb-3">
         <div class="col-sm-6 position-relative">
-          <label asteriskIfRequired="trainingRecord" for="trainingRecord"
-                 class="form-label">{{lang.map.training_program_trainee_training_record}}</label>
-          <input id="trainingRecord"
-                 validationClasses="trainingRecord"
-                 formControlName="trainingRecord" class="form-control">
-          <app-field-error-message controlName="trainingRecord"></app-field-error-message>
-        </div>
-        <div class="col-sm-6 position-relative">
-          <label asteriskIfRequired="currentJob" for="currentJob"
-                 class="form-label">{{lang.map.training_program_trainee_current_job}}</label>
-          <input id="currentJob"
-                 validationClasses="currentJob"
-                 formControlName="currentJob" class="form-control">
-          <app-field-error-message controlName="currentJob"></app-field-error-message>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="email" for="email"
                  class="form-label">{{lang.map.lbl_email}}</label>
           <input id="email"
@@ -163,6 +145,32 @@
                  validationClasses="phoneNumber"
                  formControlName="phoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="phoneNumber"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 position-relative">
+          <label asteriskIfRequired="trainingRecord" for="trainingRecord"
+                 class="form-label">{{lang.map.training_program_trainee_training_record}}</label>
+          <textarea id="trainingRecord"
+                    validationClasses="trainingRecord"
+                    formControlName="trainingRecord"
+                    class="form-control"
+                    rows="3">
+          </textarea>
+          <app-field-error-message controlName="trainingRecord"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 position-relative">
+          <label asteriskIfRequired="currentJob" for="currentJob"
+                 class="form-label">{{lang.map.training_program_trainee_current_job}}</label>
+          <textarea id="currentJob"
+                    validationClasses="currentJob"
+                    formControlName="currentJob"
+                    class="form-control"
+                    rows="3">
+          </textarea>
+          <app-field-error-message controlName="currentJob"></app-field-error-message>
         </div>
       </div>
       <div class="row mb-3">
