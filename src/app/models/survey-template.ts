@@ -5,6 +5,8 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {SurveySection} from '@app/models/survey-section';
 import {LangService} from "@app/services/lang.service";
 import {INames} from "@app/interfaces/i-names";
+import {SurveyQuestion} from "@app/models/survey-question";
+import {SurveyAnswer} from "@app/models/survey-answer";
 
 export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateService> {
   service: SurveyTemplateService;
@@ -57,5 +59,20 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
       return item;
     }).sort((a, b) => a.sectionOrder - b.sectionOrder);
     return this;
+  }
+
+  getQeustionMap(): Map<number, SurveyQuestion> {
+    const map = new Map<number, SurveyQuestion>();
+    this.sectionSet.forEach((section) => section.questionSet.forEach(q => map.set(q.question.id, q.question)))
+    return map;
+  }
+
+  getAnswersMap(): Map<number, SurveyAnswer> {
+    const map = new Map<number, SurveyAnswer>();
+    this.sectionSet.forEach((section) => section.questionSet.forEach(q => map.set(q.question.id, new SurveyAnswer().clone({
+      trainingSurveySectionId: section.id,
+      trainingSurveyQuestionId: q.question.id
+    }))))
+    return map;
   }
 }

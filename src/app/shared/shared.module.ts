@@ -73,6 +73,7 @@ import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multiple.component';
 import { AttachmentsComponent } from './components/attachments/attachments.component';
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
+import { SurveyViewComponent } from './components/survey-view/survey-view.component';
 
 @NgModule({
   declarations: [
@@ -137,7 +138,8 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
     SendToMultipleComponent,
     CustomTermPopupComponent,
     AttachmentsComponent,
-    OnlyNumbersDirective
+    OnlyNumbersDirective,
+    SurveyViewComponent
   ],
   imports: [
     CommonModule,
@@ -208,7 +210,8 @@ import { OnlyNumbersDirective } from './directives/only-numbers.directive';
     GroupErrorMessageComponent,
     AttachmentsComponent,
     OnlyNumbersDirective,
-    LogViewerComponent
+    LogViewerComponent,
+    SurveyViewComponent
   ]
 })
 export class SharedModule {

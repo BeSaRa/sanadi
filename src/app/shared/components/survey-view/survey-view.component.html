@@ -1,0 +1,62 @@
+<div class="container shadow mb-2">
+  <div class="row">
+    <div class="col-12 bg-primary  rounded-top">
+      <h5 class="m-0 p-2 text-white text-center rounded-top">
+        {{lang.map.survey}} : {{title}}</h5>
+    </div>
+  </div>
+  <div *ngIf="false" class="row mb-2">
+    <div class="col-12 grid-question question-header">
+      <span class="grid-question-serial p-2">#</span>
+      <span class="grid-question-question p-2">The Questions</span>
+      <span *ngFor="let answer of answers; last as isLast; first as isFirst;"
+            [ngClass]="{last: isLast , first: isFirst}" class="grid-question-answer p-2">{{answer.getName()}}</span>
+    </div>
+  </div>
+  <ng-container *ngIf="surveyTemplate">
+    <div *ngFor="let section of surveyTemplate.sectionSet; let sectionIndex = index;">
+      <div class="row">
+        <div class="col-12 grid-question question-header"><!-- question-section -->
+          <span class="grid-question-serial p-2">{{sectionIndex + 1}}</span>
+          <span class="p-2">{{section.getName()}}</span>
+          <span *ngFor="let answer of answers; last as isLast; first as isFirst;"
+                [ngClass]="{last: isLast , first: isFirst}"
+                class="grid-question-answer p-2">{{answer.getName()}}</span>
+        </div>
+      </div>
+      <div *ngFor="let item of section.questionSet; let qIndex = index"
+           class="row survey-question-row">
+        <div class="col-12 grid-question">
+          <span class="grid-question-serial p-2">{{qIndex + 1}}</span>
+          <span class="grid-question-question p-2">{{item.question.getName()}}</span>
+          <ng-container *ngIf="!item.question.isFreeText">
+              <span
+                *ngFor="let answer of answers; last as isLast; first as isFirst;"
+                [ngClass]="{last: isLast , first: isFirst}"
+                class="grid-question-answer p-2">
+              <button (click)="updateAnswer(item.question.id , answer.lookupKey)" [tooltip]="answer.getName()"
+                      class="btn icon-btn">
+                <i class="mdi"
+                   [ngClass]="{'mdi-checkbox-blank-circle-outline': !isAnswerSelected(item.question.id , answer.lookupKey) , 'mdi-check-circle text-primary': isAnswerSelected(item.question.id , answer.lookupKey)}"></i>
+              </button>
+            </span>
+          </ng-container>
+          <ng-container *ngIf="item.question.isFreeText">
+            <div class="p-2 py-4 grid-question-free-text ps-3 position-relative">
+              <textarea validationClasses [control]="getFreeTextControl(item.question.id)" class="form-control"
+                        [formControl]="getFreeTextControl(item.question.id)" maxlength="500"
+                        rows="3"></textarea>
+              <app-field-error-message [ignoreTop]="true"
+                                       [control]="getFreeTextControl(item.question.id)"></app-field-error-message>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div *ngIf="!viewOnly" class="row">
+  <div class="col mb-3 d-flex align-items-center justify-content-center">
+    <button (click)="submitSurveyAnswers()" class="btn btn-primary shadow">{{lang.map.submit_your_survey}}</button>
+  </div>
+</div>

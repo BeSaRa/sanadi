@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  please_provide_valid_survey_url: string;
+  msg_survey_answered_saved_successfully: string;
+  all_survey_questions_need_to_be_answered: string;
   select_survey_template: string;
   the_survey_has_been_successfully_published: string;
   please_select_survey_template_to_publish: string;
