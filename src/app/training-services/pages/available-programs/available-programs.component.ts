@@ -118,4 +118,19 @@ export class AvailableProgramsComponent extends AdminGenericComponent<TrainingPr
       });
     });
   }
+
+  setStatusColumnClass(status: number) {
+    switch (status) {
+      case this.trainingProgramStatus.REGISTRATION_OPEN:
+        return {'status-container': true, 'open-for-registration-status': true};
+      case this.trainingProgramStatus.REGISTRATION_CLOSED:
+        return {'status-container': true, 'closed-for-registration-status': true};
+      case this.trainingProgramStatus.TRAINING_FINISHED:
+        return {'status-container': true, 'finished-status': true};
+      case this.trainingProgramStatus.TRAINING_CANCELED:
+        return {'status-container': true, 'canceled-status': true};
+      default:
+        return {};
+    }
+  }
 }

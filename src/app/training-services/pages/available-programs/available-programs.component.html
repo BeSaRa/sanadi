@@ -22,7 +22,7 @@
           </ng-container>
           <ng-container cdkColumnDef="trainingStatus">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_program_status}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName()}}</td>
+            <td cdk-cell *cdkCellDef="let row"><div [ngClass]="setStatusColumnClass(row.status)">{{row.statusInfo?.getName()}}</div></td>
           </ng-container>
           <ng-container cdkColumnDef="trainingDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.training_date}}</th>
