@@ -3,12 +3,13 @@ import {LangService} from "@app/services/lang.service";
 import {SurveyTemplateService} from "@app/services/survey-template.service";
 import {SurveyTemplate} from "@app/models/survey-template";
 import {SurveyService} from "@app/services/survey.service";
-import {map} from "rxjs/operators";
+import {delay, map, takeUntil, tap} from "rxjs/operators";
 import {FormControl} from "@angular/forms";
 import {ToastService} from "@app/services/toast.service";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {TrainingProgram} from "@app/models/training-program";
 import {DialogRef} from "@app/shared/models/dialog-ref";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'select-program-survey-popup',
@@ -18,6 +19,9 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 export class SelectProgramSurveyPopupComponent implements OnInit {
   templates: SurveyTemplate[] = [];
   control: FormControl = new FormControl();
+  program!: TrainingProgram;
+  selectedTemplate: SurveyTemplate | undefined;
+  private destroy$: Subject<any> = new Subject<any>();
 
   constructor(public lang: LangService,
               private surveyService: SurveyService,
@@ -26,10 +30,13 @@ export class SelectProgramSurveyPopupComponent implements OnInit {
               @Inject(DIALOG_DATA_TOKEN)
               private data: { program: TrainingProgram },
               private surveyTemplateService: SurveyTemplateService) {
+
+    this.program = this.data.program;
   }
 
   ngOnInit(): void {
     this.loadTemplates();
+    this.listenToTemplateChange();
   }
 
   loadTemplates(): void {
@@ -52,5 +59,16 @@ export class SelectProgramSurveyPopupComponent implements OnInit {
         this.dialogRef.close();
       });
 
+  }
+
+  private listenToTemplateChange() {
+    this.control
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(_ => this.selectedTemplate = undefined))
+      .pipe(delay(100))
+      .subscribe((value) => {
+        this.selectedTemplate = value;
+      })
   }
 }

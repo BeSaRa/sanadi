@@ -1,5 +1,8 @@
-<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-center">
   <h1 class="h6 text-white">{{lang.map.select_survey_template}}</h1>
+  <span class="flex-grow-1"></span>
+  <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+          tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
@@ -15,6 +18,11 @@
         <ng-option [value]="template" *ngFor="let template of templates">{{template.getName()}}</ng-option>
       </ng-select>
       <app-field-error-message [control]="control"></app-field-error-message>
+    </div>
+  </div>
+  <div *ngIf="selectedTemplate">
+    <div class="col-12">
+      <survey-view [title]="program.activityName" [viewOnly]="true" [surveyTemplate]="selectedTemplate"></survey-view>
     </div>
   </div>
 </div>
