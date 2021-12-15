@@ -101,7 +101,7 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
       ]] : organizationUnit,
       address: controls ? [address, [
-        CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : address,
     }
   }
