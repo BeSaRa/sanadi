@@ -73,7 +73,7 @@
           <app-field-error-message controlName="trainingObjective"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-12 position-relative">
           <label asteriskIfRequired="trainingTopics" for="trainingTopics"
                  class="form-label">{{lang.map.training_topics}}</label>
@@ -86,7 +86,7 @@
           <app-field-error-message controlName="trainingTopics"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="durationInDays" for="durationInDays"
                  class="form-label">{{lang.map.duration_in_days}}</label>
@@ -108,7 +108,7 @@
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="averageDurationInHours" for="averageDurationInHours"
                  class="form-label">{{lang.map.average_duration_in_hours}}</label>
@@ -121,17 +121,16 @@
         </div>
         <div class="col-sm-6 position-relative">
           <div class="row">
-            <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
-                   class="form-label">{{lang.map.target_audience}}</label>
+            <label asteriskIfRequired="trainingLang" for="trainingLang"
+                   class="form-label">{{lang.map.training_languages}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="targetAudienceListIds"
-                         formControlName="targetAudienceListIds"
-                         id="targetAudienceListIds"
-                         [multiple]="true">
-                <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
-                           [disabled]="targetAudience.isRetiredCommonStatus()">{{targetAudience.getName()}}</ng-option>
+              <ng-select validationClasses="trainingLang"
+                         formControlName="trainingLang"
+                         id="trainingLang">
+                <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
+                           [disabled]="trainingLanguage.isRetiredCommonStatus()">{{trainingLanguage.getName()}}</ng-option>
               </ng-select>
-              <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
+              <app-field-error-message controlName="trainingLang"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -265,21 +264,22 @@
         </div>
         <div class="col-sm-6 position-relative">
           <div class="row">
-            <label asteriskIfRequired="trainingLang" for="trainingLang"
-                   class="form-label">{{lang.map.training_languages}}</label>
+            <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
+                   class="form-label">{{lang.map.target_audience}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingLang"
-                         formControlName="trainingLang"
-                         id="trainingLang">
-                <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
-                           [disabled]="trainingLanguage.isRetiredCommonStatus()">{{trainingLanguage.getName()}}</ng-option>
+              <ng-select validationClasses="targetAudienceListIds"
+                         formControlName="targetAudienceListIds"
+                         id="targetAudienceListIds"
+                         [multiple]="true">
+                <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
+                           [disabled]="targetAudience.isRetiredCommonStatus()">{{targetAudience.getName()}}</ng-option>
               </ng-select>
-              <app-field-error-message controlName="trainingLang"></app-field-error-message>
+              <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
             </div>
           </div>
         </div>
       </div>
-      <div class="row mb-3" *ngIf="model.id">
+      <div class="row mb-3" *ngIf="model.id && isInternalUser">
         <div class="col-sm-6 position-relative">
           <label class="form-label">{{lang.map.registered_trainee_number}}</label>
           <input disabled id="registeredTraineeNumber" [value]="model.registeredTraineeNumber" class="form-control">
@@ -290,7 +290,7 @@
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="numberOfSeats" for="numberOfSeats"
                  class="form-label">{{lang.map.training_program_number_of_seats}}</label>
@@ -301,7 +301,7 @@
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="numberOfSeats"></app-field-error-message>
         </div>
-        <div class="col-sm-6 position-relative" *ngIf="isInternalUser">
+        <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="totalTrainingCost" for="totalTrainingCost"
                  class="form-label">{{lang.map.total_training_cost}}</label>
           <input id="totalTrainingCost"
@@ -311,7 +311,7 @@
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-12 position-relative">
           <label asteriskIfRequired="comments" for="comments"
                  class="form-label">{{lang.map.training_comments}}</label>
