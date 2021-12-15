@@ -41,6 +41,7 @@ export class ViewSurveyPopupComponent implements OnInit {
       this.toast.error(this.lang.map.the_selected_trainee_has_no_survey_to_display);
       return;
     }
+    console.log("to vote URL:", row.surveyURL);
     this.surveyService
       .loadSurveyByTraineeIdAndProgramId(row.trainee.id, this.program.id)
       .pipe(map((survey) => this.dialog.show(ViewTraineeSurveyComponent, {
@@ -48,7 +49,7 @@ export class ViewSurveyPopupComponent implements OnInit {
         template: this.template,
         program: this.program,
         survey
-      },{
+      }, {
         fullscreen: true
       })))
       .subscribe()
