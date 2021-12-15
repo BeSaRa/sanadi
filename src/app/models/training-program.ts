@@ -9,6 +9,7 @@ import {TraineeData} from '@app/models/trainee-data';
 import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 import {TrainingStatus} from "@app/enums/training-status";
 import {DialogRef} from "@app/shared/models/dialog-ref";
+import {Observable} from "rxjs";
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService> {
   service: TrainingProgramService;
@@ -190,7 +191,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   isFinishedProgram(): boolean {
     return this.status === TrainingStatus.TRAINING_FINISHED;
   }
+
   publishSurvey(): DialogRef {
     return this.service.publishSurvey(this);
+  }
+
+  viewProgramSurvey(): Observable<DialogRef> {
+    return this.service.viewProgramSurvey(this);
   }
 }

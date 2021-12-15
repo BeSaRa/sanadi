@@ -2,7 +2,7 @@ $border-color: #EEE;
 $border: 1px solid $border-color;
 .grid-question {
   display: grid;
-  grid-template-columns: 30px 1fr repeat(5, 140px);
+  grid-template-columns: 30px 1fr repeat(5, 120px);
 }
 
 .grid-question-question {

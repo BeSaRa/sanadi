@@ -8,7 +8,9 @@ import {SurveyTemplate} from "@app/models/survey-template";
 import {TrainingProgram} from "@app/models/training-program";
 import {Survey} from "@app/models/survey";
 import {Trainee} from "@app/models/trainee";
-import {map, switchMap} from "rxjs/operators";
+import {catchError, filter, map, switchMap} from "rxjs/operators";
+import {of} from "rxjs";
+import {ISurveyInfo} from "@app/interfaces/isurvey-info";
 
 @Component({
   selector: 'survey',
@@ -21,7 +23,7 @@ export class SurveyComponent implements OnInit {
   surveyTemplate: SurveyTemplate | undefined;
   trainingProgram: TrainingProgram | undefined;
   trainee: Trainee | undefined;
-
+  viewOnly: boolean = false;
 
   constructor(private surveyTemplateService: SurveyTemplateService,
               private route: ActivatedRoute,
@@ -45,21 +47,33 @@ export class SurveyComponent implements OnInit {
 
     this.surveyService
       .loadSurveyInfoByToken(token!)
+      .pipe(catchError((_) => {
+        return of(null);
+      }))
+      .pipe(filter<ISurveyInfo | null, ISurveyInfo>((result): result is ISurveyInfo => !!result))
       .pipe(switchMap(result => {
-        return this.surveyService.loadSurveyByTraineeIdAndProgramId(result.trainee.id, result.trainingProgram.id).pipe(map(survey => {
-          return {
-            survey,
-            surveyTemplate: result.surveyTemplate,
-            trainee: result.trainee,
-            trainingProgram: result.trainingProgram
-          }
-        }))
+        return this.surveyService.loadSurveyByTraineeIdAndProgramId(result.trainee.id, result.trainingProgram.id)
+          .pipe(
+            map(survey => {
+              return {
+                survey,
+                surveyTemplate: result.surveyTemplate,
+                trainee: result.trainee,
+                trainingProgram: result.trainingProgram
+              }
+            })
+          )
       }))
       .subscribe(({survey, surveyTemplate, trainee, trainingProgram}) => {
         this.survey = survey;
         this.trainee = trainee;
         this.trainingProgram = trainingProgram;
         this.surveyTemplate = surveyTemplate;
+        this.viewOnly = survey && !!survey.id;
       })
+  }
+
+  afterAnswer(_$event: Survey) {
+    this.viewOnly = true;
   }
 }

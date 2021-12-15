@@ -1,0 +1,13 @@
+<div class="dialog-content p-0">
+  <survey-view *ngIf="data.template" [noShadow]="true"
+               [ignoreContainer]="true" [surveyTemplate]="data.template"
+               [traineeId]="data.trainee.id"
+               [programId]="data.program.id"
+               [survey]="data.survey"
+               [viewOnly]="true"
+               [title]="data.program.activityName"></survey-view>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

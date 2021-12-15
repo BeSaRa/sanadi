@@ -38,6 +38,11 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   @Output()
   afterAnswer: EventEmitter<Survey> = new EventEmitter<Survey>();
 
+  @Input()
+  ignoreContainer: boolean = false;
+  @Input()
+  noShadow: boolean = false;
+
   templateAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
   surveyAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
 
@@ -131,10 +136,15 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
         trainingProgramId: this.programId,
         trainingSurveyTemplateId: this.surveyTemplate.id
       }).save()))
-      .subscribe(() => {
+      .subscribe((newSurvey) => {
         this.toast.success(this.lang.map.msg_survey_answered_saved_successfully);
-        this.afterAnswer.emit(this.survey);
+        this.afterAnswer.emit(newSurvey);
+        this.disableFreeTextControls();
       })
+  }
+
+  private disableFreeTextControls() {
+    this.controlsMap.forEach(control => control.disable());
   }
 
   private getAnswerByQuestionId(questionId: number): SurveyAnswer {

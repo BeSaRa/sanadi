@@ -20,7 +20,7 @@ export class BackendExceptionHandlerInterceptor implements HttpInterceptor {
           arName: resError.error as unknown as string,
           enName: resError.error as unknown as string
         });
-        this.exceptionHandlerService.handle(error);
+        this.exceptionHandlerService.handle(error, req);
         return throwError(resError);
       })
     );

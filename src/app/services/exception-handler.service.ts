@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DialogService} from './dialog.service';
-import {HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpRequest} from '@angular/common/http';
 import {AdminResult} from '../models/admin-result';
 
 @Injectable({
@@ -9,11 +9,12 @@ import {AdminResult} from '../models/admin-result';
 export class ExceptionHandlerService {
   private excludedUrls: Map<string, string> = new Map<string, string>();
   private excludedCodes: Map<number, number> = new Map<number, number>();
+  private excludedMethodWithURL: Map<string, string> = new Map<string, string>();
 
   constructor(private dialog: DialogService) {
   }
 
-  handle(error: any): void {
+  handle(error: any, req?: HttpRequest<any>): void {
     // if (error.status === 401) {
     //   return;
     // }
@@ -25,6 +26,11 @@ export class ExceptionHandlerService {
       this.dialog.error('CHECK SERVICE URL <br />' + error.message);
       return;
     }
+
+    if (error instanceof HttpErrorResponse && req && this.excludedMethodWithURL.has(req?.method + req?.urlWithParams)) {
+      return;
+    }
+
     error.error.eo = AdminResult.createInstance(error.error.eo);
     // do not handle the exception came from this url
     if (this.excludedUrls.has(error.url!)) {
@@ -39,6 +45,10 @@ export class ExceptionHandlerService {
   // noinspection JSUnusedGlobalSymbols
   excludeHandlingForURL(url: string): void {
     this.excludedUrls.set(url, url);
+  }
+
+  excludeHandlingForMethodURL(method: string, url: string) {
+    this.excludedMethodWithURL.set(method.toUpperCase() + url, url);
   }
 
   // noinspection JSUnusedGlobalSymbols

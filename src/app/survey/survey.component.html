@@ -1,8 +1,16 @@
 <div class="container">
-  <survey-view *ngIf="surveyTemplate"
+  <div *ngIf="viewOnly" class="row">
+    <div class="col-12">
+      <div class="alert alert-info" role="alert">
+        {{lang.map.msg_survey_already_voted}}
+      </div>
+    </div>
+  </div>
+  <survey-view (afterAnswer)="afterAnswer($event)" *ngIf="surveyTemplate"
                [survey]="survey"
                [traineeId]="trainee?.id"
                [surveyTemplate]="surveyTemplate"
                [programId]="trainingProgram?.id"
+               [viewOnly]="viewOnly"
                [title]="trainingProgram?.activityName"></survey-view>
 </div>

@@ -23,7 +23,7 @@ import {formatDate} from '@angular/common';
 import {
   TrainingProgramAttendancePopupComponent
 } from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
-import {exhaustMap, switchMap} from 'rxjs/operators';
+import {exhaustMap, map, switchMap} from 'rxjs/operators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {
@@ -39,6 +39,8 @@ import {CertificateService} from '@app/services/certificate.service';
 import {
   SelectProgramSurveyPopupComponent
 } from "@app/training-services/popups/select-program-survey-popup/select-program-survey-popup.component";
+import {SurveyTemplateService} from "@app/services/survey-template.service";
+import {ViewSurveyPopupComponent} from "@app/shared/popups/view-survey-popup/view-survey-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +53,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
               private urlService: UrlService,
               public dialog: DialogService,
               private certificateService: CertificateService,
+              private surveyTemplateService: SurveyTemplateService,
               private traineeService: TraineeService,
               private trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
     super();
@@ -232,5 +235,15 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return this.dialog.show(SelectProgramSurveyPopupComponent, {
       program
     });
+  }
+
+  viewProgramSurvey(program: TrainingProgram): Observable<DialogRef> {
+    return this.getByIdComposite(program.id)
+      .pipe(switchMap((program) => {
+        return this.surveyTemplateService
+          .getById(program.trainingSurveyTemplateId)
+          .pipe(map(template => ({template, program})))
+      }))
+      .pipe(map(({template, program}) => this.dialog.show(ViewSurveyPopupComponent, {template, program})))
   }
 }

@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  view_survey: string;
+  the_selected_trainee_has_no_survey_to_display: string;
+  msg_survey_already_voted: string;
   publish_survey: string;
   please_provide_valid_survey_url: string;
   msg_survey_answered_saved_successfully: string;

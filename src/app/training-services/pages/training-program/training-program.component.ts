@@ -384,9 +384,10 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
     return DateUtils.getDateStringFromDate(dateFrom) + ' إلى ' + DateUtils.getDateStringFromDate(dateTo);
   }
 
-  publishSurvey(program: TrainingProgram) {
+  publishSurvey(program: TrainingProgram): void {
     if (program.surveyPublished) {
-      this.toast.error(this.lang.map.the_survey_for_this_program_has_been_published_before);
+      // this.toast.error(this.lang.map.the_survey_for_this_program_has_been_published_before);
+      program.viewProgramSurvey().subscribe(() => this.reload$.next(null));
       return;
     }
     program.publishSurvey()

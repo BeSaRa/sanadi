@@ -74,6 +74,8 @@ import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multi
 import { AttachmentsComponent } from './components/attachments/attachments.component';
 import { OnlyNumbersDirective } from './directives/only-numbers.directive';
 import { SurveyViewComponent } from './components/survey-view/survey-view.component';
+import { ViewSurveyPopupComponent } from './popups/view-survey-popup/view-survey-popup.component';
+import { ViewTraineeSurveyComponent } from './popups/view-trainee-survey/view-trainee-survey.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +141,9 @@ import { SurveyViewComponent } from './components/survey-view/survey-view.compon
     CustomTermPopupComponent,
     AttachmentsComponent,
     OnlyNumbersDirective,
-    SurveyViewComponent
+    SurveyViewComponent,
+    ViewSurveyPopupComponent,
+    ViewTraineeSurveyComponent
   ],
   imports: [
     CommonModule,

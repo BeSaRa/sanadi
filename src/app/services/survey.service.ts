@@ -16,6 +16,7 @@ import {TrainingProgramService} from "@app/services/training-program.service";
 import {TrainingProgramInterceptor} from "@app/model-interceptors/training-program-interceptor";
 import {SurveyTemplateInterceptor} from "@app/model-interceptors/survey-template-interceptor";
 import {Generator} from "@app/decorators/generator";
+import {ExceptionHandlerService} from "@app/services/exception-handler.service";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ export class SurveyService extends BackendGenericService<Survey> {
 
   constructor(public http: HttpClient,
               private trainingProgramService: TrainingProgramService,
+              private exceptionHandlerService: ExceptionHandlerService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('SurveyService', this);
@@ -54,10 +56,12 @@ export class SurveyService extends BackendGenericService<Survey> {
   }
 
   loadSurveyInfoByToken(token: string): Observable<ISurveyInfo> {
+    const params = new HttpParams({
+      fromObject: {token}
+    })
+    this.exceptionHandlerService.excludeHandlingForMethodURL('GET', this._getServiceURL() + '/fetch/training-program?' + params)
     return this.http.get<IDefaultResponse<ISurveyInfo>>(this._getServiceURL() + '/fetch/training-program', {
-      params: new HttpParams({
-        fromObject: {token}
-      })
+      params: params
     })
       .pipe(map(response => response.rs))
       .pipe(map(info => {
@@ -67,7 +71,7 @@ export class SurveyService extends BackendGenericService<Survey> {
       }))
   }
 
-  @Generator(undefined , true)
+  @Generator(undefined, true)
   private _loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number): Observable<Survey[]> {
     return this.http.get<Survey[]>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({
@@ -79,4 +83,5 @@ export class SurveyService extends BackendGenericService<Survey> {
   loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number): Observable<Survey> {
     return this._loadSurveyByTraineeIdAndProgramId(traineeId, trainingProgramId).pipe(map(result => result[0]));
   }
+
 }

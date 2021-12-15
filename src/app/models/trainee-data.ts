@@ -12,4 +12,5 @@ export class TraineeData {
   refusalComment?: string;
   addedByRACA!: boolean;
   trainee!: Trainee;
+  surveyURL?: string;
 }
