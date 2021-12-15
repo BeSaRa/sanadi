@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  publish_survey: string;
   please_provide_valid_survey_url: string;
   msg_survey_answered_saved_successfully: string;
   all_survey_questions_need_to_be_answered: string;
