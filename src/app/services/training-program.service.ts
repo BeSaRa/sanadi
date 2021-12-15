@@ -231,8 +231,6 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   publishSurvey(program: TrainingProgram): DialogRef {
     return this.dialog.show(SelectProgramSurveyPopupComponent, {
       program
-    }, {
-      fullscreen: true
     });
   }
 }
