@@ -16,7 +16,7 @@ import {map} from "rxjs/operators";
   templateUrl: './view-survey-popup.component.html',
   styleUrls: ['./view-survey-popup.component.scss']
 })
-export class ViewSurveyPopupComponent implements OnInit {
+export class ViewSurveyPopupComponent{
   private template: SurveyTemplate;
   program: TrainingProgram;
   displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
@@ -31,9 +31,6 @@ export class ViewSurveyPopupComponent implements OnInit {
     this.template = data.template;
     this.program = data.program;
     this.program.traineeList = this.program.traineeList.filter((t) => t.isAttended);
-  }
-
-  ngOnInit(): void {
   }
 
   viewTraineeSurvey(row: TraineeData): void {

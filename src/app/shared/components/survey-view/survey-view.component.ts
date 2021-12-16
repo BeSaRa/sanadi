@@ -42,6 +42,8 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   ignoreContainer: boolean = false;
   @Input()
   noShadow: boolean = false;
+  @Input()
+  closeDialog: boolean = false;
 
   templateAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
   surveyAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
@@ -49,6 +51,7 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   private questionsMap: Map<number, SurveyQuestion> = new Map<number, SurveyQuestion>();
   private controlsMap: Map<number, FormControl> = new Map<number, FormControl>();
   private destroy$ = new Subject();
+
 
   constructor(public lang: LangService,
               private surveyService: SurveyService,
