@@ -6,6 +6,7 @@ export class TraineeData {
   acceptanceTime!: string;
   enrollmentTime!: string;
   isAttended!: boolean;
+  isCertificateReady!: boolean;
   status!: number;
   statusInfo!: Lookup;
   trainingProgramId!: number;
