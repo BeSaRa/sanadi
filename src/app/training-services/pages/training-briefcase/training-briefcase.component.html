@@ -49,7 +49,7 @@
     <div class="table-responsive">
       <table class="table table-striped table-bordered caption-top" [dataSource]="bundlesList" cdk-table>
         <ng-container cdkColumnDef="icon">
-          <th cdk-header-cell *cdkHeaderCellDef></th>
+          <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.attachment_type}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <i class="text-primary mdi {{row.getIcon()}}" tooltip="{{row.getIconTooltip().getName()}}"></i>
           </td>
