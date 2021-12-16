@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  no_sections_to_save_template: string;
+  there_is_sections_has_no_related_questions: string;
   aggregate_stats_report: string;
   view_survey: string;
   the_selected_trainee_has_no_survey_to_display: string;

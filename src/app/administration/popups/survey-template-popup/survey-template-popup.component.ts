@@ -5,7 +5,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SurveyTemplate} from '@app/models/survey-template';
 import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -28,7 +28,6 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   model: SurveyTemplate;
   form!: FormGroup;
   operation!: OperationTypes;
-  reloadSections$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   addSection$: Subject<any> = new Subject<any>();
   editSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
   deleteSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
@@ -64,10 +63,18 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     this.model = model;
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.toast.success(message.change({x: model.getName()}));
-    this.operation === OperationTypes.UPDATE ? this.dialogRef.close(model) : (this.operation = OperationTypes.UPDATE);
+    this.dialogRef.close(model);
   }
 
   beforeSave(model: SurveyTemplate, form: FormGroup): boolean | Observable<boolean> {
+    if (!this.model.sectionSet.length) {
+      this.dialog.error(this.lang.map.no_sections_to_save_template)
+      return false
+    }
+    if (this.model.getEmptySections()) {
+      this.dialog.error(this.lang.map.there_is_sections_has_no_related_questions)
+      return false;
+    }
     return this.form.valid;
   }
 

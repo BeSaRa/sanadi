@@ -49,10 +49,7 @@ export class SurveyQuestionPopupComponent extends AdminGenericDialog<SurveyQuest
     this.model = model;
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.toast.success(message.change({x: this.model.getName()}));
-    if (this.operation === OperationTypes.UPDATE) {
-      this.dialogRef.close(this.model);
-    }
-    this.operation = OperationTypes.UPDATE;
+    this.dialogRef.close(this.model);
   }
 
   beforeSave(model: SurveyQuestion, form: FormGroup): boolean | Observable<boolean> {

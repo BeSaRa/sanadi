@@ -75,4 +75,13 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
     }))))
     return map;
   }
+
+
+  getEmptySections(): SurveySection[] {
+    return this.sectionSet.filter(section => !section.questionSet.length);
+  }
+
+  isValidTemplate(): boolean {
+    return !!this.sectionSet.length && !this.getEmptySections().length;
+  }
 }
