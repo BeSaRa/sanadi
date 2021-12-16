@@ -201,15 +201,18 @@
         <div class="col-sm-6 position-relative">
           <label for="registerationStartDate" asteriskIfRequired="registerationStartDate"
                  class="form-label">{{lang.map.registration_start_date}}</label>
-          <div class="input-group">
-            <i class="input-group-text mdi mdi-calendar"></i>
-            <div class="form-control" formControlName="registerationStartDate"
-                 id="registerationStartDate"
-                 (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
-                 [options]="datepickerOptionsMap.registerationStartDate"
-                 (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
-                 angular-mydatepicker [ngClass]="fm.getStatusClass('registerationStartDate')"></div>
-            <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
+          <div class="reg-start-date-container">
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="registerationStartDate"
+                   id="registerationStartDate"
+                   (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
+                   [options]="datepickerOptionsMap.registerationStartDate"
+                   (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('registerationStartDate')"></div>
+              <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
+            </div>
+            <div></div>
           </div>
         </div>
         <div class="col-sm-6 position-relative">
@@ -287,7 +290,6 @@
         <div class="col-sm-6 position-relative">
           <label class="form-label">{{lang.map.accepted_trainee_number}}</label>
           <input disabled id="acceptedTraineeNumber" [value]="model.acceptedTraineeNumber" class="form-control">
-          <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>
       <div class="row mb-3" *ngIf="isInternalUser">
@@ -307,7 +309,8 @@
           <input id="totalTrainingCost"
                  validationClasses="totalTrainingCost"
                  formControlName="totalTrainingCost" class="form-control"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 maxlength="10"
+                 [mask]="inputMaskPatterns.DECIMAL(2)">
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>

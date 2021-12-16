@@ -13,8 +13,6 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
   receive(model: TrainingProgram): TrainingProgram {
     const lookupService = FactoryService.getService('LookupService') as LookupService;
 
-    model.registrationDate = DateUtils.getDateStringFromDate(model.registerationStartDate) + ' to ' + DateUtils.getDateStringFromDate(model.registerationClosureDate);
-    model.trainingDate = DateUtils.getDateStringFromDate(model.startDate) + ' to ' + DateUtils.getDateStringFromDate(model.endDate);
     model.startDateString = DateUtils.getDateStringFromDate(model.startDate);
     model.endDateString = DateUtils.getDateStringFromDate(model.endDate);
     model.registerationStartDateString = DateUtils.getDateStringFromDate(model.registerationStartDate);

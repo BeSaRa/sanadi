@@ -171,7 +171,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       ]] : registerationClosureDate,
       totalTrainingCost: controls ? [totalTrainingCost, [
         CustomValidators.required,
-        CustomValidators.pattern('ENG_NUM_ONLY')
+        CustomValidators.decimal(2)
       ]] : totalTrainingCost
     }
   }
