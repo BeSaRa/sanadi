@@ -71,7 +71,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
       this.dialog.error(this.lang.map.no_sections_to_save_template)
       return false
     }
-    if (this.model.getEmptySections()) {
+    if (this.model.getEmptySections().length) {
       this.dialog.error(this.lang.map.there_is_sections_has_no_related_questions)
       return false;
     }
