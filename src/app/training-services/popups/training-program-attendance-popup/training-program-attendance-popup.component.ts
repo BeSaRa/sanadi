@@ -12,6 +12,7 @@ import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {TrainingProgramService} from '@app/services/training-program.service';
 import {TraineeData} from '@app/models/trainee-data';
+import {TraineeStatus} from '@app/enums/trainee-status';
 
 @Component({
   selector: 'training-program-attendance-popup',
@@ -33,6 +34,7 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
               private trainingProgramService: TrainingProgramService) {
     this.operation = data.operation;
     this.model = data.model;
+    this.model.traineeList = this.model.traineeList.filter(t => t.status == TraineeStatus.ACCEPTED_TRAINEE);
   }
 
   ngOnInit(): void {
