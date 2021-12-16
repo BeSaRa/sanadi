@@ -216,6 +216,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   }
 
   cancelBriefcaseItem(): void {
+    this.documentTitleControl.reset();
     this.showForm = false;
     this.trainingProgramBriefcaseItemVsId = '';
     this.removeFile();
