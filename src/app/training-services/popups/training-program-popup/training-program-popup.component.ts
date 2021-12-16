@@ -271,10 +271,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         trainingValidators = [];
       }
     }
-    console.log('in trainingStartDateChange before setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setTrainingStartDatesValidators(trainingValidators);
     this.setTrainingEndDatesValidators(trainingValidators);
-    console.log('in trainingStartDateChange after setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     let trainingStartDate = event.value;
     let registrationValidators: ValidatorFn[];
@@ -283,9 +281,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     } else {
       registrationValidators = [];
     }
-    console.log('in trainingStartDateChange before setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setRegistrationEndDatesValidators(registrationValidators);
-    console.log('in trainingStartDateChange after setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
@@ -307,10 +303,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         trainingValidators = [];
       }
     }
-    console.log('in trainingEndDateChange before setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setTrainingStartDatesValidators(trainingValidators);
     this.setTrainingEndDatesValidators(trainingValidators);
-    console.log('in trainingEndDateChange after setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
@@ -329,10 +323,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
         registrationValidators = [CustomValidators.maxDate(DateUtils.getDateStringFromDate(trainingStartDate))];
       }
     }
-    console.log('in registrationStartDateChange before setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setRegistrationStartDatesValidators(registrationValidators);
     this.setRegistrationEndDatesValidators(registrationValidators);
-    console.log('in registrationStartDateChange after setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }
@@ -351,10 +343,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       }
     }
 
-    console.log('in registrationEndDateChange before setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setRegistrationStartDatesValidators(registrationValidators);
     this.setRegistrationEndDatesValidators(registrationValidators);
-    console.log('in registrationEndDateChange after setRegistrationDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     let registrationEndDate = event.value;
     let trainingValidators: ValidatorFn[];
@@ -363,9 +353,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     } else {
       trainingValidators = [];
     }
-    console.log('in registrationEndDateChange before setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
     this.setTrainingStartDatesValidators(trainingValidators);
-    console.log('in registrationEndDateChange after setTrainingProgramDatesValidators', this.form.controls['registerationStartDate'].errors);
 
     this.setRelatedDates(event, fromFieldName, toFieldName);
   }

@@ -103,7 +103,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.loadedAttachments = attachments.reduce((record, attachment) => {
       return {...record, [attachment.attachmentTypeId]: attachment};
     }, {} as Record<number, FileNetDocument>);
-    console.log(this.loadedAttachments);
     return types.map(attachment => {
       attachment.id = this.loadedAttachments[attachment.attachmentTypeId]?.id;
       attachment.createdOn = this.loadedAttachments[attachment.attachmentTypeId]?.createdOn;

@@ -56,7 +56,6 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('listType', this.candidatesListType);
     this.listenToAdd();
     this.listenToReload();
     this.listenToReviewCandidate();
@@ -95,7 +94,6 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: Trainee[]) => {
-        console.log('candidates = ', list);
         this.models = list;
       });
   }

@@ -80,8 +80,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('is evaluate trainee = ', this.isEvaluate);
-    console.log('model trainee = ', this.isEvaluate);
     this.listenToLoadAuthorityUsers();
     this.listenToLoadOrganizations();
     this.listenToLoadOrganizationUsers();
@@ -139,7 +137,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   onEmployeeTypeChange() {
     this.form.reset();
     this.employeeTypeChanged$.next(this.employeeType);
-    // console.log('emp type', this.employeeType);
   }
 
   listenToEmployeeTypeChange() {
@@ -161,7 +158,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       }))
       .subscribe((users) => {
         this.authorityUsers = users;
-        console.log('users', this.authorityUsers);
       });
   }
 
@@ -197,7 +193,6 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       }))
       .subscribe((users) => {
         this.organizationUsers = users;
-        console.log('users', this.organizationUsers);
       });
   }
 
