@@ -11,7 +11,7 @@ import {TrainingStatus} from "@app/enums/training-status";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable} from "rxjs";
 
-export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService> {
+export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
   service: TrainingProgramService;
   activityName!: string;
   trainingProgramSerial!: string;
@@ -199,4 +199,13 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   viewProgramSurvey(): Observable<DialogRef> {
     return this.service.viewProgramSurvey(this);
   }
+
+  editAfterPublish() {
+    return this.service.editAfterPublish(this);
+  }
+
+  editAfterPublishAndSenMail() {
+    return this.service.editAfterPublishAndSenMail(this);
+  }
+
 }

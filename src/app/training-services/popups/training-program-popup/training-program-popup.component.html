@@ -531,6 +531,8 @@
   <!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()"
           class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
+  <button [disabled]="saveDisabled()" *ngIf="showSaveAndRePublishButton()" (click)="saveAndRePublish()"
+          class="btn btn-primary">{{lang.map.training_program_save_and_republish}}</button>
   <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"
           class="btn btn-warning">{{lang.map.cancel_training_program}}</button>
   <button [disabled]="disabledShowCertificateButton()" *ngIf="showCertificateButton()" (click)="onSelectCertificateTemplateClicked()"

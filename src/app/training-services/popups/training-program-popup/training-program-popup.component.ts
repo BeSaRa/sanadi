@@ -35,8 +35,8 @@ import {EmployeeService} from '@app/services/employee.service';
 export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingProgram> {
   approve$ = new Subject<any>();
   saveAndApproveClicked = false;
-  publish$ = new Subject<any>();
   saveAndPublishClicked = false;
+  publish$ = new Subject<any>();
   loadTrainers$ = new BehaviorSubject<any>(null);
   loadSelectedTrainers$ = new BehaviorSubject<any>(null);
   form!: FormGroup;
@@ -137,7 +137,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.originalTrainingOpenRegistrationDate = this.model.registerationStartDate;
     }
 
-    if(this.model.status == this.trainingStatus.REGISTRATION_OPEN) {
+    if (this.model.status == this.trainingStatus.REGISTRATION_OPEN) {
       this.registrationStartDateControl.disable();
       this.registrationStartDateControl.updateValueAndValidity();
     }
@@ -218,6 +218,44 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     }
     this.saveAndPublishClicked = true;
     this.save$.next();
+  }
+
+  saveAndRePublish() {
+    let registrationEndDate = DateUtils.getDateStringFromDate(this.form.get('registerationClosureDate')?.value);
+    let oldRegisterationClosureDate = DateUtils.getDateStringFromDate(this.originalRegisterationEndDate);
+    let today = DateUtils.getDateStringFromDate((new Date()));
+
+    if (this.operation != OperationTypes.CREATE) {
+      if (this.model.status == this.trainingStatus.DATA_ENTERED) {
+        if (registrationEndDate != oldRegisterationClosureDate && registrationEndDate < today) {
+          this.toast.error(this.lang.map.registration_end_date_should_not_be_in_past);
+          return;
+        }
+      }
+    }
+
+    this.dialogService.confirmWithTree('Confirmation', {actionBtn: 'btn_yes', thirdBtn: 'btn_no', cancelBtn: 'btn_cancel'})
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+      console.log('clicked', click);
+      if (click === UserClickOn.YES) {
+        const sub = this.model.editAfterPublishAndSenMail().subscribe(() => {
+          // @ts-ignore
+          const message = this.lang.map.training_x_published_successfully.change({x: this.model.activityName});
+          this.toast.success(message);
+          this.dialogRef.close(this.model);
+          sub.unsubscribe();
+        });
+      } else if (click === UserClickOn.THIRD_BTN) {
+        const sub = this.model.editAfterPublish().subscribe(() => {
+          // @ts-ignore
+          const message = this.lang.map.training_x_published_successfully.change({x: this.model.activityName});
+          this.toast.success(message);
+          this.dialogRef.close(this.model);
+          sub.unsubscribe();
+        });
+      }
+    });
+    // this.save$.next();
   }
 
   listenToPublish() {
@@ -628,9 +666,13 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   showSaveAndPublishButton() {
     return this.saveVisible &&
+      this.operation != this.operationTypes.VIEW && this.model.status == this.trainingStatus.PROGRAM_APPROVED;
+  }
+
+  showSaveAndRePublishButton() {
+    return this.saveVisible &&
       this.operation != this.operationTypes.VIEW &&
       (this.model.status == this.trainingStatus.TRAINING_PUBLISHED ||
-        this.model.status == this.trainingStatus.PROGRAM_APPROVED ||
         this.model.status == this.trainingStatus.EDITING_AFTER_PUBLISHING ||
         this.model.status == this.trainingStatus.REGISTRATION_OPEN ||
         this.model.status == this.trainingStatus.REGISTRATION_CLOSED);

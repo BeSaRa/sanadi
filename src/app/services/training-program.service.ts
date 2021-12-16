@@ -41,6 +41,7 @@ import {
 } from "@app/training-services/popups/select-program-survey-popup/select-program-survey-popup.component";
 import {SurveyTemplateService} from "@app/services/survey-template.service";
 import {ViewSurveyPopupComponent} from "@app/shared/popups/view-survey-popup/view-survey-popup.component";
+import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +94,21 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     return this.http.put(this._getServiceURL() + '/approve/' + trainingId, {trainingProgramId: trainingId});
   }
 
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  editAfterPublish(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
+    return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model);
+  }
+
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  editAfterPublishAndSenMail(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
+    let objOptions = {'with-notification': true};
+    return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model, {
+      params: (new HttpParams({fromObject: objOptions as any}))
+    });
+  }
+
   @Generator(undefined, false, {property: 'rs'})
   publish(trainingId: number) {
     return this.http.put(this._getServiceURL() + '/publish/' + trainingId, {trainingProgramId: trainingId});
@@ -104,7 +120,7 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
   }
 
   @Generator(undefined, false, {property: 'rs'})
-  applyAttendance(trainingId: number, traineeList: { first: number, second: boolean }[]) {
+  applyAttendance(trainingId: number, traineeList: { first: number, second: boolean}[]) {
     return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
