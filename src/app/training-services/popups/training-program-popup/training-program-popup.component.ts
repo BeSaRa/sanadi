@@ -137,7 +137,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.originalTrainingOpenRegistrationDate = this.model.registerationStartDate;
     }
 
-    if (this.model.status == this.trainingStatus.REGISTRATION_OPEN) {
+    if (this.model.status != this.trainingStatus.DATA_ENTERED) {
       this.registrationStartDateControl.disable();
       this.registrationStartDateControl.updateValueAndValidity();
     }

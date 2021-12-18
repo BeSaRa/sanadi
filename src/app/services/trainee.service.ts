@@ -90,8 +90,15 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
     return this.dialog.show<IDialogData<Trainee>>(TrainingProgramTraineePopupComponent, {
       model: new Trainee(),
       operation: OperationTypes.CREATE,
-      trainingProgramId: trainingProgramId,
-      isEvaluate: false
+      trainingProgramId: trainingProgramId
+    });
+  }
+
+  openEditTrainingProgramCandidateDialog(trainingProgramId: number, trainee?: Trainee): DialogRef {
+    return this.dialog.show<IDialogData<Trainee>>(TrainingProgramTraineePopupComponent, {
+      model: trainee!,
+      operation: OperationTypes.UPDATE,
+      trainingProgramId: trainingProgramId
     });
   }
 
@@ -108,15 +115,14 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
     return this.dialog.show<IDialogData<TraineeData>>(this._getDialogComponent(), {
       model: model,
       operation: operation,
-      trainingProgramId: trainingProgramId,
-      isEvaluate: true
+      trainingProgramId: trainingProgramId
     });
   }
 
   openEvaluateTrainingProgramCandidateDialog(trainingProgramId: number, traineeId: number): Observable<DialogRef> {
     {
       return this.traineeByTrainingIdAndTraineeId(trainingProgramId, traineeId)
-        .pipe(exhaustMap((model) => of(this.openEvaluateCandidateDialog(model, trainingProgramId, OperationTypes.UPDATE))));
+        .pipe(exhaustMap((model) => of(this.openEvaluateCandidateDialog(model, trainingProgramId, OperationTypes.VIEW))));
     }
   }
 }

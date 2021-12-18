@@ -22,7 +22,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {TraineeData} from '@app/models/trainee-data';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
@@ -38,7 +37,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   loadOrganizationUsers$: Subject<void> = new Subject<void>();
   selectAuthorityUser$: Subject<void> = new Subject<void>();
   selectOrganizationUser$: Subject<void> = new Subject<void>();
-  saveCandidate$: Subject<void> = new Subject<void>();
+  saveCandidate$: Subject<boolean> = new Subject<boolean>();
   acceptCandidate$: Subject<any> = new Subject<any>();
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
@@ -57,12 +56,13 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   trainingProgramId!: number;
   operation!: OperationTypes;
   forceClose = false;
-  isEvaluate!: boolean;
-  model!: TraineeData;
+  model!: Trainee;
   rejectionComment: string = '';
+  operationTypes = OperationTypes;
+  isInternalUser!: boolean;
 
   constructor(
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<TraineeData>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Trainee>,
     public lang: LangService,
     public toast: ToastService,
     public dialogRef: DialogRef,
@@ -76,10 +76,10 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.model = data.model;
     this.trainingProgramId = data.trainingProgramId;
     this.operation = data.operation;
-    this.isEvaluate = data.isEvaluate;
   }
 
   ngOnInit(): void {
+    this.isInternalUser = this.employeeService.isInternalUser();
     this.listenToLoadAuthorityUsers();
     this.listenToLoadOrganizations();
     this.listenToLoadOrganizationUsers();
@@ -90,47 +90,50 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.listenToAcceptTrainee();
     this.buildForm();
 
-    if (!this.employeeService.isInternalUser() && !this.isEvaluate) {
+    if (!this.isInternalUser && this.operation == OperationTypes.CREATE) {
       this.selectedOrganizationId = this.employeeService.getOrgUnit()?.id!;
       this.loadOrganizationUsers$.next();
-    } else if (this.employeeService.isInternalUser() && !this.isEvaluate) {
+    } else if (this.isInternalUser && this.operation == OperationTypes.CREATE) {
       this.loadOrganizations$.next();
     }
 
-    if (this.model.trainee?.id) {
-      this.mapTraineeToForm(this.model.trainee);
+    if (this.operation != OperationTypes.CREATE) {
+      this.mapTraineeToForm(this.model);
+    }
+
+    if (this.operation == OperationTypes.VIEW) {
       this.form.disable();
     }
   }
 
   buildForm() {
     this.form = this.fb.group({
-      id: null,
-      generalUserId: null,
-      arName: [null, [CustomValidators.required,
+      id: this.model?.id,
+      generalUserId: this.model?.generalUserId,
+      arName: [this.model?.arName, [CustomValidators.required,
         CustomValidators.maxLength(200),
         CustomValidators.pattern('AR_NUM')
       ]],
-      enName: [null, [CustomValidators.required,
+      enName: [this.model?.enName, [CustomValidators.required,
         CustomValidators.maxLength(200),
         CustomValidators.pattern('ENG_NUM')
       ]],
-      jobType: [null, [CustomValidators.required,
+      jobType: [this.model?.jobType, [CustomValidators.required,
         CustomValidators.maxLength(200)]],
-      department: [null, [CustomValidators.required,
+      department: [this.model?.department, [CustomValidators.required,
         CustomValidators.maxLength(200)
       ]],
-      trainingRecord: [null, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-      currentJob: [null, [CustomValidators.required,
+      trainingRecord: [this.model?.trainingRecord, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
+      currentJob: [this.model?.currentJob, [CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]],
-      employementPosition: [null, [CustomValidators.required]],
-      email: [null, [CustomValidators.required,
+      employementPosition: [this.model?.employementPosition, [CustomValidators.required]],
+      email: [this.model?.email, [CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
         Validators.email]],
-      phoneNumber: [null, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-      gender: [null, [CustomValidators.required]],
-      nationality: [null, [CustomValidators.required]]
+      phoneNumber: [this.model?.phoneNumber, [CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+      gender: [this.model?.gender, [CustomValidators.required]],
+      nationality: [this.model?.nationality, [CustomValidators.required]]
     });
   }
 
@@ -224,9 +227,10 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   listenToSaveCandidate() {
     this.saveCandidate$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => {
+      .pipe(exhaustMap((isDraft: boolean) => {
         const trainee = (new Trainee()).clone({...this.form.value});
         trainee.externalOrgId = this.selectedOrganizationId!;
+        trainee.isDraft = isDraft;
         return this.traineeService.enroll(this.trainingProgramId, trainee);
       }))
       .subscribe(() => {
@@ -245,9 +249,9 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.saveCandidate$.next();
   }
 
-  saveCandidateAndClose() {
+  saveCandidateAndClose(isDraft: boolean) {
     this.forceClose = true;
-    this.saveCandidate$.next();
+    this.saveCandidate$.next(isDraft);
   }
 
   listenToAcceptTrainee() {
@@ -256,17 +260,17 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .pipe(exhaustMap(() => {
-        return this.model.trainee.accept(this.trainingProgramId);
+        return this.model.accept(this.trainingProgramId);
       }))
       .subscribe(() => {
-        const message = this.lang.map.candidate_x_has_been_accepted.change({x: this.model.trainee.getName()});
+        const message = this.lang.map.candidate_x_has_been_accepted.change({x: this.model.getName()});
         this.toast.success(message);
         this.dialogRef.close(this.model);
       });
   }
 
   rejectCandidate() {
-    const sub = this.model.trainee.openRejectCandidateDialog(this.trainingProgramId, this.rejectionComment)
+    const sub = this.model.openRejectCandidateDialog(this.trainingProgramId, this.rejectionComment)
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((dialogRef) => {
         return dialogRef.onAfterClose$;
@@ -311,11 +315,11 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   showAuthorityTemplate() {
-    return this.employeeType == 'authority' && !this.isEvaluate;
+    return this.employeeType == 'authority' && this.operation == OperationTypes.CREATE;
   }
 
   showOrganizationsTemplate() {
-    return this.employeeType == 'organization' && !this.isEvaluate;
+    return this.employeeType == 'organization' && this.operation == OperationTypes.CREATE;
   }
 
   get popupTitle() {

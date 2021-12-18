@@ -17,6 +17,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
 import {CertificateService} from '@app/services/certificate.service';
 import {TraineeStatus} from '@app/enums/trainee-status';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'training-program-candidates',
@@ -38,25 +39,30 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
+  edit$: Subject<Trainee> = new Subject<Trainee>();
   models: Trainee[] = [];
   trainingProgramId: number;
   operation!: OperationTypes;
   candidatesListType!: number;
   candidatesListTypeEnum = CandidatesListTypeEnum;
   traineeStatusEnum = TraineeStatus;
+  isInternalUser!: boolean;
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<number>,
               public lang: LangService,
               public service: TraineeService,
               private dialogService: DialogService,
               private toast: ToastService,
-              private certificateService: CertificateService) {
+              private certificateService: CertificateService,
+              private employeeService: EmployeeService) {
     this.operation = data.operation;
     this.trainingProgramId = data.model;
     this.candidatesListType = data.candidatesListType;
   }
 
   ngOnInit(): void {
+    this.isInternalUser = this.employeeService.isInternalUser();
     this.listenToAdd();
+    this.listenToEdit();
     this.listenToReload();
     this.listenToReviewCandidate();
   }
@@ -68,6 +74,20 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
       .subscribe(() => {
         this.reload$.next(this.trainingProgramId);
       });
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((trainee) => this.service.openEditTrainingProgramCandidateDialog(this.trainingProgramId, trainee).onAfterClose$))
+      .subscribe(() => {
+        this.reload$.next(this.trainingProgramId);
+      });
+  }
+
+  edit(traineeData: TraineeData, event: MouseEvent) {
+    event.preventDefault();
+    this.edit$.next(traineeData.trainee);
   }
 
   reviewCandidate(event: MouseEvent, model: TraineeData) {
@@ -137,5 +157,21 @@ export class TrainingProgramCandidatesPopupComponent implements OnInit {
         });
       }
     });
+  }
+
+  showDeleteButton(row: TraineeData) {
+    return !this.isInternalUser &&
+      this.candidatesListType == this.candidatesListTypeEnum.ADD &&
+      row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
+      !row.addedByRACA &&
+      row.trainee.isDraft
+  }
+
+  showEditButton(row: TraineeData) {
+    return !this.isInternalUser &&
+      this.candidatesListType == this.candidatesListTypeEnum.ADD &&
+      row.status != this.traineeStatusEnum.ACCEPTED_TRAINEE &&
+      !row.addedByRACA &&
+      row.trainee.isDraft
   }
 }

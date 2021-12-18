@@ -46,8 +46,11 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row" class="table-actions">
                 <div class="d-flex flex-row">
-                  <a *ngIf="candidatesListType == candidatesListTypeEnum.ADD && !row.addedByRACA && row.status != traineeStatusEnum.ACCEPTED_TRAINEE" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                  <a *ngIf="showDeleteButton(row)" href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                     <i class="mdi mdi-close-box"></i>
+                  </a>
+                  <a *ngIf="showEditButton(row)" href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
+                    <i class="mdi mdi-pen"></i>
                   </a>
                   <a *ngIf="candidatesListType == candidatesListTypeEnum.EVALUATE" href="#" (click)="reviewCandidate($event, row)" tooltip="{{lang.map.training_program_accept_or_reject}}" class="icon-btn">
                     <i class="mdi mdi-eye"></i>

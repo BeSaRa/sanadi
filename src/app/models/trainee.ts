@@ -24,6 +24,7 @@ export class Trainee extends BaseModel<Trainee, TraineeService>{
   nationalityInfo!: Lookup;
   externalOrgId!: number;
   addedByRACA!: boolean;
+  isDraft!: boolean;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
