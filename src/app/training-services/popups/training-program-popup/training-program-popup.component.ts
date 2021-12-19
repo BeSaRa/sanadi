@@ -234,7 +234,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       }
     }
 
-    this.dialogService.confirmWithTree('Confirmation', {actionBtn: 'btn_yes', thirdBtn: 'btn_no', cancelBtn: 'btn_cancel'})
+    this.dialogService.confirmWithTree(this.lang.map.confirm_republish_message, {actionBtn: 'btn_yes', thirdBtn: 'btn_no', cancelBtn: 'btn_cancel'})
       .onAfterClose$.subscribe((click: UserClickOn) => {
       console.log('clicked', click);
       if (click === UserClickOn.YES) {
