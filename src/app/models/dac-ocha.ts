@@ -41,13 +41,13 @@ export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
     return {
       arName: controls ? [arName, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM')
       ]] : arName,
       enName: controls ? [enName, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
