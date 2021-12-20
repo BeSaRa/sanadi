@@ -54,7 +54,8 @@
                            [notFoundText]="lang.map.msg_not_found"
                            bindLabel="id"
                            formControlName="mainDACCategoryInfo" validationClasses="mainDACCategoryInfo">
-                  <ng-option *ngFor="let option of mainDACCategoriesList" [value]="option">
+                  <ng-option *ngFor="let option of mainDACCategoriesList" [value]="option"
+                             [disabled]="option.status !== commonStatusEnum.ACTIVATED">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
@@ -72,7 +73,8 @@
                            [notFoundText]="lang.map.msg_not_found"
                            formControlName="mainUNOCHACategoryInfo" validationClasses="mainUNOCHACategoryInfo"
                            bindLabel="id">
-                  <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option">
+                  <ng-option *ngFor="let option of mainUNOCHACategoriesList" [value]="option"
+                             [disabled]="option.status !== commonStatusEnum.ACTIVATED">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>

@@ -15,6 +15,7 @@ import {LookupCategories} from '@app/enums/lookup-categories';
 import {Domains} from "@app/enums/domains.enum";
 import {DacOchaService} from "@app/services/dac-ocha.service";
 import {AdminResult} from "@app/models/admin-result";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'goal',
@@ -48,6 +49,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   mainUNOCHACategoriesList: AdminResult[] = [];
   displayByDomain: "DAC" | "OCHA" | null = null;
   LookupCategories = LookupCategories;
+  commonStatusEnum = CommonStatusEnum;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
@@ -284,7 +286,8 @@ export class GoalComponent implements OnInit, OnDestroy {
             const adminResultInstance = AdminResult.createInstance({
               id: ouchaDac.id,
               arName: ouchaDac.arName,
-              enName: ouchaDac.enName
+              enName: ouchaDac.enName,
+              status: ouchaDac.status
             })
             if (ouchaDac.type === Domains.HUMAN) {
               this.mainUNOCHACategoriesList.push(adminResultInstance);

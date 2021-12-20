@@ -1,6 +1,7 @@
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {FactoryService} from '../services/factory.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class AdminResult {
   id?: number;
@@ -8,6 +9,7 @@ export class AdminResult {
   enName = '';
   parent?: number;
   lookupKey?: number;
+  status?: number;
 
   private langService: LangService;
 
