@@ -19,7 +19,7 @@
           <label asteriskIfRequired="arName" for="arName"
                  class="form-label">{{lang.map.lbl_arabic_name}}</label>
           <input id="arName"
-                 validationClasses="arName"
+                 validationClasses="arName" maxlength="100"
                  formControlName="arName" class="form-control">
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
@@ -27,7 +27,7 @@
           <label asteriskIfRequired="enName" for="enName"
                  class="form-label">{{lang.map.lbl_english_name}}</label>
           <input id="enName"
-                 validationClasses="enName"
+                 validationClasses="enName" maxlength="100"
                  formControlName="enName" class="form-control">
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
@@ -42,7 +42,8 @@
                          formControlName="status"
                          id="status"
                          appendTo="body">
-                <ng-option [value]="status.lookupKey" *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
+                <ng-option [value]="status.lookupKey"
+                           *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="status"></app-field-error-message>
             </div>
@@ -54,8 +55,9 @@
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <h1 class="h6 text-primary">{{lang.map.sub_dac_ochas.change({x: classification.getName()})}}</h1>
         <div>
-          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubDacOchas$.next()"><i
-            class="mdi mdi-reload"></i></button>
+          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubDacOchas$.next()">
+            <i
+              class="mdi mdi-reload"></i></button>
         </div>
         <div>
           <button (click)="addSubDacOcha()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i

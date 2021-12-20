@@ -12,7 +12,7 @@
           <label asteriskIfRequired="arName" for="arName"
                  class="form-label">{{lang.map.lbl_arabic_name}}</label>
           <input id="arName"
-                 validationClasses="arName"
+                 validationClasses="arName" maxlength="100"
                  formControlName="arName" class="form-control">
           <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
@@ -20,7 +20,7 @@
           <label asteriskIfRequired="enName" for="enName"
                  class="form-label">{{lang.map.lbl_english_name}}</label>
           <input id="enName"
-                 validationClasses="enName"
+                 validationClasses="enName" maxlength="100"
                  formControlName="enName" class="form-control">
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
