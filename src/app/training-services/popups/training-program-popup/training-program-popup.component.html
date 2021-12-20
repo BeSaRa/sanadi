@@ -204,14 +204,12 @@
           <div class="reg-start-date-container">
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control"
-                   formControlName="registerationStartDate"
+              <div class="form-control" formControlName="registerationStartDate"
                    id="registerationStartDate"
-                   (click)="dpregisterationStartDate.toggleCalendar()"
-                   #dpregisterationStartDate="angular-mydatepicker"
+                   (click)="dpregisterationStartDate.toggleCalendar()" #dpregisterationStartDate="angular-mydatepicker"
                    [options]="datepickerOptionsMap.registerationStartDate"
                    (inputFieldChanged)="registrationStartDateChange($event, 'registerationStartDate', 'registerationClosureDate')"
-                   angular-mydatepicker [ngClass]="getRegistrationStartDateClasses()"></div>
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('registerationStartDate')"></div>
               <app-field-error-message [control]="fm.getFormField('registerationStartDate')"></app-field-error-message>
             </div>
             <div></div>

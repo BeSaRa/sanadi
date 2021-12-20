@@ -23,6 +23,7 @@ export class TraineeInterceptor implements IModelInterceptor<TraineeData> {
   send(model: Partial<Trainee>): Partial<Trainee> {
     delete model.service;
     delete model.lang;
+    delete model.id;
     delete model.statusInfo;
     delete model.nationalityInfo;
     return model;

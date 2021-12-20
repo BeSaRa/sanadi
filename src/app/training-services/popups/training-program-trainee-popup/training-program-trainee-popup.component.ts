@@ -108,7 +108,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.form = this.fb.group({
-      id: this.operation == OperationTypes.CREATE ? null : this.model?.id,
+      id: this.model?.id,
       generalUserId: this.model?.generalUserId,
       arName: [this.model?.arName, [CustomValidators.required,
         CustomValidators.maxLength(200),
@@ -231,10 +231,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
         const trainee = (new Trainee()).clone({...this.form.value});
         trainee.externalOrgId = this.selectedOrganizationId!;
         trainee.isDraft = isDraft;
-
-        return this.operation == OperationTypes.CREATE ?
-          this.traineeService.enrollTrainee(this.trainingProgramId, trainee) :
-          this.traineeService.updateTrainee(this.trainingProgramId, trainee);
+        return this.traineeService.enroll(this.trainingProgramId, trainee);
       }))
       .subscribe(() => {
         const message = this.lang.map.msg_save_success;
@@ -288,7 +285,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
 
   mapUserToForm(user: OrgUser | InternalUser) {
     this.form.patchValue({
-      id: this.operation == OperationTypes.CREATE ? null : user?.id,
+      id: user?.id,
       generalUserId: user?.generalUserId,
       arName: user?.arName,
       enName: user?.enName,
@@ -301,7 +298,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
 
   mapTraineeToForm(trainee: Trainee) {
     this.form.patchValue({
-      id: this.operation == OperationTypes.CREATE ? null : trainee?.id,
+      id: trainee?.id,
       generalUserId: trainee?.generalUserId,
       arName: trainee?.arName,
       enName: trainee?.enName,
