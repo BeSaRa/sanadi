@@ -14,6 +14,7 @@ export interface ILanguageKeys {
   please_select_survey_template_to_publish: string;
   btn_publish: string;
   training_start_date_should_not_be_in_past: string;
+  training_start_date_should_not_be_in_past: string;
   confirm_republish_message: string;
   btn_save_and_send: string;
   training_program_save_and_republish: string;

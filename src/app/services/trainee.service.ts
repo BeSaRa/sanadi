@@ -34,8 +34,14 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
 
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
-  enroll(trainingProgramId: number, @InterceptParam() model: Trainee): Observable<Trainee> {
+  enrollTrainee(trainingProgramId: number, @InterceptParam() model: Trainee): Observable<Trainee> {
     return this.http.put<Trainee>(this._getServiceURL() + '/enroll-trainee/' + trainingProgramId, model);
+  }
+
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  updateTrainee(trainingProgramId: number, @InterceptParam() model: Trainee): Observable<Trainee> {
+    return this.http.put<Trainee>(this._getServiceURL() + '/participants/training-program-id/' + trainingProgramId, model);
   }
 
   @Generator(undefined, false, {property: 'rs'})
