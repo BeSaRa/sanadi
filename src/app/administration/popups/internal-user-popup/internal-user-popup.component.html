@@ -10,15 +10,14 @@
 </div>
 <div class="dialog-content" #content style="width: 800px">
   <tabs-list (onTabChange)="onTabChange($event)">
-    <tab name="basic" [hasError]="basicInfoHasError()" [template]="basicInfoTab"
+    <tab [name]="tabsData.basic.name" [hasError]="basicInfoHasError()" [template]="basicInfoTab"
          [title]="lang.map.lbl_basic_info"></tab>
-    <tab name="permissions" [hasError]="permissionTabHasError()" [template]="permissionsTab"
+    <tab [name]="tabsData.permissions.name" [hasError]="permissionTabHasError()" [template]="permissionsTab"
          [title]="lang.map.lbl_permissions"></tab>
-    <tab name="departments" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
-    <tab name="teams" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
-    <tab [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" name="services"
-         [title]="lang.map.link_services"
-         [template]="serviceTab"></tab>
+    <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
+    <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
+    <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)"
+         [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <form [formGroup]="form" novalidate>

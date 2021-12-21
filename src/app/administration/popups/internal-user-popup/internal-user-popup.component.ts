@@ -30,6 +30,7 @@ import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.
 import {InternalUserDepartmentService} from "@app/services/internal-user-department.service";
 import {InternalUserDepartment} from "@app/models/internal-user-department";
 import {AdminResult} from "@app/models/admin-result";
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'internal-user-popup',
@@ -54,6 +55,14 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   selectedDepartment: FormControl = new FormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
+
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    permissions: {name: 'permissions'},
+    departments: {name: 'departments'},
+    teams: {name: 'teams'},
+    services: {name: 'services'}
+  };
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
@@ -243,7 +252,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   onTabChange($event: TabComponent) {
-    this.displaySaveBtn = (!['services', 'teams'].includes($event.name))
+    this.displaySaveBtn = (![this.tabsData.services.name, this.tabsData.teams.name, this.tabsData.departments.name].includes($event.name));
+    this.validateFieldsVisible = (![this.tabsData.services.name, this.tabsData.teams.name, this.tabsData.departments.name].includes($event.name));
   }
 
   addDepartment() {
