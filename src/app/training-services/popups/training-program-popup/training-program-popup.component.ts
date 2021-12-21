@@ -290,17 +290,18 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       }))
       .pipe(take(1),
         exhaustMap((click: UserClickOn) => {
+          let model = new TrainingProgram().clone({...this.model, ...this.form.value});
           if (click === UserClickOn.NO) {
             return of(null);
           } else if (click === UserClickOn.YES && isValidTrainingStart && isValidRegistrationEnd) {
-            return this.model.editAfterPublishAndSenMail()
+            return this.model.editAfterPublishAndSenMail(model)
               .pipe(
                 tap(() => {
                   this.dialogRef.close(this.model);
                 }),
                 takeUntil(this.destroy$));
           } else if (click === UserClickOn.THIRD_BTN && isValidTrainingStart && isValidRegistrationEnd) {
-            return this.model.editAfterPublish()
+            return this.model.editAfterPublish(model)
               .pipe(
                 tap(() => {
                   this.dialogRef.close(this.model);

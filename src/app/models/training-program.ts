@@ -200,12 +200,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
     return this.service.viewProgramSurvey(this);
   }
 
-  editAfterPublish() {
-    return this.service.editAfterPublish(this);
+  editAfterPublish(model: TrainingProgram) {
+    return this.service.editAfterPublish(model);
   }
 
-  editAfterPublishAndSenMail() {
-    return this.service.editAfterPublishAndSenMail(this);
+  editAfterPublishAndSenMail(model: TrainingProgram) {
+    return this.service.editAfterPublishAndSenMail(model);
   }
 
 }

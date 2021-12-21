@@ -118,8 +118,8 @@ export class TraineeService extends BackendWithDialogOperationsGenericService<Tr
   }
 
   private openEvaluateCandidateDialog(model: TraineeData, trainingProgramId: number, operation: OperationTypes): DialogRef {
-    return this.dialog.show<IDialogData<TraineeData>>(this._getDialogComponent(), {
-      model: model,
+    return this.dialog.show<IDialogData<Trainee>>(this._getDialogComponent(), {
+      model: model.trainee,
       operation: operation,
       trainingProgramId: trainingProgramId
     });
