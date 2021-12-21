@@ -16,6 +16,7 @@ import {Team} from "@app/models/team";
 import {ConfigurationService} from "@app/services/configuration.service";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {UserTeamService} from "@app/services/user-team.service";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'user-security',
@@ -25,6 +26,7 @@ import {UserTeamService} from "@app/services/user-team.service";
 export class UserSecurityComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   selectedUserTeam: FormControl = new FormControl();
+  commonStatusEnum = CommonStatusEnum;
   private _userTeams: UserTeam[] = [];
   private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);
   @Input()

@@ -31,6 +31,7 @@ import {InternalUserDepartmentService} from "@app/services/internal-user-departm
 import {InternalUserDepartment} from "@app/models/internal-user-department";
 import {AdminResult} from "@app/models/admin-result";
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'internal-user-popup',
@@ -55,6 +56,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   selectedDepartment: FormControl = new FormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
+  commonStatusEnum = CommonStatusEnum;
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -168,7 +170,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   initPopup(): void {
     this.loadDepartments();
-    this.loadJobTitles();
+    // this.loadJobTitles();
     this.loadPermissions();
     this.loadCustomRoles();
     if (this.operation === OperationTypes.UPDATE) {

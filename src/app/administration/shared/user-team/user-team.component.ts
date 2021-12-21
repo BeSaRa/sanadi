@@ -19,6 +19,7 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
 import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
 import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'user-team',
@@ -32,6 +33,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   selectedTeamControl: FormControl = new FormControl();
   teams: Team[] = [];
   userTeams: UserTeam[] = [];
+  commonStatusEnum = CommonStatusEnum;
   userTeamsChanged$: Subject<UserTeam[]> = new Subject<UserTeam[]>();
   @Input()
   operation!: OperationTypes

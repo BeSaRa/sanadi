@@ -63,18 +63,26 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     return {
       arName: controls ? [arName, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.maxLength(50),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM')
       ]] : arName,
       enName: controls ? [enName, [
         CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.maxLength(50),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')
       ]] : enName,
-      domainName: controls ? [domainName, [CustomValidators.required]] : domainName,
-      email: controls ? [email, [CustomValidators.required]] : email,
+      domainName: controls ? [domainName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(50),
+        CustomValidators.pattern('ENG_NUM_ONLY')]
+      ] : domainName,
+      email: controls ? [email, [
+        CustomValidators.required,
+        CustomValidators.maxLength(50),
+        CustomValidators.pattern('EMAIL')]
+      ] : email,
       empNum: controls ? [empNum, [
         CustomValidators.required,
         CustomValidators.number,
@@ -86,7 +94,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
       ]] : officialPhoneNumber,
       phoneNumber: controls ? [phoneNumber, [
-        CustomValidators.required, CustomValidators.number,
+        CustomValidators.number,
         CustomValidators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
       ]] : phoneNumber,
       status: controls ? [status, [CustomValidators.required]] : status,

@@ -14,7 +14,8 @@
          [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.permissions.name" [hasError]="permissionTabHasError()" [template]="permissionsTab"
          [title]="lang.map.lbl_permissions"></tab>
-    <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
+    <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments"
+         [template]="departmentsTab"></tab>
     <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
     <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)"
          [title]="lang.map.link_services" [template]="serviceTab"></tab>
@@ -48,7 +49,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <!--<div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="jobTitle"
                    for="jobTitle">{{lang.map.job_title}}</label>
             <ng-select validationClasses="jobTitle" appendTo="body" [clearable]="true" id="jobTitle"
@@ -56,7 +57,7 @@
               <ng-option [value]="title.id" *ngFor="let title of jobTitles">{{title.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="jobTitle"></app-field-error-message>
-          </div>
+          </div>-->
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
@@ -71,22 +72,22 @@
             </ng-select>
             <app-field-error-message controlName="status"></app-field-error-message>
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
             <input validationClasses="email" formControlName="email" type="text" id="email" class="form-control">
             <app-field-error-message controlName="email"></app-field-error-message>
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="phoneNumber"
                    for="phoneNumber">{{lang.map.mobile_number}}</label>
             <input validationClasses="phoneNumber" formControlName="phoneNumber" type="text" id="phoneNumber"
-                   class="form-control">
+                   class="form-control" onlyNumbers>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="officialPhoneNumber"
                    for="officialPhoneNumber">{{lang.map.official_phone_number}}</label>
@@ -94,7 +95,7 @@
                    id="officialPhoneNumber" class="form-control">
             <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
           </div>
-        </div>
+        </div>-->
       </ng-container>
     </form>
   </ng-template>
@@ -159,7 +160,7 @@
             <label for="department">{{lang.map.select_department}}</label>
             <ng-select [formControl]="selectedDepartment" appendTo="body" [clearable]="true"
                        id="department">
-              <ng-option [disabled]="isDepExists(dep)" [value]="dep"
+              <ng-option [disabled]="isDepExists(dep) || dep.status !== commonStatusEnum.ACTIVATED" [value]="dep"
                          *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
             </ng-select>
           </div>
