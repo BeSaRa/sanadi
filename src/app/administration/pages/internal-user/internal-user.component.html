@@ -54,6 +54,16 @@
           <td cdk-cell *cdkCellDef="let row">
             <button (click)="edit$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-edit"></i>
             </button>
+            <button *ngIf="row.status === commonStatusEnum.DEACTIVATED"
+                    (click)="activateInternalUser(row)" tooltip="{{lang.map.btn_activate}}"
+                    class="btn icon-btn text-primary">
+              <i class="mdi mdi-list-status"></i>
+            </button>
+            <button *ngIf="row.status === commonStatusEnum.ACTIVATED"
+                    (click)="deactivateInternalUser(row)" tooltip="{{lang.map.btn_deactivate}}"
+                    class="btn icon-btn text-primary">
+              <i class="mdi mdi-list-status"></i>
+            </button>
 <!--            <button (click)="delete$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-remove"></i>-->
 <!--            </button>-->
           </td>

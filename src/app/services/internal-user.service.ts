@@ -11,6 +11,7 @@ import {FactoryService} from "@app/services/factory.service";
 import {Observable} from "rxjs";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
 import {map} from "rxjs/operators";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,17 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
   updateDefaultDepartment(data: { id: number, defaultDepartmentId: number }): Observable<boolean> {
     return this.http.put<IDefaultResponse<boolean>>(this._getServiceURL() + '/default-department/update', data)
       .pipe(map(res => res.rs));
+  }
+
+  updateStatus(id: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(id) : this._deactivate(id);
+  }
+
+  private _activate(id: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
+  }
+
+  private _deactivate(id: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
 }

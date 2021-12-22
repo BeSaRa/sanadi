@@ -10,6 +10,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {searchFunctionType} from '@app/types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
@@ -132,5 +133,17 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
 
   updateDefaultDepartment(): Observable<boolean> {
     return this.service.updateDefaultDepartment({id: this.id, defaultDepartmentId: this.defaultDepartmentId});
+  }
+
+  isInactive(): boolean {
+    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }
