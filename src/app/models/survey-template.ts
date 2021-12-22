@@ -24,8 +24,16 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   buildForm(controls: boolean = false) {
     const {arName, enName, status} = this;
     return {
-      arName: controls ? [arName, [CustomValidators.required]] : arName,
-      enName: controls ? [enName, [CustomValidators.required]] : enName,
+      arName: controls ? [arName, [
+        CustomValidators.required,
+        CustomValidators.pattern('AR_NUM'),
+        CustomValidators.maxLength(200)
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required,
+        CustomValidators.pattern('ENG_NUM'),
+        CustomValidators.maxLength(200)
+      ]] : enName,
       status: controls ? [status, [CustomValidators.required]] : status,
     };
   }

@@ -90,7 +90,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm());
+    this.form = this.fb.group(this.model.buildForm(true));
   }
 
   get dialogTitle(): string {

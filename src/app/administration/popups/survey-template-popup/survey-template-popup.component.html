@@ -6,7 +6,7 @@
   <button type='button' class='btn-close btn-close-white'
           tabindex='-1' dialogClose='' aria-label='Close'></button>
 </div>
-<div class='dialog-content no-fixed-height' style='width: 600px'>
+<div class='dialog-content no-fixed-height' style='width: 700px'>
   <tabs-list>
     <tab [template]='basicInfoTab' [title]='lang.map.lbl_basic_info'></tab>
     <tab [template]='sectionsTab' [title]='lang.map.survey_sections'></tab>
@@ -17,17 +17,17 @@
         <div class='col-md-6 col-sm-12 mb-4 position-relative'>
           <label class='form-label' asteriskIfRequired='arName'
                  for='arName'>{{lang.map.arabic_name}}</label>
-          <input id='arName' validationClasses='arName' formControlName='arName' class='form-control'>
+          <input id='arName' maxlength="200" validationClasses='arName' formControlName='arName' class='form-control'>
           <app-field-error-message controlName='arName'></app-field-error-message>
         </div>
         <div class='col-md-6 col-sm-12 mb-4 position-relative'>
           <label class='form-label' asteriskIfRequired='enName'
                  for='enName'>{{lang.map.english_name}}</label>
-          <input id='enName' validationClasses='enName' formControlName='enName' class='form-control'>
+          <input id='enName' maxlength="200" validationClasses='enName' formControlName='enName' class='form-control'>
           <app-field-error-message controlName='enName'></app-field-error-message>
         </div>
       </div>
-      <div class='row'>
+      <div class='row mt-2'>
         <div class='col-12'>
           <div class='form-check form-switch'>
             <label for='status'>{{lang.map.lbl_status}}</label>
