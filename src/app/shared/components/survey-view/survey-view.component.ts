@@ -45,6 +45,9 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   @Input()
   closeDialog: boolean = false;
 
+  @Input()
+  authToken?: string;
+
   templateAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
   surveyAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
 
@@ -138,7 +141,7 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
         traineeId: this.traineeId,
         trainingProgramId: this.programId,
         trainingSurveyTemplateId: this.surveyTemplate.id
-      }).save()))
+      }).save(this.authToken)))
       .subscribe((newSurvey) => {
         this.toast.success(this.lang.map.msg_survey_answered_saved_successfully);
         this.afterAnswer.emit(newSurvey);

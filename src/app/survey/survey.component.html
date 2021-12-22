@@ -1,12 +1,12 @@
-<div class="container">
-  <div *ngIf="viewOnly" class="row">
+<div class="container pt-5">
+  <div *ngIf="viewOnly">
     <div class="col-12">
-      <div class="alert alert-info" role="alert">
+      <div class="alert alert-info shadow-sm" role="alert">
         {{lang.map.msg_survey_already_voted}}
       </div>
     </div>
   </div>
-  <survey-view (afterAnswer)="afterAnswer($event)" *ngIf="surveyTemplate"
+  <survey-view [authToken]="authToken" (afterAnswer)="afterAnswer($event)" *ngIf="surveyTemplate"
                [survey]="survey"
                [traineeId]="trainee?.id"
                [surveyTemplate]="surveyTemplate"

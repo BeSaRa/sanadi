@@ -1,4 +1,4 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpContext, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {BackendGenericService} from "@app/generics/backend-generic-service";
 import {Survey} from "@app/models/survey";
@@ -19,6 +19,9 @@ import {Generator} from "@app/decorators/generator";
 import {ExceptionHandlerService} from "@app/services/exception-handler.service";
 import {BlobModel} from "@app/models/blob-model";
 import {DomSanitizer} from "@angular/platform-browser";
+import {SURVEY_TOKEN} from "@app/http-context/survey-token";
+import {TokenService} from "@app/services/token.service";
+import {InterceptParam, SendInterceptor} from "@app/decorators/model-interceptor";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +35,7 @@ export class SurveyService extends BackendGenericService<Survey> {
   constructor(public http: HttpClient,
               private trainingProgramService: TrainingProgramService,
               private exceptionHandlerService: ExceptionHandlerService,
+              private tokenService: TokenService,
               private domSanitizer: DomSanitizer,
               private urlService: UrlService) {
     super();
@@ -58,13 +62,14 @@ export class SurveyService extends BackendGenericService<Survey> {
     return this.http.put<boolean>(this._getServiceURL() + `/publish/training-program/${trainingProgramId}/template-id/${trainingTemplateId}`, {})
   }
 
-  loadSurveyInfoByToken(token: string): Observable<ISurveyInfo> {
+  loadSurveyInfoByToken(token: string, authToken?: string): Observable<ISurveyInfo> {
     const params = new HttpParams({
       fromObject: {token}
     })
     this.exceptionHandlerService.excludeHandlingForMethodURL('GET', this._getServiceURL() + '/fetch/training-program?' + params)
     return this.http.get<IDefaultResponse<ISurveyInfo>>(this._getServiceURL() + '/fetch/training-program', {
-      params: params
+      params: params,
+      context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
     })
       .pipe(map(response => response.rs))
       .pipe(map(info => {
@@ -75,16 +80,17 @@ export class SurveyService extends BackendGenericService<Survey> {
   }
 
   @Generator(undefined, true)
-  private _loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number): Observable<Survey[]> {
+  private _loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number, authToken?: string): Observable<Survey[]> {
     return this.http.get<Survey[]>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({
         fromObject: {traineeId, trainingProgramId}
-      })
+      }),
+      context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
     })
   }
 
-  loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number): Observable<Survey> {
-    return this._loadSurveyByTraineeIdAndProgramId(traineeId, trainingProgramId).pipe(map(result => result[0]));
+  loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number, authToken?: string): Observable<Survey> {
+    return this._loadSurveyByTraineeIdAndProgramId(traineeId, trainingProgramId, authToken).pipe(map(result => result[0]));
   }
 
   printReport(programId: number): Observable<BlobModel> {
@@ -92,5 +98,21 @@ export class SurveyService extends BackendGenericService<Survey> {
       observe: 'body',
       responseType: 'blob'
     }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
+  }
+
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  create(@InterceptParam() model: Survey, authToken?: string): Observable<Survey> {
+    return this.http.post<Survey>(this._getServiceURL() + '/full', model, {
+      context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
+    });
+  }
+
+  @SendInterceptor()
+  @Generator(undefined, false, {property: 'rs'})
+  update(@InterceptParam() model: Survey, authToken?: string): Observable<Survey> {
+    return this.http.put<Survey>(this._getServiceURL() + '/full', model, {
+      context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
+    });
   }
 }

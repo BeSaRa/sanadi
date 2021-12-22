@@ -55,11 +55,11 @@ const routes: Routes = [
         canActivate: [PermissionGuard],
         //data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
-      },
-      {path: 'survey', loadChildren: () => import('./survey/survey.module').then(m => m.SurveyModule)},
+      }
       //{path: '**', redirectTo: '../error'}
     ]
   },
+  {path: 'survey', loadChildren: () => import('./survey/survey.module').then(m => m.SurveyModule)},
   {path: 'error', component: ErrorPageComponent},
 ];
 

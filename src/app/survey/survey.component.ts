@@ -24,6 +24,7 @@ export class SurveyComponent implements OnInit {
   trainingProgram: TrainingProgram | undefined;
   trainee: Trainee | undefined;
   viewOnly: boolean = false;
+  authToken?: string
 
   constructor(private surveyTemplateService: SurveyTemplateService,
               private route: ActivatedRoute,
@@ -39,20 +40,20 @@ export class SurveyComponent implements OnInit {
 
 
   private loadSurvey(): void {
-    const {token}: { token?: string } = this.route.snapshot.queryParams
-    if (!token) {
+    const {token, Authorization}: { token?: string, Authorization?: string } = this.route.snapshot.queryParams
+    if (!token || !Authorization) {
       this.dialog.error(this.lang.map.please_provide_valid_survey_url);
       return;
     }
-
+    this.authToken = Authorization;
     this.surveyService
-      .loadSurveyInfoByToken(token!)
+      .loadSurveyInfoByToken(token!, this.authToken)
       .pipe(catchError((_) => {
         return of(null);
       }))
       .pipe(filter<ISurveyInfo | null, ISurveyInfo>((result): result is ISurveyInfo => !!result))
       .pipe(switchMap(result => {
-        return this.surveyService.loadSurveyByTraineeIdAndProgramId(result.trainee.id, result.trainingProgram.id)
+        return this.surveyService.loadSurveyByTraineeIdAndProgramId(result.trainee.id, result.trainingProgram.id, this.authToken)
           .pipe(
             map(survey => {
               return {
