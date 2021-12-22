@@ -32,6 +32,7 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
   selectedDacOchaTypeId: number = 1;
   searchText = '';
   classifications!: Lookup[];
+  commonStatusEnum = CommonStatusEnum;
   tabsData: IKeyValue = {
     ocha: {name: 'OCHA'},
     dac: {name: 'DAC'}
@@ -48,6 +49,26 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
       label: 'btn_edit',
       icon: 'mdi-pen',
       onClick: (user) => this.edit$.next(user)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: DacOcha) => this.activateDacOcha(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: DacOcha) => this.deactivateDacOcha(item),
+      show: (item) => {
+        return item.status === CommonStatusEnum.ACTIVATED;
+      }
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
@@ -59,6 +80,28 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (items: DacOcha[]) => {
+            return true;
+          }
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (items: DacOcha[]) => {
+            return true;
+          }
+        }
+      ],
     }
   ];
 
@@ -247,5 +290,34 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
 
   get ochaTabLabel(): string {
     return this.classifications.find(classification => classification.lookupKey === 1)!.getName();
+  }
+
+  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
+    const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
+      .subscribe((response) => {
+        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
+          .subscribe(() => {
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+      });
+  }
+
+  activateDacOcha(model: DacOcha): void {
+    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
+  deactivateDacOcha(model: DacOcha): void {
+    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
   }
 }

@@ -7,6 +7,7 @@ import {INames} from '@app/interfaces/i-names';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Lookup} from '@app/models/lookup';
 import {Observable} from 'rxjs';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
   status!: number;
@@ -58,5 +59,17 @@ export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
 
   loadSubDacOchas(): Observable<DacOcha[]> {
     return this.service.loadSubDacOchas(this.id);
+  }
+
+  isInactive(): boolean {
+    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

@@ -9,12 +9,13 @@ import {HttpClient} from '@angular/common/http';
 import {UrlService} from '@app/services/url.service';
 import {DialogService} from '@app/services/dialog.service';
 import {Observable, of} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {Generator} from '@app/decorators/generator';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SubDacOchaPopupComponent} from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -102,5 +103,39 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
         }));
       })
     );
+  }
+
+  updateStatus(dacOchaId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(dacOchaId) : this._deactivate(dacOchaId);
+  }
+
+  updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
+  }
+
+  private _activate(dacOchaId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + dacOchaId + '/activate', {});
+  }
+
+  private _deactivate(dacOchaId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + dacOchaId + '/de-activate', {});
+  }
+
+  private _activateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+
+  private _deactivateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/de-activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
   }
 }
