@@ -8,7 +8,6 @@
     <app-table #table sortableTable [paginator]='paginator'
                [selectable]='true'
                [filter]='filterControl.value'
-               [useSearchToFilter]='true'
                [data]='models'
                [columns]='displayedColumns'>
       <table cdk-table [dataSource]='table.dataSource' class='table table-striped table-bordered caption-top'>
