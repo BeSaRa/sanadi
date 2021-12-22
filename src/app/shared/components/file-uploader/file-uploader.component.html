@@ -1,0 +1,28 @@
+<div class="row">
+  <label class="form-label">{{lang.map[labelKey]}}<span class="text-danger"
+                                                        *ngIf="isRequired"> * </span></label>
+  <input type="file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
+         [accept]="allowedExtensions" [multiple]="allowMultiple">
+  <div class="col-md-6 col-sm-12">
+    <button class="btn btn-primary"
+            (click)="openFileBrowser($event)">
+      {{lang.map.upload_file}}
+    </button>
+  </div>
+  <div class="col-md-6 col-sm-12">
+    <span *ngIf="showFileName && uploadedFileName">{{uploadedFileName ? uploadedFileName.getName() : ''}}</span>
+    <button *ngIf="uploadedFile || uploadedFiles.length > 0" class="btn icon-btn text-primary m-0 align-top"
+            tooltip="{{lang.map.btn_remove}}"
+            (click)="removeFile($event)">
+      <i class="mdi mdi-close"></i>
+    </button>
+  </div>
+  <div class="col-sm-12" *ngIf="showFilePreview">
+    <img *ngIf="uploadedFilePath" id="fileImgUploaded" [src]="uploadedFilePath" alt="{{lang.map.file}}"
+         class="img-fit-contain file-display mt-1"/>
+
+    <img *ngIf="loadedFile && !uploadedFilePath" id="fileImgLoaded" [src]="loadedFile.safeUrl"
+         alt="{{lang.map.file}}"
+         class="img-fit-contain file-display mt-1"/>
+  </div>
+</div>

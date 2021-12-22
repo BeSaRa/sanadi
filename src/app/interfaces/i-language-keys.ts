@@ -656,6 +656,9 @@ export interface ILanguageKeys {
   upload_logo: string;
   btn_remove: string;
   msg_invalid_format_allowed_formats: string;
+  msg_invalid_file_format: string;
+  msg_allowed_formats: string;
+  msg_some_files_invalid_file_format: string;
   err_arabic_only: string;
   err_english_only: string;
   attachment_type: string;
