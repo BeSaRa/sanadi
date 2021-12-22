@@ -13,6 +13,8 @@ import {
 } from '@app/administration/popups/survey-template-popup/survey-template-popup.component';
 import {SurveySectionService} from "@app/services/survey-section.service";
 import {SurveyQuestionService} from "@app/services/survey-question.service";
+import {ViewTraineeSurveyComponent} from "@app/shared/popups/view-trainee-survey/view-trainee-survey.component";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +50,16 @@ export class SurveyTemplateService extends BackendWithDialogOperationsGenericSer
 
   _getReceiveInterceptor() {
     return this.interceptor.receive;
+  }
+
+  viewTemplate(template: SurveyTemplate): DialogRef {
+    return this.dialog.show(ViewTraineeSurveyComponent, {
+      trainee: false,
+      template: template,
+      program: false,
+      survey: false
+    }, {
+      fullscreen: true
+    })
   }
 }

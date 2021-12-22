@@ -58,4 +58,8 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
         this.reload$.next(null);
       })
   }
+
+  viewTemplate(row: SurveyTemplate) {
+    row.view().onAfterClose$.subscribe(this.reload$)
+  }
 }

@@ -42,6 +42,8 @@
           <td cdk-cell *cdkCellDef='let row'>
             <button (click)='deleteTemplate(row)' class='btn icon-btn'><i class='mdi text-primary mdi-delete'></i>
             </button>
+            <button (click)='viewTemplate(row)' class='btn icon-btn'><i class='mdi text-primary mdi-eye'></i>
+            </button>
             <button (click)='edit$.next(row)' class='btn icon-btn'><i class='mdi text-primary mdi-pen'></i></button>
           </td>
         </ng-container>

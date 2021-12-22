@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {TrainingProgram} from "@app/models/training-program";
@@ -16,7 +16,7 @@ import {map} from "rxjs/operators";
   templateUrl: './view-survey-popup.component.html',
   styleUrls: ['./view-survey-popup.component.scss']
 })
-export class ViewSurveyPopupComponent{
+export class ViewSurveyPopupComponent {
   private template: SurveyTemplate;
   program: TrainingProgram;
   displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];

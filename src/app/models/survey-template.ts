@@ -8,6 +8,7 @@ import {INames} from "@app/interfaces/i-names";
 import {SurveyQuestion} from "@app/models/survey-question";
 import {SurveyAnswer} from "@app/models/survey-answer";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateService> {
   service: SurveyTemplateService;
@@ -96,5 +97,9 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
 
   getStatusValue(): string {
     return this.langService.map[(this.status ? 'lbl_active' : 'lbl_inactive') as keyof ILanguageKeys]
+  }
+
+  view(): DialogRef {
+    return this.service.viewTemplate(this);
   }
 }
