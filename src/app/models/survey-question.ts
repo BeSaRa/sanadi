@@ -4,6 +4,7 @@ import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {LangService} from "@app/services/lang.service";
 import {INames} from "@app/interfaces/i-names";
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 export class SurveyQuestion extends BaseModel<SurveyQuestion, SurveyQuestionService> {
   service: SurveyQuestionService;
@@ -27,5 +28,9 @@ export class SurveyQuestion extends BaseModel<SurveyQuestion, SurveyQuestionServ
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  getIsFreeTextValue(): string {
+    return this.langService.map[(this.isFreeText ? 'lbl_yes' : 'lbl_no') as keyof ILanguageKeys];
   }
 }

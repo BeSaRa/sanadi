@@ -8,7 +8,6 @@
     <app-table #table sortableTable [paginator]="paginator"
                [selectable]="true"
                [filter]="filterControl.value"
-               [useSearchToFilter]="true"
                [data]="models"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
@@ -34,6 +33,10 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="isFreeText">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.free_text}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.getIsFreeTextValue()}} </td>
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row">
@@ -41,10 +44,6 @@
             </button>
             <button (click)="edit$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
           </td>
-        </ng-container>
-        <ng-container cdkColumnDef="isFreeText">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.free_text}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.isFreeText}} </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
         <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
