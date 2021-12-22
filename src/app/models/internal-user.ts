@@ -9,6 +9,7 @@ import {InternalUserService} from "@app/services/internal-user.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {Validators} from "@angular/forms";
 import {Observable} from "rxjs";
+import {searchFunctionType} from '@app/types/types';
 
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
@@ -34,6 +35,14 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   generalUserId!: number;
   customRoleId!: number;
   langService: LangService;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    userName: 'domainName',
+    arName: 'arName',
+    enName: 'enName',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
+    defaultDepartment: text => !this.defaultDepartmentInfo ? false : this.defaultDepartmentInfo.getName().toLowerCase().indexOf(text) !== -1
+  };
 
   constructor() {
     super();
