@@ -20,6 +20,7 @@ export class ViewSurveyPopupComponent {
   private template: SurveyTemplate;
   program: TrainingProgram;
   displayedColumns: string[] = ['arName', 'enName', 'department', 'status', 'nationality', 'actions'];
+  traineeList: TraineeData[] = [];
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -30,7 +31,7 @@ export class ViewSurveyPopupComponent {
               private data: { program: TrainingProgram, template: SurveyTemplate }) {
     this.template = data.template;
     this.program = data.program;
-    this.program.traineeList = this.program.traineeList.filter((t) => t.isAttended);
+    this.traineeList = this.program.traineeList.filter((t) => t.isAttended && t.status === 2);
   }
 
   viewTraineeSurvey(row: TraineeData): void {
