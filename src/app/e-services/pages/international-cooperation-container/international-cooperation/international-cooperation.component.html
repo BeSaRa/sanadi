@@ -25,7 +25,7 @@
                            validationClasses="competentDepartmentID"
                            formControlName="competentDepartmentID"
                            id="competentDepartmentID">
-                  <ng-option [value]="department.id"
+                  <ng-option [value]="department.id" [disabled]="!department.isActive()"
                              *ngFor="let department of departments">{{department.getName()}}</ng-option>
                 </ng-select>
                 <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>

@@ -102,4 +102,16 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+  
+  isRetired(): boolean {
+    return Number(this.status) === CommonStatusEnum.RETIRED;
+  }
+
+  isInactive(): boolean {
+    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
 }
