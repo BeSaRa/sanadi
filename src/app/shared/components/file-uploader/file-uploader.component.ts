@@ -6,6 +6,7 @@ import {interval, Observable, Subject} from 'rxjs';
 import {concatMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {AdminResult} from '@app/models/admin-result';
 import {BlobModel} from '@app/models/blob-model';
+import {SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'file-uploader',
@@ -13,10 +14,20 @@ import {BlobModel} from '@app/models/blob-model';
   styleUrls: ['./file-uploader.component.scss']
 })
 export class FileUploaderComponent implements OnInit {
+  @Output() fileUploadEvent = new EventEmitter<File | File[] | undefined>();
+  @ViewChild('fileUploader') fileUploader!: ElementRef;
+  uploadedFile: any;
+  uploadedFilePath: any;
+  uploadedFileName?: AdminResult;
+
+  uploadedFiles: File[] = [];
+  uploadedFilesCount: number = 0;
+
   @Input() labelKey: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   @Input() isRequired: boolean = false;
   @Input() allowedExtensions: string[] = [];
   @Input() allowMultiple: boolean = false;
+  @Input() allowRemoveLoadedFile: boolean = false;
 
   /**
    * @description shows the uploaded file name if single file
@@ -30,7 +41,6 @@ export class FileUploaderComponent implements OnInit {
   @Input() showFilePreview: boolean = false;
 
   private _loadedFile?: BlobModel;
-
   @Input()
   set loadedFile(file: BlobModel | undefined) {
     this._loadedFile = file;
@@ -40,15 +50,19 @@ export class FileUploaderComponent implements OnInit {
     return this._loadedFile;
   }
 
-  @Output() fileUploadEvent = new EventEmitter<File | File[] | undefined>();
+  private _loadedFilePath?: SafeResourceUrl;
+  @Input()
+  set loadedFilePath(filePath: SafeResourceUrl | undefined) {
+    this._loadedFilePath = filePath || undefined;
+  }
 
-  @ViewChild('fileUploader') fileUploader!: ElementRef;
-  uploadedFile: any;
-  uploadedFilePath: any;
-  uploadedFileName?: AdminResult;
+  get loadedFilePath(): SafeResourceUrl | undefined {
+    return this._loadedFilePath;
+  }
 
-  uploadedFiles: File[] = [];
-  uploadedFilesCount: number = 0;
+  isLoadedFileAvailable(): boolean {
+    return !!this.loadedFile || !!this.loadedFilePath;
+  }
 
   constructor(public lang: LangService,
               private dialogService: DialogService) {
@@ -56,11 +70,10 @@ export class FileUploaderComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.allowMultiple) {
+      this.showFileName = true;
       this.showFilePreview = false;
     } else {
-      if (this.showFilePreview) {
-        this.showFileName = false;
-      }
+      this.showFileName = !this.showFilePreview;
     }
   }
 
@@ -72,7 +85,7 @@ export class FileUploaderComponent implements OnInit {
 
   private _verifyFile(file: File) {
     const extension = file.name.getExtension().toLowerCase(),
-      invalidMessage = this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
+      invalidMessage = ''//this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
 
     if (!this.allowedExtensions.includes(extension)) {
       this.dialogService.error(invalidMessage);
@@ -184,6 +197,14 @@ export class FileUploaderComponent implements OnInit {
   removeFile($event?: MouseEvent): void {
     $event?.preventDefault();
     this._clearFileUploader();
+    this._emitFileChangeEvent(undefined);
+  }
+
+  removeLoadedFile($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this._clearFileUploader();
+    this.loadedFilePath = undefined;
+    this.loadedFile = undefined;
     this._emitFileChangeEvent(undefined);
   }
 

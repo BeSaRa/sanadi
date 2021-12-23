@@ -1,8 +1,21 @@
-.file-display {
+
+img.img-fit-contain {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-container {
   width: 250px;
   height: 250px;
-  max-width: 250px;
-  max-height: 250px;
-  border: 2px dotted gray;
-  border-radius: 2px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  padding: 5px;
+  position: relative;
+
+  button.btn-remove-file {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }

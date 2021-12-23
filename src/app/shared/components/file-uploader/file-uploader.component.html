@@ -1,28 +1,44 @@
 <div class="row">
   <label class="form-label">{{lang.map[labelKey]}}<span class="text-danger"
                                                         *ngIf="isRequired"> * </span></label>
-  <input type="file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
+  <input type="file" class="input-file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
          [accept]="allowedExtensions" [multiple]="allowMultiple">
-  <div class="col-md-6 col-sm-12">
-    <button class="btn btn-primary"
-            (click)="openFileBrowser($event)">
-      {{lang.map.upload_file}}
-    </button>
-  </div>
-  <div class="col-md-6 col-sm-12">
-    <span *ngIf="showFileName && uploadedFileName">{{uploadedFileName ? uploadedFileName.getName() : ''}}</span>
-    <button *ngIf="uploadedFile || uploadedFiles.length > 0" class="btn icon-btn text-primary m-0 align-top"
-            tooltip="{{lang.map.btn_remove}}"
-            (click)="removeFile($event)">
-      <i class="mdi mdi-close"></i>
-    </button>
+  <div class="col-sm-12">
+    <button class="btn btn-primary mb-3" (click)="openFileBrowser($event)">{{lang.map.upload_file}}</button>
+    <div *ngIf="showFileName">
+      <span *ngIf="uploadedFileName">{{uploadedFileName ? uploadedFileName.getName() : ''}}</span>
+      <button *ngIf="uploadedFile || uploadedFiles.length > 0" class="btn icon-btn text-primary m-0 align-top"
+              tooltip="{{lang.map.btn_remove}}"
+              (click)="removeFile($event)">
+        <i class="mdi mdi-close-circle"></i>
+      </button>
+    </div>
   </div>
   <div class="col-sm-12" *ngIf="showFilePreview">
-    <img *ngIf="uploadedFilePath" id="fileImgUploaded" [src]="uploadedFilePath" alt="{{lang.map.file}}"
-         class="img-fit-contain file-display mt-1"/>
+    <div class="preview-container mb-3" *ngIf="uploadedFilesCount > 0 || isLoadedFileAvailable()">
+      <ng-container *ngIf="uploadedFiles.length > 0">
+        <img *ngIf="uploadedFilePath" id="fileImgUploaded" [src]="uploadedFilePath" alt="{{lang.map.file}}"
+             class="img-fit-contain mt-1"/>
 
-    <img *ngIf="loadedFile && !uploadedFilePath" id="fileImgLoaded" [src]="loadedFile.safeUrl"
-         alt="{{lang.map.file}}"
-         class="img-fit-contain file-display mt-1"/>
+        <button class="btn icon-btn text-primary m-0 align-top btn-remove-file"
+                tooltip="{{lang.map.btn_remove}}"
+                (click)="removeFile($event)">
+          <i class="mdi mdi-close-circle"></i>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="!uploadedFilePath && (loadedFile || loadedFilePath)">
+        <img *ngIf="loadedFile" id="loadedFile" [src]="loadedFile.safeUrl" alt="{{lang.map.file}}"
+             class="img-fit-contain mt-1"/>
+        <img *ngIf="!loadedFile && loadedFilePath" id="loadedFileByPath" [src]="loadedFilePath" alt="{{lang.map.file}}"
+             class="img-fit-contain mt-1"/>
+        <button class="btn icon-btn text-primary m-0 align-top btn-remove-file"
+                tooltip="{{lang.map.btn_remove}}" *ngIf="allowRemoveLoadedFile"
+                (click)="removeLoadedFile($event)">
+          <i class="mdi mdi-close-circle"></i>
+        </button>
+      </ng-container>
+
+    </div>
   </div>
 </div>
