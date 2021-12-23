@@ -123,7 +123,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       department: [this.model?.department, [CustomValidators.required,
         CustomValidators.maxLength(200)
       ]],
-      trainingRecord: [this.model?.trainingRecord, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
+      trainingRecord: [this.model?.trainingRecord, [CustomValidators.maxLength(200)]],
       currentJob: [this.model?.currentJob, [CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]],
