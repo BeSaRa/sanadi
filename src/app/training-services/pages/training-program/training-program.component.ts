@@ -119,7 +119,8 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   openTrainingBriefcaseDialog($event: MouseEvent, record: TrainingProgram): void {
     $event.preventDefault();
-    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record, OperationTypes.CREATE).subscribe((dialog: DialogRef) => {
+    let operationType = record.status == this.trainingStatus.TRAINING_FINISHED ? OperationTypes.VIEW : OperationTypes.CREATE
+    const sub = this.trainingProgramBriefcaseService.openTrainingBriefcaseDialog(record, operationType).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });
@@ -168,7 +169,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   }
 
   showBriefcases(status: number) {
-    return status != this.trainingStatus.TRAINING_FINISHED && status != this.trainingStatus.TRAINING_CANCELED;
+    return status != this.trainingStatus.TRAINING_CANCELED;
   }
 
   setStatusColumnClass(status: number) {
