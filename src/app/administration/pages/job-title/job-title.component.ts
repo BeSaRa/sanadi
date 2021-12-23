@@ -12,7 +12,9 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
 import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';;
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'job-title',
@@ -99,6 +101,14 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       ],
     }
   ];
+
+  sortingCallbacks = {
+    statusInfo: (a: JobTitle, b: JobTitle, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
 
   edit(jobTitle: JobTitle, event: MouseEvent) {
     event.preventDefault();

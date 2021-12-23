@@ -13,6 +13,8 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
 import {map} from 'rxjs/operators';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'attachment-types',
@@ -103,6 +105,14 @@ export class AttachmentTypesComponent implements OnInit {
   reload() {
     this.selectedRecords = [];
     this.load();
+  }
+
+  sortingCallbacks = {
+    statusInfo: (a: AttachmentType, b: AttachmentType, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
   filterCallback(data: AttachmentType, text: string): boolean {

@@ -9,6 +9,8 @@ import {of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {ToastService} from '@app/services/toast.service';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-department',
@@ -59,6 +61,14 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
   constructor(public lang: LangService, public service: InternalDepartmentService,
               private toast: ToastService) {
     super();
+  }
+
+  sortingCallbacks = {
+    statusInfo: (a: InternalDepartment, b: InternalDepartment, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
   ngOnInit() {
