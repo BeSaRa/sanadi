@@ -1,27 +1,28 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {LangService} from '@app/services/lang.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {OperationTypes} from '../../../enums/operation-types.enum';
+import {FormManager} from '@app/models/form-manager';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
-import {AttachmentType} from '../../../models/attachment-type';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {ServiceDataService} from '../../../services/service-data.service';
-import {ServiceData} from '../../../models/service-data';
-import {AttachmentTypeService} from '../../../services/attachment-type.service';
-import {AttachmentTypeServiceData} from '../../../models/attachment-type-service-data';
-import {AttachmentTypeServiceDataService} from '../../../services/attachment-type-service-data.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogService} from '../../../services/dialog.service';
+import {AttachmentType} from '@app/models/attachment-type';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {ServiceData} from '@app/models/service-data';
+import {AttachmentTypeService} from '@app/services/attachment-type.service';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
+import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'attachment-types-popup',
@@ -51,6 +52,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentType>,
               public lang: LangService,
+              public employeeService: EmployeeService,
               private fb: FormBuilder,
               private exceptionHandlerService: ExceptionHandlerService,
               private lookupService: LookupService,
