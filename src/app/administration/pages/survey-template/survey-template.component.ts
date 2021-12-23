@@ -62,4 +62,8 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
   viewTemplate(row: SurveyTemplate) {
     row.view().onAfterClose$.subscribe(this.reload$)
   }
+
+  editTemplate(row: SurveyTemplate): void {
+    !row.usedBefore && this.edit$.next(row);
+  }
 }

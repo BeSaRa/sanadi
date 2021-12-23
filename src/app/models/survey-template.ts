@@ -15,6 +15,7 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   status: boolean = true;
   sectionSet: SurveySection[] = [];
   langService: LangService;
+  usedBefore: boolean = false;
 
   constructor() {
     super();
