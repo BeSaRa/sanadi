@@ -167,6 +167,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     return classes;
   }
 
+  getRegistrationEndTrainingStartTrainingEndDatesClasses(controlName: string) {
+    let classes = {};
+    classes = this.fm.getStatusClass(controlName);
+    if (this.isCertification || this.operation == OperationTypes.VIEW) {
+      classes = {...classes, 'input-disabled': true};
+    }
+    return classes;
+  }
+
   listenToApprove() {
     this.approve$
       .pipe(
