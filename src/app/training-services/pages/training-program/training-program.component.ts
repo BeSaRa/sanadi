@@ -101,11 +101,10 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   applyAttendance(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
-    const sub = this.service.openAttendanceDialog(trainingProgram).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        sub.unsubscribe();
-      });
-    });
+    this.service.openAttendanceDialog(trainingProgram)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(ref => ref.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   candidates(trainingProgram: TrainingProgram, event: MouseEvent) {

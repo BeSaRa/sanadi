@@ -11,7 +11,7 @@ import {TrainingStatus} from "@app/enums/training-status";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable} from "rxjs";
 
-export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService>{
+export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService> {
   service: TrainingProgramService;
   activityName!: string;
   trainingProgramSerial!: string;
@@ -55,6 +55,7 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   isOpenForCertification!: boolean;
   trainingSurveyTemplateId!: number;
   surveyPublished!: boolean;
+  attendencePublished!: boolean;
 
   // to be removed
   registeredTraineeNumber: number = 0;
@@ -190,6 +191,10 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
 
   isFinishedProgram(): boolean {
     return this.status === TrainingStatus.TRAINING_FINISHED;
+  }
+
+  readyForSurvey(): boolean {
+    return this.isFinishedProgram() && this.attendencePublished;
   }
 
   publishSurvey(): DialogRef {

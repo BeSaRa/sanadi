@@ -94,7 +94,7 @@
                    tooltip="{{lang.map.attendance}}" class="icon-btn">
                   <i class="mdi mdi-account-clock"></i>
                 </a>
-                <button [tooltip]="(!row.surveyPublished ? lang.map.publish_survey : lang.map.menu_surveys)" (click)="publishSurvey(row)" *ngIf="row.isFinishedProgram()"
+                <button [tooltip]="(!row.surveyPublished ? lang.map.publish_survey : lang.map.menu_surveys)" (click)="publishSurvey(row)" *ngIf="row.readyForSurvey()"
                         class="btn icon-btn">
                   <i class="mdi mdi-poll"
                      [ngClass]="{'text-info':row.surveyPublished ,'text-primary': !row.surveyPublished}"></i></button>
