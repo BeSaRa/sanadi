@@ -1,12 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
-import {catchError, exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {OrgUnit} from '@app/models/org-unit';
@@ -208,20 +208,24 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   }
 
   listenToSelectAuthorityUser() {
-    this.selectAuthorityUser$.subscribe(() => {
-      this.form.reset();
-      const user = this.authorityUsers.find(x => x.id == this.selectedAuthorityUserId)!;
-      this.mapUserToForm(user);
-    });
+    this.selectAuthorityUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.form.reset();
+        const user = this.authorityUsers.find(x => x.id == this.selectedAuthorityUserId)!;
+        this.mapUserToForm(user);
+      });
   }
 
   listenToSelectOrganizationUser() {
-    this.selectOrganizationUser$.subscribe(() => {
-      this.form.reset();
-      const user = this.organizationUsers.find(x => x.id == this.selectedOrganizationUserId)!;
-      this.mapUserToForm(user);
-      console.log('selected org user', this.selectedOrganizationUserId);
-    });
+    this.selectOrganizationUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.form.reset();
+        const user = this.organizationUsers.find(x => x.id == this.selectedOrganizationUserId)!;
+        this.mapUserToForm(user);
+        console.log('selected org user', this.selectedOrganizationUserId);
+      });
   }
 
   listenToSaveCandidate() {
@@ -232,13 +236,16 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
           trainee.externalOrgId = this.selectedOrganizationId!;
           trainee.isDraft = isDraft;
 
-          return this.operation == OperationTypes.CREATE ?
+          let obs = this.operation == OperationTypes.CREATE ?
             this.traineeService.enrollTrainee(this.trainingProgramId, trainee) :
             this.traineeService.updateTrainee(this.trainingProgramId, trainee);
+
+          return obs.pipe(catchError((err) => {
+            return of(null);
+          }));
         }),
-        catchError((err: Error, source: Observable<Trainee>) => {
-          return source;
-        }))
+        filter(res => res != null)
+      )
       .subscribe(() => {
         const message = this.lang.map.msg_save_success;
         this.toast.success(message);
