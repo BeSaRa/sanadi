@@ -8,9 +8,11 @@ import {DialogService} from "@app/services/dialog.service";
 import {ComponentType} from "@angular/cdk/overlay";
 import {InternalUserPopupComponent} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
 import {FactoryService} from "@app/services/factory.service";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
+import {BlobModel} from '@app/models/blob-model';
+import {DomSanitizer} from '@angular/platform-browser';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
@@ -22,6 +24,7 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
+              private domSanitizer: DomSanitizer,
               public dialog: DialogService) {
     super()
     FactoryService.registerService('InternalUserService', this);
@@ -62,5 +65,36 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
 
   private _deactivate(id: number): Observable<any> {
     return this.http.put<any>(this._getServiceURL() + '/' + id + '/de-activate', {});
+  }
+
+  loadSignatureByGeneralUserId(generalUserId: number) {
+    return this.http.get(this._getServiceURL() + '/signature/content?generalUserId=' + generalUserId, {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+        })));
+  }
+
+  private _addSignature(generalUserId: number, file: File): Observable<boolean> {
+    let form = new FormData();
+    form.append('content', file);
+    return this.http.post<boolean>(this._getServiceURL() + '/signature?generalUserId=' + generalUserId, form);
+  }
+
+  private _updateSignature(generalUserId: number, file: File): Observable<boolean> {
+    let form = new FormData();
+    form.append('content', file);
+    return this.http.post<boolean>(this._getServiceURL() + '/signature/update?generalUserId=' + generalUserId, form);
+  }
+
+  saveSignature(generalUserId: number, file: File, isNewSignature: boolean = true): Observable<boolean> {
+    if (!isNewSignature) {
+      return this._updateSignature(generalUserId, file);
+    } else {
+      return this._addSignature(generalUserId, file);
+    }
   }
 }

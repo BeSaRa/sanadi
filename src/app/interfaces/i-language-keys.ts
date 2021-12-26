@@ -821,4 +821,5 @@ export interface ILanguageKeys {
   file_pdf: string;
   file_video: string;
   file_powerpoint: string;
+  signature: string;
 }

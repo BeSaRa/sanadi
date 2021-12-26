@@ -86,6 +86,13 @@
                    class="form-control" onlyNumbers>
             <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <file-uploader labelKey="signature" [isRequired]="false"
+                           [loadedFile]="loadedSignature" [showFilePreview]="true"
+                           (fileUploadEvent)="setSignatureFile($event)"
+                           [allowedExtensions]="[fileExtensionsEnum.PNG, fileExtensionsEnum.JPEG, fileExtensionsEnum.JPG]">
+            </file-uploader>
+          </div>
         </div>
         <!--<div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">

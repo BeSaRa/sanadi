@@ -146,4 +146,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+
+  saveSignature(signatureFile: File, isNewSignature: boolean = true): Observable<any> {
+    return this.service.saveSignature(this.generalUserId, signatureFile, isNewSignature);
+  }
 }

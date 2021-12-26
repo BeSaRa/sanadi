@@ -32,6 +32,9 @@ import {InternalUserDepartment} from "@app/models/internal-user-department";
 import {AdminResult} from "@app/models/admin-result";
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {InternalUserService} from '@app/services/internal-user.service';
+import {BlobModel} from '@app/models/blob-model';
 
 @Component({
   selector: 'internal-user-popup',
@@ -57,6 +60,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
   commonStatusEnum = CommonStatusEnum;
+  fileExtensionsEnum = FileExtensionsEnum;
+  signatureFile?: File;
+  loadedSignature?: BlobModel;
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -78,6 +84,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private internalUserDepartmentService: InternalUserDepartmentService,
               private permissionService: PermissionService,
               private toast: ToastService,
+              private internalUserService: InternalUserService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
     this.model = this.data.model;
@@ -168,6 +175,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       .subscribe((roles) => this.customRoles = roles);
   }
 
+  private loadSignature() {
+    this.internalUserService.loadSignatureByGeneralUserId(this.model.generalUserId)
+      .subscribe((result) => {
+        this.loadedSignature = result;
+      });
+  }
+
   initPopup(): void {
     this.loadDepartments();
     // this.loadJobTitles();
@@ -175,6 +189,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.loadCustomRoles();
     if (this.operation === OperationTypes.UPDATE) {
       this.loadUserDepartments();
+      this.loadSignature();
     }
     this.listenToUserDepartmentsChange();
   }
@@ -207,18 +222,27 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
-    this.userPermissionService
-      .saveUserPermissions(model.id, this.groupHandler.getSelection())
-      .subscribe(() => {
-        const message = (this.operation === OperationTypes.CREATE)
-          ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-        this.toast.success(message.change({x: model.getName()}));
-        // here i closing the popup after click on save and the operation is update
-        this.operation === OperationTypes.UPDATE && dialogRef.close(model);
-        // here i change operation to UPDATE after first save
-        this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
-        this.preventUserDomain();
-      });
+    let signSub;
+    if (!!this.signatureFile) {
+      signSub = model.saveSignature(this.signatureFile, !this.loadedSignature);
+    } else {
+      signSub = of(true);
+    }
+
+    signSub.subscribe(() => {
+      this.userPermissionService
+        .saveUserPermissions(model.id, this.groupHandler.getSelection())
+        .subscribe(() => {
+          const message = (this.operation === OperationTypes.CREATE)
+            ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+          this.toast.success(message.change({x: model.getName()}));
+          // here i closing the popup after click on save and the operation is update
+          this.operation === OperationTypes.UPDATE && dialogRef.close(model);
+          // here i change operation to UPDATE after first save
+          this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
+          this.preventUserDomain();
+        });
+    })
   }
 
   beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
@@ -330,5 +354,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         this.userDepartmentsIds = list.map(item => item.internalDepartmentId);
         this.userDepartments = list;
       })
+  }
+
+  setSignatureFile(file: File | File[] | undefined): void {
+    if (!file || file instanceof File) {
+      this.signatureFile = file;
+    } else {
+      this.signatureFile = file[0];
+    }
   }
 }
