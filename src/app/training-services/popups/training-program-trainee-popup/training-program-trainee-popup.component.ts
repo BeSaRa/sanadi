@@ -1,12 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
-import {exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {OrgUnit} from '@app/models/org-unit';
@@ -228,14 +228,17 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.saveCandidate$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((isDraft: boolean) => {
-        const trainee = (new Trainee()).clone({...this.form.value});
-        trainee.externalOrgId = this.selectedOrganizationId!;
-        trainee.isDraft = isDraft;
+          const trainee = (new Trainee()).clone({...this.form.value});
+          trainee.externalOrgId = this.selectedOrganizationId!;
+          trainee.isDraft = isDraft;
 
-        return this.operation == OperationTypes.CREATE ?
-          this.traineeService.enrollTrainee(this.trainingProgramId, trainee) :
-          this.traineeService.updateTrainee(this.trainingProgramId, trainee);
-      }))
+          return this.operation == OperationTypes.CREATE ?
+            this.traineeService.enrollTrainee(this.trainingProgramId, trainee) :
+            this.traineeService.updateTrainee(this.trainingProgramId, trainee);
+        }),
+        catchError((err: Error, source: Observable<Trainee>) => {
+          return source;
+        }))
       .subscribe(() => {
         const message = this.lang.map.msg_save_success;
         this.toast.success(message);
