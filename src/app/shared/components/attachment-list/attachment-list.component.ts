@@ -1,20 +1,19 @@
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
-import {SubventionRequest} from '../../../models/subvention-request';
-import {FormManager} from '../../../models/form-manager';
-import {SanadiAttachment} from '../../../models/sanadi-attachment';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {LookupService} from '../../../services/lookup.service';
-import {AttachmentService} from '../../../services/attachment.service';
-import {ToastService} from '../../../services/toast.service';
+import {LangService} from '@app/services/lang.service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {SubventionRequest} from '@app/models/subvention-request';
+import {FormManager} from '@app/models/form-manager';
+import {SanadiAttachment} from '@app/models/sanadi-attachment';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {LookupService} from '@app/services/lookup.service';
+import {AttachmentService} from '@app/services/attachment.service';
+import {ToastService} from '@app/services/toast.service';
 import {catchError, switchMap} from 'rxjs/operators';
 import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {isValidValue} from '../../../helpers/utils';
-import {DialogService} from '../../../services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-attachment-list',
@@ -46,7 +45,15 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   attachedFiles: any[] = [];
   showForm: boolean = false;
   currentAttachment: any;
-  allowedExtensions: string[] = this.configService.CONFIG.ATTACHMENT_EXTENSIONS;
+  allowedExtensions: string[] = [
+    FileExtensionsEnum.PDF,
+    FileExtensionsEnum.JPG,
+    FileExtensionsEnum.JPEG,
+    FileExtensionsEnum.PNG,
+    FileExtensionsEnum.DOC,
+    FileExtensionsEnum.DOCX,
+    FileExtensionsEnum.TIFF
+  ];
   reload$ = new Subject<any>();
   reloadSubscription!: Subscription;
   displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
@@ -59,7 +66,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private toast: ToastService,
               private dialogService: DialogService,
-              private configService: ConfigurationService,
               public lookupService: LookupService,
               private attachmentService: AttachmentService) {
   }

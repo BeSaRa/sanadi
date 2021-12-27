@@ -6,7 +6,10 @@ export enum FileExtensionsEnum {
   MP4 = '.mp4',
   MKV = '.mkv',
   PPT = '.ppt',
-  PPTX = '.pptx'
+  PPTX = '.pptx',
+  DOC = '.doc',
+  DOCX = '.docx',
+  TIFF = '.tiff'
 }
 
 export enum FileMimeTypesEnum {
@@ -17,7 +20,10 @@ export enum FileMimeTypesEnum {
   MP4 = 'video/mp4',
   MKV = 'video/x-matroska',
   PPT = 'application/vnd.ms-powerpoint',
-  PPTX = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  PPTX = 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  DOC = 'application/msword',
+  DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  TIFF = 'image/tiff'
 }
 
 export enum FileIconsEnum {
@@ -33,5 +39,8 @@ export enum FileIconsEnum {
   MP4 = 'mdi-file-video-outline',
   MKV = 'mdi-file-video-outline',
   PPT = 'mdi-file-powerpoint-outline',
-  PPTX = 'mdi-file-powerpoint-outline'
+  PPTX = 'mdi-file-powerpoint-outline',
+  DOC = 'mdi-file-word-box',
+  DOCX = 'mdi-file-word-box',
+  TIFF = 'mdi-file-image-outline'
 }

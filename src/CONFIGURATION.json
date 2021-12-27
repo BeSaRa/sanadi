@@ -76,19 +76,6 @@
     "TRAINING_ADD_PUBLISH_PROGRAM",
     "TRAINING_MANAGE_TRAINEE"
   ],
-  "ORG_LOGO_EXTENSIONS": [
-    ".png",
-    ".jpg",
-    ".jpeg"
-  ],
-  "ATTACHMENT_EXTENSIONS": [
-    ".pdf",
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".docx",
-    ".tiff"
-  ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
   ],
