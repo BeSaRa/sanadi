@@ -13,7 +13,7 @@
       <table cdk-table [dataSource]='table.dataSource' class='table table-striped table-bordered caption-top'>
         <ng-container cdkColumnDef='select'>
           <th style='width: 20px' cdk-header-cell *cdkHeaderCellDef>
-            <input type='checkbox'
+            <input type='checkbox' [disabled]="table.filter"
                    [indeterminate]='table.selection.hasValue() && !table.allSelected()'
                    (change)='$event ? table.toggleAll() : null'
                    [checked]='table.selection.hasValue() && table.allSelected()'
