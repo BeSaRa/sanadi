@@ -46,6 +46,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     stamp: {name: 'stamp'}
   };
   blob!: BlobModel;
+  teamInfo!: Team;
 
   constructor(
     public dialogRef: DialogRef,
@@ -61,10 +62,11 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     this.model = data.model;
     this.operation = data.operation;
     this.disableForm = data.disableForm;
+    this.teamInfo = data.model.mainTeam;
   }
 
   initPopup(): void {
-    this.loadTeams();
+    // this.loadTeams();
     this.loadInternalUsers();
     this.listenToSaveStamp();
     this.setCurrentStamp();
