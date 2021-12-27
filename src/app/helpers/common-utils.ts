@@ -157,4 +157,29 @@ export class CommonUtils {
   static objectHasValue(objectToCheck: any): boolean {
     return Object.values(objectToCheck).some(value => this.isValidValue(value));
   }
+
+  /**
+   * @description Opens the blob data in new browser tab or download if IE browser
+   * @param data:Blob
+   * @param fileName?:string
+   */
+  static printBlobData(data: Blob, fileName?: string): void {
+    if ((window.navigator as any).msSaveOrOpenBlob) {
+      (window.navigator as any).msSaveOrOpenBlob(data, fileName ?? 'sanadi-' + new Date().valueOf() + '.pdf');
+    } else {
+      const a: HTMLAnchorElement = document.createElement('a');
+      const url = URL.createObjectURL(data);
+      a.href = URL.createObjectURL(data);
+      a.target = '_blank';
+      a.click();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 0)
+    }
+  }
+
+  openBlobFileByUrl(blobUrl: string): void {
+    window.open(blobUrl);
+  }
 }

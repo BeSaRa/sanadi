@@ -13,13 +13,17 @@ export class UserPermissionService {
   constructor(private http: HttpClient, private urlService: UrlService) {
   }
 
+  _getServiceURL(): string {
+    return this.urlService.URLS.INTERNAL_USER_PERMISSIONS;
+  }
+
   @Generator(UserPermission, true)
   private _loadUserPermissions(userId: number): Observable<UserPermission[]> {
-    return this.http.get<UserPermission[]>(this.urlService.URLS.INTERNAL_USER_PERMISSIONS + '/internal/' + userId)
+    return this.http.get<UserPermission[]>(this._getServiceURL() + '/internal/' + userId)
   }
 
   private _saveUserPermissions(userId: number, permissions: number[]): Observable<any> {
-    return this.http.post(this.urlService.URLS.INTERNAL_USER_PERMISSIONS + '/' + userId + '/bulk', permissions);
+    return this.http.post(this._getServiceURL() + '/' + userId + '/bulk', permissions);
   }
 
   saveUserPermissions(userId: number, permissions: number[]): Observable<any> {
@@ -28,6 +32,10 @@ export class UserPermissionService {
 
   loadUserPermissions(userId: number): Observable<UserPermission[]> {
     return this._loadUserPermissions(userId);
+  }
+
+  loadPermissionsAsBlob(internalUserId: number): Observable<Blob> {
+    return this.http.get(this._getServiceURL() + '/export/' + internalUserId, {responseType: 'blob'});
   }
 
 

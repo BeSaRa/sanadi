@@ -35,6 +35,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {BlobModel} from '@app/models/blob-model';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-user-popup',
@@ -362,5 +363,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     } else {
       this.signatureFile = file[0];
     }
+  }
+
+  printPermissions($event: MouseEvent): void {
+    $event?.preventDefault();
+    this.userPermissionService.loadPermissionsAsBlob(this.model.id)
+      .subscribe((data) => {
+        CommonUtils.printBlobData(data, 'InternalUserPermission_' + this.model.getName());
+      });
   }
 }

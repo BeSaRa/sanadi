@@ -124,6 +124,13 @@
             </ng-option>
           </ng-select>
         </div>
+        <div class="col-sm-6 mb-4 text-end">
+          <button *ngIf="model.id && customRoleId?.value"
+                  (click)="printPermissions($event)" tooltip="{{lang.map.print}}"
+                  class="btn icon-btn text-primary">
+            <i class="mdi mdi-printer"></i>
+          </button>
+        </div>
       </div>
     </ng-container>
     <div *ngIf="customRoleId?.value" class="row">
