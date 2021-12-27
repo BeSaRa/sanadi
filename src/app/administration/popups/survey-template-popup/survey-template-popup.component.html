@@ -52,12 +52,12 @@
             <button cdkDragHandle [disabled]="model.usedBefore" [tooltip]="lang.map.change_order" class="btn icon-btn">
               <i
                 class="mdi text-primary mdi-cursor-move"></i></button>
-            <button (click)="addQuestion$.next(i)" [tooltip]="lang.map.add_question"
+            <button [disabled]="model.usedBefore" (click)="addQuestion$.next(i)" [tooltip]="lang.map.add_question"
                     class="btn icon-btn"><i
               class="mdi text-primary mdi-plus-box"></i></button>
-            <button [tooltip]="lang.map.delete_section" (click)="deleteSection$.next({index: i, model:section})"
+            <button [disabled]="model.usedBefore" [tooltip]="lang.map.delete_section" (click)="deleteSection$.next({index: i, model:section})"
                     class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
-            <button [tooltip]="lang.map.edit_section" (click)="editSection$.next({index: i, model:section})"
+            <button [disabled]="model.usedBefore" [tooltip]="lang.map.edit_section" (click)="editSection$.next({index: i, model:section})"
                     class="btn icon-btn"><i class="mdi text-primary mdi-pen"></i></button>
           </div>
           <div cdkDropList (cdkDropListDropped)="dropQuestion($event , i)" class="card-body">
@@ -69,7 +69,7 @@
                 <button cdkDragHandle [disabled]="model.usedBefore" [tooltip]="lang.map.change_order"
                         class="btn icon-btn"><i
                   class="mdi text-primary mdi-cursor-move"></i></button>
-                <button (click)="deleteQuestion(question , qIndex , i)" [tooltip]="lang.map.delete_question"
+                <button [disabled]="model.usedBefore" (click)="deleteQuestion(question , qIndex , i)" [tooltip]="lang.map.delete_question"
                         class="btn icon-btn"><i class="mdi text-primary mdi-delete"></i></button>
               </div>
             </div>

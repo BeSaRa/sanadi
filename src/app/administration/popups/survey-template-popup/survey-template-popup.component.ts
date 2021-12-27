@@ -104,6 +104,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   private listenToAddSection() {
     this.addSection$
       .pipe(takeUntil(this.destroy$))
+      .pipe(filter(_ => !this.model.usedBefore))
       .pipe(switchMap(_ => (this.surveySectionService.addDialog().onAfterClose$ as Observable<SurveySection>)))
       .pipe(filter(value => !!value))
       .subscribe((section) => {
@@ -115,6 +116,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     let editIndex: number = 0;
     this.editSection$
       .pipe(takeUntil(this.destroy$))
+      .pipe(filter(_ => !this.model.usedBefore))
       .pipe(switchMap(({index, model}) => {
         editIndex = index;
         return this.surveySectionService.editDialog(model, false)
@@ -132,6 +134,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     let deleteIndex: number = 0;
     this.deleteSection$
       .pipe(takeUntil(this.destroy$))
+      .pipe(filter(_ => !this.model.usedBefore))
       .pipe(tap(({index}) => deleteIndex = index))
       .pipe(switchMap(({model}) => this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$ as Observable<UserClickOn>))
       .pipe(filter(click => click === UserClickOn.YES))
@@ -144,6 +147,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     let sectionIndex: number;
     this.addQuestion$
       .pipe(takeUntil(this.destroy$))
+      .pipe(filter(_ => !this.model.usedBefore))
       .pipe(tap(index => sectionIndex = index))
       .pipe(switchMap(() => this.surveyQuestionService.loadIfNotExists()))
       .pipe(switchMap(questions => (this.surveyQuestionService.openSelectQuestion(questions, this.model.getQuestionsIds()).onAfterClose$ as Observable<SurveyQuestion>)))
@@ -161,6 +165,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   deleteQuestion(q: IQuestionSection, questionIndex: number, sectionIndex: number) {
     of(null)
       .pipe(takeUntil(this.destroy$))
+      .pipe(filter(_ => !this.model.usedBefore))
       .pipe(switchMap(_ => this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: q.question.getName()})).onAfterClose$ as Observable<UserClickOn>))
       .pipe(filter(val => val === UserClickOn.YES))
       .subscribe(() => {
