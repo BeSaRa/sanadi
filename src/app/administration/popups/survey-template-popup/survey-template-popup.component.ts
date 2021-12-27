@@ -173,6 +173,6 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
   }
 
   cannotAddSections(): boolean {
-    return this.model.sectionSet.length >= 6;
+    return this.model.sectionSet.length >= 6 || this.model.usedBefore;
   }
 }

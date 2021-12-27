@@ -44,7 +44,7 @@
             </button>
             <button (click)='viewTemplate(row)' class='btn icon-btn'><i class='mdi text-primary mdi-eye'></i>
             </button>
-            <button [ngClass]="{isDisabled: row.usedBefore}" (click)='editTemplate(row)' class='btn icon-btn'><i
+            <button (click)='editTemplate(row)' class='btn icon-btn'><i
               class='mdi text-primary mdi-pen'></i></button>
           </td>
         </ng-container>

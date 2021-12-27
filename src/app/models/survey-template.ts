@@ -27,12 +27,12 @@ export class SurveyTemplate extends BaseModel<SurveyTemplate, SurveyTemplateServ
   buildForm(controls: boolean = false) {
     const {arName, enName, status} = this;
     return {
-      arName: controls ? [arName, [
+      arName: controls ? [{value: arName, disabled: this.usedBefore}, [
         CustomValidators.required,
         CustomValidators.pattern('AR_NUM'),
         CustomValidators.maxLength(200)
       ]] : arName,
-      enName: controls ? [enName, [
+      enName: controls ? [{value: enName, disabled: this.usedBefore}, [
         CustomValidators.required,
         CustomValidators.pattern('ENG_NUM'),
         CustomValidators.maxLength(200)

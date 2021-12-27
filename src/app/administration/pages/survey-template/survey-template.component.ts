@@ -64,6 +64,6 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
   }
 
   editTemplate(row: SurveyTemplate): void {
-    !row.usedBefore && this.edit$.next(row);
+    this.edit$.next(row);
   }
 }

@@ -9,13 +9,15 @@
       <div class='col-md-6 col-sm-12 mb-4 position-relative'>
         <label class='form-label' asteriskIfRequired='arName'
                for='sectionArName'>{{lang.map.arabic_name}}</label>
-        <input id='sectionArName' validationClasses='arName' formControlName='arName' class='form-control'>
+        <input id='sectionArName' validationClasses='arName' maxlength="200" formControlName='arName'
+               class='form-control'>
         <app-field-error-message controlName='arName'></app-field-error-message>
       </div>
       <div class='col-md-6 col-sm-12 mb-4 position-relative'>
         <label class='form-label' asteriskIfRequired='enName'
                for='sectionEnName'>{{lang.map.english_name}}</label>
-        <input id='sectionEnName' validationClasses='enName' formControlName='enName' class='form-control'>
+        <input id='sectionEnName' validationClasses='enName' maxlength="200" formControlName='enName'
+               class='form-control'>
         <app-field-error-message controlName='enName'></app-field-error-message>
       </div>
     </div>
