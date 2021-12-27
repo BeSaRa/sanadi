@@ -12,7 +12,6 @@ import {TeamService} from '@app/services/team.service';
 import {Team} from '@app/models/team';
 import {InternalUser} from '@app/models/internal-user';
 import {InternalUserService} from '@app/services/internal-user.service';
-import {ConfigurationService} from '@app/services/configuration.service';
 import {DialogService} from '@app/services/dialog.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
@@ -21,6 +20,7 @@ import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {BlobModel} from '@app/models/blob-model';
 import {SafeResourceUrl} from '@angular/platform-browser';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'internal-department-popup',
@@ -38,7 +38,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   @ViewChild('stampUploader') stampUploader!: ElementRef;
   stampPath!: SafeResourceUrl;
   stampFile: any;
-  stampExtensions: string[] = this.configService.CONFIG.ORG_LOGO_EXTENSIONS;
+  stampExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
   disableForm: boolean = false;
   saveStamp$: Subject<void> = new Subject<void>();
   tabsData: IKeyValue = {
@@ -54,7 +54,6 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
     private teamService: TeamService,
     private internalUserService: InternalUserService,
-    private configService: ConfigurationService,
     private dialogService: DialogService,
     private lookupService: LookupService,
     private toast: ToastService) {

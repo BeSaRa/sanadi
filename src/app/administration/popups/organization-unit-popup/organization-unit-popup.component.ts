@@ -1,25 +1,25 @@
 import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {OrgUnit} from '../../../models/org-unit';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {LookupService} from '../../../services/lookup.service';
-import {ToastService} from '../../../services/toast.service';
-import {LangService} from '../../../services/lang.service';
-import {extender} from '../../../helpers/extender';
-import {Lookup} from '../../../models/lookup';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormManager} from '@app/models/form-manager';
+import {OrgUnit} from '@app/models/org-unit';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {LangService} from '@app/services/lang.service';
+import {extender} from '@app/helpers/extender';
+import {Lookup} from '@app/models/lookup';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {FileStore} from '../../../models/file-store';
-import {DialogService} from '../../../services/dialog.service';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {DateUtils} from '../../../helpers/date-utils';
+import {FileStore} from '@app/models/file-store';
+import {DialogService} from '@app/services/dialog.service';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {DateUtils} from '@app/helpers/date-utils';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -59,7 +59,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   @ViewChild('logoUploader') logoUploader!: ElementRef;
   logoPath: string = '';
   logoFile: any;
-  logoExtensions: string[] = this.configService.CONFIG.ORG_LOGO_EXTENSIONS;
+  logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUnit>,
               private lookupService: LookupService,
@@ -67,7 +67,6 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               public langService: LangService,
               private dialogService: DialogService,
-              private configService: ConfigurationService,
               private exceptionHandlerService: ExceptionHandlerService) {
     this.operation = data.operation;
     this.model = data.model;
