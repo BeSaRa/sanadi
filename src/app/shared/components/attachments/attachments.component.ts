@@ -54,7 +54,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   destroy$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = [/*'select',*/ 'title', 'type', 'description', 'mandatory', 'date', 'actions'];
+  displayedColumns: string[] = [/*'rowSelection',*/ 'title', 'type', 'description', 'mandatory', 'date', 'actions'];
 
   filter: FormControl = new FormControl();
 

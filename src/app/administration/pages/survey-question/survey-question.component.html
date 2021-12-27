@@ -11,7 +11,7 @@
                [data]="models"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-        <ng-container cdkColumnDef="select">
+        <ng-container cdkColumnDef="rowSelection">
           <th style="width: 20px" cdk-header-cell *cdkHeaderCellDef>
             <input type="checkbox"
                    [indeterminate]="table.selection.hasValue() && !table.allSelected()"

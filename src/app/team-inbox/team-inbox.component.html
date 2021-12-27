@@ -23,7 +23,7 @@
                  [columns]="tableOptions.columns" [data]="queryResultSet?.items" [filter]="tableOptions.searchText"
                  [useSearchToFilter]="true">
         <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-          <ng-container cdkColumnDef="select">
+          <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
               <input type="checkbox"
                      [indeterminate]="table.selection.hasValue() && !table.allSelected()"

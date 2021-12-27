@@ -52,7 +52,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['select', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'],
+    columns: ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'],
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {

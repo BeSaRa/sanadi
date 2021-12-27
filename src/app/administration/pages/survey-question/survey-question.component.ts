@@ -28,7 +28,7 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
     super();
   }
 
-  displayedColumns: string[] = ['select', 'arName', 'enName', 'isFreeText', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'isFreeText', 'actions'];
   useCompositeToLoad = false;
   @ViewChild(TableComponent)
   table!: TableComponent;

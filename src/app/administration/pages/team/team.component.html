@@ -15,7 +15,7 @@
                  [columns]="tableOptions.columns" [data]="teams" [filter]="tableOptions.searchText"
                  [filterCallback]="tableOptions.searchCallback">
         <table cdk-table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="select">
+          <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell *cdkHeaderCellDef>
               <input type="checkbox"
                      [indeterminate]="table.selection.hasValue() && !table.allSelected()"

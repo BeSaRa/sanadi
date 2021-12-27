@@ -17,7 +17,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   styleUrls: ['./internal-user.component.scss']
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
-  displayedColumns: string[] = ['select', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
   // subject for emit clicking om delete button
   delete$: Subject<InternalUser> = new Subject<InternalUser>();
   commonStatusEnum = CommonStatusEnum;

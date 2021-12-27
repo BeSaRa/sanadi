@@ -37,7 +37,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['select', 'arName', 'enName', 'authName', 'createdOn', 'createdBy', 'updatedOn', 'updatedBy', 'status', 'actions'],
+    columns: ['rowSelection', 'arName', 'enName', 'authName', 'createdOn', 'createdBy', 'updatedOn', 'updatedBy', 'status', 'actions'],
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
