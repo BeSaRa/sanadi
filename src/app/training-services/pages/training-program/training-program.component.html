@@ -22,7 +22,7 @@
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell *cdkHeaderCellDef class="text-center">
               <input aria-label="select all" [indeterminate]="isIndeterminateSelection" [checked]="isFullSelection"
-                     type="checkbox"
+                     type="checkbox" [disabled]="table.filter"
                      id="select-all" (change)="onSelectAll()"
                      class="form-check-input cursor-pointer">
             </th>
