@@ -26,6 +26,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   operation: OperationTypes;
   saveVisible = true;
   userTypes: Lookup[] = [];
+  disableForm: boolean = false;
 
   constructor(public dialogRef: DialogRef,
               public fb: FormBuilder,
@@ -37,6 +38,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
     super();
     this.model = data.model;
     this.operation = data.operation;
+    this.disableForm = data.disableForm;
   }
 
   initPopup(): void {
@@ -45,6 +47,11 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+    if (this.disableForm) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
   beforeSave(model: JobTitle, form: FormGroup): Observable<boolean> | boolean {

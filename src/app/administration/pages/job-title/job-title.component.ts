@@ -9,12 +9,13 @@ import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {ToastService} from '@app/services/toast.service';
-import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'job-title',
@@ -32,21 +33,35 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     super();
   }
 
+  protected _init(): void {
+    this.listenToView();
+  }
+
   @ViewChild('table') table!: TableComponent;
+  view$: Subject<JobTitle> = new Subject<JobTitle>();
 
   commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<JobTitle>[] = [
+    // reload
     {
       type: 'action',
       label: 'btn_reload',
       icon: 'mdi-reload',
       onClick: _ => this.reload$.next(null),
     },
+    // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
-      onClick: (user) => this.edit$.next(user)
+      onClick: (item: JobTitle) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: 'mdi-eye',
+      onClick: (item: JobTitle) => this.view$.next(item)
     },
     // activate
     {
@@ -115,9 +130,25 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     return this.table.selection.selected;
   }
 
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
   edit(jobTitle: JobTitle, event: MouseEvent) {
     event.preventDefault();
     this.edit$.next(jobTitle);
+  }
+
+  view(jobTitle: JobTitle, event: MouseEvent) {
+    event.preventDefault();
+    this.view$.next(jobTitle);
   }
 
   delete(event: MouseEvent, model: JobTitle): void {

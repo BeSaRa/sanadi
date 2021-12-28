@@ -23,17 +23,26 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
   commonStatusEnum = CommonStatusEnum;
 
   actions: IMenuItem<InternalDepartment>[] = [
+    // reload
     {
       type: 'action',
       label: 'btn_reload',
       icon: 'mdi-reload',
       onClick: _ => this.reload$.next(null),
     },
+    // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: 'mdi-pen',
-      onClick: (user) => this.edit$.next(user)
+      onClick: (item) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: 'mdi-eye',
+      onClick: (item) => this.view$.next(item)
     },
     // activate
     {

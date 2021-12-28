@@ -50,6 +50,9 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row" class="table-actions">
             <div class="d-flex flex-row">
+              <a href="#" (click)="view(row, $event)" tooltip="{{lang.map.view}}" class="icon-btn">
+                <i class="mdi mdi-eye"></i>
+              </a>
               <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
                 <i class="mdi mdi-close-box"></i>
               </a>

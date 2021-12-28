@@ -9,8 +9,11 @@ import {UrlService} from '@app/services/url.service';
 import {DialogService} from '@app/services/dialog.service';
 import {FactoryService} from '@app/services/factory.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -78,5 +81,17 @@ export class JobTitleService extends BackendWithDialogOperationsGenericService<J
           return response.rs;
         })
       );
+  }
+
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getByIdComposite(modelId).pipe(
+      switchMap((jobTitle: JobTitle) => {
+        return of(this.dialog.show<IDialogData<JobTitle>>(JobTitlePopupComponent, {
+          model: jobTitle,
+          operation: OperationTypes.UPDATE,
+          disableForm: true
+        }));
+      })
+    );
   }
 }
