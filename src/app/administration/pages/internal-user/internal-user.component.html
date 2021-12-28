@@ -1,10 +1,13 @@
 <div class="row pb-3">
   <app-page-header [pageTitle]="'menu_users'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
   </app-page-header>
-  <!--  <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"-->
-  <!--                    [selectedRecords]="selectedRecords"-->
-  <!--                    [actionsList]="actionsList"></app-bulk-actions>-->
-  <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+  <ng-container *ngIf="table">
+    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
+                      [selectedRecords]="table.selection.selected"
+                      [actionsList]="[]"></app-bulk-actions>
+    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"
+                     *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
+  </ng-container>
 </div>
 <div class="row">
   <div class="col-12">
@@ -30,23 +33,26 @@
                    class="form-check-input"></td>
         </ng-container>
         <ng-container cdkColumnDef="arName">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
         </ng-container>
         <ng-container cdkColumnDef="enName">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
         </ng-container>
         <ng-container cdkColumnDef="status">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="defaultDepartment">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.default_dep}}</th>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.defaultDepartmentInfo"> {{lang.map.default_dep}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.defaultDepartmentInfo.getName()}} </td>
         </ng-container>
         <ng-container cdkColumnDef="username">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_username}}</th>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.username"> {{lang.map.lbl_username}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.domainName}} </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
@@ -64,8 +70,8 @@
                     class="btn icon-btn text-primary">
               <i class="mdi mdi-list-status"></i>
             </button>
-<!--            <button (click)="delete$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-remove"></i>-->
-<!--            </button>-->
+            <!--            <button (click)="delete$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-account-remove"></i>-->
+            <!--            </button>-->
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>

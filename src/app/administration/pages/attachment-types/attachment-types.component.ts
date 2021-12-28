@@ -1,32 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {AttachmentType} from '@app/models/attachment-type';
 import {AttachmentTypeService} from '@app/services/attachment-type.service';
 import {FormControl} from '@angular/forms';
-import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
-import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
-import {map} from 'rxjs/operators';
+import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'attachment-types',
   templateUrl: './attachment-types.component.html',
   styleUrls: ['./attachment-types.component.scss']
 })
-export class AttachmentTypesComponent implements OnInit {
+export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentType, AttachmentTypeService> {
   list: AttachmentType[] = [];
-  columns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-  filter: FormControl = new FormControl();
+  displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
-  selectedRecords: AttachmentType[] = [];
+  filterControl: FormControl = new FormControl('');
+
   actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -36,75 +37,40 @@ export class AttachmentTypesComponent implements OnInit {
       }
     }
   ];
+  actions: IMenuItem<AttachmentType>[] = [];
 
-  private _addSelected(record: AttachmentType): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: AttachmentType): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.list.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.list.length;
-  }
-
-  isSelected(record: AttachmentType): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: AttachmentType): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
-    }
-  }
-
-  onSelectAll(): void {
-    if (this.selectedRecords.length === this.list.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.list);
-    }
-  }
+  @ViewChild('table') table!: TableComponent;
 
   constructor(public lang: LangService,
-              private attachmentTypeService: AttachmentTypeService,
+              public service: AttachmentTypeService,
               private dialogService: DialogService,
               private sharedService: SharedService,
               private toast: ToastService) {
+    super();
   }
 
-  ngOnInit(): void {
-    this.load();
+  get selectedRecords(): AttachmentType[] {
+    return this.table.selection.selected;
   }
 
-  load() {
-    this.attachmentTypeService.loadComposite().pipe(
-      map(list => {
-        return list.filter(model => {
-          return model.status !== CommonStatusEnum.RETIRED;
-        })
+  listenToReload() {
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(switchMap(() => {
+        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+        return load.pipe(
+          map(list => {
+            return list.filter(model => {
+              return model.status !== CommonStatusEnum.RETIRED;
+            });
+          }),
+          catchError(_ => of([]))
+        );
+      }))
+      .subscribe((list: AttachmentType[]) => {
+        this.models = list;
+        this.table.selection.clear();
       })
-    ).subscribe(data => {
-      this.list = data;
-    });
-  }
-
-  reload() {
-    this.selectedRecords = [];
-    this.load();
   }
 
   sortingCallbacks = {
@@ -115,26 +81,9 @@ export class AttachmentTypesComponent implements OnInit {
     }
   }
 
-  filterCallback(data: AttachmentType, text: string): boolean {
-    return data.arName.toLowerCase().indexOf(text.toLowerCase()) !== -1 ||
-      data.enName.toLowerCase().indexOf(text.toLowerCase()) !== -1;
-  }
-
-  add(): void {
-    const sub = this.attachmentTypeService.openCreateDialog().onAfterClose$.subscribe(() => {
-      this.reload();
-      sub.unsubscribe();
-    });
-  }
-
-  edit(attachmentType: AttachmentType, $event: MouseEvent): void {
-    $event.preventDefault();
-    const sub = this.attachmentTypeService.openUpdateDialog(attachmentType.id).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        this.reload();
-        sub.unsubscribe();
-      });
-    });
+  edit(attachmentType: AttachmentType, event: MouseEvent) {
+    event.preventDefault();
+    this.edit$.next(attachmentType);
   }
 
   delete(event: MouseEvent, model: AttachmentType): void {
@@ -147,7 +96,7 @@ export class AttachmentTypesComponent implements OnInit {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
-          this.reload();
+          this.reload$.next(null);
           sub.unsubscribe();
         });
       }
@@ -164,10 +113,10 @@ export class AttachmentTypesComponent implements OnInit {
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.attachmentTypeService.deleteBulk(ids).subscribe((response) => {
+          const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
-                this.reload();
+                this.reload$.next(null);
                 sub.unsubscribe();
               });
           });

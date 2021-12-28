@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {JobTitle} from '@app/models/job-title';
 import {JobTitleService} from '@app/services/job-title.service';
@@ -8,13 +8,13 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {SharedService} from '@app/services/shared.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
-import {cloneDeep as _deepClone} from 'lodash';
 import {ToastService} from '@app/services/toast.service';
 import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';;
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'job-title',
@@ -32,7 +32,8 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     super();
   }
 
-  searchText = '';
+  @ViewChild('table') table!: TableComponent;
+
   commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<JobTitle>[] = [
     {
@@ -69,7 +70,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-  selectedRecords: JobTitle[] = [];
+
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -110,6 +111,10 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     }
   }
 
+  get selectedRecords(): JobTitle[] {
+    return this.table.selection.selected;
+  }
+
   edit(jobTitle: JobTitle, event: MouseEvent) {
     event.preventDefault();
     this.edit$.next(jobTitle);
@@ -117,7 +122,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
 
   delete(event: MouseEvent, model: JobTitle): void {
     event.preventDefault();
-    // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -145,7 +149,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
           const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
-                this.selectedRecords = [];
                 this.reload$.next(null);
                 sub.unsubscribe();
               });
@@ -200,53 +203,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       }))
       .subscribe((list: JobTitle[]) => {
         this.models = list;
-        this.selectedRecords = [];
+        this.table.selection.clear();
       })
-  }
-
-  filterCallback = (record: any, searchText: string) => {
-    return record.search(searchText);
-  }
-
-  private _addSelected(record: JobTitle): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: JobTitle): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.models.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.models.length;
-  }
-
-  isSelected(record: JobTitle): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: JobTitle): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
-    }
-  }
-
-  onSelectAll(): void {
-    if (this.selectedRecords.length === this.models.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.models);
-    }
   }
 }

@@ -10,6 +10,8 @@ import {DialogService} from "@app/services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ToastService} from "@app/services/toast.service";
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-user',
@@ -18,7 +20,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
   displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
-  // subject for emit clicking om delete button
+  // subject for emit clicking on delete button
   delete$: Subject<InternalUser> = new Subject<InternalUser>();
   commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<InternalUser>[] = [
@@ -67,6 +69,24 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
     this.listenToDelete();
   }
 
+  sortingCallbacks = {
+    statusInfo: (a: InternalUser, b: InternalUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    defaultDepartmentInfo: (a: InternalUser, b: InternalUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.defaultDepartmentInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.defaultDepartmentInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    username: (a: InternalUser, b: InternalUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.domainName.toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.domainName.toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
   listenToDelete() {
     this.delete$
       .pipe(takeUntil(this.destroy$))
@@ -85,7 +105,6 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
 
   activateInternalUser(model: InternalUser): void {
     const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
-      // @ts-ignore
       this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
       this.reload$.next(null);
       sub.unsubscribe();
@@ -94,7 +113,6 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
 
   deactivateInternalUser(model: InternalUser): void {
     const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
-      // @ts-ignore
       this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
       this.reload$.next(null);
       sub.unsubscribe();

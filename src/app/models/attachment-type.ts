@@ -6,15 +6,22 @@ import {LangService} from '../services/lang.service';
 import {Lookup} from './lookup';
 import {FileNetDocument} from "@app/models/file-net-document";
 import {AdminResult} from "@app/models/admin-result";
+import {searchFunctionType} from '@app/types/types';
 
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
   langService: LangService;
   status!: number;
   global: boolean = false;
-  arDesc!: string
-  enDesc!: string
-  statusInfo!: Lookup
+  arDesc!: string;
+  enDesc!: string;
+  statusInfo!: Lookup;
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
+  };
 
   constructor() {
     super();
