@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
@@ -147,14 +147,15 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         ])
       }),
       permissions: this.fb.group({
-        customRoleId: [this.model.customRoleId, CustomValidators.required],
-        permissions: [!!this.selectedPermissions.length, Validators.requiredTrue]
+        customRoleId: [this.model.customRoleId],
+        permissions: [!!this.selectedPermissions.length]
       })
     });
     this.fm = new FormManager(this.form, this.langService);
     this.bindOrgBranchList();
     // will check it later
     if (this.operation === OperationTypes.UPDATE) {
+      this._updatePermissionValidations(true);
       this.fm.displayFormValidity();
     }
   }
@@ -231,6 +232,14 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_user : this.langService.map.lbl_edit_org_user;
   }
 
+  get customRoleControl(): FormControl {
+    return this.fm.getFormField('permissions.customRoleId') as FormControl
+  }
+
+  get permissionsControl(): FormControl {
+    return this.fm.getFormField('permissions.permissions') as FormControl
+  }
+
 
   private buildPermissionGroups(): void {
     combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))])
@@ -258,9 +267,21 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _updatePermissionValidations(forceUpdateValueAndValidation: boolean = false) {
+    const value = this.customRoleControl?.value;
+    if (!value) {
+      this.permissionsControl.removeValidators(Validators.requiredTrue);
+    } else {
+      this.permissionsControl.addValidators(Validators.requiredTrue);
+    }
+    if (forceUpdateValueAndValidation){
+      this.permissionsControl.updateValueAndValidity();
+    }
+  }
+
   // noinspection JSUnusedLocalSymbols
   updatePermissionsByRole($event: Event): void {
-    const value = this.fm.getFormField('permissions.customRoleId')?.value;
+    const value = this.customRoleControl?.value;
     if (!value) {
       this.selectedPermissions = [];
     } else {
@@ -269,6 +290,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         return item.permissionId;
       });
     }
+    this._updatePermissionValidations(true);
     this.groups.forEach(group => {
       group.setSelected(this.selectedPermissions);
     });
@@ -297,7 +319,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
   private updatePermissionFormField(): void {
     this.setSelectedPermissions();
-    this.fm.getFormField('permissions.permissions')?.setValue(this.groups.some((group) => {
+    this.permissionsControl?.setValue(this.groups.some((group) => {
       return group.hasSelectedValue();
     }));
   }
@@ -309,8 +331,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   }
 
   private listenToCustomRoleChange() {
-    this.fm
-      .getFormField('permissions.customRoleId')?.valueChanges
+    this.customRoleControl?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.fm.getFormField('basic.customRoleId')?.setValue(value);

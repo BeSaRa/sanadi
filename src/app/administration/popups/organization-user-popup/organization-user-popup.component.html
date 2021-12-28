@@ -181,10 +181,10 @@
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('permissions.customRoleId')"></app-field-error-message>
+            <app-field-error-message [control]="customRoleControl"></app-field-error-message>
           </div>
         </div>
-        <div class="row" *ngIf="fm.getFormField('permissions.customRoleId')?.value">
+        <div class="row" *ngIf="customRoleControl?.value">
           <ng-container>
             <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
               <div class="p-2 border border-1">

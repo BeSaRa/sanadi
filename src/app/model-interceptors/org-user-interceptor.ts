@@ -2,6 +2,7 @@ import {OrgUser} from '../models/org-user';
 import {generateModelAndCast, isValidAdminResult} from '../helpers/utils';
 import {AdminResult} from '../models/admin-result';
 import {DateUtils} from '../helpers/date-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class OrgUserInterceptor {
   static receive(model: OrgUser | any): (OrgUser | any) {
@@ -16,6 +17,7 @@ export class OrgUserInterceptor {
   }
 
   static send(model: OrgUser | any): (OrgUser | any) {
+    model.customRoleId = CommonUtils.isValidValue(model.customRoleId) ? model.customRoleId : null;
     delete model.service;
     delete model.langService;
     delete model.lookupService;
