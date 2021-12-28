@@ -161,8 +161,16 @@ export class UserTeamComponent implements OnInit, OnDestroy {
 
   toggleTeamUser(userTeam: UserTeam): void {
     userTeam.toggleStatus()
-      .subscribe(() =>
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: userTeam.teamInfo.getName()}))
+      .subscribe(() => {
+          let updatedTeams = this.userTeams.map(x=> {
+            if (x.id === userTeam.id){
+              x.status = 1 - userTeam.status; // toggling 1 and 0
+            }
+            return x;
+          })
+          this.userTeamsChanged$.next(updatedTeams);
+          this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: userTeam.teamInfo.getName()}));
+        }
       )
   }
 

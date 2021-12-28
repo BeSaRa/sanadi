@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {FactoryService} from "@app/services/factory.service";
 import {UserTeamService} from "@app/services/user-team.service";
 import {map} from "rxjs/operators";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class UserTeam extends Cloneable<UserTeam> {
   id!: number;
@@ -25,6 +26,10 @@ export class UserTeam extends Cloneable<UserTeam> {
     this.arName = this.teamInfo.arName;
     this.enName = this.teamInfo.enName;
     return this;
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }
 
   toggleStatus(): Observable<boolean> {

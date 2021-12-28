@@ -8,7 +8,7 @@
                    placeholder="{{lang.map.select}}" id="teamSecurity"
                    [notFoundText]="lang.map.msg_not_found">
           <ng-option *ngFor="let team of userTeams" [value]="team.teamId"
-          [disabled]="team.status !== commonStatusEnum.ACTIVATED">
+                     [disabled]="!team.isActive()">
             {{team.teamInfo.getName()}}
           </ng-option>
         </ng-select>
@@ -32,7 +32,7 @@
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canManage(row)" class="form-check form-switch">
               <input (change)="toggleUserSecurity(row , 'canManage')" type="checkbox" [checked]="row.canManage"
-                     class="form-check-input">
+                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -41,7 +41,7 @@
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canView(row)" class="form-check form-switch">
               <input (change)="toggleUserSecurity(row , 'canView')" type="checkbox" [checked]="row.canView"
-                     class="form-check-input">
+                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -50,7 +50,7 @@
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canAdd(row)" class="form-check form-switch">
               <input (change)="toggleUserSecurity(row , 'canAdd')" type="checkbox" [checked]="row.canAdd"
-                     class="form-check-input">
+                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -59,7 +59,7 @@
           <td cdk-cell *cdkCellDef="let row">
             <div class="form-check form-switch">
               <input (change)="toggleUserSecurity(row , 'approval')" type="checkbox" [checked]="row.approval"
-                     class="form-check-input">
+                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>

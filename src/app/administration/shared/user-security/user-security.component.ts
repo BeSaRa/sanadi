@@ -38,6 +38,14 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     return this._operation.value;
   }
 
+  get isSelectedUserTeamActive(): boolean {
+    if (!this.selectedUserTeam || !this.selectedUserTeam.value) {
+      return false;
+    }
+    let team = this.userTeams.find(x => Number(x.teamId) === Number(this.selectedUserTeam.value));
+    return !team ? false : team.isActive();
+  }
+
   @Input()
   set userTeams(value: UserTeam[]) {
     this._userTeams = value;
@@ -180,6 +188,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
+    if (!this.isSelectedUserTeamActive){
+      return;
+    }
     if (this.model.isExternal()) {
       return this.updateBulkUserSecurity(userSecurity, property);
     }
