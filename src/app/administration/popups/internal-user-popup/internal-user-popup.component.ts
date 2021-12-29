@@ -203,11 +203,26 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.form = this.fb.group({
       user: this.fb.group(this.model.buildForm(true)),
       userPermissions: this.fb.group({
-        permissions: [false, Validators.requiredTrue],
-        customRoleId: [this.model?.customRoleId, Validators.required]
+        permissions: [false],
+        customRoleId: [this.model?.customRoleId]
       })
     });
     this.preventUserDomain();
+    if (this.operation === OperationTypes.UPDATE) {
+      this._updatePermissionValidations(true);
+    }
+  }
+
+  private _updatePermissionValidations(forceUpdateValueAndValidation: boolean = false) {
+    const value = this.customRoleId?.value;
+    if (!value) {
+      (this.userPermissions as FormControl).removeValidators(Validators.requiredTrue);
+    } else {
+      (this.userPermissions as FormControl).addValidators(Validators.requiredTrue);
+    }
+    if (forceUpdateValueAndValidation){
+      (this.userPermissions as FormControl).updateValueAndValidity();
+    }
   }
 
   get domainName(): AbstractControl {
@@ -247,6 +262,10 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
+    if (!form.valid){
+      this.toast.info(this.lang.map.msg_following_tabs_valid);
+      return false;
+    }
     return form.valid;
   }
 
@@ -274,8 +293,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   onCustomRoleChange() {
     let selectedRole = this.customRoles.find(role => role.id === this.customRoleId!.value);
     this.userCustomRoleId?.setValue(selectedRole ? selectedRole.id : null);
-    this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : [])
-    this.updateUserPermissions(!!this.groupHandler.selection.length)
+    this.groupHandler.setSelection(selectedRole ? selectedRole.permissionSet.map(p => p.permissionId) : []);
+    this.updateUserPermissions(!!this.groupHandler.selection.length);
+    this._updatePermissionValidations(true);
   }
 
   onTabChange($event: TabComponent) {
