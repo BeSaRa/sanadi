@@ -21,6 +21,8 @@ import {TrainingStatus} from '@app/enums/training-status';
 import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {OperationTypes} from '@app/enums/operation-types.enum';
+import {EmployeeService} from "@app/services/employee.service";
+import {Permissions} from "@app/enums/Permissions";
 
 @Component({
   selector: 'training-program',
@@ -59,14 +61,20 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   filterCriteria: Partial<ITrainingProgramCriteria> = {};
   trainingStatus = TrainingStatus;
   certification$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
+  permissions: typeof Permissions = Permissions;
 
   constructor(public lang: LangService,
               public service: TrainingProgramService,
               private trainingProgramBriefcaseService: TrainingProgramBriefcaseService,
               private dialogService: DialogService,
               private sharedService: SharedService,
+              private employeeService: EmployeeService,
               private toast: ToastService) {
     super();
+  }
+
+  hasPermissionTo(permission: string): boolean {
+    return this.employeeService.hasPermissionTo(permission);
   }
 
   ngOnInit(): void {

@@ -3,6 +3,7 @@ import {MenuItem} from '@app/models/menu-item';
 import {EmployeeService} from '@app/services/employee.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
+import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
 
 @Component({
   selector: 'app-sidebar-menu-item-list',
@@ -47,5 +48,9 @@ export class SidebarMenuItemListComponent implements OnInit {
     } else {
       this.router.navigate([item.path]).then();
     }
+  }
+
+  hasCustomPermissions(item: MenuItem): boolean {
+    return CustomEmployeePermission.hasCustomPermission(item.langKey) ? CustomEmployeePermission.getCustomPermission(item.langKey)(this.empService, item) : true;
   }
 }
