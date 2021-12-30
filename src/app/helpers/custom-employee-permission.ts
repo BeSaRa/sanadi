@@ -7,9 +7,9 @@ export class CustomEmployeePermission {
 
 
   static registerCustomPermission(langKey: keyof ILanguageKeys, callback: (employee: EmployeeService, item: MenuItem) => boolean): CustomEmployeePermission {
-    if (CustomEmployeePermission.customPermissions.has(langKey)) {
-      throw Error('you have same menu permission before:' + langKey)
-    }
+    // if (CustomEmployeePermission.customPermissions.has(langKey)) {
+    //   throw Error('you have same menu permission before:' + langKey)
+    // }
     CustomEmployeePermission.customPermissions.set(langKey, callback);
     return CustomEmployeePermission;
   }

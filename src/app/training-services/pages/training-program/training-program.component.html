@@ -1,6 +1,6 @@
 <div class="row pb-3">
   <app-page-header [pageTitle]="'menu_training_programs'"
-                   [disableAdd]="!hasPermissionTo(permissions.ADD_PUBLISH_TRAINING)" [clickOnReload$]="reload$"
+                   [disableAdd]="!hasPermissionTo(permissions.TRAINING_ADD_PUBLISH_TRAINING)" [clickOnReload$]="reload$"
                    [clickOnNew$]="add$">
   </app-page-header>
   <app-bulk-actions *ngIf="selectedRecords && selectedRecords.length"
