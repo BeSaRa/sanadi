@@ -7,7 +7,7 @@
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
-  "BASE_ENVIRONMENT": "STAGING",
+  "BASE_ENVIRONMENT": "BAW_UI",
   "BASE_URL": "",
   "API_VERSION": "v1",
   "TOKEN_HEADER_KEY": "Authorization",
@@ -73,7 +73,8 @@
   "TRAINING_PROGRAMS_PAGE_GROUP": [
     "TRAINING_BUNDLE",
     "TRAINING_CERTIFICATE_TRAINEE",
-    "TRAINING_ADD_PUBLISH_PROGRAM"
+    "TRAINING_ADD_PUBLISH_PROGRAM",
+    "TRAINING_MANAGE_TRAINEE"
   ],
   "ORG_LOGO_EXTENSIONS": [
     ".png",
