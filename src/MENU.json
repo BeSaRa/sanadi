@@ -499,7 +499,7 @@
     "path": "/home/training/certificate-templates",
     "icon": "mdi-certificate",
     "isSvg": false,
-    "permission": "TRAINING_CERTIFICATE_TEMPLATE",
+    "permission": "",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",
@@ -530,6 +530,19 @@
     "parent": 6,
     "group": "administration",
     "itemOrder": 3,
+    "svg": null
+  },
+  {
+    "id": 42,
+    "langKey": "menu_sd_goal",
+    "path": "/home/administration/sdg",
+    "icon": "mdi-bullseye",
+    "isSvg": false,
+    "permission": "MANAGE_DAC_OUCHA_CATEGORIES",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 11,
     "svg": null
   }
 ]

@@ -20,6 +20,7 @@ import {DacOchaComponent} from '@app/administration/pages/dac-ocha/dac-ocha.comp
 import {SurveyQuestionComponent} from '@app/administration/pages/survey-question/survey-question.component';
 import {SurveyTemplateComponent} from '@app/administration/pages/survey-template/survey-template.component';
 import {Permissions} from "@app/enums/Permissions";
+import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -77,6 +78,7 @@ const routes: Routes = [
     }, canActivate: [PermissionGuard], component: SurveyTemplateComponent
   },
 
+  {path: 'sdg', component: SdGoalComponent},
 ];
 
 @NgModule({

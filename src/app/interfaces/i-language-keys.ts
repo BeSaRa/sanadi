@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  lbl_sub_sd_goal_count: string;
+  lbl_sub_sd_goals: string;
+  lbl_add_sd_goal: string;
+  lbl_edit_sd_goal: string;
+  menu_sd_goal: string;
   no_sections_to_save_template: string;
   there_is_sections_has_no_related_questions: string;
   aggregate_stats_report: string;

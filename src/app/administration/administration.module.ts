@@ -53,6 +53,8 @@ import { SurveyTemplatePopupComponent } from './popups/survey-template-popup/sur
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SurveySectionPopupComponent } from './popups/survey-section-popup/survey-section-popup.component';
 import { SelectQuestionPopupComponent } from './popups/select-question-popup/select-question-popup.component';
+import { SdGoalComponent } from './pages/sd-goal/sd-goal.component';
+import { SdGoalPopupComponent } from './popups/sd-goal-popup/sd-goal-popup.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +100,8 @@ import { SelectQuestionPopupComponent } from './popups/select-question-popup/sel
     SurveyTemplatePopupComponent,
     SurveySectionPopupComponent,
     SelectQuestionPopupComponent,
+    SdGoalComponent,
+    SdGoalPopupComponent,
   ],
   imports: [
     SharedModule,
