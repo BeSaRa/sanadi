@@ -51,7 +51,7 @@ export class CountryService extends BackendGenericService<Country> {
 
   @Generator(undefined, true, {property: 'rs'})
   private _loadCountries(): Observable<Country[]> {
-    return this.http.get<Country[]>(this._getServiceURL() + '/countries');
+    return this.http.get<Country[]>(this._getServiceURL());
   }
 
   loadCountries(): Observable<Country[]> {
@@ -81,18 +81,14 @@ export class CountryService extends BackendGenericService<Country> {
     });
   }
 
-  openCreateDialog(parent?: Country): Observable<DialogRef> {
+  openCreateDialog(): Observable<DialogRef> {
     return this._loadDialogData()
       .pipe(
         switchMap((result) => {
-          if (parent) {
-            result.country.parentId = parent.id;
-          }
           return of(this.dialogService.show<IDialogData<Country>>(CountryPopupComponent, {
             model: result.country,
             operation: OperationTypes.CREATE,
-            parentCountries: this.listCountries,
-            isParent: !parent
+            parentCountries: this.listCountries
           }))
         })
       );
@@ -106,7 +102,6 @@ export class CountryService extends BackendGenericService<Country> {
             model: result.country,
             operation: OperationTypes.UPDATE,
             parentCountries: this.listCountries,
-            isParent: !result.country.parentId,
             selectedTabName: (CommonUtils.isValidValue(tabName) ? tabName : 'basic')
           }))
         })

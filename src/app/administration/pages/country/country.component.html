@@ -64,11 +64,6 @@
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-close-box"></i>
               </button>-->
-              <button *ngIf="!parentCountry"
-                (click)="showCities(row)" tooltip="{{langService.map.cities}}"
-                      class="btn icon-btn text-primary">
-                <i class="mdi mdi-city"></i>
-              </button>
               <button *ngIf="row.status === commonStatusEnum.DEACTIVATED"
                 (click)="activateCountry(row)" tooltip="{{langService.map.btn_activate}}"
                       class="btn icon-btn text-primary">

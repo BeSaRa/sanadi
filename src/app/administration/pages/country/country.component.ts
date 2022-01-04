@@ -28,7 +28,6 @@ import {FilterEventTypes} from '@app/types/types';
 })
 export class CountryComponent implements OnInit, AfterViewInit {
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-  @Input() parentCountry?: Country;
 
   countries: Country[] = [];
   actions: IMenuItem<Country>[] = [];
@@ -91,10 +90,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this.tableOptions.ready = true;
-      // if not parent country, hide riskLevel
-      if (this.parentCountry) {
-        this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'riskLevel');
-      }
     });
   }
 
@@ -110,9 +105,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        if (this.parentCountry) {
-          return this.countryService.loadCountriesByParentId(this.parentCountry.id);
-        }
         return this.countryService.loadCountries();
       })
     ).subscribe((countries: Country[]) => {
@@ -130,7 +122,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   }
 
   add(): void {
-    const sub = this.countryService.openCreateDialog(this.parentCountry).subscribe((dialog: DialogRef) => {
+    const sub = this.countryService.openCreateDialog().subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe(() => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -138,7 +130,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  editCountry(country: Country, tab: 'basic' | 'cities' = 'basic'): void {
+  editCountry(country: Country, tab: 'basic' = 'basic'): void {
     const sub = this.countryService.openUpdateDialog(country.id, tab).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
@@ -212,24 +204,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
       });
   }
 
-  showCities(country: Country): void {
-    this.editCountry(country, 'cities');
-  }
-
-  changeBulkParent($event: MouseEvent): void {
-    $event.preventDefault();
-    if (this.table.selection.selected.length === 0) {
-      return;
-    }
-    const sub = this.countryService.openChangeParentDialog(this.table.selection.selected)
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe((_) => {
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      });
-  }
-
   private buildActions() {
     // noinspection JSUnusedLocalSymbols
     this.actions = [
@@ -253,16 +227,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
           return true
         }
       },*/
-      // cities
-      {
-        type: 'action',
-        icon: 'mdi-city',
-        label: 'cities',
-        onClick: (item: Country) => this.showCities(item),
-        show: (item) => {
-          return !this.parentCountry;
-        }
-      },
       // activate
       {
         type: 'action',
@@ -289,14 +253,6 @@ export class CountryComponent implements OnInit, AfterViewInit {
   private buildBulkActions() {
     // noinspection JSUnusedLocalSymbols
     this.bulkActions = [
-      {
-        icon: 'mdi-swap-vertical-bold',
-        langKey: 'btn_change_parent',
-        callback: ($event: MouseEvent, action: IGridAction) => this.changeBulkParent($event),
-        show: (items: Country[]) => {
-          return !!this.parentCountry;
-        }
-      },
       /*{
         icon: 'mdi-close-box',
         langKey: 'btn_delete',

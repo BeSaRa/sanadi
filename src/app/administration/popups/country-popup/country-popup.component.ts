@@ -31,7 +31,6 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   fm!: FormManager;
   parentCountriesList: Country[];
   statusList: Lookup[];
-  isParent: boolean;
   tabsData: IKeyValue = {
     basic: {name: 'basic', index: 0},
     cities: {name: 'cities', index: 1}
@@ -50,7 +49,6 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
               public langService: LangService,
               private lookupService: LookupService) {
     this.model = data.model;
-    this.isParent = data.isParent;
     this.operation = data.operation;
     this.parentCountriesList = data.parentCountries;
     this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
@@ -92,20 +90,11 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
           CustomValidators.required, CustomValidators.maxLength(100),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
-        parentId: [{
-          value: this.model.parentId,
-          disabled: !this.model.id // disabled while adding
-        }],
         status: [this.model.status, [CustomValidators.required]],
         riskLevel: [this.model.riskLevel, [CustomValidators.decimal(5), CustomValidators.maxLength(10)]]
       },
-      validators: string[] = ['arName', 'enName', 'parentId', 'status', 'riskLevel'];
+      validators: string[] = ['arName', 'enName', 'status'];
 
-    // if country is not parent country, remove risk level
-    if (this.model.parentId) {
-      delete controls.riskLevel;
-      validators = validators.filter(x => x !== 'riskLevel');
-    }
     this.form = this.fb.group({
       basic: this.fb.group(controls, {
         validators: CustomValidators.validateFieldsStatus(validators)
@@ -146,10 +135,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   }
 
   get popupTitle(): string {
-    if (this.isParent) {
-      return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_country : this.langService.map.lbl_edit_country;
-    }
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_city : this.langService.map.lbl_edit_city;
+    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_country : this.langService.map.lbl_edit_country;
   }
 
 }
