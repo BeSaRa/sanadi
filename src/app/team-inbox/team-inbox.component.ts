@@ -421,7 +421,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       // claim
       {
         type: 'action',
-        icon: 'mdi-hand-right',
+        icon: 'mdi-hand-back-right',
         label: 'claim',
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
