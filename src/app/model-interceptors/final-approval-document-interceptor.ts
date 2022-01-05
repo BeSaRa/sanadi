@@ -13,7 +13,7 @@ export class FinalApprovalDocumentInterceptor implements IModelInterceptor<Final
     model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
-    model.regionInfo = AdminResult.createInstance(model.regionInfo);
+    // model.regionInfo = AdminResult.createInstance(model.regionInfo);
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
     model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
@@ -34,7 +34,7 @@ export class FinalApprovalDocumentInterceptor implements IModelInterceptor<Final
     delete model.licenseStatusInfo;
     delete model.ouInfo;
     delete model.creatorInfo;
-    delete model.regionInfo;
+    // delete model.regionInfo;
     delete model.caseStatusInfo;
     delete model.chiefDecisionInfo;
     delete model.managerDecisionInfo;

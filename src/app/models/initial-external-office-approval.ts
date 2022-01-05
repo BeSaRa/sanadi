@@ -1,4 +1,3 @@
-import {CaseModel} from "@app/models/case-model";
 import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
 import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
@@ -12,7 +11,7 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   subject!: string;
   requestType!: number;
   country!: number;
-  region!: number;
+  region!: string;
   description!: string;
   specialistJustification!: string;
   chiefJustification!: string;
@@ -45,7 +44,7 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
       organizationId: controls ? [organizationId, [CustomValidators.required]] : organizationId,
       licenseNumber: controls ? [licenseNumber, []] : licenseNumber,
       country: controls ? [country, [CustomValidators.required]] : country,
-      region: controls ? [region, [CustomValidators.required]] : region,
+      region: controls ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description,
     }
   }

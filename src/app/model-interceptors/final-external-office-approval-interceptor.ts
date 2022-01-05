@@ -14,6 +14,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor<FinalExternalOfficeApproval> {
 
@@ -38,6 +39,7 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
   }
 
   send(model: Partial<FinalExternalOfficeApproval>): Partial<FinalExternalOfficeApproval> {
+    model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
     model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
     let service = FactoryService.getService<FinalExternalOfficeApprovalService>('FinalExternalOfficeApprovalService');

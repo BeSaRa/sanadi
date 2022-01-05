@@ -10,11 +10,11 @@ export class FinalApprovalDocument extends BaseLicense {
   arName!: string;
   caseType: number = CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
   country!: number;
-  region!: number;
+  region!: string;
   customTerms!: string;
   publicTerms!: string;
   countryInfo!: AdminResult;
-  regionInfo!: AdminResult;
+  // regionInfo!: AdminResult;
   executiveManagementList: ExecutiveManagement[] = [];
   branchList: BankBranch[] = [];
   bankAccountList: BankAccount[] = [];

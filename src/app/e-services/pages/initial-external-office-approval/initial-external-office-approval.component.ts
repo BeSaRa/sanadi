@@ -25,7 +25,6 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ProjectModel} from '@app/models/project-model';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
@@ -38,7 +37,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   form!: FormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = []
-  regions: Country[] = [];
+  // regions: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialApprovalDocument;
   organizations: OrgUnit[] = [];
@@ -109,9 +108,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         // otherwise load regions separately
         if (this.model?.licenseNumber) {
           this.loadSelectedLicense(this.model?.licenseNumber!);
-        } else {
+        }/* else {
           this.loadRegions(this.country.value);
-        }
+        }*/
       }
       this.listenToRequestTypeChange();
     // });
@@ -215,7 +214,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       .subscribe((countries) => this.countries = countries)
   }
 
-  private loadRegions(id: number): void {
+  /*private loadRegions(id: number): void {
     this.regions = [];
     if (!id) {
       return;
@@ -223,7 +222,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.countryService.loadCountriesByParentId(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((regions) => this.regions = regions)
-  }
+  }*/
 
   private loadOrganizations() {
     this.orgService.load()
@@ -247,7 +246,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     if (this.country.invalid) {
       return;
     }
-    this.loadRegions(this.country.value);
+    // this.loadRegions(this.country.value);
   }
 
   listenToRequestTypeChange(): void {
@@ -323,9 +322,9 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }
     this._handleRequestTypeDependentControls();
 
-    if (license) {
+    /*if (license) {
       this.loadRegions(this.country.value);
-    }
+    }*/
   }
 
   licenseSearch(): void {
@@ -372,11 +371,11 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       .licenseSearch({licenseNumber})
       .pipe(
         filter(list => {
-          // if license number exists, set it and regions will be loaded inside
+         /* // if license number exists, set it and regions will be loaded inside
           // otherwise load regions separately
           if (list.length === 0) {
             this.loadRegions(this.country.value);
-          }
+          }*/
           return list.length > 0;
         }),
         map(list => list[0]),

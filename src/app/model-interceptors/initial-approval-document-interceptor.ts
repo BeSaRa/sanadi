@@ -8,7 +8,7 @@ export class InitialApprovalDocumentInterceptor implements IModelInterceptor<Ini
     model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
-    model.regionInfo = AdminResult.createInstance(model.regionInfo);
+    // model.regionInfo = AdminResult.createInstance(model.regionInfo);
     return model;
   }
 
@@ -17,7 +17,7 @@ export class InitialApprovalDocumentInterceptor implements IModelInterceptor<Ini
     delete model.licenseStatusInfo;
     delete model.ouInfo;
     delete model.creatorInfo;
-    delete model.regionInfo;
+    // delete model.regionInfo;
     return model;
   }
 }

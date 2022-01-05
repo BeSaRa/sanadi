@@ -100,7 +100,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   operation: OperationTypes = OperationTypes.CREATE;
 
   countriesList: Country[] = [];
-  regionsList: Country[] = [];
+  // regionsList: Country[] = [];
   jobTitlesList: JobTitle[] = [];
 
   unprocessedLicensesList: any[] = [];
@@ -313,11 +313,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       if (value !== this.model?.country) {
         this.regionField?.reset();
       }
-      this.loadRegionsList();
+      // this.loadRegionsList();
     });
   }
 
-  private loadRegionsList(): void {
+  /*private loadRegionsList(): void {
     this.regionsList = [];
     if (!this.countryField?.value) {
       return;
@@ -326,7 +326,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       .subscribe((result: Country[]) => {
         this.regionsList = result;
       });
-  }
+  }*/
 
   private _handleLicenseValidationsByRequestType(): void {
     // set validators to empty

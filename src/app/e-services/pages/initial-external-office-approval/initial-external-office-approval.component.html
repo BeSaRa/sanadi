@@ -99,13 +99,15 @@
                      class="col-form-label col-md-4 col-sm-12"
                      for="region">{{lang.map.region}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <ng-select [readonly]="!isEditCountryAllowed()" validationClasses="region" appendTo="body"
+                <!--<ng-select [readonly]="!isEditCountryAllowed()" validationClasses="region" appendTo="body"
                            [clearable]="true"
                            id="region"
                            formControlName="region">
                   <ng-option *ngFor="let option of regions" [value]="option.id"
                              [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-                </ng-select>
+                </ng-select>-->
+                <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()"
+                       validationClasses="region" class="form-control" id="region">
                 <app-field-error-message controlName="region"></app-field-error-message>
               </div>
             </div>

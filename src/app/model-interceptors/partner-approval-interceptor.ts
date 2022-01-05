@@ -13,6 +13,7 @@ import {ManagementCouncil} from "@app/models/management-council";
 import {TargetGroup} from "@app/models/target-group";
 import {ContactOfficer} from "@app/models/contact-officer";
 import {ApprovalReason} from "@app/models/approval-reason";
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerApproval> {
   receive(model: PartnerApproval): PartnerApproval {
@@ -44,6 +45,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
   }
 
   send(model: Partial<PartnerApproval>): Partial<PartnerApproval> {
+    model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
     model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
     let service = FactoryService.getService<PartnerApprovalService>('PartnerApprovalService');

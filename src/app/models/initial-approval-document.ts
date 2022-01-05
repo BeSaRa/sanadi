@@ -5,9 +5,9 @@ export class InitialApprovalDocument extends BaseLicense {
   enName!: string;
   arName!: string;
   country!: number;
-  region!: number;
+  region!: string;
   customTerms!: string;
   publicTerms!: string;
   countryInfo!: AdminResult;
-  regionInfo!: AdminResult;
+  // regionInfo!: AdminResult;
 }

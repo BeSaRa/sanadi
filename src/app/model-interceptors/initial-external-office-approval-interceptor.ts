@@ -2,9 +2,11 @@ import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
 import {AdminResult} from "@app/models/admin-result";
 import {TaskDetails} from "@app/models/task-details";
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class InitialExternalOfficeApprovalInterceptor implements IModelInterceptor<InitialExternalOfficeApproval> {
   send(model: Partial<InitialExternalOfficeApproval>): Partial<InitialExternalOfficeApproval> {
+    model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
     delete model.service;
     delete model.employeeService;
     delete model.taskDetails;

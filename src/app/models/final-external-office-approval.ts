@@ -19,7 +19,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   subject: string = '';
   actionType!: number;
   country!: number;
-  region!: number;
+  region!: string;
   description: string = '';
   specialistJustification: string = '';
   chiefJustification: string = '';
@@ -79,7 +79,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       initialLicenseNumber: control ? [initialLicenseNumber] : initialLicenseNumber,
       licenseNumber: control ? [licenseNumber] : licenseNumber,
       country: control ? [country, [CustomValidators.required]] : country,
-      region: control ? [region, [CustomValidators.required]] : region,//state
+      region: control ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,//state
       externalOfficeName: control ? [externalOfficeName, [CustomValidators.required, CustomValidators.maxLength(100)]] : externalOfficeName,
       establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required, CustomValidators.maxDate(new Date())]] : DateUtils.changeDateToDatepicker(establishmentDate),
       recordNo: control ? [recordNo, [CustomValidators.required, CustomValidators.maxLength(20)]] : recordNo,

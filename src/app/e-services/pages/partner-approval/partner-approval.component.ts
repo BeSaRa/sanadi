@@ -48,7 +48,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
   jobTitles: JobTitle[] = [];
-  regions: Country[] = [];
+  // regions: Country[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
@@ -187,8 +187,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     // setTimeout(() => {
       this.handleReadonly();
       if (this.fromDialog) {
-        // if license number exists, load it and regions will be loaded inside
-        // otherwise load regions separately
+       /* // if license number exists, load it and regions will be loaded inside
+        // otherwise load regions separately*/
         if (this.model?.licenseNumber) {
           this.loadSelectedLicense(this.model?.licenseNumber!);
         }
@@ -294,7 +294,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     console.log(error);
   }
 
-  loadRegions(id: number): void {
+  /*loadRegions(id: number): void {
     this.regions = [];
     if (!id) {
       return;
@@ -304,7 +304,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .subscribe((result: Country[]) => {
         this.regions = result;
       });
-  }
+  }*/
 
   private loadCountries() {
     this.countryService
@@ -323,7 +323,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       takeUntil(this.destroy$)
     ).subscribe(_ => {
       this.region?.reset();
-      this.loadRegions(this.country?.value);
+      // this.loadRegions(this.country?.value);
     });
   }
 
@@ -397,11 +397,11 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .licenseSearch({licenseNumber})
       .pipe(
         filter(list => {
-          // if license number exists, set it and regions will be loaded inside
+         /* // if license number exists, set it and regions will be loaded inside
           // otherwise load regions separately
           if (list.length === 0) {
             this.loadRegions(this.country?.value);
-          }
+          }*/
           return list.length > 0;
         }),
         map(list => list[0]),

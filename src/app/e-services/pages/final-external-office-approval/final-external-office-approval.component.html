@@ -111,7 +111,7 @@
                 <label asteriskIfRequired="region" for="region"
                        class="col-sm-12 col-md-4 col-form-label">{{lang.map.region}}</label>
                 <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                  <ng-select [selectOnTab]="true" labelForId="region" [clearable]="false"
+                  <!--<ng-select [selectOnTab]="true" labelForId="region" [clearable]="false"
                              placeholder="{{lang.map.select}}" id="region"
                              [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                              formControlName="region" validationClasses="region">
@@ -119,7 +119,9 @@
                                [disabled]="!option.isActive()">
                       {{option.getName()}}
                     </ng-option>
-                  </ng-select>
+                  </ng-select>-->
+                  <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()"
+                         validationClasses="region" class="form-control" id="region">
                   <app-field-error-message controlName="region"></app-field-error-message>
                 </div>
               </div>
