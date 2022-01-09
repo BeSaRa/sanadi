@@ -73,6 +73,23 @@
         </div>
       </div>
     </div>
+    <!-- Initial External Office Generated License -->
+    <div class="col-md-6 col-sm-12" *ngIf="canShowInitialOfficeApprovalGeneratedLicense()">
+      <div class="row">
+        <label for="generatedInitialOfficeApprovalLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
+            <input readonly [value]="initialOfficeApprovalGeneratedLicenseNumber" id="generatedInitialOfficeApprovalLicenseNumber"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view" (click)="viewInitialOfficeApprovalGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Template Model Approved -->
     <div class="col-md-6 col-sm-12" *ngIf="isTemplateModelServiceAndApproved()">
       <div class="row">

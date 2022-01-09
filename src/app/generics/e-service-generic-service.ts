@@ -72,6 +72,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   documentService: DocumentService = new DocumentService(this);
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
+  selectLicenseDisplayColumns: string[] = [];
 
   caseStatusEnumMap: any = {
     [CaseTypes.CONSULTATION]: ConsultationCaseStatus,

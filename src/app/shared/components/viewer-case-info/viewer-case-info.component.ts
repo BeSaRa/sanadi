@@ -14,6 +14,7 @@ import {InternalProjectLicenseResult} from '@app/models/internal-project-license
 import {ProjectModelService} from '@app/services/project-model.service';
 import {BlobModel} from '@app/models/blob-model';
 import {SharedService} from '@app/services/shared.service';
+import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
 
 @Component({
   selector: 'viewer-case-info',
@@ -117,6 +118,33 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
       this.finalExternalOfficeGeneratedLicense = license;
       this.licenseService.openSelectLicenseDialog([this.finalExternalOfficeGeneratedLicense], this.model, false)
     })
+  }
+
+  get initialOfficeApprovalGeneratedLicenseNumber(): string {
+    return this.loadedModel.exportedLicenseFullserial || '';
+  }
+
+  get initialOfficeApprovalGeneratedLicenseId(): string {
+    return this.loadedModel.exportedLicenseId || '';
+  }
+
+  canShowInitialOfficeApprovalGeneratedLicense(): boolean {
+    return this.model.getCaseType() === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+  }
+
+  viewInitialOfficeApprovalGeneratedLicense(): void {
+    if (!this.initialOfficeApprovalGeneratedLicenseId) {
+      return;
+    }
+    let license = {
+      documentTitle: this.initialOfficeApprovalGeneratedLicenseNumber,
+      id: this.initialOfficeApprovalGeneratedLicenseId
+    } as InitialExternalOfficeApprovalResult;
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
   }
 
   get internalProjectGeneratedLicenseNumber(): string {

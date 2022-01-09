@@ -1,7 +1,7 @@
 import {BaseLicense} from "@app/models/base-license";
 import {AdminResult} from "@app/models/admin-result";
 
-export class InitialApprovalDocument extends BaseLicense {
+export class InitialExternalOfficeApprovalResult extends BaseLicense {
   enName!: string;
   arName!: string;
   country!: number;

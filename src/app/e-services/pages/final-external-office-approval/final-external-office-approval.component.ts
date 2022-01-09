@@ -20,7 +20,7 @@ import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {EmployeeService} from '@app/services/employee.service';
 import {InitialExternalOfficeApprovalService} from '@app/services/initial-external-office-approval.service';
-import {InitialApprovalDocument} from '@app/models/initial-approval-document';
+import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
 import {LicenseService} from '@app/services/license.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {SaveTypes} from '@app/enums/save-types';
@@ -105,7 +105,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   unprocessedLicensesList: any[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: InitialApprovalDocument | FinalApprovalDocument;
+  selectedLicense?: InitialExternalOfficeApprovalResult | FinalApprovalDocument;
 
   datepickerOptionsMap: IKeyValue = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
@@ -425,9 +425,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // switch to the dialog ref to use it later and catch the user response
         switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null})).onAfterClose$),
         // allow only if the user select license
-        filter<{ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
-        ((selection): selection is ({ selected: InitialApprovalDocument | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }) => {
-          return (selection && selection.selected instanceof InitialApprovalDocument && selection.details instanceof InitialExternalOfficeApproval) || (selection && selection.selected instanceof FinalApprovalDocument && selection.details instanceof FinalExternalOfficeApproval);
+        filter<{ selected: InitialExternalOfficeApprovalResult | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
+        ((selection): selection is ({ selected: InitialExternalOfficeApprovalResult | FinalApprovalDocument, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }) => {
+          return (selection && selection.selected instanceof InitialExternalOfficeApprovalResult && selection.details instanceof InitialExternalOfficeApproval) || (selection && selection.selected instanceof FinalApprovalDocument && selection.details instanceof FinalExternalOfficeApproval);
         }),
         takeUntil(this.destroy$)
       )
@@ -436,7 +436,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       })
   }
 
-  private setSelectedLicense(license?: InitialApprovalDocument | FinalApprovalDocument, licenseDetails?: InitialExternalOfficeApproval | FinalExternalOfficeApproval) {
+  private setSelectedLicense(license?: InitialExternalOfficeApprovalResult | FinalApprovalDocument, licenseDetails?: InitialExternalOfficeApproval | FinalExternalOfficeApproval) {
     this.selectedLicense = license;
     if (license && licenseDetails) {
       let requestType = this.requestTypeField?.value,
@@ -551,7 +551,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     return isAllowed && CommonUtils.isValidValue(this.requestTypeField.value);
   }
 
-  loadInitialLicencesByCriteria(value: any): Observable<InitialApprovalDocument[]> {
+  loadInitialLicencesByCriteria(value: any): Observable<InitialExternalOfficeApprovalResult[]> {
     return this.initialApprovalService.licenseSearch({licenseNumber: value});
   }
 

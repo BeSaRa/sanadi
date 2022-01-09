@@ -17,7 +17,6 @@ import {UrlService} from "./url.service";
 import {CaseStatus} from "../enums/case-status.enum";
 import {PartnerApprovalInterceptor} from "../model-interceptors/partner-approval-interceptor";
 import {Observable} from "rxjs";
-import {InitialApprovalDocument} from "@app/models/initial-approval-document";
 import {LicenseService} from "@app/services/license.service";
 import {BankAccount} from "@app/models/bank-account";
 import {BankAccountInterceptor} from "@app/model-interceptors/bank-account-interceptor";
@@ -94,7 +93,7 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
     return new PartnerApprovalSearchCriteria();
   }
 
-  licenseSearch(criteria: Partial<InitialApprovalDocument> = {}): Observable<PartnerApproval[]> {
+  licenseSearch(criteria: Partial<PartnerApprovalSearchCriteria> = {}): Observable<PartnerApproval[]> {
     return this.licenseService.partnerApprovalLicenseSearch(criteria);
   }
 }

@@ -3,6 +3,7 @@ import {InitialExternalOfficeApproval} from "@app/models/initial-external-office
 import {AdminResult} from "@app/models/admin-result";
 import {TaskDetails} from "@app/models/task-details";
 import {CommonUtils} from '@app/helpers/common-utils';
+import {isValidAdminResult} from '@app/helpers/utils';
 
 export class InitialExternalOfficeApprovalInterceptor implements IModelInterceptor<InitialExternalOfficeApproval> {
   send(model: Partial<InitialExternalOfficeApproval>): Partial<InitialExternalOfficeApproval> {
@@ -12,7 +13,9 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     delete model.taskDetails;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
+    delete model.licenseStatusInfo;
     delete model.ouInfo;
+    delete model.countryInfo;
     delete model.specialistDecisionInfo;
     delete model.chiefDecisionInfo;
     delete model.managerDecisionInfo;
@@ -33,7 +36,8 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo);
     model.generalManagerDecisionInfo = AdminResult.createInstance(model.generalManagerDecisionInfo);
     model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
-
+    model.licenseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.licenseStatusInfo) ? model.licenseStatusInfo : {});
+    model.countryInfo = AdminResult.createInstance(isValidAdminResult(model.countryInfo) ? model.countryInfo : {});
 
     return model;
   }

@@ -1,9 +1,9 @@
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {InitialApprovalDocument} from "@app/models/initial-approval-document";
+import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
 import {AdminResult} from "@app/models/admin-result";
 
-export class InitialApprovalDocumentInterceptor implements IModelInterceptor<InitialApprovalDocument> {
-  receive(model: InitialApprovalDocument): InitialApprovalDocument {
+export class InitialApprovalDocumentInterceptor implements IModelInterceptor<InitialExternalOfficeApprovalResult> {
+  receive(model: InitialExternalOfficeApprovalResult): InitialExternalOfficeApprovalResult {
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
@@ -12,7 +12,7 @@ export class InitialApprovalDocumentInterceptor implements IModelInterceptor<Ini
     return model;
   }
 
-  send(model: Partial<InitialApprovalDocument>): Partial<InitialApprovalDocument> {
+  send(model: Partial<InitialExternalOfficeApprovalResult>): Partial<InitialExternalOfficeApprovalResult> {
     delete model.countryInfo;
     delete model.licenseStatusInfo;
     delete model.ouInfo;
