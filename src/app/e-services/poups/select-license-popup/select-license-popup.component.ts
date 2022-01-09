@@ -6,7 +6,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {LicenseService} from "@app/services/license.service";
 import {PartnerApproval} from "@app/models/partner-approval";
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
@@ -32,7 +32,7 @@ export class SelectLicensePopupComponent {
               private inboxService: InboxService,
               private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]),
+                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]),
                 caseRecord: any | undefined,
                 select: boolean,
                 displayedColumns: string[]
@@ -61,7 +61,7 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)): void {
+  selectLicense(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)): void {
     this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .subscribe((licenseDetails) => {
         if (!licenseDetails) {
@@ -69,40 +69,9 @@ export class SelectLicensePopupComponent {
         }
         this.dialogRef.close({selected: license, details: licenseDetails});
       });
-    /*if (license instanceof InternalProjectLicenseResult) {
-      this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
-        .subscribe((licenseDetails) => {
-          if (!licenseDetails) {
-            return;
-          }
-          this.dialogRef.close({selected: license, details: licenseDetails});
-        });
-    } else {
-      let loadedLicense: Observable<any>;
-
-      if (license instanceof InitialExternalOfficeApprovalResult) {
-        loadedLicense = this.licenseService.loadInitialLicenseByLicenseId(license.id);
-      } else if (license instanceof PartnerApproval) {
-        loadedLicense = this.licenseService.loadPartnerLicenseByLicenseId(license.id);
-      } else { //if (license instanceof FinalApprovalDocument)
-        loadedLicense = this.licenseService.loadFinalLicenseByLicenseId(license.id);
-      }
-
-      if (!loadedLicense) {
-        return;
-      }
-
-      loadedLicense
-        .subscribe((licenseDetails) => {
-          if (!licenseDetails) {
-            return;
-          }
-          this.dialogRef.close({selected: license, details: licenseDetails});
-        })
-    }*/
   }
 
-  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)) {
+  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)) {
     return this.licenseService.showLicenseContent(license, this.caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, license);

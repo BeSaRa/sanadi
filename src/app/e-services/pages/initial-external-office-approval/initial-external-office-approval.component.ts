@@ -421,13 +421,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       })
   }
 
-  viewLicense(): void {
-    if (!this.selectedLicense)
-      return;
-
-    // this.licenseService.openSelectLicenseDialog([this.selectedLicense], this.model, false)
-  }
-
   viewLicenseAsPDF(license: InitialExternalOfficeApprovalResult) {
     return this.licenseService.showLicenseContent(license, CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL)
       .subscribe((file) => {

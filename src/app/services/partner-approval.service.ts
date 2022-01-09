@@ -54,6 +54,7 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
   jsonSearchFile: string = 'partner_approval_search_form.json';
   searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'countryInfo', 'requestClassificationInfo', 'creatorInfo'];
   serviceKey: keyof ILanguageKeys = "menu_partner_approval";
+  selectLicenseDisplayColumns = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
     [CaseStatus.CANCELLED, 'mdi mdi-cancel'],

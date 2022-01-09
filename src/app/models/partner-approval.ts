@@ -71,12 +71,16 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
     const {
       requestType, requestClassification, arName, enName, country, region, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
-      firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, licenseNumber, description
+      firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, description,
+      oldLicenseFullserial, oldLicenseId, oldLicenseSerial
     } = this;
 
     return {
       organizationId: control ? [organizationId, [CustomValidators.required]] : organizationId,
-      licenseNumber: control ? [licenseNumber, []] : licenseNumber,
+      // licenseNumber: control ? [licenseNumber, []] : licenseNumber,
+      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
+      oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       requestType: control ? [requestType, CustomValidators.required] : requestType,
       requestClassification: control ? [requestClassification, CustomValidators.required] : requestClassification,
       arName: control ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),

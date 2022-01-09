@@ -40,7 +40,7 @@
       </div>
     </div>
     <!-- Final External Office Generated License -->
-    <div class="col-md-6 col-sm-12" *ngIf="canShowFinalExternalOfficeGeneratedLicense()">
+    <!--<div class="col-md-6 col-sm-12" *ngIf="canShowFinalExternalOfficeGeneratedLicense()">
       <div class="row">
         <label for="generatedLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
                disabled>{{lang.map.generated_license_number}}</label>
@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <!-- Internal Project Generated License -->
     <div class="col-md-6 col-sm-12" *ngIf="canShowInternalProjectGeneratedLicense()">
       <div class="row">
@@ -84,6 +84,40 @@
             <input readonly [value]="initialOfficeApprovalGeneratedLicenseNumber" id="generatedInitialOfficeApprovalLicenseNumber"
                    class="form-control">
             <a type="button" [tooltip]="lang.map.view" (click)="viewInitialOfficeApprovalGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Partner Approval Generated License -->
+    <div class="col-md-6 col-sm-12" *ngIf="canShowPartnerApprovalGeneratedLicense()">
+      <div class="row">
+        <label for="generatedPartnerApprovalLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
+            <input readonly [value]="partnerApprovalGeneratedLicenseNumber" id="generatedPartnerApprovalLicenseNumber"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view" (click)="viewPartnerApprovalGeneratedLicense()"
+               class="input-group-text"><i
+              class="mdi mdi-eye text-primary"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Final External Office Generated License -->
+    <div class="col-md-6 col-sm-12" *ngIf="canShowFinalExternalOfficeApprovalGeneratedLicense()">
+      <div class="row">
+        <label for="generatedFinalOfficeApprovalLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
+               disabled>{{lang.map.generated_license_number}}</label>
+        <div class="col-md-8 mb-3 col-sm-12 position-relative">
+          <div class="input-group">
+            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
+            <input readonly [value]="finalExternalOfficeApprovalGeneratedLicenseNumber" id="generatedFinalOfficeApprovalLicenseNumber"
+                   class="form-control">
+            <a type="button" [tooltip]="lang.map.view" (click)="viewFinalExternalOfficeApprovalGeneratedLicense()"
                class="input-group-text"><i
               class="mdi mdi-eye text-primary"></i></a>
           </div>

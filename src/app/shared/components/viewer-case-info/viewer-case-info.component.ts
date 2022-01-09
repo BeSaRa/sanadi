@@ -5,16 +5,15 @@ import {LangService} from '@app/services/lang.service';
 import {AdminResult} from "@app/models/admin-result";
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
-import {Observable, of, Subject} from 'rxjs';
-import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
-import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
+import {Subject} from 'rxjs';
 import {LicenseService} from '@app/services/license.service';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {ProjectModelService} from '@app/services/project-model.service';
 import {BlobModel} from '@app/models/blob-model';
 import {SharedService} from '@app/services/shared.service';
 import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
+import {PartnerApproval} from '@app/models/partner-approval';
 
 @Component({
   selector: 'viewer-case-info',
@@ -32,7 +31,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   @Input() componentService?: EServiceGenericService<any>;
   showManagerRequestStatus: boolean = false;
 
-  finalExternalOfficeGeneratedLicense?: FinalApprovalDocument;
+  finalExternalOfficeGeneratedLicense?: FinalExternalOfficeApprovalResult;
   internalProjectGeneratedLicense?: InternalProjectLicenseResult;
 
   destroy$: Subject<any> = new Subject<any>();
@@ -82,7 +81,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     return this.loadedModel.generalManagerDecision ? this.loadedModel.generalManagerDecisionInfo : null;
   }
 
-  get finalExternalOfficeGeneratedLicenseNumber(): string {
+  /* get finalExternalOfficeGeneratedLicenseNumber(): string {
     return this.loadedModel.licenseNumber || '';
   }
 
@@ -94,7 +93,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
     return (this.componentService as unknown as FinalExternalOfficeApprovalService);
   }
 
-  canShowFinalExternalOfficeGeneratedLicense(): boolean {
+ canShowFinalExternalOfficeGeneratedLicense(): boolean {
     let caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
     return caseStatusEnum && (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
   }
@@ -118,7 +117,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
       this.finalExternalOfficeGeneratedLicense = license;
       this.licenseService.openSelectLicenseDialog([this.finalExternalOfficeGeneratedLicense], this.model, false)
     })
-  }
+  }*/
 
   get initialOfficeApprovalGeneratedLicenseNumber(): string {
     return this.loadedModel.exportedLicenseFullserial || '';
@@ -140,6 +139,61 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
       documentTitle: this.initialOfficeApprovalGeneratedLicenseNumber,
       id: this.initialOfficeApprovalGeneratedLicenseId
     } as InitialExternalOfficeApprovalResult;
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
+  }
+
+  get partnerApprovalGeneratedLicenseNumber(): string {
+    return this.loadedModel.exportedLicenseFullserial || '';
+  }
+
+  get partnerApprovalGeneratedLicenseId(): string {
+    return this.loadedModel.exportedLicenseId || '';
+  }
+
+  canShowPartnerApprovalGeneratedLicense(): boolean {
+    return this.model.getCaseType() === CaseTypes.PARTNER_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+  }
+
+  viewPartnerApprovalGeneratedLicense(): void {
+    if (!this.partnerApprovalGeneratedLicenseId) {
+      return;
+    }
+    // @ts-ignore
+    let license = {
+      documentTitle: this.partnerApprovalGeneratedLicenseNumber,
+      id: this.partnerApprovalGeneratedLicenseId
+    } as PartnerApproval;
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
+  }
+
+  get finalExternalOfficeApprovalGeneratedLicenseNumber(): string {
+    return this.loadedModel.exportedLicenseFullserial || '';
+  }
+
+  get finalExternalOfficeApprovalGeneratedLicenseId(): string {
+    return this.loadedModel.exportedLicenseId || '';
+  }
+
+  canShowFinalExternalOfficeApprovalGeneratedLicense(): boolean {
+    return this.model.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+  }
+
+  viewFinalExternalOfficeApprovalGeneratedLicense(): void {
+    if (!this.finalExternalOfficeApprovalGeneratedLicenseId) {
+      return;
+    }
+    let license = {
+      documentTitle: this.finalExternalOfficeApprovalGeneratedLicenseNumber,
+      id: this.finalExternalOfficeApprovalGeneratedLicenseId
+    } as FinalExternalOfficeApprovalResult;
 
     this.licenseService.showLicenseContent(license, this.model.getCaseType())
       .subscribe((file) => {
