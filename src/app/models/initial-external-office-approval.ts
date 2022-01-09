@@ -32,13 +32,6 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   licenseStatusInfo!: AdminResult;
   countryInfo!: AdminResult;
 
-  oldLicenseFullserial!: string;
-  oldLicenseId!: string;
-  oldLicenseSerial!: number;
-  exportedLicenseFullserial!: string;
-  exportedLicenseId!: string;
-  exportedLicenseSerial!: number;
-
   // properties to be delete while send to the backend
   service: InitialExternalOfficeApprovalService;
 

@@ -110,7 +110,6 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   // temp properties
   projectNameInfo!: AdminResult;
   allNationalities: boolean = true;
-  ignoreInterceptor?: boolean;
 
   getBasicFormFields(control: boolean = false): any {
     const {

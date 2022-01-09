@@ -11,9 +11,10 @@ import {FactoryService} from "../services/factory.service";
 import {CustomValidators} from "../validators/custom-validators";
 import {LicenseApprovalModel} from "@app/models/license-approval-model";
 import {DateUtils} from "@app/helpers/date-utils";
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService, PartnerApproval> {
-  caseType: number = 7;
+  caseType: number = CaseTypes.PARTNER_APPROVAL;
   organizationId!: number;
   address!: string;
   arName!: string;

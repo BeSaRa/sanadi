@@ -19,6 +19,14 @@ export abstract class LicenseApprovalModel<S extends EServiceGenericService<M>, 
   deductionPercent!: number;
   requestTypeInfo!: AdminResult;
 
+  oldLicenseFullserial!: string;
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
+  exportedLicenseFullserial!: string;
+  exportedLicenseId!: string;
+  exportedLicenseSerial!: number;
+  ignoreSendInterceptor?: boolean;
+
 
   patchAndUpdateModel(data: Partial<LicenseApprovalModel<any, any>>, callback?: (data: any) => any): Observable<any> {
     return this.service.update(((callback ? callback(data) : data) as unknown as M));

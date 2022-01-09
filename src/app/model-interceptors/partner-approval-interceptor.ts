@@ -45,6 +45,10 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
   }
 
   send(model: Partial<PartnerApproval>): Partial<PartnerApproval> {
+    if (model.ignoreSendInterceptor) {
+      PartnerApprovalInterceptor._deleteBeforeSend(model);
+      return model;
+    }
     model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
     model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
@@ -72,6 +76,12 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     model.approvalReasonList = model.approvalReasonList?.map((x: ApprovalReason) => {
       return service.approvalReasonInterceptor.send(x) as ApprovalReason;
     });
+    PartnerApprovalInterceptor._deleteBeforeSend(model);
+    return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<PartnerApproval>): void {
+    delete model.ignoreSendInterceptor;
 
     delete model.service;
     delete model.taskDetails;
@@ -90,8 +100,5 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
     delete model.categoryInfo;
     delete model.searchFields;
     delete model.deductionPercent;
-
-    return model;
   }
-
 }

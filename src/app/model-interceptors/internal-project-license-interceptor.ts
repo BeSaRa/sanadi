@@ -60,7 +60,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
   }
 
   send(model: Partial<InternalProjectLicense>): Partial<InternalProjectLicense> {
-    if (model.ignoreInterceptor) {
+    if (model.ignoreSendInterceptor) {
       InternalProjectLicenseInterceptor._deleteBeforeSend(model);
       return model;
     }
@@ -87,7 +87,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
   }
 
   private static _deleteBeforeSend(model: Partial<InternalProjectLicense>): void {
-    delete model.ignoreInterceptor;
+    delete model.ignoreSendInterceptor;
     delete model.allNationalities;
     delete model.service;
     delete model.employeeService;

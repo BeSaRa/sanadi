@@ -7,21 +7,12 @@ import {isValidAdminResult} from '@app/helpers/utils';
 
 export class InitialExternalOfficeApprovalInterceptor implements IModelInterceptor<InitialExternalOfficeApproval> {
   send(model: Partial<InitialExternalOfficeApproval>): Partial<InitialExternalOfficeApproval> {
+    if (model.ignoreSendInterceptor) {
+      InitialExternalOfficeApprovalInterceptor._deleteBeforeSend(model);
+      return model;
+    }
     model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
-    delete model.service;
-    delete model.employeeService;
-    delete model.taskDetails;
-    delete model.caseStatusInfo;
-    delete model.creatorInfo;
-    delete model.licenseStatusInfo;
-    delete model.ouInfo;
-    delete model.countryInfo;
-    delete model.specialistDecisionInfo;
-    delete model.chiefDecisionInfo;
-    delete model.managerDecisionInfo;
-    delete model.generalManagerDecisionInfo;
-    delete model.reviewerDepartmentDecisionInfo;
-    delete model.deductionPercent;
+    InitialExternalOfficeApprovalInterceptor._deleteBeforeSend(model);
 
     return model;
   }
@@ -40,5 +31,23 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     model.countryInfo = AdminResult.createInstance(isValidAdminResult(model.countryInfo) ? model.countryInfo : {});
 
     return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<InitialExternalOfficeApproval>): void {
+    delete model.ignoreSendInterceptor;
+    delete model.service;
+    delete model.employeeService;
+    delete model.taskDetails;
+    delete model.caseStatusInfo;
+    delete model.creatorInfo;
+    delete model.licenseStatusInfo;
+    delete model.ouInfo;
+    delete model.countryInfo;
+    delete model.specialistDecisionInfo;
+    delete model.chiefDecisionInfo;
+    delete model.managerDecisionInfo;
+    delete model.generalManagerDecisionInfo;
+    delete model.reviewerDepartmentDecisionInfo;
+    delete model.deductionPercent;
   }
 }

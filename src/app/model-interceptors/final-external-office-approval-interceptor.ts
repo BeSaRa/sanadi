@@ -39,6 +39,10 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
   }
 
   send(model: Partial<FinalExternalOfficeApproval>): Partial<FinalExternalOfficeApproval> {
+    if (model.ignoreSendInterceptor) {
+      FinalExternalOfficeApprovalInterceptor._deleteBeforeSend(model);
+      return model;
+    }
     model.region = CommonUtils.isValidValue(model.region) ? model.region : '';
     model.establishmentDate = !model.establishmentDate ? undefined : DateUtils.changeDateFromDatepicker(model.establishmentDate as unknown as IMyDateModel)?.toISOString();
 
@@ -53,6 +57,12 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
       return service.bankBranchInterceptor.send(x) as BankBranch;
     });
 
+    FinalExternalOfficeApprovalInterceptor._deleteBeforeSend(model);
+    return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<FinalExternalOfficeApproval>): void {
+    delete model.ignoreSendInterceptor;
     delete model.service;
     delete model.employeeService;
     delete model.taskDetails;
@@ -66,8 +76,6 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     delete model.generalManagerDecisionInfo;
     delete model.reviewerDepartmentDecisionInfo;
     delete model.deductionPercent;
-    // delete model.organizationInfo;
-    return model;
   }
 
 }

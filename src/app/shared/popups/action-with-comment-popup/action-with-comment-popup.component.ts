@@ -267,7 +267,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       }
       let fields = Object.keys(this.form.value).concat(['id']);
       return Object.keys(data).filter(field => fields.includes(field)).reduce((acc, field) => {
-        return {...acc, [field]: data[field], ignoreInterceptor: true};
+        return {...acc, [field]: data[field], ignoreSendInterceptor: true};
       }, {});
     }) : of(null);
   }
