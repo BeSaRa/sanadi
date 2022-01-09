@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  internal_login_text: string;
+  external_login_text: string;
   lbl_review_limit: string;
   edit_step: string;
   lbl_sla: string;

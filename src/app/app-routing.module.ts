@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
 import {ErrorPageComponent} from './shared/components/error-page/error-page.component';
 import {AuthGuard} from './guards/auth-guard';
@@ -8,10 +7,13 @@ import {GuestGuard} from './guards/guest-guard';
 import {PermissionGuard} from './guards/permission-guard';
 import {PermissionGroup} from "@app/enums/permission-group";
 import {EServicePermissions} from "@app/enums/e-service-permissions";
+import {ExternalLoginComponent} from "@app/pages/external-login/external-login.component";
+import {InternalLoginComponent} from "@app/pages/internal-login/internal-login.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: 'login', component: LoginComponent, canActivate: [GuestGuard]},
+  {path: 'login', component: InternalLoginComponent, canActivate: [GuestGuard]},
+  {path: 'login-external', component: ExternalLoginComponent, canActivate: [GuestGuard]},
   {
     path: 'home', component: HomeComponent,
     canActivate: [AuthGuard],

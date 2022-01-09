@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {listAnimation} from '../../../animations/list.animation';
-import {LangService} from '../../../services/lang.service';
+import {listAnimation} from '@app/animations/list.animation';
+import {LangService} from '@app/services/lang.service';
 import {Subscription} from 'rxjs';
-import {EmployeeService} from '../../../services/employee.service';
-import {MenuItem} from '../../../models/menu-item';
+import {EmployeeService} from '@app/services/employee.service';
+import {MenuItem} from '@app/models/menu-item';
 import {Router} from '@angular/router';
 
 
@@ -39,6 +39,7 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   }
 
   navigateToPath(item: MenuItem): void {
+    console.log(item.path);
     this.router.navigate([item.path]).then();
   }
 }

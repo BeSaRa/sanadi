@@ -13,6 +13,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {Router} from '@angular/router';
 import {ToastService} from '@app/services/toast.service';
 import {NavigationService} from '@app/services/navigation.service';
+import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -49,6 +50,7 @@ export class SidebarComponent implements OnInit {
   scrollDirection: Direction = 'ltr';
   destroy$: Subject<any> = new Subject<any>();
   searchInput: FormControl = new FormControl('');
+  isExternalUser: boolean = this.employeeService.isExternalUser();
 
   @HostBinding('class.sidebar-opened')
   isOpened: boolean = true;
@@ -79,6 +81,7 @@ export class SidebarComponent implements OnInit {
               private renderer: Renderer2,
               private toastService: ToastService,
               public navigationService: NavigationService,
+              private employeeService: EmployeeService,
               private router: Router,
               public langService: LangService) {
   }
@@ -169,7 +172,7 @@ export class SidebarComponent implements OnInit {
 
   private _logout(): void {
     this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']).then(() => {
+      this.router.navigate([this.isExternalUser ? '/login-external' : '/login']).then(() => {
         this.toastService.success(this.langService.map.msg_logout_success);
       });
     });

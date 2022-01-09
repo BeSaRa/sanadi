@@ -2,7 +2,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {LoginComponent} from './pages/login/login.component';
 import {HomeComponent} from './pages/home/home.component';
 import {SharedModule} from './shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -32,12 +31,15 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {FormlyModule} from '@ngx-formly/core';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {AutoRegisterService} from './services/auto-register.service';
+import {InternalLoginComponent} from './pages/internal-login/internal-login.component';
+import {ExternalLoginComponent} from './pages/external-login/external-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    HomeComponent
+    HomeComponent,
+    InternalLoginComponent,
+    ExternalLoginComponent
   ],
   imports: [
     BrowserModule,
