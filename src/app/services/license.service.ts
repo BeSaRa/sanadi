@@ -5,7 +5,9 @@ import {Observable, of} from "rxjs";
 import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
 import {UrlService} from "@app/services/url.service";
 import {Generator} from "@app/decorators/generator";
-import {InitialExternalOfficeApprovalSearchCriteria} from "@app/models/initial-external-office-approval-search-criteria";
+import {
+  InitialExternalOfficeApprovalSearchCriteria
+} from "@app/models/initial-external-office-approval-search-criteria";
 import {EmployeeService} from "@app/services/employee.service";
 import {InitialApprovalDocumentInterceptor} from "@app/model-interceptors/initial-approval-document-interceptor";
 import {DialogRef} from "@app/shared/models/dialog-ref";
@@ -19,18 +21,27 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ViewDocumentPopupComponent} from "@app/shared/popups/view-document-popup/view-document-popup.component";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalInterceptor} from "@app/model-interceptors/partner-approval-interceptor";
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
-import {FinalApprovalDocumentInterceptor} from '@app/model-interceptors/final-approval-document-interceptor';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
+import {
+  FinalExternalOfficeApprovalResultInterceptor
+} from '@app/model-interceptors/final-external-office-approval-result-interceptor';
 import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
-import {InitialExternalOfficeApprovalInterceptor} from '@app/model-interceptors/initial-external-office-approval-interceptor';
-import {FinalExternalOfficeApprovalInterceptor} from '@app/model-interceptors/final-external-office-approval-interceptor';
+import {
+  InitialExternalOfficeApprovalInterceptor
+} from '@app/model-interceptors/initial-external-office-approval-interceptor';
+import {
+  FinalExternalOfficeApprovalInterceptor
+} from '@app/model-interceptors/final-external-office-approval-interceptor';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
-import {InternalProjectLicenseResultInterceptor} from '@app/model-interceptors/internal-project-license-result-interceptor';
+import {
+  InternalProjectLicenseResultInterceptor
+} from '@app/model-interceptors/internal-project-license-result-interceptor';
 import {InternalProjectLicense} from '@app/models/internal-project-license';
 import {InternalProjectLicenseInterceptor} from '@app/model-interceptors/internal-project-license-interceptor';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
 
 @Injectable({
   providedIn: 'root'
@@ -68,16 +79,16 @@ export class LicenseService {
   }
 
 
-  @Generator(FinalApprovalDocument, true, {
+  @Generator(FinalExternalOfficeApprovalResult, true, {
     property: 'rs',
-    interceptReceive: (new FinalApprovalDocumentInterceptor()).receive
+    interceptReceive: (new FinalExternalOfficeApprovalResultInterceptor()).receive
   })
-  private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalApprovalDocument[]> {
+  private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<FinalApprovalDocument[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<FinalExternalOfficeApprovalResult[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
   }
 
-  finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalApprovalDocument[]> {
+  finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
     return this._finalApprovalLicenseSearch(criteria);
   }
 
@@ -169,10 +180,15 @@ export class LicenseService {
     interceptReceive: (new FinalExternalOfficeApprovalInterceptor()).receive
   })
   _validateFinalExternalOfficeLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<FinalExternalOfficeApproval> {
-    return this.http.post<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', {
+    let data: any = {
       requestType,
       oldLicenseId
-    });
+    };
+    if (requestType === ServiceRequestTypes.NEW) {
+      data.initialLicenseId = oldLicenseId;
+      delete data.oldLicenseId;
+    }
+    return this.http.post<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', data);
   }
 
   @Generator(InternalProjectLicense, false, {
@@ -199,7 +215,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalApprovalDocument[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
@@ -208,7 +224,7 @@ export class LicenseService {
     });
   }
 
-  openLicenseFullContentDialog(blob: BlobModel, license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult)): DialogRef {
+  openLicenseFullContentDialog(blob: BlobModel, license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)): DialogRef {
     return this.dialog.show(ViewDocumentPopupComponent, {
       model: license,
       blob: blob
@@ -217,7 +233,7 @@ export class LicenseService {
     });
   }
 
-  showLicenseContent(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalApprovalDocument | InternalProjectLicenseResult), caseType: number): Observable<BlobModel> {
+  showLicenseContent(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult), caseType: number): Observable<BlobModel> {
     let url!: string;
 
     switch (caseType) {

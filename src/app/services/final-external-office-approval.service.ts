@@ -24,7 +24,7 @@ import {BankAccountInterceptor} from '@app/model-interceptors/bank-account-inter
 import {ExecutiveManagementInterceptor} from '@app/model-interceptors/executive-management-interceptor';
 import {BankBranchInterceptor} from '@app/model-interceptors/bank-branch-interceptor';
 import {LicenseService} from '@app/services/license.service';
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +43,7 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
   recommendationService: RecommendationService = new RecommendationService(this);
   searchService: SearchService = new SearchService(this);
   serviceKey: keyof ILanguageKeys = 'menu_final_external_office_approval';
+  selectLicenseDisplayColumns = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
@@ -75,7 +76,7 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
     return new FinalExternalOfficeApprovalSearchCriteria();
   }
 
-  licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<FinalApprovalDocument[]> {
+  licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<FinalExternalOfficeApprovalResult[]> {
     return this.licenseService.finalApprovalLicenseSearch(criteria);
   }
 

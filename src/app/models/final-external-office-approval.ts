@@ -34,7 +34,6 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   email: string = '';
   externalOfficeName: string = '';
   fax: string = '';
-  initialLicenseNumber: string = '';
   phone: string = '';
   postalCode: string = '';
   recordNo: string = '';
@@ -48,6 +47,9 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   managerDecisionInfo!: AdminResult;
   generalManagerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
+  initialLicenseFullserial!: string;
+  initialLicenseId!: string;
+  initialLicenseSerial!: number;
 
   service: FinalExternalOfficeApprovalService;
 
@@ -59,8 +61,13 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   getFormFields(control: boolean = false): any {
     const {
       requestType,
-      initialLicenseNumber,
-      licenseNumber,
+      initialLicenseId,
+      initialLicenseFullserial,
+      initialLicenseSerial,
+      // licenseNumber,
+      oldLicenseFullserial,
+      oldLicenseId,
+      oldLicenseSerial,
       country,
       region,
       externalOfficeName,
@@ -76,8 +83,13 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
 
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      initialLicenseNumber: control ? [initialLicenseNumber] : initialLicenseNumber,
-      licenseNumber: control ? [licenseNumber] : licenseNumber,
+      initialLicenseFullserial: control ? [initialLicenseFullserial, [CustomValidators.maxLength(250)]] : initialLicenseFullserial,
+      initialLicenseId: control ? [initialLicenseId] : initialLicenseId,
+      initialLicenseSerial: control ? [initialLicenseSerial] : initialLicenseSerial,
+      // licenseNumber: control ? [licenseNumber] : licenseNumber,
+      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
+      oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       country: control ? [country, [CustomValidators.required]] : country,
       region: control ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,//state
       externalOfficeName: control ? [externalOfficeName, [CustomValidators.required, CustomValidators.maxLength(100)]] : externalOfficeName,

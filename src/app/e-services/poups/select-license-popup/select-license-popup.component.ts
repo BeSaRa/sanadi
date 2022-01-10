@@ -42,11 +42,12 @@ export class SelectLicensePopupComponent {
     this.requestType = this.data.caseRecord?.getRequestType();
     this.caseService = this.inboxService.getService(this.caseType);
 
-    if (this.caseService && !!this.caseService.selectLicenseDisplayColumns && this.caseService.selectLicenseDisplayColumns.length > 0) {
-      this.displayedColumns = [...this.caseService.selectLicenseDisplayColumns];
+
+    if (this.data.displayedColumns.length > 0) {
+      this.displayedColumns = [...this.data.displayedColumns];
     } else {
-      if (this.data.displayedColumns.length > 0) {
-        this.displayedColumns = [...this.data.displayedColumns];
+      if (this.caseService && !!this.caseService.selectLicenseDisplayColumns && this.caseService.selectLicenseDisplayColumns.length > 0) {
+        this.displayedColumns = [...this.caseService.selectLicenseDisplayColumns];
       } else {
         this.displayedColumns = [...this.displayedColumns];
       }

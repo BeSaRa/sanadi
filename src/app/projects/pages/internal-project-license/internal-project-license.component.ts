@@ -800,7 +800,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns).onAfterClose$),
+        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null}), true).onAfterClose$),
         // allow only if the user select license
         filter<{ selected: InternalProjectLicenseResult, details: InternalProjectLicense }, any>
         ((selection): selection is { selected: InternalProjectLicenseResult, details: InternalProjectLicense } => {

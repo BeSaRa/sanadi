@@ -1,14 +1,14 @@
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {AdminResult} from "@app/models/admin-result";
-import {FinalApprovalDocument} from '@app/models/final-approval-document';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
 import {FactoryService} from '@app/services/factory.service';
 import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
 import {BankAccount} from '@app/models/bank-account';
 import {BankBranch} from '@app/models/bank-branch';
 import {ExecutiveManagement} from '@app/models/executive-management';
 
-export class FinalApprovalDocumentInterceptor implements IModelInterceptor<FinalApprovalDocument> {
-  receive(model: FinalApprovalDocument): FinalApprovalDocument {
+export class FinalExternalOfficeApprovalResultInterceptor implements IModelInterceptor<FinalExternalOfficeApprovalResult> {
+  receive(model: FinalExternalOfficeApprovalResult): FinalExternalOfficeApprovalResult {
     model.countryInfo = AdminResult.createInstance(model.countryInfo);
     model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
@@ -29,7 +29,7 @@ export class FinalApprovalDocumentInterceptor implements IModelInterceptor<Final
     return model;
   }
 
-  send(model: Partial<FinalApprovalDocument>): Partial<FinalApprovalDocument> {
+  send(model: Partial<FinalExternalOfficeApprovalResult>): Partial<FinalExternalOfficeApprovalResult> {
     delete model.countryInfo;
     delete model.licenseStatusInfo;
     delete model.ouInfo;

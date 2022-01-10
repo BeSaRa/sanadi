@@ -5,7 +5,7 @@ import {BankBranch} from '@app/models/bank-branch';
 import {BankAccount} from '@app/models/bank-account';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
-export class FinalApprovalDocument extends BaseLicense {
+export class FinalExternalOfficeApprovalResult extends BaseLicense {
   enName!: string;
   arName!: string;
   caseType: number = CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
