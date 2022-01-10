@@ -185,7 +185,8 @@
                      class="col-md-4 col-sm-12 col-form-label">{{lang.map.country}}</label>
               <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
                 <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
-                           placeholder="{{lang.map.select}}" id="country"
+                           placeholder="{{lang.map.select}}" id="country" appendTo="body"
+                           (change)="handleCountryChange($event)"
                            [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
                            formControlName="country" validationClasses="country">
                   <ng-option *ngFor="let option of countries" [value]="option.id"
@@ -200,12 +201,6 @@
               <label asteriskIfRequired="region" for="region"
                      class="col-md-4 col-sm-12 col-form-label">{{lang.map.region}}</label>
               <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
-                <!--<ng-select [readonly]="!isEditCountryAllowed()" [selectOnTab]="true" labelForId="region"
-                           [clearable]="false"
-                           validationClasses="region" formControlName="region" id="region">
-                  <ng-option [value]="option.id" *ngFor="let option of regions"
-                             [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-                </ng-select>-->
                 <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()"
                        validationClasses="region" class="form-control" id="region">
                 <app-field-error-message controlName="region"></app-field-error-message>

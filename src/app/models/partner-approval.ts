@@ -90,7 +90,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
       country: control ? [country, CustomValidators.required] : country,
-      region: control ? [region, CustomValidators.required, CustomValidators.maxLength(50)] : region,
+      region: control ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,
       headQuarterType: control ? [headQuarterType, CustomValidators.required] : headQuarterType,
       latitude: control ? [latitude,
         [CustomValidators.required, CustomValidators.maxLength(12), CustomValidators.pattern('NUM_HYPHEN_COMMA')]] : latitude,

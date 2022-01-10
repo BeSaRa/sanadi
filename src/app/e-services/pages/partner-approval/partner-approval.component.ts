@@ -61,7 +61,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
   jobTitles: JobTitle[] = [];
-  // regions: Country[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
@@ -195,7 +194,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   _afterBuildForm(): void {
     this.setDefaultOrganization();
-    this.listenToCountryChange();
 
     // setTimeout(() => {
     this.handleReadonly();
@@ -305,18 +303,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     console.log(error);
   }
 
-  /*loadRegions(id: number): void {
-    this.regions = [];
-    if (!id) {
-      return;
-    }
-    this.countryService.loadCountriesByParentId(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((result: Country[]) => {
-        this.regions = result;
-      });
-  }*/
-
   private loadCountries() {
     this.countryService
       .loadCountries()
@@ -329,13 +315,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .subscribe((jobTitles) => this.jobTitles = jobTitles);
   }
 
-  listenToCountryChange(): void {
-    this.country?.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(_ => {
-      this.region?.reset();
-      // this.loadRegions(this.country?.value);
-    });
+  handleCountryChange($event?: MouseEvent): void {
+    this.region.reset();
   }
 
   private _getInvalidTabs(): any {
@@ -408,11 +389,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .licenseSearch({licenseNumber})
       .pipe(
         filter(list => {
-          /* // if license number exists, set it and regions will be loaded inside
-           // otherwise load regions separately
-           if (list.length === 0) {
-             this.loadRegions(this.country?.value);
-           }*/
           return list.length > 0;
         }),
         map(list => list[0]),
