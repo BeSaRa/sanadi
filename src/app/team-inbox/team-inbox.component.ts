@@ -57,7 +57,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'BD_SUBJECT', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'orgInfo', 'fromUserInfo'],
+    columns: ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
