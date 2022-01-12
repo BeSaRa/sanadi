@@ -79,6 +79,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     }
   };
 
+  headerColumn: string[] = ['extra-header'];
+
   constructor(public lang: LangService,
               private toast: ToastService,
               private employeeService: EmployeeService,

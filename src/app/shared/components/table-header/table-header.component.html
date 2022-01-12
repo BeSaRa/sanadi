@@ -1,0 +1,27 @@
+<div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white">
+  <h1 class="h6 my-1">{{lang.map[tableTitle]}}</h1>
+  <div>
+    <button [tooltip]="lang.map.btn_reload"
+            (click)="reload$.next(null)"
+            class="btn icon-btn">
+      <i class="mdi mdi-reload"></i>
+    </button>
+  </div>
+  <div class="flex-grow-1"></div>
+  <button (click)="clearSort()" [ngClass]="{isDisabled: !hasSort}" class="btn icon-btn">
+    <i class="mdi mdi-sort-variant-remove"></i>
+  </button>
+  <div class="vr"></div>
+  <button [ngClass]="{isDisabled:!hasFilterCriteria()}" (click)="clearFilter()" class="btn icon-btn p-0">
+    <i class="mdi mdi-filter-off-outline"></i>
+  </button>
+  <div class="vr"></div>
+  <button (click)="filterClicked.emit('OPEN')" class="btn icon-btn">
+    <i [ngClass]="{'mdi-filter': hasFilterCriteria(), 'mdi-filter-outline': !hasFilterCriteria()}" class="mdi"></i>
+  </button>
+  <div class="position-relative">
+    <i class="mdi zoom-icon mdi-magnify position-absolute translate-middle-y top-50 start-0 ms-1"></i>
+    <input [formControl]="filterControl" placeholder="{{lang.map.lbl_search}}"
+           class="form-control form-control-sm ps-4"/>
+  </div>
+</div>

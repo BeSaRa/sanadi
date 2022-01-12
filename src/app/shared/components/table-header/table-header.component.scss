@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.icon-btn {
+  &:disabled {
+    color: rgba(255, 255, 255, .6);
+  }
+}
+
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}
+
+.zoom-icon.mdi-magnify {
+  color: darken(white, 30);
+}
+
+.vr {
+  min-height: 1rem;
+  width: 1px;
+  background-color: currentColor;
+  opacity: .5;
+}

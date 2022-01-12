@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {SortEvent} from '../../interfaces/sort-event';
+import {SortEvent} from '@app/interfaces/sort-event';
 import {SortableHeaderComponent} from '../components/sortable-header/sortable-header.component';
 import {BehaviorSubject} from 'rxjs';
 
@@ -80,6 +80,15 @@ export class SortableTableDirective implements OnInit, OnDestroy {
       directionIndex = 0;
     }
     return directions[directionIndex];
+  }
+
+  clearSort(): void {
+    this.direction = '';
+    this.active = '';
+    this.sortChange.emit({
+      direction: '',
+      active: ''
+    })
   }
 
   ngOnDestroy(): void {
