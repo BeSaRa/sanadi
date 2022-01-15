@@ -16,6 +16,8 @@ import {Lookup} from '@app/models/lookup';
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {LookupService} from '@app/services/lookup.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {FormManager} from '@app/models/form-manager';
+import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
   selector: 'service-data-popup',
@@ -26,10 +28,19 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
+  fm!: FormManager;
   model: ServiceData;
   operation: OperationTypes;
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    customSettings: {name: 'customSettings'}
+  };
   list: ServiceData[] = [];
   statusList: Lookup[] = [];
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  showMaxTargetAmount = false;
+  showMaxElementsCount = false;
+  showActivateDevelopmentField = false;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>, private lookupService: LookupService,
               public langService: LangService, private fb: FormBuilder, private toast: ToastService,
@@ -42,6 +53,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
+    this.validateCustomSettingsFields();
     this._saveModel();
   }
 
@@ -57,31 +69,39 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   buildForm(): void {
     this.form = this.fb.group({
-      caseType: [this.model.caseType, [CustomValidators.required, CustomValidators.number]],
-      bawServiceCode: [this.model.bawServiceCode, [
-        CustomValidators.required,
-        CustomValidators.unique<ServiceData>(this.list, 'bawServiceCode', this.model)]],
-      arName: [this.model.arName, [
-        CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-      ]],
-      enName: [this.model.enName, [
-        CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-      ]],
-      requestSerialCode: [this.model.requestSerialCode, CustomValidators.required],
-      licenseSerialCode: [this.model.licenseSerialCode, CustomValidators.required],
-      status: [this.model.status, [CustomValidators.required]],
-      serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number]],
-      licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number]],
-      licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number]],
-      serviceDescription: [this.model.serviceDescription, [CustomValidators.maxLength(1000)]],
-      serviceRequirements: [this.model.serviceRequirements, [CustomValidators.maxLength(1000)]],
-      serviceTerms: [this.model.serviceTerms, [CustomValidators.required, CustomValidators.maxLength(1000)]],
-      fees: [this.model.fees, [CustomValidators.number]],
-      serviceStepsArabic: [this.model.serviceStepsArabic, [CustomValidators.maxLength(1000)]],
-      serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]],
+      basic: this.fb.group({
+        caseType: [this.model.caseType, [CustomValidators.required, CustomValidators.number]],
+        bawServiceCode: [this.model.bawServiceCode, [
+          CustomValidators.required,
+          CustomValidators.unique<ServiceData>(this.list, 'bawServiceCode', this.model)]],
+        arName: [this.model.arName, [
+          CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+        ]],
+        enName: [this.model.enName, [
+          CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+        ]],
+        requestSerialCode: [this.model.requestSerialCode, CustomValidators.required],
+        licenseSerialCode: [this.model.licenseSerialCode, CustomValidators.required],
+        status: [this.model.status, [CustomValidators.required]],
+        serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number]],
+        licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number]],
+        licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number]],
+        serviceDescription: [this.model.serviceDescription, [CustomValidators.maxLength(1000)]],
+        serviceRequirements: [this.model.serviceRequirements, [CustomValidators.maxLength(1000)]],
+        serviceTerms: [this.model.serviceTerms, [CustomValidators.required, CustomValidators.maxLength(1000)]],
+        fees: [this.model.fees, [CustomValidators.number]],
+        serviceStepsArabic: [this.model.serviceStepsArabic, [CustomValidators.maxLength(1000)]],
+        serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]]
+      }),
+      customSettings: this.fb.group({
+        maxTargetAmount: [this.model.maxTargetAmount, [CustomValidators.number]],
+        maxElementsCount: [this.model.maxElementsCount, [CustomValidators.number]],
+        activateDevelopmentField: [this.model.activateDevelopmentField]
+      })
     });
+    this.fm = new FormManager(this.form, this.langService);
   }
 
   saveModel(): void {
@@ -92,7 +112,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.save$.pipe(
       takeUntil(this.destroy$),
       exhaustMap(() => {
-        const serviceData = extender<ServiceData>(ServiceData, {...this.model, ...this.form.value});
+        const serviceData = extender<ServiceData>(ServiceData, {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.customSettings});
         return serviceData.save().pipe(
           catchError((err) => {
             this.exceptionHandlerService.handle(err);
@@ -114,5 +134,29 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   get popupTitle(): string {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_service : this.langService.map.lbl_edit_service;
+  }
+
+  validateCustomSettingsFields() {
+    if(this.model.isExternalProjectModels()) {
+      this.showActivateDevelopmentField = true;
+    }
+
+    if(this.model.isUrgentInterventionLicensing()) {
+      this.maxTargetAmount?.setValidators([CustomValidators.required, CustomValidators.number]);
+      this.showMaxTargetAmount = true;
+    }
+
+    if(this.model.isCollectorLicensing()) {
+      this.maxElementsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
+      this.showMaxElementsCount = true;
+    }
+  }
+
+  get maxTargetAmount() {
+    return this.form.get('customSettings.maxTargetAmount');
+  }
+
+  get maxElementsCount() {
+    return this.form.get('customSettings.maxElementsCount');
   }
 }

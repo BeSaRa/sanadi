@@ -6,9 +6,11 @@ import {LangService} from '../services/lang.service';
 import {LookupService} from '../services/lookup.service';
 import {AdminResult} from './admin-result';
 import {INames} from '../interfaces/i-names';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   caseType!: number;
+  customSettings!: string;
   bawServiceCode!: string;
   requestSerialCode!: string;
   licenseSerialCode!: string;
@@ -27,6 +29,11 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   serviceRequirements: string = '';
   serviceStepsArabic: string = '';
   serviceStepsEnglish: string = '';
+
+  maxTargetAmount!: number;
+  maxElementsCount!: number;
+  activateDevelopmentField: boolean = false;
+
 
   service: ServiceDataService;
   langService: LangService;
@@ -49,5 +56,23 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
 
   getName(): string {
     return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
+  }
+
+  hasCustomSettings() {
+    return this.caseType == CaseTypes.EXTERNAL_PROJECT_MODELS ||
+      this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING ||
+      this.caseType == CaseTypes.COLLECTOR_LICENSING;
+  }
+
+  isExternalProjectModels() {
+    return this.caseType == CaseTypes.EXTERNAL_PROJECT_MODELS;
+  }
+
+  isUrgentInterventionLicensing() {
+    return this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING;
+  }
+
+  isCollectorLicensing() {
+    return this.caseType == CaseTypes.COLLECTOR_LICENSING;
   }
 }

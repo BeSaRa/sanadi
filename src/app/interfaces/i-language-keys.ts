@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  custom_settings_activate_development_field: string;
+  custom_settings_max_elements_count: string;
+  custom_setting_max_target_amount: string;
+  custom_settings: string;
   lbl_sub_sd_goal_count: string;
   lbl_sub_sd_goals: string;
   lbl_add_sd_goal: string;
