@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  SERVICE_DATA_STEP: string;
   SURVEY: string;
   SURVEY_SECTION: string;
   SURVEY_TEMPLATE: string;

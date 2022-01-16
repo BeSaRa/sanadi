@@ -55,6 +55,7 @@ import { SurveySectionPopupComponent } from './popups/survey-section-popup/surve
 import { SelectQuestionPopupComponent } from './popups/select-question-popup/select-question-popup.component';
 import { SdGoalComponent } from './pages/sd-goal/sd-goal.component';
 import { SdGoalPopupComponent } from './popups/sd-goal-popup/sd-goal-popup.component';
+import { ServiceDataStepPopupComponent } from './popups/service-data-step-popup/service-data-step-popup.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { SdGoalPopupComponent } from './popups/sd-goal-popup/sd-goal-popup.compo
     SelectQuestionPopupComponent,
     SdGoalComponent,
     SdGoalPopupComponent,
+    ServiceDataStepPopupComponent,
   ],
   imports: [
     SharedModule,

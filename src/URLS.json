@@ -1,4 +1,5 @@
 {
+  "SERVICE_DATA_STEP": "admin/service-steps",
   "SURVEY": "/training/training-survey",
   "SURVEY_SECTION": "/training/training-survey-quest-section",
   "SURVEY_TEMPLATE": "/training/training-survey-template",

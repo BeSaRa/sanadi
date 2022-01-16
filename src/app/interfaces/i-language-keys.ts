@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  service_steps: string;
   custom_settings_activate_development_field: string;
   custom_settings_max_elements_count: string;
   custom_setting_max_target_amount: string;

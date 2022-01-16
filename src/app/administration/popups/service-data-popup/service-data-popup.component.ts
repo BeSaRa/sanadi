@@ -18,6 +18,8 @@ import {LookupService} from '@app/services/lookup.service';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FormManager} from '@app/models/form-manager';
 import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ServiceDataStep} from '@app/models/service-data-step';
+import {ServiceDataStepService} from '@app/services/service-data-step.service';
 
 @Component({
   selector: 'service-data-popup',
@@ -33,9 +35,12 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   operation: OperationTypes;
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
-    customSettings: {name: 'customSettings'}
+    customSettings: {name: 'customSettings'},
+    steps: {name: 'steps'}
   };
   list: ServiceData[] = [];
+  stepsList: ServiceDataStep[] = [];
+  stepsColumns = ['arName', 'enName', 'activityName', 'stepName'];
   statusList: Lookup[] = [];
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   showMaxTargetAmount = false;
@@ -44,7 +49,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>, private lookupService: LookupService,
               public langService: LangService, private fb: FormBuilder, private toast: ToastService,
-              private dialogRef: DialogRef, private exceptionHandlerService: ExceptionHandlerService) {
+              private dialogRef: DialogRef, private exceptionHandlerService: ExceptionHandlerService,
+              private serviceDataStepsService: ServiceDataStepService) {
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
@@ -55,6 +61,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.validateCustomSettingsFields();
     this._saveModel();
+    this.reloadSteps();
   }
 
   ngOnDestroy(): void {
@@ -158,5 +165,17 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   get maxElementsCount() {
     return this.form.get('customSettings.maxElementsCount');
+  }
+
+  private loadSteps(): void {
+    this.serviceDataStepsService.stepsByServiceId(this.model.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(steps => {
+        this.stepsList = steps;
+      });
+  }
+
+  reloadSteps() {
+    this.loadSteps();
   }
 }
