@@ -33,6 +33,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   maxTargetAmount!: number;
   maxElementsCount!: number;
   activateDevelopmentField: boolean = false;
+  sLA!: number;
+  serviceReviewLimit!: number;
 
 
   service: ServiceDataService;

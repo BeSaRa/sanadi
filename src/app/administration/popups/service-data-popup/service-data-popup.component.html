@@ -107,6 +107,20 @@
             <input id="fees" validationClasses="fees" formControlName="fees" class="form-control">
             <app-field-error-message controlName="fees"></app-field-error-message>
           </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="fees" for="sLA" class="form-label">{{langService.map.lbl_sla}}</label>
+            <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="sLA"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="fees" for="serviceReviewLimit" class="form-label">{{langService.map.lbl_review_limit}}</label>
+            <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit" class="form-control"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
+          </div>
         </div>
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">

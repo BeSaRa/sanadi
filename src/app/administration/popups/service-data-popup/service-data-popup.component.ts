@@ -91,6 +91,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         licenseSerialCode: [this.model.licenseSerialCode, CustomValidators.required],
         status: [this.model.status, [CustomValidators.required]],
         serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number]],
+        sLA: [this.model.sLA, [CustomValidators.number]],
+        serviceReviewLimit: [this.model.serviceReviewLimit, [CustomValidators.number]],
         licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number]],
         licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number]],
         serviceDescription: [this.model.serviceDescription, [CustomValidators.maxLength(1000)]],
