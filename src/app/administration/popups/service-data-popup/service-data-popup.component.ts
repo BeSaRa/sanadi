@@ -20,6 +20,7 @@ import {FormManager} from '@app/models/form-manager';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ServiceDataStep} from '@app/models/service-data-step';
 import {ServiceDataStepService} from '@app/services/service-data-step.service';
+import {ChecklistService} from '@app/services/checklist.service';
 
 @Component({
   selector: 'service-data-popup',
@@ -50,7 +51,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>, private lookupService: LookupService,
               public langService: LangService, private fb: FormBuilder, private toast: ToastService,
               private dialogRef: DialogRef, private exceptionHandlerService: ExceptionHandlerService,
-              private serviceDataStepsService: ServiceDataStepService) {
+              private serviceDataStepsService: ServiceDataStepService,
+              private checklistService: ChecklistService) {
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
@@ -177,5 +179,16 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   reloadSteps() {
     this.loadSteps();
+  }
+
+  checklist(serviceDataStep: ServiceDataStep, $event: MouseEvent): void {
+    $event.preventDefault();
+    this.checklistService.openListDialog(serviceDataStep)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        // sub.unsubscribe();
+      });
+    });
   }
 }

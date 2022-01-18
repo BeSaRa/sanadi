@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  checklist_items: string;
+  checklist_item_status: string;
+  lbl_checklist: string;
   service_steps: string;
   custom_settings_activate_development_field: string;
   custom_settings_max_elements_count: string;

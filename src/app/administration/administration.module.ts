@@ -56,6 +56,8 @@ import { SelectQuestionPopupComponent } from './popups/select-question-popup/sel
 import { SdGoalComponent } from './pages/sd-goal/sd-goal.component';
 import { SdGoalPopupComponent } from './popups/sd-goal-popup/sd-goal-popup.component';
 import { ServiceDataStepPopupComponent } from './popups/service-data-step-popup/service-data-step-popup.component';
+import { ChecklistPopupComponent } from './popups/checklist-popup/checklist-popup.component';
+import { ChecklistItemPopupComponent } from './popups/checklist-item-popup/checklist-item-popup.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +106,8 @@ import { ServiceDataStepPopupComponent } from './popups/service-data-step-popup/
     SdGoalComponent,
     SdGoalPopupComponent,
     ServiceDataStepPopupComponent,
+    ChecklistPopupComponent,
+    ChecklistItemPopupComponent,
   ],
   imports: [
     SharedModule,
