@@ -71,11 +71,23 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
     });
   }
 
-  openEditChecklistItemDialog(stepId: number, checklistItem?: ChecklistItem): DialogRef {
+  openEditChecklistItemDialog(stepId: number, checklistItem: ChecklistItem): DialogRef {
     return this.dialog.show<IDialogData<ChecklistItem>>(ChecklistItemPopupComponent, {
-      model: checklistItem!,
+      model: checklistItem,
       operation: OperationTypes.UPDATE,
       stepId: stepId
     });
   }
+
+  // openEditChecklistItemDialog(stepId: number, checklistItemId: number): Observable<DialogRef> {
+  //   return this.getById(checklistItemId).pipe(
+  //     switchMap((checklistItem: ChecklistItem) => {
+  //       return of(this.dialog.show<IDialogData<ChecklistItem>>(ChecklistItemPopupComponent, {
+  //         model: checklistItem,
+  //         operation: OperationTypes.UPDATE,
+  //         stepId: stepId
+  //       }));
+  //     })
+  //   );
+  // }
 }

@@ -11,7 +11,11 @@ export class ChecklistItemInterceptor implements IModelInterceptor<ChecklistItem
   }
 
   send(model: Partial<ChecklistItem>): Partial<ChecklistItem> {
+    model.status = model.status ? 1 : 0;
+    model.stepOrder = +model.stepOrder!;
     delete model.langService;
+    delete model.service;
+    delete model.statusInfo;
     return model;
   }
 }

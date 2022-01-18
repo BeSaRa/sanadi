@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  edit_checklist_item: string;
+  add_checklist_item: string;
+  lbl_item_order: string;
+  lbl_english_description: string;
+  lbl_arabic_description: string;
   checklist_items: string;
   checklist_item_status: string;
   lbl_checklist: string;

@@ -74,7 +74,7 @@ export class ChecklistPopupComponent implements OnInit {
         return load.pipe(catchError(_ => of([])));
       }))
       .subscribe((list: ChecklistItem[]) => {
-        this.models = list;
+        this.models = list.sort(this.sortByOrder);
       });
   }
 
@@ -97,5 +97,13 @@ export class ChecklistPopupComponent implements OnInit {
 
   get popupTitle(): string {
     return this.lang.map.lbl_checklist;
+  };
+
+  sortByOrder = (a: ChecklistItem, b: ChecklistItem) => {
+    if (a.stepOrder < b.stepOrder)
+      return -1;
+    if (a.stepOrder > b.stepOrder)
+      return 1;
+    return 0;
   };
 }
