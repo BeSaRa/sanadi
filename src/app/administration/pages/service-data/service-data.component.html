@@ -1,6 +1,5 @@
 <div class="row">
-  <app-page-header pageTitle="menu_services_data" [clickOnReload$]="reloadServiceData$"
-                   [clickOnNew$]="add$"></app-page-header>
+  <app-page-header pageTitle="menu_services_data" [clickOnReload$]="reloadServiceData$"></app-page-header>
   <app-grid-search *ngIf="!tableOptions.isSelectedRecords()"
                    (searchTextEvent)="tableOptions.searchText = $event"></app-grid-search>
 </div>
