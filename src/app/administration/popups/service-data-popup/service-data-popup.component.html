@@ -8,7 +8,7 @@
     <tabs-list>
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
-      <tab [name]="tabsData.basic.customSettings"
+      <tab [name]="tabsData.basic.steps"
            [template]="stepsTabTemplate"
            [title]="langService.map.service_steps"
            [hasError]="fm.getFieldInvalidStatus('steps')"></tab>
@@ -185,13 +185,16 @@
                   <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="activityName">
-                  <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_required}}</th>
-                  <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
+                  <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_step_name}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.stepName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="stepName">
                   <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
+                      <a href="#" (click)="editStep(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
+                        <i class="mdi mdi-pen"></i>
+                      </a>
                       <a href="#" (click)="checklist(row , $event)" tooltip="{{langService.map.lbl_checklist}}" class="icon-btn">
                         <i class="mdi mdi-format-list-bulleted-square"></i>
                       </a>

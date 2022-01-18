@@ -29,6 +29,7 @@ import {ChecklistService} from '@app/services/checklist.service';
 })
 export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
+  edit$: Subject<ServiceDataStep> = new Subject<ServiceDataStep>();
   private destroy$: Subject<any> = new Subject<any>();
   form!: FormGroup;
   fm!: FormManager;
@@ -62,14 +63,9 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.buildForm();
     this.validateCustomSettingsFields();
-    this._saveModel();
+    this.listenToSave();
+    this.listenToEdit();
     this.reloadSteps();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 
   displayFormValidity(elmRefToScroll: HTMLElement) {
@@ -117,7 +113,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.save$.next();
   }
 
-  _saveModel(): void {
+  listenToSave(): void {
     this.save$.pipe(
       takeUntil(this.destroy$),
       exhaustMap(() => {
@@ -181,6 +177,20 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.loadSteps();
   }
 
+  editStep(serviceDataStep: ServiceDataStep, event: MouseEvent): void {
+    event.preventDefault();
+    this.edit$.next(serviceDataStep);
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.serviceDataStepsService.openEditStepDialog(model).onAfterClose$.pipe(catchError(_ => of(null)));
+      }))
+      .subscribe(() => this.reloadSteps())
+  }
+
   checklist(serviceDataStep: ServiceDataStep, $event: MouseEvent): void {
     $event.preventDefault();
     this.checklistService.openListDialog(serviceDataStep)
@@ -190,5 +200,10 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         // sub.unsubscribe();
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

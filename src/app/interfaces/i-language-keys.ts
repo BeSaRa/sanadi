@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  lbl_review_limit: string;
+  edit_step: string;
+  lbl_sla: string;
+  lbl_activity_name: string;
+  lbl_step_name: string;
   edit_checklist_item: string;
   add_checklist_item: string;
   lbl_item_order: string;

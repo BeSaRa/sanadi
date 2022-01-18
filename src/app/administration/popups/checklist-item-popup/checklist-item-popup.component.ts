@@ -11,7 +11,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
@@ -25,7 +25,6 @@ export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistIte
   model!: ChecklistItem;
   operation!: OperationTypes;
   stepId!: number;
-  destroy$: Subject<void> = new Subject<void>();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ChecklistItem>,
