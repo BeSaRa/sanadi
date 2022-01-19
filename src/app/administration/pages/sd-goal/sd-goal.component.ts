@@ -32,6 +32,8 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
       }
     }
   ];
+  commonStatusEnum = CommonStatusEnum;
+
   @ViewChild('table') table!: TableComponent;
 
   constructor(public service: SDGoalService,
@@ -131,5 +133,23 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
         }
       });
     }
+  }
+
+  activate(model: SDGoal): void {
+    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
+  deactivate(model: SDGoal): void {
+    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
   }
 }

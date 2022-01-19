@@ -1,11 +1,12 @@
-import {BaseModel} from "@app/models/base-model";
-import {SDGoalService} from "@app/services/sdgoal.service";
-import {FactoryService} from "@app/services/factory.service";
-import {INames} from "@app/interfaces/i-names";
-import {LangService} from "@app/services/lang.service";
+import {BaseModel} from '@app/models/base-model';
+import {SDGoalService} from '@app/services/sdgoal.service';
+import {FactoryService} from '@app/services/factory.service';
+import {INames} from '@app/interfaces/i-names';
+import {LangService} from '@app/services/lang.service';
 import {searchFunctionType} from '@app/types/types';
 import {Lookup} from '@app/models/lookup';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
   service!: SDGoalService;
@@ -59,5 +60,9 @@ export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
 
   loadSubGoals() {
     return this.service.loadSubSdGoals(this.id);
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

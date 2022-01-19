@@ -1,8 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {SDGoal} from "@app/models/sdgoal";
-import {FactoryService} from "@app/services/factory.service";
-import {UrlService} from "@app/services/url.service";
+import {SDGoal} from '@app/models/sdgoal';
+import {FactoryService} from '@app/services/factory.service';
+import {UrlService} from '@app/services/url.service';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {ComponentType} from '@angular/cdk/portal';
 import {SdGoalPopupComponent} from '@app/administration/popups/sd-goal-popup/sd-goal-popup.component';
@@ -13,6 +13,7 @@ import {Observable} from 'rxjs';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -70,5 +71,17 @@ export class SDGoalService extends BackendWithDialogOperationsGenericService<SDG
 
   _getDialogComponent(): ComponentType<any> {
     return SdGoalPopupComponent;
+  }
+
+  updateStatus(sdGoalId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(sdGoalId) : this._deactivate(sdGoalId);
+  }
+
+  private _activate(sdGoalId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + sdGoalId + '/activate', {});
+  }
+
+  private _deactivate(sdGoalId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + sdGoalId + '/de-activate', {});
   }
 }
