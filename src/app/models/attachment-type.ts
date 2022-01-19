@@ -11,7 +11,7 @@ import {searchFunctionType} from '@app/types/types';
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
   langService: LangService;
-  status!: number;
+  status: boolean | number = false;
   global: boolean = false;
   arDesc!: string;
   enDesc!: string;

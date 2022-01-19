@@ -61,7 +61,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
         return load.pipe(
           map(list => {
             return list.filter(model => {
-              return model.status !== CommonStatusEnum.RETIRED;
+              return +model.status == CommonStatusEnum.ACTIVATED || +model.status == CommonStatusEnum.DEACTIVATED;
             });
           }),
           catchError(_ => of([]))
