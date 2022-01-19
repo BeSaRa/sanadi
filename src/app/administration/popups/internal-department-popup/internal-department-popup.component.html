@@ -32,12 +32,12 @@
         <div class="col-md-6 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="teamId"
                  for="teamId">{{lang.map.lbl_team}}</label>
-          <!--<ng-select validationClasses="teamId" appendTo="body" [clearable]="true" id="teamId"
-                     placeholder="{{lang.map.select}}" [readonly]="true"
+          <ng-select validationClasses="teamId" appendTo="body" [clearable]="true" id="teamId"
+                     placeholder="{{lang.map.select}}"
                      formControlName="teamId">
             <ng-option [value]="team.id" *ngFor="let team of teams">{{team.getName()}}</ng-option>
-          </ng-select>-->
-          <label id="teamId" class="form-control input-disabled">{{teamInfo.getName()}}</label>
+          </ng-select>
+<!--          <label id="teamId" class="form-control input-disabled">{{teamInfo.getName()}}</label>-->
           <app-field-error-message controlName="teamId"></app-field-error-message>
         </div>
         <div class="col-md-6 col-sm-12 mb-4 position-relative">

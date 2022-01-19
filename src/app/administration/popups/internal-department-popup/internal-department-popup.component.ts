@@ -66,7 +66,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   }
 
   initPopup(): void {
-    // this.loadTeams();
+    this.loadTeams();
     this.loadInternalUsers();
     this.listenToSaveStamp();
     this.setCurrentStamp();
