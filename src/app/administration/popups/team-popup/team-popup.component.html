@@ -67,7 +67,7 @@
         <label for="ldapGroupName" asteriskIfRequired="ldapGroupName"
                class="form-label">{{langService.map.ldap_group}}</label>
         <input id="ldapGroupName" [ngClass]="fm.getStatusClass('ldapGroupName')"
-               formControlName="ldapGroupName" class="form-control">
+               formControlName="ldapGroupName" class="form-control" readonly="true">
         <app-field-error-message controlName="ldapGroupName"></app-field-error-message>
       </div>
     </div>
