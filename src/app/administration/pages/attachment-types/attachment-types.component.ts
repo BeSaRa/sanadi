@@ -38,6 +38,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     }
   ];
   actions: IMenuItem<AttachmentType>[] = [];
+  commonStatusEnum = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
 
@@ -123,5 +124,25 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
         }
       });
     }
+  }
+
+  activate(model: AttachmentType): void {
+    model.status = CommonStatusEnum.ACTIVATED;
+    const sub = model.update().subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
+  }
+
+  deactivate(model: AttachmentType): void {
+    model.status = CommonStatusEnum.DEACTIVATED;
+    const sub = model.update().subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+      this.reload$.next(null);
+      sub.unsubscribe();
+    });
   }
 }

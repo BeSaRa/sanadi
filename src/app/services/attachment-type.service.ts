@@ -1,23 +1,17 @@
 import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
 import {AttachmentType} from '../models/attachment-type';
 import {HttpClient} from '@angular/common/http';
 import {IModelInterceptor} from '../interfaces/i-model-interceptor';
 import {AttachmentTypeInterceptor} from '../model-interceptors/attachment-type-interceptor';
 import {UrlService} from './url.service';
 import {FactoryService} from './factory.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
 import {DialogService} from './dialog.service';
 import {AttachmentTypesPopupComponent} from '../administration/popups/attachment-types-popup/attachment-types-popup.component';
-import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {AttachmentTypeServiceDataService} from "@app/services/attachment-type-service-data.service";
-import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
+import {Observable} from 'rxjs';
+import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {ComponentType} from '@angular/cdk/portal';
-import {JobTitlePopupComponent} from '@app/administration/popups/job-title-popup/job-title-popup.component';
 
 @Injectable({
   providedIn: 'root'

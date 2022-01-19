@@ -4,8 +4,8 @@ import {FactoryService} from '../services/factory.service';
 import {INames} from '../interfaces/i-names';
 import {LangService} from '../services/lang.service';
 import {Lookup} from './lookup';
-import {FileNetDocument} from "@app/models/file-net-document";
-import {AdminResult} from "@app/models/admin-result";
+import {FileNetDocument} from '@app/models/file-net-document';
+import {AdminResult} from '@app/models/admin-result';
 import {searchFunctionType} from '@app/types/types';
 
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
