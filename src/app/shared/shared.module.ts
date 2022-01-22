@@ -78,6 +78,7 @@ import { ViewSurveyPopupComponent } from './popups/view-survey-popup/view-survey
 import { ViewTraineeSurveyComponent } from './popups/view-trainee-survey/view-trainee-survey.component';
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { TableHeaderComponent } from './components/table-header/table-header.component';
+import { WorkItemStatusComponent } from './components/work-item-status/work-item-status.component';
 
 @NgModule({
   declarations: [
@@ -147,7 +148,8 @@ import { TableHeaderComponent } from './components/table-header/table-header.com
     ViewSurveyPopupComponent,
     ViewTraineeSurveyComponent,
     FileUploaderComponent,
-    TableHeaderComponent
+    TableHeaderComponent,
+    WorkItemStatusComponent
   ],
   imports: [
     CommonModule,
@@ -221,7 +223,8 @@ import { TableHeaderComponent } from './components/table-header/table-header.com
     LogViewerComponent,
     SurveyViewComponent,
     FileUploaderComponent,
-    TableHeaderComponent
+    TableHeaderComponent,
+    WorkItemStatusComponent
   ]
 })
 export class SharedModule {

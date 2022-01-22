@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12">
-    <app-table  #table sortableTable [paginator]="paginator"
+    <app-table #table sortableTable [paginator]="paginator"
                [columns]="tableOptions.columns" [data]="queryResultSet?.items" [filter]="tableOptions.searchText"
                [useSearchToFilter]="true">
       <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
@@ -8,6 +8,12 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <a href="#" class="dir-ltr" (click)="$event.preventDefault(); actionOpen(row)">{{row.BD_FULL_SERIAL}}</a>
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="workItemStatus">
+          <th style="width:8px" class="p-0" cdk-header-cell sortable-header *cdkHeaderCellDef></th>
+          <td cdk-cell class="position-relative p-0" *cdkCellDef="let row">
+            <work-item-status [item]="row"></work-item-status>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="ACTIVATED">
@@ -55,7 +61,7 @@
           </th>
         </ng-container>
         <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef></th>
           <td cdk-cell class="table-actions" *cdkCellDef="let row">
             <button (click)="actionViewLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
               <i class="mdi mdi-view-list-outline"></i></button>
