@@ -2,12 +2,33 @@
   <h1 class="h6 my-1">{{lang.map[tableTitle]}}</h1>
   <div>
     <button [tooltip]="lang.map.btn_reload"
-            (click)="reload$.next(null)"
+            (click)="reload()"
             class="btn icon-btn">
       <i class="mdi mdi-reload"></i>
     </button>
   </div>
   <div class="flex-grow-1"></div>
+  <div class="d-flex gap-3 risk-status">
+    <div class="d-flex" *ngIf="selectedFilter">
+      <button (click)="selectFilter(selectedFilter)" class="btn btn-sm"
+              [ngClass]="riskStatusClasses[selectedFilter.lookupKey]" *ngIf="selectedFilter">
+        {{lang.map.selected_status}} - {{selectedFilter.getName()}}
+      </button>
+      <div class="px-2"></div>
+      <div class="vr"></div>
+    </div>
+    <button (click)="selectFilter(filter)"
+            class="btn btn-sm position-relative {{riskStatusClasses[filter.lookupKey]}}"
+            *ngFor="let filter of riskStatus">
+      {{filter.getName()}}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+        {{stats && stats[riskCounter[filter.lookupKey]]}}
+        <span class="visually-hidden">unread messages</span>
+      </span>
+    </button>
+  </div>
+  <div class="px-3"></div>
+  <div class="vr"></div>
   <button (click)="clearSort()" [ngClass]="{isDisabled: !hasSort}" class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
   </button>

@@ -24,6 +24,7 @@ import {TableComponent} from "@app/shared/components/table/table.component";
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CaseStatus} from '@app/enums/case-status.enum';
+import {Lookup} from "@app/models/lookup";
 
 @Component({
   selector: 'app-user-inbox',
@@ -81,6 +82,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   headerColumn: string[] = ['extra-header'];
 
+  oldQueryResultSet?: QueryResultSet;
+
   constructor(public lang: LangService,
               private toast: ToastService,
               private employeeService: EmployeeService,
@@ -95,7 +98,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     this.reloadInbox$
       .pipe(
         switchMap(_ => {
-            //this.inboxService.loadUserInbox()
             if (!this.hasFilterCriteria()) {
               return this.inboxService.loadUserInbox();
             } else {
@@ -108,6 +110,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.queryResultSet = value;
+        this.oldQueryResultSet = {...value}
       });
 
   }
@@ -558,5 +561,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   hasFilterCriteria(): boolean {
     return !CommonUtils.isEmptyObject(this.filterCriteria) && CommonUtils.objectHasValue(this.filterCriteria);
+  }
+
+  onInboxFiltered($event: Lookup | undefined): void {
+    if ($event) {
+      this.queryResultSet!.items = this.oldQueryResultSet!.items.filter((item) => item.riskStatusInfo.lookupKey === $event.lookupKey)
+    } else {
+      this.queryResultSet!.items = this.oldQueryResultSet!.items
+    }
   }
 }

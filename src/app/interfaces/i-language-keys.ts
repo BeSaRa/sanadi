@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  selected_status: string;
   internal_login_text: string;
   external_login_text: string;
   lbl_review_limit: string;

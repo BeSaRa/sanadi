@@ -9,6 +9,9 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {DialogService} from "@app/services/dialog.service";
 import {takeUntil} from "rxjs/operators";
 import {SortableTableDirective} from "@app/shared/directives/sortable-table.directive";
+import {Lookup} from "@app/models/lookup";
+import {LookupService} from "@app/services/lookup.service";
+import {IStats} from "@app/interfaces/istats";
 
 @Component({
   selector: 'table-header',
@@ -29,10 +32,33 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   textChange: EventEmitter<string> = new EventEmitter<string>();
   @Input()
   sort: SortableTableDirective | undefined | null;
+  @Input()
+  stats?: IStats;
+
+  @Output()
+  onSelectFilter: EventEmitter<Lookup | undefined> = new EventEmitter<Lookup | undefined>();
+
   hasSort: boolean = false;
   private destroy$: Subject<any> = new Subject<any>();
+  riskStatus: Lookup[] = this.lookupService.listByCategory.RiskStatus.slice().sort((a, b) => a.lookupKey - b.lookupKey);
 
-  constructor(public lang: LangService, private dialog: DialogService) {
+  riskStatusClasses: Record<number, string> = {
+    1: 'btn-success',
+    2: 'btn-warning',
+    3: 'btn-danger',
+  }
+  riskCounter: Record<number, keyof IStats> = {
+    1: "onTrack",
+    2: "atRisk",
+    3: "overdue",
+  }
+
+  selectedFilter?: Lookup;
+
+
+  constructor(public lang: LangService,
+              private lookupService: LookupService,
+              private dialog: DialogService) {
 
   }
 
@@ -86,5 +112,25 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
 
   clearSort() {
     this.sort && this.sort.clearSort();
+  }
+
+  selectFilter(filter: Lookup) {
+    if (this.selectedFilter && filter === this.selectedFilter) {
+      this.selectedFilter = undefined;
+      this.onSelectFilter.emit(undefined);
+    } else {
+      this.selectedFilter = filter;
+      this.onSelectFilter.emit(filter);
+    }
+  }
+
+  reload() {
+    this.reload$.next(null);
+    this.selectedFilter = undefined;
+    this.onSelectFilter.emit(undefined);
+  }
+
+  isSelected(filter: Lookup) {
+    return filter === this.selectedFilter;
   }
 }
