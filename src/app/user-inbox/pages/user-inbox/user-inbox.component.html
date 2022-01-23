@@ -63,22 +63,13 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef></th>
           <td cdk-cell class="table-actions" *cdkCellDef="let row">
-            <button (click)="actionViewLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
-              <i class="mdi mdi-view-list-outline"></i></button>
-            <button (click)="actionManageAttachments(row)" [tooltip]="lang.map.manage_attachments"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-paperclip"></i></button>
-            <button (click)="actionSendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-send-circle"></i></button>
-            <button (click)="actionSendToUser(row)" [tooltip]="lang.map.send_to_user"
-                    class="btn text-primary icon-btn">
-              <i class="mdi mdi-account-arrow-right"></i></button>
+            <inbox-grid-actions [actions]="gridActions" [model]="row"></inbox-grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
-        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+        <tr cdk-row riskStatus readUnread [model]="row" (contextmenu)="menu.open($event , row)"
+            *cdkRowDef="let row; columns: table.columns;"></tr>
         <tr *cdkNoDataRow>
           <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>

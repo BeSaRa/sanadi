@@ -42,7 +42,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo','actions'], //'BD_SUBJECT', 'orgInfo',
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -84,6 +84,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   oldQueryResultSet?: QueryResultSet;
 
+  gridActions: IMenuItem<QueryResult>[] = [];
+
   constructor(public lang: LangService,
               private toast: ToastService,
               private employeeService: EmployeeService,
@@ -123,6 +125,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToReload();
     this.buildGridActions();
+
   }
 
   actionManageAttachments(item: QueryResult) {
@@ -289,6 +292,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: {hideFromViewer: true},
+        displayInGrid: true,
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
       // view logs
@@ -296,6 +300,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-view-list-outline',
         label: 'logs',
+        displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
       // manage attachments
@@ -546,6 +551,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         }
       }
     ];
+    this.gridActions = this.actions.filter(action => action.displayInGrid);
   }
 
   getServiceName(service: number) {

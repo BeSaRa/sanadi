@@ -13,4 +13,5 @@ export interface IMenuItem<T> {
   icon?: string;
   show?: (item: T) => boolean;
   children?: IMenuItem<T>[];
+  displayInGrid?: ((model: T) => boolean) | boolean
 }

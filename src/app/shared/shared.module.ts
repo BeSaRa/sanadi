@@ -79,6 +79,9 @@ import { ViewTraineeSurveyComponent } from './popups/view-trainee-survey/view-tr
 import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
 import { TableHeaderComponent } from './components/table-header/table-header.component';
 import { WorkItemStatusComponent } from './components/work-item-status/work-item-status.component';
+import { InboxGridActionsComponent } from './components/inbox-grid-actions/inbox-grid-actions.component';
+import { ReadUnreadDirective } from './directives/read-unread.directive';
+import { RiskStatusDirective } from './directives/risk-status.directive';
 
 @NgModule({
   declarations: [
@@ -149,7 +152,10 @@ import { WorkItemStatusComponent } from './components/work-item-status/work-item
     ViewTraineeSurveyComponent,
     FileUploaderComponent,
     TableHeaderComponent,
-    WorkItemStatusComponent
+    WorkItemStatusComponent,
+    InboxGridActionsComponent,
+    ReadUnreadDirective,
+    RiskStatusDirective
   ],
   imports: [
     CommonModule,
@@ -224,7 +230,10 @@ import { WorkItemStatusComponent } from './components/work-item-status/work-item
     SurveyViewComponent,
     FileUploaderComponent,
     TableHeaderComponent,
-    WorkItemStatusComponent
+    WorkItemStatusComponent,
+    InboxGridActionsComponent,
+    ReadUnreadDirective,
+    RiskStatusDirective
   ]
 })
 export class SharedModule {

@@ -278,6 +278,8 @@ th.serial-column, td.serial-column {
 }
 
 td.table-actions {
+  padding: 0;
+
   button.icon-btn {
     padding: 0;
   }
@@ -379,10 +381,24 @@ td.td-checkbox, th.td-checkbox {
   margin: auto 0;
   padding: 10px 5px 0 5px;
 }
+
 .extra-header {
   padding: 0 !important;
 }
+
 .table-row-header {
   background-color: #E8EFF0;
   font-size: .75rem;
+}
+
+tr.unread {
+  font-weight: bold;
+}
+
+tr.overdue {
+  background-color: lighten(red, 45%);
+}
+
+tr.risk {
+  background-color: lighten(orange, 45%);
 }

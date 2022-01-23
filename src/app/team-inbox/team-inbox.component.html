@@ -1,28 +1,16 @@
-<div class="row">
-  <app-page-header pageTitle="menu_team_inbox" [clickOnReload$]="inboxChange$"
-                   [useReloadValue]="true"
-                   [customTemplate]="customHeader">
-  </app-page-header>
-  <ng-template #customHeader>
-    <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
-      <option [ngValue]="team" *ngFor="let team of employeeService.teams">{{team.getName()}}</option>
-    </select>
-  </ng-template>
-  <app-grid-search *ngIf="!tableOptions.isSelectedRecords()"
-                   [searchBox]="true" (searchTextEvent)="tableOptions.searchText = $event"
-                   [filterButton]="true" (filterEvent)="tableOptions.filterCallback($event)"
-                   [filterCriteria]="filterCriteria"></app-grid-search>
-  <app-bulk-actions *ngIf="tableOptions.isSelectedRecords()"
-                    [actionsList]="[]"
-                    [selectedRecords]="table.selection.selected"></app-bulk-actions>
-</div>
+<ng-template #teamsSelect>
+  <select [formControl]="selectControl" class="form-select form-select-sm mx-4">
+    <option [ngValue]="team" *ngFor="let team of employeeService.teams">{{team.getName()}}</option>
+  </select>
+</ng-template>
+
 <div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
       <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
                  [columns]="tableOptions.columns" [data]="queryResultSet?.items" [filter]="tableOptions.searchText"
                  [useSearchToFilter]="true">
-        <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
               <input type="checkbox" [disabled]="table.filter"
@@ -36,6 +24,12 @@
                      [checked]="table.selection.isSelected(row)"
                      (change)="$event ? table.selection.toggle(row) : null"
                      class="form-check-input"></td>
+          </ng-container>
+          <ng-container cdkColumnDef="workItemStatus">
+            <th style="width:8px" class="p-0" cdk-header-cell sortable-header *cdkHeaderCellDef></th>
+            <td cdk-cell class="position-relative p-0" *cdkCellDef="let row">
+              <work-item-status [item]="row"></work-item-status>
+            </td>
           </ng-container>
           <ng-container cdkColumnDef="BD_FULL_SERIAL">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
@@ -78,26 +72,29 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header (onSelectFilter)="onInboxFiltered($event)" tableTitle="menu_team_inbox"
+                            [sort]="table.dataSource.sort"
+                            (textChange)="tableOptions.searchText = $event"
+                            [filterCriteria]="filterCriteria"
+                            [stats]="queryResultSet?.stats"
+                            [useReloadValue]="true"
+                            [customTemplate]="teamsSelect"
+                            (filterClicked)="tableOptions.filterCallback($event)"
+                            [reload$]="inboxChange$"></table-header>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef></th>
             <td cdk-cell class="table-actions" *cdkCellDef="let row">
-              <button (click)="actionViewLogs(row)" [tooltip]="lang.map.logs" class="btn text-primary icon-btn">
-                <i class="mdi mdi-view-list-outline"></i></button>
-              <button (click)="actionClaim(row)" [tooltip]="lang.map.claim" class="btn text-primary icon-btn">
-                <i class="mdi mdi-hand-back-right"></i></button>
-              <button (click)="actionManageAttachments(row)" [tooltip]="lang.map.manage_attachments"
-                      class="btn text-primary icon-btn">
-                <i class="mdi mdi-paperclip"></i></button>
-              <button (click)="actionSendToDepartment(row)" [tooltip]="lang.map.send_to_competent_dep"
-                      class="btn text-primary icon-btn">
-                <i class="mdi mdi-send-circle"></i></button>
-              <button (click)="actionSendToUser(row)" [tooltip]="lang.map.send_to_user"
-                      class="btn text-primary icon-btn">
-                <i class="mdi mdi-account-arrow-right"></i></button>
+              <inbox-grid-actions [actions]="gridActions" [model]="row"></inbox-grid-actions>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
-          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row riskStatus readUnread [model]="row" (contextmenu)="menu.open($event , row)"
+              *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="10">{{lang.map.no_records_to_display}}</td>
           </tr>

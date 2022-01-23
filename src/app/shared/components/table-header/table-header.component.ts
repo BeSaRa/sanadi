@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {FormControl} from "@angular/forms";
 import {FilterEventTypes} from "@app/types/types";
@@ -20,7 +20,7 @@ import {IStats} from "@app/interfaces/istats";
 })
 export class TableHeaderComponent implements OnInit, OnDestroy {
   @Input()
-  reload$!: Subject<any>;
+  reload$!: BehaviorSubject<any>;
   @Input()
   tableTitle!: keyof ILanguageKeys;
   filterControl: FormControl = new FormControl();
@@ -41,6 +41,11 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   hasSort: boolean = false;
   private destroy$: Subject<any> = new Subject<any>();
   riskStatus: Lookup[] = this.lookupService.listByCategory.RiskStatus.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  @Input()
+  useReloadValue: boolean = false;
+
+  @Input()
+  customTemplate?: TemplateRef<any>;
 
   riskStatusClasses: Record<number, string> = {
     1: 'btn-success',
@@ -125,7 +130,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   reload() {
-    this.reload$.next(null);
+    this.reload$.next(this.useReloadValue ? this.reload$.value : null);
     this.selectedFilter = undefined;
     this.onSelectFilter.emit(undefined);
   }

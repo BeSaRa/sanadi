@@ -27,6 +27,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {CaseStatus} from '@app/enums/case-status.enum';
+import {Lookup} from "@app/models/lookup";
 
 @Component({
   selector: 'team-inbox',
@@ -44,7 +45,11 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('table') table!: TableComponent;
   filterCriteria: Partial<IInboxCriteria> = {};
 
-  // filterControl: FormControl = new FormControl('');
+  headerColumn: string[] = ['extra-header'];
+
+  oldQueryResultSet?: QueryResultSet;
+
+  gridActions: IMenuItem<QueryResult>[] = [];
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -57,7 +62,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo'],//'BD_SUBJECT', 'orgInfo'
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo', 'actions'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -106,10 +111,6 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  hasFilterCriteria(): boolean {
-    return !CommonUtils.isEmptyObject(this.filterCriteria) && CommonUtils.objectHasValue(this.filterCriteria);
-  }
-
   hasSelectedInbox(): boolean {
     return !!this.inboxChange$.value;
   }
@@ -128,6 +129,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       // .pipe(tap(val => console.log(val.items)))
       .pipe(tap(result => {
         this.queryResultSet = result;
+        this.oldQueryResultSet = {...result};
         this.table.selection.clear();
       }));
   }
@@ -366,6 +368,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: {hideFromViewer: true},
+        displayInGrid: true,
         onClick: (item: QueryResult) => this.openTask(item)
       },
       // view logs
@@ -373,6 +376,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'action',
         icon: 'mdi-view-list-outline',
         label: 'logs',
+        displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
       // manage attachments
@@ -423,6 +427,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'action',
         icon: 'mdi-hand-back-right',
         label: 'claim',
+        displayInGrid: true,
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
             return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
@@ -737,6 +742,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     ];
+    this.gridActions = this.actions.filter(action => action.displayInGrid)
   }
 
   displayStepName(row: QueryResult) {
@@ -751,5 +757,17 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       return '';
     }
     return this.lang.getLocalByKey(serviceKey).getName();
+  }
+
+  hasFilterCriteria(): boolean {
+    return !CommonUtils.isEmptyObject(this.filterCriteria) && CommonUtils.objectHasValue(this.filterCriteria);
+  }
+
+  onInboxFiltered($event: Lookup | undefined): void {
+    if ($event) {
+      this.queryResultSet!.items = this.oldQueryResultSet!.items.filter((item) => item.riskStatusInfo.lookupKey === $event.lookupKey)
+    } else {
+      this.queryResultSet!.items = this.oldQueryResultSet!.items
+    }
   }
 }

@@ -69,6 +69,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   RESPONSES!: string [];
   BD_SUBJECT!: string;
   RISK_STATUS!: number;
+  BD_IS_READ!: boolean;
   fromUserInfo!: AdminResult;
   orgInfo!: AdminResult;
   riskStatusInfo!: AdminResult;
@@ -316,5 +317,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     }
 
     return color[this.RISK_STATUS];
+  }
+
+  isRead(): boolean {
+    return this.BD_IS_READ;
   }
 }
