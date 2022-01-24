@@ -39,6 +39,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   get isSelectedUserTeamActive(): boolean {
+    if (this.model.isExternal()) { // always return true if the current user external
+      return true;
+    }
     if (!this.selectedUserTeam || !this.selectedUserTeam.value) {
       return false;
     }
@@ -188,7 +191,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
-    if (!this.isSelectedUserTeamActive){
+    if (!this.isSelectedUserTeamActive) {
       return;
     }
     if (this.model.isExternal()) {

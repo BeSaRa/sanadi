@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, Optional} from '@angular/core';
-import {TableService} from '../../../services/table.service';
+import {TableService} from '@app/services/table.service';
 import {BehaviorSubject, isObservable, Observable, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {TableDataSource} from '../../models/table-data-source';
