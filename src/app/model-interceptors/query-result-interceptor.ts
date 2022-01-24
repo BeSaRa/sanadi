@@ -16,6 +16,7 @@ export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.riskStatusInfo = AdminResult.createInstance(model.riskStatusInfo);
     model.displayNameInfo = AdminResult.createInstance(model.displayNameInfo);
+    model.teamInfo = AdminResult.createInstance(model.teamInfo);
     return model;
   }
 }

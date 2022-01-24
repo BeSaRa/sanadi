@@ -186,8 +186,16 @@ export class EmployeeService {
       permissionKey: 'TEAM_INBOX'
     }))) : null;
 
+    // add static team called all with id -1 to load all teams items
+    if (this.teams.length) {
+      this.teams = [new Team().clone({
+        arName: 'الكل',
+        enName: 'All',
+        id: -1
+      }), ...this.teams];
+    }
+
     this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.forEach((permission) => {
-      console.log(permission);
       this.permissions?.push(new Permission().clone({
         permissionKey: permission
       }));

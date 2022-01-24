@@ -74,6 +74,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   orgInfo!: AdminResult;
   riskStatusInfo!: AdminResult;
   displayNameInfo!: AdminResult;
+  teamInfo!: AdminResult;
 
   service!: InboxService;
   dialog!: DialogService;
@@ -169,7 +170,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.sendToMultiDepartments(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
-  sendToSupervisionAndControlDepartment(claimBefore: boolean = false): Observable<boolean> {
+  sendToSupervisionAndControlDepartment(_claimBefore: boolean = false): Observable<boolean> {
     let service = this.service.getService(this.BD_CASE_TYPE),
       taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
     if (taskName.startsWith('ask:')) {
