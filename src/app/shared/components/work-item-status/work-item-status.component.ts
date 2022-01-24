@@ -10,6 +10,7 @@ import {QueryResult} from "@app/models/query-result";
 export class WorkItemStatusComponent {
   @Input()
   item!: QueryResult;
+
   statusList: Record<number, string> = {
     1: 'bg-success',
     2: 'bg-warning',
