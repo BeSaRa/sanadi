@@ -3,9 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {EServicesComponent} from '@app/e-services/e-services.component';
 import {
-  ConsultationContainerComponent
-} from '@app/e-services/pages/consultation-container/consultation-container.component';
-import {
   InternationalCooperationContainerComponent
 } from '@app/e-services/pages/international-cooperation-container/international-cooperation-container.component';
 import {
@@ -34,9 +31,14 @@ const routes: Routes = [
     }
   },
   {
-    path: 'consultations', component: ConsultationContainerComponent,
+    path: 'consultations', component: EServiceComponentWrapperComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: EServicePermissions.CONSULTATION, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: EServicePermissions.CONSULTATION,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'ConsultationComponent'
+    }
   },
   {
     path: 'international-coop', component: InternationalCooperationContainerComponent,

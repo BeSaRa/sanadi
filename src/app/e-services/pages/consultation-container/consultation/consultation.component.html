@@ -1,5 +1,10 @@
 <div class="d-flex flex-column">
-  <tabs-list class="py-4">
+  <div *ngIf="!accordionView" class="row">
+    <div class="col">
+      <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_consultations}}</h1></div>
+    </div>
+  </div>
+  <tabs-list [accordionView]="accordionView">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
@@ -98,6 +103,7 @@
               <label asteriskIfRequired="mobileNo" for="mobileNo"
                      class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
               <div class="col-md-8 mb-3 position-relative col-sm-12">
+                <!--suppress XmlDuplicatedId -->
                 <input id="mobileNo" validationClasses="mobileNo" formControlName="mobileNo" class="form-control">
                 <app-field-error-message controlName="mobileNo"></app-field-error-message>
               </div>
@@ -157,4 +163,12 @@
                          [caseId]="model?.id"
                          [service]="service.recommendationService"></app-recommendations>
   </ng-template>
+  <div class="mb-3 d-flex align-items-center justify-content-center">
+    <button (click)="save.next(saveTypes.FINAL)"
+            [disabled]="form.invalid || model?.alreadyStarted()"
+            class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
+    <button (click)="launch()" [disabled]="form.invalid || !model?.canStart()"
+            class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
+    <button (click)="navigateBack()" class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
+  </div>
 </div>

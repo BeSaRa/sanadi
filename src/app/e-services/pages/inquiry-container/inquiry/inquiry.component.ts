@@ -31,6 +31,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./inquiry.component.scss']
 })
 export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
+  accordionView: boolean = false;
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;

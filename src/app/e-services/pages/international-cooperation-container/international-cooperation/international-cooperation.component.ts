@@ -29,6 +29,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
   styleUrls: ['./international-cooperation.component.scss']
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent {
+  accordionView: boolean = false;
   countries: Country[] = [];
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();

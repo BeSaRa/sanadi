@@ -13,6 +13,7 @@ export interface IESComponent {
   allowEditRecommendations?: boolean;
   operation: OperationTypes;
   openFrom: OpenFrom;
+  accordionView: boolean;
   handleReadonly?: any;
   formValidity$?: Subject<any>
 }

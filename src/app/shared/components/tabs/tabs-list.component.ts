@@ -1,8 +1,21 @@
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList} from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  Self
+} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
 import {Subject} from 'rxjs';
 import {TabListService} from './tab-list-service';
 import {takeUntil} from 'rxjs/operators';
+import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
   selector: 'tabs-list , [tabs-list]',
@@ -15,8 +28,12 @@ import {takeUntil} from 'rxjs/operators';
 export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
+  @Input() accordionView: boolean = false;
   static aliveTabsCount: number = 0;
   private destroy$: Subject<any> = new Subject<any>();
+
+  @HostBinding('class')
+  paddingClass: string = '';
 
   tabContainerId: string = '';
   tabContainerNumber: number = 0;
@@ -24,13 +41,15 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onTabChange: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
-  constructor(private tabListService: TabListService) {
+  constructor(@Self() private tabListService: TabListService, private employeeService: EmployeeService) {
     this.tabContainerNumber = this.tabListService.containerId;
     this.tabContainerId = 'tab-list-' + this.tabContainerNumber;
   }
 
   ngOnInit(): void {
+    this.tabListService.accordionView = this.accordionView;
     this.listenToOutSideTabChange();
+    this.paddingClass = this.employeeService.getCurrentUser() ? (this.employeeService.isExternalUser() ? '' : 'pb-2') : '';
   }
 
   private listenToOutSideTabChange() {

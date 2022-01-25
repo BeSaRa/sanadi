@@ -1,4 +1,4 @@
-<ul *ngIf="tabs.length" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
+<ul *ngIf="tabs.length && !accordionView" [id]="tabContainerId" role="tablist" class="nav nav-tabs">
   <li *ngFor="let tab of tabs" role="presentation" class="nav-item">
     <a class="nav-link position-relative tab-link" [class.disabled]="tab.disabled" [class.active]="tab.active"
        aria-current="page" data-bs-toggle="tab" role="tab"
@@ -8,6 +8,6 @@
     </a>
   </li>
 </ul>
-<div id="{{tabContainerId}}-content" class="tab-content pt-4">
+<div id="{{tabContainerId}}-content" [ngClass]="{'pt-4': !accordionView}" class="tab-content">
   <ng-content></ng-content>
 </div>

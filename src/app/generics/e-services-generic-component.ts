@@ -25,6 +25,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
+  accordionView: boolean = false;
   saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   launch$: Subject<null> = new Subject<null>();

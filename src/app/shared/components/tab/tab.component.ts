@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {Component, Host, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {TabListService} from '../tabs/tab-list-service';
 import {delay, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -17,11 +17,19 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() disabled: boolean = false;
   @Input() tabWidth?: string;
   private destroy$: Subject<any> = new Subject<any>();
+  accordionView: boolean = false;
+  containerId: number = 0;
+  tabId: string = '';
+  tabIdRef: string = '';
 
-  constructor(private  tabListService: TabListService) {
+  constructor(@Host() private tabListService: TabListService) {
   }
 
   ngOnInit(): void {
+    this.accordionView = this.tabListService.accordionView;
+    this.containerId = this.tabListService.containerId;
+    this.tabId = (this.name || Date.now().toString()) + this.containerId;
+    this.tabIdRef = '#' + this.tabId;
     this.listenToTabChange();
   }
 

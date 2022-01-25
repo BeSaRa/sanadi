@@ -13,6 +13,7 @@ export class TabListService implements OnDestroy {
   activeTabIndex: number = 0;
   onSelectTabChange$: Observable<TabComponent> = this.changeSelectedTabTo$.asObservable();
   onTabChangeEvent!: EventEmitter<TabComponent>;
+  public accordionView: boolean = false;
 
   constructor() {
     ++TabListService.id;

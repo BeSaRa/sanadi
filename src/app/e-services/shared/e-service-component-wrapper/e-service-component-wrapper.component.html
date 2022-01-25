@@ -1,1 +1,34 @@
-<ng-template #template></ng-template>
+<div class="d-flex flex-column">
+  <ng-container *ngIf="internal">
+    <div class="row">
+      <div class="col">
+        <div class="col"><h1 class="h6 text-primary">{{lang.map[component.service.serviceKey]}}</h1></div>
+      </div>
+    </div>
+    <tabs-list class="position-relative">
+      <button class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
+        <i class="mdi mdi-printer"></i>
+        <span class="px-1"></span>
+        <span>{{lang.map.print}}</span>
+      </button>
+      <tab [title]="lang.map.request_info" name="request_info">
+        <ng-template #internalContainer></ng-template>
+      </tab>
+      <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">Attachments</tab>
+      <tab [title]="lang.map.logs" name="team">Logs</tab>
+      <tab [title]="lang.map.supporting_information" name="team">supporting_information</tab>
+    </tabs-list>
+    <ng-template #attachment>
+      <div class="d-flex flex-row align-items-center justify-content-start">
+        <button (click)="attachmentsCtrl.openUploadDialog()"
+                class="d-inline-block btn p-0 m-0 icon-btn"><i
+          class="mdi mdi-plus-box text-primary"></i></button>
+      </div>
+      <app-documents #attachmentsCtrl [caseId]="component.model?.id" [service]="component.service.documentService"
+                     [readonly]="isAttachmentReadonly()"></app-documents>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="!internal">
+    <ng-template #externalContainer></ng-template>
+  </ng-container>
+</div>

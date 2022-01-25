@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  supporting_information: string;
   selected_status: string;
   internal_login_text: string;
   external_login_text: string;

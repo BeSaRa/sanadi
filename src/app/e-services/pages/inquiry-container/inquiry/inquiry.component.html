@@ -1,11 +1,14 @@
 <div class="d-flex flex-column">
-  <tabs-list class="py-4">
+  <div *ngIf="!accordionView && !fromDialog" class="row mb-3">
+    <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_inquiries_and_complaints}}</h1></div>
+  </div>
+  <tabs-list [accordionView]="accordionView">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
          [template]="commentsTabTemplate" [title]="lang.map.comments"
          *ngIf="employeeService.isInternalUser()"></tab>
-    <tab [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
     <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
          [template]="recommendationsTemplate" [title]="lang.map.recommendations"
@@ -118,7 +121,7 @@
   <ng-template #commentsTabTemplate>
     <div class="d-flex flex-row align-items-center justify-content-start">
       <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
-              class="d-inline-block btn p-0 icon-btn"><i
+              class="d-inline-block btn p-0 m-0 icon-btn"><i
         class="mdi mdi-plus-box text-primary"></i></button>
     </div>
     <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
@@ -128,7 +131,7 @@
   <ng-template #attachmentsTabTemplate>
     <div class="d-flex flex-row align-items-center justify-content-start">
       <button [disabled]="isAttachmentReadonly()" (click)="attachmentsCtrl.openUploadDialog()"
-              class="d-inline-block btn p-0 icon-btn"><i
+              class="d-inline-block btn p-0 m-0 icon-btn"><i
         class="mdi mdi-plus-box text-primary"></i></button>
     </div>
     <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"

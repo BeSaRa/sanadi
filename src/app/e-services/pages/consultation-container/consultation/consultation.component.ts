@@ -25,6 +25,7 @@ import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {NavigationService} from "@app/services/navigation.service";
 
 @Component({
   selector: 'consultation',
@@ -32,6 +33,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
   styleUrls: ['./consultation.component.scss']
 })
 export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
+  accordionView: boolean = false;
   departments: InternalDepartment[] = [];
   organizations: OrgUnit[] = [];
   destroy$: Subject<any> = new Subject<any>();
@@ -96,6 +98,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
               public employeeService: EmployeeService,
               private intDepService: InternalDepartmentService,
               public lang: LangService,
+              private navigationService: NavigationService,
               private orgUnitService: OrganizationUnitService) {
   }
 
@@ -310,5 +313,9 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
     }
 
     return !isAllowed;
+  }
+
+  navigateBack(): void {
+    this.navigationService.goToBack();
   }
 }
