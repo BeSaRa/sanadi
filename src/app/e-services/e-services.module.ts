@@ -25,6 +25,7 @@ import {BankBranchComponent} from './shared/bank-branch/bank-branch.component';
 import {FilterInboxRequestPopupComponent} from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {ProjectsModelsComponent} from './pages/projects-models/projects-models.component';
 import { SelectTemplatePopupComponent } from './poups/select-template-popup/select-template-popup.component';
+import { EServiceComponentWrapperComponent } from './shared/e-service-component-wrapper/e-service-component-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SelectTemplatePopupComponent } from './poups/select-template-popup/sele
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
     ProjectsModelsComponent,
-    SelectTemplatePopupComponent
+    SelectTemplatePopupComponent,
+    EServiceComponentWrapperComponent
   ],
   imports: [
     CommonModule,

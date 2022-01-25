@@ -2,21 +2,36 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {EServicesComponent} from '@app/e-services/e-services.component';
-import {InquiryContainerComponent} from '@app/e-services/pages/inquiry-container/inquiry-container.component';
-import {ConsultationContainerComponent} from '@app/e-services/pages/consultation-container/consultation-container.component';
-import {InternationalCooperationContainerComponent} from '@app/e-services/pages/international-cooperation-container/international-cooperation-container.component';
-import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
-import {FinalExternalOfficeApprovalComponent} from '@app/e-services/pages/final-external-office-approval/final-external-office-approval.component';
+import {
+  ConsultationContainerComponent
+} from '@app/e-services/pages/consultation-container/consultation-container.component';
+import {
+  InternationalCooperationContainerComponent
+} from '@app/e-services/pages/international-cooperation-container/international-cooperation-container.component';
+import {
+  InitialExternalOfficeApprovalComponent
+} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
+import {
+  FinalExternalOfficeApprovalComponent
+} from '@app/e-services/pages/final-external-office-approval/final-external-office-approval.component';
 import {PartnerApprovalComponent} from "./pages/partner-approval/partner-approval.component";
 import {PermissionGuard} from '@app/guards/permission-guard';
 import {EServicePermissions} from "@app/enums/e-service-permissions";
+import {
+  EServiceComponentWrapperComponent
+} from "@app/e-services/shared/e-service-component-wrapper/e-service-component-wrapper.component";
 
 const routes: Routes = [
   {path: '', component: EServicesComponent},
   {
-    path: 'inquiries', component: InquiryContainerComponent,
+    path: 'inquiries', component: EServiceComponentWrapperComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: EServicePermissions.INQUIRY, configPermissionGroup: null, checkAnyPermission: false}
+    data: {
+      permissionKey: EServicePermissions.INQUIRY,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'InquiryComponent'
+    }
   },
   {
     path: 'consultations', component: ConsultationContainerComponent,

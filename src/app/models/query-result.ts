@@ -231,8 +231,6 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     const service = this.service.getService(this.BD_CASE_TYPE);
     const componentName = service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
-    const cfr = this.service.getCFR();
-    const factory = cfr.resolveComponentFactory(component);
     let model: CaseModel<any, any>;
     return service.getTask(this.TKIID)
       .pipe(
@@ -254,7 +252,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
             )
             .subscribe(() => {
               instance.container.clear();
-              const componentRef = instance.container.createComponent(factory);
+              const componentRef = instance.container.createComponent(component);
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
               comInstance.fromDialog = true;

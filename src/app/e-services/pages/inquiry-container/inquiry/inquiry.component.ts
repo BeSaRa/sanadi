@@ -23,6 +23,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {NavigationService} from "@app/services/navigation.service";
 
 @Component({
   selector: 'inquiry-component',
@@ -97,6 +98,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private toast: ToastService,
+              private navigationService: NavigationService,
               public lang: LangService) {
 
   }
@@ -275,5 +277,9 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
     }
 
     return !isAllowed;
+  }
+
+  navigateBack(): void {
+    this.navigationService.goToBack();
   }
 }
