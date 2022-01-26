@@ -18,7 +18,7 @@ export class EncryptionService {
 
   decrypt<T = any>(encryptedText: string): T {
     if (!encryptedText) {
-      throw Error('Please Provide encrypted Text to decrypt');
+      return null as unknown as T;
     }
     return JSON.parse(AES.decrypt((encryptedText.split(':').shift() + ''), (encryptedText.split(':').pop() + '')).toString(enc.Utf8));
   }

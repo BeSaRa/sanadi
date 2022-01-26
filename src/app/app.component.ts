@@ -1,6 +1,5 @@
 import {Component, HostListener} from '@angular/core';
 import {LangService} from './services/lang.service';
-import {AppRootScrollService} from './services/app-root-scroll.service';
 import {LoadingService} from './services/loading.service';
 import {CacheService} from './services/cache.service';
 import {NavigationService} from './services/navigation.service';
@@ -11,13 +10,10 @@ import {NavigationService} from './services/navigation.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'sanadi';
-
   constructor(private langService: LangService,
               public loadingService: LoadingService,
               private cacheService: CacheService,
-              private navigationService: NavigationService,
-              private appScrollService: AppRootScrollService) {
+              private navigationService: NavigationService) {
 
     // @ts-ignore
     window['cacheService'] = cacheService;
@@ -39,10 +35,5 @@ export class AppComponent {
       });
     }
 
-  }
-
-  @HostListener('scroll', ['$event'])
-  scroll({target: {scrollTop: scroll}}: any): void {
-    this.appScrollService.emitScrollEvent(scroll);
   }
 }
