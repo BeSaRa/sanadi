@@ -17,7 +17,9 @@ import {RecommendationService} from '../services/recommendation.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
 import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
-import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {
+  ManageRecommendationPopupComponent
+} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {ComponentFactoryResolver} from '@angular/core';
@@ -36,12 +38,15 @@ import {InquiryCaseStatus} from '@app/enums/inquiry-case-status.enum';
 import {InternationalCaseStatus} from '@app/enums/international-case-status.enum';
 import {FactoryService} from '@app/services/factory.service';
 import {EmployeeService} from '@app/services/employee.service';
+import {MenuItem} from "@app/models/menu-item";
+import {MenuItemService} from "@app/services/menu-item.service";
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
 
   protected constructor() {
     this.employeeService = FactoryService.getService('EmployeeService');
+    this.menuItemService = FactoryService.getService('MenuItemService');
   }
 
   abstract _getModel(): any;
@@ -65,7 +70,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   abstract caseStatusIconMap: Map<number, string>;
   abstract searchColumns: string[];
   abstract dynamicService: DynamicOptionsService;
-
+  menuItemService: MenuItemService;
   employeeService: EmployeeService;
   commentService: CommentService = new CommentService(this);
   recommendationService: RecommendationService = new RecommendationService(this);
@@ -272,5 +277,9 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   getStatusIcon(caseStatus: number): string {
     return this.caseStatusIconMap.has(caseStatus) ? this.caseStatusIconMap.get(caseStatus)! : '';
+  }
+
+  getMenuItem(): MenuItem {
+    return this.menuItemService.getMenuItemByLangKey(this.serviceKey)!
   }
 }

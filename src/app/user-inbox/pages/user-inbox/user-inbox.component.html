@@ -7,7 +7,8 @@
         <ng-container cdkColumnDef="BD_FULL_SERIAL">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
           <td cdk-cell *cdkCellDef="let row">
-            <a href="#" class="dir-ltr" (click)="$event.preventDefault(); actionOpen(row)">{{row.BD_FULL_SERIAL}}</a>
+            <a class="dir-ltr" [routerLink]="row.itemRoute"
+               [queryParams]="{item:row.itemDetails}">{{row.BD_FULL_SERIAL}}</a>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="workItemStatus">
@@ -70,6 +71,7 @@
         <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row riskStatus readUnread [model]="row" (contextmenu)="menu.open($event , row)"
             *cdkRowDef="let row; columns: table.columns;"></tr>
+        <!--suppress HtmlUnknownBooleanAttribute -->
         <tr *cdkNoDataRow>
           <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>

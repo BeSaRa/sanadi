@@ -1,8 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActionLogService} from '@app/services/action-log.service';
-import {iif, of, Subject} from 'rxjs';
+import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
 import {ActionRegistry} from '@app/models/action-registry';
-import {concatMap, takeUntil, tap} from 'rxjs/operators';
+import {concatMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
 import {AdminResult} from '@app/models/admin-result';
 import {TabComponent} from '../tab/tab.component';
@@ -14,7 +14,16 @@ import {ServiceActionType} from '@app/enums/service-action-type.enum';
   styleUrls: ['./log-viewer.component.scss']
 })
 export class LogViewerComponent implements OnInit, OnDestroy {
-  @Input() caseId: string = '';
+  _caseId: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  @Input()
+  set caseId(value: string | undefined) {
+    this._caseId.next(value ? value : '');
+  };
+
+  get caseId(): string {
+    return this._caseId.value;
+  }
+
   @Input() service!: ActionLogService;
 
   @Input() hideViewedAction: boolean = false;
@@ -46,7 +55,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    this.service.load(this.caseId)
+    merge(of(this.caseId),this._caseId)
+      .pipe(filter((val): val is string => !!val))
+      .pipe(switchMap(id => this.service.load(id)))
       .pipe(
         takeUntil(this.destroy$),
         tap(logs => {
@@ -58,7 +69,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
           }
           this.logsAll = logs;
         }),
-        concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId)))
+        concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId!)))
       )
       .subscribe(locations => this.locations = locations);
   }

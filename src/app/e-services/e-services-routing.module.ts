@@ -17,12 +17,15 @@ import {EServicePermissions} from "@app/enums/e-service-permissions";
 import {
   EServiceComponentWrapperComponent
 } from "@app/e-services/shared/e-service-component-wrapper/e-service-component-wrapper.component";
+import {ServicesGuard} from "@app/guards/services.guard";
+import {ServiceItemResolver} from "@app/resolvers/service-item.resolver";
 
 const routes: Routes = [
   {path: '', component: EServicesComponent},
   {
     path: 'inquiries', component: EServiceComponentWrapperComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissions.INQUIRY,
       configPermissionGroup: null,

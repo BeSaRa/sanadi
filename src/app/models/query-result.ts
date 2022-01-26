@@ -28,6 +28,8 @@ import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {CaseStatus} from '@app/enums/case-status.enum';
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {RiskStatus} from "@app/enums/risk-status";
+import {EncryptionService} from "@app/services/encryption.service";
+import {INavigatedItem} from "@app/interfaces/inavigated-item";
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -80,6 +82,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   dialog!: DialogService;
   lang!: LangService;
   employeeService!: EmployeeService;
+  encrypt!: EncryptionService;
+  itemRoute!: string;
+  itemDetails!: string;
 
   searchFields: ISearchFieldsMap<QueryResult> = {
     BD_FULL_SERIAL: 'BD_FULL_SERIAL',
@@ -116,6 +121,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     this.dialog = FactoryService.getService('DialogService');
     this.lang = FactoryService.getService('LangService');
     this.employeeService = FactoryService.getService('EmployeeService');
+    this.encrypt = new EncryptionService();
   }
 
   claim(): Observable<IBulkResult> {
@@ -320,5 +326,15 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   isRead(): boolean {
     return this.BD_IS_READ;
+  }
+
+  setItemRoute(): void {
+    this.itemRoute = '/' + this.service.getServiceRoute(this.BD_CASE_TYPE);
+    this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
+      openFrom: !this.OWNER ? OpenFrom.TEAM_INBOX : OpenFrom.USER_INBOX,
+      taskId: this.TKIID,
+      caseId: this.PI_PARENT_CASE_ID,
+      caseType: this.BD_CASE_TYPE
+    });
   }
 }

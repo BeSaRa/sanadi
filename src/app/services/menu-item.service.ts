@@ -7,6 +7,7 @@ import {tap} from 'rxjs/operators';
 import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FactoryService} from './factory.service';
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 
 @Injectable({
   providedIn: 'root'
@@ -76,5 +77,9 @@ export class MenuItemService {
 
   getMenuByRouteGroup(routeGroupName: string): MenuItem[] {
     return this.menuItems.filter(item => item.group === routeGroupName).sort((a, b) => a.itemOrder - b.itemOrder);
+  }
+
+  getMenuItemByLangKey(langKey: keyof ILanguageKeys): MenuItem | undefined {
+    return this.menuItems.find(item => item.langKey === langKey);
   }
 }

@@ -6,7 +6,7 @@
       </div>
     </div>
     <tabs-list class="position-relative">
-      <button class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
+      <button (click)="print()" [disabled]="!model" class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
         <i class="mdi mdi-printer"></i>
         <span class="px-1"></span>
         <span>{{lang.map.print}}</span>
@@ -15,7 +15,7 @@
         <ng-template #internalContainer></ng-template>
       </tab>
       <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">Attachments</tab>
-      <tab [title]="lang.map.logs" name="team">Logs</tab>
+      <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">Logs</tab>
       <tab [title]="lang.map.supporting_information" name="team">supporting_information</tab>
     </tabs-list>
     <ng-template #attachment>
@@ -31,4 +31,9 @@
   <ng-container *ngIf="!internal">
     <ng-template #externalContainer></ng-template>
   </ng-container>
+  <ng-template #logsTemplate>
+    <!--<request-recommendations [record]="model"></request-recommendations>-->
+    <log-viewer [caseId]="component?.model?.getCaseId()" [service]="service.actionLogService"
+                [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
+  </ng-template>
 </div>

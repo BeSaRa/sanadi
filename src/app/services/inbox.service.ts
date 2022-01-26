@@ -17,7 +17,9 @@ import {IWFResponse} from '../interfaces/i-w-f-response';
 import {IDefaultResponse} from '../interfaces/idefault-response';
 import {map} from 'rxjs/operators';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
-import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
+import {
+  ActionWithCommentPopupComponent
+} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {QueryResult} from '../models/query-result';
 import {ConsultationService} from './consultation.service';
 import {InternationalCooperationService} from './international-cooperation.service';
@@ -27,13 +29,15 @@ import {InitialExternalOfficeApprovalService} from '@app/services/initial-extern
 import {PartnerApprovalService} from '@app/services/partner-approval.service';
 import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
 import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
-import {FilterInboxRequestPopupComponent} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import {
+  FilterInboxRequestPopupComponent
+} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {DateUtils} from '@app/helpers/date-utils';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
 import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
-import {ExpertsEnum} from '@app/enums/experts-enum';
 import {ProjectModelService} from '@app/services/project-model.service';
+import {Memoize} from "typescript-memoize";
 
 @Injectable({
   providedIn: 'root'
@@ -284,6 +288,11 @@ export class InboxService {
     }, {
       escToClose: true
     }));
+  }
+
+  @Memoize()
+  getServiceRoute(caseType: number): string {
+    return this.getService(caseType).getMenuItem().path;
   }
 
 }

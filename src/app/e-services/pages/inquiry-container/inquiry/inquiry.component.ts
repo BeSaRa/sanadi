@@ -205,7 +205,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
         tap((item) => this.model = item),
       )
       .subscribe((model) => {
-        model ? this.updateFromFields(model) : this.form.reset();
+        model?.id ? this.updateFromFields(model) : this.form.reset();
       });
   }
 

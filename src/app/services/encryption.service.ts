@@ -11,14 +11,14 @@ export class EncryptionService {
     FactoryService.registerService('EncryptionService', this);
   }
 
-  encrypt(model: any): string {
+  encrypt<T = any>(model: T): string {
     const randomPrivateKey = MD5(Math.random().toString()).toString();
     return AES.encrypt(JSON.stringify(model), randomPrivateKey).toString() + ':' + randomPrivateKey;
   }
 
-  decrypt(encryptedText: string): any {
+  decrypt<T = any>(encryptedText: string): T {
     if (!encryptedText) {
-      return null;
+      throw Error('Please Provide encrypted Text to decrypt');
     }
     return JSON.parse(AES.decrypt((encryptedText.split(':').shift() + ''), (encryptedText.split(':').pop() + '')).toString(enc.Utf8));
   }

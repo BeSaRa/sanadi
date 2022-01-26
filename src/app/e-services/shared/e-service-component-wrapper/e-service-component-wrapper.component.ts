@@ -1,7 +1,8 @@
 import {
   AfterViewInit,
   Component,
-  ComponentFactoryResolver, ComponentRef,
+  ComponentFactoryResolver,
+  ComponentRef,
   Injector,
   OnInit,
   ViewChild,
@@ -15,6 +16,7 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {CaseModel} from "@app/models/case-model";
 import {OpenFrom} from "@app/enums/open-from.enum";
+import {IOpenedInfo} from "@app/interfaces/i-opened-info";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -34,28 +36,33 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>
 
   internal: boolean = this.employeeService.isInternalUser();
+  service!: EServiceGenericService<CaseModel<any, any>>
+  model?: CaseModel<any, any>
 
-  constructor(private activeRoute: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
               private injector: Injector,
               private employeeService: EmployeeService,
               public lang: LangService,
               private cfr: ComponentFactoryResolver) {
-    this.render = this.activeRoute.snapshot.data.render as string;
+    this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
-      throw Error(`Please Provide render property in this route ${activeRoute.snapshot.url}`)
+      throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
     }
   }
 
   async ngOnInit(): Promise<void> {
+    const info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
+
     const component = DynamicComponentService.getComponent(this.render);
     const componentFactory = this.cfr.resolveComponentFactory(component);
     this.componentRef = componentFactory.create(this.injector);
-    // const instance  = componentRef.instance as IESComponent;
-    // instance.outModel = new Inquiry().clone({
-    //   id: `{166858898989888465656}`
-    // })
     this.component = this.componentRef.instance as EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
+    this.service = this.component.service;
     this.component.accordionView = this.employeeService.isInternalUser();
+    if (info) {
+      this.component.outModel = info.model;
+      this.model = info.model;
+    }
   }
 
 
@@ -84,5 +91,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
     }
 
     return !isAllowed;
+  }
+
+  print() {
+    this.model?.exportModel().subscribe((blob) => window.open(blob.url))
   }
 }

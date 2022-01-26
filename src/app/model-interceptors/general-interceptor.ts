@@ -9,6 +9,9 @@ export class GeneralInterceptor {
     delete model.employeeService;
     delete model.langService;
     delete model.dialog;
+    delete model.encrypt;
+    delete model.itemRoute;
+    delete model.itemDetails;
     return model;
   }
 }
