@@ -1,14 +1,6 @@
 <div id="main-sidebar-wrapper" class="d-flex align-self-stretch flex-grow-1 flex-column">
   <div [style.background-image]="topImage" class="pattern top"></div>
   <div [style.background-image]="bottomImage" class="pattern bottom"></div>
-  <div id="top-fake-nav"
-       class="bg-primary d-flex flex-row align-items-center">
-    <button [tooltip]="langService.map.show_hide_sidebar" (click)="toggle()" class="icon-btn">
-      <i flipIcon
-         [class.mdi-menu-open]="isOpened"
-         class="mdi mdi-menu text-white"></i>
-    </button>
-  </div>
   <div id="sidebar-content-wrapper"
        (mouseenter)="sidebarMouseEnter()"
        (mouseleave)="sidebarMouseOut()"
@@ -17,7 +9,9 @@
       <img id="sanady-logo" alt="sanady-logo" src="assets/images/raca-logo.png">
       <h6 id="sanady-word">{{langService.map.application_name}}</h6>
       <span class="flex-grow-1"></span>
-      <button *ngIf="!isOpened" (click)="pinSidebar()" class="icon-btn m-0"><i class="mdi mdi-pin"></i></button>
+      <button (click)="toggle()" class="icon-btn m-0">
+        <i [ngClass]="{'mdi-rotate-45': !isOpened}" class="mdi mdi-pin"></i>
+      </button>
     </div>
     <div class="px-2 d-flex flex-column align-self-stretch flex-grow-1">
       <div class="d-flex flex-row align-items-center justify-content-center py-2" id="home-back-logout-items">
