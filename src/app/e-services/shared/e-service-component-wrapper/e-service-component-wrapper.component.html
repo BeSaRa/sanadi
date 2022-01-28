@@ -14,9 +14,10 @@
       <tab [title]="lang.map.request_info" name="request_info">
         <ng-template #internalContainer></ng-template>
       </tab>
-      <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">Attachments</tab>
-      <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">Logs</tab>
-      <tab [title]="lang.map.supporting_information" name="team">supporting_information</tab>
+      <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
+      <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">{{lang.map.logs}}</tab>
+      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>
+      <tab [title]="lang.map.supporting_information" name="team">{{lang.map.supporting_information}}</tab>
     </tabs-list>
     <ng-template #attachment>
       <div class="d-flex flex-row align-items-center justify-content-start">
@@ -33,7 +34,11 @@
   </ng-container>
   <ng-template #logsTemplate>
     <!--<request-recommendations [record]="model"></request-recommendations>-->
-    <log-viewer [caseId]="component?.model?.getCaseId()" [service]="service.actionLogService"
-                [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
+    <log-viewer [accordionView]="true" displayCategorizedAs="tabs"
+                [categorizeLogs]="true" [caseId]="component?.model?.getCaseId()"
+                [service]="service.actionLogService"></log-viewer>
+  </ng-template>
+  <ng-template #outputs>
+
   </ng-template>
 </div>

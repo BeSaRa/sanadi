@@ -27,7 +27,6 @@ export class SidebarMenuItemListComponent implements OnInit {
   @Input()
   level!: number;
   _searchText: string = '';
-  currentRoute!: string;
 
   @Input()
   set searchText(value: string | null) {

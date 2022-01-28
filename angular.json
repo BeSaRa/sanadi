@@ -18,6 +18,9 @@
           "skipTests": true,
           "prefix": ""
         },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
         "@schematics/angular:guard": {
           "skipTests": true
         },

@@ -402,3 +402,7 @@ tr.overdue {
 tr.risk {
   background-color: lighten(orange, 45%);
 }
+
+.table > :not(:first-child) {
+  border-top: none !important;
+}

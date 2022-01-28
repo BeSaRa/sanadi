@@ -1,3 +1,5 @@
+@import "src/scss/custom_mixin";
+
 :host {
   display: block;
 }
@@ -8,4 +10,20 @@
 
 .tab-link.active {
   font-weight: bold;
+}
+
+.nav-tabs > li > a {
+  background-color: #EFEFEF;
+  margin-right: .75rem;
+
+  &.active {
+    background-color: white;
+  }
+}
+
+:host-context(html[dir=rtl]) {
+  .nav-tabs > li > a {
+    margin-right: 0;
+    margin-left: .75rem;
+  }
 }

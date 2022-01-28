@@ -9,6 +9,7 @@ import {PermissionGroup} from "@app/enums/permission-group";
 import {EServicePermissions} from "@app/enums/e-service-permissions";
 import {ExternalLoginComponent} from "@app/pages/external-login/external-login.component";
 import {InternalLoginComponent} from "@app/pages/internal-login/internal-login.component";
+import {ServicesGuard} from "@app/guards/services.guard";
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -28,7 +29,7 @@ const routes: Routes = [
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
       {
         path: 'e-services',
-        canActivate: [PermissionGuard],
+        canActivate: [ServicesGuard],
         loadChildren: () => import('./e-services/e-services.module').then(m => m.EServicesModule),
         data: {configPermissionGroup: PermissionGroup.E_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
       },

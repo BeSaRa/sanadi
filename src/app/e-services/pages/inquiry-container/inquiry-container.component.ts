@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {NavigationService} from '../../../services/navigation.service';
+import {LangService} from '@app/services/lang.service';
+import {NavigationService} from '@app/services/navigation.service';
 
 @Component({
   selector: 'inquiry-container',

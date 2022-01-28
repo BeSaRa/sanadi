@@ -5,8 +5,11 @@
 </ng-container>
 
 <ng-container *ngIf="!hideItemLocation">
-  <tabs-list (onTabChange)="tabChanged($event)">
-    <tab [template]="logTemplate" [title]="lang.map.logs"></tab>
+  <tabs-list class="position-relative" (onTabChange)="tabChanged($event)">
+    <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()" class="btn icon-btn position-absolute top-0 end-0">
+      <i
+        class="mdi mdi-reload text-primary"></i></button>
+    <tab [template]="logTemplate" name="logs_view" [title]="lang.map.logs"></tab>
     <tab name="location" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
   </tabs-list>
 </ng-container>
@@ -56,10 +59,11 @@
     </div>
 
     <div *ngIf="displayCategorizedAs === 'tabs'">
-      <tabs-list>
-        <tab [template]="logTemplateViewed" [title]="lang.map.action_viewed" *ngIf="!hideViewedAction"></tab>
-        <tab [template]="logTemplateUpdated" [title]="lang.map.action_updated"></tab>
-        <tab [template]="logTemplateOthers" [title]="lang.map.action_others"></tab>
+      <tabs-list [accordionView]="accordionView">
+        <tab name="view_actions" [template]="logTemplateViewed" [title]="lang.map.action_viewed"
+             *ngIf="!hideViewedAction"></tab>
+        <tab name="update_actions" [template]="logTemplateUpdated" [title]="lang.map.action_updated"></tab>
+        <tab name="other_actions" [template]="logTemplateOthers" [title]="lang.map.action_others"></tab>
       </tabs-list>
       <ng-template #logTemplateViewed>
         <ng-container [ngTemplateOutlet]="logTableTemplate"
@@ -83,7 +87,7 @@
 <ng-template #logTableTemplate let-data="data" let-tableColumns="displayColumns">
   <div class="table-responsive">
     <app-table #table sortableTable [paginator]="paginator" [data]="data" [columns]="tableColumns">
-      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+      <table class="table border border-1" cdk-table [dataSource]="table.dataSource">
         <ng-container cdkColumnDef="action">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_type}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.actionInfo.getName()}} </td>
@@ -108,8 +112,9 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
         </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+        <!--suppress HtmlUnknownBooleanAttribute -->
         <tr *cdkNoDataRow>
           <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>
@@ -129,6 +134,7 @@
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayLocationColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>
+        <!--suppress HtmlUnknownBooleanAttribute -->
         <tr *cdkNoDataRow>
           <td colspan="10">{{lang.map.no_records_to_display}}</td>
         </tr>

@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActionLogService} from '@app/services/action-log.service';
 import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
 import {ActionRegistry} from '@app/models/action-registry';
-import {concatMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
 import {AdminResult} from '@app/models/admin-result';
 import {TabComponent} from '../tab/tab.component';
@@ -14,6 +14,7 @@ import {ServiceActionType} from '@app/enums/service-action-type.enum';
   styleUrls: ['./log-viewer.component.scss']
 })
 export class LogViewerComponent implements OnInit, OnDestroy {
+  reload$: Subject<void> = new Subject<void>();
   _caseId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   @Input()
   set caseId(value: string | undefined) {
@@ -30,6 +31,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input() hideItemLocation: boolean = false;
   @Input() categorizeLogs: boolean = false;
   @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'tabs';
+  @Input() accordionView: boolean = false;
 
   logsAll: ActionRegistry[] = [];
   logsViewed: ActionRegistry[] = [];
@@ -55,8 +57,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    merge(of(this.caseId),this._caseId)
-      .pipe(filter((val): val is string => !!val))
+    merge(of(this.caseId), this._caseId , this.reload$)
+      .pipe(filter(() => !!this.caseId))
+      .pipe(map(_ => this.caseId))
       .pipe(switchMap(id => this.service.load(id)))
       .pipe(
         takeUntil(this.destroy$),
