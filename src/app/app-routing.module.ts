@@ -49,7 +49,7 @@ const routes: Routes = [
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
       {
         path: 'projects',
-        canActivate: [PermissionGuard],
+        canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroup.PROJECTS_PERMISSION_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)
       },

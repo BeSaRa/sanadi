@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  <div class="row mb-3" *ngIf="!fromDialog">
+  <div class="row mb-3" *ngIf="!accordionView && !fromDialog" >
     <div class="col">
       <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_partner_approval}}</h1></div>
     </div>
@@ -7,7 +7,7 @@
   <!-- content -->
   <div class="d-flex flex-column">
     <form [formGroup]="form" autocomplete="off">
-      <tabs-list>
+      <tabs-list [accordionView]="accordionView">
         <tab [name]="tabsData.basic.name" [template]="basicTemplate" [title]="lang.map.lbl_basic_info"
              [hasError]="getTabInvalidStatus('basic')"></tab>
         <tab [name]="tabsData.bankAccounts.name" [template]="bankAccountsTemplate"

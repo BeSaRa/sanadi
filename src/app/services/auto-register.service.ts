@@ -1,23 +1,23 @@
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
-import {InquiryComponent} from '../e-services/pages/inquiry-container/inquiry/inquiry.component';
-import {ConsultationComponent} from '../e-services/pages/consultation-container/consultation/consultation.component';
+import {TeamService} from './team.service';
+import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
+import {InquiryComponent} from '@app/e-services/pages/inquiry/inquiry.component';
+import {ConsultationComponent} from '@app/e-services/pages/consultation/consultation.component';
 import {
   InternationalCooperationComponent
-} from '../e-services/pages/international-cooperation-container/international-cooperation/international-cooperation.component';
-import {TeamService} from './team.service';
+} from "@app/e-services/pages/international-cooperation/international-cooperation.component";
 import {
   InitialExternalOfficeApprovalComponent
 } from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
-import {PartnerApprovalComponent} from "@app/e-services/pages/partner-approval/partner-approval.component";
 import {
   FinalExternalOfficeApprovalComponent
 } from "@app/e-services/pages/final-external-office-approval/final-external-office-approval.component";
+import {PartnerApprovalComponent} from "@app/e-services/pages/partner-approval/partner-approval.component";
 import {
   InternalProjectLicenseComponent
-} from '@app/projects/pages/internal-project-license/internal-project-license.component';
+} from "@app/projects/pages/internal-project-license/internal-project-license.component";
 import {ProjectModelComponent} from "@app/projects/pages/project-model/project-model.component";
-import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
 
 @Injectable({
   providedIn: 'root'

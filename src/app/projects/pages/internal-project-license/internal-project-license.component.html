@@ -1,10 +1,10 @@
 <div class="d-flex flex-column">
-  <div *ngIf="!fromDialog" class="row mb-3">
+  <div *ngIf="!accordionView && !fromDialog" class="row mb-3">
     <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_internal_project_license}}</h1></div>
   </div>
   <div class="row">
     <form autocomplete="off" [formGroup]="form" id="form">
-      <tabs-list class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+      <tabs-list class="py-4" [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
         <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
              [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
         <tab [name]="tabsData.projectCategory.name" [hasError]="getTabInvalidStatus('projectCategory')"

@@ -1,9 +1,9 @@
 <div class="d-flex flex-column">
-  <div *ngIf="!fromDialog" class="row mb-3">
+  <div *ngIf="!accordionView && !fromDialog" class="row mb-3">
     <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_initial_external_office_approval}}</h1></div>
   </div>
   <div class="row">
-    <tabs-list class="py-4">
+    <tabs-list [accordionView]="accordionView" class="py-4">
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
       <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"

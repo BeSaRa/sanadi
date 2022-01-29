@@ -1,18 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-
 import {EServicesComponent} from '@app/e-services/e-services.component';
-import {
-  InternationalCooperationContainerComponent
-} from '@app/e-services/pages/international-cooperation-container/international-cooperation-container.component';
-import {
-  InitialExternalOfficeApprovalComponent
-} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
-import {
-  FinalExternalOfficeApprovalComponent
-} from '@app/e-services/pages/final-external-office-approval/final-external-office-approval.component';
-import {PartnerApprovalComponent} from "./pages/partner-approval/partner-approval.component";
-import {PermissionGuard} from '@app/guards/permission-guard';
 import {EServicePermissions} from "@app/enums/e-service-permissions";
 import {
   EServiceComponentWrapperComponent
@@ -35,7 +23,8 @@ const routes: Routes = [
   },
   {
     path: 'consultations', component: EServiceComponentWrapperComponent,
-    canActivate: [PermissionGuard],
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissions.CONSULTATION,
       configPermissionGroup: null,
@@ -44,35 +33,50 @@ const routes: Routes = [
     }
   },
   {
-    path: 'international-coop', component: InternationalCooperationContainerComponent,
-    canActivate: [PermissionGuard],
+    path: 'international-coop', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissions.INTERNATIONAL_COOPERATION,
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: false,
+      render: 'InternationalCooperationComponent'
     }
   },
   {
-    path: 'partner-approval', component: PartnerApprovalComponent,
-    canActivate: [PermissionGuard],
-    data: {permissionKey: EServicePermissions.PARTNER_APPROVAL, configPermissionGroup: null, checkAnyPermission: false}
+    path: 'partner-approval',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.PARTNER_APPROVAL,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'PartnerApprovalComponent'
+    }
   },
   {
-    path: 'initial-external-office-approval', component: InitialExternalOfficeApprovalComponent,
-    canActivate: [PermissionGuard],
+    path: 'initial-external-office-approval',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissions.INITIAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: false,
+      render: 'InitialExternalOfficeApprovalComponent'
     }
   },
   {
-    path: 'final-external-office-approval', component: FinalExternalOfficeApprovalComponent,
-    canActivate: [PermissionGuard],
+    path: 'final-external-office-approval',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
     data: {
       permissionKey: EServicePermissions.FINAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
-      checkAnyPermission: false
+      checkAnyPermission: false,
+      render: 'FinalExternalOfficeApprovalComponent'
     }
   }
 ];
