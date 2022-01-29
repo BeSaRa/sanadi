@@ -57,7 +57,9 @@ import {SendToComponent} from './popups/send-to-user-popup/send-to.component';
 import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
 import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
-import {ManageRecommendationPopupComponent} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {
+  ManageRecommendationPopupComponent
+} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import {ManageCommentPopupComponent} from './popups/manage-comment-popup/manage-comment-popup.component';
 import {CaseViewerPopupComponent} from './popups/case-viewer-popup/case-viewer-popup.component';
 import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
@@ -66,22 +68,24 @@ import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comme
 import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
 import {FilterRetiredStatusPipe} from './pipes/filter-retired-status.pipe';
 import {CustomTermPopupComponent} from './popups/custom-term-popup/custom-term-popup.component';
-import {RequestRecommendationsComponent} from '@app/shared/components/request-recommendations/request-recommendations.component';
+import {
+  RequestRecommendationsComponent
+} from '@app/shared/components/request-recommendations/request-recommendations.component';
 import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
 import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
-import { SendToMultipleComponent } from './popups/send-to-multiple/send-to-multiple.component';
-import { AttachmentsComponent } from './components/attachments/attachments.component';
-import { OnlyNumbersDirective } from './directives/only-numbers.directive';
-import { SurveyViewComponent } from './components/survey-view/survey-view.component';
-import { ViewSurveyPopupComponent } from './popups/view-survey-popup/view-survey-popup.component';
-import { ViewTraineeSurveyComponent } from './popups/view-trainee-survey/view-trainee-survey.component';
-import { FileUploaderComponent } from './components/file-uploader/file-uploader.component';
-import { TableHeaderComponent } from './components/table-header/table-header.component';
-import { WorkItemStatusComponent } from './components/work-item-status/work-item-status.component';
-import { InboxGridActionsComponent } from './components/inbox-grid-actions/inbox-grid-actions.component';
-import { ReadUnreadDirective } from './directives/read-unread.directive';
-import { RiskStatusDirective } from './directives/risk-status.directive';
+import {SendToMultipleComponent} from './popups/send-to-multiple/send-to-multiple.component';
+import {AttachmentsComponent} from './components/attachments/attachments.component';
+import {OnlyNumbersDirective} from './directives/only-numbers.directive';
+import {SurveyViewComponent} from './components/survey-view/survey-view.component';
+import {ViewSurveyPopupComponent} from './popups/view-survey-popup/view-survey-popup.component';
+import {ViewTraineeSurveyComponent} from './popups/view-trainee-survey/view-trainee-survey.component';
+import {FileUploaderComponent} from './components/file-uploader/file-uploader.component';
+import {TableHeaderComponent} from './components/table-header/table-header.component';
+import {WorkItemStatusComponent} from './components/work-item-status/work-item-status.component';
+import {InboxGridActionsComponent} from './components/inbox-grid-actions/inbox-grid-actions.component';
+import {ReadUnreadDirective} from './directives/read-unread.directive';
+import {RiskStatusDirective} from './directives/risk-status.directive';
 
 @NgModule({
   declarations: [

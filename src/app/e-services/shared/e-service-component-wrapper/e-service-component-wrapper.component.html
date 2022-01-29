@@ -28,12 +28,23 @@
       <app-documents #attachmentsCtrl [caseId]="component.model?.id" [service]="component.service.documentService"
                      [readonly]="isAttachmentReadonly()"></app-documents>
     </ng-template>
+    <div class="row mb-2">
+      <div class="col-12">
+        <div class="d-flex flex-row flex-wrap gap-2">
+          <button *ngFor="let action of actions" (click)="actionCallback(action)" class="btn btn-primary">
+            <div class="d-flex">
+              <i class="mdi" [ngClass]="action.icon!"></i>
+              <span class="ms-2">{{action.translatedLabel}}</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
   </ng-container>
   <ng-container *ngIf="!internal">
     <ng-template #externalContainer></ng-template>
   </ng-container>
   <ng-template #logsTemplate>
-    <!--<request-recommendations [record]="model"></request-recommendations>-->
     <log-viewer [accordionView]="true" displayCategorizedAs="tabs"
                 [categorizeLogs]="true" [caseId]="component?.model?.getCaseId()"
                 [service]="service.actionLogService"></log-viewer>
