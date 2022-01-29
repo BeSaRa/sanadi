@@ -15,7 +15,7 @@ import {SearchService} from '@app/services/search.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {InternalProjectLicenseInterceptor} from '@app/model-interceptors/internal-project-license-interceptor';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {LicenseService} from '@app/services/license.service';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {ProjectComponent} from '@app/models/project-component';
@@ -28,6 +28,9 @@ import {IDefaultResponse} from '@app/interfaces/idefault-response';
   providedIn: 'root'
 })
 export class InternalProjectLicenseService extends EServiceGenericService<InternalProjectLicense> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
   selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -59,7 +62,7 @@ export class InternalProjectLicenseService extends EServiceGenericService<Intern
     return InternalProjectLicense;
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.INTERNAL_PROJECT_LICENSE;
   }
 
@@ -76,7 +79,7 @@ export class InternalProjectLicenseService extends EServiceGenericService<Intern
   }
 
   checkFinalApproveNotificationByMatrix(caseId: string): Observable<boolean> {
-    return this.http.get<IDefaultResponse<boolean>>(this._getServiceURL() + '/matrix-approval/' + caseId)
+    return this.http.get<IDefaultResponse<boolean>>(this._getURLSegment() + '/matrix-approval/' + caseId)
       .pipe(map(response => response.rs));
   }
 }

@@ -30,6 +30,10 @@ import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-offi
   providedIn: 'root'
 })
 export class FinalExternalOfficeApprovalService extends EServiceGenericService<FinalExternalOfficeApproval> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   interceptor: IModelInterceptor<FinalExternalOfficeApproval> = new FinalExternalOfficeApprovalInterceptor();
@@ -68,7 +72,7 @@ export class FinalExternalOfficeApprovalService extends EServiceGenericService<F
     return FinalExternalOfficeApproval;
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL;
   }
 

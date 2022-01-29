@@ -10,7 +10,7 @@ import {RecommendationInterceptor} from '../model-interceptors/recommendation-in
 export class RecommendationService implements Pick<BackendServiceModelInterface<Recommendation>, '_getInterceptor' | '_getModel'> {
   interceptor: RecommendationInterceptor = new RecommendationInterceptor();
 
-  constructor(private service: { http: HttpClient, _getServiceURL(): string }) {
+  constructor(private service: { http: HttpClient, _getURLSegment(): string }) {
   }
 
 
@@ -26,7 +26,7 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _create(caseId: string, @InterceptParam() model: Partial<Recommendation>): Observable<Recommendation> {
-    return this.service.http.post<Recommendation>(this.service._getServiceURL() + '/' + caseId + '/recommendation', model);
+    return this.service.http.post<Recommendation>(this.service._getURLSegment() + '/' + caseId + '/recommendation', model);
   }
 
   create(caseId: string, model: Partial<Recommendation>): Observable<Recommendation> {
@@ -36,7 +36,7 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _update(caseId: string, @InterceptParam() model: Partial<Recommendation>): Observable<Recommendation> {
-    return this.service.http.put<Recommendation>(this.service._getServiceURL() + '/' + caseId + '/recommendation', model);
+    return this.service.http.put<Recommendation>(this.service._getURLSegment() + '/' + caseId + '/recommendation', model);
   }
 
   update(caseId: string, model: Partial<Recommendation>): Observable<Recommendation> {
@@ -45,7 +45,7 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
 
   @Generator(undefined, true, {property: 'rs'})
   private _load(caseId: string): Observable<Recommendation[]> {
-    return this.service.http.get<Recommendation[]>(this.service._getServiceURL() + '/' + caseId + '/recommendations');
+    return this.service.http.get<Recommendation[]>(this.service._getURLSegment() + '/' + caseId + '/recommendations');
   }
 
   load(caseId: string): Observable<Recommendation[]> {

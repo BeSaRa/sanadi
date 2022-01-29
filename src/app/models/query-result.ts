@@ -125,11 +125,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   claim(): Observable<IBulkResult> {
-    return this.service.claimBulk([this.TKIID]);
+    return this.service.claimBulk([this.TKIID], this.BD_CASE_TYPE);
   }
 
   release(): Observable<IBulkResult> {
-    return this.service.releaseBulk([this.TKIID]);
+    return this.service.releaseBulk([this.TKIID], this.BD_CASE_TYPE);
   }
 
   manageAttachments(): DialogRef {

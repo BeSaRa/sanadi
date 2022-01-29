@@ -15,13 +15,19 @@ import {Observable, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {Generator} from "@app/decorators/generator";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {SelectTemplatePopupComponent} from "@app/e-services/poups/select-template-popup/select-template-popup.component";
+import {
+  SelectTemplatePopupComponent
+} from "@app/e-services/poups/select-template-popup/select-template-popup.component";
 import {BlobModel} from '@app/models/blob-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectModelService extends EServiceGenericService<ProjectModel> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   jsonSearchFile: string = 'external_project_models.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_models';
   interceptor: IModelInterceptor<ProjectModel> = new ProjectModelInterceptor();
@@ -32,7 +38,7 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
     return ProjectModel;
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.PROJECT_MODELING;
   }
 
@@ -60,14 +66,14 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
 
   @Generator(undefined, true)
   private _searchTemplateBySerial(serial: string): Observable<ProjectModel[]> {
-    return this.http.post<ProjectModel[]>(this._getServiceURL() + '/template/search', {
+    return this.http.post<ProjectModel[]>(this._getURLSegment() + '/template/search', {
       templateFullSerial: serial
     })
   }
 
   @Generator(undefined, false)
   private _getTemplateById(id: string): Observable<ProjectModel> {
-    return this.http.get<ProjectModel>(this._getServiceURL() + '/template/' + id + '/details')
+    return this.http.get<ProjectModel>(this._getURLSegment() + '/template/' + id + '/details')
   }
 
   getTemplateById(id: string): Observable<ProjectModel> {
@@ -86,7 +92,7 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
   }
 
   exportTemplate(templateId: string): Observable<BlobModel> {
-    return this.http.get(this._getServiceURL() + '/template/' + templateId + '/export', {
+    return this.http.get(this._getURLSegment() + '/template/' + templateId + '/export', {
       responseType: 'blob'
     }).pipe(
       map(blob => new BlobModel(blob, this.domSanitizer),

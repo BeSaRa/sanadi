@@ -22,6 +22,10 @@ import {DynamicOptionsService} from './dynamic-options.service';
   providedIn: 'root'
 })
 export class InquiryService extends EServiceGenericService<Inquiry> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'fullName', 'category', 'organization', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
     [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
@@ -53,7 +57,7 @@ export class InquiryService extends EServiceGenericService<Inquiry> {
     return 'InquiryComponent';
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.E_INQUIRY;
   }
 

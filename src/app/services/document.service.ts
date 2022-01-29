@@ -17,7 +17,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
 
   constructor(private service: {
     http: HttpClient,
-    _getServiceURL(): string,
+    _getURLSegment(): string,
     dialog: DialogService,
     domSanitizer: DomSanitizer
   }) {
@@ -52,7 +52,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
       delete clonedDocument.description;
     }
     content ? formData.append('content', content) : null;
-    return this.service.http.post<any>(this.service._getServiceURL() + '/' + caseId + '/document', formData, {
+    return this.service.http.post<any>(this.service._getURLSegment() + '/' + caseId + '/document', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),
       reportProgress: true,
       observe: 'events'
@@ -84,7 +84,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.required;
     delete clonedDocument.langService;
     clonedDocument.attachmentTypeId = 1;
-    return this.service.http.post(this.service._getServiceURL() + '/' + caseId + '/document/bulk', formData, {
+    return this.service.http.post(this.service._getURLSegment() + '/' + caseId + '/document/bulk', formData, {
       params: new HttpParams({fromObject: clonedDocument as any}),
       reportProgress: true,
       observe: 'events'
@@ -111,7 +111,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
 
   @Generator(FileNetDocument, true, {property: 'rs'})
   private _loadDocuments(caseId: string): Observable<FileNetDocument[]> {
-    return this.service.http.get<FileNetDocument[]>(this.service._getServiceURL() + '/' + caseId + '/folder/contained-documents');
+    return this.service.http.get<FileNetDocument[]>(this.service._getURLSegment() + '/' + caseId + '/folder/contained-documents');
   }
 
   loadDocuments(caseId: string): Observable<FileNetDocument[]> {
@@ -119,11 +119,11 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
   }
 
   deleteDocument(docId: string): Observable<boolean> {
-    return this.service.http.delete<boolean>(this.service._getServiceURL() + '/document/' + docId);
+    return this.service.http.delete<boolean>(this.service._getURLSegment() + '/document/' + docId);
   }
 
   downloadDocument(docId: string): Observable<BlobModel> {
-    return this.service.http.get(this.service._getServiceURL() + '/document/' + docId + '/download', {
+    return this.service.http.get(this.service._getURLSegment() + '/document/' + docId + '/download', {
       observe: 'body',
       responseType: 'blob'
     }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));
@@ -139,7 +139,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
   }
 
   deleteBulkDocument(documentIds: string[]) {
-    return this.service.http.request('DELETE', this.service._getServiceURL() + '/document/bulk', {
+    return this.service.http.request('DELETE', this.service._getURLSegment() + '/document/bulk', {
       params: {
         docIds: documentIds,
       }

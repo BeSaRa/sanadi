@@ -17,6 +17,7 @@ import {EmployeeService} from '../services/employee.service';
 import {FactoryService} from '../services/factory.service';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {ICaseModel} from "@app/interfaces/icase-model";
+import {IBulkResult} from "@app/interfaces/ibulk-result";
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
@@ -202,4 +203,11 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.id;
   }
 
+  release(): Observable<IBulkResult> {
+    return this.service.releaseBulk([this.taskDetails.tkiid]);
+  }
+
+  claim(): Observable<IBulkResult> {
+    return this.service.claimBulk([this.taskDetails.tkiid]);
+  }
 }

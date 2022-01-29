@@ -17,7 +17,7 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
 
   constructor(private service: {
     http: HttpClient,
-    _getServiceURL(): string,
+    _getURLSegment(): string,
     dialog: DialogService,
     domSanitizer: DomSanitizer
   }) {
@@ -34,7 +34,7 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
 
   @Generator(undefined, true, {property: 'rs'})
   private _load(caseId: string): Observable<ActionRegistry[]> {
-    return this.service.http.get<ActionRegistry[]>(this.service._getServiceURL() + '/' + caseId + '/actions');
+    return this.service.http.get<ActionRegistry[]>(this.service._getURLSegment() + '/' + caseId + '/actions');
   }
 
   load(caseId: string): Observable<ActionRegistry[]> {
@@ -43,7 +43,7 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
 
   exportActions(caseId: string): Observable<BlobModel> {
     return this.service.http
-      .get(this.service._getServiceURL() + '/' + caseId + '/actions/export', {
+      .get(this.service._getURLSegment() + '/' + caseId + '/actions/export', {
         observe: 'body',
         responseType: 'blob'
       }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));
@@ -51,7 +51,7 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
 
   loadCaseLocation(caseId: string): Observable<AdminResult[]> {
     return this.service.http
-      .get<IDefaultResponse<AdminResult[]>>(this.service._getServiceURL() + '/' + caseId + '/assigned-to')
+      .get<IDefaultResponse<AdminResult[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to')
       .pipe(map((response) => response.rs.map(item => AdminResult.createInstance(item))));
   }
 }

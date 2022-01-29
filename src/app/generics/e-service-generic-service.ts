@@ -40,6 +40,8 @@ import {FactoryService} from '@app/services/factory.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {MenuItem} from "@app/models/menu-item";
 import {MenuItemService} from "@app/services/menu-item.service";
+import {IBulkResult} from "@app/interfaces/ibulk-result";
+import {UrlService} from "@app/services/url.service";
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -51,7 +53,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   abstract _getModel(): any;
 
-  abstract _getServiceURL(): string;
+  abstract _getURLSegment(): string;
 
   abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
 
@@ -100,7 +102,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _create(@InterceptParam() model: Partial<T>): Observable<T> {
-    return this.http.post<T>(this._getServiceURL(), model);
+    return this.http.post<T>(this._getURLSegment(), model);
   }
 
   create(model: T): Observable<T> {
@@ -110,7 +112,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _update(@InterceptParam() model: Partial<T>): Observable<T> {
-    return this.http.put<T>(this._getServiceURL(), model);
+    return this.http.put<T>(this._getURLSegment(), model);
   }
 
   update(model: T): Observable<T> {
@@ -124,7 +126,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _commit(@InterceptParam() model: Partial<T>): Observable<T> {
-    return this.http.post<T>(this._getServiceURL() + '/commit', model);
+    return this.http.post<T>(this._getURLSegment() + '/commit', model);
   }
 
   commit(model: T): Observable<T> {
@@ -134,7 +136,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _draft(@InterceptParam() model: Partial<T>): Observable<T> {
-    return this.http.post<T>(this._getServiceURL() + '/draft', model);
+    return this.http.post<T>(this._getURLSegment() + '/draft', model);
   }
 
   draft(model: T): Observable<T> {
@@ -142,7 +144,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   private _start(caseId: string): Observable<boolean> {
-    return this.http.request<boolean>('POST', this._getServiceURL() + '/' + caseId + '/start', {body: null});
+    return this.http.request<boolean>('POST', this._getURLSegment() + '/' + caseId + '/start', {body: null});
   }
 
   start(caseId: string): Observable<boolean> {
@@ -151,7 +153,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   @Generator(undefined, false, {property: 'rs'})
   private _getById(caseId: string): Observable<T> {
-    return this.http.get<T>(this._getServiceURL() + '/' + caseId + '/details');
+    return this.http.get<T>(this._getURLSegment() + '/' + caseId + '/details');
   }
 
   getById(caseId: string): Observable<T> {
@@ -246,7 +248,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   exportModel(caseId: string): Observable<BlobModel> {
-    return this.http.get(this._getServiceURL() + '/model/' + caseId + '/export/', {
+    return this.http.get(this._getURLSegment() + '/model/' + caseId + '/export/', {
       responseType: 'blob',
       observe: 'body'
     }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
@@ -258,7 +260,26 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   @Generator(undefined, false, {property: 'rs'})
   private _getTask(taskId: string): Observable<T> {
-    return this.http.get<T>(this._getServiceURL() + '/task/' + taskId);
+    return this.http.get<T>(this._getURLSegment() + '/task/' + taskId);
+  }
+
+
+  @Generator(undefined, false, {property: 'rs'})
+  private _claimBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this.http.post<IBulkResult>(this._getUrlService().URLS.CLAIM_BULK, taskIds);
+  }
+
+  @Generator(undefined, false, {property: 'rs'})
+  private _releaseBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this.http.post<IBulkResult>(this._getUrlService().URLS.RELEASE_BULK, taskIds);
+  }
+
+  claimBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this._claimBulk(taskIds);
+  }
+
+  releaseBulk(taskIds: string[]): Observable<IBulkResult> {
+    return this._releaseBulk(taskIds);
   }
 
 
@@ -282,4 +303,6 @@ export abstract class EServiceGenericService<T extends { id: string }>
   getMenuItem(): MenuItem {
     return this.menuItemService.getMenuItemByLangKey(this.serviceKey)!
   }
+
+  abstract _getUrlService(): UrlService
 }

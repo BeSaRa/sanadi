@@ -10,7 +10,7 @@ import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 export class CommentService implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
   interceptor: CaseCommentInterceptor = new CaseCommentInterceptor();
 
-  constructor(private service: { http: HttpClient, _getServiceURL(): string }) {
+  constructor(private service: { http: HttpClient, _getURLSegment(): string }) {
   }
 
 
@@ -26,7 +26,7 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
   private _create(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
-    return this.service.http.post<CaseComment>(this.service._getServiceURL() + '/' + caseId + '/comment', model);
+    return this.service.http.post<CaseComment>(this.service._getURLSegment() + '/' + caseId + '/comment', model);
   }
 
   create(caseId: string, model: Partial<CaseComment>): Observable<CaseComment> {
@@ -35,8 +35,8 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
 
   @SendInterceptor()
   @Generator(undefined, false, {property: 'rs'})
-  private _update(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
-    return this.service.http.put<CaseComment>(this.service._getServiceURL() + '/comment/', model);
+  private _update(_caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
+    return this.service.http.put<CaseComment>(this.service._getURLSegment() + '/comment/', model);
   }
 
   update(caseId: string, model: Partial<CaseComment>): Observable<CaseComment> {
@@ -45,7 +45,7 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
 
   @Generator(undefined, true, {property: 'rs'})
   private _load(caseId: string): Observable<CaseComment[]> {
-    return this.service.http.get<CaseComment[]>(this.service._getServiceURL() + '/' + caseId + '/comments');
+    return this.service.http.get<CaseComment[]>(this.service._getURLSegment() + '/' + caseId + '/comments');
   }
 
   load(caseId: string): Observable<CaseComment[]> {

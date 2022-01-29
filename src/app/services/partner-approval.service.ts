@@ -38,6 +38,10 @@ import {ApprovalReasonInterceptor} from "@app/model-interceptors/ApprovalReasonI
   providedIn: 'root'
 })
 export class PartnerApprovalService extends EServiceGenericService<PartnerApproval> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   actionLogService: ActionLogService = new ActionLogService(this);
   commentService: CommentService = new CommentService(this);
   documentService: DocumentService = new DocumentService(this);
@@ -82,7 +86,7 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
     return PartnerApproval;
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.E_PARTNER_APPROVAL;
   }
 

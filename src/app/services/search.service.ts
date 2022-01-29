@@ -11,7 +11,7 @@ import {BlobModel} from '../models/blob-model';
 export class SearchService {
   constructor(private service: {
     http: HttpClient,
-    _getServiceURL(): string,
+    _getURLSegment(): string,
     _getModel(): any,
     _getInterceptor(): Partial<IModelInterceptor<any>>,
     domSanitizer: DomSanitizer
@@ -21,12 +21,12 @@ export class SearchService {
   @Generator(undefined, true, {property: 'rs'})
   @SendInterceptor((new GeneralSearchCriteriaInterceptor().send))
   private _search(@InterceptParam() criteria: Partial<any>): Observable<any> {
-    return this.service.http.post<any>(this.service._getServiceURL() + '/search', criteria);
+    return this.service.http.post<any>(this.service._getURLSegment() + '/search', criteria);
   }
 
   @SendInterceptor((new GeneralSearchCriteriaInterceptor().send))
   private _exportSearch(@InterceptParam() criteria: Partial<any>): Observable<BlobModel> {
-    return this.service.http.post(this.service._getServiceURL() + '/search/export', criteria, {
+    return this.service.http.post(this.service._getURLSegment() + '/search/export', criteria, {
       responseType: 'blob',
       observe: 'body'
     }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));

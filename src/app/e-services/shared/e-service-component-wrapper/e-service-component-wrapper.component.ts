@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DynamicComponentService} from "@app/services/dynamic-component.service";
 import {EmployeeService} from "@app/services/employee.service";
 import {LangService} from "@app/services/lang.service";
@@ -22,6 +22,7 @@ import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {WFActions} from "@app/enums/wfactions.enum";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ToastService} from "@app/services/toast.service";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -33,6 +34,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
               private injector: Injector,
               private employeeService: EmployeeService,
               public lang: LangService,
+              private router: Router,
+              private toast: ToastService,
               private cfr: ComponentFactoryResolver) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
@@ -120,7 +123,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         label: 'claim',
         displayInGrid: true,
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionClaim(item, dialogRef, loadedModel, component, caseViewerComponent);
+          this.claimAction(item);
         }
       }
     ];
@@ -134,7 +137,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-hand-okay',
         label: 'release_task',
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
-        onClick: (item: CaseModel<any, any>) => true /*this.actionRelease(item, viewDialogRef)*/
+        onClick: (item: CaseModel<any, any>) => this.releaseAction(item)
       },
       // send to department
       {
@@ -365,4 +368,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
   }
 
 
+  private releaseAction(item: CaseModel<any, any>) {
+    item.release().subscribe(() => {
+      this.toast.success(this.lang.map.task_have_been_released_successfully);
+      item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CLAIM);
+      this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
+    });
+  }
+
+  private claimAction(item: CaseModel<any, any>) {
+    item.claim().subscribe(() => {
+      this.toast.success(this.lang.map.task_have_been_claimed_successfully);
+      item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CANCEL_CLAIM);
+      this.displayRightActions(OpenFrom.USER_INBOX);
+    })
+  }
 }

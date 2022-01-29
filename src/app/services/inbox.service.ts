@@ -115,11 +115,6 @@ export class InboxService {
     return this._loadTeamInbox(teamId, options);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  private _claimBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this.http.post<IBulkResult>(this.urlService.URLS.CLAIM_BULK, taskIds);
-  }
-
   getService(serviceNumber: number): EServiceGenericService<any> {
     if (!this.services.has(serviceNumber)) {
       throw new Error('Service number' + serviceNumber + ' Not register in InboxServices');
@@ -127,17 +122,14 @@ export class InboxService {
     return (this.services.get(serviceNumber) as EServiceGenericService<any>);
   }
 
-  claimBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this._claimBulk(taskIds);
+  claimBulk(taskIds: string[], caseType: number): Observable<IBulkResult> {
+    const service = this.getService(caseType);
+    return service.claimBulk(taskIds);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  private _releaseBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this.http.post<IBulkResult>(this.urlService.URLS.RELEASE_BULK, taskIds);
-  }
-
-  releaseBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this._releaseBulk(taskIds);
+  releaseBulk(taskIds: string[], caseType: number): Observable<IBulkResult> {
+    const service = this.getService(caseType);
+    return service.releaseBulk(taskIds);
   }
 
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
@@ -172,7 +164,7 @@ export class InboxService {
   }
 
   takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any>): Observable<boolean> {
-    return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/complete', info)
+    return this.http.post<IDefaultResponse<boolean>>(service._getURLSegment() + '/task/' + taskId + '/complete', info)
       .pipe(map(response => response.rs));
   }
 
@@ -185,7 +177,7 @@ export class InboxService {
   }
 
   startTaskToMultiple(taskId: string, info: { taskName: string, departments?: number[], users?: number[] }, service: EServiceGenericService<any>): Observable<boolean> {
-    return this.http.post<IDefaultResponse<boolean>>(service._getServiceURL() + '/task/' + taskId + '/start', info)
+    return this.http.post<IDefaultResponse<boolean>>(service._getURLSegment() + '/task/' + taskId + '/start', info)
       .pipe(map(response => response.rs));
   }
 

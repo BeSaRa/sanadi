@@ -7,21 +7,33 @@ import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
 import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
-import {InitialExternalOfficeApprovalInterceptor} from "@app/model-interceptors/initial-external-office-approval-interceptor";
+import {
+  InitialExternalOfficeApprovalInterceptor
+} from "@app/model-interceptors/initial-external-office-approval-interceptor";
 import {FactoryService} from "@app/services/factory.service";
 import {UrlService} from "@app/services/url.service";
 import {LicenseService} from "@app/services/license.service";
-import {InitialExternalOfficeApprovalSearchCriteria} from "@app/models/initial-external-office-approval-search-criteria";
+import {
+  InitialExternalOfficeApprovalSearchCriteria
+} from "@app/models/initial-external-office-approval-search-criteria";
 import {Observable} from "rxjs";
 import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
-import {InitialExternalOfficeApprovalComponent} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
-import {SearchInitialExternalOfficeApprovalCriteria} from "@app/models/search-initial-external-office-approval-criteria";
+import {
+  InitialExternalOfficeApprovalComponent
+} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
+import {
+  SearchInitialExternalOfficeApprovalCriteria
+} from "@app/models/search-initial-external-office-approval-criteria";
 import {SearchService} from "@app/services/search.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class InitialExternalOfficeApprovalService extends EServiceGenericService<InitialExternalOfficeApproval> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   jsonSearchFile: string = 'initial_external_office_approval.json';
   selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
   interceptor: IModelInterceptor<InitialExternalOfficeApproval> = new InitialExternalOfficeApprovalInterceptor();
@@ -45,7 +57,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
     return InitialExternalOfficeApproval;
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.INITIAL_OFFICE_APPROVAL;
   }
 

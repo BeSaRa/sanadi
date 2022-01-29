@@ -22,6 +22,10 @@ import {DynamicOptionsService} from './dynamic-options.service';
   providedIn: 'root'
 })
 export class InternationalCooperationService extends EServiceGenericService<InternationalCooperation> {
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organization', 'fullName', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
     [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
@@ -54,7 +58,7 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
     return 'InternationalCooperationComponent';
   }
 
-  _getServiceURL(): string {
+  _getURLSegment(): string {
     return this.urlService.URLS.E_INTERNATIONAL_COOPERATION;
   }
 
