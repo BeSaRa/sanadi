@@ -57,7 +57,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   load(): void {
-    merge(of(this.caseId), this._caseId , this.reload$)
+    merge(of(this.caseId), this._caseId, this.reload$)
       .pipe(filter(() => !!this.caseId))
       .pipe(map(_ => this.caseId))
       .pipe(switchMap(id => this.service.load(id)))
@@ -87,15 +87,14 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
-    logs.map(x => {
+    logs.forEach(x => {
       if (x.actionId === ServiceActionType.Viewed) {
-        this.logsViewed = this.logsViewed.concat(x);
+        this.logsViewed = [].concat(x);
       } else if (x.actionId === ServiceActionType.Updated) {
-        this.logsUpdated = this.logsUpdated.concat(x);
+        this.logsUpdated = [].concat(x);
       } else {
-        this.logsOthers = this.logsOthers.concat(x);
+        this.logsOthers = [].concat(x);
       }
-      return x;
     });
   }
 }
