@@ -28,6 +28,7 @@ import {InboxService} from "@app/services/inbox.service";
 import {Subject} from "rxjs";
 import {delay, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {OperationTypes} from "@app/enums/operation-types.enum";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -91,8 +92,41 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.model = this.info.model;
       this.model.setInboxService(this.inboxService);
       this.displayRightActions(this.info.openFrom);
+      this.component.openFrom = this.info.openFrom;
+      if (this.info.openFrom === OpenFrom.SEARCH) {
+        this.prepareFromSearch();
+      } else {
+        this.prepareFromInbox();
+      }
     }
     this.listenToModelChange();
+  }
+
+  private prepareFromInbox(): void {
+    if (!this.info) {
+      return;
+    }
+    this.component.readonly = true;
+    this.component.operation = OperationTypes.UPDATE;
+    this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info.openFrom);
+  }
+
+  private prepareFromSearch(): void {
+    if (!this.info) {
+      return;
+    }
+
+    if (this.model) {
+      return;
+    }
+    this.component.readonly = !this.model!.canStart();
+    this.component.operation = OperationTypes.UPDATE;
+    this.component.allowEditRecommendations = (this.info.openFrom === OpenFrom.USER_INBOX || (this.info.openFrom === OpenFrom.SEARCH && this.model!.canStart())) && this.employeeService.isInternalUser();
+  }
+
+
+  isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
   }
 
   listenToModelChange(): void {
