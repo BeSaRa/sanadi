@@ -27,6 +27,7 @@ import {InboxService} from "@app/services/inbox.service";
 import {Subject} from "rxjs";
 import {delay, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -135,7 +136,25 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private buildSearchActions(): void {
-    this.searchActions = [];
+    this.searchActions = [
+      {
+        type: 'action',
+        icon: 'mdi-rocket-launch-outline',
+        label: 'launch',
+        show: (item: CaseModel<any, any>) => item.canStart(),
+        onClick: (item: CaseModel<any, any>, dialogRef: DialogRef) => {
+          this.launchAction(item);
+        }
+      }
+    ];
+  }
+
+  private launchAction(item: CaseModel<any, any>) {
+    item.start()
+      .subscribe(_ => {
+        this.toast.success(this.lang.map.request_has_been_sent_successfully);
+        this.navigateToSamePageThatUserCameFrom();
+      });
   }
 
   private buildTeamInboxActions(): void {

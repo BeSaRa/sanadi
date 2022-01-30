@@ -689,7 +689,7 @@
                  [load]="loadAttachments"></attachments>
   </ng-template>
 </ng-container>
-<div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center mb-5 gap-2">
+<div *ngIf="!fromDialog && !accordionView" class="d-flex align-items-center justify-content-center mb-5 gap-2">
   <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
           class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
   <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"

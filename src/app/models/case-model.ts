@@ -21,6 +21,8 @@ import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {InboxService} from "@app/services/inbox.service";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {LicenseApprovalModel} from "@app/models/license-approval-model";
+import {INavigatedItem} from "@app/interfaces/inavigated-item";
+import {EncryptionService} from "@app/services/encryption.service";
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
@@ -42,9 +44,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   employeeService: EmployeeService;
   inboxService?: InboxService;
 
+  itemRoute: string = '';
+  itemDetails: string = '';
+  encrypt!: EncryptionService;
+
   protected constructor() {
     super();
     this.employeeService = FactoryService.getService('EmployeeService');
+    this.encrypt = new EncryptionService();
   }
 
   create(): Observable<T> {
@@ -294,5 +301,15 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
 
   close(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.CLOSE, false, this);
+  }
+
+  setItemRoute(): void {
+    this.itemRoute = '/' + this.service.getMenuItem().path;
+    this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
+      openFrom: OpenFrom.SEARCH,
+      taskId: null,
+      caseId: this.id,
+      caseType: this.caseType
+    });
   }
 }

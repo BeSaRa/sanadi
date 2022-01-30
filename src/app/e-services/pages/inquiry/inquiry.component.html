@@ -145,7 +145,7 @@
                          [caseId]="model?.id"
                          [service]="service.recommendationService"></app-recommendations>
   </ng-template>
-  <div *ngIf="!fromDialog" class="mb-3 d-flex align-items-center justify-content-center">
+  <div *ngIf="!fromDialog && !accordionView" class="mb-3 d-flex align-items-center justify-content-center">
     <button (click)="save.next(saveTypes.FINAL)"
             [disabled]="form.invalid || model?.alreadyStarted()"
             class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>

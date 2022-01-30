@@ -1,5 +1,6 @@
 export class GeneralInterceptor {
   static receive(model: any): any {
+    model.setItemRoute && model.setItemRoute();
     return model;
   }
 

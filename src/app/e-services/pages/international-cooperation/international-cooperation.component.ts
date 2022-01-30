@@ -22,6 +22,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {NavigationService} from "@app/services/navigation.service";
 
 @Component({
   selector: 'international-cooperation',
@@ -94,6 +95,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
               private dialog: DialogService,
               private toast: ToastService,
               private countryService: CountryService,
+              private navigationService: NavigationService,
               public employeeService: EmployeeService,
               public lang: LangService) {
   }
@@ -284,5 +286,9 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     }
 
     return !isAllowed;
+  }
+
+  navigateBack(): void {
+    this.navigationService.goToBack();
   }
 }

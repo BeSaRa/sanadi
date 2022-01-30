@@ -332,7 +332,7 @@
                     [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
       </ng-template>
 
-      <div *ngIf="!fromDialog" class="d-flex align-items-center justify-content-center gap-2 mb-3">
+      <div *ngIf="!fromDialog && !accordionView" class="d-flex align-items-center justify-content-center gap-2 mb-3">
         <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
                 class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
         <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"

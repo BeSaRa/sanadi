@@ -33,8 +33,8 @@
           </ng-container>
           <ng-container cdkColumnDef="BD_FULL_SERIAL">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"><a href="#"
-                                                  (click)="$event.preventDefault(); openTask(row)">{{row.BD_FULL_SERIAL}}</a>
+            <td cdk-cell *cdkCellDef="let row"><a class="dir-ltr" [routerLink]="row.itemRoute"
+                                                  [queryParams]="{item:row.itemDetails}">{{row.BD_FULL_SERIAL}}</a>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="ACTIVATED">
