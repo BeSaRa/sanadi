@@ -3,7 +3,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
-  Injector,
+  Injector, OnDestroy,
   OnInit,
   ViewChild,
   ViewContainerRef
@@ -24,13 +24,15 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ToastService} from "@app/services/toast.service";
 import {InboxService} from "@app/services/inbox.service";
+import {Subject} from "rxjs";
+import {delay, takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'e-service-component-wrapper',
   templateUrl: './e-service-component-wrapper.component.html',
   styleUrls: ['./e-service-component-wrapper.component.scss']
 })
-export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit {
+export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private injector: Injector,
               private employeeService: EmployeeService,
@@ -44,6 +46,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
     }
   }
+
 
   private userInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
   private teamInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -63,6 +66,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
   component!: EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>
   internal: boolean = this.employeeService.isInternalUser();
   info: IOpenedInfo | null = null;
+  destroy$: Subject<any> = new Subject<any>();
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null);
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
 
   async ngOnInit(): Promise<void> {
     this.info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
@@ -78,6 +88,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
       this.model.setInboxService(this.inboxService);
       this.displayRightActions(this.info.openFrom);
     }
+    this.listenToModelChange();
+  }
+
+  listenToModelChange(): void {
+    this.component.onModelChange$
+      .pipe(delay(0))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((model) => {
+        this.model = model;
+      })
   }
 
   ngAfterViewInit(): void {

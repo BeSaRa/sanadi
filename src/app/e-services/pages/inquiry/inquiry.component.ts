@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {LangService} from '@app/services/lang.service';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
@@ -30,7 +30,8 @@ import {NavigationService} from "@app/services/navigation.service";
   templateUrl: './inquiry.component.html',
   styleUrls: ['./inquiry.component.scss']
 })
-export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
+export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
+  onModelChange$: EventEmitter<Inquiry | undefined> = new EventEmitter<Inquiry | undefined>();
   accordionView: boolean = false;
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
@@ -57,7 +58,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent {
   }
 
   private changeModel: BehaviorSubject<Inquiry | undefined> = new BehaviorSubject<Inquiry | undefined>(new Inquiry());
-  private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable();
+  private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
 
   inputMaskPatterns: typeof CustomValidators.inputMaskPatterns = CustomValidators.inputMaskPatterns;
 

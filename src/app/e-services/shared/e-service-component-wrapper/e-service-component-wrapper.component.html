@@ -6,7 +6,8 @@
       </div>
     </div>
     <tabs-list class="position-relative">
-      <button (click)="print()" [disabled]="!model" class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
+      <button (click)="print()" [disabled]="!model?.id"
+              class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
         <i class="mdi mdi-printer"></i>
         <span class="px-1"></span>
         <span>{{lang.map.print}}</span>

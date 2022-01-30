@@ -169,7 +169,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.inboxChange$.next(this.inboxChange$.value);
   }
 
-  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent, caseViewerComponent?: any) {
+  actionClaim(item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent<CaseModel<any, any>>, caseViewerComponent?: any) {
     item.claim()
       .pipe(take(1))
       .subscribe((val) => {
@@ -433,7 +433,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
             return loadedModel.taskDetails.actions && loadedModel.taskDetails.actions.indexOf(WFActions.ACTION_CLAIM) === -1;
           }
         },
-        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent, caseViewerComponent?: any) => {
+        onClick: (item: QueryResult, dialogRef?: DialogRef, loadedModel?: CaseModel<any, any>, component?: IESComponent<CaseModel<any, any>>, caseViewerComponent?: any) => {
           this.actionClaim(item, dialogRef, loadedModel, component, caseViewerComponent);
         }
       },

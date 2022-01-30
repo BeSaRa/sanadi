@@ -1,4 +1,4 @@
-import {Directive, Input, OnDestroy, OnInit} from "@angular/core";
+import {Directive, EventEmitter, Input, OnDestroy, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
@@ -24,7 +24,8 @@ import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Directive()
-export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent {
+export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent<M> {
+  onModelChange$: EventEmitter<M | undefined> = new EventEmitter<M | undefined>();
   accordionView: boolean = false;
   saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();

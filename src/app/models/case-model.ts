@@ -156,7 +156,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
             .subscribe(() => {
               instance.container.clear();
               const componentRef = instance.container.createComponent(component);
-              const comInstance = componentRef.instance as unknown as IESComponent;
+              const comInstance = componentRef.instance as unknown as IESComponent<CaseModel<any, any>>;
               comInstance.outModel = model;
               comInstance.fromDialog = true;
               comInstance.readonly = !model.canStart();

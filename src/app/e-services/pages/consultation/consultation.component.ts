@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {IESComponent} from '@app/interfaces/iescomponent';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {SaveTypes} from '@app/enums/save-types';
@@ -32,7 +32,8 @@ import {NavigationService} from "@app/services/navigation.service";
   templateUrl: './consultation.component.html',
   styleUrls: ['./consultation.component.scss']
 })
-export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
+export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Consultation> {
+  onModelChange$: EventEmitter<Consultation | undefined> = new EventEmitter<Consultation | undefined>();
   accordionView: boolean = false;
   departments: InternalDepartment[] = [];
   organizations: OrgUnit[] = [];
@@ -49,7 +50,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent {
   private outModelChange$: BehaviorSubject<Consultation> = new BehaviorSubject<Consultation>(null as unknown as Consultation);
 
   private changeModel: BehaviorSubject<Consultation | undefined> = new BehaviorSubject<Consultation | undefined>(new Consultation());
-  private modelChange$: Observable<Consultation | undefined> = this.changeModel.asObservable();
+  private modelChange$: Observable<Consultation | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
 
   @Input()
   fromDialog: boolean = false;

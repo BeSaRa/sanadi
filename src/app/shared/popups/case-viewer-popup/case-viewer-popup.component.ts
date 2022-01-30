@@ -28,14 +28,14 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
   container!: ViewContainerRef;
 
   viewInit: Subject<any> = new Subject<any>();
-  _component!: IESComponent;
+  _component!: IESComponent<CaseModel<any, any>>;
   openedFrom!: OpenFrom;
 
   canShowMatrixNotification: boolean = false;
   matrixNotificationType!: 'success' | 'danger';
   matrixNotificationMsg!: string;
 
-  set component(component: IESComponent) {
+  set component(component: IESComponent<CaseModel<any, any>>) {
     this.zone.onStable
       .pipe(take(1))
       .subscribe(() => {
@@ -43,7 +43,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
       });
   }
 
-  get component(): IESComponent {
+  get component(): IESComponent<CaseModel<any, any>> {
     return this._component;
   }
 

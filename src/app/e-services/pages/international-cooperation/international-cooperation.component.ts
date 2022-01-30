@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {SaveTypes} from '@app/enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {FormManager} from '@app/models/form-manager';
@@ -28,7 +28,8 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
   templateUrl: './international-cooperation.component.html',
   styleUrls: ['./international-cooperation.component.scss']
 })
-export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent {
+export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
+  onModelChange$: EventEmitter<InternationalCooperation | undefined> = new EventEmitter<InternationalCooperation | undefined>();
   accordionView: boolean = false;
   countries: Country[] = [];
   departments: InternalDepartment[] = [];
@@ -55,7 +56,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   }
 
   private changeModel: BehaviorSubject<InternationalCooperation | undefined> = new BehaviorSubject<InternationalCooperation | undefined>(new InternationalCooperation());
-  private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable();
+  private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
 
@@ -96,6 +97,10 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
               public employeeService: EmployeeService,
               public lang: LangService) {
   }
+
+  handleReadonly?: any;
+  formValidity$?: Subject<any> | undefined;
+
 
   ngOnInit(): void {
     this.service.ping();

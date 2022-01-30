@@ -3,8 +3,9 @@ import {SaveTypes} from '../enums/save-types';
 import {FormGroup} from '@angular/forms';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {EventEmitter} from "@angular/core";
 
-export interface IESComponent {
+export interface IESComponent<T> {
   outModel: any;
   save: Subject<SaveTypes>;
   form: FormGroup;
@@ -16,4 +17,5 @@ export interface IESComponent {
   accordionView: boolean;
   handleReadonly?: any;
   formValidity$?: Subject<any>
+  onModelChange$: EventEmitter<T | undefined>
 }
