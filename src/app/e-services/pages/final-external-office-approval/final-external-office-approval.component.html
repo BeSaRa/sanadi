@@ -4,7 +4,7 @@
   </div>
   <div class="row">
     <form autocomplete="off" [formGroup]="form" id="form">
-      <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" class="py-4">
+      <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
         <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
              [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
         <tab [name]="tabsData.bankAccounts.name" [hasError]="getTabInvalidStatus('bankAccounts')"
