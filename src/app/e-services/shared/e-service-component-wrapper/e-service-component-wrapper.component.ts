@@ -100,6 +100,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     }
     this.listenToModelChange();
+    this.listenToLangChange();
   }
 
   private prepareFromInbox(): void {
@@ -123,7 +124,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component.operation = OperationTypes.UPDATE;
     this.component.allowEditRecommendations = (this.info.openFrom === OpenFrom.USER_INBOX || (this.info.openFrom === OpenFrom.SEARCH && this.model!.canStart())) && this.employeeService.isInternalUser();
   }
-
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
@@ -444,7 +444,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         this.buildSearchActions();
         this.actions = this.actionShowFilter(this.searchActions);
     }
-    this.actions = this.translateActions(this.actions);
   }
 
   private actionShowFilter(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
@@ -455,13 +454,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     return actions.map((action) => {
       action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys]
       return action
-    })
+    });
   }
 
   actionCallback(action: IMenuItem<CaseModel<any, any>>) {
     action.onClick && this.model && action.onClick(this.model);
   }
-
 
   private releaseAction(item: CaseModel<any, any>) {
     item.release().subscribe(() => {
@@ -579,5 +577,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === 'attachments';
+  }
+
+  private listenToLangChange(): void {
+    this.lang
+      .onLanguageChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.actions = this.translateActions(this.actions);
+      })
   }
 }

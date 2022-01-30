@@ -120,12 +120,13 @@ export class LangService extends BackendGenericService<Localization> {
   changeLanguage(language: Language, silent: boolean = false): void {
     this.changeHTMLDirection(language.direction);
     this.changeStyleHref(language.style);
-    if (!silent) {
-      this.languageChange.next(language);
-    }
 
     this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
     this.prepareCurrentLang();
+
+    if (!silent) {
+      this.languageChange.next(language);
+    }
   }
 
   /**
