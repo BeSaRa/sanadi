@@ -61,24 +61,22 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
   service!: EServiceGenericService<CaseModel<any, any>>
   model?: CaseModel<any, any>
   component!: EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>
-
-
   internal: boolean = this.employeeService.isInternalUser();
+  info: IOpenedInfo | null = null;
 
   async ngOnInit(): Promise<void> {
-    const info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
-
+    this.info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
     const component = DynamicComponentService.getComponent(this.render);
     const componentFactory = this.cfr.resolveComponentFactory(component);
     this.componentRef = componentFactory.create(this.injector);
     this.component = this.componentRef.instance as EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
     this.service = this.component.service;
     this.component.accordionView = this.employeeService.isInternalUser();
-    if (info) {
-      this.component.outModel = info.model;
-      this.model = info.model;
+    if (this.info) {
+      this.component.outModel = this.info.model;
+      this.model = this.info.model;
       this.model.setInboxService(this.inboxService);
-      this.displayRightActions(info.openFrom);
+      this.displayRightActions(this.info.openFrom);
     }
   }
 
@@ -337,8 +335,21 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
   }
 
   private navigateToSamePageThatUserCameFrom(): void {
-    // this.router.navigate([])
-    console.log('NAVIGATE');
+    if (this.info == null) {
+      return;
+    }
+    switch (this.info.openFrom) {
+      case OpenFrom.TEAM_INBOX:
+        this.router.navigate(['/home/team-inbox']).then();
+        break;
+      case OpenFrom.USER_INBOX:
+        this.router.navigate(['/home/user-inbox']).then();
+        break;
+      case OpenFrom.SEARCH:
+        this.router.navigate(['/home/services-search']).then();
+        break
+    }
+
   }
 
   private displayRightActions(openFrom: OpenFrom) {

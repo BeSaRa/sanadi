@@ -70,7 +70,6 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
     this.model = this.data.model;
     this.openedFrom = this.data.openedFrom;
     this.loadedModel = this.data.loadedModel;
-    console.log(this.model , this.loadedModel);
   }
 
   ngOnInit(): void {
