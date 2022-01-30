@@ -415,7 +415,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.toast.success(this.lang.map.task_have_been_released_successfully);
       item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CLAIM);
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
-      this.navigateToSamePageThatUserCameFrom();
+      // this.navigateToSamePageThatUserCameFrom();
     });
   }
 
@@ -424,7 +424,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
       item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CANCEL_CLAIM);
       this.displayRightActions(OpenFrom.USER_INBOX);
-      this.navigateToSamePageThatUserCameFrom();
+      // this.navigateToSamePageThatUserCameFrom();
     })
   }
 
