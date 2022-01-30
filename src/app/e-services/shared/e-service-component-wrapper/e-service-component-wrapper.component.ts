@@ -26,6 +26,7 @@ import {ToastService} from "@app/services/toast.service";
 import {InboxService} from "@app/services/inbox.service";
 import {Subject} from "rxjs";
 import {delay, takeUntil} from "rxjs/operators";
+import {TabComponent} from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -33,6 +34,8 @@ import {delay, takeUntil} from "rxjs/operators";
   styleUrls: ['./e-service-component-wrapper.component.scss']
 })
 export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
+
+
   constructor(private route: ActivatedRoute,
               private injector: Injector,
               private employeeService: EmployeeService,
@@ -46,7 +49,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
     }
   }
-
 
   private userInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
   private teamInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -67,6 +69,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   internal: boolean = this.employeeService.isInternalUser();
   info: IOpenedInfo | null = null;
   destroy$: Subject<any> = new Subject<any>();
+  loadAttachments: boolean = false;
 
   ngOnDestroy(): void {
     this.destroy$.next(null);
@@ -519,5 +522,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     item.close().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
+  }
+
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === 'attachments';
   }
 }
