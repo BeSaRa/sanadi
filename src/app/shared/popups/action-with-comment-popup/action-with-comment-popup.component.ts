@@ -11,7 +11,7 @@ import {ToastService} from '@app/services/toast.service';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {QueryResult} from '@app/models/query-result';
 import {isObservable, Observable, of, Subject} from 'rxjs';
-import {filter, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IKeyValue} from '@app/interfaces/i-key-value';
@@ -26,6 +26,7 @@ import {CustomTerm} from "@app/models/custom-term";
 import {CustomTermService} from "@app/services/custom-term.service";
 import {DialogService} from "@app/services/dialog.service";
 import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
+import {CaseModel} from "@app/models/case-model";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -65,7 +66,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       inboxService: InboxService,
       actionType: WFResponseType,
       taskId: string,
-      task: QueryResult,
+      task: QueryResult | CaseModel<any, any>,
       claimBefore: boolean
     },
     private dialogRef: DialogRef,
@@ -85,30 +86,29 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.action = this.data.actionType;
   }
 
-
   ngOnInit(): void {
-    this.loadUserCustomTerms();
     this.listenToTakeAction();
-    if (this.data.task) {
-      this.data.task.loadLicenseModel()
-        .pipe(
-          withLatestFrom(this.serviceDataService.loadByCaseType(this.data.task.BD_CASE_TYPE))
-        )
-        .subscribe(([caseDetails, serviceData]) => {
-          this.loadedLicense = caseDetails;
-          this.displayCustomForm(caseDetails);
-          this.buildForm();
-          if (this.employeeService.isRiskAndComplianceUser()) {
-            this.displayLicenseForm = false;
-            /*this.licenseFormReadonly = true;
-            this.form.disable();*/
-          }
-          if (this.displayLicenseForm) {
-            this.updateForm(caseDetails, serviceData);
-          }
-        });
-    }
-
+    of(this.data.task.getCaseType())
+      .pipe(filter(caseType => this.specialApproveServices.includes(caseType)))
+      .pipe(tap(val => console.log(val)))
+      .pipe(switchMap(_ => this.data.task.loadLicenseModel()))
+      .pipe(switchMap(license => this.serviceDataService.loadByCaseType(this.data.task.getCaseType()).pipe(map(service => ({
+        service,
+        license
+      })))))
+      .subscribe(({license, service}) => {
+        this.loadedLicense = license;
+        this.displayCustomForm(license);
+        this.buildForm();
+        if (this.employeeService.isRiskAndComplianceUser()) {
+          this.displayLicenseForm = false;
+          /*this.licenseFormReadonly = true;
+          this.form.disable();*/
+        }
+        if (this.displayLicenseForm) {
+          this.updateForm(license, service);
+        }
+      })
     this.setRequiredComment();
   }
 
@@ -125,7 +125,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       caseDetails.requestType !== ServiceRequestTypes.CANCEL;*/
 
     this.displayLicenseForm = this.data.task &&
-      this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
+      this.specialApproveServices.includes(this.data.task.getCaseType()) &&
       caseDetails.requestType !== ServiceRequestTypes.CANCEL &&
       (
         this.action === WFResponseType.FINAL_APPROVE ||
@@ -189,7 +189,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       responseInfo = {
         comment: this.comment.value ? this.comment.value : undefined
       };
-      this.data.task.RESPONSES.includes(WFResponseType.COMPLETE) && (responseInfo['selectedResponse'] = WFResponseType.COMPLETE)
+      this.data.task.getResponses().includes(WFResponseType.COMPLETE) && (responseInfo['selectedResponse'] = WFResponseType.COMPLETE)
     }
 
     return stream$.pipe(
@@ -283,24 +283,23 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN;
   }
 
-  private loadUserCustomTerms() {
-    this.customTermService.loadByCaseType(this.data.task.BD_CASE_TYPE)
+  private loadUserCustomTerms(): Observable<CustomTerm[]> {
+    return this.customTermService.loadByCaseType(this.data.task.getCaseType())
       .pipe(takeUntil(this.destroy$))
-      .subscribe(customTerms => this.customTerms = customTerms);
+      .pipe(tap(customTerms => this.customTerms = customTerms));
   }
 
   openAddCustomTermDialog() {
-    const customTerm = new CustomTerm().clone({caseType: this.data.task.BD_CASE_TYPE});
+    const customTerm = new CustomTerm().clone({caseType: this.data.task.getCaseType()});
     this.dialog.show(CustomTermPopupComponent, {
       model: customTerm
     }).onAfterClose$
-      .subscribe((customTerm) => {
-        this.loadUserCustomTerms();
-      });
+      .pipe(switchMap(_ => this.loadUserCustomTerms()))
+      .subscribe();
   }
 
   onCustomTermsChange(customTerm: CustomTerm) {
-    var appendTerm = this.customTermsField.value ? this.customTermsField.value + ' ' + customTerm.terms : customTerm.terms;
+    let appendTerm = this.customTermsField.value ? this.customTermsField.value + ' ' + customTerm.terms : customTerm.terms;
     this.customTermsField.setValue(appendTerm)
   }
 

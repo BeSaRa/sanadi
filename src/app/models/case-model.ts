@@ -18,6 +18,9 @@ import {FactoryService} from '../services/factory.service';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {ICaseModel} from "@app/interfaces/icase-model";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
+import {InboxService} from "@app/services/inbox.service";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {LicenseApprovalModel} from "@app/models/license-approval-model";
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
@@ -37,6 +40,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
 
   abstract service: S;
   employeeService: EmployeeService;
+  inboxService?: InboxService;
 
   protected constructor() {
     super();
@@ -130,8 +134,6 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   open(actions?: IMenuItem<CaseModel<any, any>>[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
     const componentName = this.service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);
-    const cfr = this.service.getCFR();
-    const factory = cfr.resolveComponentFactory(component);
     let model: CaseModel<any, any>;
     return this.service.getById(this.id)
       .pipe(
@@ -153,7 +155,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
             )
             .subscribe(() => {
               instance.container.clear();
-              const componentRef = instance.container.createComponent(factory);
+              const componentRef = instance.container.createComponent(component);
               const comInstance = componentRef.instance as unknown as IESComponent;
               comInstance.outModel = model;
               comInstance.fromDialog = true;
@@ -187,7 +189,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.caseStatus === this.service.caseStatusEnumMap[this.caseType].RETURNED;
   }
 
-  getCaseType(): any {
+  getCaseType(): number {
     return this.caseType;
   }
 
@@ -203,11 +205,94 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.id;
   }
 
+  getResponses(): string[] {
+    return this.taskDetails?.responses || [];
+  }
+
+  loadLicenseModel(): Observable<LicenseApprovalModel<any, any>> {
+    return this.service.getTask(this.taskDetails.tkiid) as unknown as Observable<LicenseApprovalModel<any, any>>;
+  }
+
   release(): Observable<IBulkResult> {
     return this.service.releaseBulk([this.taskDetails.tkiid]);
   }
 
   claim(): Observable<IBulkResult> {
     return this.service.claimBulk([this.taskDetails.tkiid]);
+  }
+
+  setInboxService(service: InboxService): void {
+    this.inboxService = service;
+  }
+
+  sendToDepartment(): DialogRef {
+    return this.inboxService!.sendToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToMultiDepartments(): DialogRef {
+    return this.inboxService!.sendToMultiDepartments(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToSupervisionAndControlDepartment(): Observable<any> {
+    let taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+    if (taskName.startsWith('ask:')) {
+      taskName = taskName.split('ask:')[1];
+    } else if (taskName.startsWith('askSingle:')) {
+      taskName = taskName.split('askSingle:')[1];
+    }
+    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, this.service);
+  }
+
+  sendToUser(): DialogRef {
+    return this.inboxService!.sendToUser(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToStructureExpert(): DialogRef {
+    return this.inboxService!.sendToStructureExpert(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToDevelopmentExpert(): DialogRef {
+    return this.inboxService!.sendToDevelopmentExpert(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToManager(): DialogRef {
+    return this.inboxService!.sendToManager(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  sendToGeneralManager(): DialogRef {
+    return this.inboxService!.sendToGeneralManager(this.taskDetails.tkiid, this.caseType, false, this);
+  }
+
+  complete(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
+  }
+
+  approve(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
+  }
+
+  finalApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_APPROVE, false, this);
+  }
+
+  askForConsultation(): DialogRef {
+    let actionType = this.getResponses().find(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0);
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, actionType as WFResponseType, false, this);
+  }
+
+  postpone(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.POSTPONE, false, this);
+  }
+
+  return(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN, false, this);
+  }
+
+  reject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.REJECT, false, this);
+  }
+
+  close(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.CLOSE, false, this);
   }
 }

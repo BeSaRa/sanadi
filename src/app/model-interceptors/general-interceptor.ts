@@ -12,6 +12,7 @@ export class GeneralInterceptor {
     delete model.encrypt;
     delete model.itemRoute;
     delete model.itemDetails;
+    delete model.inboxService;
     return model;
   }
 }

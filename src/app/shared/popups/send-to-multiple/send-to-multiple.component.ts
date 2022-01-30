@@ -19,6 +19,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
 import {ExpertsEnum} from '@app/enums/experts-enum';
+import {CaseModel} from "@app/models/case-model";
 
 @Component({
   selector: 'send-to-multiple',
@@ -42,7 +43,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       sendToResponse: WFResponseType,
       service: EServiceGenericService<any>,
       claimBefore: boolean,
-      task: QueryResult,
+      task: QueryResult | CaseModel<any, any>,
       extraInfo: any
     },
     private dialogRef: DialogRef,

@@ -213,7 +213,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   askForConsultation(claimBefore: boolean = false): DialogRef {
-    let response = this.RESPONSES.find(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0);
+    let response = this.getResponses().find(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0);
     return this.actionOnTask(response as WFResponseType, claimBefore);
   }
 
@@ -290,7 +290,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
 
-  getCaseType(): any {
+  getCaseType(): number {
     return this.BD_CASE_TYPE;
   }
 
@@ -336,5 +336,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       caseId: this.PI_PARENT_CASE_ID,
       caseType: this.BD_CASE_TYPE
     });
+  }
+
+  getResponses(): string[] {
+    return this.RESPONSES;
   }
 }

@@ -1,24 +1,25 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {InboxService} from '../../../services/inbox.service';
-import {EmployeeService} from '../../../services/employee.service';
-import {TeamService} from '../../../services/team.service';
-import {InternalUser} from '../../../models/internal-user';
+import {InboxService} from '@app/services/inbox.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {TeamService} from '@app/services/team.service';
+import {InternalUser} from '@app/models/internal-user';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
-import {InternalDepartmentService} from '../../../services/internal-department.service';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {of, Subject} from 'rxjs';
-import {InternalDepartment} from '../../../models/internal-department';
-import {EServiceGenericService} from '../../../generics/e-service-generic-service';
-import {WFResponseType} from '../../../enums/wfresponse-type.enum';
-import {ToastService} from '../../../services/toast.service';
-import {DialogService} from '../../../services/dialog.service';
+import {InternalDepartment} from '@app/models/internal-department';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
 import {DialogRef} from '../../models/dialog-ref';
-import {QueryResult} from '../../../models/query-result';
-import {IWFResponse} from '../../../interfaces/i-w-f-response';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
+import {QueryResult} from '@app/models/query-result';
+import {IWFResponse} from '@app/interfaces/i-w-f-response';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CaseModel} from "@app/models/case-model";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -44,7 +45,7 @@ export class SendToComponent implements OnInit, OnDestroy {
       sendToResponse: WFResponseType,
       service: EServiceGenericService<any>,
       claimBefore: boolean,
-      task: QueryResult
+      task: QueryResult | CaseModel<any, any>
     },
     private dialogRef: DialogRef,
     private toast: ToastService,

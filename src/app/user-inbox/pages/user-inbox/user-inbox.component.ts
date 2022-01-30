@@ -363,7 +363,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
+          return item.getResponses().includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDepartment(item, viewDialogRef);
@@ -375,7 +375,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_multi_departments',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);
@@ -387,7 +387,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_supervision_and_control_department',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);
@@ -399,7 +399,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_USER);
+          return item.getResponses().includes(WFResponseType.TO_USER);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToUser(item, viewDialogRef);
@@ -411,7 +411,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
+          return item.getResponses().includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToStructureExpert(item, viewDialogRef);
@@ -423,7 +423,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
+          return item.getResponses().includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToDevelopmentExpert(item, viewDialogRef);
@@ -435,7 +435,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_MANAGER);
+          return item.getResponses().includes(WFResponseType.TO_MANAGER);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToManager(item, viewDialogRef);
@@ -447,7 +447,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-card-account-details-star',
         label: 'send_to_general_manager',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.TO_GM);
+          return item.getResponses().includes(WFResponseType.TO_GM);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToGeneralManager(item, viewDialogRef);
@@ -460,7 +460,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-check',
         label: 'task_complete',
         show: (item: QueryResult) => {
-          return !item.RESPONSES.length || item.RESPONSES.includes(WFResponseType.COMPLETE);
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionComplete(item, viewDialogRef);
@@ -472,7 +472,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-check-bold',
         label: 'approve_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.APPROVE);
+          return item.getResponses().includes(WFResponseType.APPROVE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionApprove(item, viewDialogRef);
@@ -484,7 +484,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-check-underline',
         label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.FINAL_APPROVE);
+          return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionFinalApprove(item, viewDialogRef);
@@ -496,7 +496,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-help-rhombus-outline',
         label: 'ask_for_consultation_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
+          return item.getResponses().some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionAskForConsultation(item, viewDialogRef);
@@ -508,7 +508,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-calendar-clock',
         label: 'postpone_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.POSTPONE);
+          return item.getResponses().includes(WFResponseType.POSTPONE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionPostpone(item, viewDialogRef);
@@ -520,7 +520,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-undo-variant',
         label: 'return_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.RETURN);
+          return item.getResponses().includes(WFResponseType.RETURN);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReturn(item, viewDialogRef);
@@ -532,7 +532,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.REJECT);
+          return item.getResponses().includes(WFResponseType.REJECT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionReject(item, viewDialogRef);
@@ -544,7 +544,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-close-circle-outline',
         label: 'cancel_task',
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.CLOSE);
+          return item.getResponses().includes(WFResponseType.CLOSE);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);

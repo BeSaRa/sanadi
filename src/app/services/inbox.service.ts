@@ -38,6 +38,7 @@ import {InternalProjectLicenseService} from '@app/services/internal-project-lice
 import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
 import {ProjectModelService} from '@app/services/project-model.service';
 import {Memoize} from "typescript-memoize";
+import {CaseModel} from "@app/models/case-model";
 
 @Injectable({
   providedIn: 'root'
@@ -185,7 +186,7 @@ export class InboxService {
                            sendToResponse: WFResponseType,
                            service: EServiceGenericService<any>,
                            claimBefore: boolean = false,
-                           task?: QueryResult): DialogRef {
+                           task?: QueryResult | CaseModel<any, any>): DialogRef {
 
     return this.dialog.show(SendToComponent,
       {
@@ -202,7 +203,7 @@ export class InboxService {
                                    sendToResponse: WFResponseType,
                                    service: EServiceGenericService<any>,
                                    claimBefore: boolean = false,
-                                   task?: QueryResult,
+                                   task?: QueryResult | CaseModel<any, any>,
                                    extraInfo?: any): DialogRef {
 
     return this.dialog.show(SendToMultipleComponent,
@@ -217,37 +218,37 @@ export class InboxService {
       });
   }
 
-  sendToUser(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToUser(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_USER, service, claimBefore, task);
   }
 
-  sendToStructureExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToStructureExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_CONSTRUCTION_EXPERT, service, claimBefore, task);
   }
 
-  sendToDevelopmentExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToDevelopmentExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_DEVELOPMENT_EXPERT, service, claimBefore, task);
   }
 
-  sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
 
-  sendToMultiDepartments(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToMultiDepartments(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS, service, claimBefore, task, null);
   }
 
-  sendToManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_MANAGER, service, claimBefore, task);
   }
 
-  sendToGeneralManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  sendToGeneralManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_GM, service, claimBefore, task);
   }
@@ -262,7 +263,7 @@ export class InboxService {
     return this.cfr;
   }
 
-  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult): DialogRef {
+  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.dialog.show(ActionWithCommentPopupComponent, {
       service,

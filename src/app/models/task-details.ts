@@ -40,4 +40,8 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   isClaimed(): boolean {
     return this.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
   }
+
+  getCaseId(): string {
+    return this.parentCaseId;
+  }
 }

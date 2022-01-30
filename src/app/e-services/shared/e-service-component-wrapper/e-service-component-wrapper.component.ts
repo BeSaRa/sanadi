@@ -23,6 +23,7 @@ import {WFActions} from "@app/enums/wfactions.enum";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ToastService} from "@app/services/toast.service";
+import {InboxService} from "@app/services/inbox.service";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -36,6 +37,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
               public lang: LangService,
               private router: Router,
               private toast: ToastService,
+              private inboxService: InboxService,
               private cfr: ComponentFactoryResolver) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
@@ -75,6 +77,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
     if (info) {
       this.component.outModel = info.model;
       this.model = info.model;
+      this.model.setInboxService(this.inboxService);
       this.displayRightActions(info.openFrom);
     }
   }
@@ -145,10 +148,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
+          return item.getResponses().includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToDepartment(item, viewDialogRef);
+          this.sendToDepartmentAction(item);
         }
       },
       // send to multi department
@@ -157,10 +160,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-send-circle',
         label: 'send_to_multi_departments',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToMultiDepartments(item, viewDialogRef);
+          this.sendToMultiDepartmentsAction(item);
         }
       },
       // send to Supervision and control department
@@ -169,10 +172,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-send-circle',
         label: 'send_to_supervision_and_control_department',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);
+          this.sendToSupervisionAndControlDepartmentAction(item);
         }
       },
       // send to user
@@ -181,10 +184,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_USER);
+          return item.getResponses().includes(WFResponseType.TO_USER);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToUser(item, viewDialogRef);
+          this.sendToUserAction(item);
         }
       },
       // send to structural expert
@@ -193,10 +196,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
+          return item.getResponses().includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToStructureExpert(item, viewDialogRef);
+          this.sendToStructureExpertAction(item);
         }
       },
       // send to developmental expert
@@ -205,10 +208,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
+          return item.getResponses().includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToDevelopmentExpert(item, viewDialogRef);
+          this.sendToDevelopmentExpertAction(item);
         }
       },
       // send to Manager
@@ -217,10 +220,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_MANAGER);
+          return item.getResponses().includes(WFResponseType.TO_MANAGER);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToManager(item, viewDialogRef);
+          this.sendToManagerAction(item);
         }
       },
       // send to general Manager
@@ -229,10 +232,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-card-account-details-star',
         label: 'send_to_general_manager',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.TO_GM);
+          return item.getResponses().includes(WFResponseType.TO_GM);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionSendToGeneralManager(item, viewDialogRef);
+          this.sendToGeneralManagerAction(item);
         }
       },
       {
@@ -240,10 +243,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-book-check',
         label: 'task_complete',
         show: (item: CaseModel<any, any>) => {
-          return !item.taskDetails.responses.length || item.taskDetails.responses.includes(WFResponseType.COMPLETE);
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionComplete(item, viewDialogRef);
+          this.completeAction(item);
         }
       },
       // approve
@@ -252,10 +255,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-check-bold',
         label: 'approve_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.APPROVE);
+          return item.getResponses().includes(WFResponseType.APPROVE);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionApprove(item, viewDialogRef);
+          this.approveAction(item);
         }
       },
       // final approve
@@ -264,10 +267,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-check-underline',
         label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.FINAL_APPROVE);
+          return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionFinalApprove(item, viewDialogRef);
+          this.finalApproveAction(item);
         }
       },
       // ask for consultation
@@ -276,10 +279,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-help-rhombus-outline',
         label: 'ask_for_consultation_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
+          return item.getResponses().some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionAskForConsultation(item, viewDialogRef);
+          this.askForConsultationAction(item);
         }
       },
       // postpone
@@ -288,10 +291,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-calendar-clock',
         label: 'postpone_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.POSTPONE);
+          return item.getResponses().includes(WFResponseType.POSTPONE);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionPostpone(item, viewDialogRef);
+          this.postponeAction(item);
         }
       },
       // return
@@ -300,10 +303,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-undo-variant',
         label: 'return_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.RETURN);
+          return item.getResponses().includes(WFResponseType.RETURN);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionReturn(item, viewDialogRef);
+          this.returnAction(item);
         }
       },
       // reject
@@ -312,10 +315,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.REJECT);
+          return item.getResponses().includes(WFResponseType.REJECT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionReject(item, viewDialogRef);
+          this.rejectAction(item);
         }
       },
       //close/cancel task
@@ -324,13 +327,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
         icon: 'mdi-close-circle-outline',
         label: 'cancel_task',
         show: (item: CaseModel<any, any>) => {
-          return item.taskDetails.responses.includes(WFResponseType.CLOSE);
+          return item.getResponses().includes(WFResponseType.CLOSE);
         },
         onClick: (item: CaseModel<any, any>) => {
-          // this.actionClose(item, viewDialogRef);
+          this.closeAction(item);
         }
       }
     ]
+  }
+
+  private navigateToSamePageThatUserCameFrom(): void {
+    // this.router.navigate([])
+    console.log('NAVIGATE');
   }
 
   private displayRightActions(openFrom: OpenFrom) {
@@ -373,6 +381,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
       this.toast.success(this.lang.map.task_have_been_released_successfully);
       item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CLAIM);
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
+      this.navigateToSamePageThatUserCameFrom();
     });
   }
 
@@ -381,6 +390,103 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit 
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
       item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CANCEL_CLAIM);
       this.displayRightActions(OpenFrom.USER_INBOX);
+      this.navigateToSamePageThatUserCameFrom();
     })
+  }
+
+  private sendToDepartmentAction(item: CaseModel<any, any>) {
+    item.sendToDepartment().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    })
+  }
+
+  private sendToMultiDepartmentsAction(item: CaseModel<any, any>) {
+    item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    })
+  }
+
+  private sendToSupervisionAndControlDepartmentAction(item: CaseModel<any, any>) {
+    item.sendToSupervisionAndControlDepartment().subscribe(() => {
+      this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToUserAction(item: CaseModel<any, any>) {
+    item.sendToUser().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToStructureExpertAction(item: CaseModel<any, any>) {
+    item.sendToStructureExpert().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    })
+  }
+
+  private sendToDevelopmentExpertAction(item: CaseModel<any, any>): void {
+    item.sendToDevelopmentExpert().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToManagerAction(item: CaseModel<any, any>) {
+    item.sendToManager().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToGeneralManagerAction(item: CaseModel<any, any>) {
+    item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private completeAction(item: CaseModel<any, any>) {
+    item.complete().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private approveAction(item: CaseModel<any, any>) {
+    item.approve().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private finalApproveAction(item: CaseModel<any, any>) {
+    item.finalApprove().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private askForConsultationAction(item: CaseModel<any, any>) {
+    item.askForConsultation().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private postponeAction(item: CaseModel<any, any>) {
+    item.postpone().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private returnAction(item: CaseModel<any, any>) {
+    item.return().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private rejectAction(item: CaseModel<any, any>) {
+    item.reject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private closeAction(item: CaseModel<any, any>) {
+    item.close().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
   }
 }
