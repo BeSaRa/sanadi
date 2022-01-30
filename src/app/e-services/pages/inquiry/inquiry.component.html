@@ -12,7 +12,7 @@
          [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
     <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
          [template]="recommendationsTemplate" [title]="lang.map.recommendations"
-         *ngIf="fromDialog && employeeService.isInternalUser()" [disabled]="!model?.id"></tab>
+         *ngIf="(fromDialog || accordionView) && employeeService.isInternalUser()" [disabled]="!model?.id"></tab>
   </tabs-list>
   <ng-template #basicInfoTabTemplate>
     <fieldset [disabled]="readonly">
