@@ -3,7 +3,8 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef,
-  Injector, OnDestroy,
+  Injector,
+  OnDestroy,
   OnInit,
   ViewChild,
   ViewContainerRef
@@ -27,7 +28,6 @@ import {InboxService} from "@app/services/inbox.service";
 import {Subject} from "rxjs";
 import {delay, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
-import {DialogRef} from "@app/shared/models/dialog-ref";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -142,7 +142,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-rocket-launch-outline',
         label: 'launch',
         show: (item: CaseModel<any, any>) => item.canStart(),
-        onClick: (item: CaseModel<any, any>, dialogRef: DialogRef) => {
+        onClick: (item: CaseModel<any, any>) => {
           this.launchAction(item);
         }
       }
