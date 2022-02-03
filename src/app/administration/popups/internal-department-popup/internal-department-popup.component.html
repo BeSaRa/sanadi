@@ -34,7 +34,9 @@
                  for="teamId">{{lang.map.lbl_team}}</label>
           <ng-select validationClasses="teamId" appendTo="body" [clearable]="true" id="teamId"
                      placeholder="{{lang.map.select}}"
-                     formControlName="teamId">
+                     formControlName="teamId"
+                     [readonly]="true"
+          [disabled]="true">
             <ng-option [value]="team.id" *ngFor="let team of teams">{{team.getName()}}</ng-option>
           </ng-select>
 <!--          <label id="teamId" class="form-control input-disabled">{{teamInfo.getName()}}</label>-->
