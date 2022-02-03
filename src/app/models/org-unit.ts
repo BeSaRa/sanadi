@@ -42,6 +42,8 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   city: number | undefined;
   licensingAuthority!: number;
   workField!: number;
+  orgFieldId!: number;
+  promoteExtProj: boolean = false;
   arabicBrief: string | undefined;
   enBrief: string | undefined;
   arabicBoardMembers: string[] | undefined = [];

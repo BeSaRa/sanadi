@@ -20,6 +20,8 @@ import {DialogService} from '@app/services/dialog.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {OrgUnitField} from '@app/models/org-unit-field';
+import {OrgUnitFieldService} from '@app/services/org-unit-field.service';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -41,6 +43,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   workFieldList: Lookup[];
   saveVisible = true;
   validateFieldsVisible = true;
+  orgUnitFieldList: OrgUnitField[] = [];
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -67,7 +70,8 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               public langService: LangService,
               private dialogService: DialogService,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              private exceptionHandlerService: ExceptionHandlerService,
+              private orgUnitFieldService: OrgUnitFieldService) {
     this.operation = data.operation;
     this.model = data.model;
     this.orgUnitsList = data.orgUnitsList;
@@ -79,10 +83,16 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadOrgUnitFields();
     this.buildForm();
     this._saveModel();
   }
 
+  loadOrgUnitFields() {
+    this.orgUnitFieldService.loadComposite().subscribe(list => {
+      this.orgUnitFieldList = list;
+    });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -138,7 +148,9 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         registryCreator: [this.model.registryCreator],
         registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
         licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
-        workField: [this.model.workField, CustomValidators.required]
+        workField: [this.model.workField, CustomValidators.required],
+        orgFieldId: [this.model.orgFieldId, CustomValidators.required],
+        promoteExtProj: [this.model.promoteExtProj]
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',

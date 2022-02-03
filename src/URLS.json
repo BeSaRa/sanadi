@@ -1,4 +1,5 @@
 {
+  "ORG_UNIT_FIELD": "admin/org-unit-field",
   "CHECKLIST": "admin/checklist",
   "SERVICE_DATA_STEP": "admin/service-steps",
   "SURVEY": "/training/training-survey",

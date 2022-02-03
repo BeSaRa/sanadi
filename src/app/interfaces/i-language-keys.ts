@@ -4,6 +4,8 @@ export interface ILanguageKeys {
   selected_status: string;
   internal_login_text: string;
   external_login_text: string;
+  organization_field: string;
+  promotion_of_external_projects: string;
   lbl_review_limit: string;
   edit_step: string;
   lbl_sla: string;

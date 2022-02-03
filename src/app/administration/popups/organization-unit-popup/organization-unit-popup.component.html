@@ -228,6 +228,22 @@
             <app-field-error-message [control]="fm.getFormField('basic.workField')"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label for="licensingAuthority" asteriskIfRequired="orgFieldId"
+                   class="form-label">{{langService.map.organization_field}}</label>
+            <ng-select [selectOnTab]="true" labelForId="orgFieldId" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="orgFieldId"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="orgFieldId"
+                       [ngClass]="fm.getStatusClass('basic.orgFieldId')">
+              <ng-option *ngFor="let option of orgUnitFieldList" [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message [control]="fm.getFormField('basic.orgFieldId')"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="licensingAuthority" asteriskIfRequired="licensingAuthority"
                    class="form-label">{{langService.map.licensing_authority}}</label>
             <ng-select [selectOnTab]="true" labelForId="licensingAuthority" [clearable]="false"
@@ -241,6 +257,13 @@
               </ng-option>
             </ng-select>
             <app-field-error-message [control]="fm.getFormField('basic.licensingAuthority')"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 mt-5 form-check form-switch">
+            <div class="ms-3">
+              <input class="form-check-input" type="checkbox" id="promoteExtProj" formControlName="promoteExtProj">
+              <label class="form-check-label"
+                     for="promoteExtProj">{{langService.map.promotion_of_external_projects}}</label>
+            </div>
           </div>
         </div>
       </div>
