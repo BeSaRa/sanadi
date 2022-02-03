@@ -201,11 +201,15 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
       exhaustMap(() => {
         const orgUnit = extender<OrgUnit>(OrgUnit,
           {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.advanced});
-        return orgUnit.save().pipe(
-          catchError((err) => {
-            this.exceptionHandlerService.handle(err);
-            return of(null);
-          }));
+        if(!this.isDuplicatedOrganizationNames(orgUnit)) {
+          return orgUnit.save().pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            }));
+        } else {
+          return of(null);
+        }
       })
     ).subscribe((orgUnit) => {
       if (!orgUnit) {
@@ -238,6 +242,34 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
           this.toast.success(message.change({x: orgUnit.getName()}));
         });
     });
+  }
+
+  isDuplicatedOrganizationNames(orgUnit: OrgUnit) {
+    let isDuplicatedArabicName = false;
+    let isDuplicatedEnglishName = false;
+    if(this.isDuplicatedOrganizationArabicName(orgUnit)) {
+      this.toast.error(this.langService.map.arabic_name_is_duplicated);
+      isDuplicatedArabicName = true;
+    }
+
+    if(this.isDuplicatedOrganizationEnglishName(orgUnit)) {
+      this.toast.error(this.langService.map.english_name_is_duplicated);
+      isDuplicatedEnglishName = true;
+    }
+
+    return isDuplicatedArabicName || isDuplicatedEnglishName;
+  }
+
+  isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
+    return this.orgUnitsList
+      .filter(org => org.id != orgUnit.id)
+      .some(org => org.arName == orgUnit.arName);
+  }
+
+  isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
+    return this.orgUnitsList
+      .filter(org => org.id != orgUnit.id)
+      .some(org => org.enName == orgUnit.enName);
   }
 
   openFileBrowser($event: MouseEvent): void {
