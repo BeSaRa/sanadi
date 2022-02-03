@@ -41,6 +41,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     userName: 'domainName',
     arName: 'arName',
     enName: 'enName',
+    empNum: 'empNum',
     status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
     defaultDepartment: text => !this.defaultDepartmentInfo ? false : this.defaultDepartmentInfo.getName().toLowerCase().indexOf(text) !== -1
   };
