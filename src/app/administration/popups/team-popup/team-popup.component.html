@@ -62,7 +62,8 @@
                    placeholder="{{langService.map.select}}" id="parentDeptId"
                    [notFoundText]="langService.map.msg_not_found"
                    formControlName="parentDeptId"
-                   [ngClass]="fm.getStatusClass('parentDeptId')">
+                   [ngClass]="fm.getStatusClass('parentDeptId')"
+        [readonly]="true">
           <ng-option value="">{{langService.map.lbl_none}}</ng-option>
           <ng-option *ngFor="let option of parentDepartmentsList" [value]="option.id">
             {{option.getName()}}
