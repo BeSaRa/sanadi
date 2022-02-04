@@ -105,7 +105,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.countryService.loadCountries();
+        return this.countryService.loadCountriesComposite();
       })
     ).subscribe((countries: Country[]) => {
       this.countries = countries;

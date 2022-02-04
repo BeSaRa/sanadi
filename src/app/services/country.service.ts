@@ -63,6 +63,20 @@ export class CountryService extends BackendGenericService<Country> {
       )
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadCountriesComposite(): Observable<Country[]> {
+    return this.http.get<Country[]>(this._getServiceURL() + '/composite');
+  }
+
+  loadCountriesComposite(): Observable<Country[]> {
+    return this._loadCountriesComposite()
+      .pipe(
+        tap((result: Country[]) => {
+          this.listCountries = result;
+        })
+      )
+  }
+
   @Generator(undefined, false)
   loadCountryById(id: number): Observable<Country> {
     return this.http.get<Country>(this._getServiceURL() + '/' + id + '/composite');
