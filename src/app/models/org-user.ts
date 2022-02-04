@@ -42,6 +42,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     arName: 'arName',
     enName: 'enName',
     empNum: 'empNum',
+    domainName: 'domainName',
     organization: text => !this.orgUnitInfo ? false : this.orgUnitInfo.getName().toLowerCase().indexOf(text) !== -1,
     branch: text => !this.orgBranchInfo ? false : this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
     status: text => !this.getOrgUserStatusLookup() ? false : this.getOrgUserStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1,
