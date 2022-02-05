@@ -63,7 +63,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
             operation: OperationTypes.CREATE,
             customRoleList: result.customRoles,
             orgUnitList: result.orgUnits,
-            orgUserPermissions: result.orgUserPermissions
+            orgUserPermissions: result.orgUserPermissions,
+            list: this.list
           }));
         })
       );
@@ -79,7 +80,8 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
               operation: OperationTypes.UPDATE,
               customRoleList: result.customRoles,
               orgUnitList: result.orgUnits,
-              orgUserPermissions: result.orgUserPermissions
+              orgUserPermissions: result.orgUserPermissions,
+              list: this.list
             }));
           })
         );

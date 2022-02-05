@@ -4,6 +4,8 @@ export interface ILanguageKeys {
   selected_status: string;
   internal_login_text: string;
   external_login_text: string;
+  email_is_duplicated: string;
+  phone_number_is_duplicated: string;
   arabic_name_is_duplicated: string;
   english_name_is_duplicated: string;
   organization_field: string;

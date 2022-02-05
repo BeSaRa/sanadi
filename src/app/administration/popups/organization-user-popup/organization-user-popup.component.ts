@@ -28,7 +28,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
-import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -38,6 +38,7 @@ import {TabComponent} from "@app/shared/components/tab/tab.component";
 export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
+  list: OrgUser[] = [];
   form!: FormGroup;
   model: OrgUser;
   operation: OperationTypes;
@@ -91,6 +92,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.customRoleList = data.customRoleList;
     this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
+    this.list = data.list;
     this.userTypeList = lookupService.getByCategory(LookupCategories.ORG_USER_TYPE);
     this.jobTitleList = lookupService.getByCategory(LookupCategories.ORG_USER_JOB_TITLE);
     this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
@@ -169,27 +171,31 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       exhaustMap(() => {
         const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
-        return orgUser.save()
-          .pipe(
-            catchError((err) => {
-              this.exceptionHandlerService.handle(err);
-              return of(null);
-            }),
-            switchMap((savedUser: OrgUser | null) => {
-              if (!savedUser) {
-                return of(savedUser);
-              }
-              return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
-                .pipe(
-                  catchError((err) => {
-                    this.exceptionHandlerService.handle(err);
-                    return of(null);
-                  }),
-                  map(() => {
-                    return savedUser;
-                  })
-                );
-            }));
+        if(!this.isDuplicatedUserMobileNumberOrEmail(orgUser)) {
+          return orgUser.save()
+            .pipe(
+              catchError((err) => {
+                this.exceptionHandlerService.handle(err);
+                return of(null);
+              }),
+              switchMap((savedUser: OrgUser | null) => {
+                if (!savedUser) {
+                  return of(savedUser);
+                }
+                return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
+                  .pipe(
+                    catchError((err) => {
+                      this.exceptionHandlerService.handle(err);
+                      return of(null);
+                    }),
+                    map(() => {
+                      return savedUser;
+                    })
+                  );
+              }));
+        } else {
+          return of(null);
+        }
       }),
       switchMap((user) => {
         if (!user) {
@@ -210,6 +216,34 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       this.model = user;
       this.operation = OperationTypes.UPDATE;
     });
+  }
+
+  isDuplicatedUserMobileNumberOrEmail(orgUser: OrgUser) {
+    let isDuplicatedMobileNumber = false;
+    let isDuplicatedEmail = false;
+    if(this.isDuplicatedUserMobileNumber(orgUser)) {
+      this.toast.error(this.langService.map.phone_number_is_duplicated);
+      isDuplicatedMobileNumber = true;
+    }
+
+    if(this.isDuplicatedUserEmail(orgUser)) {
+      this.toast.error(this.langService.map.email_is_duplicated);
+      isDuplicatedEmail = true;
+    }
+
+    return isDuplicatedMobileNumber || isDuplicatedEmail;
+  }
+
+  isDuplicatedUserMobileNumber(orgUser: OrgUser) {
+    return this.list
+      .filter(user => user.id != orgUser.id)
+      .some(user => user.phoneNumber == orgUser.phoneNumber);
+  }
+
+  isDuplicatedUserEmail(orgUser: OrgUser) {
+    return this.list
+      .filter(user => user.id != orgUser.id)
+      .some(user => user.email == orgUser.email);
   }
 
   onOrgUnitChange(): void {

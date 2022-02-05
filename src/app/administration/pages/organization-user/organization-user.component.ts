@@ -203,6 +203,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
         return this.orgUserService.loadComposite();
       })
     ).subscribe((orgUsers) => {
+      this.orgUserService.list = orgUsers;
       this.orgUsers = orgUsers;
       this.orgUsersClone = orgUsers;
       this.selectedRecords = [];
