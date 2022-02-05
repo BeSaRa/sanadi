@@ -64,6 +64,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   fileExtensionsEnum = FileExtensionsEnum;
   signatureFile?: File;
   loadedSignature?: BlobModel;
+  list: InternalUser[] = [];
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -90,6 +91,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     super();
     this.model = this.data.model;
     this.operation = this.data.operation;
+    this.list = this.data.list;
     this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
   }
 
@@ -266,11 +268,67 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       this.toast.info(this.lang.map.msg_following_tabs_valid);
       return false;
     }
-    return form.valid;
+
+    let user = (new InternalUser()).clone({...model, ...form.get('user')?.value});
+    if(!this.isDuplicatedUser(user)) {
+      return form.valid;
+    }
+    return false;
   }
 
   prepareModel(model: InternalUser, form: FormGroup): InternalUser | Observable<InternalUser> {
     return (new InternalUser()).clone({...model, ...form.get('user')?.value});
+  }
+
+  isDuplicatedUser(internalUser: InternalUser) {
+    let isDuplicatedUserLoginName = false;
+    let isDuplicatedUserEmpNumber = false;
+    let isDuplicatedUserPhoneNumber = false;
+    let isDuplicatedUserEmail = false;
+    if(this.isDuplicatedUserLoginName(internalUser)) {
+      this.toast.error(this.lang.map.login_name_is_duplicated);
+      isDuplicatedUserLoginName = true;
+    }
+
+    if(this.isDuplicatedUserEmpNumber(internalUser)) {
+      this.toast.error(this.lang.map.employee_code_is_duplicated);
+      isDuplicatedUserEmpNumber = true;
+    }
+
+    if(this.isDuplicatedUserPhoneNumber(internalUser)) {
+      this.toast.error(this.lang.map.phone_number_is_duplicated);
+      isDuplicatedUserPhoneNumber = true;
+    }
+
+    if(this.isDuplicatedUserEmail(internalUser)) {
+      this.toast.error(this.lang.map.email_is_duplicated);
+      isDuplicatedUserEmail = true;
+    }
+    return isDuplicatedUserLoginName || isDuplicatedUserEmpNumber || isDuplicatedUserPhoneNumber || isDuplicatedUserEmail;
+  }
+
+  isDuplicatedUserLoginName(internalUser: InternalUser) {
+    return this.list
+      .filter(user => user.id != internalUser.id)
+      .some(user => user.domainName == internalUser.domainName);
+  }
+
+  isDuplicatedUserEmpNumber(internalUser: InternalUser) {
+    return this.list
+      .filter(user => user.id != internalUser.id)
+      .some(user => user.empNum == internalUser.empNum);
+  }
+
+  isDuplicatedUserPhoneNumber(internalUser: InternalUser) {
+    return this.list
+      .filter(user => user.id != internalUser.id)
+      .some(user => user.phoneNumber == internalUser.phoneNumber);
+  }
+
+  isDuplicatedUserEmail(internalUser: InternalUser) {
+    return this.list
+      .filter(user => user.id != internalUser.id)
+      .some(user => user.email == internalUser.email);
   }
 
   saveFail(error: Error): void {

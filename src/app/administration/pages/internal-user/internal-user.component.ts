@@ -1,17 +1,18 @@
 import {Component} from '@angular/core';
-import {AdminGenericComponent} from "@app/generics/admin-generic-component";
-import {InternalUser} from "@app/models/internal-user";
-import {LangService} from "@app/services/lang.service";
-import {InternalUserService} from "@app/services/internal-user.service";
-import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
-import {Subject} from "rxjs";
-import {exhaustMap, filter, map, mapTo, takeUntil, tap} from "rxjs/operators";
-import {DialogService} from "@app/services/dialog.service";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ToastService} from "@app/services/toast.service";
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {InternalUser} from '@app/models/internal-user';
+import {LangService} from '@app/services/lang.service';
+import {InternalUserService} from '@app/services/internal-user.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {Subject} from 'rxjs';
+import {exhaustMap, filter, map, mapTo, takeUntil, tap} from 'rxjs/operators';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'internal-user',
@@ -85,7 +86,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
         value2 = !CommonUtils.isValidValue(b) ? '' : b.domainName.toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   listenToDelete() {
     this.delete$
@@ -94,7 +95,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
         return this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.getName()}))
           .onAfterClose$
           .pipe(map((click: UserClickOn) => {
-            return {model, click}
+            return {model, click};
           }));
       }))
       .pipe(filter<{ model: InternalUser, click: UserClickOn }>(({click}) => click === UserClickOn.YES))
@@ -117,5 +118,24 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       this.reload$.next(null);
       sub.unsubscribe();
     });
+  }
+
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.models)))
+      .subscribe(() => this.reload$.next(null));
+  }
+
+  edit(internalUser: InternalUser, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.service.openUpdateDialog(internalUser.id, this.models)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((dialog: DialogRef) => {
+        return dialog.onAfterClose$;
+      }))
+      .subscribe((_) => {
+        this.reload$.next(null);
+      });
   }
 }

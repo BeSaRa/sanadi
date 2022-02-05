@@ -10,10 +10,13 @@ import {InternalUserPopupComponent} from "@app/administration/popups/internal-us
 import {FactoryService} from "@app/services/factory.service";
 import {Observable, of} from "rxjs";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {BlobModel} from '@app/models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -96,5 +99,25 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
     } else {
       return this._addSignature(generalUserId, file);
     }
+  }
+
+  openCreateDialog(list: InternalUser[]): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<InternalUser>>(InternalUserPopupComponent, {
+      model: new InternalUser(),
+      operation: OperationTypes.CREATE,
+      list: list
+    }));
+  }
+
+  openUpdateDialog(modelId: number, list: InternalUser[]): Observable<DialogRef> {
+    return this.getById(modelId).pipe(
+        switchMap((internalUser: InternalUser) => {
+          return of(this.dialog.show<IDialogData<InternalUser>>(InternalUserPopupComponent, {
+            model: internalUser,
+            operation: OperationTypes.UPDATE,
+            list: list
+          }));
+        })
+    );
   }
 }
