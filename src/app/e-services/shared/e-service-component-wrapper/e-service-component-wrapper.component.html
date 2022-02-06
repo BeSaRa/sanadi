@@ -17,7 +17,7 @@
       </tab>
       <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
       <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">{{lang.map.logs}}</tab>
-      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>
+<!--      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>-->
       <tab [title]="lang.map.supporting_information" name="team">{{lang.map.supporting_information}}</tab>
     </tabs-list>
     <ng-template #attachment>
@@ -50,7 +50,7 @@
                 [categorizeLogs]="true" [caseId]="component?.model?.getCaseId()"
                 [service]="service.actionLogService"></log-viewer>
   </ng-template>
-  <ng-template #outputs>
+<!--  <ng-template #outputs>-->
 
-  </ng-template>
+<!--  </ng-template>-->
 </div>
