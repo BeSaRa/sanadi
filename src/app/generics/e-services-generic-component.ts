@@ -228,4 +228,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _validateForms(): FormGroup[] {
     return [this.form]
   }
+
+  launch(): void {
+    this.launch$.next(null);
+  }
 }

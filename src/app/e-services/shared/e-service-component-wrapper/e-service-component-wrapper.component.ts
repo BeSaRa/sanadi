@@ -26,9 +26,10 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ToastService} from "@app/services/toast.service";
 import {InboxService} from "@app/services/inbox.service";
 import {Subject} from "rxjs";
-import {delay, takeUntil} from "rxjs/operators";
+import {skip, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {OperationTypes} from "@app/enums/operation-types.enum";
+import {SaveTypes} from "@app/enums/save-types";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -55,6 +56,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private userInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
   private teamInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
   private searchActions: IMenuItem<CaseModel<any, any>>[] = [];
+  private addActions: IMenuItem<CaseModel<any, any>>[] = [];
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>
@@ -73,42 +75,68 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   destroy$: Subject<any> = new Subject<any>();
   loadAttachments: boolean = false;
 
+  saveTypes: typeof SaveTypes = SaveTypes;
+
+  excludedDraftTypes: number[] = [
+    CaseTypes.INQUIRY,
+    CaseTypes.CONSULTATION,
+    CaseTypes.INTERNATIONAL_COOPERATION,
+  ]
+
   ngOnDestroy(): void {
     this.destroy$.next(null);
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
     const component = DynamicComponentService.getComponent(this.render);
     const componentFactory = this.cfr.resolveComponentFactory(component);
     this.componentRef = componentFactory.create(this.injector);
     this.component = this.componentRef.instance as EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
+
     this.service = this.component.service;
     this.component.accordionView = this.employeeService.isInternalUser();
+
     if (this.info) {
       this.component.outModel = this.info.model;
       this.model = this.info.model;
       this.model.setInboxService(this.inboxService);
-      this.displayRightActions(this.info.openFrom);
       this.component.openFrom = this.info.openFrom;
+      this.component.operation = OperationTypes.UPDATE;
       if (this.info.openFrom === OpenFrom.SEARCH) {
         this.prepareFromSearch();
       } else {
         this.prepareFromInbox();
       }
+    } else {
+      this.model = new (this.service._getModel());
     }
+    // listen to model change
     this.listenToModelChange();
+    // listen to change language
     this.listenToLangChange();
+  }
+
+
+  ngAfterViewInit(): void {
+    Promise.resolve().then(() => {
+      this.internal ? this.internalContainer.clear() : this.externalContainer.clear();
+      this.internal ? this.internalContainer.insert(this.componentRef.hostView) : this.externalContainer.insert(this.componentRef.hostView);
+      this.displayRightActions(this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
+    });
   }
 
   private prepareFromInbox(): void {
     if (!this.info) {
       return;
     }
+
+    if (!this.model) {
+      return;
+    }
     this.component.readonly = true;
-    this.component.operation = OperationTypes.UPDATE;
     this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info.openFrom);
   }
 
@@ -117,67 +145,55 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       return;
     }
 
-    if (this.model) {
+    if (!this.model) {
       return;
     }
     this.component.readonly = !this.model!.canStart();
-    this.component.operation = OperationTypes.UPDATE;
     this.component.allowEditRecommendations = (this.info.openFrom === OpenFrom.USER_INBOX || (this.info.openFrom === OpenFrom.SEARCH && this.model!.canStart())) && this.employeeService.isInternalUser();
-  }
-
-  isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
-    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
-  }
-
-  listenToModelChange(): void {
-    this.component.onModelChange$
-      .pipe(delay(0))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((model) => {
-        this.model = model;
-      })
-  }
-
-  ngAfterViewInit(): void {
-    Promise.resolve().then(() => {
-      this.internal ? this.internalContainer.clear() : this.externalContainer.clear();
-      this.internal ? this.internalContainer.insert(this.componentRef.hostView) : this.externalContainer.insert(this.componentRef.hostView)
-    });
-  }
-
-  isAttachmentReadonly(): boolean {
-    if (!this.component.model?.id) {
-      return false;
-    }
-    let isAllowed = true;
-    if (this.component.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.component.model.taskDetails.isClaimed();
-    }
-    if (isAllowed) {
-      let caseStatus = this.component.model.getCaseStatus(),
-        caseStatusEnum = this.component.service.caseStatusEnumMap[this.component.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
-    }
-
-    return !isAllowed;
-  }
-
-  print() {
-    this.model?.exportModel().subscribe((blob) => window.open(blob.url))
   }
 
   private buildSearchActions(): void {
     this.searchActions = [
       {
         type: 'action',
-        icon: 'mdi-rocket-launch-outline',
+        // icon: 'mdi-rocket-launch-outline',
         label: 'launch',
         show: (item: CaseModel<any, any>) => item.canStart(),
         onClick: (item: CaseModel<any, any>) => {
           this.launchAction(item);
+        }
+      }
+    ];
+  }
+
+  private buildAddAction(): void {
+    this.addActions = [
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'btn_save',
+        disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.FINAL);
+        }
+      },
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'launch',
+        disabled: (item) => !item?.canStart(),
+        onClick: () => {
+          this.component.launch();
+        }
+      },
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'save_as_draft',
+        show: () => (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType())),
+        disabled: item => item?.canDraft(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.DRAFT);
         }
       }
     ];
@@ -439,26 +455,17 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         this.actions = this.actionShowFilter(this.teamInboxActions);
         break;
       case OpenFrom.SEARCH:
-      case OpenFrom.ADD_SCREEN:
-      default:
         this.buildSearchActions();
         this.actions = this.actionShowFilter(this.searchActions);
+        break;
+      default:
+        this.buildAddAction();
+        this.actions = this.actionShowFilter(this.addActions)
     }
   }
 
   private actionShowFilter(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
     return actions.filter((action) => action.show && this.model ? action.show(this.model) : true)
-  }
-
-  translateActions(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
-    return actions.map((action) => {
-      action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys]
-      return action
-    });
-  }
-
-  actionCallback(action: IMenuItem<CaseModel<any, any>>) {
-    action.onClick && this.model && action.onClick(this.model);
   }
 
   private releaseAction(item: CaseModel<any, any>) {
@@ -575,10 +582,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
-  onTabChange($event: TabComponent) {
-    this.loadAttachments = $event.name === 'attachments';
-  }
-
   private listenToLangChange(): void {
     this.lang
       .onLanguageChange$
@@ -586,5 +589,62 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       .subscribe(() => {
         this.actions = this.translateActions(this.actions);
       })
+  }
+
+  private listenToModelChange(): void {
+    this.component.onModelChange$
+      .pipe(skip(1))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((model) => {
+        this.model = model;
+      })
+  }
+
+  private translateActions(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
+    return actions.map((action) => {
+      action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys]
+      return action
+    });
+  }
+
+
+  isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
+  }
+
+  isAttachmentReadonly(): boolean {
+    if (!this.component.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.component.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.component.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.component.model.getCaseStatus(),
+        caseStatusEnum = this.component.service.caseStatusEnumMap[this.component.model.getCaseType()];
+
+      if (caseStatusEnum) {
+        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
+      }
+    }
+
+    return !isAllowed;
+  }
+
+  print() {
+    this.model?.exportModel().subscribe((blob) => window.open(blob.url))
+  }
+
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === 'attachments';
+  }
+
+  isDisabled(action: IMenuItem<CaseModel<any, any>>) {
+    return this.model && (typeof action.disabled === 'function' ? action.disabled(this.model!) : action.disabled);
+  }
+
+  actionCallback(action: IMenuItem<CaseModel<any, any>>) {
+    action.onClick && this.model && (!action.disabled || (typeof action.disabled === 'function' && !action.disabled(this.model))) && action.onClick(this.model);
   }
 }

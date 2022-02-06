@@ -18,4 +18,6 @@ export interface IESComponent<T> {
   handleReadonly?: any;
   formValidity$?: Subject<any>
   onModelChange$: EventEmitter<T | undefined>
+
+  launch?(): void
 }

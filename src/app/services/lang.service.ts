@@ -7,7 +7,7 @@ import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
-import {map, switchMap} from 'rxjs/operators';
+import {delay, map, switchMap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
@@ -41,7 +41,7 @@ export class LangService extends BackendGenericService<Localization> {
     en: 'ar'
   };
   private languageChange: BehaviorSubject<Language> = new BehaviorSubject<Language>(this.languages.ar);
-  public onLanguageChange$: Observable<Language> = this.languageChange.asObservable();
+  public onLanguageChange$: Observable<Language> = this.languageChange.asObservable().pipe(delay(0));
   protected firstTime = true;
   public map: LangType = {} as LangType;
   private localizationMap: LocalizationMap = {} as LocalizationMap;
@@ -122,11 +122,10 @@ export class LangService extends BackendGenericService<Localization> {
     this.changeStyleHref(language.style);
 
     this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
-    this.prepareCurrentLang();
-
     if (!silent) {
       this.languageChange.next(language);
     }
+    this.prepareCurrentLang();
   }
 
   /**

@@ -15,4 +15,5 @@ export interface IMenuItem<T> {
   children?: IMenuItem<T>[];
   displayInGrid?: ((model: T) => boolean) | boolean,
   translatedLabel?: string;
+  disabled?: ((model: T) => boolean) | boolean
 }
