@@ -2,9 +2,10 @@ import {CaseModel} from './case-model';
 import {FactoryService} from '../services/factory.service';
 import {CustomValidators} from '../validators/custom-validators';
 import {InternationalCooperationService} from '../services/international-cooperation.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class InternationalCooperation extends CaseModel<InternationalCooperationService, InternationalCooperation> {
-  caseType: number = 3;
+  caseType: number = CaseTypes.INTERNATIONAL_COOPERATION;
   country!: string;
   email!: string;
   fullName!: string;
