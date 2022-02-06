@@ -28,7 +28,8 @@
     <div class="row mb-2">
       <div class="col-12">
         <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
-          <button [disabled]="isDisabled(action)" *ngFor="let action of actions" (click)="actionCallback(action)" class="btn btn-primary">
+          <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)" *ngFor="let action of actions"
+                  (click)="actionCallback(action)" class="btn btn-primary">
             <div class="d-flex">
               <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
               <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
