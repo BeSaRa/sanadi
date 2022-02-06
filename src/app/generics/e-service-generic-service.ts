@@ -200,23 +200,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this.documentService.addSingleDocument(caseId, document, progressCallback);
   }
 
-  getCaseActions(): void {
-
-  }
-
-  getCaseLocations(): void {
-
-  }
-
-  getCaseDetails(): void {
-
-  }
-
   getContainedDocument(): void {
 
-  }
-
-  addRecommendation(): void {
   }
 
   getCaseRecommendations(): void {
@@ -240,11 +225,6 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   openDocumentDialog(caseId: string, caseType?: number): DialogRef {
     return this.dialog.show(DocumentsPopupComponent, {service: this, caseId, caseType});
-  }
-
-  downloadDocument(): void {
-    //inquiry/document/{docId}/download
-    //Download document as PDF.
   }
 
   exportModel(caseId: string): Observable<BlobModel> {
@@ -285,14 +265,6 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   getTask(taskId: string): Observable<T> {
     return this._getTask(taskId);
-  }
-
-  claimTask(): void {
-
-  }
-
-  completeTask(): void {
-
   }
 
 

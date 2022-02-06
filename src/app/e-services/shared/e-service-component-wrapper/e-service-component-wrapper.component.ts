@@ -162,6 +162,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         onClick: (item: CaseModel<any, any>) => {
           this.launchAction(item);
         }
+      },
+      {
+        type: 'action',
+        class: 'btn-secondary',
+        label: 'back',
+        show: () => true,
+        onClick: () => this.navigateToSamePageThatUserCameFrom()
       }
     ];
   }
@@ -218,6 +225,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         onClick: (item: CaseModel<any, any>) => {
           this.claimAction(item);
         }
+      },
+      {
+        type: 'action',
+        class: 'btn-secondary',
+        label: 'back',
+        show: () => true,
+        onClick: () => this.navigateToSamePageThatUserCameFrom()
       }
     ];
   }
