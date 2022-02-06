@@ -37,7 +37,6 @@
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status"
                        [ngClass]="fm.getStatusClass('basic.status')">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
                          [disabled]="option.isRetiredCommonStatus()">
                 {{option.getName()}}
