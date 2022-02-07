@@ -72,7 +72,8 @@
                   <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="status">
-                  <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_status}}</th>
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                      [sortCallback]="sortingCallbacks.statusInfo">{{lang.map.lbl_status}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.status == commonStatusEnum.ACTIVATED ? lang.map.lbl_active : lang.map.lbl_inactive}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">

@@ -17,6 +17,8 @@ import {ToastService} from '@app/services/toast.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'sd-goal-popup',
@@ -43,6 +45,14 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   subGoalsColumns = ['arName', 'enName', 'status', 'actions'];
   parentId: number;
   commonStatusEnum = CommonStatusEnum;
+
+  sortingCallbacks = {
+    statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SDGoal>,
               public fb: FormBuilder,

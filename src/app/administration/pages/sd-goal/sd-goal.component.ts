@@ -13,6 +13,8 @@ import {of} from 'rxjs';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'sd-goal',
@@ -21,7 +23,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService> implements OnInit {
   actions: IMenuItem<SDGoal>[] = [];
-  displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'subSdGoalCount', 'actions'];
+  displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'childCount', 'actions'];
 
   actionsList: IGridAction[] = [
     {
@@ -35,6 +37,14 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
   commonStatusEnum = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
+
+  sortingCallbacks = {
+    statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
 
   constructor(public service: SDGoalService,
               private sharedService: SharedService,
