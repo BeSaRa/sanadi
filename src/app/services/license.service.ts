@@ -42,6 +42,8 @@ import {InternalProjectLicense} from '@app/models/internal-project-license';
 import {InternalProjectLicenseInterceptor} from '@app/model-interceptors/internal-project-license-interceptor';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -175,11 +177,11 @@ export class LicenseService {
     });
   }
 
-  @Generator(FinalExternalOfficeApproval, false, {
+  /*@Generator(FinalExternalOfficeApproval, false, {
     property: 'rs',
     interceptReceive: (new FinalExternalOfficeApprovalInterceptor()).receive
-  })
-  _validateFinalExternalOfficeLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<FinalExternalOfficeApproval> {
+  })*/
+  _validateFinalExternalOfficeLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InitialExternalOfficeApproval | FinalExternalOfficeApproval> {
     let data: any = {
       requestType,
       oldLicenseId
@@ -188,7 +190,24 @@ export class LicenseService {
       data.initialLicenseId = oldLicenseId;
       delete data.oldLicenseId;
     }
-    return this.http.post<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', data);
+    return this.http.post<IDefaultResponse<InitialExternalOfficeApproval | FinalExternalOfficeApproval>>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', data)
+      .pipe(
+        map((response) => {
+          let finalResponse, receiveInterceptor;
+          if (requestType === ServiceRequestTypes.NEW) {
+            receiveInterceptor = (new InitialExternalOfficeApprovalInterceptor()).receive;
+            finalResponse = response.rs as InitialExternalOfficeApproval;
+            finalResponse = new InitialExternalOfficeApproval().clone({...finalResponse});
+          } else {
+            receiveInterceptor = (new FinalExternalOfficeApprovalInterceptor()).receive;
+            finalResponse = response.rs as FinalExternalOfficeApproval;
+            finalResponse = new FinalExternalOfficeApproval().clone({...finalResponse});
+          }
+          finalResponse = GeneralInterceptor.receive(finalResponse);
+          finalResponse = receiveInterceptor(finalResponse);
+          return finalResponse;
+        })
+      );
   }
 
   @Generator(InternalProjectLicense, false, {
