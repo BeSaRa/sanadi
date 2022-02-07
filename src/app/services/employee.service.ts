@@ -373,6 +373,9 @@ export class EmployeeService {
     let canSearch = false;
     this.userSecurityMap.forEach((value, key: CaseTypes) => {
       const permissionKey = CaseTypes[key];
+      if (!permissionKey) {
+        return;
+      }
       this.userCanAdd(key) && this.permissionMap
         .set(permissionKey.toLowerCase(), new Permission().clone({
           permissionKey
