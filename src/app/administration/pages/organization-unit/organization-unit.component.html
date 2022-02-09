@@ -72,6 +72,12 @@
               <a href="#" (click)="showAuditLogs($event, row)" tooltip="{{langService.map.show_logs}}" class="icon-btn">
                 <i class="mdi mdi-history"></i>
               </a>
+              <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED"
+                    style="top: auto">
+                <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatus.ACTIVATED"
+                       tooltip="{{row.status == commonStatus.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"
+                       (change)="toggleStatus(row)">
+              </span>
             </div>
           </td>
         </ng-container>

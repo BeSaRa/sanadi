@@ -18,6 +18,8 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {EmployeeService} from '../../../services/employee.service';
 import {SharedService} from '../../../services/shared.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {AidLookup} from '@app/models/aid-lookup';
 
 @Component({
   selector: 'app-organization-unit',
@@ -39,6 +41,7 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   orgUnitTypesList: Lookup[];
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
+  commonStatus = CommonStatusEnum;
 
   selectedRecords: OrgUnit[] = [];
   actionsList: IGridAction[] = [
@@ -230,5 +233,11 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
+  }
+
+  toggleStatus(aidLookup: AidLookup) {
+    this.organizationUnitService.updateStatus(aidLookup.id, aidLookup.status!).subscribe(() => {
+      this.reload$.next(null);
+    });
   }
 }

@@ -14,6 +14,7 @@ import {OrganizationUnitInterceptor} from '../model-interceptors/organization-un
 import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
 import {Generator} from '../decorators/generator';
 import {AuditLogService} from './audit-log.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,14 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
 
   deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
+  }
+
+  updateStatus(id: number, currentStatus: CommonStatusEnum) {
+    return currentStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
+  }
+
+  private activate(id: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
   }
 
   updateLogo(id: number, file: File): Observable<boolean> {
