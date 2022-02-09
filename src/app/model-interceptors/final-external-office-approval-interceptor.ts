@@ -15,6 +15,7 @@ import {FinalExternalOfficeApprovalService} from '@app/services/final-external-o
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {isValidAdminResult} from '@app/helpers/utils';
 
 export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor<FinalExternalOfficeApproval> {
 
@@ -24,6 +25,7 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
+    model.licenseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.licenseStatusInfo) ? model.licenseStatusInfo : {});
 
     model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
     model.chiefDecisionInfo = AdminResult.createInstance(model.chiefDecisionInfo);
@@ -76,6 +78,7 @@ export class FinalExternalOfficeApprovalInterceptor implements IModelInterceptor
     delete model.generalManagerDecisionInfo;
     delete model.reviewerDepartmentDecisionInfo;
     delete model.deductionPercent;
+    delete model.licenseStatusInfo;
   }
 
 }

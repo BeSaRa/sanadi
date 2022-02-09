@@ -50,6 +50,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   initialLicenseFullserial!: string;
   initialLicenseId!: string;
   initialLicenseSerial!: number;
+  licenseStatusInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
 
