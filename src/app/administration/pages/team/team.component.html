@@ -73,7 +73,7 @@
                 <i class="mdi mdi-pen"></i>
               </button>
               <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED">
-                <input class="form-check-input" type="checkbox" id="allowCompletion" [checked]="row.status == commonStatus.ACTIVATED"
+                <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatus.ACTIVATED"
                        tooltip="{{row.status == commonStatus.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"
                 (change)="toggleStatus(row)">
               </span>

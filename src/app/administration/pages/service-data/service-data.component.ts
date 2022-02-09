@@ -12,6 +12,7 @@ import {ITableOptions} from '../../../interfaces/i-table-options';
 import {DialogRef} from '../../../shared/models/dialog-ref';
 import {TableComponent} from '../../../shared/components/table/table.component';
 import {FilterEventTypes} from '@app/types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'service-data',
@@ -24,6 +25,7 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
   data: ServiceData[] = [];
   add$ = new Subject<any>();
   addSubscription!: Subscription;
+  commonStatus = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
 
   constructor(public langService: LangService, private service: ServiceDataService, private toast: ToastService) {
@@ -118,5 +120,11 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
           sub.unsubscribe();
         });
       });
+  }
+
+  toggleStatus(team: ServiceData) {
+    this.service.updateStatus(team.id, team.status).subscribe(() => {
+      this.reloadServiceData$.next(null);
+    });
   }
 }

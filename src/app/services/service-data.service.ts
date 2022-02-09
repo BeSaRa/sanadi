@@ -13,6 +13,7 @@ import {DialogService} from './dialog.service';
 import {ServiceDataPopupComponent} from '../administration/popups/service-data-popup/service-data-popup.component';
 import {map, switchMap} from 'rxjs/operators';
 import {Generator} from '../decorators/generator';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -77,5 +78,17 @@ export class ServiceDataService extends BackendGenericService<ServiceData> {
       .pipe(
         map(item => item[0])
       );
+  }
+
+  updateStatus(serviceId: number, currentStatus: CommonStatusEnum) {
+    return currentStatus === CommonStatusEnum.ACTIVATED ? this._deactivate(serviceId) : this._activate(serviceId);
+  }
+
+  private _activate(serviceId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + serviceId + '/activate', {});
+  }
+
+  private _deactivate(serviceId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + serviceId + '/de-activate', {});
   }
 }
