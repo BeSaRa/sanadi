@@ -50,20 +50,23 @@
 
         <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
-       <!-- <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>-->
+        <!-- <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>-->
 
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row" class="table-actions">
-            <button (click)="edit(row, $event)" tooltip="{{langService.map.btn_edit}}"
-                    class="btn icon-btn text-primary">
-              <i class="mdi mdi-pen"></i>
-            </button>
-            <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED">
+            <div class="d-flex flex-nowrap">
+              <button (click)="edit(row, $event)" tooltip="{{langService.map.btn_edit}}"
+                      class="btn icon-btn text-primary"
+              style="position: relative; top: 8px;">
+                <i class="mdi mdi-pen"></i>
+              </button>
+              <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED">
                 <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatus.ACTIVATED"
                        tooltip="{{row.status == commonStatus.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"
                        (change)="toggleStatus(row)">
               </span>
+            </div>
           </td>
         </ng-container>
 
