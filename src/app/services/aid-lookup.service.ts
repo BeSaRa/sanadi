@@ -15,6 +15,7 @@ import {AidLookupInterceptor} from '../model-interceptors/aid-lookup-interceptor
 import {Generator} from '../decorators/generator';
 import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
 import {AuditLogService} from './audit-log.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,14 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
 
   deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
+  }
+
+  updateStatus(id: number, currentStatus: CommonStatusEnum) {
+    return currentStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
+  }
+
+  private activate(id: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
   }
 
   _getModel(): any {

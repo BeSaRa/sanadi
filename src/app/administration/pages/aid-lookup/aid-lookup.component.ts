@@ -17,6 +17,8 @@ import {generateHtmlList, searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
 import {SharedService} from '../../../services/shared.service';
+import {Team} from '@app/models/team';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-aid-lookup',
@@ -38,6 +40,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
   internalSearchSubscription!: Subscription;
+  commonStatus = CommonStatusEnum;
 
   selectedRecords: AidLookup[] = [];
   actionsList: IGridAction[] = [
@@ -237,5 +240,11 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
+  }
+
+  toggleStatus(aidLookup: AidLookup) {
+    this.aidLookupService.updateStatus(aidLookup.id, aidLookup.status!).subscribe(() => {
+      this.reload$.next(null);
+    });
   }
 }
