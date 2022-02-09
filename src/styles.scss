@@ -406,3 +406,12 @@ tr.risk {
 .table > :not(:first-child) {
   border-top: none !important;
 }
+
+.switch-action {
+  display: inline-block;
+  position: relative;
+  top: 8px;
+  input {
+    cursor: pointer;
+  }
+}

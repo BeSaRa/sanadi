@@ -21,6 +21,7 @@ import {InternalDepartmentService} from './internal-department.service';
 import {InternalDepartment} from '../models/internal-department';
 import {UserTeam} from "@app/models/user-team";
 import {UserTeamService} from "@app/services/user-team.service";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -124,5 +125,17 @@ export class TeamService extends BackendGenericService<Team> {
 
   deleteUserTeamBulk(ids: number[]): Observable<Record<number, boolean>> {
     return this.userTeamService.deleteBulk(ids);
+  }
+
+  updateStatus(teamId: number, currentStatus: CommonStatusEnum) {
+    return currentStatus === CommonStatusEnum.ACTIVATED ? this._deactivate(teamId) : this._activate(teamId);
+  }
+
+  private _activate(teamId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + teamId + '/activate', {});
+  }
+
+  private _deactivate(teamId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + teamId + '/de-activate', {});
   }
 }

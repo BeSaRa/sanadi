@@ -13,6 +13,7 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {ITableOptions} from '@app/interfaces/i-table-options';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {FilterEventTypes} from '@app/types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'team',
@@ -23,6 +24,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
   teams: Team[] = [];
   actions: IMenuItem<Team>[] = [];
   bulkActions: IGridAction[] = [];
+  commonStatus = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
 
@@ -153,5 +155,11 @@ export class TeamComponent implements OnInit, AfterViewInit {
 
   private buildBulkActions() {
     this.bulkActions = [];
+  }
+
+  toggleStatus(team: Team) {
+    this.teamService.updateStatus(team.id, team.status).subscribe(() => {
+      this.reload$.next(null);
+    });
   }
 }
