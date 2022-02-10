@@ -9,6 +9,7 @@ import {DialogService} from "@app/services/dialog.service";
 import {filter, switchMap} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ToastService} from "@app/services/toast.service";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'survey-template',
@@ -33,6 +34,7 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
       callback: () => this.deleteBulk(),
     },
   ];
+  commonStatusEnum = CommonStatusEnum;
 
   constructor(
     public service: SurveyTemplateService,
@@ -65,5 +67,14 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
 
   editTemplate(row: SurveyTemplate): void {
     this.edit$.next(row);
+  }
+
+  toggleStatus(model: SurveyTemplate) {
+    model.status ? model.status = false : model.status = true;
+    const message = this.lang.map.msg_update_x_success;
+    this.service.update(model).subscribe(() => {
+      this.toast.success(message.change({x: model.getName()}));
+      this.reload$.next(null);
+    })
   }
 }
