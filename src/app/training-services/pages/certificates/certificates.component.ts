@@ -13,6 +13,7 @@ import {cloneDeep as _deepClone} from 'lodash';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'certificates',
@@ -46,6 +47,7 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
     }
   ];
   editTemplate$: Subject<Certificate> = new Subject<Certificate>();
+  commonStatusEnum = CommonStatusEnum;
 
   constructor(public lang: LangService,
               public service: CertificateService,
@@ -157,5 +159,14 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
     } else {
       this.selectedRecords = _deepClone(this.models);
     }
+  }
+
+  toggleStatus(model: Certificate) {
+    model.status ? model.status = false : model.status = true;
+    const message = this.lang.map.msg_update_x_success;
+    this.service.updateTemplate(model).subscribe(() => {
+      this.toast.success(message.change({x: model.documentTitle}));
+      this.reload$.next(null);
+    })
   }
 }
