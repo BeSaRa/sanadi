@@ -145,21 +145,12 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
     }
   }
 
-  activate(model: SDGoal): void {
-    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
-  }
-
-  deactivate(model: SDGoal): void {
-    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
+  toggleStatus(model: SDGoal) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
