@@ -27,6 +27,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
   filterControl: FormControl = new FormControl('');
+  commonStatus = CommonStatusEnum;
 
   actionsList: IGridAction[] = [
     {
@@ -126,23 +127,12 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     }
   }
 
-  activate(model: AttachmentType): void {
-    model.status = CommonStatusEnum.ACTIVATED;
-    const sub = model.update().subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+  toggleStatus(model: AttachmentType) {
+    model.status == CommonStatusEnum.ACTIVATED ? model.status = CommonStatusEnum.DEACTIVATED : model.status = CommonStatusEnum.ACTIVATED;
+    model.update()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       this.reload$.next(null);
-      sub.unsubscribe();
-    });
-  }
-
-  deactivate(model: AttachmentType): void {
-    model.status = CommonStatusEnum.DEACTIVATED;
-    const sub = model.update().subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
     });
   }
 }
