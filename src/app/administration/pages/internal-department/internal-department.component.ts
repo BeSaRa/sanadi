@@ -49,7 +49,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_activate',
-      onClick: (item) => this.activateDepartment(item),
+      onClick: (item) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
       }
@@ -59,7 +59,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
-      onClick: (item) => this.deactivateDepartment(item),
+      onClick: (item) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
@@ -112,21 +112,12 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
     return record.search(searchText);
   }
 
-  activateDepartment(model: InternalDepartment): void {
-    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
-  }
-
-  deactivateDepartment(model: InternalDepartment): void {
-    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
+  toggleStatus(model: InternalDepartment) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
