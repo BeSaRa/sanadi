@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Country} from '@app/models/country';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {IGridAction} from '@app/interfaces/i-grid-action';
@@ -6,7 +6,7 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {LangService} from '@app/services/lang.service';
 import {CountryService} from '@app/services/country.service';
-import {switchMap, tap} from 'rxjs/operators';
+import {switchMap, takeUntil, tap} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ITableOptions} from '@app/interfaces/i-table-options';
 import {SortEvent} from '@app/interfaces/sort-event';
@@ -26,12 +26,14 @@ import {FilterEventTypes} from '@app/types/types';
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss']
 })
-export class CountryComponent implements OnInit, AfterViewInit {
+export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
 
   countries: Country[] = [];
   actions: IMenuItem<Country>[] = [];
   bulkActions: IGridAction[] = [];
+  commonStatus = CommonStatusEnum;
+  destroy$: Subject<any> = new Subject<any>();
 
   @ViewChild('table') table!: TableComponent;
 
@@ -96,6 +98,8 @@ export class CountryComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getTitleText(): (keyof ILanguageKeys) {
@@ -104,6 +108,7 @@ export class CountryComponent implements OnInit, AfterViewInit {
 
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
+      takeUntil(this.destroy$),
       switchMap(() => {
         return this.countryService.loadCountriesComposite();
       })
@@ -201,6 +206,15 @@ export class CountryComponent implements OnInit, AfterViewInit {
             this.reload$.next(null);
             sub.unsubscribe();
           });
+      });
+  }
+
+  toggleStatus(model: Country) {
+    model.status == CommonStatusEnum.ACTIVATED ? model.status = CommonStatusEnum.DEACTIVATED : model.status = CommonStatusEnum.ACTIVATED;
+    model.update()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.reload$.next(null);
       });
   }
 
