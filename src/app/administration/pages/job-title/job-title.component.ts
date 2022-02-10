@@ -68,7 +68,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_activate',
-      onClick: (item: JobTitle) => this.activateJobTitle(item),
+      onClick: (item: JobTitle) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
       }
@@ -78,7 +78,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
-      onClick: (item: JobTitle) => this.deactivateJobTitle(item),
+      onClick: (item: JobTitle) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
@@ -200,22 +200,13 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       });
   }
 
-  activateJobTitle(model: JobTitle): void {
-    const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
-  }
-
-  deactivateJobTitle(model: JobTitle): void {
-    const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
+  toggleStatus(model: JobTitle) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 
   listenToReload() {
