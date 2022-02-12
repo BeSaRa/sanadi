@@ -122,9 +122,14 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  toggleStatus(team: ServiceData) {
-    this.service.updateStatus(team.id, team.status).subscribe(() => {
-      this.reloadServiceData$.next(null);
-    });
+  toggleStatus(serviceData: ServiceData) {
+    this.service.updateStatus(serviceData.id, serviceData.status)
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: serviceData.getName()}));
+        this.reloadServiceData$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: serviceData.getName()}));
+        this.reloadServiceData$.next(null);
+      });
   }
 }
