@@ -4,7 +4,7 @@ import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CustomRoleService} from '../../../services/custom-role.service';
 import {CustomRole} from '../../../models/custom-role';
 import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {debounceTime, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '../../../services/toast.service';
 import {DialogService} from '../../../services/dialog.service';
 import {DialogRef} from '../../../shared/models/dialog-ref';
@@ -13,6 +13,7 @@ import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
 import {searchInObject} from '../../../helpers/utils';
 import {SharedService} from '../../../services/shared.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-custom-role',
@@ -31,6 +32,8 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
   addSubscription!: Subscription;
   searchSubscription!: Subscription;
   internalSearchSubscription!: Subscription;
+  commonStatusEnum = CommonStatusEnum;
+  destroy$: Subject<any> = new Subject<any>();
 
   selectedRecords: CustomRole[] = [];
   actionsList: IGridAction[] = [
@@ -182,19 +185,6 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
     });
   }
 
-  updateStatus(model: CustomRole): void {
-    const sub = model.toggleStatus().update().subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
-      sub.unsubscribe();
-    }, () => {
-      // @ts-ignore
-      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
-      model.toggleStatus();
-      sub.unsubscribe();
-    });
-  }
-
   search(searchText: string): void {
     this.search$.next(searchText);
   }
@@ -214,6 +204,20 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
       this.customRoles = this.customRolesClone.slice().filter((item) => {
         return searchInObject(item, searchText);
       });
+    });
+  }
+
+  toggleStatus(model: CustomRole) {
+    model.toggleStatus().update()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+      // @ts-ignore
+      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
+      this.reload$.next(null);
+    }, () => {
+      // @ts-ignore
+      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
+      this.reload$.next(null);
     });
   }
 }
