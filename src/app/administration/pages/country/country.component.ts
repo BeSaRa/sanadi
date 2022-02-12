@@ -214,6 +214,10 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     model.update()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }
@@ -228,7 +232,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'btn_edit',
         onClick: (item: Country) => this.editCountry(item),
         show: () => {
-          return true
+          return true;
         }
       },
       // delete
