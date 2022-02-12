@@ -5,10 +5,10 @@ import {SurveyTemplate} from '@app/models/survey-template';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
-import {DialogService} from "@app/services/dialog.service";
-import {filter, switchMap} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ToastService} from "@app/services/toast.service";
+import {DialogService} from '@app/services/dialog.service';
+import {filter, switchMap} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
@@ -58,11 +58,11 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
       .subscribe(() => {
         this.toast.success(this.lang.map.msg_delete_x_success.change({x: item.getName()}));
         this.reload$.next(null);
-      })
+      });
   }
 
   viewTemplate(row: SurveyTemplate) {
-    row.view().onAfterClose$.subscribe(this.reload$)
+    row.view().onAfterClose$.subscribe(this.reload$);
   }
 
   editTemplate(row: SurveyTemplate): void {
@@ -71,10 +71,15 @@ export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplat
 
   toggleStatus(model: SurveyTemplate) {
     model.status ? model.status = false : model.status = true;
-    const message = this.lang.map.msg_update_x_success;
-    this.service.update(model).subscribe(() => {
-      this.toast.success(message.change({x: model.getName()}));
-      this.reload$.next(null);
-    })
+    const successMessage = this.lang.map.msg_status_x_updated_success;
+    const failMessage = this.lang.map.msg_status_x_updated_fail;
+    this.service.update(model)
+      .subscribe(() => {
+        this.toast.success(successMessage.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(failMessage.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 }

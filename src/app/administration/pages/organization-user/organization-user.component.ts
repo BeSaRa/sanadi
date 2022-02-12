@@ -16,7 +16,7 @@ import {IGridAction} from '@app/interfaces/i-grid-action';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {SharedService} from '@app/services/shared.service';
-import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
@@ -57,7 +57,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
       label: 'btn_edit',
       onClick: item => this.edit(item),
     }
-  ]
+  ];
 
   // noinspection JSUnusedLocalSymbols
   bindingKeys: IKeyValue = {
@@ -153,7 +153,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     event.preventDefault();
     // @ts-ignore
     const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.user.toLowerCase()}) + '<br/>' +
-      this.langService.map.msg_confirm_delete_x.change({x: model.getName()})
+      this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
@@ -265,7 +265,10 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }

@@ -67,11 +67,11 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
     this.editTemplate$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.editTemplateDialog(model).pipe(catchError(_ => of(null)))
+        return this.service.editTemplateDialog(model).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null))
+      .subscribe(() => this.reload$.next(null));
   }
 
   edit(certificate: Certificate, event: MouseEvent) {
@@ -163,10 +163,15 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
 
   toggleStatus(model: Certificate) {
     model.status ? model.status = false : model.status = true;
-    const message = this.lang.map.msg_update_x_success;
-    this.service.updateTemplate(model).subscribe(() => {
-      this.toast.success(message.change({x: model.documentTitle}));
-      this.reload$.next(null);
-    })
+    const successMessage = this.lang.map.msg_status_x_updated_success;
+    const failMessage = this.lang.map.msg_status_x_updated_fail;
+    this.service.updateTemplate(model)
+      .subscribe(() => {
+        this.toast.success(successMessage.change({x: model.documentTitle}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(failMessage.change({x: model.documentTitle}));
+        this.reload$.next(null);
+      });
   }
 }

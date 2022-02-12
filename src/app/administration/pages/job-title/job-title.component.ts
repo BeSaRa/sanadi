@@ -204,7 +204,10 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_update_x_success.change({x: model.getName()}));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }
