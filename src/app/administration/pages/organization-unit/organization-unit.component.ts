@@ -19,7 +19,6 @@ import {IGridAction} from '../../../interfaces/i-grid-action';
 import {EmployeeService} from '../../../services/employee.service';
 import {SharedService} from '../../../services/shared.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {AidLookup} from '@app/models/aid-lookup';
 
 @Component({
   selector: 'app-organization-unit',
@@ -235,9 +234,14 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
       });
   }
 
-  toggleStatus(aidLookup: AidLookup) {
-    this.organizationUnitService.updateStatus(aidLookup.id, aidLookup.status!).subscribe(() => {
-      this.reload$.next(null);
-    });
+  toggleStatus(orgUnit: OrgUnit) {
+    this.organizationUnitService.updateStatus(orgUnit.id, orgUnit.status!)
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: orgUnit.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: orgUnit.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
