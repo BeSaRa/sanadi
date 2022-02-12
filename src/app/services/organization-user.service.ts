@@ -23,6 +23,7 @@ import {PermissionService} from './permission.service';
 import {OrganizationUserPermissionService} from './organization-user-permission.service';
 import {OrgUserPermission} from '../models/org-user-permission';
 import {AuditLogService} from './audit-log.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -87,6 +88,14 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
         );
       })
     );
+  }
+
+  updateStatus(id: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
+  }
+
+  private activate(id: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
   }
 
   deactivate(id: number): Observable<boolean> {

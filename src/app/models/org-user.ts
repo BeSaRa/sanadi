@@ -10,6 +10,7 @@ import {LookupCategories} from '../enums/lookup-categories';
 import {LookupService} from '../services/lookup.service';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   email: string | undefined;
@@ -95,5 +96,9 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
 
   isInternal(): boolean {
     return false;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

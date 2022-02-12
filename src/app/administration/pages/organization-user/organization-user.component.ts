@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PageComponentInterface} from '@app/interfaces/page-component-interface';
 import {OrgUser} from '@app/models/org-user';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {debounceTime, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {OrganizationUserService} from '@app/services/organization-user.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
@@ -17,6 +17,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-organization-user',
@@ -35,6 +36,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   searchSubscription!: Subscription;
   internalSearchSubscription!: Subscription;
+  commonStatusEnum = CommonStatusEnum;
+  destroy$: Subject<any> = new Subject<any>();
 
   selectedRecords: OrgUser[] = [];
   actionsList: IGridAction[] = [
@@ -224,6 +227,8 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     this.addSubscription?.unsubscribe();
     this.searchSubscription?.unsubscribe();
     this.internalSearchSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   search(searchText: string): void {
@@ -253,6 +258,15 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     user.showAuditLogs($event)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
+      });
+  }
+
+  toggleStatus(model: OrgUser) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
+        this.reload$.next(null);
       });
   }
 }
