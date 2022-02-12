@@ -14,6 +14,7 @@ import {ITableOptions} from '@app/interfaces/i-table-options';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {FilterEventTypes} from '@app/types/types';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {ToastService} from '@app/services/toast.service';
 
 @Component({
   selector: 'team',
@@ -34,7 +35,8 @@ export class TeamComponent implements OnInit, AfterViewInit {
   reloadSubscription!: Subscription;
 
   constructor(public langService: LangService,
-              private teamService: TeamService) {
+              private teamService: TeamService,
+              private toast: ToastService) {
   }
 
   tableOptions: ITableOptions = {
@@ -147,7 +149,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
         label: 'btn_edit',
         onClick: (item: Team) => this.editTeam(item),
         show: () => {
-          return true
+          return true;
         }
       }
     ];
@@ -158,8 +160,13 @@ export class TeamComponent implements OnInit, AfterViewInit {
   }
 
   toggleStatus(team: Team) {
-    this.teamService.updateStatus(team.id, team.status).subscribe(() => {
-      this.reload$.next(null);
-    });
+    this.teamService.updateStatus(team.id, team.status)
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: team.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: team.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
