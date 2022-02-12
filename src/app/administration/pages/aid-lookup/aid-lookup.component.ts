@@ -13,11 +13,10 @@ import {AidTypes} from '../../../enums/aid-types.enum';
 import {IAidLookupCriteria} from '../../../interfaces/i-aid-lookup-criteria';
 import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 import {ConfigurationService} from '../../../services/configuration.service';
-import {generateHtmlList, searchInObject} from '../../../helpers/utils';
+import {searchInObject} from '../../../helpers/utils';
 import {IGridAction} from '../../../interfaces/i-grid-action';
 import {cloneDeep as _deepClone} from 'lodash';
 import {SharedService} from '../../../services/shared.service';
-import {Team} from '@app/models/team';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
@@ -178,7 +177,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
           });
           const sub = this.aidLookupService.deactivateBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-              .subscribe(()=> {
+              .subscribe(() => {
                 this.reload$.next(null);
                 sub.unsubscribe();
               });
@@ -243,8 +242,13 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   }
 
   toggleStatus(aidLookup: AidLookup) {
-    this.aidLookupService.updateStatus(aidLookup.id, aidLookup.status!).subscribe(() => {
-      this.reload$.next(null);
-    });
+    this.aidLookupService.updateStatus(aidLookup.id, aidLookup.status!)
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: aidLookup.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: aidLookup.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
