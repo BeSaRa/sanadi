@@ -72,7 +72,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       .subscribe((list: AttachmentType[]) => {
         this.models = list;
         this.table.selection.clear();
-      })
+      });
   }
 
   sortingCallbacks = {
@@ -81,7 +81,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   edit(attachmentType: AttachmentType, event: MouseEvent) {
     event.preventDefault();
@@ -132,7 +132,11 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     model.update()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-      this.reload$.next(null);
-    });
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 }
