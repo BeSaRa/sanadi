@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  lbl_step_sla: string;
   outputs: string;
   supporting_information: string;
   selected_status: string;
