@@ -37,13 +37,27 @@
             <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
                    class="form-label">{{langService.map.baw_service_code}}</label>
             <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
-                   class="form-control">
+                   class="form-control" [disabled]="true">
             <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
           </div>
-          <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{langService.map.case_type}}</label>
-            <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">
-            <app-field-error-message controlName="caseType"></app-field-error-message>
+<!--          <div class="col-sm-6 position-relative">-->
+<!--            <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{langService.map.case_type}}</label>-->
+<!--            <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">-->
+<!--            <app-field-error-message controlName="caseType"></app-field-error-message>-->
+<!--          </div>-->
+          <div class="col-sm-6 ng-select-wrapper">
+            <label for="status" asteriskIfRequired="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="status"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="status" validationClasses="status">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
+                         [disabled]="option.isRetiredCommonStatus()">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="status"></app-field-error-message>
           </div>
         </div>
         <div class="row mb-4">
@@ -63,26 +77,18 @@
           </div>
         </div>
         <div class="row mb-4">
-          <div class="col-sm-6 ng-select-wrapper">
-            <label for="status" asteriskIfRequired="status" class="form-label">{{langService.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status" validationClasses="status">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredCommonStatus()">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="status"></app-field-error-message>
-          </div>
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
                    class="form-label">{{langService.map.service_time_limit}}</label>
             <input id="serviceTimeLimit" validationClasses="serviceTimeLimit" formControlName="serviceTimeLimit"
                    class="form-control">
             <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="fees" for="serviceReviewLimit" class="form-label">{{langService.map.lbl_review_limit}}</label>
+            <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit" class="form-control"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
           </div>
         </div>
         <div class="row mb-4">
@@ -112,14 +118,6 @@
             <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
                    [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="sLA"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row mb-4">
-          <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="fees" for="serviceReviewLimit" class="form-label">{{langService.map.lbl_review_limit}}</label>
-            <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit" class="form-control"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
           </div>
         </div>
         <div class="row mb-4">

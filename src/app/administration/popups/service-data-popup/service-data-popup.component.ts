@@ -76,7 +76,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       basic: this.fb.group({
         caseType: [this.model.caseType, [CustomValidators.required, CustomValidators.number]],
-        bawServiceCode: [this.model.bawServiceCode, [
+        bawServiceCode: [{value: this.model.bawServiceCode, disabled: true}, [
           CustomValidators.required,
           CustomValidators.unique<ServiceData>(this.list, 'bawServiceCode', this.model)]],
         arName: [this.model.arName, [
@@ -87,18 +87,18 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
           CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
-        requestSerialCode: [this.model.requestSerialCode, CustomValidators.required],
-        licenseSerialCode: [this.model.licenseSerialCode, CustomValidators.required],
+        requestSerialCode: [this.model.requestSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
+        licenseSerialCode: [this.model.licenseSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         status: [this.model.status, [CustomValidators.required]],
-        serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number]],
-        sLA: [this.model.sLA, [CustomValidators.number]],
-        serviceReviewLimit: [this.model.serviceReviewLimit, [CustomValidators.number]],
-        licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number]],
-        licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number]],
+        serviceTimeLimit: [this.model.serviceTimeLimit, [CustomValidators.number, CustomValidators.maxLength(10)]],
+        sLA: [this.model.sLA, [CustomValidators.number, CustomValidators.maxLength(10)]],
+        serviceReviewLimit: [this.model.serviceReviewLimit, [CustomValidators.number, CustomValidators.maxLength(10)]],
+        licenseMinTime: [this.model.licenseMinTime, [CustomValidators.number, CustomValidators.maxLength(10)]],
+        licenseMaxTime: [this.model.licenseMaxTime, [CustomValidators.number, CustomValidators.maxLength(10)]],
         serviceDescription: [this.model.serviceDescription, [CustomValidators.maxLength(1000)]],
         serviceRequirements: [this.model.serviceRequirements, [CustomValidators.maxLength(1000)]],
         serviceTerms: [this.model.serviceTerms, [CustomValidators.required, CustomValidators.maxLength(1000)]],
-        fees: [this.model.fees, [CustomValidators.number]],
+        fees: [this.model.fees, [CustomValidators.number, CustomValidators.maxLength(10)]],
         serviceStepsArabic: [this.model.serviceStepsArabic, [CustomValidators.maxLength(1000)]],
         serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]]
       }),
