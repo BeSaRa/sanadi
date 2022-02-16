@@ -87,13 +87,16 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
+    this.logsViewed = [];
+    this.logsUpdated = [];
+    this.logsOthers = [];
     logs.forEach(x => {
       if (x.actionId === ServiceActionType.Viewed) {
-        this.logsViewed = [].concat(x);
+        this.logsViewed = this.logsViewed.concat(x);
       } else if (x.actionId === ServiceActionType.Updated) {
-        this.logsUpdated = [].concat(x);
+        this.logsUpdated = this.logsUpdated.concat(x);
       } else {
-        this.logsOthers = [].concat(x);
+        this.logsOthers = this.logsOthers.concat(x);
       }
     });
   }
