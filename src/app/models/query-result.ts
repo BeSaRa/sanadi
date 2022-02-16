@@ -30,6 +30,7 @@ import {IKeyValue} from "@app/interfaces/i-key-value";
 import {RiskStatus} from "@app/enums/risk-status";
 import {EncryptionService} from "@app/services/encryption.service";
 import {INavigatedItem} from "@app/interfaces/inavigated-item";
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -176,9 +177,25 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.sendToMultiDepartments(this.TKIID, this.BD_CASE_TYPE, claimBefore, this);
   }
 
+  getAskSingleWFResponseByCaseType(caseType?: number): string {
+    let servicesMap = {
+      [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.PARTNER_APPROVAL]: WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT
+    }
+
+    if (!caseType){
+      caseType = this.BD_CASE_TYPE;
+    }
+
+    // @ts-ignore
+    return servicesMap[caseType];
+  }
+
   sendToSupervisionAndControlDepartment(_claimBefore: boolean = false): Observable<boolean> {
     let service = this.service.getService(this.BD_CASE_TYPE),
-      taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {

@@ -499,7 +499,10 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         show: (item: QueryResult) => {
-          return item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+          return item.RESPONSES.includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.RESPONSES.includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.RESPONSES.includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.RESPONSES.includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);

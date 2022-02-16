@@ -11,6 +11,9 @@ export enum WFResponseType {
   FINAL_APPROVE = 'finalApprove',
   ASK_FOR_CONSULTATION = 'launch:',
   INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewInternalProjectlicensing',
+  INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInitialExternalOfficeApproval',
+  FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFinalExternalOfficeApproval',
+  PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewPartnerApprovalRequest',
   INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalProjectlicensing',
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',
