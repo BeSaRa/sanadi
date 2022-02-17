@@ -114,7 +114,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     } else {
       this.model = new (this.service._getModel());
     }
-    this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!,  this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
+    this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
     // listen to model change
     this.listenToModelChange();
     // listen to change language
@@ -149,7 +149,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (!this.model) {
       return;
     }
-    this.component.readonly = !this.model!.canStart();
+    this.component.readonly = !(this.model!.canStart());
     this.component.allowEditRecommendations = (this.info.openFrom === OpenFrom.USER_INBOX || (this.info.openFrom === OpenFrom.SEARCH && this.model!.canStart())) && this.employeeService.isInternalUser();
   }
 
@@ -158,10 +158,28 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
+        label: 'btn_save',
+        disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.FINAL);
+        }
+      },
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
         label: 'launch',
         show: (item: CaseModel<any, any>) => item.canStart(),
         onClick: (item: CaseModel<any, any>) => {
           this.launchAction(item);
+        }
+      },
+      {
+        type: 'action',
+        icon: 'mdi-view-list-outline',
+        label: 'logs',
+        show: () => !!this.model?.id,
+        onClick: (item: CaseModel<any, any>) => {
+          item.viewLogs();
         }
       },
       {
