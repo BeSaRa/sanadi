@@ -28,22 +28,6 @@
                    [service]="service.documentService"
                    [load]="loadAttachments"></attachments>
     </ng-template>
-    <div class="row mb-2">
-      <div class="col-12">
-        <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
-          <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)" *ngFor="let action of actions"
-                  (click)="actionCallback(action)" class="btn btn-primary">
-            <div class="d-flex">
-              <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
-              <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
-            </div>
-          </button>
-          <button class="btn btn-link" [tooltip]="lang.map.validate_fields" *ngIf="component.formValidity$"
-                  (click)="component.formValidity$.next('main-content')"><i
-            class="mdi mdi-information-outline text-info"></i></button>
-        </div>
-      </div>
-    </div>
   </ng-container>
   <ng-container *ngIf="!internal">
     <ng-template #externalContainer></ng-template>
@@ -56,4 +40,20 @@
   <!--  <ng-template #outputs>-->
 
   <!--  </ng-template>-->
+  <div class="row mb-2">
+    <div class="col-12">
+      <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
+        <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)" *ngFor="let action of actions"
+                (click)="actionCallback(action)" class="btn btn-primary">
+          <div class="d-flex">
+            <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
+            <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
+          </div>
+        </button>
+        <button class="btn btn-link" [tooltip]="lang.map.validate_fields" *ngIf="component.formValidity$"
+                (click)="component.formValidity$.next('main-content')"><i
+          class="mdi mdi-information-outline text-info"></i></button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -144,12 +144,12 @@
                          [caseId]="model?.id"
                          [service]="service.recommendationService"></app-recommendations>
   </ng-template>
-  <div *ngIf="!fromDialog && !accordionView" class="mb-3 d-flex align-items-center justify-content-center">
+  <!--<div *ngIf="!fromDialog && !accordionView" class="mb-3 d-flex align-items-center justify-content-center">
     <button (click)="save.next(saveTypes.FINAL)"
             [disabled]="form.invalid || model?.alreadyStarted()"
             class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
     <button (click)="launch()" [disabled]="form.invalid || !model?.canStart()"
             class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
     <button (click)="navigateBack()" class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
-  </div>
+  </div>-->
 </div>
