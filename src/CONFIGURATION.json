@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.4.0",
+  "VERSION": "v1.4.0-rc#1",
   "ENVIRONMENTS_URLS": {
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
