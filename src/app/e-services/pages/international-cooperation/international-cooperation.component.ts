@@ -30,6 +30,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./international-cooperation.component.scss']
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
+  fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<InternationalCooperation | undefined> = new EventEmitter<InternationalCooperation | undefined>();
   accordionView: boolean = false;
   countries: Country[] = [];

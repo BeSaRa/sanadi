@@ -31,6 +31,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./inquiry.component.scss']
 })
 export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
+  fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<Inquiry | undefined> = new EventEmitter<Inquiry | undefined>();
   accordionView: boolean = false;
   departments: InternalDepartment[] = [];

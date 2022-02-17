@@ -13,8 +13,7 @@
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
     <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
-         [template]="recommendationsTemplate" [title]="lang.map.recommendations"
-         *ngIf="(fromDialog || accordionView) && employeeService.isInternalUser()" [disabled]="!model?.id"></tab>
+         [template]="recommendationsTemplate" [title]="lang.map.recommendations" [disabled]="!model?.id"></tab>
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>

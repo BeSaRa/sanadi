@@ -18,6 +18,7 @@ export interface IESComponent<T> {
   handleReadonly?: any;
   formValidity$?: Subject<any>
   onModelChange$: EventEmitter<T | undefined>
+  fromWrapperComponent: boolean;
 
   launch?(): void
 }

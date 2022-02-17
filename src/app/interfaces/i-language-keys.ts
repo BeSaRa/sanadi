@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  _ignored_label: string;
   lbl_step_sla: string;
   outputs: string;
   supporting_information: string;

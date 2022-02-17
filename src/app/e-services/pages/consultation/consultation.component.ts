@@ -33,6 +33,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./consultation.component.scss']
 })
 export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Consultation> {
+  fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<Consultation | undefined> = new EventEmitter<Consultation | undefined>();
   accordionView: boolean = false;
   departments: InternalDepartment[] = [];

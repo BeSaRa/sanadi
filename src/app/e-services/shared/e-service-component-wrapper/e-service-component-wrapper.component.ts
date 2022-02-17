@@ -98,6 +98,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
     this.service = this.component.service;
     this.component.accordionView = this.employeeService.isInternalUser();
+    this.component.fromWrapperComponent = true;
 
     if (this.info) {
       this.component.outModel = this.info.model;
@@ -113,6 +114,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     } else {
       this.model = new (this.service._getModel());
     }
+    this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!,  this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
     // listen to model change
     this.listenToModelChange();
     // listen to change language
@@ -137,7 +139,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       return;
     }
     this.component.readonly = true;
-    this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info.openFrom);
   }
 
   private prepareFromSearch(): void {
@@ -630,6 +631,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
+    console.log(this.employeeService.isInternalUser());
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
   }
 
