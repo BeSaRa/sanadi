@@ -106,6 +106,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.model.setInboxService(this.inboxService);
       this.component.openFrom = this.info.openFrom;
       this.component.operation = OperationTypes.UPDATE;
+      this.component.fromDialog = true;
       if (this.info.openFrom === OpenFrom.SEARCH) {
         this.prepareFromSearch();
       } else {
