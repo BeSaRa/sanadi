@@ -50,7 +50,8 @@
             <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
           </div>
         </button>
-        <button class="btn btn-link" [tooltip]="lang.map.validate_fields" *ngIf="component.formValidity$"
+        <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
+                *ngIf="component.formValidity$ && !component.readonly"
                 (click)="component.formValidity$.next('main-content')"><i
           class="mdi mdi-information-outline text-info"></i></button>
       </div>
