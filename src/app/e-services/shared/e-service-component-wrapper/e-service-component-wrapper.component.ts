@@ -647,6 +647,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       .pipe(takeUntil(this.destroy$))
       .subscribe((model) => {
         this.model = model;
+        this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
       })
   }
 
