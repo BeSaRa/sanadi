@@ -257,6 +257,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildUserInboxActions(): void {
     this.userInboxActions = [
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'btn_save',
+        disabled: () => this.component.readonly,
+        onClick: () => {
+          this.component.save.next(this.saveTypes.FINAL);
+        }
+      },
       // release
       {
         type: 'action',
