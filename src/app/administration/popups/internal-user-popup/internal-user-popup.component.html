@@ -220,7 +220,7 @@
             <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
             <tr *cdkNoDataRow>
-              <td colspan="20">{{lang.map.no_records_to_display}}</td>
+              <td colspan="20" class="text-center">{{lang.map.no_records_to_display}}</td>
             </tr>
           </table>
         </app-table>

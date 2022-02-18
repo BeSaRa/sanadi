@@ -116,7 +116,7 @@
         <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
         <!--suppress HtmlUnknownBooleanAttribute -->
         <tr *cdkNoDataRow>
-          <td colspan="10">{{lang.map.no_records_to_display}}</td>
+          <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
       <app-paginator #paginator [length]="data.length"></app-paginator>
@@ -136,7 +136,7 @@
         <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>
         <!--suppress HtmlUnknownBooleanAttribute -->
         <tr *cdkNoDataRow>
-          <td colspan="10">{{lang.map.no_records_to_display}}</td>
+          <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
         </tr>
       </table>
     </app-table>
