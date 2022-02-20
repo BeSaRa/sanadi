@@ -22,7 +22,16 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   }
 
   getFormFields(control: boolean = false): any {
-    const {category, organizationId, fullName, mobileNo, email, requestBody, competentDepartmentID, competentDepartmentAuthName} = this;
+    const {
+      category,
+      organizationId,
+      fullName,
+      mobileNo,
+      email,
+      requestBody,
+      competentDepartmentID,
+      competentDepartmentAuthName
+    } = this;
 
     return {
       category: control ? [category, [CustomValidators.required]] : category,
@@ -30,7 +39,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
       fullName: control ? [fullName, [CustomValidators.required,
         CustomValidators.minLength(4),
         CustomValidators.maxLength(100),
-        CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
+        CustomValidators.pattern('ENG_AR_NUM_ONLY')]] : fullName,
       mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
       email: control ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
       requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,

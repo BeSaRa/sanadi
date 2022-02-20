@@ -648,6 +648,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       .subscribe((model) => {
         this.model = model;
         this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
+        this.translateActions(this.actions);
       })
   }
 
@@ -660,7 +661,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
-    console.log(this.employeeService.isInternalUser());
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
   }
 
