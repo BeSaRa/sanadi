@@ -30,6 +30,9 @@ import {skip, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
+import {IESComponent} from "@app/interfaces/iescomponent";
+import {OrgUser} from "@app/models/org-user";
+import {InternalUser} from "@app/models/internal-user";
 
 @Component({
   selector: 'e-service-component-wrapper',
@@ -128,7 +131,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     Promise.resolve().then(() => {
       this.internal ? this.internalContainer.clear() : this.externalContainer.clear();
       this.internal ? this.internalContainer.insert(this.componentRef.hostView) : this.externalContainer.insert(this.componentRef.hostView);
-      this.displayRightActions(this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
+      this.displayRightActions(this.info?.openFrom ? (this.info.openFrom) : OpenFrom.ADD_SCREEN);
     });
   }
 
@@ -520,6 +523,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private displayRightActions(openFrom: OpenFrom) {
+    if (!this.shouldFollowTheOpenFrom(openFrom)) {
+      openFrom = this.getTheRightOpenForm();
+    }
     switch (openFrom) {
       case OpenFrom.USER_INBOX:
         this.buildUserInboxActions();
@@ -539,6 +545,21 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
   }
 
+  private shouldFollowTheOpenFrom(openFrom: OpenFrom): boolean {
+    switch (openFrom) {
+      case OpenFrom.USER_INBOX:
+        return !!this.info && this.model!.openedFormInbox();
+      case OpenFrom.TEAM_INBOX:
+        return !!this.info && this.model!.openedFormTeamInbox();
+      case OpenFrom.SEARCH:
+        return !!this.info && this.model!.openedFromSearch();
+      case OpenFrom.ADD_SCREEN:
+        return true
+      default:
+        return false;
+    }
+  }
+
   private actionShowFilter(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
     return actions.filter((action) => action.show && this.model ? action.show(this.model) : true)
   }
@@ -546,18 +567,25 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private releaseAction(item: CaseModel<any, any>) {
     item.release().subscribe(() => {
       this.toast.success(this.lang.map.task_have_been_released_successfully);
-      item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CLAIM);
+      item.addReleaseAction()
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
       this.actions = this.translateActions(this.actions);
+      this.component.readonly = true;
+      this.component.allowEditRecommendations = false;
     });
   }
 
   private claimAction(item: CaseModel<any, any>) {
     item.claim().subscribe(() => {
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
-      item.taskDetails.actions = item.taskDetails.actions.concat(WFActions.ACTION_CANCEL_CLAIM);
+      item.addClaimAction((this.employeeService.getCurrentUser() as (OrgUser | InternalUser)).getUniqueName())
       this.displayRightActions(OpenFrom.USER_INBOX);
       this.actions = this.translateActions(this.actions);
+      this.component.allowEditRecommendations = this.internal;
+      const component = (this.component as IESComponent<any>)
+      if (component.handleReadonly && typeof component.handleReadonly === 'function') {
+        component.handleReadonly();
+      }
     })
   }
 
@@ -748,5 +776,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   actionCallback(action: IMenuItem<CaseModel<any, any>>) {
     action.onClick && this.model && (!action.disabled || (typeof action.disabled === 'function' && !action.disabled(this.model))) && action.onClick(this.model);
+  }
+
+  private getTheRightOpenForm(): OpenFrom {
+    if (!!this.info) {
+      if (this.model?.openedFromSearch()) {
+        return OpenFrom.SEARCH;
+      } else if (this.model?.openedFormTeamInbox()) {
+        return OpenFrom.TEAM_INBOX;
+      } else if (this.model?.openedFormInbox()) {
+        return OpenFrom.USER_INBOX;
+      }
+    }
+    return OpenFrom.ADD_SCREEN;
   }
 }

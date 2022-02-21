@@ -41,7 +41,21 @@ export class TaskDetails extends Cloneable<TaskDetails> {
     return this.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
   }
 
+  isNotClaimed(): boolean {
+    return this.actions.includes(WFActions.ACTION_CLAIM);
+  }
+
   getCaseId(): string {
     return this.parentCaseId;
+  }
+
+  addReleaseAction(): void {
+    this.actions = this.actions.filter(action => action !== WFActions.ACTION_CANCEL_CLAIM).concat(WFActions.ACTION_CLAIM);
+    this.owner = '';
+  }
+
+  addClaimAction(username?: string): void {
+    this.actions = this.actions.filter(action => action !== WFActions.ACTION_CLAIM).concat(WFActions.ACTION_CANCEL_CLAIM);
+    username && (this.owner = username)
   }
 }

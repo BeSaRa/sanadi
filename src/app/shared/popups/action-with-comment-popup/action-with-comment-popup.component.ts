@@ -90,7 +90,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.listenToTakeAction();
     of(this.data.task.getCaseType())
       .pipe(filter(caseType => this.specialApproveServices.includes(caseType)))
-      .pipe(tap(val => console.log(val)))
       .pipe(switchMap(_ => this.data.task.loadLicenseModel()))
       .pipe(switchMap(license => this.serviceDataService.loadByCaseType(this.data.task.getCaseType()).pipe(map(service => ({
         service,

@@ -201,7 +201,6 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.task_have_been_released_successfully);
-
         viewDialogRef?.close();
       });
   }

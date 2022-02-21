@@ -311,6 +311,30 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this);
   }
 
+  isClaimed(): boolean {
+    return this.taskDetails && this.taskDetails.isClaimed();
+  }
+
+  addReleaseAction(): void {
+    this.taskDetails && this.taskDetails.addReleaseAction();
+  }
+
+  addClaimAction(username: string): void {
+    this.taskDetails && this.taskDetails.addClaimAction(username);
+  }
+
+  openedFormInbox(): boolean {
+    return this.taskDetails && !!this.taskDetails.owner;
+  }
+
+  openedFormTeamInbox(): boolean {
+    return this.taskDetails && !this.taskDetails.owner;
+  }
+
+  openedFromSearch(): boolean {
+    return !this.taskDetails || !this.taskDetails.tkiid;
+  }
+
   setItemRoute(): void {
     this.itemRoute = '/' + this.service.getMenuItem().path;
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({

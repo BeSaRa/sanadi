@@ -151,4 +151,9 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   saveSignature(signatureFile: File, isNewSignature: boolean = true): Observable<any> {
     return this.service.saveSignature(this.generalUserId, signatureFile, isNewSignature);
   }
+
+  // noinspection JSUnusedGlobalSymbols
+  getUniqueName(): string {
+    return this.domainName;
+  }
 }

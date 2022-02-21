@@ -101,4 +101,9 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+
+  // noinspection JSUnusedGlobalSymbols
+  getUniqueName(): string {
+    return this.qid!.toString();
+  }
 }
