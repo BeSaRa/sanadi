@@ -250,6 +250,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.claimAction(item);
         }
       },
+      // view logs
+      {
+        type: 'action',
+        icon: 'mdi-view-list-outline',
+        label: 'logs',
+        show: () => !this.internal,
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+      },
       {
         type: 'action',
         class: 'btn-secondary',
@@ -494,6 +502,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.closeAction(item);
         }
       },
+      // view logs
+      {
+        type: 'action',
+        icon: 'mdi-view-list-outline',
+        label: 'logs',
+        show: () => !this.internal,
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+      },
       {
         type: 'action',
         class: 'btn-secondary',
@@ -697,6 +713,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private static viewLogsAction(item: CaseModel<any, any>) {
+    item.viewLogs();
+  }
+
   private listenToLangChange(): void {
     this.lang
       .onLanguageChange$
@@ -726,6 +746,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component!.afterSave$
       .pipe(takeUntil(this.destroy$))
       .subscribe((model) => {
+        if (this.info && (this.info.openFrom === OpenFrom.USER_INBOX || this.info.openFrom === OpenFrom.TEAM_INBOX)) {
+          model = model.clone({
+            taskDetails: this.model?.taskDetails
+          });
+        }
         this.updateActions(model);
       })
   }
