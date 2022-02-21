@@ -7,7 +7,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {ToastService} from '@app/services/toast.service';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -322,7 +322,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.form.get('phone')?.patchValue(this.employeeService.getUser()?.phoneNumber);
   }
 
-  handleCountryChange($event?: MouseEvent): void {
+  handleCountryChange(_$event?: MouseEvent): void {
     this.regionField?.reset();
   }
 
@@ -403,8 +403,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   loadLicencesByCriteria(criteria: (Partial<InitialExternalOfficeApprovalSearchCriteria> | Partial<FinalExternalOfficeApprovalSearchCriteria>)): (Observable<InitialExternalOfficeApprovalResult[] | FinalExternalOfficeApprovalResult[]>) {
     if (this.isNewRequestType()) {
+      console.log('NEW');
       return this.initialApprovalService.licenseSearch(criteria as Partial<InitialExternalOfficeApprovalSearchCriteria>);
     } else {
+      console.log('OLD');
       return this.service.licenseSearch(criteria as Partial<FinalExternalOfficeApprovalSearchCriteria>);
     }
   }

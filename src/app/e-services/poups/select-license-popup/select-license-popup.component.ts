@@ -12,6 +12,8 @@ import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {InboxService} from '@app/services/inbox.service';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {CaseTypes} from "@app/enums/case-types.enum";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 @Component({
   selector: 'select-license-popup',
@@ -73,7 +75,7 @@ export class SelectLicensePopupComponent {
   }
 
   viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)) {
-    return this.licenseService.showLicenseContent(license, this.caseType)
+    return this.licenseService.showLicenseContent(license, (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, license);
       });
