@@ -40,13 +40,8 @@ import {CommonUtils} from "@app/helpers/common-utils";
 import {JobTitleService} from "@app/services/job-title.service";
 import {JobTitle} from "@app/models/job-title";
 import {OpenFrom} from "@app/enums/open-from.enum";
-import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
-import {InternalProjectLicense} from '@app/models/internal-project-license';
-import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {SharedService} from '@app/services/shared.service';
 
@@ -315,7 +310,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .subscribe((jobTitles) => this.jobTitles = jobTitles);
   }
 
-  handleCountryChange($event?: MouseEvent): void {
+  handleCountryChange(_$event?: MouseEvent): void {
     this.region.reset();
   }
 
@@ -380,6 +375,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     });
   }
 
+  // noinspection JSUnusedLocalSymbols
   private loadSelectedLicense(licenseNumber: string): void {
     if (!this.model || !licenseNumber) {
       return;
