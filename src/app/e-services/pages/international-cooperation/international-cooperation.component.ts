@@ -30,6 +30,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./international-cooperation.component.scss']
 })
 export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
+  afterSave$: EventEmitter<InternationalCooperation> = new EventEmitter<InternationalCooperation>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<InternationalCooperation | undefined> = new EventEmitter<InternationalCooperation | undefined>();
   accordionView: boolean = false;
@@ -158,7 +159,10 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
       model.draft()
         .pipe(takeUntil(this.destroy$), tap(_ => this.saveDraftMessage()))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 
@@ -170,7 +174,8 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
         return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
       })
     ).subscribe((model) => {
-      this.changeModel.next(model)
+      this.changeModel.next(model);
+      this.afterSave$.emit(model);
     });
   }
 
@@ -181,7 +186,10 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     ).subscribe(fromValues => {
       const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
       model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 

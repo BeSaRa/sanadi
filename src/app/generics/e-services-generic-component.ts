@@ -25,6 +25,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent<M> {
+  afterSave$: EventEmitter<M> = new EventEmitter<M>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<M | undefined> = new EventEmitter<M | undefined>();
   accordionView: boolean = false;
@@ -124,6 +125,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .subscribe((result) => {
         this._afterSave(result.model, result.saveType, this.operation)
         this.operation = OperationTypes.UPDATE;
+        this.afterSave$.emit(result.model);
       })
   }
 

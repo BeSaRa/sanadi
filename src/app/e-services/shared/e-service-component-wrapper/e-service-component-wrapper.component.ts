@@ -118,6 +118,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
     // listen to model change
     this.listenToModelChange();
+    this.listenToAfterSave();
     // listen to change language
     this.listenToLangChange();
   }
@@ -442,6 +443,30 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.returnAction(item);
         }
       },
+      // final reject
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'final_reject_task',
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.FINAL_REJECT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.finalRejectAction(item);
+        }
+      },
+      // return to organization
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'return_to_org_task',
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.RETURN_TO_ORG);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.returnToOrganizationAction(item);
+        }
+      },
       // reject
       {
         type: 'action',
@@ -620,6 +645,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private finalRejectAction(item: CaseModel<any, any>) {
+    item.finalReject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private returnToOrganizationAction(item: CaseModel<any, any>) {
+    item.returnToOrganization().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
   private rejectAction(item: CaseModel<any, any>) {
     item.reject().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -641,14 +678,27 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       })
   }
 
+  private updateActions(model: CaseModel<any, any>): void {
+    this.model = model;
+    this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
+    this.translateActions(this.actions);
+  }
+
   private listenToModelChange(): void {
     this.component.onModelChange$
       .pipe(skip(1))
       .pipe(takeUntil(this.destroy$))
       .subscribe((model) => {
-        this.model = model;
-        this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
-        this.translateActions(this.actions);
+        this.updateActions(model!);
+      })
+  }
+
+
+  private listenToAfterSave() {
+    this.component!.afterSave$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((model) => {
+        this.updateActions(model);
       })
   }
 

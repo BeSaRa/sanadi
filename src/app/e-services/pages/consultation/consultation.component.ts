@@ -103,6 +103,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
               private navigationService: NavigationService,
               private orgUnitService: OrganizationUnitService) {
   }
+  afterSave$: EventEmitter<Consultation> = new EventEmitter<Consultation>();
 
   ngOnInit(): void {
     this.service.ping();
@@ -190,7 +191,10 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
       const model = (new Consultation()).clone({...this.model, ...fromValues});
       model.draft()
         .pipe(takeUntil(this.destroy$), tap(_ => this.saveDraftMessage()))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 
@@ -202,7 +206,8 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
         return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
       })
     ).subscribe((model) => {
-      this.changeModel.next(model)
+      this.changeModel.next(model);
+      this.afterSave$.emit(model);
     });
   }
 
@@ -212,7 +217,10 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
     ).subscribe((fromValues) => {
       const model = (new Consultation()).clone({...this.model, ...fromValues});
       model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 

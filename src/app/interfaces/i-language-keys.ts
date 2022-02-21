@@ -1,5 +1,7 @@
 export interface ILanguageKeys {
   _ignored_label: string;
+  final_reject_task: string;
+  return_to_org_task: string;
   lbl_step_sla: string;
   outputs: string;
   supporting_information: string;

@@ -4,6 +4,8 @@ export enum WFResponseType {
   REJECT = 'reject',
   CLOSE = 'close',
   RETURN = 'return',
+  RETURN_TO_ORG = 'returnToOrg',
+  FINAL_REJECT = 'finalReject',
   COMPLETE = 'complete',
   TO_COMPETENT_DEPARTMENT = 'toCompetentDept',
   TO_MANAGER = 'toManager',

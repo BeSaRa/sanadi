@@ -303,6 +303,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.CLOSE, false, this);
   }
 
+  finalReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_REJECT, false, this);
+  }
+
+  returnToOrganization(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this);
+  }
+
   setItemRoute(): void {
     this.itemRoute = '/' + this.service.getMenuItem().path;
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({

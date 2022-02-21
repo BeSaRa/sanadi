@@ -19,6 +19,7 @@ export interface IESComponent<T> {
   formValidity$?: Subject<any>
   onModelChange$: EventEmitter<T | undefined>
   fromWrapperComponent: boolean;
+  afterSave$: EventEmitter<T>
 
   launch?(): void
 }

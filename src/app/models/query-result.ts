@@ -185,7 +185,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT
     }
 
-    if (!caseType){
+    if (!caseType) {
       caseType = this.BD_CASE_TYPE;
     }
 
@@ -248,6 +248,14 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   reject(claimBefore: boolean = false): DialogRef {
     return this.actionOnTask(WFResponseType.REJECT, claimBefore);
+  }
+
+  finalReject(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.FINAL_REJECT, claimBefore);
+  }
+
+  returnToOrganization(claimBefore: boolean = false): DialogRef {
+    return this.actionOnTask(WFResponseType.RETURN_TO_ORG, claimBefore);
   }
 
   open(actions: IMenuItem<QueryResult>[] = [], from: OpenFrom = OpenFrom.USER_INBOX, readonly: boolean = true): Observable<DialogRef> {

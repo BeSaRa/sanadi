@@ -31,6 +31,7 @@ import {NavigationService} from "@app/services/navigation.service";
   styleUrls: ['./inquiry.component.scss']
 })
 export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
+  afterSave$: EventEmitter<Inquiry> = new EventEmitter<Inquiry>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<Inquiry | undefined> = new EventEmitter<Inquiry | undefined>();
   accordionView: boolean = false;
@@ -158,7 +159,10 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
       const model = (new Inquiry()).clone({...this.model, ...fromValues});
       model.draft()
         .pipe(takeUntil(this.destroy$), tap(_ => this.saveDraftMessage()))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 
@@ -170,7 +174,8 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
         return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
       })
     ).subscribe((model) => {
-      this.changeModel.next(model)
+      this.changeModel.next(model);
+      this.afterSave$.emit(model);
     });
   }
 
@@ -181,7 +186,10 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
     ).subscribe(fromValues => {
       const model = (new Inquiry()).clone({...this.model, ...fromValues});
       model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => this.changeModel.next(model));
+        .subscribe((model) => {
+          this.changeModel.next(model);
+          this.afterSave$.emit(model);
+        });
     });
   }
 
