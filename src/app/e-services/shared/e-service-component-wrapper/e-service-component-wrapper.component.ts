@@ -222,7 +222,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
         show: () => (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType())),
-        disabled: item => item?.canDraft(),
+        disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
         }
