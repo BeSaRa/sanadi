@@ -1,7 +1,4 @@
 <div class="d-flex flex-column">
-  <div *ngIf="!fromDialog" class="row mb-3">
-    <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_final_external_office_approval}}</h1></div>
-  </div>
   <div class="row">
     <form autocomplete="off" [formGroup]="form" id="form">
       <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">

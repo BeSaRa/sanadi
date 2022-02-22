@@ -764,7 +764,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
-    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
   }
 
   isAttachmentReadonly(): boolean {

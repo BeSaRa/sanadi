@@ -1,10 +1,10 @@
 <div class="d-flex flex-column">
-  <ng-container *ngIf="internal">
-    <div class="row">
-      <div class="col">
-        <div class="col"><h1 class="h6 text-primary">{{lang.map[component.service.serviceKey]}}</h1></div>
-      </div>
+  <div class="row">
+    <div class="col">
+      <div class="col"><h1 class="h6 text-primary">{{lang.map[component.service.serviceKey]}}</h1></div>
     </div>
+  </div>
+  <ng-container *ngIf="internal">
     <tabs-list (onTabChange)="onTabChange($event)" class="position-relative">
       <button (click)="print()" [disabled]="!model?.id"
               class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">

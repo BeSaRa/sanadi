@@ -1,9 +1,4 @@
 <div class="d-flex flex-column">
-  <div *ngIf="!accordionView && !fromDialog" class="row">
-    <div class="col">
-      <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_consultations}}</h1></div>
-    </div>
-  </div>
   <tabs-list [accordionView]="accordionView">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
