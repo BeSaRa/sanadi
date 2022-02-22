@@ -42,6 +42,7 @@ import {MenuItem} from "@app/models/menu-item";
 import {MenuItemService} from "@app/services/menu-item.service";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {UrlService} from "@app/services/url.service";
+import {IDefaultResponse} from "@app/interfaces/idefault-response";
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -244,24 +245,13 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
 
-  @Generator(undefined, false, {property: 'rs'})
-  private _claimBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this.http.post<IBulkResult>(this._getUrlService().URLS.CLAIM_BULK, taskIds);
-  }
-
-  @Generator(undefined, false, {property: 'rs'})
-  private _releaseBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this.http.post<IBulkResult>(this._getUrlService().URLS.RELEASE_BULK, taskIds);
-  }
-
   claimBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this._claimBulk(taskIds);
+    return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.CLAIM_BULK, taskIds).pipe(map(res => res.rs));
   }
 
   releaseBulk(taskIds: string[]): Observable<IBulkResult> {
-    return this._releaseBulk(taskIds);
+    return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.RELEASE_BULK, taskIds).pipe(map(res => res.rs));
   }
-
 
   getTask(taskId: string): Observable<T> {
     return this._getTask(taskId);
