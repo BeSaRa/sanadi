@@ -16,11 +16,11 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.office_english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
       </ng-container>
-<!--      <ng-container cdkColumnDef="licenseNumber">-->
-<!--        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>-->
-<!--        <td cdk-cell *cdkCellDef="let row"> {{row.licenseNumber}} </td>-->
-<!--      </ng-container>-->
       <ng-container cdkColumnDef="licenseNumber">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="fullSerial">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
