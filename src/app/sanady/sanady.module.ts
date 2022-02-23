@@ -16,6 +16,7 @@ import {RequestDetailsPopupComponent} from "./popups/request-details-popup/reque
 import {FilterRequestPopupComponent} from "./popups/filter-request-popup/filter-request-popup.component";
 import {PartialRequestReportsComponent} from "./pages/partial-request-reports/partial-request-reports.component";
 import {SubventionAidPopupComponent} from "./popups/subvention-aid-popup/subvention-aid-popup.component";
+import { AuditDetailsPopupComponent } from './popups/audit-details-popup/audit-details-popup.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {SubventionAidPopupComponent} from "./popups/subvention-aid-popup/subvent
     PartialRequestComponent,
     RequestDetailsPopupComponent,
     FilterRequestPopupComponent,
-    PartialRequestReportsComponent
+    PartialRequestReportsComponent,
+    AuditDetailsPopupComponent
   ],
   imports: [
     CommonModule,

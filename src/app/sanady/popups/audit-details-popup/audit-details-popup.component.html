@@ -1,0 +1,175 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.audit_details}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
+</div>
+<div class="dialog-content">
+  <ng-container *ngIf="auditRecord.auditEntity === 'BENEFICIARY' && auditBeneficiary">
+    <div class="w600px">
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.arabic_name}}</label>
+          <span class="form-control">{{auditBeneficiary.arName || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.english_name}}</label>
+          <span class="form-control">{{(auditBeneficiary.enName || '&nbsp;')}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.mobile_number}}</label>
+          <span class="form-control">{{auditBeneficiary.phoneNumber1 || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.monthly_income}}</label>
+          <span
+            class="form-control">{{(auditBeneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.extra_income_source}}</label>
+          <span
+            class="form-control">{{(auditBeneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.total_debts}}</label>
+          <span
+            class="form-control">{{(auditBeneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.number_of_installments}}</label>
+          <span class="form-control">{{auditBeneficiary.totalInstalments || '&nbsp;'}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="auditRecord.auditEntity === 'SUBVENTION_REQUEST' && auditSubventionRequest">
+    <tabs-list>
+      <tab [name]="tabsData.requestInfo.name"
+           [template]="requestInfoTemplate" [title]="lang.map.request_info"></tab>
+      <tab [name]="tabsData.requestStatus.name"
+           [template]="requestStatusTemplate" [title]="lang.map.request_status"></tab>
+    </tabs-list>
+
+    <ng-template #requestInfoTemplate>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.reason_of_request}}</label>
+          <span class="form-control">{{auditSubventionRequest.requestTypeInfo?.getName() || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.request_date}}</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+            <span class="form-control">{{auditSubventionRequest.creationDateString || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.request_aid_amount}}</label>
+          <span
+            class="form-control">{{(auditSubventionRequest.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="allowCompletion" [disabled]="true"
+                   [checked]="auditSubventionRequest.allowCompletion" (click)="preventClick($event)">
+            <label class="form-check-label"
+                   for="allowCompletion">{{lang.map.supplement_amount_with_other_institutes}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-4">
+          <label class="form-label">{{lang.map.request_summary}}</label>
+          <span class="form-control">{{(auditSubventionRequest.requestSummary || '&nbsp;')}}</span>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #requestStatusTemplate>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.request_status}}</label>
+          <span class="form-control">{{auditSubventionRequest.requestStatusInfo?.getName() || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.status_date}}</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+            <span class="form-control">{{auditSubventionRequest.statusDateModifiedString || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-4">
+          <label class="form-label">{{lang.map.notes}}</label>
+          <span class="form-control">{{(auditSubventionRequest.requestNotes || '&nbsp;')}}</span>
+        </div>
+      </div>
+    </ng-template>
+
+  </ng-container>
+  <ng-container *ngIf="auditRecord.auditEntity === 'SUBVENTION_AID' && auditSubventionAid">
+    <div class="w600px">
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.aid_type}}</label>
+          <span class="form-control">{{auditSubventionAid.aidLookupInfo?.getName() || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.estimated_amount}}</label>
+          <span
+            class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.approval_date}}</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+            <span class="form-control">{{auditSubventionAid.approvalDateString || '&nbsp;'}}</span>
+          </div>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.payment_date}}</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+            <span class="form-control">{{auditSubventionAid.aidStartPayDateString || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.payment_periodicity}}</label>
+          <span class="form-control">{{auditSubventionAid.periodicTypeInfo?.getName() || '&nbsp;'}}</span>
+        </div>
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.number_of_installments}}</label>
+          <span class="form-control">{{auditSubventionAid.installementsCount || '0'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-4">
+          <label class="form-label">{{lang.map.given_amount}}</label>
+          <span
+            class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-4">
+          <label class="form-label">{{lang.map.lbl_description}}</label>
+          <span class="form-control">{{auditSubventionAid.aidDescription || '&nbsp;'}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div class="dialog-actions">
+  <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

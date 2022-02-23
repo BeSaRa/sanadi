@@ -309,6 +309,7 @@ export interface ILanguageKeys {
   save_changes: string;
   lbl_edit_attachment_type: string;
   lbl_add_attachment_type: string;
+  lbl_general: string;
   menu_attachment_types: string;
   updated_by: string;
   updated_date: string;
@@ -634,6 +635,8 @@ export interface ILanguageKeys {
   budget_closure_date: string;
   registry_number: string;
   auditor: string;
+  lbl_audit: string;
+  audit_details: string;
   link_to_internal_system: string;
   law_subjected_name: string;
   board_of_directors_period: string;

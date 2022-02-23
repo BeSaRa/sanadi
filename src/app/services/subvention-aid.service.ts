@@ -7,6 +7,11 @@ import {FactoryService} from './factory.service';
 import {SubventionAidInterceptor} from '../model-interceptors/subvention-aid-interceptor';
 import {Generator} from '../decorators/generator';
 import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
+import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +51,34 @@ export class SubventionAidService extends BackendGenericService<SubventionAid> {
 
   loadByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
     return this._loadByCriteria(criteria);
+  }
+
+  /**
+   * @description Loads the subvention aid audit data by request id
+   * @param requestId
+   */
+  loadSubventionAidAuditData(requestId: number): Observable<SanadiAuditResult[]> {
+    return this.http.get<IDefaultResponse<SanadiAuditResult[]>>(this._getServiceURL() + '/audit/' + requestId)
+      .pipe(
+        map((result) => {
+          return result.rs.map(data => {
+            let item = Object.assign(new SanadiAuditResult(), data),
+              interceptor = new SanadiAuditResultInterceptor();
+
+            item = GeneralInterceptor.receive(item);
+            item.auditEntity = 'SUBVENTION_AID';
+            return interceptor.receive(item);
+          })
+        })
+      );
+  }
+
+  @Generator(undefined, false)
+  private _loadSubventionAidAuditDetails(auditId: number): Observable<SubventionAid> {
+    return this.http.get<SubventionAid>(this._getServiceURL() + '/audit/updates/' + auditId);
+  }
+
+  loadSubventionAidAuditDetails(auditId: number): Observable<SubventionAid> {
+    return this._loadSubventionAidAuditDetails(auditId);
   }
 }

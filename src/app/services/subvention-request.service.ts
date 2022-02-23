@@ -13,7 +13,7 @@ import {SubventionRequestInterceptor} from '../model-interceptors/subvention-req
 import {SubventionAid} from '../models/subvention-aid';
 import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
 import {SubventionLogService} from './subvention-log.service';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {SubventionLog} from '../models/subvention-log';
 import {SubventionLogPopupComponent} from '../sanady/popups/subvention-log-popup/subvention-log-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -21,6 +21,10 @@ import {DialogService} from './dialog.service';
 import {SubventionAidPopupComponent} from '../sanady/popups/subvention-aid-popup/subvention-aid-popup.component';
 import {ReasonPopupComponent} from '../sanady/popups/reason-popup/reason-popup.component';
 import {LangService} from './lang.service';
+import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
+import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -111,7 +115,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.loadSubventionAidByCriteria({requestId})
       .pipe(
         switchMap((aidList: SubventionAid[]) => {
-          return of(this.dialogService.show<{aidList: SubventionAid[], isPartial: boolean}>(SubventionAidPopupComponent, {
+          return of(this.dialogService.show<{ aidList: SubventionAid[], isPartial: boolean }>(SubventionAidPopupComponent, {
               aidList,
               isPartial
             })
@@ -148,5 +152,34 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
       requestId: requestId,
       reason
     });
+  }
+
+  /**
+   * @description Loads the subvention request audit data by request id
+   * @param requestId
+   */
+  loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
+    return this.http.get<IDefaultResponse<SanadiAuditResult[]>>(this._getServiceURL() + '/audit/' + requestId)
+      .pipe(
+        map((result) => {
+          return result.rs.map(data => {
+            let item = Object.assign(new SanadiAuditResult(), data),
+              interceptor = new SanadiAuditResultInterceptor();
+
+            item = GeneralInterceptor.receive(item);
+            item.auditEntity = 'SUBVENTION_REQUEST';
+            return interceptor.receive(item);
+          })
+        })
+      );
+  }
+
+  @Generator(undefined, false)
+  private _loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
+    return this.http.get<SubventionRequest>(this._getServiceURL() + '/audit/updates/' + auditId)
+  }
+
+  loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
+    return this._loadSubventionRequestAuditDetails(auditId);
   }
 }

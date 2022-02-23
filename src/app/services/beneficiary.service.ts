@@ -10,11 +10,17 @@ import {Generator} from '../decorators/generator';
 import {IBeneficiaryCriteria} from '../interfaces/i-beneficiary-criteria';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
-import {SelectBeneficiaryPopupComponent} from '../sanady/popups/select-beneficiary-popup/select-beneficiary-popup.component';
+import {
+  SelectBeneficiaryPopupComponent
+} from '../sanady/popups/select-beneficiary-popup/select-beneficiary-popup.component';
 import {Pair} from '../interfaces/pair';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {map} from 'rxjs/operators';
 import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
+import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +28,7 @@ import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
 export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   list!: Beneficiary[];
 
-  constructor(public  http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
+  constructor(public http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
     super();
     FactoryService.registerService('BeneficiaryService', this);
   }
@@ -68,5 +74,34 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
 
   openSelectBeneficiaryDialog(list: Beneficiary[]): DialogRef {
     return this.dialogService.show<Beneficiary[]>(SelectBeneficiaryPopupComponent, list);
+  }
+
+  /**
+   * @description Loads the beneficiary audit data by request id
+   * @param requestId
+   */
+  loadBeneficiaryAuditData(requestId: number): Observable<SanadiAuditResult[]> {
+    return this.http.get<IDefaultResponse<SanadiAuditResult[]>>(this._getServiceURL() + '/audit/' + requestId)
+      .pipe(
+        map((result) => {
+          return result.rs.map(data => {
+            let item = Object.assign(new SanadiAuditResult, data),
+              interceptor = new SanadiAuditResultInterceptor();
+
+            item = GeneralInterceptor.receive(item);
+            item.auditEntity = 'BENEFICIARY';
+            return interceptor.receive(item);
+          })
+        })
+      );
+  }
+
+  @Generator(undefined, false)
+  private _loadBeneficiaryAuditDetails(auditId: number): Observable<Beneficiary> {
+    return this.http.get<Beneficiary>(this._getServiceURL() + '/audit/updates/' + auditId);
+  }
+
+  loadBeneficiaryAuditDetails(auditId: number): Observable<Beneficiary> {
+    return this._loadBeneficiaryAuditDetails(auditId);
   }
 }
