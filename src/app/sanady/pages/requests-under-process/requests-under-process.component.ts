@@ -1,14 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {SubventionRequestService} from '../../../services/subvention-request.service';
+import {LangService} from '@app/services/lang.service';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {Router} from '@angular/router';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {debounceTime, switchMap, take} from 'rxjs/operators';
-import {SubventionRequest} from '../../../models/subvention-request';
-import {ToastService} from '../../../services/toast.service';
-import {EmployeeService} from '../../../services/employee.service';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {SubventionRequest} from '@app/models/subvention-request';
+import {ToastService} from '@app/services/toast.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -24,8 +27,9 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  displayedColumns: string[] = ['requestSerial', 'requestDate', 'organization', 'requestStatus', 'requestAmount', 'actions'];
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'actions'];
   fileIconsEnum = FileIconsEnum;
+  filterControl: FormControl = new FormControl('');
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
@@ -43,6 +47,29 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
     this.internalSearchSubscription?.unsubscribe();
+  }
+
+  sortingCallbacks = {
+    requestDate: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.creationDateString.toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.creationDateString.toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    organizationAndBranch: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestStatus: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestStatusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestStatusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    aidAmount: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestedAidAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestedAidAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
   printRequest($event: MouseEvent, request: SubventionRequest): void {

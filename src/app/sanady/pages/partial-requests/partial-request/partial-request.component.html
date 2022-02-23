@@ -68,6 +68,9 @@
        </ng-container>
        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+       <tr *cdkNoDataRow>
+         <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+       </tr>
      </table>
    </div>
  </div>
