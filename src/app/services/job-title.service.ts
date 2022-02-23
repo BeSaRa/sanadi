@@ -88,8 +88,7 @@ export class JobTitleService extends BackendWithDialogOperationsGenericService<J
       switchMap((jobTitle: JobTitle) => {
         return of(this.dialog.show<IDialogData<JobTitle>>(JobTitlePopupComponent, {
           model: jobTitle,
-          operation: OperationTypes.UPDATE,
-          disableForm: true
+          operation: OperationTypes.VIEW
         }));
       })
     );

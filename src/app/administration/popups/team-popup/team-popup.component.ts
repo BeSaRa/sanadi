@@ -46,10 +46,6 @@ export class TeamPopupComponent implements OnInit {
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
     this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
-    if (this.operation === OperationTypes.VIEW) {
-      this.saveVisible = false;
-      this.validateFieldsVisible = false;
-    }
   }
 
   ngOnInit(): void {
@@ -64,7 +60,7 @@ export class TeamPopupComponent implements OnInit {
   }
 
   buildForm(): void {
-    this.langService = FactoryService.getService('LangService');
+    // this.langService = FactoryService.getService('LangService');
     this.form = this.fb.group({
       arName: [this.model.arName, [
         CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
@@ -95,6 +91,8 @@ export class TeamPopupComponent implements OnInit {
     }
     if (this.operation === OperationTypes.VIEW){
       this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
     }
   }
 

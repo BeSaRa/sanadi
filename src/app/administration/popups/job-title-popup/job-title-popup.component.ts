@@ -26,7 +26,6 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   operation: OperationTypes;
   saveVisible = true;
   userTypes: Lookup[] = [];
-  disableForm: boolean = false;
 
   constructor(public dialogRef: DialogRef,
               public fb: FormBuilder,
@@ -38,7 +37,6 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.disableForm = data.disableForm;
   }
 
   initPopup(): void {
@@ -47,7 +45,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    if (this.disableForm) {
+    if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
@@ -74,7 +72,14 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_job_title : this.lang.map.lbl_edit_job_title;
+    if (this.operation === OperationTypes.CREATE){
+      return this.lang.map.lbl_add_job_title;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.lbl_edit_job_title;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
   };
 
   destroyPopup(): void {
