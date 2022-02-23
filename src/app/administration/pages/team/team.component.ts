@@ -169,6 +169,26 @@ export class TeamComponent implements OnInit, AfterViewInit {
         show: () => {
           return true;
         }
+      },
+      // activate
+      {
+        type: 'action',
+        icon: 'mdi-list-status',
+        label: 'btn_activate',
+        onClick: (item: Team) => this.toggleStatus(item),
+        show: (item) => {
+          return item.status === CommonStatusEnum.DEACTIVATED;
+        }
+      },
+      // deactivate
+      {
+        type: 'action',
+        icon: 'mdi-list-status',
+        label: 'btn_deactivate',
+        onClick: (item: Team) => this.toggleStatus(item),
+        show: (item) => {
+          return item.status === CommonStatusEnum.ACTIVATED;
+        }
       }
     ];
   }
