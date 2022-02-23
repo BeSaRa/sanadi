@@ -1,6 +1,3 @@
-<div *ngIf="!accordionView && !fromDialog" class="row mb-3">
-  <div class="col"><h1 class="h6 text-primary">{{lang.map.menu_projects_models}}</h1></div>
-</div>
 <div class="row">
   <tabs-list [accordionView]="accordionView" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
@@ -689,17 +686,3 @@
                  [load]="loadAttachments"></attachments>
   </ng-template>
 </ng-container>
-<!--<div *ngIf="!fromDialog && !accordionView" class="d-flex align-items-center justify-content-center mb-5 gap-2">
-  <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
-          class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
-  <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-          class="btn shadow-sm btn-primary">{{lang.map.save_as_draft}}</button>
-  <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
-          class="btn btn-primary">{{lang.map.launch}}</button>
-  <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
-  <button class="btn btn-link" [tooltip]="lang.map.validate_fields" (click)="formValidity$.next('main-content')"><i
-    class="mdi mdi-information-outline text-info"></i></button>
-</div>-->
-<div class="mb-5">
-  <button class="invisible">RACA</button>
-</div>

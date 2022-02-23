@@ -58,7 +58,8 @@ const routes: Routes = [
         canActivate: [PermissionGuard],
         //data: {configPermissionGroup: 'ADMIN_PERMISSIONS_GROUP', checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
-      }
+      },
+      { path: 'collection', loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) }
       //{path: '**', redirectTo: '../error'}
     ]
   },

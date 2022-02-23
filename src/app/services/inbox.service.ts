@@ -39,6 +39,7 @@ import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-
 import {ProjectModelService} from '@app/services/project-model.service';
 import {Memoize} from "typescript-memoize";
 import {CaseModel} from "@app/models/case-model";
+import {CollectionApprovalService} from "@app/services/collection-approval.service";
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,7 @@ export class InboxService {
               private cfr: ComponentFactoryResolver,
               private exceptionHandlerService: ExceptionHandlerService,
               private partnerApprovalService: PartnerApprovalService,
+              private collectionApprovalService: CollectionApprovalService,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -69,6 +71,7 @@ export class InboxService {
     this.services.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, this.finalExternalOfficeApprovalService);
     this.services.set(CaseTypes.INTERNAL_PROJECT_LICENSE, this.internalProjectLicenseService);
     this.services.set(CaseTypes.EXTERNAL_PROJECT_MODELS, this.projectModelService);
+    this.services.set(CaseTypes.COLLECTION_APPROVAL, this.collectionApprovalService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

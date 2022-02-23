@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  menu_collection_services_approval: string;
+  menu_collection_services: string;
   _ignored_label: string;
   final_reject_task: string;
   clear_sorting: string;

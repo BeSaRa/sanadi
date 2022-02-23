@@ -544,5 +544,31 @@
     "group": "administration",
     "itemOrder": 11,
     "svg": null
+  },
+  {
+    "id": 43,
+    "langKey": "menu_collection_services",
+    "path": "/home/collection",
+    "icon": "mdi-currency-usd",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 11,
+    "svg": null
+  },
+  {
+    "id": 44,
+    "langKey": "menu_collection_services_approval",
+    "path": "/home/collection/collection-services-approval",
+    "icon": "mdi-currency-usd",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 43,
+    "group": "collection",
+    "itemOrder": 11,
+    "svg": null
   }
 ]
