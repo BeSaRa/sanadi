@@ -81,8 +81,7 @@ export class InternalDepartmentService extends BackendWithDialogOperationsGeneri
       switchMap((internalDepartment: InternalDepartment) => {
         return of(this.dialog.show<IDialogData<InternalDepartment>>(InternalDepartmentPopupComponent, {
           model: internalDepartment,
-          operation: OperationTypes.UPDATE,
-          disableForm: true
+          operation: OperationTypes.VIEW
         }));
       })
     );

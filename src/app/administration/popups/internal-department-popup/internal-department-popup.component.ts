@@ -32,6 +32,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   form!: FormGroup;
   model!: InternalDepartment;
   operation!: OperationTypes;
+  operationTypes = OperationTypes;
   teams: Team[] = [];
   internalUsers: InternalUser[] = [];
   saveVisible = true;
@@ -39,7 +40,6 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   stampPath!: SafeResourceUrl;
   stampFile: any;
   stampExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
-  disableForm: boolean = false;
   saveStamp$: Subject<void> = new Subject<void>();
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
@@ -61,7 +61,6 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.disableForm = data.disableForm;
     this.teamInfo = data.model.mainTeam;
   }
 
@@ -74,7 +73,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    if (this.disableForm) {
+    if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
@@ -193,4 +192,14 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   destroyPopup(): void {
     this.blob.dispose();
   };
+  get popupTitle(): string {
+    if (this.operation === OperationTypes.CREATE){
+      return this.lang.map.add_new_internal_department;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.edit_internal_department;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
+  }
 }
