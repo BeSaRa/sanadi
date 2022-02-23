@@ -72,6 +72,10 @@
                       class="btn icon-btn text-primary">
                 <i class="mdi mdi-pen"></i>
               </button>
+              <button (click)="viewTeam(row)" tooltip="{{langService.map.view}}"
+                      class="btn icon-btn text-primary">
+                <i class="mdi mdi-eye"></i>
+              </button>
               <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED">
                 <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatus.ACTIVATED"
                        tooltip="{{row.status == commonStatus.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"

@@ -132,9 +132,17 @@ export class TeamComponent implements OnInit, AfterViewInit {
   }
 
   editTeam(team: Team): void {
-    const sub = this.teamService.openUpdateDialog(team.id).subscribe((dialog: DialogRef) => {
+    const sub = this.teamService.openUpdateDialog(team.id, false).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
+        sub.unsubscribe();
+      });
+    });
+  }
+
+  viewTeam(team: Team): void {
+    const sub = this.teamService.openUpdateDialog(team.id, true).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });
     });
@@ -148,6 +156,16 @@ export class TeamComponent implements OnInit, AfterViewInit {
         icon: 'mdi-pen',
         label: 'btn_edit',
         onClick: (item: Team) => this.editTeam(item),
+        show: () => {
+          return true;
+        }
+      },
+      // view
+      {
+        type: 'action',
+        icon: 'mdi-eye',
+        label: 'view',
+        onClick: (item: Team) => this.viewTeam(item),
         show: () => {
           return true;
         }

@@ -1,23 +1,22 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {of, Subject} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormManager} from '../../../models/form-manager';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {Team} from '../../../models/team';
-import {LangService} from '../../../services/lang.service';
-import {FactoryService} from '../../../services/factory.service';
-import {CustomValidators} from '../../../validators/custom-validators';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FormManager} from '@app/models/form-manager';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {Team} from '@app/models/team';
+import {LangService} from '@app/services/lang.service';
+import {FactoryService} from '@app/services/factory.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {InternalDepartment} from '../../../models/internal-department';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {InternalDepartment} from '@app/models/internal-department';
 
 @Component({
   selector: 'team-popup',
@@ -33,6 +32,8 @@ export class TeamPopupComponent implements OnInit {
   fm!: FormManager;
   statusList: Lookup[];
   parentDepartmentsList: InternalDepartment[];
+  validateFieldsVisible: boolean = true;
+  saveVisible: boolean = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Team>,
               private toast: ToastService,
@@ -45,6 +46,10 @@ export class TeamPopupComponent implements OnInit {
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
     this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
+    if (this.operation === OperationTypes.VIEW) {
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
   ngOnInit(): void {
@@ -88,6 +93,9 @@ export class TeamPopupComponent implements OnInit {
     if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
     }
+    if (this.operation === OperationTypes.VIEW){
+      this.form.disable();
+    }
   }
 
   saveModel(): void {
@@ -118,6 +126,13 @@ export class TeamPopupComponent implements OnInit {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_team : this.langService.map.lbl_edit_team;
+    if (this.operation === OperationTypes.CREATE){
+      return this.langService.map.lbl_add_team;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.langService.map.lbl_edit_team;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.langService.map.view;
+    }
+    return '';
   }
 }

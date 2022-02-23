@@ -98,13 +98,13 @@ export class TeamService extends BackendGenericService<Team> {
       );
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
+  openUpdateDialog(modelId: number, viewOnly: boolean = false): Observable<DialogRef> {
     return this._loadDialogData(modelId)
       .pipe(
         switchMap((result) => {
           return of(this.dialogService.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
-            operation: OperationTypes.UPDATE,
+            operation: viewOnly ? OperationTypes.VIEW : OperationTypes.UPDATE,
             parentDepartmentsList: result.internalDepartments
           }))
         })

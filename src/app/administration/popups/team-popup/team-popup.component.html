@@ -91,12 +91,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
           class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
+  <button *ngIf="saveVisible" [disabled]="form.invalid || form.pending" (click)="saveModel()"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
