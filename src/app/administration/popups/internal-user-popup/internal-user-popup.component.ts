@@ -222,7 +222,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     } else {
       (this.userPermissions as FormControl).addValidators(Validators.requiredTrue);
     }
-    if (forceUpdateValueAndValidation){
+    if (forceUpdateValueAndValidation) {
       (this.userPermissions as FormControl).updateValueAndValidity();
     }
   }
@@ -264,13 +264,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
-    if (!form.valid){
-      this.toast.info(this.lang.map.msg_following_tabs_valid);
+    if (!form.valid) {
+      this.toast.info(this.lang.map.msg_all_required_fields_are_filled);
       return false;
     }
 
     let user = (new InternalUser()).clone({...model, ...form.get('user')?.value});
-    if(!this.isDuplicatedUser(user)) {
+    if (!this.isDuplicatedUser(user)) {
       return form.valid;
     }
     return false;
@@ -285,22 +285,22 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     let isDuplicatedUserEmpNumber = false;
     let isDuplicatedUserPhoneNumber = false;
     let isDuplicatedUserEmail = false;
-    if(this.isDuplicatedUserLoginName(internalUser)) {
+    if (this.isDuplicatedUserLoginName(internalUser)) {
       this.toast.error(this.lang.map.login_name_is_duplicated);
       isDuplicatedUserLoginName = true;
     }
 
-    if(this.isDuplicatedUserEmpNumber(internalUser)) {
+    if (this.isDuplicatedUserEmpNumber(internalUser)) {
       this.toast.error(this.lang.map.employee_code_is_duplicated);
       isDuplicatedUserEmpNumber = true;
     }
 
-    if(this.isDuplicatedUserPhoneNumber(internalUser)) {
+    if (this.isDuplicatedUserPhoneNumber(internalUser)) {
       this.toast.error(this.lang.map.phone_number_is_duplicated);
       isDuplicatedUserPhoneNumber = true;
     }
 
-    if(this.isDuplicatedUserEmail(internalUser)) {
+    if (this.isDuplicatedUserEmail(internalUser)) {
       this.toast.error(this.lang.map.email_is_duplicated);
       isDuplicatedUserEmail = true;
     }
