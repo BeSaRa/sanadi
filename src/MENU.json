@@ -122,7 +122,7 @@
     "path": "/home/administration/localization",
     "icon": "localization",
     "isSvg": true,
-    "permission": "NO_PERMISSION",
+    "permission": "MANAGE_LOCALIZATION",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",

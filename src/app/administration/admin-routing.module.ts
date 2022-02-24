@@ -24,7 +24,11 @@ import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.compone
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
-  {path: 'localization', component: LocalizationComponent},
+  {
+    path: 'localization', component: LocalizationComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_LOCALIZATION', configPermissionGroup: null, checkAnyPermission: false}
+  },
   {
     path: 'custom-role', component: CustomRoleComponent,
     canActivate: [PermissionGuard],
