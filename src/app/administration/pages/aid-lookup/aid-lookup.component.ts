@@ -1,23 +1,26 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {AidLookup} from '../../../models/aid-lookup';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {AidLookup} from '@app/models/aid-lookup';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {LangService} from '../../../services/lang.service';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {debounceTime, switchMap, tap} from 'rxjs/operators';
-import {AidLookupService} from '../../../services/aid-lookup.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {AidTypes} from '../../../enums/aid-types.enum';
-import {IAidLookupCriteria} from '../../../interfaces/i-aid-lookup-criteria';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {searchInObject} from '../../../helpers/utils';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {cloneDeep as _deepClone} from 'lodash';
-import {SharedService} from '../../../services/shared.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {LangService} from '@app/services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {switchMap, tap} from 'rxjs/operators';
+import {AidLookupService} from '@app/services/aid-lookup.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {IAidLookupCriteria} from '@app/interfaces/i-aid-lookup-criteria';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {FormControl} from '@angular/forms';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {AidLookupStatusEnum} from '@app/enums/aid-lookup-status.enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'app-aid-lookup',
@@ -35,13 +38,24 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
-  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
-  commonStatus = CommonStatusEnum;
+  aidLookupStatusEnum = AidLookupStatusEnum;
+  filterControl: FormControl = new FormControl('');
 
-  selectedRecords: AidLookup[] = [];
+  @ViewChild('table') table!: TableComponent;
+
+  sortingCallbacks = {
+    statusDate: (a: AidLookup, b: AidLookup, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusDateModifiedString.toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusDateModifiedString.toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    status: (a: AidLookup, b: AidLookup, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
   actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -52,58 +66,62 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     }
   ];
 
-  private _addSelected(record: AidLookup): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: AidLookup): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.aidLookups.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.aidLookups.length;
-  }
-
-  isSelected(record: AidLookup): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: AidLookup): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
+  actions: IMenuItem<AidLookup>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      onClick: (item: AidLookup) => this.edit(item, undefined)
+    },
+    // delete
+    {
+      type: 'action',
+      icon: 'mdi-close-box',
+      label: 'btn_delete',
+      onClick: (item: AidLookup) => this.deactivate(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: 'mdi-view-list-outline',
+      label: 'logs',
+      onClick: (item: AidLookup) => this.showAuditLogs(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: AidLookup) => this.toggleStatus(item),
+      show: (item) => {
+        return item.status !== AidLookupStatusEnum.RETIRED && item.status === AidLookupStatusEnum.INACTIVE;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: AidLookup) => this.toggleStatus(item),
+      show: (item) => {
+        return item.status !== AidLookupStatusEnum.RETIRED && item.status === AidLookupStatusEnum.ACTIVE;
+      }
     }
-  }
-
-  onSelectAll($event: Event): void {
-    if (this.selectedRecords.length === this.aidLookups.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.aidLookups);
-    }
-  }
+  ]
 
   constructor(public langService: LangService, private dialogService: DialogService,
               public configService: ConfigurationService, private sharedService: SharedService,
               public toast: ToastService, public aidLookupService: AidLookupService) {
   }
 
+  get selectedRecords(): AidLookup[] {
+    return this.table.selection.selected;
+  }
+
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAdd();
-    this.listenToSearch();
-    this.listenToInternalSearch();
   }
 
   listenToAdd(): void {
@@ -121,8 +139,8 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     })).subscribe(aidLookups => {
       this.aidLookups = aidLookups;
       this.aidLookupsClone = aidLookups;
-      this.selectedRecords = [];
-      this.internalSearch$.next(this.search$.value);
+      this.table.selection.clear();
+      //this.internalSearch$.next(this.search$.value);
     });
   }
 
@@ -134,8 +152,8 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
       });
   }
 
-  edit(aidLookup: AidLookup, $event: MouseEvent): void {
-    $event.preventDefault();
+  edit(aidLookup: AidLookup, $event?: MouseEvent): void {
+    $event?.preventDefault();
     const sub = this.aidLookupService.openUpdateDialog(aidLookup.id, this.aidType)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe((_) => {
@@ -150,9 +168,8 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     return;
   }
 
-  deactivate($event: MouseEvent, aidLookup: AidLookup): void {
-    $event.preventDefault();
-    // @ts-ignore
+  deactivate(aidLookup: AidLookup, $event?: MouseEvent): void {
+    $event?.preventDefault();
     const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: aidLookup.aidCode}))
       .onAfterClose$
       .subscribe((click: UserClickOn) => {
@@ -207,35 +224,11 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   ngOnDestroy(): void {
     this.reloadSubscription?.unsubscribe();
     this.addSubscription?.unsubscribe();
-    this.searchSubscription?.unsubscribe();
-    this.internalSearchSubscription?.unsubscribe();
   }
 
-  search(searchText: string): void {
-    this.search$.next(searchText);
-  }
-
-  private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
-      debounceTime(500)
-    ).subscribe((searchText) => {
-      this.aidLookups = this.aidLookupsClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  private listenToInternalSearch(): void {
-    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
-      this.aidLookups = this.aidLookupsClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  showAuditLogs($event: MouseEvent, aidLookup: AidLookup): void {
-    $event.preventDefault();
-    aidLookup.showAuditLogs($event)
+  showAuditLogs(aidLookup: AidLookup, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    aidLookup.showAuditLogs()
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

@@ -20,7 +20,7 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
 
   service: AidLookupService;
   private langService: LangService;
-  private statusInfo!: Lookup;
+  statusInfo!: Lookup;
   statusDateModifiedString!: string;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
@@ -61,7 +61,7 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+  showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
   }
 }
