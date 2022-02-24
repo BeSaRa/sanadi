@@ -9,6 +9,8 @@ import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {PageComponentInterface} from '@app/interfaces/page-component-interface';
 import {searchInObject} from '@app/helpers/utils';
+import {FormControl} from '@angular/forms';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'app-localization',
@@ -27,10 +29,21 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   add$ = new Subject<any>();
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  filterControl: FormControl = new FormControl('');
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
 
   }
+
+  actions: IMenuItem<Localization>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      onClick: (item: Localization) => this.edit(item, undefined)
+    }
+]
 
   ngOnInit(): void {
     this.listenToReload();
@@ -73,8 +86,8 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
     });
   }
 
-  edit(localization: Localization, $event: MouseEvent): void {
-    $event.preventDefault();
+  edit(localization: Localization, $event?: MouseEvent): void {
+    $event?.preventDefault();
     const sub = this.langService.openUpdateDialog(localization.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
