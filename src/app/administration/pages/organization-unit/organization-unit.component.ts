@@ -1,24 +1,28 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {PageComponentInterface} from '@app/interfaces/page-component-interface';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {LangService} from '../../../services/lang.service';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {debounceTime, switchMap, tap} from 'rxjs/operators';
-import {OrgUnit} from '../../../models/org-unit';
-import {OrganizationUnitService} from '../../../services/organization-unit.service';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {searchInObject} from '../../../helpers/utils';
-import {cloneDeep as _deepClone} from 'lodash';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {EmployeeService} from '../../../services/employee.service';
-import {SharedService} from '../../../services/shared.service';
+import {LangService} from '@app/services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {switchMap, tap} from 'rxjs/operators';
+import {OrgUnit} from '@app/models/org-unit';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {EmployeeService} from '@app/services/employee.service';
+import {SharedService} from '@app/services/shared.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {FormControl} from '@angular/forms';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-unit',
@@ -28,22 +32,71 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 export class OrganizationUnitComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUnit> {
   add$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   organizations: OrgUnit[] = [];
   organizationsClone: OrgUnit[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   reloadSubscription!: Subscription;
   addSubscription!: Subscription;
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
   orgUnitTypesList: Lookup[];
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
   commonStatus = CommonStatusEnum;
+  orgStatusEnum = OrgStatusEnum;
 
-  selectedRecords: OrgUnit[] = [];
-  actionsList: IGridAction[] = [
+  @ViewChild('table') table!: TableComponent;
+  filterControl: FormControl = new FormControl('');
+
+  actionsList: IMenuItem<OrgUnit>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      onClick: (item: OrgUnit) => this.edit(item),
+      show: (item: OrgUnit) => {
+        return this.empService.checkPermissions('ADMIN_EDIT_OU');
+      }
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: 'mdi-close-box',
+      onClick: (item: OrgUnit) => this.deactivate(item),
+      show: (item: OrgUnit) => {
+        return this.empService.checkPermissions('ADMIN_DELETE_OU');
+      }
+    },
+    // logs
+    {
+      type: 'action',
+      icon: 'mdi-view-list-outline',
+      label: 'logs',
+      onClick: (item: OrgUnit) => this.showAuditLogs(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: OrgUnit) => this.toggleStatus(item),
+      show: (item) => {
+        return item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.INACTIVE;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: OrgUnit) => this.toggleStatus(item),
+      show: (item) => {
+        return item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.ACTIVE;
+      }
+    }
+  ];
+
+  bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -53,46 +106,16 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     }
   ];
 
-  private _addSelected(record: OrgUnit): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: OrgUnit): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.organizations.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.organizations.length;
-  }
-
-  isSelected(record: OrgUnit): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: OrgUnit): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
+  sortingCallbacks = {
+    status: (a: OrgUnit, b: OrgUnit, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.getOrgStatusLookup()?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.getOrgStatusLookup()?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
 
-  onSelectAll($event: Event): void {
-    if (this.selectedRecords.length === this.organizations.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.organizations);
-    }
+  get selectedRecords(): OrgUnit[] {
+    return this.table.selection.selected;
   }
 
   constructor(public langService: LangService,
@@ -110,15 +133,11 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
   ngOnDestroy(): void {
     this.reloadSubscription.unsubscribe();
     this.addSubscription.unsubscribe();
-    this.searchSubscription?.unsubscribe();
-    this.internalSearchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToReload();
-    this.listenToSearch();
-    this.listenToInternalSearch();
   }
 
   add(): void {
@@ -133,8 +152,8 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     return;
   }
 
-  deactivate(event: MouseEvent, model: OrgUnit): void {
-    event.preventDefault();
+  deactivate(model: OrgUnit, event?: MouseEvent): void {
+    event?.preventDefault();
     const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.xDeleteMessage}) + '<br/>' +
       this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message).onAfterClose$
@@ -173,8 +192,8 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     }
   }
 
-  edit(model: OrgUnit, event: MouseEvent): void {
-    event.preventDefault();
+  edit(model: OrgUnit, event?: MouseEvent): void {
+    event?.preventDefault();
     const sub = this.organizationUnitService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
@@ -199,36 +218,13 @@ export class OrganizationUnitComponent implements OnInit, OnDestroy, PageCompone
     ).subscribe((orgUnits) => {
       this.organizations = orgUnits;
       this.organizationsClone = orgUnits;
-      this.selectedRecords = [];
-      this.internalSearch$.next(this.search$.value);
+      this.table.selection.clear();
     });
   }
 
-  search(searchText: string): void {
-    this.search$.next(searchText);
-  }
-
-  private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
-      debounceTime(500)
-    ).subscribe((searchText) => {
-      this.organizations = this.organizationsClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  private listenToInternalSearch(): void {
-    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
-      this.organizations = this.organizationsClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  showAuditLogs($event: MouseEvent, organization: OrgUnit): void {
-    $event.preventDefault();
-    organization.showAuditLogs($event)
+  showAuditLogs(organization: OrgUnit, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    organization.showAuditLogs()
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

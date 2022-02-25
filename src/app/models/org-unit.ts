@@ -111,7 +111,7 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
     return this.service.updateLogo(this.id, file);
   }
 
-  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+  showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
   }
 
