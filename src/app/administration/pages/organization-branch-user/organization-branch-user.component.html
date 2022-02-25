@@ -2,21 +2,24 @@
 <div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
-      <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="users">
-        <ng-container cdkColumnDef="id">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_identifier}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.id}} </td>
-        </ng-container>
+      <app-table #table [paginator]="paginator"
+                 [filter]="filterControl.value"
+                 [useSearchToFilter]="true"
+                 [selectable]="true"
+                 [data]="users"
+                 [columns]="displayedColumns"
+                 sortableTable>
+        <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
         <ng-container cdkColumnDef="empNum">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_employee_number}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.lbl_employee_number}}</th>
           <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">{{row.empNum}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="arName">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_arabic_name}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.lbl_arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.arName}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="enName">
-          <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_english_name}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.lbl_english_name}}</th>
           <td cdk-cell *cdkCellDef="let row"><span class="dir-ltr d-inline-block">{{row.enName}}</span></td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
@@ -27,15 +30,18 @@
                  (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
                 <i class="mdi mdi-pen"></i>
               </a>
-              <a href="#" (click)="showAuditLogs($event, row)" tooltip="{{langService.map.show_logs}}" class="icon-btn">
+              <a href="#" (click)="showAuditLogs(row, $event)" tooltip="{{langService.map.show_logs}}" class="icon-btn">
                 <i class="mdi mdi-history"></i>
               </a>
             </div>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-        <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
       </table>
+      </app-table>
+      <app-paginator #paginator></app-paginator>
+      <context-menu-item #menu [actions]="actionsList"></context-menu-item>
     </div>
   </div>
 </div>

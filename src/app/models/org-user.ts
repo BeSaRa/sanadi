@@ -86,7 +86,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_USER_STATUS);
   }
 
-  showAuditLogs(_$event: MouseEvent): Observable<DialogRef> {
+  showAuditLogs(_$event?: MouseEvent): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
   }
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PageComponentInterface} from '@app/interfaces/page-component-interface';
 import {OrgUser} from '@app/models/org-user';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
@@ -9,6 +9,9 @@ import {OrgBranch} from '@app/models/org-branch';
 import {OrgUnit} from '@app/models/org-unit';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {EmployeeService} from '@app/services/employee.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-organization-branch-user',
@@ -25,6 +28,29 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
   addSubscription!: Subscription;
   reload$ = new BehaviorSubject<any>(null);
   reloadSubscription!: Subscription;
+
+  @ViewChild('table') table!: TableComponent;
+  filterControl: FormControl = new FormControl('');
+
+  actionsList: IMenuItem<OrgUser>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: 'mdi-pen',
+      onClick: (item: OrgUser) => this.edit(item, undefined),
+      show: (item: OrgUser) => {
+        return this.empService.checkPermissions('ADMIN_EDIT_USER');
+      }
+    },
+    // logs
+    {
+      type: 'action',
+      icon: 'mdi-view-list-outline',
+      label: 'logs',
+      onClick: (item: OrgUser) => this.showAuditLogs(item)
+    }
+  ]
 
   constructor(private orgUserService: OrganizationUserService,
               public langService: LangService,
@@ -48,8 +74,8 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
   delete(model: OrgUser, event: MouseEvent): void {
   }
 
-  edit(orgUser: OrgUser, $event: MouseEvent): void {
-    $event.preventDefault();
+  edit(orgUser: OrgUser, $event?: MouseEvent): void {
+    $event?.preventDefault();
     const sub = this.orgUserService.openUpdateDialog(orgUser.id).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
@@ -76,9 +102,9 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
     });
   }
 
-  showAuditLogs($event: MouseEvent, user: OrgUser): void {
-    $event.preventDefault();
-    user.showAuditLogs($event)
+  showAuditLogs(user: OrgUser, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    user.showAuditLogs()
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });

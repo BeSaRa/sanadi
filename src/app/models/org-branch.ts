@@ -74,7 +74,7 @@ export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
     return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
   }
 
-  showAuditLogs($event: MouseEvent): Observable<DialogRef> {
+  showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
   }
 }
