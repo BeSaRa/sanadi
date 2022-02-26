@@ -237,6 +237,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
         }
+      },
+      {
+        class: 'btn-secondary',
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'btn_reset',
+        show: () => (!this.model?.id),
+        onClick: () => {
+          this.component.resetForm$.next(null);
+        }
       }
     ];
   }
