@@ -82,4 +82,6 @@ export interface ILookupMap {
   ExternalModelingStatus: Lookup[];
   ServiceRequestTypeNoRenew: Lookup[];
   TRAINING_SURVEY_ANSWER: Lookup[];
+  CollectionClassification: Lookup[];
+  LicenseDurationType: Lookup[];
 }

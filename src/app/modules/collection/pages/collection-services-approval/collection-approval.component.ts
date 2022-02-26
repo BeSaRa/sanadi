@@ -7,6 +7,10 @@ import {CollectionApproval} from "@app/models/collection-approval";
 import {CollectionApprovalService} from "@app/services/collection-approval.service";
 import {LangService} from '@app/services/lang.service';
 import {Observable} from 'rxjs';
+import {Lookup} from "@app/models/lookup";
+import {LookupService} from "@app/services/lookup.service";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {DialogService} from "@app/services/dialog.service";
 
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -17,11 +21,19 @@ import {Observable} from 'rxjs';
 })
 export class CollectionApprovalComponent extends EServicesGenericComponent<CollectionApproval, CollectionApprovalService> {
   constructor(public lang: LangService,
+              private lookupService: LookupService,
+              private dialog: DialogService,
               public service: CollectionApprovalService,
               public fb: FormBuilder) {
     super();
   }
 
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew
+    .filter((l) => l.lookupKey !== ServiceRequestTypes.EXTEND)
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  requestClassifications: Lookup[] = this.lookupService.listByCategory.CollectionClassification;
+  licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   form!: FormGroup;
 
   _getNewInstance(): CollectionApproval {
@@ -41,11 +53,16 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _afterBuildForm(): void {
-    throw new Error('Method not implemented.');
+    //throw new Error('Method not implemented.');
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
+    // check the validation
+    // there is no items
+    this.dialog.error('Please Fill the required data');
+    return false
+
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -57,11 +74,13 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _prepareModel(): CollectionApproval | Observable<CollectionApproval> {
-    throw new Error('Method not implemented.');
+    return new CollectionApproval().clone({
+      ...this.form.value
+    })
   }
 
   _afterSave(model: CollectionApproval, saveType: SaveTypes, operation: OperationTypes): void {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 
   _saveFail(error: any): void {
@@ -81,7 +100,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _resetForm(): void {
-    throw new Error('Method not implemented.');
+    console.log('RESET');
+    // throw new Error('Method not implemented.');
   }
 
 

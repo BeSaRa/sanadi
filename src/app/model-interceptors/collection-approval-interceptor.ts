@@ -12,6 +12,8 @@ export class CollectionApprovalInterceptor implements IModelInterceptor<Collecti
     delete model.requestTypeInfo
     delete model.requestClassificationInfo
     delete model.licenseDurationTypeInfo
+
+    console.log(model);
     return model;
   }
 

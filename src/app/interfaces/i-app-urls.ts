@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  COLLECTION_APPROVAL: string;
   ORG_UNIT_FIELD: string;
   CHECKLIST: string;
   SERVICE_DATA_STEP: string;

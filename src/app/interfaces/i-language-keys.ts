@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  license_type: string;
+  req_classification: string;
   menu_collection_services_approval: string;
   menu_collection_services: string;
   _ignored_label: string;

@@ -16,16 +16,22 @@ import {LangService} from "@app/services/lang.service";
   providedIn: 'root'
 })
 export class CollectionApprovalService extends EServiceGenericService<CollectionApproval> {
+  jsonSearchFile: string = 'asdad';
+  interceptor: IModelInterceptor<CollectionApproval> = new CollectionApprovalInterceptor();
+  serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
+  caseStatusIconMap: Map<number, string> = new Map<number, string>();
+  searchColumns: string[] = [];
+
   _getModel() {
-    throw new Error('Method not implemented.');
+    return CollectionApproval;
   }
 
   _getURLSegment(): string {
-    throw new Error('Method not implemented.');
+    return this.urlService.URLS.COLLECTION_APPROVAL;
   }
 
   _getInterceptor(): Partial<IModelInterceptor<CollectionApproval>> {
-    throw new Error('Method not implemented.');
+    return this.interceptor;
   }
 
   getSearchCriteriaModel<S extends CollectionApproval>(): CollectionApproval {
@@ -36,15 +42,8 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
     throw new Error('Method not implemented.');
   }
 
-  jsonSearchFile: string = 'asdad';
-
-  interceptor: IModelInterceptor<CollectionApproval> = new CollectionApprovalInterceptor();
-  serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
-  caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
-
   _getUrlService(): UrlService {
-    throw new Error('Method not implemented.');
+    return this.urlService;
   }
 
   constructor(public domSanitizer: DomSanitizer,
@@ -52,6 +51,7 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
               public http: HttpClient,
               public dynamicService: DynamicOptionsService,
               public cfr: ComponentFactoryResolver,
+              private urlService: UrlService,
               public dialog: DialogService) {
     super();
     FactoryService.registerService('CollectionApprovalService', this);
