@@ -4,7 +4,7 @@ import {EServicesComponent} from '@app/e-services/e-services.component';
 import {EServicePermissions} from "@app/enums/e-service-permissions";
 import {
   EServiceComponentWrapperComponent
-} from "@app/e-services/shared/e-service-component-wrapper/e-service-component-wrapper.component";
+} from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import {ServicesGuard} from "@app/guards/services.guard";
 import {ServiceItemResolver} from "@app/resolvers/service-item.resolver";
 

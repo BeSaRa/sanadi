@@ -86,6 +86,9 @@ import {WorkItemStatusComponent} from './components/work-item-status/work-item-s
 import {InboxGridActionsComponent} from './components/inbox-grid-actions/inbox-grid-actions.component';
 import {ReadUnreadDirective} from './directives/read-unread.directive';
 import {RiskStatusDirective} from './directives/risk-status.directive';
+import {
+  EServiceComponentWrapperComponent
+} from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 
 @NgModule({
   declarations: [
@@ -159,7 +162,8 @@ import {RiskStatusDirective} from './directives/risk-status.directive';
     WorkItemStatusComponent,
     InboxGridActionsComponent,
     ReadUnreadDirective,
-    RiskStatusDirective
+    RiskStatusDirective,
+    EServiceComponentWrapperComponent
   ],
   imports: [
     CommonModule,
@@ -237,7 +241,8 @@ import {RiskStatusDirective} from './directives/risk-status.directive';
     WorkItemStatusComponent,
     InboxGridActionsComponent,
     ReadUnreadDirective,
-    RiskStatusDirective
+    RiskStatusDirective,
+    EServiceComponentWrapperComponent
   ]
 })
 export class SharedModule {

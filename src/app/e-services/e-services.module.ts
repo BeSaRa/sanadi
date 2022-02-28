@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
 import {EServicesRoutingModule} from './e-services-routing.module';
 import {EServicesComponent} from './e-services.component';
 import {SharedModule} from '../shared/shared.module';
@@ -27,9 +26,6 @@ import {
   FilterInboxRequestPopupComponent
 } from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {SelectTemplatePopupComponent} from './poups/select-template-popup/select-template-popup.component';
-import {
-  EServiceComponentWrapperComponent
-} from './shared/e-service-component-wrapper/e-service-component-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -52,8 +48,7 @@ import {
     ContactOfficerComponent,
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
-    SelectTemplatePopupComponent,
-    EServiceComponentWrapperComponent
+    SelectTemplatePopupComponent
   ],
   imports: [
     CommonModule,

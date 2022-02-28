@@ -10,7 +10,7 @@ import {ServicesGuard} from "@app/guards/services.guard";
 import {ServiceItemResolver} from "@app/resolvers/service-item.resolver";
 import {
   EServiceComponentWrapperComponent
-} from "@app/e-services/shared/e-service-component-wrapper/e-service-component-wrapper.component";
+} from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 
 const routes: Routes = [
   {path: '', component: ProjectsComponent},
