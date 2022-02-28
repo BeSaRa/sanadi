@@ -4,6 +4,7 @@
       <div class="col"><h1 class="h6 text-primary">{{lang.map[component.service.serviceKey]}}</h1></div>
     </div>
   </div>
+  <case-info [model]="model!"></case-info>
   <ng-container *ngIf="internal">
     <tabs-list (onTabChange)="onTabChange($event)" class="position-relative">
       <button (click)="print()" [disabled]="!model?.id"

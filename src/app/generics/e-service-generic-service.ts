@@ -43,6 +43,7 @@ import {MenuItemService} from "@app/services/menu-item.service";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {UrlService} from "@app/services/url.service";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import {ProjectModelCaseStatus} from "@app/enums/project-model-case-status";
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -89,7 +90,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
     [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
-    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus
+    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelCaseStatus
   };
 
   getCFR(): ComponentFactoryResolver {

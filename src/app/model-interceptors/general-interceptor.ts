@@ -1,6 +1,9 @@
+import {AdminResult} from "@app/models/admin-result";
+
 export class GeneralInterceptor {
   static receive(model: any): any {
     model.setItemRoute && model.setItemRoute();
+    model.taskDetails && model.taskDetails.fromUserInfo && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo));
     return model;
   }
 

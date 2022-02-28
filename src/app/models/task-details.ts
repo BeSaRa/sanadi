@@ -1,5 +1,6 @@
 import {Cloneable} from './cloneable';
 import {WFActions} from '@app/enums/wfactions.enum';
+import {AdminResult} from "@app/models/admin-result";
 
 export class TaskDetails extends Cloneable<TaskDetails> {
   tkiid!: string;
@@ -36,6 +37,8 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   parentCaseId!: string;
   responses!: string[];
   actions!: string[];
+
+  fromUserInfo!: AdminResult;
 
   isClaimed(): boolean {
     return this.actions.includes(WFActions.ACTION_CANCEL_CLAIM);

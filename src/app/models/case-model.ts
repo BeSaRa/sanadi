@@ -335,6 +335,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return !this.taskDetails || !this.taskDetails.tkiid;
   }
 
+  hasDetails(): boolean {
+    return !!(this.taskDetails && this.taskDetails.tkiid)
+  }
+
   setItemRoute(): void {
     this.itemRoute = '/' + this.service.getMenuItem().path;
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({

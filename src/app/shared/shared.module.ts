@@ -89,6 +89,7 @@ import {RiskStatusDirective} from './directives/risk-status.directive';
 import {
   EServiceComponentWrapperComponent
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
+import { CaseInfoComponent } from './components/case-info/case-info.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +164,8 @@ import {
     InboxGridActionsComponent,
     ReadUnreadDirective,
     RiskStatusDirective,
-    EServiceComponentWrapperComponent
+    EServiceComponentWrapperComponent,
+    CaseInfoComponent
   ],
   imports: [
     CommonModule,
