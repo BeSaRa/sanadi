@@ -25,8 +25,8 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ToastService} from "@app/services/toast.service";
 import {InboxService} from "@app/services/inbox.service";
-import {Subject} from "rxjs";
-import {skip, takeUntil} from "rxjs/operators";
+import {merge, Subject} from "rxjs";
+import {skip, startWith, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
@@ -54,6 +54,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
     }
+    console.log('CONSTRUCTOR');
   }
 
   private userInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -79,7 +80,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   loadAttachments: boolean = false;
 
   saveTypes: typeof SaveTypes = SaveTypes;
-
   excludedDraftTypes: number[] = [
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
@@ -87,12 +87,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   ]
 
   ngOnDestroy(): void {
-    this.destroy$.next(null);
+    this.destroy$.next('Destroy');
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
 
   ngOnInit(): void {
+    this.rebuildRouteStrategy();
     this.info = this.route.snapshot.data['info'] as (IOpenedInfo | null);
     const component = DynamicComponentService.getComponent(this.render);
     const componentFactory = this.cfr.resolveComponentFactory(component);
@@ -103,7 +104,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component.accordionView = this.employeeService.isInternalUser();
     this.component.fromWrapperComponent = true;
 
-    if (this.info) {
+    if (this.info && this.route.snapshot.queryParamMap.has('item')) {
       this.component.outModel = this.info.model;
       this.model = this.info.model;
       this.model.setInboxService(this.inboxService);
@@ -126,6 +127,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.listenToLangChange();
   }
 
+  rebuildRouteStrategy() {
+    const callback = this.router.routeReuseStrategy.shouldReuseRoute;
+    const sub = merge(this.destroy$)
+      .pipe(startWith('Start'))
+      .subscribe((val: 'Start' | 'Destroy') => {
+        val === 'Start' ? (this.router.routeReuseStrategy.shouldReuseRoute = () => false) : this.router.routeReuseStrategy.shouldReuseRoute = callback;
+        val === 'Destroy' && sub.unsubscribe();
+      });
+  }
 
   ngAfterViewInit(): void {
     Promise.resolve().then(() => {
