@@ -241,10 +241,11 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
         this.form.reset();
-        this.model = undefined;
+        this.model = new Inquiry();
         this.operation = OperationTypes.CREATE;
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.changeModel.next(this.model);
     });
   }
 

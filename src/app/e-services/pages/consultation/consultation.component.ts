@@ -173,10 +173,11 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
         this.resetForm();
-        this.model = undefined;
+        this.model = new Consultation();
         this.operation = OperationTypes.CREATE;
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.changeModel.next(this.model);
     });
   }
 

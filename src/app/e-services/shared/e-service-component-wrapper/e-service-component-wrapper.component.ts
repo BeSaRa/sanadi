@@ -162,7 +162,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.searchActions = [
       {
         type: 'action',
-        // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
         disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
         onClick: () => {
@@ -171,7 +170,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       },
       {
         type: 'action',
-        // icon: 'mdi-rocket-launch-outline',
         label: 'launch',
         show: (item: CaseModel<any, any>) => item.canStart(),
         onClick: (item: CaseModel<any, any>) => {
@@ -203,7 +201,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
-        disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
+        disabled: (item) => {
+          return this.component.form.invalid || item?.alreadyStarted()
+        },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
         }
@@ -221,7 +221,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
-        show: () => (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType())),
+        show: () => {
+          return (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType()))
+        },
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
@@ -795,8 +797,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.loadAttachments = $event.name === 'attachments';
   }
 
-  isDisabled(action: IMenuItem<CaseModel<any, any>>) {
-    return this.model && (typeof action.disabled === 'function' ? action.disabled(this.model!) : action.disabled);
+  isDisabled(action: IMenuItem<CaseModel<any, any>>): boolean {
+    return !!(this.model && (typeof action.disabled === 'function' ? action.disabled(this.model!) : action.disabled));
   }
 
   actionCallback(action: IMenuItem<CaseModel<any, any>>) {

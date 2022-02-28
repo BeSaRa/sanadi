@@ -241,10 +241,11 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       if (this.model) {
         this.model.caseStatus = CaseStatus.STARTED;
         this.form.reset();
-        this.model = undefined;
+        this.model = new InternationalCooperation();
         this.operation = OperationTypes.CREATE;
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.changeModel.next(this.model);
     });
   }
 
