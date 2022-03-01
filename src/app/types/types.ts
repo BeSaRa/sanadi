@@ -15,7 +15,8 @@ export type customValidationTypes =
   | 'ENG_AR_NUM_ONLY'
   | 'PASSPORT'
   | 'EMAIL'
-  | 'NUM_HYPHEN_COMMA';
+  | 'NUM_HYPHEN_COMMA'
+  | 'PHONE_NUMBER';
 
 export type searchFunctionType<T = any> = (text: string, model: T) => boolean;
 
