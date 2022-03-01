@@ -8,7 +8,7 @@ export interface IShowDialog<T> {
 
   _getDialogComponent(): ComponentType<any>;
 
-  addDialog(): DialogRef;
+  addDialog(): DialogRef | Observable<DialogRef>;
 
   editDialog(model: T): Observable<DialogRef>;
 }

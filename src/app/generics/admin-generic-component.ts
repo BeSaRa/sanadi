@@ -65,7 +65,14 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.service.addDialog().onAfterClose$))
+      .pipe(exhaustMap(() => {
+        const result = this.service.addDialog();
+        if (result instanceof DialogRef) {
+          return result.onAfterClose$;
+        } else {
+          return result.pipe(switchMap(ref => ref.onAfterClose$));
+        }
+      }))
       .subscribe(() => this.reload$.next(null))
   }
 

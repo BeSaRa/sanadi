@@ -36,7 +36,7 @@ export abstract class BackendWithDialogOperationsGenericService<T extends { id: 
    * @description open add dialog you can override it in your service class
    * @returns DialogRef reference for the opened dialog
    */
-  addDialog(): DialogRef {
+  addDialog(): DialogRef | Observable<DialogRef> {
     return this.getDialog(new (this._getModel() as { new(...args: any[]): T }), OperationTypes.CREATE);
   }
 
