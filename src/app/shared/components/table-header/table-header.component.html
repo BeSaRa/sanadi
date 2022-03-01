@@ -21,9 +21,9 @@
       <div class="vr"></div>
     </div>
     <ng-container *ngIf="stats">
-      <button  (click)="selectFilter(filter)"
-               class="btn btn-sm position-relative {{riskStatusClasses[filter.lookupKey]}}"
-               *ngFor="let filter of riskStatus">
+      <button (click)="selectFilter(filter)"
+              class="btn btn-sm position-relative {{riskStatusClasses[filter.lookupKey]}}"
+              *ngFor="let filter of riskStatus">
         {{filter.getName()}}
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
         {{stats && stats[riskCounter[filter.lookupKey]]}}
@@ -34,15 +34,18 @@
   </div>
   <div class="px-3"></div>
   <div class="vr"></div>
-  <button (click)="clearSort()" [ngClass]="{isDisabled: !hasSort}" class="btn icon-btn">
+  <button (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
+          class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
   </button>
   <div *ngIf="filterCriteria" class="vr"></div>
-  <button *ngIf="filterCriteria"  [ngClass]="{isDisabled:!hasFilterCriteria()}" (click)="clearFilter()" class="btn icon-btn p-0">
+  <button *ngIf="filterCriteria" [ngClass]="{isDisabled:!hasFilterCriteria()}" [tooltip]="lang.map.clear_filter"
+          (click)="clearFilter()" class="btn icon-btn p-0">
     <i class="mdi mdi-filter-off-outline"></i>
   </button>
   <div *ngIf="filterCriteria" class="vr"></div>
-  <button *ngIf="filterCriteria" (click)="filterClicked.emit('OPEN')" class="btn icon-btn">
+  <button *ngIf="filterCriteria" (click)="filterClicked.emit('OPEN')" [tooltip]="lang.map.filter_results"
+          class="btn icon-btn">
     <i [ngClass]="{'mdi-filter': hasFilterCriteria(), 'mdi-filter-outline': !hasFilterCriteria()}" class="mdi"></i>
   </button>
   <div class="position-relative">
