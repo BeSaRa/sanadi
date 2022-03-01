@@ -25,7 +25,9 @@
       </tab>
     </tabs-list>
     <ng-template #attachment>
-      <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+      <attachments [disabled]="isAttachmentReadonly()"
+                   [caseId]="model?.id"
+                   [caseType]="model?.caseType"
                    [service]="service.documentService"
                    [load]="loadAttachments"></attachments>
     </ng-template>

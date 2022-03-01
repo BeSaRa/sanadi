@@ -114,6 +114,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (this.disabled) {
       return;
     }
+
+    if(!this.caseId){
+      this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
+      return;
+    }
     uploader.click();
     this.selectedFile = row;
     this.selectedIndex = this.attachments.indexOf(row);
