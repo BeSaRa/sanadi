@@ -46,7 +46,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
 
   dataSource: BehaviorSubject<ManagementCouncil[]> = new BehaviorSubject<ManagementCouncil[]>([]);
   columns = ['arabicName', 'englishName', 'email', 'phone', 'mobileNo', 'actions'];
-
+  viewOnly: boolean = false;
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
@@ -96,9 +96,9 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(council => {
-        if (this.readonly) {
-          return;
-        }
+        // if (this.readonly) {
+        //   return;
+        // }
         this.current = council || undefined;
         this.updateForm(this.current);
       })
@@ -109,8 +109,15 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     managementCouncilsFormArray.clear();
 
     if (record) {
-      this._setComponentReadiness('NOT_READY');
+      if (this.viewOnly) {
+        this._setComponentReadiness('READY');
+      } else {
+        this._setComponentReadiness('NOT_READY');
+      }
       managementCouncilsFormArray.push(this.fb.group((record.getManagementCouncilFields(true))));
+      if (this.readonly || this.viewOnly) {
+        this.managementCouncilsFormArray.disable();
+      }
     } else {
       this._setComponentReadiness('READY');
     }
@@ -182,6 +189,13 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
       return;
     }
     this.editIndex = index;
+    this.changed$.next(record);
+  }
+
+  view($event: MouseEvent, record: ManagementCouncil, index: number) {
+    $event.preventDefault();
+    this.editIndex = index;
+    this.viewOnly = true;
     this.changed$.next(record);
   }
 
