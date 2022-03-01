@@ -103,6 +103,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
               private navigationService: NavigationService,
               private orgUnitService: OrganizationUnitService) {
   }
+
   afterSave$: EventEmitter<Consultation> = new EventEmitter<Consultation>();
 
   ngOnInit(): void {
@@ -130,9 +131,26 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
       .subscribe(deps => this.departments = deps);
   }
 
+  private refillFromView(): void {
+    if (!this.model || !this.model.id) {
+      return;
+    }
+
+    const orgExists = this.organizations.find(i => i.id === this.model?.organizationId);
+    if (!orgExists) {
+      this.organizations = this.organizations.concat(new OrgUnit().clone({
+        id: this.model.organizationInfo.id,
+        arName: this.model.organizationInfo.arName,
+        enName: this.model.organizationInfo.enName,
+      }))
+    }
+  }
+
   private loadOrganizations(): void {
     this.orgUnitService.loadActive().pipe(takeUntil(this.destroy$))
-      .subscribe(organizations => this.organizations = organizations);
+      .subscribe(organizations => {
+        this.organizations = organizations;
+      });
   }
 
   private buildForm(): void {
@@ -250,6 +268,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
 
   private updateFromFields(model: Consultation): void {
     this.form.patchValue(model.getFormFields());
+    this.refillFromView();
   }
 
   private listenToOutModelChange(): void {
