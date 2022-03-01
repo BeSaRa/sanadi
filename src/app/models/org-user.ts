@@ -11,6 +11,7 @@ import {LookupService} from '../services/lookup.service';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {OrgUserStatusEnum} from '@app/enums/status.enum';
 
 export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   email: string | undefined;
@@ -98,7 +99,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return false;
   }
 
-  updateStatus(newStatus: CommonStatusEnum): any {
+  updateStatus(newStatus: OrgUserStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
 

@@ -76,7 +76,7 @@ export class OrganizationBranchUserComponent implements OnInit, OnDestroy, PageC
 
   edit(orgUser: OrgUser, $event?: MouseEvent): void {
     $event?.preventDefault();
-    const sub = this.orgUserService.openUpdateDialog(orgUser.id).subscribe((dialog: DialogRef) => {
+    const sub = this.orgUserService.editDialog(orgUser).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();

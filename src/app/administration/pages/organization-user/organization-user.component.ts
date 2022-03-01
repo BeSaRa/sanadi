@@ -1,8 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {Component, ViewChild} from '@angular/core';
 import {OrgUser} from '@app/models/org-user';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {debounceTime, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 import {OrganizationUserService} from '@app/services/organization-user.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
@@ -10,37 +8,59 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {ConfigurationService} from '@app/services/configuration.service';
-import {cloneDeep as _deepClone} from 'lodash';
-import {searchInObject} from '@app/helpers/utils';
 import {IGridAction} from '@app/interfaces/i-grid-action';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {of} from 'rxjs';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {OrgUserStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-user',
   templateUrl: './organization-user.component.html',
   styleUrls: ['./organization-user.component.scss']
 })
-export class OrganizationUserComponent implements OnInit, OnDestroy, PageComponentInterface<OrgUser> {
-  orgUsers: OrgUser[] = [];
-  orgUsersClone: OrgUser[] = [];
-  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
-  add$ = new Subject<any>();
-  addSubscription!: Subscription;
-  reload$ = new BehaviorSubject<any>(null);
-  reloadSubscription!: Subscription;
-  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
-  commonStatusEnum = CommonStatusEnum;
-  destroy$: Subject<any> = new Subject<any>();
+export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
 
-  selectedRecords: OrgUser[] = [];
-  actionsList: IGridAction[] = [
+  constructor(public service: OrganizationUserService,
+              public langService: LangService,
+              private toast: ToastService,
+              public configService: ConfigurationService,
+              public empService: EmployeeService,
+              private dialogService: DialogService,
+              private sharedService: SharedService) {
+    super();
+  }
+
+  @ViewChild('table') table!: TableComponent;
+
+  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
+
+  sortingCallbacks = {
+    organization: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUnitInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUnitInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    branch: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    status: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  orgUserStatusEnum = OrgUserStatusEnum;
+  bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -59,98 +79,12 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
     }
   ];
 
-  // noinspection JSUnusedLocalSymbols
-  bindingKeys: IKeyValue = {
-    arName: 'arName',
-    enName: 'enName',
-    empNum: 'empNum',
-    organization: (record: any): string => {
-      return 'orgUnitInfo.' + this.langService.map.lang + 'Name';
-    },
-    branch: (record: any): string => {
-      return 'orgBranchInfo.' + this.langService.map.lang + 'Name';
-    },
-    status: (record: any): string => {
-      return '';
-    },
-    statusDateModified: 'statusDateModified'
-  };
-
-  private _addSelected(record: OrgUser): void {
-    this.selectedRecords.push(_deepClone(record));
+  get selectedRecords(): OrgUser[] {
+    return this.table.selection.selected;
   }
 
-  private _removeSelected(record: OrgUser): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.orgUsers.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.orgUsers.length;
-  }
-
-  isSelected(record: OrgUser): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: OrgUser): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
-    }
-  }
-
-  // noinspection JSUnusedLocalSymbols
-  onSelectAll($event: Event): void {
-    if (this.selectedRecords.length === this.orgUsers.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.orgUsers);
-    }
-  }
-
-  constructor(private orgUserService: OrganizationUserService,
-              public langService: LangService,
-              private toast: ToastService,
-              public configService: ConfigurationService,
-              public empService: EmployeeService,
-              private dialogService: DialogService,
-              private sharedService: SharedService) {
-  }
-
-  ngOnInit(): void {
-    this.listenToReload();
-    this.listenToAdd();
-    this.listenToSearch();
-    this.listenToInternalSearch();
-  }
-
-  add(): void {
-    const sub = this.orgUserService.openCreateDialog().subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe(() => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
-  }
-
-  delete(model: OrgUser, event: MouseEvent): void {
-    event.preventDefault();
-    return;
-  }
-
-  deactivate(event: MouseEvent, model: OrgUser): void {
-    event.preventDefault();
+  deactivate(model: OrgUser, event?: MouseEvent): void {
+    event?.preventDefault();
     // @ts-ignore
     const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.user.toLowerCase()}) + '<br/>' +
       this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
@@ -178,7 +112,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.orgUserService.deactivateBulk(ids).subscribe((response) => {
+          const sub = this.service.deactivateBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
                 this.reload$.next(null);
@@ -192,69 +126,28 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
 
   edit(orgUser: OrgUser, $event?: MouseEvent): void {
     $event?.preventDefault();
-    const sub = this.orgUserService.openUpdateDialog(orgUser.id).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
+    this.edit$.next(orgUser);
   }
 
   listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(
-      switchMap(() => {
-        return this.orgUserService.loadComposite();
-      })
-    ).subscribe((orgUsers) => {
-      this.orgUserService.list = orgUsers;
-      this.orgUsers = orgUsers;
-      this.orgUsersClone = orgUsers;
-      this.selectedRecords = [];
-      this.internalSearch$.next(this.search$.value);
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(
+        switchMap(() => {
+          // return this.service.loadComposite();
+          const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+          return load.pipe(
+            catchError(_ => of([]))
+          );
+        })
+      ).subscribe((list) => {
+      this.models = list;
+      this.table.selection.clear();
     });
   }
 
-  listenToAdd(): void {
-    this.addSubscription = this.add$.pipe(
-      tap(() => {
-        this.add();
-      })
-    ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
-    this.addSubscription?.unsubscribe();
-    this.searchSubscription?.unsubscribe();
-    this.internalSearchSubscription?.unsubscribe();
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  search(searchText: string): void {
-    this.search$.next(searchText);
-  }
-
-  private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
-      debounceTime(500)
-    ).subscribe((searchText) => {
-      this.orgUsers = this.orgUsersClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  private listenToInternalSearch(): void {
-    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
-      this.orgUsers = this.orgUsersClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  showAuditLogs($event: MouseEvent, user: OrgUser): void {
-    $event.preventDefault();
+  showAuditLogs(user: OrgUser, $event?: MouseEvent): void {
+    $event?.preventDefault();
     user.showAuditLogs($event)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
@@ -262,7 +155,7 @@ export class OrganizationUserComponent implements OnInit, OnDestroy, PageCompone
   }
 
   toggleStatus(model: OrgUser) {
-    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    let updateObservable = model.status == OrgUserStatusEnum.ACTIVE ? model.updateStatus(OrgUserStatusEnum.INACTIVE) : model.updateStatus(OrgUserStatusEnum.ACTIVE);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));

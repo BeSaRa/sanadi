@@ -105,7 +105,15 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     this.addSection$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(_ => !this.model.usedBefore))
-      .pipe(switchMap(_ => (this.surveySectionService.addDialog().onAfterClose$ as Observable<SurveySection>)))
+      .pipe(switchMap(_ => {
+        const result = this.surveySectionService.addDialog();
+        if (result instanceof DialogRef) {
+          return result.onAfterClose$ as Observable<SurveySection>;
+        } else {
+          return result.pipe(switchMap(ref => ref.onAfterClose$ as Observable<SurveySection>));
+        }
+        // this.surveySectionService.addDialog().onAfterClose$ as Observable<SurveySection>
+      }))
       .pipe(filter(value => !!value))
       .subscribe((section) => {
         this.model.sectionSet = this.model.sectionSet.concat(section);

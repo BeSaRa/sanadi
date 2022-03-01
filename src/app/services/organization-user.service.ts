@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
 import {OrgUser} from '../models/org-user';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -24,16 +23,20 @@ import {OrganizationUserPermissionService} from './organization-user-permission.
 import {OrgUserPermission} from '../models/org-user-permission';
 import {AuditLogService} from './audit-log.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
+import {OrgUserStatusEnum} from '@app/enums/status.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUserService extends BackendGenericService<OrgUser> {
+export class OrganizationUserService extends BackendWithDialogOperationsGenericService<OrgUser> {
   list!: OrgUser[];
+  interceptor: OrgUserInterceptor = new OrgUserInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private customRoleService: CustomRoleService,
               private organizationUnitService: OrganizationUnitService,
               private permissionService: PermissionService,
@@ -41,6 +44,10 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
               private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationUserService', this);
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return OrganizationUserPopupComponent;
   }
 
   private _loadInitData(userId?: number): Observable<{
@@ -55,11 +62,13 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
     });
   }
 
-  openCreateDialog(): Observable<DialogRef> {
+  // openCreateDialog(): Observable<DialogRef> {
+  addDialog(): Observable<DialogRef> {
+    debugger
     return this._loadInitData()
       .pipe(
         switchMap((result) => {
-          return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
+          return of(this.dialog.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
             model: new OrgUser(),
             operation: OperationTypes.CREATE,
             customRoleList: result.customRoles,
@@ -71,12 +80,12 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
       );
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this._loadInitData(modelId).pipe(
+  private _openUpdateDialog(model: OrgUser): Observable<DialogRef> {
+    return this._loadInitData(model.id).pipe(
       switchMap((result) => {
-        return this.getById(modelId).pipe(
+        return this.getById(model.id).pipe(
           switchMap((orgUser: OrgUser) => {
-            return of(this.dialogService.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
+            return of(this.dialog.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
               model: orgUser,
               operation: OperationTypes.UPDATE,
               customRoleList: result.customRoles,
@@ -90,8 +99,16 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
     );
   }
 
-  updateStatus(id: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
+  editDialog(model: OrgUser): Observable<DialogRef> {
+    return this._openUpdateDialog(model);
+  }
+
+  editDialogComposite(model: OrgUser): Observable<DialogRef> {
+    return this._openUpdateDialog(model);
+  }
+
+  updateStatus(id: number, newStatus: OrgUserStatusEnum) {
+    return newStatus === OrgUserStatusEnum.ACTIVE ? this.activate(id) : this.deactivate(id);
   }
 
   private activate(id: number): Observable<any> {
@@ -111,8 +128,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   }
 
   _getSendInterceptor(): any {
-    return OrgUserInterceptor.send;
-    // return interceptOrganizationUser;
+    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
@@ -120,8 +136,7 @@ export class OrganizationUserService extends BackendGenericService<OrgUser> {
   }
 
   _getReceiveInterceptor(): any {
-    return OrgUserInterceptor.receive;
-    // return interceptReceiveOrganizationUser;
+    return this.interceptor.receive;
   }
 
 
