@@ -23,9 +23,8 @@
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-account"></i>
                 <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
-                       [placeholder]="lang.map.qatari_id_number"
-                       class="form-control"
-                       type="text">
+                       [placeholder]="lang.map.qatari_id_number" onlyNumbers
+                       class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" type="text">
               </div>
             </div>
             <div class="mb-3 position-relative">
@@ -50,7 +49,7 @@
             <div class="d-flex align-items-center justify-content-center">
               <a href="#" (click)="toggleLang($event)" class="text-decoration-none">
                 <span>{{lang.getCurrentLanguage().toggleTo}}</span>
-<!--                <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>-->
+                <!--                <img alt="lang code" class="lang-icon" src="assets/images/{{lang.getCurrentLanguage().code}}.svg"/>-->
               </a>
             </div>
             <div class="mt-2 mb-2 d-flex align-items-center justify-content-center">

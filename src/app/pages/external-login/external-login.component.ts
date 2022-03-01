@@ -23,6 +23,7 @@ export class ExternalLoginComponent implements OnInit {
 
   background: string = 'url(assets/images/login-background.png)';
   loginBackground: string = 'url(assets/images/background-3.jpg)';
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(public lang: LangService,
               private router: Router,
@@ -40,7 +41,7 @@ export class ExternalLoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginFromExternal = this.fb.group({
-      username: ['', CustomValidators.required],
+      username: ['', [CustomValidators.required, CustomValidators.number]],
       password: [''] // for now, it is not required till we make full integration with NAS Services.
     });
     this.listenToLoginEvent();
