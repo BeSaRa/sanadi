@@ -49,9 +49,9 @@
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <a *ngIf="row.fullSerial" href="#"
-                 class="dir-ltr" [routerLink]="row.itemRoute"
+                 class="dir-ltr" [routerLink]="[row.itemRoute,searchState]"
                  [queryParams]="{item:row.itemDetails}">{{row.fullSerial}}</a>
-              <a *ngIf="!row.fullSerial" href="#" [routerLink]="row.itemRoute"
+              <a *ngIf="!row.fullSerial" href="#" [routerLink]="[row.itemRoute,searchState]"
                  [queryParams]="{item:row.itemDetails}">{{lang.map.open_task}}</a>
             </td>
           </ng-container>

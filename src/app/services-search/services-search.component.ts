@@ -19,6 +19,9 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigurationService} from '@app/services/configuration.service';
 import {CaseStatus} from '@app/enums/case-status.enum';
+import {GeneralSearchCriteriaInterceptor} from "@app/model-interceptors/general-search-criteria-interceptor";
+import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
+import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
 
 @Component({
   selector: 'services-search',
@@ -43,6 +46,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   defaultDates: string = '';
   fieldsNames: string[] = [];
   filter: string = '';
+  searchState: any;
+  oldValuesAssigned: boolean = false;
 
   get criteriaTitle(): string {
     return this.lang.map.search_result + (this.results.length ? " (" + this.results.length + ")" : '');
@@ -67,13 +72,15 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = new FormGroup({});
-    // this.listenToRouteParams();
+    this.reSelectService();
     this.listenToServiceChange(this.serviceControl.value);
     this.listenToSearch();
     this.buildGridActions();
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
+    let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
+    this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .search(this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames))
       .subscribe((results: CaseModel<any, any>[]) => {
@@ -84,6 +91,13 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
         }
       });
+  }
+
+  private normalizeSearchCriteria(criteria: any): any {
+    return {
+      ...(GeneralInterceptor.send(new GeneralSearchCriteriaInterceptor().send(criteria))),
+      caseType: (new (this.selectedService._getModel() as unknown as IServiceConstructor)).caseType
+    }
   }
 
   private listenToServiceChange(serviceNumber?: number) {
@@ -108,6 +122,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
             this.form.reset();
             this.stringifyDefaultDates(fields[0]);
             this.fields = fields;
+            this.setOldValues();
             this.getFieldsNames(fields);
           });
       });
@@ -327,23 +342,42 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   // noinspection JSUnusedLocalSymbols
-  private listenToRouteParams() {
-    this.activatedRoute.fragment.subscribe((serviceNumber) => {
-      let service = serviceNumber ? Number(serviceNumber.split('-').pop()) : -1
-      service && this.serviceNumbers.includes(service) && this.serviceControl.value !== service && this.serviceControl.patchValue(service);
-    })
-  }
-
-  // noinspection JSUnusedLocalSymbols
-  private updateRoute() {
-    this.router.navigate([this.activatedRoute], {
-      fragment: ("service-" + this.serviceControl.value)
-    }).then((val) => console.log(val))
+  private reSelectService() {
+    const selectedService = parseInt(this.activatedRoute.snapshot.params['caseType']);
+    if (isNaN(selectedService)) {
+      return;
+    }
+    this.serviceControl.patchValue(selectedService);
   }
 
   private getFieldsNames(fields: FormlyFieldConfig[]) {
     this.fieldsNames = fields.map(group => group.fieldGroup).reduce((list, row) => {
       return row ? list.concat(row.map(field => (field.key as string))) : list;
     }, [] as string[])
+  }
+
+  private setOldValues(): void {
+    if (this.oldValuesAssigned) {
+      return;
+    }
+    const controls = Object.keys(this.activatedRoute.snapshot.params);
+    const oldValues = this.activatedRoute.snapshot.params;
+    if (!controls.length) {
+      this.oldValuesAssigned = true;
+      return;
+    }
+    setTimeout(() => {
+      Object.entries(this.form.controls).forEach(([key, control]) => {
+        if (oldValues.hasOwnProperty(key)) {
+          (key === 'createdOnTo' || key === 'createdOnFrom') ? (control.patchValue({
+            dateRange: undefined,
+            isRange: false,
+            singleDate: {jsDate: new Date(oldValues[key])}
+          })) : control.patchValue(isNaN(Number(oldValues[key])) ? oldValues[key] : Number(oldValues[key]));
+        }
+      })
+      this.search$.next(null);
+      this.oldValuesAssigned = true;
+    })
   }
 }

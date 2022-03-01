@@ -64,7 +64,7 @@
         }
       },
       {
-        "key": "serial",
+        "key": "fullSerial",
         "type": "input",
         "label": "serial_number",
         "validations": {

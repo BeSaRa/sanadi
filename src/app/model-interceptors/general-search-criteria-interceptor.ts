@@ -23,12 +23,6 @@ interceptors.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, new FinalExternalOffi
 interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
-
-
-  constructor() {
-
-  }
-
   // not important we will never use it
   receive(model: ICaseSearchCriteria): ICaseSearchCriteria {
     return interceptors.get(model.caseType!)?.receive(model) || identity(model);

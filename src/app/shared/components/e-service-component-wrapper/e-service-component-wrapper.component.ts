@@ -54,7 +54,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
     }
-    console.log('CONSTRUCTOR');
   }
 
   private userInboxActions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -543,9 +542,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       case OpenFrom.USER_INBOX:
         this.router.navigate(['/home/user-inbox']).then();
         break;
-      case OpenFrom.SEARCH:
-        this.router.navigate(['/home/services-search']).then();
+      case OpenFrom.SEARCH: {
+        this.router.navigate(['/home/services-search', this.route.snapshot.params]).then();
         break
+      }
     }
 
   }
