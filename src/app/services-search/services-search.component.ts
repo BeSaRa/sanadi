@@ -3,8 +3,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {LangService} from '../services/lang.service';
 import {InboxService} from '../services/inbox.service';
-import {Subject} from 'rxjs';
-import {filter, map, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {CaseModel} from '../models/case-model';
 import {DialogService} from '../services/dialog.service';
@@ -31,20 +31,23 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   private selectedService!: EServiceGenericService<any>;
 
   searchColumns: string[] = [];
+  headerColumn: string[] = ['extra-header'];
   form!: FormGroup;
   fields: FormlyFieldConfig[] = [];
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.employeeService.userCanManage(caseType));
   serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
-  search$: Subject<any> = new Subject<any>();
+  search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   tabIndex$: Subject<number> = new Subject<number>();
   defaultDates: string = '';
   fieldsNames: string[] = [];
+  filter: string = '';
 
   get criteriaTitle(): string {
     return this.lang.map.search_result + (this.results.length ? " (" + this.results.length + ")" : '');
   };
+
 
   constructor(public lang: LangService,
               private toast: ToastService,
@@ -263,6 +266,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   private listenToSearch() {
     const validForm$ = this.search$
+      .pipe(skip(1))
       .pipe(filter(_ => this.form.valid))
       .pipe(map(_ => this.prepareCriteriaModel()));
 
@@ -288,6 +292,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       return "";
     }
     return this.lang.getLocalByKey(serviceKey).getName();
+  }
+
+  get selectedServiceKey(): keyof ILanguageKeys {
+    return this.selectedService.serviceKey;
   }
 
   resetCriteria() {
