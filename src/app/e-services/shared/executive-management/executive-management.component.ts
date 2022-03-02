@@ -12,6 +12,7 @@ import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {JobTitleService} from '@app/services/job-title.service';
 import {JobTitle} from '@app/models/job-title';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'executive-management',
@@ -42,6 +43,7 @@ export class ExecutiveManagementComponent implements OnInit {
   @Input() countriesList: Country[] = [];
   @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;
+  @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
 
   listDataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<ExecutiveManagement[]>([]);
   columns = ['arabicName', 'englishName', 'email', 'phone', 'actions'];

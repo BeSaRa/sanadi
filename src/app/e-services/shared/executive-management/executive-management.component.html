@@ -99,7 +99,7 @@
   </div>
 </div>
 
-<app-page-header [hidden]="managersFormArray.controls.length" pageTitle="managers"
+<app-page-header [hidden]="managersFormArray.controls.length" [pageTitle]="pageTitleKey"
                  [clickOnNew$]="add$"
                  [addPermission]="addManagerAllowed()"></app-page-header>
 
