@@ -320,7 +320,7 @@
     <ng-template #executiveManagementsTemplate>
       <executive-management #executiveManagementsTab
                             [countriesList]="countries"
-                            [jobTitlesList]="jobTitles"
+                            [jobTitlesList]="jobTitles" [pageTitleKey]="'executive_management'"
                             [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event"></executive-management>
