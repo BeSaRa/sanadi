@@ -460,7 +460,8 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       })
   }
 
-  licenseSearch(): void {
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
     const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
     if (!value) {
       this.dialog.info(this.lang.map.need_license_number_to_search)

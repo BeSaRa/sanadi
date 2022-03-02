@@ -778,8 +778,8 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       })
   }
 
-  licenseSearch($event: Event): void {
-    $event.preventDefault();
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
     const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
     if (!value) {
       this.dialogService.info(this.lang.map.need_license_number_to_search)

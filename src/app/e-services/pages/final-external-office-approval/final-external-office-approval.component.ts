@@ -388,8 +388,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     });
   }
 
-  licenseSearch($event: Event): void {
-    $event.preventDefault();
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
     let value = '';
     if (this.requestTypeField.valid) {
       value = this.isNewRequestType() ? this.initialLicenseFullSerialField.value : this.oldLicenseFullSerialField.value;
