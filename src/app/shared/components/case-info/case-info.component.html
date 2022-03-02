@@ -1,78 +1,59 @@
 <div class="task-details">
-  <div class="row mb-3">
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="sender"
-               class="col-md-4 col-sm-12 col-form-label">{{model.hasDetails() ? lang.map.sender : lang.map.created_by }}</label>
-        <div class="col-md-8 mb-3 col-sm-12">
-          <div class="input-group">
-            <span class="input-group-text"><i class="mdi mdi-account text-primary"></i></span>
-            <input id="sender" readonly [value]="username" disabled class="form-control">
-            <span class="input-group-text"><i class="mdi mdi-calendar text-primary"></i></span>
-            <input id="creationDate" readonly [value]="(model.createdOn|date: 'mediumDate')" disabled
-                   class="form-control">
-          </div>
-        </div>
+  <div class="row">
+    <!-- Sender/Created By -->
+    <div class="col-sm-12 col-md-4 mb-4">
+      <label for="senderOrCreatedBy"
+             class="form-label">{{model.hasDetails() ? lang.map.sender : lang.map.created_by}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-account text-primary"></i></span>
+        <span id="senderOrCreatedBy" class="form-control input-disabled">{{username || '&nbsp;'}}</span>
       </div>
     </div>
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="serial"
-               class="col-md-4 col-sm-12 col-form-label">{{lang.map.serial_number}}</label>
-        <div class="col-md-8 mb-3 col-sm-12">
-          <div class="input-group">
-            <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
-            <input id="serial" readonly [value]="fullSerial"
-                   class="form-control">
-          </div>
-        </div>
+    <!-- Sent On/Created On -->
+    <div class="col-sm-12 col-md-4 mb-4">
+      <label for="sentOrCreatedOn"
+             class="form-label">{{model.hasDetails() ? lang.map.sent_date : lang.map.creation_date}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-calendar text-primary"></i></span>
+        <span id="sentOrCreatedOn"
+              class="form-control input-disabled">{{(model.createdOn|date: 'mediumDate') || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <!-- Serial Number -->
+    <div class="col-sm-12 col-md-4 mb-4">
+      <label class="form-label">{{lang.map.serial_number}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+        <span class="form-control input-disabled">{{fullSerial || '&nbsp;'}}</span>
       </div>
     </div>
   </div>
-  <div class="row mb-3">
-    <div class="col-md-6 col-sm-12">
-      <div class="row">
-        <label for="caseStatusInfo" class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_status}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <span id="caseStatusInfo"
-                class="form-control input-disabled">{{caseStatusInfo}}</span>
-        </div>
-      </div>
+  <div class="row">
+    <!-- Status -->
+    <div class="col-sm-12 col-md-4 mb-4">
+      <label class="form-label">{{lang.map.lbl_status}}</label>
+      <span class="form-control input-disabled">{{caseStatusInfo || '&nbsp;'}}</span>
     </div>
-    <!-- Internal Project Generated License -->
-    <!-- Initial External Office Generated License -->
-    <!-- Partner Approval Generated License -->
-    <!-- Final External Office Generated License -->
-    <div class="col-md-6 col-sm-12" *ngIf="isLicenseCase()">
-      <div class="row">
-        <label for="generatedInternalProjectLicenseNumber" class="col-md-4 col-sm-12 col-form-label"
-               disabled>{{lang.map.generated_license_number}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
-            <input readonly [value]="generatedLicenseNumber" id="generatedInternalProjectLicenseNumber"
-                   class="form-control">
-            <a type="button" [tooltip]="lang.map.view" (click)="viewGeneratedLicense()"
-               class="input-group-text"><i
-              class="mdi mdi-eye text-primary"></i></a>
-          </div>
-        </div>
+    <!-- Generated License -->
+    <div class="col-sm-12 col-md-4 mb-4" *ngIf="isLicenseCase()">
+      <label class="form-label">{{lang.map.generated_license_number}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+        <span class="form-control input-disabled">{{generatedLicenseNumber || '&nbsp;'}}</span>
+        <a type="button" [tooltip]="lang.map.view" (click)="viewGeneratedLicense()"
+           class="input-group-text"><i
+          class="mdi mdi-eye text-primary"></i></a>
       </div>
     </div>
     <!-- Template Model Approved -->
-    <div class="col-md-6 col-sm-12" *ngIf="isTemplateModelServiceAndApproved()">
-      <div class="row">
-        <label for="templateSerial1" class="col-md-4 col-sm-12 col-form-label">{{lang.map.template_serial}}</label>
-        <div class="col-md-8 mb-3 col-sm-12 position-relative">
-          <div class="input-group">
-            <span class="input-group-text"><i class="text-primary mdi mdi-counter"></i></span>
-            <input id="templateSerial1" readonly [readOnly]="true" [value]="templateSerial"
-                   class="form-control">
-            <a type="button" [tooltip]="lang.map.view" (click)="viewProjectModelTemplate()"
-               class="input-group-text"><i
-              class="mdi mdi-eye text-primary"></i></a>
-          </div>
-        </div>
+    <div class="col-sm-12 col-md-4 mb-4" *ngIf="isTemplateModelServiceAndApproved()">
+      <label class="form-label">{{lang.map.template_serial}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+        <span class="form-control input-disabled">{{templateSerial || '&nbsp;'}}</span>
+        <a type="button" [tooltip]="lang.map.view" (click)="viewProjectModelTemplate()"
+           class="input-group-text"><i
+          class="mdi mdi-eye text-primary"></i></a>
       </div>
     </div>
   </div>

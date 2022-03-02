@@ -28,73 +28,74 @@
     </tabs-list>
     <!-- basic -->
     <ng-template formGroupName="basic" #basicTemplate>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="organizationId"
-                   class="col-form-label col-md-4 col-sm-12"
-                   for="organizationId">{{lang.map.lbl_organization}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <ng-select [readonly]="readonly || !!(this.model?.id)" validationClasses="organizationId"
-                         appendTo="body"
-                         [clearable]="true"
-                         id="organizationId"
-                         formControlName="organizationId">
-                <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="organizationId"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <!-- Organization -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
+          <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="organizationId"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="(readonly || !!(this.model?.id))" appendTo="body"
+                     formControlName="organizationId" validationClasses="organizationId">
+            <ng-option [value]="org.id" *ngFor="let org of organizations">{{org.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="organizationId"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="requestClassification" for="requestClassification"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.request_classification}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select [readonly]="readonly" validationClasses="requestClassification"
-                         id="requestClassification" formControlName="requestClassification">
-                <ng-option [value]="requestClassification.lookupKey"
-                           *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="requestClassification"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Request Classification -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="requestClassification" for="requestClassification" class="form-label">{{lang.map.request_classification}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestClassification"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
+                     formControlName="requestClassification" validationClasses="requestClassification">
+            <ng-option [value]="requestClassification.lookupKey"
+                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestClassification"></app-field-error-message>
+        </div>
+        <!-- Request Type -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{lang.map.request_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestType"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="!isEditRequestTypeAllowed()" appendTo="body"
+                     formControlName="requestType" validationClasses="requestType">
+            <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="requestType" for="requestType"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.request_type}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select [readonly]="!isEditRequestTypeAllowed()"
-                         validationClasses="requestType" id="requestType"
-                         formControlName="requestType" appendTo="body">
-                <ng-option [value]="requestType.lookupKey"
-                           *ngFor="let requestType of requestTypes">{{requestType.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="requestType"></app-field-error-message>
-            </div>
+      <div class="row">
+        <!-- License Number -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="oldLicenseFullserial" for="oldLicenseFullserial" class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
+                    class="input-group-text"><i
+              class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
+                   formControlName="oldLicenseFullserial" trimInput
+                   type="text" [readOnly]="!isEditLicenseAllowed()"
+                   validationClasses="oldLicenseFullserial" [onlyInvalid]="false" class="form-control"
+                   id="oldLicenseFullserial">
+            <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
           </div>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="oldLicenseFullserial" class="col-form-label col-md-4 col-sm-12"
-                   for="oldLicenseFullserial">{{lang.map.license_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-position-relative">
-              <div class="input-group">
-                <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
-                        class="input-group-text"><i
-                  class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-                <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
-                       formControlName="oldLicenseFullserial"
-                       type="text" [readOnly]="!isEditLicenseAllowed()"
-                       validationClasses="oldLicenseFullserial" [onlyInvalid]="false" class="form-control"
-                       id="oldLicenseFullserial">
-              </div>
-              <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Arabic Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="arName" class="form-control" trimInput id="arName">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <!-- English Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+          <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="enName" class="form-control" trimInput id="enName">
+          <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
       </div>
       <div *ngIf="selectedLicense">
@@ -145,233 +146,148 @@
           </table>
         </app-table>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="arName" for="arName"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_arabic_name}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="arName" [readonly]="readonly" validationClasses="arName"
-                     formControlName="arName" class="form-control"/>
-              <app-field-error-message controlName="arName"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <!-- Country -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
+          <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="country"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="!isEditCountryAllowed()" appendTo="body"
+                     (change)="handleCountryChange($event)"
+                     formControlName="country" validationClasses="country">
+            <ng-option *ngFor="let option of countries" [value]="option.id"
+                       [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="country"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="enName" for="enName"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_english_name}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="enName" [readonly]="readonly" validationClasses="enName"
-                     formControlName="enName" class="form-control"/>
-              <app-field-error-message controlName="enName"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Region -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.region}}</label>
+          <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()"
+                 validationClasses="region" class="form-control" trimInput id="region">
+          <app-field-error-message controlName="region"></app-field-error-message>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="country" for="country"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.country}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
-                         placeholder="{{lang.map.select}}" id="country" appendTo="body"
-                         (change)="handleCountryChange($event)"
-                         [notFoundText]="lang.map.msg_not_found" [readonly]="!isEditCountryAllowed()"
-                         formControlName="country" validationClasses="country">
-                <ng-option *ngFor="let option of countries" [value]="option.id"
-                           [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="country"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="region" for="region"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.region}}</label>
-            <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
-              <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()"
-                     validationClasses="region" class="form-control" id="region">
-              <app-field-error-message controlName="region"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Headquarter  Type -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="headQuarterType" for="headQuarterType" class="form-label">{{lang.map.headquarter_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="headQuarterType" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="headQuarterType"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
+                     (change)="handleCountryChange($event)"
+                     formControlName="headQuarterType" validationClasses="headQuarterType">
+            <ng-option [value]="headQuarterType.lookupKey"
+                       *ngFor="let headQuarterType of headQuarterTypes">{{headQuarterType.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="headQuarterType"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="headQuarterType" for="headQuarterType"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.headquarter_type}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12 ng-select-wrapper">
-              <ng-select [readonly]="readonly" validationClasses="headQuarterType" id="headQuarterType"
-                         formControlName="headQuarterType">
-                <ng-option [value]="headQuarterType.lookupKey"
-                           *ngFor="let headQuarterType of headQuarterTypes">{{headQuarterType.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="headQuarterType"></app-field-error-message>
-            </div>
+      <div class="row">
+        <!-- Establishment Date -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="establishmentDate" for="establishmentDate" class="form-label">{{lang.map.establishment_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="establishmentDate"
+                 [ngClass]="{'input-disabled': (isExtendOrCancelRequestType() || readonly)}"
+                 id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
+                 (click)="!isExtendOrCancelRequestType() && !readonly && dpEstablishmentDate.toggleCalendar()"
+                 #dpEstablishmentDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="establishmentDate"></div>
+            <app-field-error-message controlName="establishmentDate"></app-field-error-message>
           </div>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="establishmentDate" asteriskIfRequired="establishmentDate"
-                   class="col-sm-12 col-md-4 col-form-label">{{lang.map.establishment_date}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <div class="input-group">
-                <i class="input-group-text mdi mdi-calendar"></i>
-                <div class="form-control" formControlName="establishmentDate"
-                     [ngClass]="{'input-disabled': readonly}"
-                     id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
-                     (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
-                     #dpEstablishmentDate="angular-mydatepicker"
-                     angular-mydatepicker validationClasses="establishmentDate"></div>
-                <app-field-error-message controlName="establishmentDate"></app-field-error-message>
-              </div>
-            </div>
-          </div>
+        <!-- Latitude -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="latitude" for="latitude" class="form-label">{{lang.map.latitude}}</label>
+          <input formControlName="latitude" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="latitude" class="form-control" trimInput id="latitude">
+          <app-field-error-message controlName="latitude"></app-field-error-message>
+        </div>
+        <!-- Longitude -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="longitude" for="longitude" class="form-label">{{lang.map.longitude}}</label>
+          <input formControlName="longitude" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="longitude" class="form-control" trimInput id="longitude">
+          <app-field-error-message controlName="longitude"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="latitude" for="latitude"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.latitude}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="latitude" [readonly]="readonly" validationClasses="latitude"
-                     formControlName="latitude" class="form-control"/>
-              <app-field-error-message controlName="latitude"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <!-- Phone -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
+          <input formControlName="phone" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="phone" class="form-control" trimInput id="phone">
+          <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="longitude" for="longitude"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.longitude}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="longitude" [readonly]="readonly" validationClasses="longitude"
-                     formControlName="longitude" class="form-control"/>
-              <app-field-error-message controlName="longitude"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Fax Number -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="fax" for="fax" class="form-label">{{lang.map.fax_number}}</label>
+          <input formControlName="fax" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="fax" class="form-control" trimInput id="fax">
+          <app-field-error-message controlName="fax"></app-field-error-message>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="phone" for="phone"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="phone" [readonly]="readonly" validationClasses="phone"
-                     formControlName="phone" class="form-control"/>
-              <app-field-error-message controlName="phone"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="fax" for="fax"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.fax_number}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="fax" [readonly]="readonly" validationClasses="fax"
-                     formControlName="fax" class="form-control"/>
-              <app-field-error-message controlName="fax"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Website -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="website" for="website" class="form-label">{{lang.map.website}}</label>
+          <input formControlName="website" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="website" class="form-control" trimInput id="website">
+          <app-field-error-message controlName="website"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="website" for="website"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.website}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="website" [readonly]="readonly" validationClasses="website"
-                     formControlName="website" class="form-control"/>
-              <app-field-error-message controlName="website"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <!-- Email -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+          <input formControlName="email" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="email" class="form-control" trimInput id="email">
+          <app-field-error-message controlName="email"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="email" for="email"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_email}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="email" [readonly]="readonly" validationClasses="email"
-                     formControlName="email" class="form-control"/>
-              <app-field-error-message controlName="email"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Address -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="address" for="address" class="form-label">{{lang.map.lbl_address}}</label>
+          <input formControlName="address" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="address" class="form-control" trimInput id="address">
+          <app-field-error-message controlName="address"></app-field-error-message>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="postalCode" for="address"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_address}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="address" [readonly]="readonly" validationClasses="address"
-                     formControlName="address" class="form-control"/>
-              <app-field-error-message controlName="address"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="postalCode" for="postalCode"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_po_box_num}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="postalCode" [readonly]="readonly" validationClasses="postalCode"
-                     formControlName="postalCode" class="form-control"/>
-              <app-field-error-message controlName="postalCode"></app-field-error-message>
-            </div>
-          </div>
+        <!-- PO Box -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="postalCode" for="postalCode" class="form-label">{{lang.map.lbl_po_box_num}}</label>
+          <input formControlName="postalCode" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="postalCode" class="form-control" trimInput id="postalCode">
+          <app-field-error-message controlName="postalCode"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="firstSocialMedia" for="firstSocialMedia"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.social_media_1}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="firstSocialMedia" [readonly]="readonly" validationClasses="firstSocialMedia"
-                     formControlName="firstSocialMedia" class="form-control"/>
-              <app-field-error-message controlName="firstSocialMedia"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <!-- Social Media 1 -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="firstSocialMedia" for="firstSocialMedia" class="form-label">{{lang.map.social_media_1}}</label>
+          <input formControlName="firstSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="firstSocialMedia" class="form-control" trimInput id="firstSocialMedia">
+          <app-field-error-message controlName="firstSocialMedia"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="secondSocialMedia" for="secondSocialMedia"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.social_media_2}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="secondSocialMedia" [readonly]="readonly" validationClasses="secondSocialMedia"
-                     formControlName="secondSocialMedia" class="form-control"/>
-              <app-field-error-message controlName="secondSocialMedia"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Social Media 2 -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="secondSocialMedia" for="secondSocialMedia" class="form-label">{{lang.map.social_media_2}}</label>
+          <input formControlName="secondSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="secondSocialMedia" class="form-control" trimInput id="secondSocialMedia">
+          <app-field-error-message controlName="address"></app-field-error-message>
         </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6 col-sm-12">
-          <div class="row">
-            <label asteriskIfRequired="thirdSocialMedia" for="thirdSocialMedia"
-                   class="col-md-4 col-sm-12 col-form-label">{{lang.map.social_media_3}}</label>
-            <div class="col-md-8 mb-3 position-relative col-sm-12">
-              <input id="thirdSocialMedia" [readonly]="readonly" validationClasses="thirdSocialMedia"
-                     formControlName="thirdSocialMedia" class="form-control"/>
-              <app-field-error-message controlName="thirdSocialMedia"></app-field-error-message>
-            </div>
-          </div>
+        <!-- Social Media 3 -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="thirdSocialMedia" for="thirdSocialMedia" class="form-label">{{lang.map.social_media_3}}</label>
+          <input formControlName="thirdSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="thirdSocialMedia" class="form-control" trimInput id="thirdSocialMedia">
+          <app-field-error-message controlName="thirdSocialMedia"></app-field-error-message>
         </div>
       </div>
-      <div class="row mb-3">
-        <label asteriskIfRequired="description" for="description"
-               class="col-md-2 col-sm-12 col-form-label">{{lang.map.special_explanations}}</label>
-        <div class="col-md-10 col-sm-12 mb-3 position-relative">
-        <textarea rows="5" id="description" validationClasses="description" formControlName="description"
-                  class="form-control" [readOnly]="readonly"></textarea>
+      <div class="row">
+        <!-- Special Explanation -->
+        <div class="col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="description" for="description" class="form-label">{{lang.map.special_explanations}}</label>
+          <textarea rows="5" id="description" validationClasses="description" formControlName="description"
+                    class="form-control" trimInput [readOnly]="readonly"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>
@@ -381,14 +297,14 @@
       <bank-account #bankAccountsTab [countriesList]="countries"
                     [list]="model?.bankAccountList || []"
                     [caseType]="model?.caseType"
-                    [readonly]="readonly"
+                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     (readyEvent)="bankDetailsTabStatus = $event"></bank-account>
     </ng-template>
     <!-- Goals -->
     <ng-template #goalsTemplate>
       <goal #goalsTab
             [list]="model?.goalsList || []"
-            [readonly]="readonly"
+            [readonly]="(isExtendOrCancelRequestType() || readonly)"
             (readyEvent)="goalsTabStatus = $event"></goal>
     </ng-template>
     <!-- Management Councils -->
@@ -397,7 +313,7 @@
                           [countriesList]="countries"
                           [jobTitlesList]="jobTitles"
                           [list]="model?.managementCouncilList || []"
-                          [readonly]="readonly"
+                          [readonly]="(isExtendOrCancelRequestType() || readonly)"
                           (readyEvent)="managementCouncilsTabStatus = $event"></management-council>
     </ng-template>
     <!-- Executive Managements -->
@@ -406,28 +322,28 @@
                             [countriesList]="countries"
                             [jobTitlesList]="jobTitles"
                             [list]="model?.executiveManagementList || []"
-                            [readonly]="readonly"
+                            [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event"></executive-management>
     </ng-template>
     <!-- Target Groups -->
     <ng-template #targetGroupsTemplate>
       <target-group #targetGroupsTab
                     [list]="model?.targetGroupList || []"
-                    [readonly]="readonly"
+                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     (readyEvent)="targetGroupsTabStatus = $event"></target-group>
     </ng-template>
     <!-- Contact Officers -->
     <ng-template #contactOfficersTemplate>
       <contact-officer #contactOfficersTab
                        [list]="model?.contactOfficerList || []"
-                       [readonly]="readonly"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        (readyEvent)="contactOfficersTabStatus = $event"></contact-officer>
     </ng-template>
     <!-- Approval Reasons -->
     <ng-template #approvalReasonsTemplate>
       <approval-reason #approvalReasonsTab
                        [list]="model?.approvalReasonList || []"
-                       [readonly]="readonly"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        (readyEvent)="approvalReasonsTabStatus = $event"></approval-reason>
     </ng-template>
     <ng-template #commentsTemplate>

@@ -356,6 +356,7 @@ export interface ILanguageKeys {
   claim: string;
   due_date: string;
   creation_date: string;
+  sent_date: string;
   menu_team_inbox: string;
   menu_department_inbox: string;
   request_has_been_sent_successfully: string;

@@ -2,31 +2,22 @@
   <div formGroupName="targetGroups">
     <ng-container *ngFor="let _ of targetGroupsFormArray.controls; let i = index">
       <div [formGroupName]="i">
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="services" asteriskIfRequired="services"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_services}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="services" validationClasses="services"
-                       formControlName="services" class="form-control">
-                <app-field-error-message controlName="services"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <!-- Services -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="services" for="services" class="form-label">{{lang.map.lbl_services}}</label>
+            <input formControlName="services" type="text"
+                   validationClasses="services" trimInput class="form-control" id="services">
+            <app-field-error-message controlName="services"></app-field-error-message>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="targetedGroup" asteriskIfRequired="targetedGroup"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.targeted_groups}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="targetedGroup" validationClasses="targetedGroup"
-                       formControlName="targetedGroup" class="form-control">
-                <app-field-error-message controlName="targetedGroup"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Targeted Groups -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="targetedGroup" for="targetedGroup" class="form-label">{{lang.map.targeted_groups}}</label>
+            <input formControlName="targetedGroup" type="text"
+                   validationClasses="targetedGroup" trimInput class="form-control" id="targetedGroup">
+            <app-field-error-message controlName="targetedGroup"></app-field-error-message>
           </div>
         </div>
-
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="save()"
                   class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>

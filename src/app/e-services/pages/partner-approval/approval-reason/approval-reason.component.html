@@ -2,57 +2,38 @@
   <div formGroupName="approvalReasons">
     <ng-container *ngFor="let _ of approvalReasonsFormArray.controls; let i = index">
       <div [formGroupName]="i">
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="projects" asteriskIfRequired="projects"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_projects}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="projects" validationClasses="projects"
-                       formControlName="projects" class="form-control">
-                <app-field-error-message controlName="projects"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <!-- Projects -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="projects" for="projects" class="form-label">{{lang.map.lbl_projects}}</label>
+            <input formControlName="projects" type="text"
+                   validationClasses="projects" trimInput class="form-control" id="projects">
+            <app-field-error-message controlName="projects"></app-field-error-message>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="research" asteriskIfRequired="research"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_research}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="research" validationClasses="research"
-                       formControlName="research" class="form-control">
-                <app-field-error-message controlName="research"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Research -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="research" for="research" class="form-label">{{lang.map.lbl_research}}</label>
+            <input formControlName="research" type="text"
+                   validationClasses="research" trimInput class="form-control" id="research">
+            <app-field-error-message controlName="research"></app-field-error-message>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="fieldVisit" asteriskIfRequired="fieldVisit"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_field_visit}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="fieldVisit" validationClasses="fieldVisit"
-                       formControlName="fieldVisit" class="form-control">
-                <app-field-error-message controlName="fieldVisit"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Field Visit -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="fieldVisit" for="fieldVisit" class="form-label">{{lang.map.lbl_field_visit}}</label>
+            <input formControlName="fieldVisit" type="text"
+                   validationClasses="fieldVisit" trimInput class="form-control" id="fieldVisit">
+            <app-field-error-message controlName="fieldVisit"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-row">
-          <div class="col-12">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="description" asteriskIfRequired="description"
-                     class="col-sm-12 col-md-2 col-form-label">{{lang.map.lbl_description}}</label>
-              <div class="col-md-10 col-sm-12 mb-4 position-relative">
-                  <textarea rows="5" id="description" validationClasses="description" formControlName="description"
-                            class="form-control"></textarea>
-                <app-field-error-message controlName="description"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <!-- Description -->
+          <div class="col-sm-12 mb-4 position-relative">
+            <label asteriskIfRequired="projects" for="projects" class="form-label">{{lang.map.lbl_description}}</label>
+            <textarea rows="5" id="description" validationClasses="description" formControlName="description"
+                      class="form-control" trimInput></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
-
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="save()" [disabled]="readonly"
                   class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
