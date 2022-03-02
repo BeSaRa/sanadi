@@ -291,6 +291,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildUserInboxActions(): void {
     this.userInboxActions = [
+      // save
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
@@ -338,7 +339,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-send-circle',
         label: 'send_to_supervision_and_control_department',
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+          return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSupervisionAndControlDepartmentAction(item);
@@ -404,6 +408,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToGeneralManagerAction(item);
         }
       },
+      // complete
       {
         type: 'action',
         icon: 'mdi-book-check',
@@ -531,6 +536,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
       },
+      // back
       {
         type: 'action',
         class: 'btn-secondary',
