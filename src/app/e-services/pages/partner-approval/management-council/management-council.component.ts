@@ -189,6 +189,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
       return;
     }
     this.editIndex = index;
+    this.viewOnly = false;
     this.changed$.next(record);
   }
 
