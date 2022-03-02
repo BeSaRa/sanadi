@@ -585,4 +585,17 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       return isAllowed && !this.readonly;
     }
   }
+
+
+  isNewRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW)
+  }
+
+  isRenewOrUpdateRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.UPDATE);
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL)
+  }
 }
