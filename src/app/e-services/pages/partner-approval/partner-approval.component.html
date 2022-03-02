@@ -30,7 +30,7 @@
     <ng-template formGroupName="basic" #basicTemplate>
       <div class="row">
         <!-- Organization -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <div *ngIf="employeeService.isInternalUser()" class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
           <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
                      placeholder="{{lang.map.select}}" id="organizationId"
