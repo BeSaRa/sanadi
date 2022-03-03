@@ -692,6 +692,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onRequestTypeChange() {
+    const value = this.requestType.value;
+    this._resetForm();
+    this.requestType.setValue(value);
+
     this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.EDIT;
     this.templateSerialControl.setValidators(CustomValidators.required);
   }
