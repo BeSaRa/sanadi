@@ -4,6 +4,7 @@ import {LangService} from '@app/services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {isEmptyObject} from '@app/helpers/utils';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
@@ -45,11 +46,14 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
   reloadCallback(): void {
     if (this.useReloadValue) {
-      this.clickOnReload$.next(this.clickOnReload$.value);
+      !this.disableReload && this.clickOnReload$.next(this.clickOnReload$.value);
     } else {
-      this.clickOnReload$.next(null);
+      !this.disableReload && this.clickOnReload$.next(null);
     }
   }
 
 
+  clickAdd() {
+    !this.disableAdd && this.clickOnNew$.next(null)
+  }
 }
