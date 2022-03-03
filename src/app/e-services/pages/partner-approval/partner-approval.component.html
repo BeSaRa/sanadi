@@ -41,33 +41,19 @@
           </ng-select>
           <app-field-error-message controlName="organizationId"></app-field-error-message>
         </div>
-        <!-- Request Classification -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="requestClassification" for="requestClassification" class="form-label">{{lang.map.request_classification}}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
-                     placeholder="{{lang.map.select}}" id="requestClassification"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
-                     formControlName="requestClassification" validationClasses="requestClassification">
-            <ng-option [value]="requestClassification.lookupKey"
-                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="requestClassification"></app-field-error-message>
-        </div>
         <!-- Request Type -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{lang.map.request_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                      placeholder="{{lang.map.select}}" id="requestType"
                      [notFoundText]="lang.map.msg_not_found"
+                     (change)="handleRequestTypeChange($event, true)"
                      [readonly]="!isEditRequestTypeAllowed()" appendTo="body"
                      formControlName="requestType" validationClasses="requestType">
             <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
         <!-- License Number -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="oldLicenseFullserial" for="oldLicenseFullserial" class="form-label">{{lang.map.license_number}}</label>
@@ -82,6 +68,21 @@
                    id="oldLicenseFullserial">
             <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Request Classification -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="requestClassification" for="requestClassification" class="form-label">{{lang.map.request_classification}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestClassification"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
+                     formControlName="requestClassification" validationClasses="requestClassification">
+            <ng-option [value]="requestClassification.lookupKey"
+                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestClassification"></app-field-error-message>
         </div>
         <!-- Arabic Name -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">

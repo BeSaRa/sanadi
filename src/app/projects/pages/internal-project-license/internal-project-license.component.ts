@@ -252,7 +252,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterBuildForm(): void {
-    // setTimeout(() => {
+
     this.handleReadonly();
     this.loadAidLookup(AidTypes.CLASSIFICATIONS);
     this.listenToAddProjectComponent();
@@ -266,7 +266,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this.oldLicenseFullSerialField.updateValueAndValidity();
       });
     }
-    // })
+
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -375,7 +375,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       specialExplanations: model.getSpecialExplanationFields()
     });
 
-    this.handleRequestTypeChange(model.requestType);
+    this.handleRequestTypeChange(model.requestType, false);
     this.handleChangeMainCategory(model.domain, false);
     this.handleChangeSubCategory1(model.firstSubDomain, false);
     this.updateBeneficiaryValidations();
@@ -388,9 +388,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
-
-    this.selectedLicense = undefined;
-
+    this.setSelectedLicense(undefined, true);
     this.subCategories1List = [];
     this.subCategories2List = [];
     this.projectTotalCostField.setValue(null);
@@ -622,12 +620,15 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
   }
 
-  handleRequestTypeChange(requestTypeValue: number): void {
-    this._handleRequestTypeDependentControls();
-
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestTypeField.setValue(requestTypeValue);
+    }
     if (!requestTypeValue) {
       requestTypeValue = this.requestTypeField && this.requestTypeField.value;
     }
+    this._handleRequestTypeDependentControls();
 
     // if no requestType or (requestType = new)
     // if new record or draft, reset license and its validations
@@ -649,7 +650,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
       }]);
     }
-
     this.oldLicenseFullSerialField.updateValueAndValidity();
   }
 

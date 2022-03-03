@@ -34,25 +34,11 @@
                      class="form-label">{{lang.map.request_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="requestType"
-                         (change)="handleRequestTypeChange($event)"
+                         (change)="handleRequestTypeChange($event, true)"
                          [notFoundText]="lang.map.msg_not_found"
                          [readonly]="!isEditRequestTypeAllowed()"
                          formControlName="requestType" validationClasses="requestType">
                 <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message controlName="requestType"></app-field-error-message>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="projectType" asteriskIfRequired="projectType"
-                     class="form-label">{{lang.map.project_type}}</label>
-              <ng-select [selectOnTab]="true" labelForId="projectType" [clearable]="true"
-                         placeholder="{{lang.map.select}}" id="projectType"
-                         [notFoundText]="lang.map.msg_not_found"
-                         [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                         formControlName="projectType" validationClasses="projectType">
-                <ng-option *ngFor="let option of projectTypesList" [value]="option.lookupKey">
                   {{option.getName()}}
                 </ng-option>
               </ng-select>
@@ -72,6 +58,20 @@
                        id="oldLicenseFullserial">
                 <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
               </div>
+            </div>
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label for="projectType" asteriskIfRequired="projectType"
+                     class="form-label">{{lang.map.project_type}}</label>
+              <ng-select [selectOnTab]="true" labelForId="projectType" [clearable]="true"
+                         placeholder="{{lang.map.select}}" id="projectType"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                         formControlName="projectType" validationClasses="projectType">
+                <ng-option *ngFor="let option of projectTypesList" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message controlName="requestType"></app-field-error-message>
             </div>
           </div>
           <div *ngIf="selectedLicense">

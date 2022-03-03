@@ -164,12 +164,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _afterBuildForm(): void {
-    // setTimeout(() => {
 
     this.handleReadonly();
     if (this.fromDialog) {
-      // this.loadSelectedLicense(this.requestTypeField?.value === ServiceRequestTypes.NEW ? this.model?.initialLicenseNumber! : this.model?.licenseNumber!);
-
       let licenseId: string, licenseField: FormControl;
       if (this.isNewRequestType()) {
         licenseId = this.model?.initialLicenseId!
@@ -183,8 +180,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         licenseField.updateValueAndValidity();
       });
     }
-    this.listenToRequestTypeChange();
-    // });
   }
 
   private _getInvalidTabs(): any {
@@ -282,6 +277,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   _updateForm(model: FinalExternalOfficeApproval): void {
     this.model = model;
     this.basicTab.patchValue(model.getFormFields());
+    this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
   }
 
@@ -289,6 +285,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.setSelectedLicense(undefined, true);
     this.setDefaultValuesForExternalUser();
     this.bankAccountComponentRef.forceClearComponent();
     this.executiveManagementComponentRef.forceClearComponent();
@@ -378,7 +375,19 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     }*/
   }
 
-  listenToRequestTypeChange(): void {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestTypeField.setValue(requestTypeValue);
+    }
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    }
+    this._handleLicenseValidationsByRequestType();
+    this._handleRequestTypeDependentValidations();
+  }
+
+  /*listenToRequestTypeChange(): void {
     this.requestTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(_ => {
@@ -386,7 +395,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       this._handleLicenseValidationsByRequestType();
       this._handleRequestTypeDependentValidations();
     });
-  }
+  }*/
 
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
@@ -644,11 +653,12 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     if (!this.isNewRequestType()) {
       return false;
     }
+    let isAllowed = !this.isExtendOrCancelRequestType();
 
     if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
-      return true;
+      return isAllowed;
     } else {
-      return !this.readonly;
+      return isAllowed && !this.readonly;
     }
   }
 

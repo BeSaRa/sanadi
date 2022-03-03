@@ -190,15 +190,13 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   _afterBuildForm(): void {
     this.setDefaultOrganization();
 
-    // setTimeout(() => {
     this.handleReadonly();
     if (this.fromDialog) {
       this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
         this.oldLicenseFullSerialField.updateValueAndValidity();
       });
     }
-    this.listenToRequestTypeChange();
-    // });
+    // this.listenToRequestTypeChange();
   }
 
   private _updateModelAfterSave(model: PartnerApproval): void {
@@ -267,6 +265,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   _updateForm(model: PartnerApproval): void {
     this.model = model;
     this.basicTab.patchValue(model.getBasicFields());
+    this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
   }
 
@@ -274,6 +273,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.setSelectedLicense(undefined, true);
     this.bankAccountComponentRef.forceClearComponent();
     this.goalComponentRef.forceClearComponent();
     this.managementCouncilComponentRef.forceClearComponent();
@@ -347,7 +347,39 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     }
   }
 
-  listenToRequestTypeChange(): void {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestType.setValue(requestTypeValue);
+    }
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestType && this.requestType.value;
+    }
+
+    // if no requestType or (requestType = new)
+    // if new record or draft, reset license and its validations
+    // also reset the values in model
+    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.oldLicenseFullSerialField.reset();
+        this.oldLicenseFullSerialField.setValidators([]);
+        this.setSelectedLicense(undefined, true);
+
+        if (this.model) {
+          this.model.licenseNumber = '';
+          this.model.licenseDuration = 0;
+          this.model.licenseStartDate = '';
+        }
+      }
+    } else {
+      this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
+        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+      }]);
+    }
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  /*listenToRequestTypeChange(): void {
     this.requestType?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(requestTypeValue => {
@@ -373,7 +405,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       }
       this.oldLicenseFullSerialField.updateValueAndValidity();
     });
-  }
+  }*/
 
   // noinspection JSUnusedLocalSymbols
   private loadSelectedLicense(licenseNumber: string): void {
@@ -577,8 +609,10 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   isEditCountryAllowed(): boolean {
-    let requestType = this.requestType.value,
-      isAllowed = !(requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL);
+    if (!this.isNewRequestType()) {
+      return false;
+    }
+    let isAllowed = !this.isExtendOrCancelRequestType();
 
     if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
       return isAllowed;
@@ -586,7 +620,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       return isAllowed && !this.readonly;
     }
   }
-
 
   isNewRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW)
@@ -597,6 +630,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   isExtendOrCancelRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL)
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
   }
 }
