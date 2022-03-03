@@ -4,6 +4,7 @@ import {FactoryService} from "@app/services/factory.service";
 import {AdminResult} from "./admin-result";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {CollectionItem} from "@app/models/collection-item";
 
 export class CollectionApproval extends CaseModel<CollectionApprovalService, CollectionApproval> {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
@@ -30,7 +31,7 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
   specialistJustification!: string;
   subject!: string;
   inRenewalPeriod!: boolean;
-  collectionItemList!: any[];
+  collectionItemList: CollectionItem[] = [];
   managerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;
@@ -48,11 +49,12 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
   }
 
   buildForm(controls: boolean = false): any {
-    const {requestType, requestClassification, licenseDurationType} = this;
+    const {requestType, requestClassification, licenseDurationType, description} = this;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       requestClassification: controls ? [requestClassification, [CustomValidators.required]] : requestClassification,
-      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType
+      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType,
+      description: controls ? [description, [CustomValidators.required]] : description,
     }
   }
 }

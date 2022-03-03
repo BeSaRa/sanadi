@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  identification_number: string;
+  show_location_on_map: string;
+  unit_number: string;
+  location_details: string;
+  collection_items: string;
   license_type: string;
   req_classification: string;
   menu_collection_services_approval: string;

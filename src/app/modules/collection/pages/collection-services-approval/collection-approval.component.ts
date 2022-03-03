@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormBuilder} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
@@ -11,6 +11,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {DialogService} from "@app/services/dialog.service";
+import {takeUntil} from "rxjs/operators";
 
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -36,6 +37,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   form!: FormGroup;
 
+  disableSearchField: boolean = true;
+
+  get requestType(): AbstractControl {
+    return this.form.get('requestType')!
+  }
+
   _getNewInstance(): CollectionApproval {
     return new CollectionApproval()
   }
@@ -53,7 +60,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _afterBuildForm(): void {
-    //throw new Error('Method not implemented.');
+    this.setDefaultValues();
+    this.listenToRequestTypeChanges()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -92,7 +100,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _destroyComponent(): void {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
   }
 
   _updateForm(model: CollectionApproval | undefined): void {
@@ -104,5 +112,26 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     // throw new Error('Method not implemented.');
   }
 
+  private setDefaultValues(): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.requestType.patchValue(this.requestTypes[0].lookupKey);
+    }
+  }
 
+  private listenToRequestTypeChanges() {
+    this.requestType
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val: ServiceRequestTypes) => {
+        this.disableSearchField = val === ServiceRequestTypes.NEW
+      })
+  }
+
+  checkDisableRequestType(): void {
+    this.model?.collectionItemList.length ? this.requestType.disable() : this.requestType.enable();
+  }
+
+  collectionItemFormStatusChanged($event: boolean) {
+    $event ? this.requestType.disable() : this.checkDisableRequestType();
+  }
 }
