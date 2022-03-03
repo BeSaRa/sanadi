@@ -3,7 +3,7 @@
   "ENVIRONMENTS_URLS": {
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
-    "BAW_UI": "http://eblaepm.no-ip.org:9011/sanadi-services/api/",
+    "BAW_UI": "http://100.100.15.216:9080/eservices/api/",
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
