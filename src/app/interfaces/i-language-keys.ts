@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  please_add_collection_items_to_proceed: string
   identification_number: string;
   show_location_on_map: string;
   unit_number: string;

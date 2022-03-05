@@ -6,12 +6,13 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {CollectionApproval} from "@app/models/collection-approval";
 import {CollectionApprovalService} from "@app/services/collection-approval.service";
 import {LangService} from '@app/services/lang.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {DialogService} from "@app/services/dialog.service";
-import {takeUntil} from "rxjs/operators";
+import {filter, map, takeUntil, tap} from "rxjs/operators";
+import {ToastService} from "@app/services/toast.service";
 
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -24,6 +25,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   constructor(public lang: LangService,
               private lookupService: LookupService,
               private dialog: DialogService,
+              private toast: ToastService,
               public service: CollectionApprovalService,
               public fb: FormBuilder) {
     super();
@@ -39,8 +41,16 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   disableSearchField: boolean = true;
 
+  get basicInfo(): FormGroup {
+    return this.form.get('basicInfo')! as FormGroup;
+  }
+
   get requestType(): AbstractControl {
-    return this.form.get('requestType')!
+    return this.form.get('basicInfo.requestType')!;
+  }
+
+  get specialExplanation(): FormGroup {
+    return this.form.get('explanation')! as FormGroup;
   }
 
   _getNewInstance(): CollectionApproval {
@@ -55,7 +65,10 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     // 1 - implement all model properties [done]
     const model = new CollectionApproval()
     // 2 - create the form controls for the model
-    this.form = this.fb.group(model.buildForm(true))
+    this.form = this.fb.group({
+      basicInfo: this.fb.group(model.buildBasicInfo(true)),
+      explanation: this.fb.group(model.buildExplanation(true))
+    })
     // 3 - draw the screen controls
   }
 
@@ -65,34 +78,53 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    // throw new Error('Method not implemented.');
-    // check the validation
-    // there is no items
-    this.dialog.error('Please Fill the required data');
-    return false
-
+    return of(this.form.valid)
+      .pipe(tap(valid => !valid && this.invalidFormMessage()))
+      .pipe(filter(valid => valid))
+      .pipe(map(_ => !!(this.model && this.model.collectionItemList.length)))
+      .pipe(tap(hasCollectionItems => !hasCollectionItems && this.invalidItemMessage()))
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    if (this.model && !this.model.collectionItemList.length) {
+      this.invalidItemMessage();
+    }
+    return true
+  }
+
+  private invalidItemMessage() {
+    this.dialog.error(this.lang.map.please_add_collection_items_to_proceed)
   }
 
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
   _prepareModel(): CollectionApproval | Observable<CollectionApproval> {
     return new CollectionApproval().clone({
-      ...this.form.value
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue()
     })
   }
 
   _afterSave(model: CollectionApproval, saveType: SaveTypes, operation: OperationTypes): void {
     // throw new Error('Method not implemented.');
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   _saveFail(error: any): void {
-    throw new Error('Method not implemented.');
+    // throw new Error('Method not implemented.');
+    console.log(error);
   }
 
   _launchFail(error: any): void {
@@ -104,12 +136,21 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _updateForm(model: CollectionApproval | undefined): void {
-    throw new Error('Method not implemented.');
+    if (!model) {
+      return;
+    }
+    this.model = model;
+    this.form.patchValue({
+      basicInfo: model?.buildBasicInfo(),
+      explanation: model?.buildExplanation()
+    })
   }
 
   _resetForm(): void {
-    console.log('RESET');
-    // throw new Error('Method not implemented.');
+    this.form.reset();
+    this.model && (this.model.collectionItemList = [])
+    this.operation = OperationTypes.CREATE;
+    this.setDefaultValues();
   }
 
   private setDefaultValues(): void {
@@ -133,5 +174,9 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   collectionItemFormStatusChanged($event: boolean) {
     $event ? this.requestType.disable() : this.checkDisableRequestType();
+  }
+
+  private invalidFormMessage() {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
 }

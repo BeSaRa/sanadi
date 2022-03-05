@@ -42,6 +42,7 @@ import {
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'final-external-office-approval',
   templateUrl: './final-external-office-approval.component.html',

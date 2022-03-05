@@ -1,6 +1,7 @@
 import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {CollectionApproval} from "@app/models/collection-approval";
 import {AdminResult} from "@app/models/admin-result";
+import {TaskDetails} from "@app/models/task-details";
 
 export class CollectionApprovalInterceptor implements IModelInterceptor<CollectionApproval> {
   send(model: Partial<CollectionApproval>): Partial<CollectionApproval> {
@@ -12,12 +13,11 @@ export class CollectionApprovalInterceptor implements IModelInterceptor<Collecti
     delete model.requestTypeInfo
     delete model.requestClassificationInfo
     delete model.licenseDurationTypeInfo
-
-    console.log(model);
     return model;
   }
 
   receive(model: CollectionApproval): CollectionApproval {
+    model.taskDetails = (new TaskDetails().clone(model.taskDetails))
     model.managerDecisionInfo = AdminResult.createInstance(model.managerDecisionInfo)
     model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo)
     model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo)

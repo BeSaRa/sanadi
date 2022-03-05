@@ -48,13 +48,21 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
     this.service = FactoryService.getService('CollectionApprovalService');
   }
 
-  buildForm(controls: boolean = false): any {
-    const {requestType, requestClassification, licenseDurationType, description} = this;
+  buildBasicInfo(controls: boolean = false): any {
+    const {requestType, requestClassification, licenseDurationType} = this;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       requestClassification: controls ? [requestClassification, [CustomValidators.required]] : requestClassification,
-      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType,
+      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType
+    }
+  }
+
+  buildExplanation(controls: boolean = false): any {
+    const {description} = this;
+    return {
       description: controls ? [description, [CustomValidators.required]] : description,
     }
   }
+
+
 }

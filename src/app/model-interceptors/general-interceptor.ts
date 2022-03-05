@@ -4,6 +4,8 @@ export class GeneralInterceptor {
   static receive(model: any): any {
     model.setItemRoute && model.setItemRoute();
     model.taskDetails && model.taskDetails.fromUserInfo && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo));
+    model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
+    model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo))
     return model;
   }
 
@@ -17,6 +19,8 @@ export class GeneralInterceptor {
     delete model.itemRoute;
     delete model.itemDetails;
     delete model.inboxService;
+    delete model.caseStatusInfo;
+    delete model.creatorInfo;
     return model;
   }
 }
