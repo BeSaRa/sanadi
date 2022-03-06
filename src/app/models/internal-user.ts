@@ -7,7 +7,6 @@ import {AdminResult} from "@app/models/admin-result";
 import {InternalDepartment} from "@app/models/internal-department";
 import {InternalUserService} from "@app/services/internal-user.service";
 import {CustomValidators} from "@app/validators/custom-validators";
-import {Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {searchFunctionType} from '@app/types/types';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
@@ -148,8 +147,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     return this.service.updateStatus(this.id, newStatus);
   }
 
-  saveSignature(signatureFile: File, isNewSignature: boolean = true): Observable<any> {
-    return this.service.saveSignature(this.generalUserId, signatureFile, isNewSignature);
+  saveSignature(signatureFile: File): Observable<any> {
+    return this.service.saveSignature(this.generalUserId, signatureFile);
   }
 
   // noinspection JSUnusedGlobalSymbols

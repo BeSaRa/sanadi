@@ -81,24 +81,10 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
         })));
   }
 
-  private _addSignature(generalUserId: number, file: File): Observable<boolean> {
+  saveSignature(generalUserId: number, file: File): Observable<boolean> {
     let form = new FormData();
     form.append('content', file);
     return this.http.post<boolean>(this._getServiceURL() + '/signature?generalUserId=' + generalUserId, form);
-  }
-
-  private _updateSignature(generalUserId: number, file: File): Observable<boolean> {
-    let form = new FormData();
-    form.append('content', file);
-    return this.http.post<boolean>(this._getServiceURL() + '/signature/update?generalUserId=' + generalUserId, form);
-  }
-
-  saveSignature(generalUserId: number, file: File, isNewSignature: boolean = true): Observable<boolean> {
-    if (!isNewSignature) {
-      return this._updateSignature(generalUserId, file);
-    } else {
-      return this._addSignature(generalUserId, file);
-    }
   }
 
   openCreateDialog(list: InternalUser[]): Observable<DialogRef> {
@@ -111,13 +97,13 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
 
   openUpdateDialog(modelId: number, list: InternalUser[]): Observable<DialogRef> {
     return this.getById(modelId).pipe(
-        switchMap((internalUser: InternalUser) => {
-          return of(this.dialog.show<IDialogData<InternalUser>>(InternalUserPopupComponent, {
-            model: internalUser,
-            operation: OperationTypes.UPDATE,
-            list: list
-          }));
-        })
+      switchMap((internalUser: InternalUser) => {
+        return of(this.dialog.show<IDialogData<InternalUser>>(InternalUserPopupComponent, {
+          model: internalUser,
+          operation: OperationTypes.UPDATE,
+          list: list
+        }));
+      })
     );
   }
 }
