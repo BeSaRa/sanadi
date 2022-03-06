@@ -469,7 +469,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.basicInfoGroup?.get('oldLicenseFullserial')) as FormControl;
+    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as FormControl;
   }
 
   get mainCategoryField(): FormControl {
@@ -819,7 +819,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = (new InternalProjectLicense()).clone(licenseDetails);
       value.requestType = this.requestTypeField.value;
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
       value.documentTitle = '';

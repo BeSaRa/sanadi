@@ -50,7 +50,7 @@ export class CaseInfoComponent implements OnInit {
   }
 
   get generatedLicenseNumber(): string {
-    return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullserial || '';
+    return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullSerial || '';
   }
 
   get generatedLicenseId(): string {

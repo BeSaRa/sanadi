@@ -434,7 +434,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = (new PartnerApproval()).clone(licenseDetails);
       value.requestType = this.requestType.value;
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
       value.documentTitle = '';
@@ -522,7 +522,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('basic')?.get('oldLicenseFullserial')) as FormControl;
+    return (this.form.get('basic')?.get('oldLicenseFullSerial')) as FormControl;
   }
 
   get organizationId(): AbstractControl {

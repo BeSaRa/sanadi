@@ -72,13 +72,12 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       requestType, requestClassification, arName, enName, country, region, headQuarterType, latitude,
       longitude, address, establishmentDate, phone, fax, website, email, postalCode,
       firstSocialMedia, secondSocialMedia, thirdSocialMedia, organizationId, description,
-      oldLicenseFullserial, oldLicenseId, oldLicenseSerial
+      oldLicenseFullSerial, oldLicenseId, oldLicenseSerial
     } = this;
 
     return {
       organizationId: control ? [organizationId, [CustomValidators.required]] : organizationId,
-      // licenseNumber: control ? [licenseNumber, []] : licenseNumber,
-      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       requestType: control ? [requestType, CustomValidators.required] : requestType,

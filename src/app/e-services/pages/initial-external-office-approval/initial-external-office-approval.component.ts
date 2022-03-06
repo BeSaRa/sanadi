@@ -213,7 +213,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('oldLicenseFullserial')) as FormControl;
+    return (this.form.get('oldLicenseFullSerial')) as FormControl;
   }
 
   private loadCountries(): void {
@@ -351,7 +351,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       value.licenseDuration = licenseDetails.licenseDuration;
       value.licenseStartDate = licenseDetails.licenseStartDate;
 
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
       value.fullSerial = null;

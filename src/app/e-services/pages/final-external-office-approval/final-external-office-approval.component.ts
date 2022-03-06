@@ -466,11 +466,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         };
 
       if (requestType === this.serviceRequestTypes.NEW) {
-        result.initialLicenseFullserial = licenseDetails.fullSerial;
+        result.initialLicenseFullSerial = licenseDetails.fullSerial;
         result.initialLicenseId = licenseDetails.id;
         result.initialLicenseSerial = licenseDetails.serial;
       } else {
-        result.oldLicenseFullserial = licenseDetails.fullSerial;
+        result.oldLicenseFullSerial = licenseDetails.fullSerial;
         result.oldLicenseId = licenseDetails.id;
         result.oldLicenseSerial = licenseDetails.serial;
       }
@@ -591,11 +591,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   get initialLicenseFullSerialField(): FormControl {
-    return (this.form.get('basicInfo')?.get('initialLicenseFullserial')) as FormControl;
+    return (this.form.get('basicInfo')?.get('initialLicenseFullSerial')) as FormControl;
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('basicInfo')?.get('oldLicenseFullserial')) as FormControl;
+    return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as FormControl;
   }
 
   get licenseNumberField(): FormControl {

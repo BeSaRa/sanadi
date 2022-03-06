@@ -38,7 +38,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   expectedImpact!: string;
   expectedImpactDate!: string;
   expectedResults!: string;
-  exportedLicenseFullserial!: string;
+  exportedLicenseFullSerial!: string;
   exportedLicenseId!: string;
   exportedLicenseSerial!: number;
   firstSDGoal!: number;
@@ -57,7 +57,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   managerDecision?: number;
   managerJustification: string = '';
   needsAssessment!: string;
-  oldLicenseFullserial!: string;
+  oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   organizationCode!: string;
@@ -115,7 +115,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     const {
       requestType,
       projectType,
-      oldLicenseFullserial,
+      oldLicenseFullSerial,
       oldLicenseId,
       oldLicenseSerial,
       arName,
@@ -126,7 +126,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       projectType: control ? [projectType, [CustomValidators.required]] : projectType,
-      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       arName: control ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),

@@ -19,10 +19,10 @@ export abstract class LicenseApprovalModel<S extends EServiceGenericService<M>, 
   deductionPercent!: number;
   requestTypeInfo!: AdminResult;
 
-  oldLicenseFullserial!: string;
+  oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
-  exportedLicenseFullserial!: string;
+  exportedLicenseFullSerial!: string;
   exportedLicenseId!: string;
   exportedLicenseSerial!: number;
   ignoreSendInterceptor?: boolean;
