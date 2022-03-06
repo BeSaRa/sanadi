@@ -12,7 +12,7 @@
       <input id="search" class="form-control pe-4" autocomplete="off"
              [formControl]="searchText" (keyup)="search($event)"
              placeholder="{{langService.map.lbl_search}}">
-      <button *ngIf="searchText.value" class="btn icon-btn position-fixed me-0 pe-2"
+      <button *ngIf="searchText.value" class="btn icon-btn position-absolute me-0 pe-2"
               (click)="clearSearch($event)">
         <i class="mdi mdi-close"></i>
       </button>
