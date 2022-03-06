@@ -15,3 +15,9 @@ export enum OrgUserStatusEnum {
   TERMINATED = 2,
   DELETED = 3
 }
+
+export enum AidLookupStatusEnum {
+  RETIRED = 0,
+  ACTIVE = 1,
+  INACTIVE = 2
+}

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
 import {AidLookup} from '../models/aid-lookup';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -15,20 +14,43 @@ import {AidLookupInterceptor} from '../model-interceptors/aid-lookup-interceptor
 import {Generator} from '../decorators/generator';
 import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
 import {AuditLogService} from './audit-log.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AidLookupService extends BackendGenericService<AidLookup> {
+export class AidLookupService extends BackendWithDialogOperationsGenericService<AidLookup> {
   list!: AidLookup[];
+  interceptor: AidLookupInterceptor = new AidLookupInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('AidLookupService', this);
+  }
+
+  _getDialogComponent(): ComponentType<any> {
+    return AidLookupPopupComponent;
+  }
+
+  _getModel(): any {
+    return AidLookup;
+  }
+
+  _getReceiveInterceptor(): any {
+    return this.interceptor.receive;
+  }
+
+  _getSendInterceptor(): any {
+    return this.interceptor.send;
+  }
+
+  _getServiceURL(): string {
+    return this.urlService.URLS.AID_LOOKUPS;
   }
 
   @Generator(AidLookup, true)
@@ -43,7 +65,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   openUpdateDialog(modelId: number, aidType: number): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((aidLookup: AidLookup) => {
-        return of(this.dialogService.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
+        return of(this.dialog.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
           model: aidLookup,
           parentId: aidLookup.id,
           operation: OperationTypes.UPDATE,
@@ -54,7 +76,7 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
   }
 
   openCreateDialog(aidType: number, parentId: number): DialogRef {
-    return this.dialogService.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
+    return this.dialog.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
       model: new AidLookup(),
       parentId,
       operation: OperationTypes.CREATE,
@@ -70,24 +92,12 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
 
-  updateStatus(id: number, currentStatus: CommonStatusEnum) {
-    return currentStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
+  updateStatus(id: number, currentStatus: AidLookupStatusEnum) {
+    return currentStatus === AidLookupStatusEnum.ACTIVE ? this.deactivate(id) : this.activate(id);
   }
 
   private activate(id: number): Observable<any> {
     return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
-  }
-
-  _getModel(): any {
-    return AidLookup;
-  }
-
-  _getSendInterceptor(): any {
-    return AidLookupInterceptor.send;
-  }
-
-  _getServiceURL(): string {
-    return this.urlService.URLS.AID_LOOKUPS;
   }
 
   private static buildCriteriaQueryParams(criteria: IAidLookupCriteria): HttpParams {
@@ -106,10 +116,6 @@ export class AidLookupService extends BackendGenericService<AidLookup> {
       queryParams = queryParams.append('status', criteria.status);
     }
     return queryParams;
-  }
-
-  _getReceiveInterceptor(): any {
-    return AidLookupInterceptor.receive;
   }
 
   openAuditLogsById(id: number): Observable<DialogRef> {

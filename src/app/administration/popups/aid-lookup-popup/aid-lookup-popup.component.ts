@@ -1,141 +1,84 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {FormManager} from '../../../models/form-manager';
-import {LangService} from '../../../services/lang.service';
-import {AidLookup} from '../../../models/aid-lookup';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ToastService} from '../../../services/toast.service';
-import {extender} from '../../../helpers/extender';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {AidTypes} from '../../../enums/aid-types.enum';
-import {of, Subject} from 'rxjs';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FormManager} from '@app/models/form-manager';
+import {LangService} from '@app/services/lang.service';
+import {AidLookup} from '@app/models/aid-lookup';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ToastService} from '@app/services/toast.service';
+import {extender} from '@app/helpers/extender';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {Lookup} from '../../../models/lookup';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {LookupService} from '../../../services/lookup.service';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {Lookup} from '@app/models/lookup';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {LookupService} from '@app/services/lookup.service';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 
 @Component({
   selector: 'app-aid-lookup-popup',
   templateUrl: './aid-lookup-popup.component.html',
   styleUrls: ['./aid-lookup-popup.component.scss']
 })
-export class AidLookupPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> implements AfterViewInit {
   form!: FormGroup;
   model: AidLookup;
   parentId: number;
   operation: OperationTypes;
-  fm!: FormManager;
   aidType: number;
   gridAidType!: number;
   isAidTabVisible!: boolean;
   aidLookupStatusList!: Lookup[];
   saveVisible = true;
-  validateFieldsVisible = true;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
     childAids: {name: 'childAids'}
   };
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
               private toast: ToastService,
               private lookupService: LookupService,
               public langService: LangService,
-              private dialogRef: DialogRef,
-              private fb: FormBuilder,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              public dialogRef: DialogRef,
+              public fb: FormBuilder,
+              private cd: ChangeDetectorRef) {
+    super();
     this.model = data.model;
     this.parentId = data.parentId;
     this.operation = data.operation;
     this.aidType = data.aidType;
+  }
+
+  initPopup(): void {
     this.checkIfAidTabEnabled();
     this.setGridAidType();
-    this.aidLookupStatusList = lookupService.getByCategory(LookupCategories.AID_LOOKUP_STATUS);
+    this.aidLookupStatusList = this.lookupService.getByCategory(LookupCategories.AID_LOOKUP_STATUS);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this.buildForm();
-    this._saveModel();
-  }
-
-  setDialogButtonsVisibility(tab: any): void {
-    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
-    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      basic: this.fb.group({
-        arName: [this.model.arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-        ]],
-        enName: [this.model.enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-        ]],
-        aidCode: [this.model.aidCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(50)]],
-        aidType: [this.model.aidType ?? this.aidType, [CustomValidators.required]],
-        parent: [
-          this.aidType === AidTypes.CLASSIFICATIONS ? null : (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent
-        ],
-        status: [this.model.status, [CustomValidators.required]],
-        statusDateModified: [this.model.statusDateModified]
-      }, {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status'])})
-    });
-
-    this.fm = new FormManager(this.form, this.langService);
-    // will check it later
+  ngAfterViewInit(): void {
     if (this.operation === OperationTypes.UPDATE) {
-      this.fm.displayFormValidity();
+      this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
-  }
-
-  saveModel(): void {
-    this.save$.next();
-  }
-
-  _saveModel(): void {
-    this.save$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap(() => {
-        const aidLookup = extender<AidLookup>(AidLookup, {...this.model, ...this.fm.getFormField('basic')?.value});
-        return aidLookup.save().pipe(
-          catchError((err) => {
-            this.exceptionHandlerService.handle(err);
-            return of(null);
-          })
-        );
-      }),
-    ).subscribe((aid: AidLookup | null) => {
-      if (!aid) {
-        return;
-      }
-      const message = this.operation === OperationTypes.CREATE
-        ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-      this.toast.success(message.change({x: aid.aidCode}));
-      this.model = aid;
-      this.operation = OperationTypes.UPDATE;
-      this.checkIfAidTabEnabled();
-      if (this.aidType === AidTypes.SUB_CATEGORY) {
-        this.dialogRef.close(this.model);
-      }
-    });
+    this.cd.detectChanges();
   }
 
   get popupTitle(): string {
@@ -172,8 +115,9 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
     return title;
   }
 
-  checkIfAidTabEnabled(): void {
-    this.isAidTabVisible = this.aidType !== AidTypes.SUB_CATEGORY && this.operation === OperationTypes.UPDATE;
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
 
   setGridAidType(): void {
@@ -182,5 +126,46 @@ export class AidLookupPopupComponent implements OnInit, OnDestroy {
     } else {
       this.gridAidType = AidTypes.SUB_CATEGORY;
     }
+  }
+
+  buildForm(): void {
+    let model = (new AidLookup()).clone({...this.model});
+    model.aidType = this.model.aidType || this.aidType;
+
+    if (model.aidType === AidTypes.CLASSIFICATIONS) {
+      model.parent = undefined;
+    } else {
+      model.parent = (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent;
+    }
+    this.form = this.fb.group(model.buildForm(true), {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status'])});
+  }
+
+  beforeSave(model: AidLookup, form: FormGroup): Observable<boolean> | boolean {
+    return form.valid;
+  }
+
+  prepareModel(model: AidLookup, form: FormGroup): Observable<AidLookup> | AidLookup {
+    return (new AidLookup()).clone({...model, ...form.value});
+  }
+
+  afterSave(model: AidLookup, dialogRef: DialogRef): void {
+    const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
+    this.toast.success(message.change({x: model.getName()}));
+    this.model = model;
+    this.operation = OperationTypes.UPDATE;
+    this.checkIfAidTabEnabled();
+    if (this.aidType === AidTypes.SUB_CATEGORY) {
+      this.dialogRef.close(model);
+    }
+  }
+
+  saveFail(error: Error): void {
+  }
+
+  private checkIfAidTabEnabled(): void {
+    this.isAidTabVisible = this.aidType !== AidTypes.SUB_CATEGORY && this.operation === OperationTypes.UPDATE;
+  }
+
+  destroyPopup(): void {
   }
 }
