@@ -50,7 +50,8 @@
           </div>
           <!-- Organization -->
           <div *ngIf="isInternalUser" class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
+            <label asteriskIfRequired="organizationId" for="organizationId"
+                   class="form-label">{{lang.map.lbl_organization}}</label>
             <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="organizationId"
                        [notFoundText]="lang.map.msg_not_found"
@@ -62,14 +63,16 @@
           </div>
           <!-- Competent Department -->
           <div *ngIf="isInternalUser" class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID" class="form-label">{{lang.map.competent_dep}}</label>
+            <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
+                   class="form-label">{{lang.map.competent_dep}}</label>
             <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="competentDepartmentID"
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="readonly" appendTo="body"
                        (change)="onCompetentDepChange($event)"
                        formControlName="competentDepartmentID" validationClasses="competentDepartmentID">
-              <ng-option [value]="dep.id" *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+              <ng-option [value]="dep.id" [disabled]="!dep.isActive()"
+                         *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
           </div>
@@ -77,7 +80,8 @@
         <div class="row">
           <!-- Request Body -->
           <div class="col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="requestBody" for="requestBody" class="form-label">{{lang.map.request_body}}</label>
+            <label asteriskIfRequired="requestBody" for="requestBody"
+                   class="form-label">{{lang.map.request_body}}</label>
             <textarea rows="5" id="requestBody" validationClasses="requestBody" formControlName="requestBody"
                       class="form-control" trimInput></textarea>
             <app-field-error-message controlName="requestBody"></app-field-error-message>
