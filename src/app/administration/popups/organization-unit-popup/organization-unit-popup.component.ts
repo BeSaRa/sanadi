@@ -202,7 +202,8 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   }
 
   beforeSave(model: OrgUnit, form: FormGroup): boolean | Observable<boolean> {
-    if (this.isDuplicatedOrganizationNames(model)) {
+    let updatedOrgUnit = this._getUpdatedValues(model, this.form);
+    if (this.isDuplicatedOrganizationNames(updatedOrgUnit)) {
       return false;
     }
 
@@ -216,8 +217,15 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     }
   }
 
-  prepareModel(model: OrgUnit, form: FormGroup): OrgUnit | Observable<OrgUnit> {
+  private _getUpdatedValues(model: OrgUnit, form?: FormGroup): OrgUnit {
+    if (!form) {
+      form = this.form;
+    }
     return (new OrgUnit()).clone({...model, ...form.value.basic, ...form.value.advanced});
+  }
+
+  prepareModel(model: OrgUnit, form: FormGroup): OrgUnit | Observable<OrgUnit> {
+    return this._getUpdatedValues(model, form);
   }
 
   afterSave(model: OrgUnit, dialogRef: DialogRef): void {
@@ -254,12 +262,12 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   isDuplicatedOrganizationNames(orgUnit: OrgUnit) {
     let isDuplicatedArabicName = false, isDuplicatedEnglishName = false;
 
-    if (this.isDuplicatedOrganizationArabicName(orgUnit)) {
+    if (this._isDuplicatedOrganizationArabicName(orgUnit)) {
       this.toast.error(this.langService.map.arabic_name_is_duplicated);
       isDuplicatedArabicName = true;
     }
 
-    if (this.isDuplicatedOrganizationEnglishName(orgUnit)) {
+    if (this._isDuplicatedOrganizationEnglishName(orgUnit)) {
       this.toast.error(this.langService.map.english_name_is_duplicated);
       isDuplicatedEnglishName = true;
     }
@@ -267,13 +275,13 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     return isDuplicatedArabicName || isDuplicatedEnglishName;
   }
 
-  private isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
+  private _isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
     return this.orgUnitsList
       .filter(org => org.id != orgUnit.id)
       .some(org => org.arName == orgUnit.arName);
   }
 
-  private isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
+  private _isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
     return this.orgUnitsList
       .filter(org => org.id != orgUnit.id)
       .some(org => org.enName == orgUnit.enName);
