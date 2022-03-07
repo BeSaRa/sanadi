@@ -11,44 +11,49 @@ import {IDialogData} from '../interfaces/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {switchMap} from 'rxjs/operators';
 import {OrganizationUnitInterceptor} from '../model-interceptors/organization-unit-interceptor';
-import {OrganizationUnitPopupComponent} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
+import {
+  OrganizationUnitPopupComponent
+} from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
 import {Generator} from '../decorators/generator';
 import {AuditLogService} from './audit-log.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
+export class OrganizationUnitService extends BackendWithDialogOperationsGenericService<OrgUnit> {
   list!: OrgUnit[];
-  _loadDone$!: Subject<OrgUnit[]>;
+  interceptor: OrganizationUnitInterceptor = new OrganizationUnitInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationUnitService', this);
   }
 
-  openCreateDialog(): DialogRef {
-    return this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
-      model: new OrgUnit(),
-      operation: OperationTypes.CREATE,
-      orgUnitsList: this.list
-    });
+  _getDialogComponent(): ComponentType<any> {
+    return OrganizationUnitPopupComponent;
   }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.loadOrgUnitByIdComposite(modelId).pipe(
-      switchMap((orgUnit: OrgUnit) => {
-        return of(this.dialogService.show<IDialogData<OrgUnit>>(OrganizationUnitPopupComponent, {
-          model: orgUnit,
-          operation: OperationTypes.UPDATE,
-          orgUnitsList: this.list
-        }));
-      })
-    );
+  _getModel(): any {
+    return OrgUnit;
+  }
+
+  _getSendInterceptor(): any {
+    return this.interceptor.send;
+  }
+
+  _getReceiveInterceptor(): any {
+    return this.interceptor.receive;
+  }
+
+  _getServiceURL(): string {
+    return this.urlService.URLS.ORGANIZATION_UNIT;
   }
 
   deactivate(id: number): Observable<boolean> {
@@ -59,8 +64,8 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
 
-  updateStatus(id: number, currentStatus: CommonStatusEnum) {
-    return currentStatus === CommonStatusEnum.ACTIVATED ? this.deactivate(id) : this.activate(id);
+  updateStatus(id: number, currentStatus: OrgStatusEnum) {
+    return currentStatus === OrgStatusEnum.ACTIVE ? this.deactivate(id) : this.activate(id);
   }
 
   private activate(id: number): Observable<any> {
@@ -68,7 +73,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
   }
 
   updateLogo(id: number, file: File): Observable<boolean> {
-    var form = new FormData();
+    let form = new FormData();
     form.append('content', file);
     return this.http.post<boolean>(this._getServiceURL() + '/banner-logo?id=' + id, form);
   }
@@ -81,28 +86,7 @@ export class OrganizationUnitService extends BackendGenericService<OrgUnit> {
     return this.http.get<OrgUnit[]>(this._getServiceURL() + '/org-unit-type' + '?orgUnitType[]=' + orgType);
   }
 
-  @Generator(undefined, false)
-  loadOrgUnitByIdComposite(id: number): Observable<OrgUnit> {
-    return this.http.get<OrgUnit>(this._getServiceURL() + '/' + id + '/composite');
-  }
-
   openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
-  }
-
-  _getModel(): any {
-    return OrgUnit;
-  }
-
-  _getSendInterceptor(): any {
-    return OrganizationUnitInterceptor.send;
-  }
-
-  _getServiceURL(): string {
-    return this.urlService.URLS.ORGANIZATION_UNIT;
-  }
-
-  _getReceiveInterceptor(): any {
-    return OrganizationUnitInterceptor.receive;
   }
 }

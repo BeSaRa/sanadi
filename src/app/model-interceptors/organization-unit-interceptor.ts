@@ -1,9 +1,10 @@
 import {OrgUnit} from '../models/org-unit';
 import {hasValidLength, isValidValue} from '../helpers/utils';
 import {DateUtils} from '../helpers/date-utils';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 
-export class OrganizationUnitInterceptor {
-  static receive(model: OrgUnit | any): (OrgUnit | any) {
+export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
+  receive(model: OrgUnit | any): (OrgUnit | any) {
     model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     model.registryDate = DateUtils.changeDateToDatepicker(model.registryDate);
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
@@ -18,7 +19,7 @@ export class OrganizationUnitInterceptor {
     return model;
   }
 
-  static send(model: OrgUnit | any): (OrgUnit | any) {
+  send(model: OrgUnit | any): (OrgUnit | any) {
     model.registryDate = model.registryDate ? DateUtils.changeDateFromDatepicker(model.registryDate)?.toISOString() : model.registryDate;
     model.establishmentDate = model.establishmentDate ? DateUtils.changeDateFromDatepicker(model.establishmentDate)?.toISOString() : model.establishmentDate;
     model.budgetClosureDate = model.budgetClosureDate ? DateUtils.changeDateFromDatepicker(model.budgetClosureDate)?.toISOString() : model.budgetClosureDate;
@@ -34,11 +35,15 @@ export class OrganizationUnitInterceptor {
       model.enBoardMembers = JSON.stringify([]);
     }
 
+    OrganizationUnitInterceptor._deleteBeforeSend(model);
+    return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<OrgUnit> | any): void {
     delete model.service;
     delete model.langService;
     delete model.lookupService;
     delete model.searchFields;
     delete model.statusDateModifiedString;
-    return model;
   }
 }

@@ -6,14 +6,14 @@
 <div class="dialog-content" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
-      <tab [name]="tabsData.basic.name" [hasError]="fm.getFieldInvalidStatus('basic')"
+      <tab [name]="tabsData.basic.name" [hasError]="form.invalid"
            [template]="basicInfoTemplate" [tabWidth]="'600px'"
-           [title]="langService.map.lbl_basic_info">{{langService.map.lbl_basic_info}}</tab>
+           [title]="langService.map.lbl_basic_info"></tab>
       <tab [name]="tabsData.users.name" [template]="usersTabTemplate"
-           *ngIf="model?.id" [title]="langService.map.lbl_org_users">{{langService.map.lbl_org_users}}</tab>
+           *ngIf="model?.id" [title]="langService.map.lbl_org_users"></tab>
     </tabs-list>
     <ng-template #basicInfoTemplate>
-      <div formGroupName="basic">
+      <div>
         <div class="row">
           <!--Org Name-->
           <div class="col-sm-6 mb-4">
@@ -24,8 +24,7 @@
           <div class="col-sm-6 mb-4 position-relative">
             <div class="form-check form-switch position-absolute top-50">
               <input type="checkbox" id="isMain" formControlName="isMain" class="form-check-input cursor-pointer">
-              <label for="status"
-                     class="cursor-pointer">{{fm.getBooleanFieldTranslate('basic.isMain', 'lbl_main', 'lbl_yes', 'lbl_no')}}</label>
+              <label for="status" class="cursor-pointer">{{langService.map.lbl_main}} : {{isMainField.value ? langService.map.lbl_yes: langService.map.lbl_no}}</label>
             </div>
           </div>
         </div>
@@ -34,19 +33,17 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName"
-                   [ngClass]="fm.getStatusClass('basic.arName')"
+            <input id="arName" validationClasses="arName" trimInput
                    formControlName="arName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
+            <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <!--English Name-->
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName"
-                   [ngClass]="fm.getStatusClass('basic.enName')"
+            <input id="enName" validationClasses="enName" trimInput
                    formControlName="enName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
+            <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -54,16 +51,16 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
                    class="form-label">{{langService.map.lbl_phone_1}}</label>
-            <input id="phoneNumber1" [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
+            <input id="phoneNumber1" validationClasses="phoneNumber1"
                    formControlName="phoneNumber1" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber1')"></app-field-error-message>
+            <app-field-error-message controlName="phoneNumber1"></app-field-error-message>
           </div>
           <!--Phone Number 2-->
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
-            <input id="phoneNumber2" [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
+            <input id="phoneNumber2"  validationClasses="phoneNumber2"
                    formControlName="phoneNumber2" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber2')"></app-field-error-message>
+            <app-field-error-message controlName="phoneNumber2"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -74,72 +71,27 @@
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="status"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status"
-                       [ngClass]="fm.getStatusClass('basic.status')">
+                       formControlName="status" appendTo="body"
+                       validationClasses="status">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitStatusList" [value]="option.lookupKey"
                          [disabled]="option.isRetiredOrgStatus()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
+            <app-field-error-message controlName="status"></app-field-error-message>
           </div>
-          <!--Email-->
-          <!-- <div class="col-sm-6 mb-4 position-relative">
-             <label for="email" class="form-label">{{langService.map.lbl_email}}</label>
-             <input id="email"
-                    [ngClass]="fm.getStatusClass('basic.email')"
-                    formControlName="email" class="form-control">
-             <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
-           </div>-->
         </div>
         <div class="row">
           <!--Address-->
           <div class="col-sm-12 mb-4 position-relative">
             <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
-            <textarea id="address"
-                      [ngClass]="fm.getStatusClass('basic.address')"
+            <textarea id="address" validationClasses="address" trimInput
                       formControlName="address" class="form-control">
             </textarea>
-            <app-field-error-message [control]="fm.getFormField('basic.address')"></app-field-error-message>
+            <app-field-error-message controlName="address"></app-field-error-message>
           </div>
         </div>
-        <!--   <div class="row">
-             &lt;!&ndash;Building Name&ndash;&gt;
-             <div class="col-sm-6 mb-4 position-relative">
-               <label for="buildingName" class="form-label">{{langService.map.lbl_building_name}}</label>
-               <input id="buildingName"
-                      [ngClass]="fm.getStatusClass('basic.buildingName')"
-                      formControlName="buildingName" class="form-control">
-               <app-field-error-message [control]="fm.getFormField('basic.buildingName')"></app-field-error-message>
-             </div>
-             &lt;!&ndash;Unit Name&ndash;&gt;
-             <div class="col-sm-6 mb-4 position-relative">
-               <label for="unitName" class="form-label">{{langService.map.lbl_unit_name}}</label>
-               <input id="unitName"
-                      [ngClass]="fm.getStatusClass('basic.unitName')"
-                      formControlName="unitName" class="form-control">
-               <app-field-error-message [control]="fm.getFormField('basic.unitName')"></app-field-error-message>
-             </div>
-           </div>
-           <div class="row">
-             &lt;!&ndash;Street&ndash;&gt;
-             <div class="col-sm-6 mb-4 position-relative">
-               <label for="street" class="form-label">{{langService.map.lbl_street}}</label>
-               <input id="street"
-                      [ngClass]="fm.getStatusClass('basic.street')"
-                      formControlName="street" class="form-control">
-               <app-field-error-message [control]="fm.getFormField('basic.street')"></app-field-error-message>
-             </div>
-             &lt;!&ndash;Zone&ndash;&gt;
-             <div class="col-sm-6 mb-4 position-relative">
-               <label for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
-               <input id="zone"
-                      [ngClass]="fm.getStatusClass('basic.zone')"
-                      formControlName="zone" class="form-control">
-               <app-field-error-message [control]="fm.getFormField('basic.zone')"></app-field-error-message>
-             </div>
-           </div>-->
       </div>
     </ng-template>
     <ng-template #usersTabTemplate>
@@ -148,12 +100,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

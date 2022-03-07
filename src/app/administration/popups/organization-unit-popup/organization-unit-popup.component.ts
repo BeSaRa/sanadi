@@ -1,7 +1,6 @@
-import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '@app/models/form-manager';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {OrgUnit} from '@app/models/org-unit';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
@@ -13,7 +12,7 @@ import {Lookup} from '@app/models/lookup';
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {FileStore} from '@app/models/file-store';
 import {DialogService} from '@app/services/dialog.service';
@@ -22,70 +21,116 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {OrgUnitField} from '@app/models/org-unit-field';
 import {OrgUnitFieldService} from '@app/services/org-unit-field.service';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-organization-unit-popup',
   templateUrl: './organization-unit-popup.component.html',
   styleUrls: ['./organization-unit-popup.component.scss']
 })
-export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> implements AfterViewInit {
+  constructor(public dialogRef: DialogRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUnit>,
+              private lookupService: LookupService,
+              public fb: FormBuilder,
+              private cd: ChangeDetectorRef,
+              private toast: ToastService,
+              public langService: LangService,
+              private dialogService: DialogService,
+              private orgUnitService: OrganizationUnitService,
+              private exceptionHandlerService: ExceptionHandlerService,
+              private orgUnitFieldService: OrgUnitFieldService) {
+    super();
+    this.operation = data.operation;
+    this.model = data.model;
+  }
+
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('logoUploader') logoUploader!: ElementRef;
+
   form!: FormGroup;
-  fm!: FormManager;
+  model!: OrgUnit;
   operation: OperationTypes;
-  model: OrgUnit;
-  orgUnitTypesList: Lookup[];
-  orgUnitStatusList: Lookup[];
-  orgUnitsList: OrgUnit[];
-  cityList: Lookup[];
-  licensingAuthorityList: Lookup[];
-  workFieldList: Lookup[];
   saveVisible = true;
-  validateFieldsVisible = true;
-  orgUnitFieldList: OrgUnitField[] = [];
+
+  orgUnitTypesList: Lookup[] = [];
+  orgUnitStatusList: Lookup[] = [];
+  orgUnitsList: OrgUnit[] = [];
+  cityList: Lookup[] = [];
+  licensingAuthorityList: Lookup[] = [];
+  workFieldList: Lookup[] = [];
+  orgUnitFieldList: OrgUnitField[] = [] = [];
 
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    advanced: {name: 'advanced'},
-    branches: {name: 'branches'}
+    basic: {
+      name: 'basic',
+      langKey: 'lbl_basic_info',
+      validStatus: () => this.form && this.basicInfoGroup && this.basicInfoGroup.valid
+    },
+    advanced: {
+      name: 'advanced',
+      langKey: 'advanced',
+      validStatus: () => this.form && this.advancedGroup && this.advancedGroup.valid
+    },
+    branches: {
+      name: 'branches',
+      langKey: 'lbl_org_branches',
+      validStatus: () => true
+    }
   };
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerControlsMap: { [key: string]: FormControl } = {};
+  datepickerOptionsMap: { [key: string]: IAngularMyDpOptions } = {
     registryDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     budgetClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
-
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  @ViewChild('logoUploader') logoUploader!: ElementRef;
   logoPath: string = '';
   logoFile: any;
   logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUnit>,
-              private lookupService: LookupService,
-              private fb: FormBuilder,
-              private toast: ToastService,
-              public langService: LangService,
-              private dialogService: DialogService,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private orgUnitFieldService: OrgUnitFieldService) {
-    this.operation = data.operation;
-    this.model = data.model;
-    this.orgUnitsList = data.orgUnitsList;
-    this.orgUnitTypesList = lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
-    this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
-    this.cityList = lookupService.listByCategory.Countries;
-    this.licensingAuthorityList = lookupService.getByCategory(LookupCategories.LICENSING_AUTHORITY);
-    this.workFieldList = lookupService.getByCategory(LookupCategories.WORK_FIELD);
+  private _afterViewInit(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.displayFormValidity(null, this.dialogContent.nativeElement);
+    }
+    if (this.operation !== OperationTypes.CREATE) {
+      this.orgCodeField && this.orgCodeField.disable();
+    }
+    this._buildDatepickerControlsMap();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    // used the private function to reuse functionality of afterViewInit if needed
+    this._afterViewInit();
+
+    this.cd.detectChanges();
+  }
+
+  get popupTitle(): string {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.langService.map.lbl_add_org_unit;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.langService.map.lbl_edit_org_unit;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.langService.map.view;
+    }
+    return '';
+  }
+
+  initPopup(): void {
     this.loadOrgUnitFields();
-    this.buildForm();
-    this._saveModel();
+    this.orgUnitsList = this.orgUnitService.list;
+    this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
+    this.orgUnitStatusList = this.lookupService.getByCategory(LookupCategories.ORG_STATUS);
+    this.cityList = this.lookupService.listByCategory.Countries;
+    this.licensingAuthorityList = this.lookupService.getByCategory(LookupCategories.LICENSING_AUTHORITY);
+    this.workFieldList = this.lookupService.getByCategory(LookupCategories.WORK_FIELD);
   }
 
   loadOrgUnitFields() {
@@ -94,165 +139,127 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
-
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = !(tab.name && tab.name === this.tabsData.branches.name);
     this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.branches.name);
   }
 
-  get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_unit : this.langService.map.lbl_edit_org_unit;
-  }
-
-  private _changeByteArrayToBase64(fileInfo: FileStore): string {
-    return 'data:' + fileInfo.mimeType + ';base64,' + fileInfo.fileContents;
-  }
-
-  private buildForm(): void {
+  buildForm(): void {
     this.form = this.fb.group({
-      basic: this.fb.group({
-        arName: [this.model.arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-        ]],
-        enName: [this.model.enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-        ]],
-        orgUnitType: [this.model.orgUnitType, CustomValidators.required],
-        orgCode: [{
-          value: this.model.orgCode,
-          disabled: this.operation
-        }, [CustomValidators.required, Validators.maxLength(10)]],
-        status: [this.model.status, CustomValidators.required],
-        email: [this.model.email, [CustomValidators.required, Validators.email, Validators.maxLength(50)]],
-        phoneNumber1: [this.model.phoneNumber1, [
-          CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-        phoneNumber2: [this.model.phoneNumber2, [
-          CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-        address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-        buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
-        unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
-        street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
-        zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
-        city: [this.model.city, [CustomValidators.required]],
-        orgNationality: [this.model.orgNationality, CustomValidators.required],
-        poBoxNum: [this.model.poBoxNum, [CustomValidators.number, Validators.maxLength(10)]],
-        hotLine: [this.model.hotLine, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-        faxNumber: [this.model.faxNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)],
-        registryCreator: [this.model.registryCreator],
-        registryDate: [this.model.registryDate, CustomValidators.maxDate(new Date())],
-        licensingAuthority: [this.model.licensingAuthority, CustomValidators.required],
-        workField: [this.model.workField, CustomValidators.required],
-        orgFieldId: [this.model.orgFieldId, CustomValidators.required],
-        promoteExtProj: [this.model.promoteExtProj]
-      }, {
-        validators: CustomValidators.validateFieldsStatus([
-          'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
-          'address', 'buildingName', 'unitName', 'street', 'zone', 'city', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber', 'registryCreator',
-          'registryDate', 'licensingAuthority', 'workField'
-        ])
+      basic: this.fb.group(this.model.buildFormBasic(true), {
+        validators: this.model.setBasicFormCrossValidations()
       }),
-      advanced: this.fb.group({
-        unifiedEconomicRecord: [this.model.unifiedEconomicRecord, [Validators.maxLength(150)]],
-        webSite: [this.model.webSite, [Validators.maxLength(350)]],
-        establishmentDate: [this.model.establishmentDate],
-        registryNumber: [this.model.registryNumber, [Validators.maxLength(50)]],
-        budgetClosureDate: [this.model.budgetClosureDate],
-        orgUnitAuditor: [this.model.orgUnitAuditor, [Validators.maxLength(350)]],
-        linkToInternalSystem: [this.model.linkToInternalSystem, [Validators.maxLength(450)]],
-        lawSubjectedName: [this.model.lawSubjectedName, [Validators.maxLength(450)]],
-        boardDirectorsPeriod: [this.model.boardDirectorsPeriod, [Validators.maxLength(350)]],
-        arabicBoardMembers: [this.model.arabicBoardMembers],
-        enBoardMembers: [this.model.enBoardMembers],
-        arabicBrief: [this.model.arabicBrief, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(2000)]],
-        enBrief: [this.model.enBrief, [CustomValidators.pattern('ENG_NUM'), Validators.maxLength(2000)]]
-      }, {
-        validators: CustomValidators.validateFieldsStatus([
-          'unifiedEconomicRecord', 'webSite', 'establishmentDate', 'registryNumber', 'budgetClosureDate',
-          'orgUnitAuditor', 'linkToInternalSystem', 'lawSubjectedName', 'boardDirectorsPeriod',
-          'arabicBoardMembers', 'enBoardMembers', 'arabicBrief', 'enBrief'
-        ])
+      advanced: this.fb.group(this.model.buildFormAdvanced(true), {
+        validators: this.model.setAdvancedFormCrossValidations
       })
     });
-    this.fm = new FormManager(this.form, this.langService);
 
     if (this.operation === OperationTypes.UPDATE) {
-      this.fm.displayFormValidity();
-
       if (this.model.logo) {
-        this.logoPath = this._changeByteArrayToBase64(this.model.logo);
+        this.logoPath = OrganizationUnitPopupComponent._changeByteArrayToBase64(this.model.logo);
       }
     }
   }
 
-  saveModel(): void {
-    this.save$.next();
+  private _buildDatepickerControlsMap(): void {
+    this.datepickerControlsMap = {
+      registryDate: this.registryDateField,
+      establishmentDate: this.establishmentDateField,
+      budgetClosureDate: this.budgetClosureDateField
+    };
   }
 
-  _saveModel(): void {
-    this.save$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap(() => {
-        const orgUnit = extender<OrgUnit>(OrgUnit,
-          {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.advanced});
-        if(!this.isDuplicatedOrganizationNames(orgUnit)) {
-          return orgUnit.save().pipe(
-            catchError((err) => {
-              this.exceptionHandlerService.handle(err);
-              return of(null);
-            }));
-        } else {
+  get basicInfoGroup(): FormGroup {
+    return this.form.get('basic') as FormGroup;
+  }
+
+  get advancedGroup(): FormGroup {
+    return this.form.get('advanced') as FormGroup;
+  }
+
+  get orgCodeField(): FormControl {
+    return this.basicInfoGroup.get('orgCode') as FormControl;
+  }
+
+  get registryDateField(): FormControl {
+    return this.basicInfoGroup.get('registryDate') as FormControl;
+  }
+
+  get establishmentDateField(): FormControl {
+    return this.advancedGroup.get('establishmentDate') as FormControl;
+  }
+
+  get budgetClosureDateField(): FormControl {
+    return this.advancedGroup.get('budgetClosureDate') as FormControl;
+  }
+
+  get arabicBoardMembersField(): FormControl {
+    return this.advancedGroup.get('arabicBoardMembers') as FormControl;
+  }
+
+  get englishBoardMembersField(): FormControl {
+    return this.advancedGroup.get('enBoardMembers') as FormControl;
+  }
+
+  beforeSave(model: OrgUnit, form: FormGroup): boolean | Observable<boolean> {
+    if (this.isDuplicatedOrganizationNames(model)) {
+      return false;
+    }
+
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
+      this.dialogService.error(listHtml.outerHTML);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  prepareModel(model: OrgUnit, form: FormGroup): OrgUnit | Observable<OrgUnit> {
+    return (new OrgUnit()).clone({...model, ...form.value.basic, ...form.value.advanced});
+  }
+
+  afterSave(model: OrgUnit, dialogRef: DialogRef): void {
+    const message = (this.operation === OperationTypes.CREATE)
+      ? this.langService.map.msg_create_x_success
+      : this.langService.map.msg_update_x_success;
+    this.model = model;
+    this.operation = OperationTypes.UPDATE;
+
+    if (!this.logoFile) {
+      this.toast.success(message.change({x: model.getName()}));
+      return;
+    }
+
+    model.saveLogo(this.logoFile)
+      .pipe(
+        catchError((err) => {
+          this.exceptionHandlerService.handle(err);
           return of(null);
+        })
+      )
+      .subscribe((result: boolean | null) => {
+        if (!result) {
+          return;
         }
-      })
-    ).subscribe((orgUnit) => {
-      if (!orgUnit) {
-        return;
-      }
+        this._clearLogoUploader();
+        this.toast.success(message.change({x: model.getName()}));
+      });
+  }
 
-      const message = (this.operation === OperationTypes.CREATE)
-        ? this.langService.map.msg_create_x_success
-        : this.langService.map.msg_update_x_success;
-      this.model = orgUnit;
-      this.operation = OperationTypes.UPDATE;
-
-      if (!this.logoFile) {
-        this.toast.success(message.change({x: orgUnit.getName()}));
-        return;
-      }
-
-      orgUnit.saveLogo(this.logoFile)
-        .pipe(
-          catchError((err) => {
-            this.exceptionHandlerService.handle(err);
-            return of(null);
-          })
-        )
-        .subscribe((result: boolean | null) => {
-          if (!result) {
-            return;
-          }
-          this._clearLogoUploader();
-          this.toast.success(message.change({x: orgUnit.getName()}));
-        });
-    });
+  saveFail(error: Error): void {
   }
 
   isDuplicatedOrganizationNames(orgUnit: OrgUnit) {
-    let isDuplicatedArabicName = false;
-    let isDuplicatedEnglishName = false;
-    if(this.isDuplicatedOrganizationArabicName(orgUnit)) {
+    let isDuplicatedArabicName = false, isDuplicatedEnglishName = false;
+
+    if (this.isDuplicatedOrganizationArabicName(orgUnit)) {
       this.toast.error(this.langService.map.arabic_name_is_duplicated);
       isDuplicatedArabicName = true;
     }
 
-    if(this.isDuplicatedOrganizationEnglishName(orgUnit)) {
+    if (this.isDuplicatedOrganizationEnglishName(orgUnit)) {
       this.toast.error(this.langService.map.english_name_is_duplicated);
       isDuplicatedEnglishName = true;
     }
@@ -260,13 +267,13 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     return isDuplicatedArabicName || isDuplicatedEnglishName;
   }
 
-  isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
+  private isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
     return this.orgUnitsList
       .filter(org => org.id != orgUnit.id)
       .some(org => org.arName == orgUnit.arName);
   }
 
-  isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
+  private isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
     return this.orgUnitsList
       .filter(org => org.id != orgUnit.id)
       .some(org => org.enName == orgUnit.enName);
@@ -289,7 +296,7 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
         return;
       }
 
-      var reader = new FileReader();
+      let reader = new FileReader();
       reader.readAsDataURL(files[0]);
 
       reader.onload = (event) => {
@@ -327,4 +334,25 @@ export class OrganizationUnitPopupComponent implements OnInit, OnDestroy {
     return name;
   }
 
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
+
+  private static _changeByteArrayToBase64(fileInfo: FileStore): string {
+    return 'data:' + fileInfo.mimeType + ';base64,' + fileInfo.fileContents;
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.langService.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
+  }
+
+  destroyPopup(): void {
+  }
 }

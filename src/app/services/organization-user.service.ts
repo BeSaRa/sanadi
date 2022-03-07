@@ -10,7 +10,9 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {forkJoin, Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
-import {OrganizationUserPopupComponent} from '../administration/popups/organization-user-popup/organization-user-popup.component';
+import {
+  OrganizationUserPopupComponent
+} from '../administration/popups/organization-user-popup/organization-user-popup.component';
 import {CustomRoleService} from './custom-role.service';
 import {Generator} from '../decorators/generator';
 import {IOrgUserCriteria} from '../interfaces/i-org-user-criteria';
@@ -62,9 +64,7 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
     });
   }
 
-  // openCreateDialog(): Observable<DialogRef> {
   addDialog(): Observable<DialogRef> {
-    debugger
     return this._loadInitData()
       .pipe(
         switchMap((result) => {
@@ -80,10 +80,11 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
       );
   }
 
-  private _openUpdateDialog(model: OrgUser): Observable<DialogRef> {
-    return this._loadInitData(model.id).pipe(
+  private _openUpdateDialog(orgUserId: number, isCompositeLoad: boolean): Observable<DialogRef> {
+    return this._loadInitData(orgUserId).pipe(
       switchMap((result) => {
-        return this.getById(model.id).pipe(
+        let request = isCompositeLoad  ? this.getByIdComposite(orgUserId) : this.getById(orgUserId);
+        return request.pipe(
           switchMap((orgUser: OrgUser) => {
             return of(this.dialog.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
               model: orgUser,
@@ -100,11 +101,11 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
   }
 
   editDialog(model: OrgUser): Observable<DialogRef> {
-    return this._openUpdateDialog(model);
+    return this._openUpdateDialog(model.id, false);
   }
 
   editDialogComposite(model: OrgUser): Observable<DialogRef> {
-    return this._openUpdateDialog(model);
+    return this._openUpdateDialog(model.id, true);
   }
 
   updateStatus(id: number, newStatus: OrgUserStatusEnum) {

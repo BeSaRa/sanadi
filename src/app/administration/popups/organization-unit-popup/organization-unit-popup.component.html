@@ -6,14 +6,14 @@
 <div class="dialog-content" #dialogContent>
   <form [formGroup]="form" novalidate autocomplete="off">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
-      <tab [name]="tabsData.basic.name" [hasError]="fm.getFieldInvalidStatus('basic')"
+      <tab [name]="tabsData.basic.name" [hasError]="getTabInvalidStatus('basic')"
            [template]="basicInfoTemplate" [tabWidth]="'600px'"
-           [title]="langService.map.lbl_basic_info">{{langService.map.lbl_basic_info}}</tab>
-      <tab [name]="tabsData.advanced.name" [hasError]="fm.getFieldInvalidStatus('advanced')"
+           [title]="langService.map.lbl_basic_info"></tab>
+      <tab [name]="tabsData.advanced.name" [hasError]="getTabInvalidStatus('advanced')"
            [template]="advancedInfoTemplate" [tabWidth]="'600px'"
-           [title]="langService.map.advanced">{{langService.map.advanced}}</tab>
+           [title]="langService.map.advanced"></tab>
       <tab [name]="tabsData.branches.name" [template]="branchesTemplate"
-           *ngIf="model.id" [title]="langService.map.lbl_org_branches">{{langService.map.lbl_org_branches}}</tab>
+           *ngIf="model.id" [title]="langService.map.lbl_org_branches"></tab>
     </tabs-list>
     <ng-template #basicInfoTemplate style="width: 600px">
       <div formGroupName="basic">
@@ -21,18 +21,16 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName"
-                   [ngClass]="fm.getStatusClass('basic.arName')"
+            <input id="arName" validationClasses="arName" trimInput
                    formControlName="arName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
+            <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName"
-                   [ngClass]="fm.getStatusClass('basic.enName')"
+            <input id="enName" validationClasses="enName" trimInput
                    formControlName="enName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
+            <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -42,22 +40,21 @@
             <ng-select [selectOnTab]="true" labelForId="orgUnitType" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgUnitType"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="orgUnitType"
-                       [ngClass]="fm.getStatusClass('basic.orgUnitType')">
+                       formControlName="orgUnitType" appendTo="body"
+                       validationClasses="orgUnitType">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitTypesList" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.orgUnitType')"></app-field-error-message>
+            <app-field-error-message controlName="orgUnitType"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="orgCode" for="orgCode"
                    class="form-label">{{langService.map.lbl_org_unit_code}}</label>
-            <input id="orgCode"
-                   [ngClass]="fm.getStatusClass('basic.orgCode')"
+            <input id="orgCode" validationClasses="orgCode" trimInput
                    formControlName="orgCode" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.orgCode')"></app-field-error-message>
+            <app-field-error-message controlName="orgCode"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -66,81 +63,75 @@
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="status"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status"
-                       [ngClass]="fm.getStatusClass('basic.status')">
+                       formControlName="status" appendTo="body"
+                       validationClasses="status">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitStatusList" [value]="option.lookupKey"
                          [disabled]="option.isRetiredOrgStatus()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
+            <app-field-error-message controlName="status"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="email" for="email" class="form-label">{{langService.map.lbl_email}}</label>
-            <input id="email"
-                   [ngClass]="fm.getStatusClass('basic.email')"
+            <input id="email" validationClasses="email" trimInput
                    formControlName="email" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
+            <app-field-error-message controlName="email"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber1" asteriskIfRequired="phoneNumber1"
                    class="form-label">{{langService.map.lbl_phone_1}}</label>
-            <input id="phoneNumber1" [ngClass]="fm.getStatusClass('basic.phoneNumber1')"
+            <input id="phoneNumber1" validationClasses="phoneNumber1"
                    formControlName="phoneNumber1" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber1')"></app-field-error-message>
+            <app-field-error-message controlName="phoneNumber1"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber2" class="form-label">{{langService.map.lbl_phone_2}}</label>
-            <input id="phoneNumber2" [ngClass]="fm.getStatusClass('basic.phoneNumber2')"
+            <input id="phoneNumber2" validationClasses="phoneNumber2"
                    formControlName="phoneNumber2" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber2')"></app-field-error-message>
+            <app-field-error-message controlName="phoneNumber2"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="address" class="form-label">{{langService.map.lbl_address}}</label>
-            <textarea id="address"
-                      [ngClass]="fm.getStatusClass('basic.address')"
+            <textarea id="address" validationClasses="address" trimInput
                       formControlName="address" class="form-control">
             </textarea>
-            <app-field-error-message [control]="fm.getFormField('basic.address')"></app-field-error-message>
+            <app-field-error-message controlName="address"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="buildingName" for="buildingName"
                    class="form-label">{{langService.map.lbl_building_name}}</label>
-            <input id="buildingName"
-                   [ngClass]="fm.getStatusClass('basic.buildingName')"
+            <input id="buildingName" validationClasses="buildingName" trimInput
                    formControlName="buildingName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.buildingName')"></app-field-error-message>
+            <app-field-error-message controlName="buildingName"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="unitName" for="unitName"
                    class="form-label">{{langService.map.lbl_unit_name}}</label>
-            <input id="unitName"
-                   [ngClass]="fm.getStatusClass('basic.unitName')"
+            <input id="unitName" validationClasses="unitName" trimInput
                    formControlName="unitName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.unitName')"></app-field-error-message>
+            <app-field-error-message controlName="unitName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="street" for="street" class="form-label">{{langService.map.lbl_street}}</label>
-            <input id="street"
-                   [ngClass]="fm.getStatusClass('basic.street')"
+            <input id="street" validationClasses="street" trimInput
                    formControlName="street" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.street')"></app-field-error-message>
+            <app-field-error-message controlName="street"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="zone" for="zone" class="form-label">{{langService.map.lbl_zone}}</label>
-            <input id="zone"
-                   [ngClass]="fm.getStatusClass('basic.zone')"
+            <input id="zone" validationClasses="zone" trimInput
                    formControlName="zone" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.zone')"></app-field-error-message>
+            <app-field-error-message controlName="zone"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -150,36 +141,36 @@
             <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="city"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="city"
-                       [ngClass]="fm.getStatusClass('basic.city')">
+                       formControlName="city" appendTo="body"
+                       validationClasses="city">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of cityList" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.city')"></app-field-error-message>
+            <app-field-error-message controlName="city"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="poBoxNum" class="form-label">{{langService.map.lbl_po_box_num}}</label>
-            <input id="poBoxNum" [ngClass]="fm.getStatusClass('basic.poBoxNum')"
+            <input id="poBoxNum" validationClasses="poBoxNum"
                    formControlName="poBoxNum" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.poBoxNum')"></app-field-error-message>
+            <app-field-error-message controlName="poBoxNum"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="faxNumber" asteriskIfRequired="faxNumber"
                    class="form-label">{{langService.map.fax_number}}</label>
-            <input id="faxNumber" [ngClass]="fm.getStatusClass('basic.faxNumber')"
+            <input id="faxNumber" validationClasses="faxNumber"
                    formControlName="faxNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.faxNumber')"></app-field-error-message>
+            <app-field-error-message controlName="faxNumber"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="hotLine" asteriskIfRequired="hotLine"
                    class="form-label">{{langService.map.hotline}}</label>
-            <input id="hotLine" [ngClass]="fm.getStatusClass('basic.hotLine')"
+            <input id="hotLine" validationClasses="hotLine"
                    formControlName="hotLine" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.hotLine')"></app-field-error-message>
+            <app-field-error-message controlName="hotLine"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -189,14 +180,14 @@
             <ng-select [selectOnTab]="true" labelForId="registryCreator" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="registryCreator"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="registryCreator"
-                       [ngClass]="fm.getStatusClass('basic.registryCreator')">
+                       formControlName="registryCreator" appendTo="body"
+                       validationClasses="registryCreator">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitsList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.orgNationality')"></app-field-error-message>
+            <app-field-error-message controlName="registryCreator"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="registryDate" asteriskIfRequired="registryDate"
@@ -206,8 +197,8 @@
               <div class="form-control" formControlName="registryDate"
                    id="registryDate" [options]="datepickerOptionsMap.registryDate"
                    (click)="dpRegistryDate.toggleCalendar()" #dpRegistryDate="angular-mydatepicker"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('basic.registryDate')"></div>
-              <app-field-error-message [control]="fm.getFormField('basic.registryDate')"></app-field-error-message>
+                   angular-mydatepicker validationClasses="registryDate"></div>
+              <app-field-error-message controlName="registryDate"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -218,14 +209,14 @@
             <ng-select [selectOnTab]="true" labelForId="workField" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="workField"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="workField"
-                       [ngClass]="fm.getStatusClass('basic.workField')">
+                       formControlName="workField" appendTo="body"
+                       validationClasses="workField">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of workFieldList" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.workField')"></app-field-error-message>
+            <app-field-error-message controlName="workField"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
             <label for="licensingAuthority" asteriskIfRequired="orgFieldId"
@@ -233,13 +224,13 @@
             <ng-select [selectOnTab]="true" labelForId="orgFieldId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgFieldId"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="orgFieldId"
-                       [ngClass]="fm.getStatusClass('basic.orgFieldId')">
+                       formControlName="orgFieldId" appendTo="body"
+                       validationClasses="orgFieldId">
               <ng-option *ngFor="let option of orgUnitFieldList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.orgFieldId')"></app-field-error-message>
+            <app-field-error-message controlName="orgFieldId"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -249,14 +240,14 @@
             <ng-select [selectOnTab]="true" labelForId="licensingAuthority" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="licensingAuthority"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="licensingAuthority"
-                       [ngClass]="fm.getStatusClass('basic.licensingAuthority')">
+                       formControlName="licensingAuthority" appendTo="body"
+                       validationClasses="licensingAuthority">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of licensingAuthorityList" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.licensingAuthority')"></app-field-error-message>
+            <app-field-error-message controlName="licensingAuthority"></app-field-error-message>
           </div>
           <div class="col-sm-6 mt-5 form-check form-switch">
             <div class="ms-3">
@@ -274,14 +265,14 @@
         <ng-select [selectOnTab]="true" labelForId="orgNationality" [clearable]="false"
                    placeholder="{{langService.map.select}}" id="orgNationality"
                    [notFoundText]="langService.map.msg_not_found"
-                   formControlName="orgNationality"
-                   [ngClass]="fm.getStatusClass('basic.orgNationality')">
+                   formControlName="orgNationality" appendTo="body"
+                   validationClasses="orgNationality">
           <ng-option value="">{{langService.map.lbl_none}}</ng-option>
           <ng-option *ngFor="let option of orgNationalityList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
         </ng-select>
-        <app-field-error-message [control]="fm.getFormField('basic.orgNationality')"></app-field-error-message>
+        <app-field-error-message controlName="orgNationality"></app-field-error-message>
       </div>-->
     </ng-template>
     <ng-template #advancedInfoTemplate style="width: 600px">
@@ -289,18 +280,14 @@
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="unifiedEconomicRecord" class="form-label">{{langService.map.unified_economic_record}}</label>
-            <input id="unifiedEconomicRecord"
-                   [ngClass]="fm.getStatusClass('advanced.unifiedEconomicRecord')"
+            <input id="unifiedEconomicRecord" validationClasses="unifiedEconomicRecord" trimInput
                    formControlName="unifiedEconomicRecord" class="form-control">
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.unifiedEconomicRecord')"></app-field-error-message>
+            <app-field-error-message controlName="unifiedEconomicRecord"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="webSite" class="form-label">{{langService.map.website}}</label>
-            <input id="webSite"
-                   [ngClass]="fm.getStatusClass('advanced.webSite')"
-                   formControlName="webSite" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('advanced.webSite')"></app-field-error-message>
+            <input id="webSite" validationClasses="webSite" trimInput formControlName="webSite" class="form-control">
+            <app-field-error-message controlName="webSite"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -311,9 +298,8 @@
               <div class="form-control" formControlName="establishmentDate"
                    id="establishmentDate" [options]="datepickerOptionsMap.establishmentDate"
                    (click)="dpEstablishmentDate.toggleCalendar()" #dpEstablishmentDate="angular-mydatepicker"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('advanced.establishmentDate')"></div>
-              <app-field-error-message
-                [control]="fm.getFormField('advanced.establishmentDate')"></app-field-error-message>
+                   angular-mydatepicker validationClasses="establishmentDate"></div>
+              <app-field-error-message controlName="establishmentDate"></app-field-error-message>
             </div>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
@@ -323,53 +309,45 @@
               <div class="form-control" formControlName="budgetClosureDate"
                    id="budgetClosureDate" [options]="datepickerOptionsMap.budgetClosureDate"
                    (click)="dpBudgetClosureDate.toggleCalendar()" #dpBudgetClosureDate="angular-mydatepicker"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('advanced.budgetClosureDate')"></div>
-              <app-field-error-message
-                [control]="fm.getFormField('advanced.budgetClosureDate')"></app-field-error-message>
+                   angular-mydatepicker validationClasses="budgetClosureDate"></div>
+              <app-field-error-message controlName="budgetClosureDate"></app-field-error-message>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="registryNumber" class="form-label">{{langService.map.registry_number}}</label>
-            <input id="registryNumber"
-                   [ngClass]="fm.getStatusClass('advanced.registryNumber')"
+            <input id="registryNumber" validationClasses="registryNumber" trimInput
                    formControlName="registryNumber" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('advanced.registryNumber')"></app-field-error-message>
+            <app-field-error-message controlName="registryNumber"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="orgUnitAuditor" class="form-label">{{langService.map.auditor}}</label>
-            <input id="orgUnitAuditor"
-                   [ngClass]="fm.getStatusClass('advanced.orgUnitAuditor')"
+            <input id="orgUnitAuditor" validationClasses="orgUnitAuditor" trimInput
                    formControlName="orgUnitAuditor" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('advanced.orgUnitAuditor')"></app-field-error-message>
+            <app-field-error-message controlName="orgUnitAuditor"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="linkToInternalSystem" class="form-label">{{langService.map.link_to_internal_system}}</label>
-            <input id="linkToInternalSystem"
-                   [ngClass]="fm.getStatusClass('advanced.linkToInternalSystem')"
+            <input id="linkToInternalSystem" validationClasses="linkToInternalSystem" trimInput
                    formControlName="linkToInternalSystem" class="form-control">
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.linkToInternalSystem')"></app-field-error-message>
+            <app-field-error-message controlName="linkToInternalSystem"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="lawSubjectedName" class="form-label">{{langService.map.law_subjected_name}}</label>
-            <input id="lawSubjectedName"
-                   [ngClass]="fm.getStatusClass('advanced.lawSubjectedName')"
+            <input id="lawSubjectedName" validationClasses="lawSubjectedName" trimInput
                    formControlName="lawSubjectedName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('advanced.lawSubjectedName')"></app-field-error-message>
+            <app-field-error-message controlName="lawSubjectedName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="boardDirectorsPeriod" class="form-label">{{langService.map.board_of_directors_period}}</label>
-            <input id="boardDirectorsPeriod"
-                   [ngClass]="fm.getStatusClass('advanced.boardDirectorsPeriod')"
+            <input id="boardDirectorsPeriod" validationClasses="boardDirectorsPeriod" trimInput
                    formControlName="boardDirectorsPeriod" class="form-control">
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.boardDirectorsPeriod')"></app-field-error-message>
+            <app-field-error-message controlName="boardDirectorsPeriod"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -380,15 +358,14 @@
                        id="arabicBoardMembers"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="arabicBoardMembers"
-                       [items]="fm.getFormField('advanced.arabicBoardMembers')?.value"
+                       [items]="arabicBoardMembersField?.value"
                        [addTag]="addArabicBoardMembers"
                        [multiple]="true"
                        [isOpen]="false"
                        class="no-dropdown"
-                       [ngClass]="fm.getStatusClass('advanced.arabicBoardMembers')">
+                       validationClasses="arabicBoardMembers">
             </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.arabicBoardMembers')"></app-field-error-message>
+            <app-field-error-message controlName="arabicBoardMembers"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -399,34 +376,30 @@
                        id="enBoardMembers"
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="enBoardMembers"
-                       [items]="fm.getFormField('advanced.enBoardMembers')?.value"
+                       [items]="englishBoardMembersField?.value"
                        [addTag]="addEnglishBoardMembers"
                        [multiple]="true"
                        [isOpen]="false"
                        class="no-dropdown"
-                       [ngClass]="fm.getStatusClass('advanced.enBoardMembers')">
+                       validationClasses="enBoardMembers">
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('advanced.enBoardMembers')"></app-field-error-message>
+            <app-field-error-message controlName="enBoardMembers"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="arabicBrief" class="form-label">{{langService.map.arabic_brief}}</label>
-            <textarea id="arabicBrief" cols="3"
-                      [ngClass]="fm.getStatusClass('advanced.arabicBrief')"
+            <textarea id="arabicBrief" cols="3"  validationClasses="arabicBrief" trimInput
                       formControlName="arabicBrief" class="form-control"></textarea>
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.arabicBrief')"></app-field-error-message>
+            <app-field-error-message controlName="arabicBrief"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="enBrief" class="form-label">{{langService.map.english_brief}}</label>
-            <textarea id="enBrief" cols="3"
-                      [ngClass]="fm.getStatusClass('advanced.enBrief')"
+            <textarea id="enBrief" cols="3"  validationClasses="enBrief" trimInput
                       formControlName="enBrief" class="form-control"></textarea>
-            <app-field-error-message
-              [control]="fm.getFormField('advanced.enBrief')"></app-field-error-message>
+            <app-field-error-message controlName="enBrief"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -457,12 +430,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

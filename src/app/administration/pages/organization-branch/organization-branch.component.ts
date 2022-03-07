@@ -1,5 +1,5 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {Component, Input, ViewChild} from '@angular/core';
+import {of} from 'rxjs';
 import {OrgBranch} from '@app/models/org-branch';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -8,8 +8,7 @@ import {ToastService} from '@app/services/toast.service';
 import {OrganizationBranchService} from '@app/services/organization-branch.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {switchMap, tap} from 'rxjs/operators';
-import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {OrgUnit} from '@app/models/org-unit';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
@@ -17,29 +16,19 @@ import {SharedService} from '@app/services/shared.service';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
-import {FormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 
 @Component({
   selector: 'app-organization-branch',
   templateUrl: './organization-branch.component.html',
   styleUrls: ['./organization-branch.component.scss']
 })
-export class OrganizationBranchComponent implements OnInit, OnDestroy, PageComponentInterface<OrgBranch> {
-  add$: Subject<any> = new Subject<any>();
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  branches: OrgBranch[] = [];
-  branchesClone: OrgBranch[] = [];
-
+export class OrganizationBranchComponent extends AdminGenericComponent<OrgBranch, OrganizationBranchService> {
   @Input() organization!: OrgUnit;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'address', 'status', 'statusDateModified', 'actions'];
-  reloadSubscription!: Subscription;
-  addSubscription!: Subscription;
-
   @ViewChild('table') table!: TableComponent;
-  filterControl: FormControl = new FormControl('');
-
-  actionsList: IMenuItem<OrgBranch>[] = [
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'address', 'status', 'statusDateModified', 'actions'];
+  actions: IMenuItem<OrgBranch>[] = [
     // edit
     {
       type: 'action',
@@ -62,7 +51,6 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       onClick: (item: OrgBranch) => this.showAuditLogs(item)
     }
   ];
-
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -72,7 +60,6 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
       }
     }
   ];
-
   sortingCallbacks = {
     status: (a: OrgBranch, b: OrgBranch, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.getOrgStatusLookup()?.getName().toLowerCase(),
@@ -87,32 +74,56 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
-              private organizationBranchService: OrganizationBranchService,
+              public service: OrganizationBranchService,
               public lookupService: LookupService, public configService: ConfigurationService,
               private toast: ToastService,
               private sharedService: SharedService) {
-  }
-
-  ngOnDestroy(): void {
-    this.reloadSubscription.unsubscribe();
-    this.addSubscription.unsubscribe();
+    super();
   }
 
   ngOnInit(): void {
     this.listenToAdd();
+    this.listenToEdit();
     this.listenToReload();
   }
 
-  add(): void {
-    const sub = this.organizationBranchService.openCreateDialog(this.organization).onAfterClose$.subscribe(() => {
-      this.reload$.next(null);
-      sub.unsubscribe();
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.organization).onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
+  listenToEdit() {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => this.service.openUpdateDialog(model.id, this.organization)))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => {
+        this.reload$.next(null)
+      })
+  }
+
+  listenToReload(): void {
+    this.reload$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        switchMap(() => {
+          if (!this.organization || !this.organization.id) {
+            return of([]);
+          }
+          return this.service.loadByCriteria({'org-id': this.organization?.id});
+        })
+      ).subscribe((branches) => {
+      this.models = branches;
+      this.table.selection.clear();
     });
   }
 
-  delete(model: OrgBranch, event: MouseEvent): void {
-    event.preventDefault();
-    return;
+  edit(model: OrgBranch, event?: MouseEvent): void {
+    event?.preventDefault();
+    this.edit$.next(model);
   }
 
   deactivate(model: OrgBranch, event?: MouseEvent): void {
@@ -142,7 +153,7 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.organizationBranchService.deactivateBulk(ids).subscribe((response) => {
+          const sub = this.service.deactivateBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
                 this.reload$.next(null);
@@ -152,39 +163,6 @@ export class OrganizationBranchComponent implements OnInit, OnDestroy, PageCompo
         }
       });
     }
-  }
-
-  edit(model: OrgBranch, event?: MouseEvent): void {
-    event?.preventDefault();
-    const sub = this.organizationBranchService.openUpdateDialog(model.id, this.organization).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
-  }
-
-  listenToAdd(): void {
-    this.addSubscription = this.add$.pipe(
-      tap(() => {
-        this.add();
-      })
-    ).subscribe();
-  }
-
-  listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(
-      switchMap(() => {
-        if (!this.organization || !this.organization.id) {
-          return of([]);
-        }
-        return this.organizationBranchService.loadByCriteria({'org-id': this.organization?.id});
-      })
-    ).subscribe((branches) => {
-      this.branches = branches;
-      this.branchesClone = branches;
-      this.table.selection.clear();
-    });
   }
 
   showAuditLogs(branch: OrgBranch, $event?: MouseEvent): void {
