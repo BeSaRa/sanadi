@@ -123,7 +123,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     });
   }
 
-  private static _changeLookupToEnum(lookupArray: Lookup[], showInUpperCase: boolean = true): void {
+  private static _changeLookupArrayToEnum(lookupArray: Lookup[], showInUpperCase: boolean = true, printConsole: boolean = true): string {
     let value = [];
     for (let i = 0; i < lookupArray.length; i++) {
       let key = (lookupArray[i].enName || '').split(' ').join('_');
@@ -132,6 +132,17 @@ export class LookupService extends BackendGenericService<Lookup> {
       }
       value.push(key.trim() + ' = ' + lookupArray[i].lookupKey);
     }
-    console.log(value.join(',\n'));
+    if (printConsole) {
+      console.log('{\n' + value.join(',\n') + '\n}');
+    }
+    return '{\n' + value.join(',\n') + '\n}';
+  }
+
+  private static _changeLookupMapToEnum(lookupMap: ILookupMap, showInUpperCase: boolean = true): void {
+    for (let cat in lookupMap) {
+      let lookupArray: Lookup[] = lookupMap[cat as keyof ILookupMap];
+      let result = LookupService._changeLookupArrayToEnum(lookupArray, showInUpperCase, false);
+      console.log(cat + '  =', result);
+    }
   }
 }
