@@ -3,7 +3,7 @@ import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {ReadinessStatus} from '@app/types/types';
+import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {BankBranch} from '@app/models/bank-branch';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
@@ -53,7 +53,7 @@ export class BankBranchComponent implements OnInit {
 
   form!: FormGroup;
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
 

@@ -27,6 +27,7 @@ import {CustomTermService} from "@app/services/custom-term.service";
 import {DialogService} from "@app/services/dialog.service";
 import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
 import {CaseModel} from "@app/models/case-model";
+import {DatepickerOptionsMap} from '@app/types/types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -55,7 +56,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   private loadedLicense?: LicenseApprovalModel<any, any>;
   customTerms: CustomTerm[] = [];
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
   };

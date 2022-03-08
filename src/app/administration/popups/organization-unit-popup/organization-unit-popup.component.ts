@@ -21,10 +21,10 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 import {OrgUnitField} from '@app/models/org-unit-field';
 import {OrgUnitFieldService} from '@app/services/org-unit-field.service';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -87,8 +87,8 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     }
   };
 
-  datepickerControlsMap: { [key: string]: FormControl } = {};
-  datepickerOptionsMap: { [key: string]: IAngularMyDpOptions } = {
+  datepickerControlsMap: DatepickerControlsMap = {};
+  datepickerOptionsMap: DatepickerOptionsMap = {
     registryDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     budgetClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})

@@ -4,7 +4,7 @@ import {FactoryService} from '../services/factory.service';
 import {ConfigurationService} from '../services/configuration.service';
 import * as dayjs from 'dayjs';
 import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
-import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 export class DateUtils {
   static changeDateToDatepicker(dateValue: any): IMyDateModel {
@@ -122,7 +122,7 @@ export class DateUtils {
    * @description Set the min date for the "To" datepicker relative to "From" datepicker
    * @param options
    */
-  static setRelatedMinDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }) {
+  static setRelatedMinDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: DatepickerOptionsMap, controlsMap: DatepickerControlsMap, disableSelectedFromRelated?: boolean }) {
     setTimeout(() => {
       let toFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.toFieldName]);
       const fromDate = this.changeDateFromDatepicker(options.controlsMap[options.fromFieldName]?.value);
@@ -148,7 +148,7 @@ export class DateUtils {
    * @description Set the max date for the "From" datepicker relative to "To" datepicker
    * @param options
    */
-  static setRelatedMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }): void {
+  static setRelatedMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: DatepickerOptionsMap, controlsMap: DatepickerControlsMap, disableSelectedFromRelated?: boolean }): void {
     setTimeout(() => {
       let fromFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.fromFieldName]);
       const toDate = this.changeDateFromDatepicker(options.controlsMap[options.toFieldName]?.value);

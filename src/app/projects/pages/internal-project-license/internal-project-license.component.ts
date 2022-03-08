@@ -35,6 +35,7 @@ import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'internal-project-license',
@@ -163,7 +164,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InternalProjectLicense;
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     expectedImpactDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 

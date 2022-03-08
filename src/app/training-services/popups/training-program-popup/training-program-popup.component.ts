@@ -26,6 +26,7 @@ import {TrainerService} from '@app/services/trainer.service';
 import {TrainingStatus} from '@app/enums/training-status';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {EmployeeService} from '@app/services/employee.service';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'training-program-popup',
@@ -73,8 +74,8 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     }
   };
   tabIndex$: Subject<number> = new Subject<number>();
-  datepickerControlsMap: { [key: string]: FormControl } = {};
-  datepickerOptionsMap: IKeyValue = {
+  datepickerControlsMap: DatepickerControlsMap = {};
+  datepickerOptionsMap: DatepickerOptionsMap = {
     startDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     endDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     registerationStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),

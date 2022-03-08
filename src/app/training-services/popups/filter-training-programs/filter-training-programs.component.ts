@@ -5,7 +5,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {DateUtils} from '@app/helpers/date-utils';
 import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';
@@ -17,6 +17,7 @@ import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {TrainerService} from '@app/services/trainer.service';
 import {Subject} from 'rxjs';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'filter-training-programs',
@@ -29,9 +30,9 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   criteria: ITrainingProgramCriteria;
   form: FormGroup = {} as FormGroup;
 
-  datepickerControlsMap: { [key: string]: FormControl } = {};
+  datepickerControlsMap: DatepickerControlsMap = {};
 
-  datepickerOptionsMap: { [key: string]: IAngularMyDpOptions } = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     startFromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     startToDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     registerationFromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),

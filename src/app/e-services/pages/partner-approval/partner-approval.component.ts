@@ -14,7 +14,7 @@ import {DateUtils} from "@app/helpers/date-utils";
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
-import {ReadinessStatus} from "@app/types/types";
+import {DatepickerOptionsMap, ReadinessStatus} from "@app/types/types";
 import {SaveTypes} from "@app/enums/save-types";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {BankAccountComponent} from "@app/e-services/shared/bank-account/bank-account.component";
@@ -151,7 +151,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     }
   }
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
 

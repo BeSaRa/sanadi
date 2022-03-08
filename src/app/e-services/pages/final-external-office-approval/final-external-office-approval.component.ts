@@ -24,7 +24,7 @@ import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-
 import {LicenseService} from '@app/services/license.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {SaveTypes} from '@app/enums/save-types';
-import {ReadinessStatus} from '@app/types/types';
+import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BankAccountComponent} from '@app/e-services/shared/bank-account/bank-account.component';
 import {ExecutiveManagementComponent} from '@app/e-services/shared/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/e-services/shared/bank-branch/bank-branch.component';
@@ -112,7 +112,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialExternalOfficeApproval | FinalExternalOfficeApproval;
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
 

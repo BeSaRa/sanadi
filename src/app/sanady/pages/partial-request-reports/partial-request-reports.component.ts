@@ -23,6 +23,7 @@ import {Router} from '@angular/router';
 import {OrganizationUserService} from '@app/services/organization-user.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from '@app/helpers/date-utils';
+import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -39,7 +40,7 @@ export class PartialRequestReportsComponent implements OnInit {
   private latestCriteria: Partial<ISubventionRequestPartialLogCriteria> = {} as Partial<ISubventionRequestPartialLogCriteria>;
 
   logRecords: SubventionRequestPartialLog[] = [];
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     fromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };

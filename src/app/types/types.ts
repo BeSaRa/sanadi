@@ -1,5 +1,7 @@
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {Localization} from '../models/localization';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {FormControl} from '@angular/forms';
 
 export type  LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
@@ -33,3 +35,7 @@ export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';
 export type ISearchFieldsMap<T = any> = { [key: string]: (string | searchFunctionType<T>) };
 
 export type ReadinessStatus = 'READY' | 'NOT_READY';
+
+export type DatepickerOptionsMap = { [key: string]: IAngularMyDpOptions };
+
+export type DatepickerControlsMap = { [key: string]: FormControl };
