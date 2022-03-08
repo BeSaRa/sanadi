@@ -44,7 +44,9 @@
         </div>
         <div class="row">
           <collection-item (formOpenedStatus)="collectionItemFormStatusChanged($event)"
-                           (eventHappened)="checkDisableRequestType()" [disableSearch]="disableSearchField"
+                           [disableAdd]="basicInfo.invalid"
+                           (eventHappened)="checkDisableFields()"
+                           [disableSearch]="disableSearchField"
                            [model]="model!"></collection-item>
         </div>
       </ng-template>

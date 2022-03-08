@@ -66,7 +66,8 @@ export class DateUtils {
       dateRange: false,
       dateFormat: format.toLowerCase(),
       inputFieldValidation: false,
-      divHostElement: {enabled: true, placeholder: ''}
+      divHostElement: {enabled: true, placeholder: ''},
+      appendSelectorToBody: true
     };
     if (customOptions.disablePeriod === 'none') {
       return options;
@@ -110,6 +111,11 @@ export class DateUtils {
    */
   static isLessThan(dateToCheck: any, dateToCompare: any): boolean {
     return dayjs(dateToCheck).isBefore(dayjs(dateToCompare));
+  }
+
+  static setRelatedMinMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }): void {
+    DateUtils.setRelatedMaxDate(options);
+    DateUtils.setRelatedMinDate(options);
   }
 
   /**

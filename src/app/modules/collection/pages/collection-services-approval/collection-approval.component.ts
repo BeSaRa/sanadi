@@ -53,6 +53,14 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     return this.form.get('explanation')! as FormGroup;
   }
 
+  get licenseDurationType(): AbstractControl {
+    return this.form.get('basicInfo.licenseDurationType')!
+  }
+
+  get requestClassification(): AbstractControl {
+    return this.form.get('basicInfo.requestClassification')!
+  }
+
   _getNewInstance(): CollectionApproval {
     return new CollectionApproval()
   }
@@ -75,6 +83,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   _afterBuildForm(): void {
     this.setDefaultValues();
     this.listenToRequestTypeChanges()
+    this.checkDisableFields();
+    this.listenToDurationChanges()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -110,7 +120,6 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _afterSave(model: CollectionApproval, saveType: SaveTypes, operation: OperationTypes): void {
-    // throw new Error('Method not implemented.');
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
@@ -168,15 +177,36 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       })
   }
 
-  checkDisableRequestType(): void {
-    this.model?.collectionItemList.length ? this.requestType.disable() : this.requestType.enable();
+  checkDisableFields(): void {
+    this.model?.collectionItemList.length ? this.disableFields() : this.enableFields();
   }
 
   collectionItemFormStatusChanged($event: boolean) {
-    $event ? this.requestType.disable() : this.checkDisableRequestType();
+    $event ? this.disableFields() : this.checkDisableFields();
   }
 
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+  }
+
+  private disableFields() {
+    this.requestType.disable();
+    this.licenseDurationType.disable();
+    this.requestClassification.disable();
+  }
+
+  private enableFields(): void {
+    this.requestType.enable();
+    this.licenseDurationType.enable();
+    this.requestClassification.enable();
+  }
+
+  private listenToDurationChanges() {
+    this.licenseDurationType
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.model && (this.model.licenseDurationType = value);
+      })
   }
 }

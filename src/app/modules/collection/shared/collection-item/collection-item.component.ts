@@ -38,11 +38,19 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   searchControl: FormControl = new FormControl();
 
   @Output()
+  approval: EventEmitter<{ item: CollectionItem, index: number }> = new EventEmitter<{ item: CollectionItem; index: number }>();
+
+  @Output()
   eventHappened: EventEmitter<AppEvents> = new EventEmitter<AppEvents>();
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'map', 'actions'];
+  @Input()
+  approvalMode: boolean = false;
+
+  @Input()
+  disableAdd: boolean = false;
 
   private _disableSearch: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
@@ -58,6 +66,12 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.model) {
       throw Error('Please Provide Model to get the Collection Items from it')
+    }
+
+    if (this.approvalMode) {
+      const newColumns = this.columns.slice()
+      newColumns.splice(this.columns.length - 1, 0, 'approval_info_status');
+      this.columns = newColumns;
     }
     this.buildForm();
     this.listenToAdd();
@@ -76,7 +90,10 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap(_ => this.item = new CollectionItem()))
+      .pipe(tap(_ => this.item = new CollectionItem().clone({
+        licenseDurationType: this.model.licenseDurationType
+      })))
+      .pipe(tap(_ => console.log(this.model)))
       .subscribe(() => this.formOpenedStatus.emit(true))
   }
 
@@ -184,5 +201,4 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     this.resetForm();
     this.formOpenedStatus.emit(false);
   }
-
 }

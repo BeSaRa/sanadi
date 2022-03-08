@@ -22,7 +22,7 @@
               <label class="form-label" for="username">{{lang.map.lbl_username}}</label>
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-account"></i>
-                <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
+                <input (keyup.enter)="processLogin()" formControlName="username" cdkTrapFocus tabindex="1" id="username"
                        [placeholder]="lang.map.qatari_id_number" onlyNumbers
                        class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" type="text">
               </div>

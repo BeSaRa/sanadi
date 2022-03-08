@@ -1,4 +1,6 @@
-<app-page-header [clickOnNew$]="add$" [disableAdd]="!!item" [pageTitle]="'collection_items'"></app-page-header>
+<app-page-header *ngIf="!approvalMode" [clickOnNew$]="add$" [disableAdd]="!!item || disableAdd"
+                 [pageTitle]="'collection_items'"></app-page-header>
+<app-page-header *ngIf="approvalMode" [pageTitle]="'collection_items'"></app-page-header>
 <form *ngIf="!!item" [formGroup]="form">
   <fieldset class="border border-1 rounded-1 p-3">
     <div class="row">
@@ -80,7 +82,7 @@
     </div>
   </fieldset>
 </form>
-<div class="row mt-4">
+<div class="row mt-2">
   <app-table #table [columns]="columns" [data]="model.collectionItemList">
     <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
       <ng-container cdkColumnDef="identificationNumber">
@@ -111,10 +113,21 @@
           </button>
         </td>
       </ng-container>
+      <ng-container cdkColumnDef="approval_info_status">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+          <div *ngIf="approvalMode" class="d-flex">
+            <i *ngIf="!row.hasValidApprovalInfo()" [tooltip]="lang.map.missing_approval_info"
+               class="mdi mdi-alert-circle text-warning"></i>
+            <i *ngIf="row.hasValidApprovalInfo()" [tooltip]="lang.map.approval_information_filled_out"
+               class="mdi mdi-check-circle text-success"></i>
+          </div>
+        </td>
+      </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
-          <div class="d-flex">
+          <div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
                     class="btn icon-btn">
               <i class="mdi mdi-pencil text-primary"></i>
@@ -124,6 +137,11 @@
               <i class="mdi mdi-delete text-primary"></i>
             </button>
           </div>
+          <button *ngIf="approvalMode" (click)="approval.emit({item: row , index: itemIndex})"
+                  [tooltip]="lang.map.edit_approval_info"
+                  class="btn icon-btn">
+            <i class="mdi mdi-pencil text-primary"></i>
+          </button>
         </td>
       </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>

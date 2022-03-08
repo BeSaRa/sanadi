@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  please_make_sure_that_you_filled_out_all_required_data_for_all_license: string;
+  approval_information_filled_out: string;
+  missing_approval_info: string;
+  edit_approval_info: string;
   please_add_collection_items_to_proceed: string
   identification_number: string;
   show_location_on_map: string;
@@ -739,7 +743,6 @@ export interface ILanguageKeys {
   baw_service_code: string;
   request_serial_code: string;
   license_serial_code: string;
-  status: string;
   err_unique_field: string;
   lbl_edit_service: string;
   lbl_add_service: string;

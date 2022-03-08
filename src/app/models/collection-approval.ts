@@ -5,6 +5,7 @@ import {AdminResult} from "./admin-result";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {CollectionItem} from "@app/models/collection-item";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 export class CollectionApproval extends CaseModel<CollectionApprovalService, CollectionApproval> {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
@@ -65,4 +66,13 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
   }
 
 
+  approve(): DialogRef {
+
+    // this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
+    return this.service.approveTask(this);
+  }
+
+  hasInvalidCollectionItems(): boolean {
+    return !this.collectionItemList.length || this.collectionItemList.some((item) => !item.hasValidApprovalInfo());
+  }
 }

@@ -2,6 +2,7 @@ import {Directive, HostListener} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Directive({
   selector: '[onlyNumbers]',
   providers: [{provide: NG_VALIDATORS, multi: true, useExisting: OnlyNumbersDirective}]

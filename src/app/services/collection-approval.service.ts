@@ -11,6 +11,11 @@ import {UrlService} from './url.service';
 import {CollectionApprovalInterceptor} from "@app/model-interceptors/collection-approval-interceptor";
 import {FactoryService} from "@app/services/factory.service";
 import {LangService} from "@app/services/lang.service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {
+  CollectionApprovalApproveTaskPopupComponent
+} from "@app/modules/collection/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +60,12 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
               public dialog: DialogService) {
     super();
     FactoryService.registerService('CollectionApprovalService', this);
+  }
+
+  approveTask(model: CollectionApproval): DialogRef {
+    return this.dialog.show(CollectionApprovalApproveTaskPopupComponent, {
+      model,
+      action: WFResponseType.APPROVE
+    });
   }
 }
