@@ -12,10 +12,12 @@
       <tab [name]="tabsData.advanced.name" [hasError]="getTabInvalidStatus('advanced')"
            [template]="advancedInfoTemplate" [tabWidth]="'600px'"
            [title]="langService.map.advanced"></tab>
+      <tab [name]="tabsData.services.name" [template]="servicesTemplate"
+           *ngIf="model.id" [title]="langService.map.link_services" [tabWidth]="'600px'"></tab>
       <tab [name]="tabsData.branches.name" [template]="branchesTemplate"
            *ngIf="model.id" [title]="langService.map.lbl_org_branches"></tab>
     </tabs-list>
-    <ng-template #basicInfoTemplate style="width: 600px">
+    <ng-template #basicInfoTemplate>
       <div formGroupName="basic">
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
@@ -258,22 +260,6 @@
           </div>
         </div>
       </div>
-
-      <!--<div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
-        <label for="orgNationality" asteriskIfRequired="orgNationality"
-               class="form-label">{{langService.map.lbl_nationality}}</label>
-        <ng-select [selectOnTab]="true" labelForId="orgNationality" [clearable]="false"
-                   placeholder="{{langService.map.select}}" id="orgNationality"
-                   [notFoundText]="langService.map.msg_not_found"
-                   formControlName="orgNationality" appendTo="body"
-                   validationClasses="orgNationality">
-          <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-          <ng-option *ngFor="let option of orgNationalityList" [value]="option.lookupKey">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="orgNationality"></app-field-error-message>
-      </div>-->
     </ng-template>
     <ng-template #advancedInfoTemplate style="width: 600px">
       <div formGroupName="advanced">
@@ -389,7 +375,7 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="arabicBrief" class="form-label">{{langService.map.arabic_brief}}</label>
-            <textarea id="arabicBrief" cols="3"  validationClasses="arabicBrief" trimInput
+            <textarea id="arabicBrief" cols="3" validationClasses="arabicBrief" trimInput
                       formControlName="arabicBrief" class="form-control"></textarea>
             <app-field-error-message controlName="arabicBrief"></app-field-error-message>
           </div>
@@ -397,7 +383,7 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="enBrief" class="form-label">{{langService.map.english_brief}}</label>
-            <textarea id="enBrief" cols="3"  validationClasses="enBrief" trimInput
+            <textarea id="enBrief" cols="3" validationClasses="enBrief" trimInput
                       formControlName="enBrief" class="form-control"></textarea>
             <app-field-error-message controlName="enBrief"></app-field-error-message>
           </div>
@@ -423,6 +409,9 @@
           </div>
         </div>
       </div>
+    </ng-template>
+    <ng-template #servicesTemplate>
+      <organization-unit-services [orgUnit]="model"></organization-unit-services>
     </ng-template>
     <ng-template #branchesTemplate>
       <app-organization-branch [organization]="model"></app-organization-branch>

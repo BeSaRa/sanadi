@@ -7,13 +7,12 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
-import {extender} from '@app/helpers/extender';
 import {Lookup} from '@app/models/lookup';
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of} from 'rxjs';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {FileStore} from '@app/models/file-store';
 import {DialogService} from '@app/services/dialog.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
@@ -63,7 +62,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   cityList: Lookup[] = [];
   licensingAuthorityList: Lookup[] = [];
   workFieldList: Lookup[] = [];
-  orgUnitFieldList: OrgUnitField[] = [] = [];
+  orgUnitFieldList: OrgUnitField[] = [];
 
   tabsData: IKeyValue = {
     basic: {
@@ -75,6 +74,11 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
       name: 'advanced',
       langKey: 'advanced',
       validStatus: () => this.form && this.advancedGroup && this.advancedGroup.valid
+    },
+    services: {
+      name: 'services',
+      langKey: 'link_services',
+      validStatus: () => true
     },
     branches: {
       name: 'branches',
@@ -140,8 +144,8 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   }
 
   setDialogButtonsVisibility(tab: any): void {
-    this.saveVisible = !(tab.name && tab.name === this.tabsData.branches.name);
-    this.validateFieldsVisible = !(tab.name && tab.name === this.tabsData.branches.name);
+    this.saveVisible = !(tab.name && (tab.name === this.tabsData.branches.name || tab.name === this.tabsData.services.name));
+    this.validateFieldsVisible = !(tab.name && (tab.name === this.tabsData.branches.name || tab.name === this.tabsData.services.name));
   }
 
   buildForm(): void {

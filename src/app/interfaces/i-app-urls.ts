@@ -41,6 +41,7 @@ export interface IAppUrls {
   CUSTOM_ROLE_PERMISSIONS: string;
   LOOKUPS: string;
   ORGANIZATION_UNIT: string;
+  ORGANIZATION_UNIT_SERVICES: string;
   ORGANIZATION_BRANCH: string;
   AID_LOOKUPS: string;
   AID_LOOKUPS_CRITERIA: string;

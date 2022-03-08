@@ -1,5 +1,5 @@
 import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
@@ -12,6 +12,8 @@ import {FileStore} from './file-store';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {OrganizationUnitServicesService} from '@app/services/organization-unit-services.service';
+import {OrgUnitService} from '@app/models/org-unit-service';
 
 export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
@@ -216,6 +218,14 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
 
   showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
+  }
+
+  loadLinkedServices(): Observable<OrgUnitService[]> {
+    if (!this.id){
+      return of([]);
+    }
+    let orgUnitLinkedServicesService: OrganizationUnitServicesService = FactoryService.getService('OrganizationUnitServicesService');
+    return orgUnitLinkedServicesService.loadLinkedServicesByOrgId(this.id);
   }
 
 }
