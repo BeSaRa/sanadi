@@ -12,7 +12,7 @@ export class SanadiAuditResultInterceptor implements IModelInterceptor<SanadiAud
     model.orgUserInfo = AdminResult.createInstance(isValidAdminResult(model.orgUserInfo) ? model.orgUserInfo : {});
     model.statusInfo = AdminResult.createInstance(isValidAdminResult(model.statusInfo) ? model.statusInfo : {});
     model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
-    model.updatedOnString = model.updatedOn ? DateUtils.getDateStringFromDate(model.updatedOn, 'DEFAULT_DATE_FORMAT') : '';
+    model.updatedOnString = model.updatedOn ? DateUtils.getDateStringFromDate(model.updatedOn, 'TIMESTAMP') : '';
     return model;
   }
 
