@@ -25,6 +25,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-unit-popup',
@@ -63,6 +64,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   licensingAuthorityList: Lookup[] = [];
   workFieldList: Lookup[] = [];
   orgUnitFieldList: OrgUnitField[] = [];
+  orgStatusEnum = OrgStatusEnum;
 
   tabsData: IKeyValue = {
     basic: {
