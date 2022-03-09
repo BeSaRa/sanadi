@@ -21,6 +21,7 @@ import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'dac-ocha',
@@ -29,31 +30,42 @@ import {CommonUtils} from '@app/helpers/common-utils';
 })
 export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaService> implements OnInit {
   selectDacOchaType$: BehaviorSubject<number> = new BehaviorSubject<number>(DacOchaTypeEnum.ocha);
-  selectedDacOchaTypeId: number = 1;
+  selectedDacOchaTypeId: number = DacOchaTypeEnum.ocha;
+  selectedPopupTabName: string = 'basic';
   searchText = '';
   classifications!: Lookup[];
   commonStatusEnum = CommonStatusEnum;
+  actionIconsEnum = ActionIconsEnum;
   tabsData: IKeyValue = {
     ocha: {name: 'OCHA'},
     dac: {name: 'DAC'}
   };
   actions: IMenuItem<DacOcha>[] = [
+    // reload
     {
       type: 'action',
       label: 'btn_reload',
-      icon: 'mdi-reload',
+      icon: ActionIconsEnum.RELOAD,
       onClick: _ => this.reload$.next(null),
     },
+    // edit
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (user) => this.edit$.next(user)
+    },
+    // sub dac ocha
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.CHILD_ITEMS,
       onClick: (user) => this.edit$.next(user)
     },
     // activate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       onClick: (item: DacOcha) => this.toggleStatus(item),
       show: (item) => {
@@ -63,7 +75,7 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
     // deactivate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       onClick: (item: DacOcha) => this.toggleStatus(item),
       show: (item) => {
@@ -139,7 +151,7 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openUpdateDacOchaDialog(model.id, this.selectedDacOchaTypeId).pipe(catchError(_ => of(null)))
+        return this.service.openUpdateDacOchaDialog(model.id, this.selectedDacOchaTypeId, this.selectedPopupTabName).pipe(catchError(_ => of(null)))
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -148,8 +160,16 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
 
   edit(dacOcha: DacOcha, event: MouseEvent) {
     event.preventDefault();
+    this.selectedPopupTabName = 'basic';
     this.edit$.next(dacOcha);
   }
+
+  showChildren(dacOcha: DacOcha, $event: Event): void {
+    $event?.preventDefault();
+    this.selectedPopupTabName = 'subDacOchas';
+    this.edit$.next(dacOcha);
+  }
+
 
   delete(event: MouseEvent, model: DacOcha): void {
     event.preventDefault();
@@ -290,6 +310,10 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
 
   get ochaTabLabel(): string {
     return this.classifications.find(classification => classification.lookupKey === 1)!.getName();
+  }
+
+  get tabLabel(): string {
+    return this.selectedDacOchaTypeId === DacOchaTypeEnum.ocha ? this.ochaTabLabel : this.dacTabLabel;
   }
 
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
