@@ -181,6 +181,10 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   private loadSignature() {
     this.internalUserService.loadSignatureByGeneralUserId(this.model.generalUserId)
       .subscribe((result) => {
+        if (result.blob.size === 0){
+          this.loadedSignature = undefined;
+          return;
+        }
         this.loadedSignature = result;
       });
   }
