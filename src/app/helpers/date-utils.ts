@@ -113,7 +113,7 @@ export class DateUtils {
     return dayjs(dateToCheck).isBefore(dayjs(dateToCompare));
   }
 
-  static setRelatedMinMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: IKeyValue, controlsMap: IKeyValue, disableSelectedFromRelated?: boolean }): void {
+  static setRelatedMinMaxDate(options: { fromFieldName: string, toFieldName: string, controlOptionsMap: DatepickerOptionsMap, controlsMap: DatepickerControlsMap, disableSelectedFromRelated?: boolean }): void {
     DateUtils.setRelatedMaxDate(options);
     DateUtils.setRelatedMinDate(options);
   }
