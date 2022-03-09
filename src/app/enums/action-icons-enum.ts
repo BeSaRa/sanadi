@@ -1,4 +1,7 @@
 export enum ActionIconsEnum {
+  ADD = 'mdi-plus-box',
+  ADD_SIMPLE = 'mdi-plus',
+  RELOAD = 'mdi-reload',
   EDIT = 'mdi-pen',
   EDIT_USER = 'mdi-account-edit',
   VIEW = 'mdi-eye',
