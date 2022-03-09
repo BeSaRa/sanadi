@@ -3,47 +3,45 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
 </div>
-<div class="dialog-content">
+<div class="dialog-content w600px">
   <ng-container *ngIf="auditRecord.auditEntity === 'BENEFICIARY' && auditBeneficiary">
-    <div class="w600px">
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.arabic_name}}</label>
-          <span class="form-control">{{auditBeneficiary.arName || '&nbsp;'}}</span>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.english_name}}</label>
-          <span class="form-control">{{(auditBeneficiary.enName || '&nbsp;')}}</span>
-        </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.arabic_name}}</label>
+        <span class="form-control">{{auditBeneficiary.arName || '&nbsp;'}}</span>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.mobile_number}}</label>
-          <span class="form-control">{{auditBeneficiary.phoneNumber1 || '&nbsp;'}}</span>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.monthly_income}}</label>
-          <span
-            class="form-control">{{(auditBeneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
-        </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.english_name}}</label>
+        <span class="form-control">{{(auditBeneficiary.enName || '&nbsp;')}}</span>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.extra_income_source}}</label>
-          <span
-            class="form-control">{{(auditBeneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.total_debts}}</label>
-          <span
-            class="form-control">{{(auditBeneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.mobile_number}}</label>
+        <span class="form-control">{{auditBeneficiary.phoneNumber1 || '&nbsp;'}}</span>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.number_of_installments}}</label>
-          <span class="form-control">{{auditBeneficiary.totalInstalments || '&nbsp;'}}</span>
-        </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.monthly_income}}</label>
+        <span
+          class="form-control">{{(auditBeneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.extra_income_source}}</label>
+        <span
+          class="form-control">{{(auditBeneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.total_debts}}</label>
+        <span
+          class="form-control">{{(auditBeneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.number_of_installments}}</label>
+        <span class="form-control">{{auditBeneficiary.totalInstalments || '&nbsp;'}}</span>
       </div>
     </div>
   </ng-container>
@@ -87,7 +85,7 @@
       <div class="row">
         <div class="col-12 mb-4">
           <label class="form-label">{{lang.map.request_summary}}</label>
-          <span class="form-control">{{(auditSubventionRequest.requestSummary || '&nbsp;')}}</span>
+          <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(auditSubventionRequest.requestSummary || '&nbsp;')"></textarea>
         </div>
       </div>
     </ng-template>
@@ -109,63 +107,61 @@
       <div class="row">
         <div class="col-12 mb-4">
           <label class="form-label">{{lang.map.notes}}</label>
-          <span class="form-control">{{(auditSubventionRequest.requestNotes || '&nbsp;')}}</span>
+          <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(auditSubventionRequest.requestNotes || '&nbsp;')"></textarea>
         </div>
       </div>
     </ng-template>
 
   </ng-container>
   <ng-container *ngIf="auditRecord.auditEntity === 'SUBVENTION_AID' && auditSubventionAid">
-    <div class="w600px">
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.aid_type}}</label>
-          <span class="form-control">{{auditSubventionAid.aidLookupInfo?.getName() || '&nbsp;'}}</span>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.estimated_amount}}</label>
-          <span
-            class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.aid_type}}</label>
+        <span class="form-control">{{auditSubventionAid.aidLookupInfo?.getName() || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.estimated_amount}}</label>
+        <span
+          class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.approval_date}}</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+          <span class="form-control">{{auditSubventionAid.approvalDateString || '&nbsp;'}}</span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.approval_date}}</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-            <span class="form-control">{{auditSubventionAid.approvalDateString || '&nbsp;'}}</span>
-          </div>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.payment_date}}</label>
-          <div class="input-group">
-            <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-            <span class="form-control">{{auditSubventionAid.aidStartPayDateString || '&nbsp;'}}</span>
-          </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.payment_date}}</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+          <span class="form-control">{{auditSubventionAid.aidStartPayDateString || '&nbsp;'}}</span>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.payment_periodicity}}</label>
-          <span class="form-control">{{auditSubventionAid.periodicTypeInfo?.getName() || '&nbsp;'}}</span>
-        </div>
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.number_of_installments}}</label>
-          <span class="form-control">{{auditSubventionAid.installementsCount || '0'}}</span>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.payment_periodicity}}</label>
+        <span class="form-control">{{auditSubventionAid.periodicTypeInfo?.getName() || '&nbsp;'}}</span>
       </div>
-      <div class="row">
-        <div class="col-sm-6 mb-4">
-          <label class="form-label">{{lang.map.given_amount}}</label>
-          <span
-            class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
-        </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.number_of_installments}}</label>
+        <span class="form-control">{{auditSubventionAid.installementsCount || '0'}}</span>
       </div>
-      <div class="row">
-        <div class="col-12 mb-4">
-          <label class="form-label">{{lang.map.lbl_description}}</label>
-          <span class="form-control">{{auditSubventionAid.aidDescription || '&nbsp;'}}</span>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.given_amount}}</label>
+        <span
+          class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <label class="form-label">{{lang.map.lbl_description}}</label>
+        <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(auditSubventionAid.aidDescription || '&nbsp;')"></textarea>
       </div>
     </div>
   </ng-container>

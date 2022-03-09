@@ -294,6 +294,10 @@ td.table-actions {
   height: 38.8px;
 }
 
+textarea.input-disabled {
+  height: auto;
+}
+
 .ng-select-wrapper {
   position: relative !important
 }
@@ -411,6 +415,7 @@ tr.risk {
   display: inline-block;
   position: relative;
   top: 8px;
+
   input {
     cursor: pointer;
   }
