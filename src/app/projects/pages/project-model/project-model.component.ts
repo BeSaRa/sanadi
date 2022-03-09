@@ -35,6 +35,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -140,7 +141,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               public employeeService: EmployeeService,
               private dacOchaService: DacOchaService,
               private lookupService: LookupService,
-              private countyService: CountryService,
+              private countryService: CountryService,
               private sdgService: SDGoalService,
               public service: ProjectModelService) {
     super();
@@ -480,7 +481,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private loadCountries(): void {
-    this.countyService.loadCountries()
+    this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -796,5 +797,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }
     }
     return failedList;
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

@@ -28,10 +28,13 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {SharedService} from '@app/services/shared.service';
-import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
+import {
+  InitialExternalOfficeApprovalSearchCriteria
+} from '@app/models/initial-external-office-approval-search-criteria';
 import {
   SearchInitialExternalOfficeApprovalCriteria
 } from '@app/models/search-initial-external-office-approval-criteria';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -517,5 +520,16 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   isExtendOrCancelRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

@@ -41,6 +41,7 @@ import {
 } from '@app/models/initial-external-office-approval-search-criteria';
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -686,5 +687,16 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     if ($event.name === 'attachmentsTab') {
       this.loadAttachments = true;
     }
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

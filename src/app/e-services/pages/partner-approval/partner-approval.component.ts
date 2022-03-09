@@ -44,6 +44,7 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {SharedService} from '@app/services/shared.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'partner-approval',
@@ -631,5 +632,16 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   isExtendOrCancelRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

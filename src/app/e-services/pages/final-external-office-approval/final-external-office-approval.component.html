@@ -124,7 +124,9 @@
           </div>
           <div class="row">
             <!-- Country -->
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <div class="col-sm-12 col-md-4">
+              <div class="d-flex align-items-center justify-content-start gap-2">
+                <div class="mb-4 ng-select-wrapper flex-grow-1 ">
               <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
               <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="country"
@@ -138,6 +140,10 @@
                 </ng-option>
               </ng-select>
               <app-field-error-message controlName="country"></app-field-error-message>
+                </div>
+                <button *ngIf="isEditCountryAllowed() && this.employeeService.checkPermissions('MANAGE_CITIES')"
+                        (click)="addCountry($event)" class="btn btn-primary mt-2">{{lang.map.btn_add}}</button>
+              </div>
             </div>
             <!-- Region -->
             <div class="col-sm-12 col-md-4 mb-4 position-relative">
