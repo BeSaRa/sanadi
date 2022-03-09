@@ -16,7 +16,8 @@
         <div class="row">
           <!-- Organization -->
           <div *ngIf="employeeService.isInternalUser()" class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
+            <label asteriskIfRequired="organizationId" for="organizationId"
+                   class="form-label">{{lang.map.lbl_organization}}</label>
             <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="organizationId"
                        [notFoundText]="lang.map.msg_not_found"
@@ -28,7 +29,8 @@
           </div>
           <!-- Request Type -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{lang.map.request_type}}</label>
+            <label asteriskIfRequired="requestType" for="requestType"
+                   class="form-label">{{lang.map.request_type}}</label>
             <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="requestType"
                        [notFoundText]="lang.map.msg_not_found"
@@ -40,7 +42,8 @@
           </div>
           <!-- License Number -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="oldLicenseFullserial" for="oldLicenseFullserial" class="form-label">{{lang.map.license_number}}</label>
+            <label asteriskIfRequired="oldLicenseFullserial" for="oldLicenseFullserial"
+                   class="form-label">{{lang.map.license_number}}</label>
             <div class="input-group">
               <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
                       class="input-group-text"><i
@@ -80,7 +83,8 @@
         <div class="row">
           <!-- Special Explanation -->
           <div class="col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="description" for="description" class="form-label">{{lang.map.special_explanations}}</label>
+            <label asteriskIfRequired="description" for="description"
+                   class="form-label">{{lang.map.special_explanations}}</label>
             <textarea rows="5" id="description" validationClasses="description" formControlName="description"
                       class="form-control" trimInput [readOnly]="readonly"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
@@ -112,15 +116,5 @@
       <log-viewer [caseId]="model!.getCaseId()" [service]="service.actionLogService"
                   [hideItemLocation]="true" [hideViewedAction]="true"></log-viewer>
     </ng-template>
-    <!--<div *ngIf="!fromDialog && !accordionView" class="d-flex align-items-center justify-content-center gap-2 mb-3">
-      <button [disabled]="(form.invalid || model?.alreadyStarted())" (click)="save.next(saveTypes.FINAL)"
-              class="btn shadow-sm btn-primary">{{lang.map.btn_save}}</button>
-      <button [disabled]="!model?.canDraft()" (click)="save.next(saveTypes.DRAFT)"
-              class="btn shadow-sm btn-primary">{{lang.map.save_as_draft}}</button>
-      <button [disabled]="!model?.canStart()" (click)="launch$.next(null)"
-              class="btn btn-primary">{{lang.map.launch}}</button>
-      <button class="btn shadow-sm btn-secondary" (click)="resetForm$.next()">{{lang.map.btn_reset}}</button>
-    </div>-->
-
   </div>
 </div>

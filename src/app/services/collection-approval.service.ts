@@ -62,10 +62,10 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
     FactoryService.registerService('CollectionApprovalService', this);
   }
 
-  approveTask(model: CollectionApproval): DialogRef {
+  approveTask(model: CollectionApproval, action: WFResponseType): DialogRef {
     return this.dialog.show(CollectionApprovalApproveTaskPopupComponent, {
       model,
-      action: WFResponseType.APPROVE
+      action: action
     });
   }
 }

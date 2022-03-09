@@ -18,18 +18,19 @@ import {
   InternalProjectLicenseComponent
 } from "@app/projects/pages/internal-project-license/internal-project-license.component";
 import {ProjectModelComponent} from "@app/projects/pages/project-model/project-model.component";
-import {CollectionApprovalService} from "@app/services/collection-approval.service";
 import {
   CollectionApprovalComponent
 } from "@app/modules/collection/pages/collection-services-approval/collection-approval.component";
+import {MapService} from "@app/services/map.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AutoRegisterService {
 
-  constructor(private teamService: TeamService) { // teamService is injected because it is used in info request
+  constructor(private teamService: TeamService, private mapService: MapService) { // teamService is injected because it is used in info request
     this.ngOnInit();
+    this.mapService.ping();
   }
 
   private ngOnInit(): void {
@@ -50,7 +51,7 @@ export class AutoRegisterService {
 
     // for making custom permissions form the menu based on the current employee
     CustomEmployeePermission
-      .registerCustomPermission('menu_available_programs', (employee, item) => {
+      .registerCustomPermission('menu_available_programs', (employee, _item) => {
         return employee.isExternalUser();
       })
   }

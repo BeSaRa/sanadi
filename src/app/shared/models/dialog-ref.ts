@@ -73,7 +73,7 @@ export class DialogRef {
     });
   }
 
-  close(data?: any): void {
+  close<T = any>(data?: T): void {
     const animationSub = this.containerRef?.instance.animationExitDone.subscribe(() => {
       this.langChangeSubscription?.unsubscribe();
       this.overLayRef.dispose();

@@ -3,11 +3,12 @@ import {CollectionApproval} from "@app/models/collection-approval";
 import {BehaviorSubject, of, Subject} from "rxjs";
 import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CollectionItem} from "@app/models/collection-item";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {LangService} from "@app/services/lang.service";
 import {AppEvents} from "@app/enums/app-events";
 import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {ICoordinates} from "@app/interfaces/ICoordinates";
 
 @Component({
   selector: 'collection-item',
@@ -63,6 +64,15 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     return this._disableSearch.value;
   }
 
+
+  get longitude(): AbstractControl {
+    return this.form.get('longitude')!
+  }
+
+  get latitude(): AbstractControl {
+    return this.form.get('latitude')!
+  }
+
   ngOnInit(): void {
     if (!this.model) {
       throw Error('Please Provide Model to get the Collection Items from it')
@@ -91,9 +101,9 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     this.add$
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(_ => this.item = new CollectionItem().clone({
-        licenseDurationType: this.model.licenseDurationType
+        licenseDurationType: this.model.licenseDurationType,
+        requestClassification: this.model.requestClassification
       })))
-      .pipe(tap(_ => console.log(this.model)))
       .subscribe(() => this.formOpenedStatus.emit(true))
   }
 
@@ -102,7 +112,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(info => {
         // always add one here to the selected index to avoid the if condition while process save
-        this.editIndex = (info.index++)
+        this.editIndex = (++info.index);
         this.item = info.item;
         this.updateForm(this.item);
       }))
@@ -184,11 +194,12 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   }
 
   private formInvalidMessage(): void {
-    console.log('FORM INVALID', this.form.invalid);
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+    this.form.markAllAsTouched();
   }
 
-  openLocationMap(_item: CollectionItem) {
-    // open the map for the current selected collection item
+  openLocationMap(item: CollectionItem) {
+    item.openMap(true);
   }
 
   searchForLicense() {
@@ -200,5 +211,19 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     this.editIndex = undefined;
     this.resetForm();
     this.formOpenedStatus.emit(false);
+  }
+
+
+  openMapMarker() {
+    (this.item!).openMap()
+      .onAfterClose$
+      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
+        if (click === UserClickOn.YES) {
+          this.item!.latitude = value.latitude;
+          this.item!.longitude = value.longitude;
+          this.latitude.patchValue(value.latitude);
+          this.longitude.patchValue(value.longitude);
+        }
+      })
   }
 }

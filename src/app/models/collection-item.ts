@@ -4,6 +4,9 @@ import {Cloneable} from "@app/models/cloneable";
 import {LicenseApprovalInterface} from "@app/interfaces/license-approval-interface";
 import {DateUtils} from "@app/helpers/date-utils";
 import {LicenseDurationType} from "@app/enums/license-duration-type";
+import {MapService} from "@app/services/map.service";
+import {FactoryService} from "@app/services/factory.service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
 
 export class CollectionItem extends Cloneable<CollectionItem> implements LicenseApprovalInterface {
   followUpDate!: string;
@@ -36,6 +39,18 @@ export class CollectionItem extends Cloneable<CollectionItem> implements License
   licenseStatusInfo!: AdminResult
   licenseDurationTypeInfo!: AdminResult
 
+  // to be removed while sending to backend
+  mapService: MapService;
+  defaultLatLng: google.maps.LatLngLiteral = {
+    lat: 25.3266204,
+    lng: 51.5310087
+  }
+
+  constructor() {
+    super();
+    this.mapService = FactoryService.getService('MapService');
+  }
+
   buildForm(controls: boolean = false): any {
     const {
       identificationNumber,
@@ -59,7 +74,7 @@ export class CollectionItem extends Cloneable<CollectionItem> implements License
       latitude: controls ? [latitude, [CustomValidators.required]] : latitude,
       longitude: controls ? [longitude, [CustomValidators.required]] : longitude,
       licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
-      oldLicenseFullserial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
     }
   }
 
@@ -92,5 +107,25 @@ export class CollectionItem extends Cloneable<CollectionItem> implements License
 
   hasValidApprovalInfo(): boolean {
     return this.licenseDurationType === LicenseDurationType.PERMANENT ? (this.hasLicenseStartDate() && this.hasLicenseEndDate()) : this.hasLicenseStartDate()
+  }
+
+  hasMarker(): boolean {
+    return !!this.longitude && !!this.latitude;
+  }
+
+  openMap(viewOnly: boolean = false): DialogRef {
+    return this.mapService.openMap({
+      viewOnly,
+      zoom: 18,
+      center: this.hasMarker() ? this.getLngLat() : this.defaultLatLng,
+      marker: this.hasMarker() ? this.getLngLat() : undefined
+    })
+  }
+
+  getLngLat(): google.maps.LatLngLiteral {
+    return {
+      lat: Number(this.latitude),
+      lng: Number(this.longitude)
+    }
   }
 }

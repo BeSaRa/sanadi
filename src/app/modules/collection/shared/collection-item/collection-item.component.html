@@ -63,13 +63,23 @@
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="latitude"
                for="latitude">{{lang.map.latitude}}</label>
-        <input id="latitude" validationClasses="latitude" formControlName="latitude" class="form-control">
+        <div class="input-group">
+          <input id="latitude" validationClasses="latitude" formControlName="latitude" class="form-control">
+          <button (click)="openMapMarker()" class="input-group-text">
+            <i class="mdi mdi-map-marker text-primary"></i>
+          </button>
+        </div>
         <app-field-error-message controlName="latitude"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="longitude"
                for="longitude">{{lang.map.longitude}}</label>
-        <input id="longitude" validationClasses="longitude" formControlName="longitude" class="form-control">
+        <div class="input-group">
+          <input id="longitude" validationClasses="longitude" formControlName="longitude" class="form-control">
+          <button (click)="openMapMarker()" class="input-group-text">
+            <i class="mdi mdi-map-marker text-primary"></i>
+          </button>
+        </div>
         <app-field-error-message controlName="longitude"></app-field-error-message>
       </div>
     </div>

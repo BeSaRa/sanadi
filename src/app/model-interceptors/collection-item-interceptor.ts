@@ -5,6 +5,8 @@ import {AdminResult} from "@app/models/admin-result";
 export class CollectionItemInterceptor implements IModelInterceptor<CollectionItem> {
   send(model: Partial<CollectionItem>): Partial<CollectionItem> {
     delete model.licenseDurationTypeInfo;
+    delete model.defaultLatLng;
+    delete model.mapService;
     return model
   }
 

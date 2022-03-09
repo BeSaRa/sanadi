@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  MAP_API_URL: string;
   COLLECTION_APPROVAL: string;
   ORG_UNIT_FIELD: string;
   CHECKLIST: string;

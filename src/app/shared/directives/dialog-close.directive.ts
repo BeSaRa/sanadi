@@ -1,6 +1,7 @@
 import {Directive, ElementRef, HostListener, Input, Optional} from '@angular/core';
 import {DialogRef} from '../models/dialog-ref';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Directive({
   selector: '[dialogClose]'
 })

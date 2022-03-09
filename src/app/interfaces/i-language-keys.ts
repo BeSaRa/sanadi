@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  loading_map: string;
+  please_add_marker_to_perform_this_action: string;
+  the_map: string;
+  remove_marker: string;
+  add_marker: string;
+  update_marker_position: string;
   please_make_sure_that_you_filled_out_all_required_data_for_all_license: string;
   approval_information_filled_out: string;
   missing_approval_info: string;

@@ -1,0 +1,17 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.the_map}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content d-flex flex-column" style="min-width: 600px">
+  <h3 class="text-center" *ngIf="!loaded">{{lang.map.loading_map}}</h3>
+  <raca-maps (mapLoaded)="setLoadStatus($event)" [markerPosition]="marker!" class="flex-fill"
+             (markerUpdates)="markerUpdate($event)"
+             [viewOnly]="viewOnly" [center]="center"
+             [hasMarker]="!!marker"></raca-maps>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button *ngIf="!viewOnly" (click)="saveMarker()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

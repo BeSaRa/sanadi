@@ -1,4 +1,5 @@
 export interface IAppConfig {
+  MAP_API_KEY: string;
   VERSION: string;
   TIMESTAMP: string;
   ENVIRONMENTS_URLS: Record<string, string>;

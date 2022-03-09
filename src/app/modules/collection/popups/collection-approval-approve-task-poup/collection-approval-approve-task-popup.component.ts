@@ -61,7 +61,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
 
   setSelectedLicense({item, index}: { item: LicenseApprovalInterface, index: number }) {
     this.selectedLicense = item;
-    this.selectedIndex = (index + 1); // add one to the selected inbox to avoid the  check false value
+    this.selectedIndex = (++index); // add one to the selected inbox to avoid the  check false value
   }
 
   saveLicenseInfo(license: LicenseApprovalInterface) {

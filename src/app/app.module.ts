@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {HomeComponent} from './pages/home/home.component';
 import {SharedModule} from './shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {forkJoin, Observable} from 'rxjs';
 import {IAppConfig} from './interfaces/i-app-config';
 import {ConfigurationService} from './services/configuration.service';
@@ -48,6 +48,7 @@ import {ExternalLoginComponent} from './pages/external-login/external-login.comp
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     ReactiveFormsModule,
     FormlyModule.forRoot({extras: {lazyRender: true}}),
     FormlyBootstrapModule

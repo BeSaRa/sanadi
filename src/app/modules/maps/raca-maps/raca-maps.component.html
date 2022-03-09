@@ -1,0 +1,14 @@
+<div class="d-flex flex-column flex-fill" *ngIf="loaded|async">
+  <google-map [width]="600" [height]="550" class="flex-fill" [options]="mapOptions"
+              (mapRightclick)="rightClicked(menu , $event)" [center]="center"
+              [zoom]="zoom">
+    <map-marker *ngIf="hasMarker"
+                (positionChanged)="markerUpdate()"
+                (mapRightclick)="rightClicked(markerMenu , $event)"
+                [options]="markerOptions"
+                [position]="markerPosition"></map-marker>
+  </google-map>
+  <!--  <div> {{display|json}}</div>-->
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
+  <context-menu-item #markerMenu [actions]="markerActions"></context-menu-item>
+</div>
