@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ConfigurationService} from "@app/services/configuration.service";
-import {catchError, debounceTime, map, switchMap, takeUntil} from "rxjs/operators";
+import {catchError, debounceTime, delay, map, switchMap, take, takeUntil} from "rxjs/operators";
 import {iif, Observable, of, Subject} from "rxjs";
 import {MapMarker} from "@angular/google-maps";
 import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
@@ -18,7 +18,7 @@ import {MapService} from "@app/services/map.service";
   templateUrl: './raca-maps.component.html',
   styleUrls: ['./raca-maps.component.scss']
 })
-export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
+export class RacaMapsComponent implements OnDestroy, OnInit {
   @Input()
   viewOnly: boolean = false;
   @Input()
@@ -30,7 +30,7 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
   @Input()
   zoom: number = 18;
 
-  loaded: Observable<boolean>;
+  loaded: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
 
   markerOptions: google.maps.MarkerOptions = {draggable: true};
@@ -59,6 +59,16 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
     }
   ];
 
+  viewOnlyActions: IMenuItem<google.maps.MapMouseEvent>[] = [
+    {
+      type: 'action',
+      label: 'back_to_the_marker',
+      onClick: () => {
+        this.center = this.marker.getPosition()!.toJSON();
+      }
+    }
+  ]
+
   markerActions: IMenuItem<google.maps.MapMouseEvent> [] = [{
     type: 'action',
     label: 'remove_marker',
@@ -66,6 +76,7 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
       this.removeMarker();
     }
   }]
+  private loader: Observable<boolean>;
 
   constructor(private http: HttpClient,
               private lang: LangService,
@@ -73,13 +84,12 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
               private mapService: MapService,
               private configuration: ConfigurationService) {
 
-    this.loaded = of(this.mapService.loaded)
+    this.loader = of(this.mapService.loaded)
       .pipe(switchMap(loaded => iif(() => loaded, of(true), this.http.jsonp(`${this.urlService.URLS.MAP_API_URL}${this.configuration.CONFIG.MAP_API_KEY}`, 'callback'))))
       .pipe(
         map(() => {
-          this.mapService.loaded = true;
           this.markerOptions.animation = google.maps.Animation.DROP;
-          this.mapLoaded.emit(true);
+          this.loaded = true;
           return true
         }),
         catchError((e) => {
@@ -89,16 +99,9 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
       )
   }
 
-  ngAfterViewInit(): void {
-    if (this.viewOnly) {
-      Promise.resolve().then(() => {
-        this.marker.marker?.setAnimation(google.maps.Animation.BOUNCE);
-      })
-    }
-  }
-
   ngOnInit(): void {
     this.listenToMarkerUpdates();
+    this.listenToLoadFinish();
   }
 
   ngOnDestroy(): void {
@@ -107,8 +110,9 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
     this.destroy$.unsubscribe();
   }
 
-  rightClicked(menu: ContextMenuItemComponent, event: google.maps.MapMouseEvent) {
+  rightClicked(menu: ContextMenuItemComponent, event: google.maps.MapMouseEvent, viewOnlyMenu?: ContextMenuItemComponent) {
     if (this.viewOnly) {
+      viewOnlyMenu?.open(event.domEvent as MouseEvent, event);
       return;
     }
     menu.open(event.domEvent as MouseEvent, event)
@@ -138,6 +142,21 @@ export class RacaMapsComponent implements OnDestroy, OnInit, AfterViewInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe((val) => {
         this.markerUpdates.emit(val);
+      })
+  }
+
+  private listenToLoadFinish() {
+    this.loader
+      .pipe(delay(100))
+      .pipe(take(1))
+      .subscribe(() => {
+        this.mapService.loaded = true;
+        this.mapLoaded.emit(true);
+        if (!this.viewOnly) {
+          return;
+        }
+        this.marker.marker?.setDraggable(false);
+        this.marker.marker?.setAnimation(google.maps.Animation.BOUNCE);
       })
   }
 }

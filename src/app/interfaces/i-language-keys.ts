@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  back_to_the_marker: string;
   loading_map: string;
   please_add_marker_to_perform_this_action: string;
   the_map: string;
