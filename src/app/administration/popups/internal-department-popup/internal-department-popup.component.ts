@@ -181,7 +181,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   setCurrentStamp() {
     this.model.getStamp().subscribe((file) => {
-      if (file.blob.type === 'error') {
+      if (file.blob.type === 'error' || file.blob.size === 0) {
         return;
       }
       this.blob = file;
