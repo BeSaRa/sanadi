@@ -159,14 +159,6 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
   }
 
   /**
-   * @description Loads the organization users list with composite(Info) properties
-   */
-  @Generator(undefined, true)
-  loadComposite(): Observable<OrgUser[]> {
-    return this.http.get<OrgUser[]>(this._getServiceURL() + '/composite');
-  }
-
-  /**
    * @description Loads the organization users list by criteria
    * @param criteria: IOrgUserCriteria
    */

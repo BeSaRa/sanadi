@@ -37,6 +37,10 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     super();
   }
 
+  _init() {
+    this.listenToLoadDone();
+  }
+
   @ViewChild('table') table!: TableComponent;
 
   displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
@@ -129,21 +133,12 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     this.edit$.next(orgUser);
   }
 
-  listenToReload(): void {
-    this.reload$
+  listenToLoadDone(): void {
+    this.service._loadDone$
       .pipe(takeUntil((this.destroy$)))
-      .pipe(
-        switchMap(() => {
-          // return this.service.loadComposite();
-          const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-          return load.pipe(
-            catchError(_ => of([]))
-          );
-        })
-      ).subscribe((list) => {
-      this.models = list;
-      this.table.selection.clear();
-    });
+      .subscribe((result) => {
+        this.table.selection.clear();
+      });
   }
 
   showAuditLogs(user: OrgUser, $event?: MouseEvent): void {

@@ -29,5 +29,11 @@ export class OrgUserInterceptor implements IModelInterceptor<OrgUser> {
     delete model.lookupService;
     delete model.statusDateModifiedString;
     delete model.searchFields;
+    delete model.customRoleInfo;
+    delete model.jobTitleInfo;
+    delete model.orgBranchInfo;
+    delete model.orgUnitInfo;
+    delete model.statusInfo;
+    delete model.userTypeInfo;
   }
 }
