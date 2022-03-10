@@ -14,6 +14,8 @@ export const validationPatterns: any = {
   AR_ONLY: new RegExp(/^[\u0621-\u064A ]+$/),
   ENG_NUM_ONLY: new RegExp(/^[a-zA-Z0-9]+$/),
   AR_NUM_ONLY: new RegExp(/^[\u0621-\u064A0-9\u0660-\u0669]+$/),
+  ENG_NUM_ONE_ENG: new RegExp(/^(?=.*[a-zA-Z])([a-zA-Z0-9\- ]+)$/),
+  AR_NUM_ONE_AR: new RegExp(/^(?=.*[\u0621-\u064A])([\u0621-\u064A0-9\u0660-\u0669\- ]+)$/),
   ENG_AR_ONLY: new RegExp(/^[a-zA-Z\u0621-\u064A ]+$/),
   ENG_AR_NUM_ONLY: new RegExp(/^[a-zA-Z\u0621-\u064A0-9\u0660-\u0669 ]+$/),
   PASSPORT: new RegExp('^[A-Z][0-9]{8,}$'),

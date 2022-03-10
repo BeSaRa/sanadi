@@ -13,6 +13,8 @@ export type customValidationTypes =
   | 'AR_ONLY'
   | 'ENG_NUM_ONLY'
   | 'AR_NUM_ONLY'
+  | 'ENG_NUM_ONE_ENG'
+  | 'AR_NUM_ONE_AR'
   | 'ENG_AR_ONLY'
   | 'ENG_AR_NUM_ONLY'
   | 'PASSPORT'
