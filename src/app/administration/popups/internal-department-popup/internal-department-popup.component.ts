@@ -202,4 +202,9 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     }
     return '';
   }
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
+  }
 }

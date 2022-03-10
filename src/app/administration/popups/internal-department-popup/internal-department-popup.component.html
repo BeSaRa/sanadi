@@ -6,9 +6,9 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form style="width: 800px;" [formGroup]="form" novalidate>
-    <tabs-list>
+<div class="dialog-content w800px" #dialogContent>
+  <form [formGroup]="form" novalidate>
+    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
       <tab [name]="tabsData.stamp.name" [template]="stampTabTemplate"
            [title]="lang.map.lbl_stamp"></tab>
