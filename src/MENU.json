@@ -499,7 +499,7 @@
     "path": "/home/training/certificate-templates",
     "icon": "mdi-certificate",
     "isSvg": false,
-    "permission": "",
+    "permission": "TRAINING_CERTIFICATE_TEMPLATE",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",

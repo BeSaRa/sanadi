@@ -7,14 +7,14 @@ import {TrainingProgramComponent} from '@app/training-services/pages/training-pr
 import {AvailableProgramsComponent} from '@app/training-services/pages/available-programs/available-programs.component';
 import {CertificatesComponent} from '@app/training-services/pages/certificates/certificates.component';
 import {PermissionGroup} from "@app/enums/permission-group";
+import {Permissions} from '@app/enums/Permissions';
 
 const routes: Routes = [
   {path: '', component: TrainingServicesComponent},
   {
     path: 'trainer', component: AccreditedTrainerComponent,
     canActivate: [PermissionGuard],
-    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: Permissions.TRAINING_ADD_TRAINEE, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'program', component: TrainingProgramComponent,
@@ -28,14 +28,12 @@ const routes: Routes = [
   {
     path: 'available-programs', component: AvailableProgramsComponent,
     canActivate: [PermissionGuard],
-    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: Permissions.TRAINING_CHARITY_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'certificate-templates', component: CertificatesComponent,
     canActivate: [PermissionGuard],
-    // data: {permissionKey: 'FAKE_TRAINING_PERMISSION', configPermissionGroup: null, checkAnyPermission: false}
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: Permissions.TRAINING_CERTIFICATE_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 
