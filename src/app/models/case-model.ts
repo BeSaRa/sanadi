@@ -246,7 +246,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
       [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.PARTNER_APPROVAL]: WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
-      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.COLLECTION_APPROVAL]: WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT
     }
 
     if (!caseType) {
@@ -258,14 +259,6 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   }
 
   sendToSupervisionAndControlDepartment(): Observable<any> {
-    /*let taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
-    if (taskName.startsWith('ask:')) {
-      taskName = taskName.split('ask:')[1];
-    } else if (taskName.startsWith('askSingle:')) {
-      taskName = taskName.split('askSingle:')[1];
-    }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, this.service);*/
-
     let service = this.inboxService!.getService(this.caseType),
       taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
     if (taskName.startsWith('ask:')) {

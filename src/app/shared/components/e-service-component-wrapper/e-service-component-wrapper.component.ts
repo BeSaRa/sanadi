@@ -34,6 +34,7 @@ import {IESComponent} from "@app/interfaces/iescomponent";
 import {OrgUser} from "@app/models/org-user";
 import {InternalUser} from "@app/models/internal-user";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'e-service-component-wrapper',
   templateUrl: './e-service-component-wrapper.component.html',
@@ -342,7 +343,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSupervisionAndControlDepartmentAction(item);
