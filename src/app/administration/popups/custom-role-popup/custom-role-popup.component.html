@@ -3,14 +3,14 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+<div class="dialog-content w800px" #dialogContent>
+  <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
-           [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
+           [hasError]="getTabInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
            [title]="langService.map.lbl_permissions"
-           [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
+           [hasError]="getTabInvalidStatus('permissions')"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -18,34 +18,32 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName"
-                   [ngClass]="fm.getStatusClass('basic.arName')"
+            <input id="arName" validationClasses="arName" trimInput
                    formControlName="arName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
+            <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName"
-                   [ngClass]="fm.getStatusClass('basic.enName')"
+            <input id="enName" validationClasses="enName" trimInput
                    formControlName="enName" class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
+            <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label for="description" class="form-label">{{langService.map.lbl_description}}</label>
-            <textarea id="description" [ngClass]="fm.getStatusClass('basic.description')"
-                      formControlName="description"
-                      class="form-control"></textarea>
-            <app-field-error-message [control]="fm.getFormField('basic.description')"></app-field-error-message>
+            <textarea id="description" validationClasses="description" trimInput
+                      formControlName="description" class="form-control"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4">
             <div class="form-check form-switch">
               <input type="checkbox" id="status" formControlName="status" class="form-check-input cursor-pointer">
-              <label for="status" class="cursor-pointer">{{fm.getStatusFieldTranslate('basic.status')}}</label>
+              <label for="status" class="cursor-pointer">{{langService.map.lbl_status}}
+                : {{statusField && statusField.value ? this.langService.map.lbl_active : this.langService.map.lbl_inactive}}</label>
             </div>
           </div>
         </div>
@@ -85,12 +83,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
