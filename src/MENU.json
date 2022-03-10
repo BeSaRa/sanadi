@@ -448,7 +448,7 @@
     "icon": "mdi-atom-variant",
     "isSvg": false,
     "permission": null,
-    "permissionGroup": null,
+    "permissionGroup": "TRAINING_PROGRAMS_PAGE_GROUP",
     "parent": null,
     "group": "main",
     "itemOrder": 11,
