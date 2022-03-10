@@ -9,6 +9,7 @@ import { CollectionItemComponent } from './shared/collection-item/collection-ite
 import { CollectionApprovalApproveTaskPopupComponent } from './popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component';
 import { ApprovalFormComponent } from './shared/approval-form/approval-form.component';
 import {MapsModule} from "@app/modules/maps/maps.module";
+import { FundraisingComponent } from './pages/fundraising/fundraising.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {MapsModule} from "@app/modules/maps/maps.module";
     CollectionApprovalComponent,
     CollectionItemComponent,
     CollectionApprovalApproveTaskPopupComponent,
-    ApprovalFormComponent
+    ApprovalFormComponent,
+    FundraisingComponent
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,5 @@
 {
+  "FUNDRAISING": "/fundraising-channel-licensing",
   "MAP_API_URL": "https://maps.googleapis.com/maps/api/js?libraries=places&key=",
   "COLLECTION_APPROVAL": "/collection-licensing",
   "ORG_UNIT_FIELD": "admin/org-unit-field",
