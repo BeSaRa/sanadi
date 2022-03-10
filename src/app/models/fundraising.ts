@@ -1,5 +1,6 @@
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";
+import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
@@ -61,8 +62,44 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
   requestTypeInfo!: AdminResult;
   className!: string;
 
-  constructor(){
-      super();
-      this.service = FactoryService.getService('FundraisingService');
+  constructor() {
+    super();
+    this.service = FactoryService.getService("FundraisingService");
+  }
+
+  buildBasicInfo(controls: boolean = false): any {
+    const {
+      requestType,
+      licenseDurationType,
+      oldLicenseFullSerial,
+      workingMechanism,
+      riskAssessment,
+    } = this;
+    return {
+      requestType: controls
+        ? [requestType, [CustomValidators.required]]
+        : requestType,
+      licenseDurationType: controls
+        ? [licenseDurationType, [CustomValidators.required]]
+        : licenseDurationType,
+      oldLicenseFullSerial: controls
+        ? [oldLicenseFullSerial, [CustomValidators.required]]
+        : oldLicenseFullSerial,
+      workingMechanism: controls
+        ? [workingMechanism, [CustomValidators.required]]
+        : workingMechanism,
+      riskAssessment: controls
+        ? [riskAssessment, [CustomValidators.required]]
+        : riskAssessment,
+    };
+  }
+
+  buildExplanation(controls: boolean = false): any {
+    const { description } = this;
+    return {
+      description: controls
+        ? [description, [CustomValidators.required]]
+        : description,
+    };
   }
 }

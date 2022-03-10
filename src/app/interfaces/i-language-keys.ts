@@ -1,5 +1,8 @@
 export interface ILanguageKeys {
   menu_fundraising: string;
+  previous_license_number: string;
+  working_mechanism: string;
+  risk_assessment: string;
   back_to_the_marker: string;
   loading_map: string;
   please_add_marker_to_perform_this_action: string;
