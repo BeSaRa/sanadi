@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {InternalDepartment} from '@app/models/internal-department';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -27,7 +27,7 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
   templateUrl: './internal-department-popup.component.html',
   styleUrls: ['./internal-department-popup.component.scss']
 })
-export class InternalDepartmentPopupComponent extends AdminGenericDialog<InternalDepartment> {
+export class InternalDepartmentPopupComponent extends AdminGenericDialog<InternalDepartment> implements AfterViewInit{
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: FormGroup;
   model!: InternalDepartment;
@@ -47,11 +47,13 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   };
   blob!: BlobModel;
   teamInfo!: Team;
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(
     public dialogRef: DialogRef,
     public fb: FormBuilder,
     public lang: LangService,
+    private cd: ChangeDetectorRef,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
     private teamService: TeamService,
     private internalUserService: InternalUserService,
@@ -71,13 +73,24 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     this.setCurrentStamp();
   }
 
-  buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true));
+  private _afterViewInit(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.displayFormValidity(null, this.dialogContent.nativeElement);
+    }
+
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
-      this.saveVisible = false;
-      this.validateFieldsVisible = false;
     }
+  }
+
+  ngAfterViewInit(): void {
+    // used the private function to reuse functionality of afterViewInit if needed
+    this._afterViewInit();
+    this.cd.detectChanges();
+  }
+
+  buildForm(): void {
+    this.form = this.fb.group(this.model.buildForm(true));
   }
 
   beforeSave(model: InternalDepartment, form: FormGroup): Observable<boolean> | boolean {
@@ -204,7 +217,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
   }
 
   setDialogButtonsVisibility(tab: any): void {
-    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
-    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.saveVisible = this.operation === OperationTypes.VIEW ? false : (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = this.operation === OperationTypes.VIEW ? false : (tab.name && tab.name === this.tabsData.basic.name);
   }
 }
