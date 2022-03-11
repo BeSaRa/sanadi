@@ -44,9 +44,9 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   requestTypes: Lookup[] =
-    this.lookupService.listByCategory.ServiceRequestType.slice().sort(
-      (a, b) => a.lookupKey - b.lookupKey
-    );
+    this.lookupService.listByCategory.ServiceRequestType.filter(
+      (l) => l.lookupKey !== ServiceRequestTypes.EXTEND
+    ).sort((a, b) => a.lookupKey - b.lookupKey);
 
   licenseDurationTypes: Lookup[] =
     this.lookupService.listByCategory.LicenseDurationType;
