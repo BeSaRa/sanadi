@@ -64,7 +64,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return this.form.get("basicInfo.oldLicenseFullserial") as FormControl;
+    return this.form.get("basicInfo.oldLicenseFullSerial") as FormControl;
   }
 
   isEditLicenseAllowed(): boolean {
