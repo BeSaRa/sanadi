@@ -18,7 +18,8 @@ import { LangService } from "@app/services/lang.service";
 import { LookupService } from "@app/services/lookup.service";
 import { Observable, of, Subject } from "rxjs";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { filter, tap } from "rxjs/operators";
+import { delay, filter, takeUntil, tap } from "rxjs/operators";
+import { CustomValidators } from "@app/validators/custom-validators";
 
 @Component({
   selector: "fundraising",
@@ -32,6 +33,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
+  selectedLicense?: Fundraising;
 
   constructor(
     public lang: LangService,
@@ -112,7 +114,49 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   _afterBuildForm(): void {
-    // Never direct implement anything here; rather create a function and call it from here
+    this.listenToRequestTypeChange();
+  }
+
+  listenToRequestTypeChange(): void {
+    this.requestType?.valueChanges
+      .pipe(delay(50), takeUntil(this.destroy$))
+      .subscribe((requestTypeValue) => {
+        // if no requestType or (requestType = new)
+        // if new record or draft, reset license and its validations
+        // also reset the values in model
+        if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+          if (!this.model?.id || this.model.canCommit()) {
+            this.oldLicenseFullSerialField.reset();
+            this.oldLicenseFullSerialField.setValidators([]);
+
+            this.setSelectedLicense(undefined, true);
+
+            if (this.model) {
+              // this.model.licenseNumber = '';
+              this.model.licenseDuration = 0;
+              this.model.licenseStartDate = "";
+            }
+          }
+        } else {
+          this.oldLicenseFullSerialField.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedLicense &&
+                this.selectedLicense?.fullSerial === control.value
+                ? null
+                : { select_license: true };
+            },
+          ]);
+        }
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+      });
+  }
+  setSelectedLicense(
+    licenseDetails: Fundraising | undefined,
+    ignoreUpdateForm: boolean
+  ) {
+    this.selectedLicense = licenseDetails;
+    // Todo: complete implementation whenever licenses starts getting fetched
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
