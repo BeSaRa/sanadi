@@ -16,8 +16,9 @@ import { DialogService } from "@app/services/dialog.service";
 import { FundraisingService } from "@app/services/fundraising.service";
 import { LangService } from "@app/services/lang.service";
 import { LookupService } from "@app/services/lookup.service";
-import { Observable, Subject } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
+import { filter, tap } from "rxjs/operators";
 
 @Component({
   selector: "fundraising",
@@ -90,6 +91,10 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   // Todo: Add listener to licenseSearch and complete searching process
 
+  private invalidFormMessage() {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+  }
+
   _getNewInstance(): Fundraising {
     return new Fundraising();
   }
@@ -111,8 +116,11 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    throw new Error("Method not implemented.");
+    return of(this.form.valid)
+      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+      .pipe(filter((valid) => valid));
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     throw new Error("Method not implemented.");
   }
@@ -120,7 +128,13 @@ export class FundraisingComponent extends EServicesGenericComponent<
     throw new Error("Method not implemented.");
   }
   _prepareModel(): Fundraising | Observable<Fundraising> {
-    throw new Error("Method not implemented.");
+    const model = new Fundraising().clone({
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue(),
+    });
+    console.log("prepared model in _prepareModel()", model);
+    return model;
   }
   _afterSave(
     model: Fundraising,
