@@ -59,18 +59,22 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   get requestType(): AbstractControl {
-    return this.form.get("requestType")!;
+    return this.form.get("basicInfo.requestType")!;
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return this.form.get("oldLicenseFullserial") as FormControl;
+    return this.form.get("basicInfo.oldLicenseFullserial") as FormControl;
   }
 
   isEditLicenseAllowed(): boolean {
-    return true;
     // if new or draft record and request type !== new, edit is allowed
-    // let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    // return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+    let isAllowed =
+      !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return (
+      isAllowed &&
+      CommonUtils.isValidValue(this.requestType.value) &&
+      this.requestType.value !== ServiceRequestTypes.NEW
+    );
   }
 
   licenseSearch(): void {
