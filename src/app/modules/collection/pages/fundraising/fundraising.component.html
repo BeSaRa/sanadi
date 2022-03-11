@@ -1,9 +1,10 @@
 <div class="row">
     <tabs-list [accordionView]="accordionView">
-        <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info"></tab>
+        <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+        </tab>
         <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
-         [title]="lang.map.special_explanations"></tab>
-         <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+            [title]="lang.map.special_explanations"></tab>
+        <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
     </tabs-list>
     <ng-container [formGroup]="form">
         <ng-container formGroupName="basicInfo">
@@ -11,38 +12,36 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="requestType"
-                               for="requestType">{{lang.map.request_type}}</label>
+                            for="requestType">{{lang.map.request_type}}</label>
                         <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
-                                    placeholder="{{lang.map.select}}" id="requestType"
-                                    [notFoundText]="lang.map.msg_not_found" appendTo="body"
-                                    formControlName="requestType" validationClasses="requestType">
-                            <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
+                            placeholder="{{lang.map.select}}" id="requestType" [notFoundText]="lang.map.msg_not_found"
+                            appendTo="body" formControlName="requestType" validationClasses="requestType">
+                            <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                            </ng-option>
                         </ng-select>
                         <app-field-error-message controlName="requestType"></app-field-error-message>
                     </div>
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
-                               for="oldLicenseFullSerial">{{lang.map.previous_license_number}}</label>
+                            for="oldLicenseFullSerial">{{lang.map.previous_license_number}}</label>
                         <div class="input-group">
                             <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
-                                    class="input-group-text"><i
-                                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                                class="input-group-text"><i
+                                    class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                             <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
-                                    formControlName="oldLicenseFullSerial" trimInput
-                                    type="text" [readOnly]="!isEditLicenseAllowed()"
-                                    validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
-                                    id="oldLicenseFullSerial">
+                                formControlName="oldLicenseFullSerial" trimInput type="text"
+                                [readOnly]="!isEditLicenseAllowed()" validationClasses="oldLicenseFullSerial"
+                                [onlyInvalid]="false" class="form-control" id="oldLicenseFullSerial">
                             <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="licenseDurationType"
-                               for="licenseDurationType">{{lang.map.license_type}}</label>
+                            for="licenseDurationType">{{lang.map.license_type}}</label>
                         <ng-select validationClasses="licenseDurationType" appendTo="body" [clearable]="true"
-                                   id="licenseDurationType"
-                                   formControlName="licenseDurationType">
-                          <ng-option [value]="option.lookupKey"
-                                     *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
+                            id="licenseDurationType" formControlName="licenseDurationType">
+                            <ng-option [value]="option.lookupKey" *ngFor="let option of licenseDurationTypes">
+                                {{option.getName()}}</ng-option>
                         </ng-select>
                         <app-field-error-message controlName="licenseDurationType"></app-field-error-message>
                     </div>
@@ -50,18 +49,20 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="workingMechanism"
-                               for="workingMechanism">{{lang.map.working_mechanism}}</label>
-                        <textarea name="workingMechanism" formControlName="workingMechanism" validationClasses="workingMechanism" id="workingMechanism"
-                                  rows="1" class="form-control"></textarea>
+                            for="workingMechanism">{{lang.map.working_mechanism}}</label>
+                        <textarea name="workingMechanism" formControlName="workingMechanism"
+                            validationClasses="workingMechanism" id="workingMechanism" rows="1"
+                            class="form-control"></textarea>
                         <app-field-error-message controlName="workingMechanism"></app-field-error-message>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="riskAssessment"
-                               for="riskAssessment">{{lang.map.risk_assessment}}</label>
-                        <textarea name="riskAssessment" formControlName="riskAssessment" validationClasses="riskAssessment" id="riskAssessment"
-                                  rows="1" class="form-control"></textarea>
+                            for="riskAssessment">{{lang.map.risk_assessment}}</label>
+                        <textarea name="riskAssessment" formControlName="riskAssessment"
+                            validationClasses="riskAssessment" id="riskAssessment" rows="1"
+                            class="form-control"></textarea>
                         <app-field-error-message controlName="riskAssessment"></app-field-error-message>
                     </div>
                 </div>
@@ -69,20 +70,20 @@
         </ng-container>
         <ng-container formGroupName="explanation">
             <ng-template #special_explanations>
-              <div class="row">
-                <div class="col-sm-12 mb-4 position-relative">
-                  <label class="form-label" asteriskIfRequired="description"
-                         for="description">{{lang.map.special_explanations}}</label>
-                  <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                            rows="4" class="form-control"></textarea>
-                  <app-field-error-message controlName="description"></app-field-error-message>
+                <div class="row">
+                    <div class="col-sm-12 mb-4 position-relative">
+                        <label class="form-label" asteriskIfRequired="description"
+                            for="description">{{lang.map.special_explanations}}</label>
+                        <textarea name="description" formControlName="description" validationClasses="description"
+                            id="description" rows="4" class="form-control"></textarea>
+                        <app-field-error-message controlName="description"></app-field-error-message>
+                    </div>
                 </div>
-              </div>
             </ng-template>
         </ng-container>
     </ng-container>
     <ng-template #attachmentsTab>
-        <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                     [service]="service.documentService"></attachments>
-      </ng-template>
+        <attachments [caseId]="model?.id" [caseType]="model?.caseType" [service]="service.documentService">
+        </attachments>
+    </ng-template>
 </div>

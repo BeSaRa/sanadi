@@ -1,5 +1,10 @@
 import { Component } from "@angular/core";
-import { FormGroup, FormBuilder, AbstractControl, FormControl } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  AbstractControl,
+  FormControl,
+} from "@angular/forms";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
@@ -12,14 +17,17 @@ import { FundraisingService } from "@app/services/fundraising.service";
 import { LangService } from "@app/services/lang.service";
 import { LookupService } from "@app/services/lookup.service";
 import { Observable, Subject } from "rxjs";
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 
 @Component({
   selector: "fundraising",
   templateUrl: "./fundraising.component.html",
   styleUrls: ["./fundraising.component.scss"],
 })
-export class FundraisingComponent extends EServicesGenericComponent<Fundraising, FundraisingService> {
+export class FundraisingComponent extends EServicesGenericComponent<
+  Fundraising,
+  FundraisingService
+> {
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -34,24 +42,28 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     super();
   }
 
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] =
+    this.lookupService.listByCategory.ServiceRequestType.slice().sort(
+      (a, b) => a.lookupKey - b.lookupKey
+    );
 
-  licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
-  
+  licenseDurationTypes: Lookup[] =
+    this.lookupService.listByCategory.LicenseDurationType;
+
   get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+    return this.form.get("basicInfo")! as FormGroup;
   }
 
   get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+    return this.form.get("explanation")! as FormGroup;
   }
 
   get requestType(): AbstractControl {
-    return this.form.get('requestType')!
+    return this.form.get("requestType")!;
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('oldLicenseFullserial')) as FormControl;
+    return this.form.get("oldLicenseFullserial") as FormControl;
   }
 
   isEditLicenseAllowed(): boolean {
@@ -62,9 +74,11 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   }
 
   licenseSearch(): void {
-    const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
+    const value =
+      this.oldLicenseFullSerialField.value &&
+      this.oldLicenseFullSerialField.value.trim();
     if (!value) {
-      this.dialog.info(this.lang.map.need_license_number_to_search)
+      this.dialog.info(this.lang.map.need_license_number_to_search);
       return;
     }
     this.licenseSearch$.next(value);
@@ -84,8 +98,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     const model = new Fundraising();
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
-      explanation: this.fb.group(model.buildExplanation(true))
-    })
+      explanation: this.fb.group(model.buildExplanation(true)),
+    });
   }
 
   _afterBuildForm(): void {
