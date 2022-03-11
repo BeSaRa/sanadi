@@ -41,8 +41,9 @@
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="licenseDurationType"
                             for="licenseDurationType">{{lang.map.license_type}}</label>
-                        <ng-select validationClasses="licenseDurationType" appendTo="body" [clearable]="true"
-                            id="licenseDurationType" formControlName="licenseDurationType">
+                        <ng-select [selectOnTab]="true" labelForId="licenseDurationType" [clearable]="true"
+                            placeholder="{{lang.map.select}}" id="licenseDurationType" [notFoundText]="lang.map.msg_not_found"
+                            appendTo="body" formControlName="licenseDurationType" validationClasses="licenseDurationType">
                             <ng-option [value]="option.lookupKey" *ngFor="let option of licenseDurationTypes">
                                 {{option.getName()}}</ng-option>
                         </ng-select>
