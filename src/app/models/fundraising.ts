@@ -72,6 +72,9 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
       requestType,
       licenseDurationType,
       oldLicenseFullSerial,
+      arName,
+      enName,
+      about,
       workingMechanism,
       riskAssessment,
     } = this;
@@ -85,6 +88,9 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
       oldLicenseFullSerial: controls
         ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
         : oldLicenseFullSerial,
+      arName: controls ? [arName, [CustomValidators.required]] : arName,
+      enName: controls ? [enName, [CustomValidators.required]] : enName,
+      about: controls ? [about, [CustomValidators.required]] : about,
       workingMechanism: controls
         ? [workingMechanism, [CustomValidators.required]]
         : workingMechanism,

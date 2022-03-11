@@ -1,6 +1,7 @@
 export interface ILanguageKeys {
   menu_fundraising: string;
   previous_license_number: string;
+  about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
   back_to_the_marker: string;

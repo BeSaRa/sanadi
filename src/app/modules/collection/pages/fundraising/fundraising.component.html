@@ -49,6 +49,30 @@
                         <app-field-error-message controlName="licenseDurationType"></app-field-error-message>
                     </div>
                 </div>
+                <!-- channel/media name -->
+                <div class="row">
+                    <!-- arabic name -->
+                    <div class="col-md-4 col-sm-6 mb-4 position-relative">
+                        <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+                        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
+                        <app-field-error-message controlName="arName"></app-field-error-message>
+                    </div>
+                    <!-- english name -->
+                    <div class="col-md-4 col-sm-6 mb-4 position-relative">
+                        <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+                        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
+                        <app-field-error-message controlName="enName"></app-field-error-message>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Introduction to the new channel/media -->
+                    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                        <label class="form-label" asteriskIfRequired="about" for="about">{{lang.map.about_channel}}</label>
+                        <textarea name="about" formControlName="about" validationClasses="about" id="about" rows="1"
+                            class="form-control"></textarea>
+                        <app-field-error-message controlName="about"></app-field-error-message>
+                    </div>
+                </div>
                 <div class="row">
                     <!-- How the new channel/media works -->
                     <div class="col-md-6 col-sm-12 mb-4 position-relative">
