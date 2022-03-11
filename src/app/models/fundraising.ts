@@ -83,7 +83,7 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
         ? [licenseDurationType, [CustomValidators.required]]
         : licenseDurationType,
       oldLicenseFullSerial: controls
-        ? [oldLicenseFullSerial, [CustomValidators.required]]
+        ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
         : oldLicenseFullSerial,
       workingMechanism: controls
         ? [workingMechanism, [CustomValidators.required]]
