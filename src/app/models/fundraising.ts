@@ -1,3 +1,4 @@
+import { CaseTypes } from "@app/enums/case-types.enum";
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -16,7 +17,7 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
   serial!: number;
   fullSerial!: string;
   caseStatus!: number;
-  caseType!: number;
+  caseType: number = CaseTypes.FUNDRAISING_LICENSING;
   organizationId!: number;
   taskDetails!: TaskDetails;
   caseStatusInfo!: AdminResult;
