@@ -22,6 +22,7 @@ import {
   CollectionApprovalComponent
 } from "@app/modules/collection/pages/collection-services-approval/collection-approval.component";
 import {MapService} from "@app/services/map.service";
+import {CollectorApprovalComponent} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('InternalProjectLicenseComponent', InternalProjectLicenseComponent);
       DynamicComponentService.registerComponent('ProjectModelComponent', ProjectModelComponent);
       DynamicComponentService.registerComponent('CollectionApprovalComponent', CollectionApprovalComponent);
+      DynamicComponentService.registerComponent('CollectorApprovalComponent', CollectorApprovalComponent);
 
     });// just to make sure that service constructed and register all dynamic components
 

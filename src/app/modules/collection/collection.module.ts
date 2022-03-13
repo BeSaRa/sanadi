@@ -9,6 +9,8 @@ import { CollectionItemComponent } from './shared/collection-item/collection-ite
 import { CollectionApprovalApproveTaskPopupComponent } from './popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component';
 import { ApprovalFormComponent } from './shared/approval-form/approval-form.component';
 import {MapsModule} from "@app/modules/maps/maps.module";
+import { CollectorApprovalComponent } from './pages/collector-approval/collector-approval.component';
+import { CollectorItemComponent } from './shared/collector-item/collector-item.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import {MapsModule} from "@app/modules/maps/maps.module";
     CollectionApprovalComponent,
     CollectionItemComponent,
     CollectionApprovalApproveTaskPopupComponent,
-    ApprovalFormComponent
+    ApprovalFormComponent,
+    CollectorApprovalComponent,
+    CollectorItemComponent
   ],
   imports: [
     CommonModule,
