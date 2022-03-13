@@ -6,6 +6,10 @@ import {FactoryService} from "@app/services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {CommonUtils} from "@app/helpers/common-utils";
 import {Validators} from '@angular/forms';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 // noinspection JSUnusedGlobalSymbols
 export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
@@ -73,6 +77,12 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
   service!: ProjectModelService;
+
+  searchFields: ISearchFieldsMap<ProjectModel> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo', 'templateTypeInfo']),
+    ...normalSearchFields(['projectName', 'fullSerial'])
+  }
 
   constructor() {
     super();
@@ -175,7 +185,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(1200)]] : needsAssessment,
       goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(1200)]] : goals,
       handicappedBeneficiaryNumber: controls ? [handicappedBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : handicappedBeneficiaryNumber,
-      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required,CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
+      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
       directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
       indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
       indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectMaleBeneficiaries,

@@ -12,6 +12,10 @@ import {CustomValidators} from "../validators/custom-validators";
 import {LicenseApprovalModel} from "@app/models/license-approval-model";
 import {DateUtils} from "@app/helpers/date-utils";
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService, PartnerApproval> {
   caseType: number = CaseTypes.PARTNER_APPROVAL;
@@ -61,6 +65,12 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
   description!: string;
 
   service: PartnerApprovalService;
+
+  searchFields: ISearchFieldsMap<PartnerApproval> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo']),
+    ...normalSearchFields(['subject', 'fullSerial'])
+  }
 
   constructor() {
     super();

@@ -8,6 +8,11 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {AdminResult} from '@app/models/admin-result';
 import {DateUtils} from '@app/helpers/date-utils';
 import {Validators} from '@angular/forms';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
+
 
 export class InternalProjectLicense extends LicenseApprovalModel<InternalProjectLicenseService, InternalProjectLicense> {
   service: InternalProjectLicenseService;
@@ -110,6 +115,12 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   // temp properties
   projectNameInfo!: AdminResult;
   allNationalities: boolean = true;
+
+  searchFields: ISearchFieldsMap<InternalProjectLicense> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo']),
+    ...normalSearchFields(['subject', 'fullSerial'])
+  }
 
   getBasicFormFields(control: boolean = false): any {
     const {

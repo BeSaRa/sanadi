@@ -9,6 +9,10 @@ import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {DateUtils} from '@app/helpers/date-utils';
 import {AdminResult} from '@app/models/admin-result';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
   caseType: number = CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
@@ -51,6 +55,12 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   licenseStatusInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
+
+  searchFields: ISearchFieldsMap<FinalExternalOfficeApproval> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo']),
+    ...normalSearchFields(['subject', 'fullSerial'])
+  }
 
   constructor() {
     super();
