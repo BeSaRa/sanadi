@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
-import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {AppEvents} from '@app/enums/app-events';
@@ -12,6 +12,9 @@ import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AdminResult} from '@app/models/admin-result';
 
 @Component({
   selector: 'collector-item',
@@ -20,7 +23,7 @@ import {DateUtils} from '@app/helpers/date-utils';
 })
 export class CollectorItemComponent implements OnInit, OnDestroy {
   @Input()
-  model!: CollectorApproval
+  model!: CollectorApproval;
   destroy$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectorItem, index: number }> = new Subject<{ item: CollectorItem, index: number }>();
@@ -35,10 +38,22 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   relationships: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
+  licenseDurationTypeEnum = LicenseDurationType;
+  isPermanent!: boolean;
 
   datepickerOptionsMap: IKeyValue = {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
+
+  private _licenseDurationType: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
+
+  get licenseDurationType(): number | undefined {
+    return this._licenseDurationType.value;
+  }
+
+  @Input() set licenseDurationType(val: number | undefined) {
+    this._licenseDurationType.next(val);
+  }
 
   @Output()
   approval: EventEmitter<{ item: CollectorItem, index: number }> = new EventEmitter<{ item: CollectorItem; index: number }>();
@@ -74,11 +89,11 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!this.model) {
-      throw Error('Please Provide Model to get the Collector Items from it')
+      throw Error('Please Provide Model to get the Collector Items from it');
     }
 
     if (this.approvalMode) {
-      const newColumns = this.columns.slice()
+      const newColumns = this.columns.slice();
       newColumns.splice(this.columns.length - 1, 0, 'approval_info_status');
       this.columns = newColumns;
     }
@@ -87,7 +102,8 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this.listenToEdit();
     this.listenToRemove();
     this.listenToSave();
-    this.listenToDisableSearchField()
+    this.listenToDisableSearchField();
+    this.listenToLicenseDurationTypeChanges();
   }
 
   private buildForm(): void {
@@ -108,7 +124,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
       .pipe(tap(_ => this.item = new CollectorItem().clone<CollectorItem>({
         licenseDurationType: this.model.licenseDurationType
       })))
-      .subscribe(() => this.formOpenedStatus.emit(true))
+      .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
   private listenToEdit() {
@@ -120,7 +136,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
         this.item = info.item;
         this.updateForm(this.item);
       }))
-      .subscribe(() => this.formOpenedStatus.emit(true))
+      .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
   private listenToRemove() {
@@ -133,12 +149,12 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
             return {
               index: info.index,
               click
-            }
-          }))
+            };
+          }));
       }))
       .subscribe((info) => {
         info.click === UserClickOn.YES ? this.processDelete(info.index) : null;
-      })
+      });
   }
 
   private listenToDisableSearchField() {
@@ -146,7 +162,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         value ? this.searchControl.disable() : this.searchControl.enable();
-      })
+      });
   }
 
   private listenToSave(): void {
@@ -159,28 +175,29 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
         this.processSave(new CollectorItem().clone<CollectorItem>({
           ...this.item,
           ...this.form.value
-        }))
-      })
+        }));
+      });
   }
 
   private processSave(item: CollectorItem): void {
+    item.collectorTypeInfo = AdminResult.createInstance(this.collectorTypes.find(c => c.lookupKey == item?.collectorType)!);
     this.editIndex ? this.processEdit(item) : this.processAdd(item);
     this.cancel();
   }
 
   private processAdd(item: CollectorItem): void {
     this.model.collectorItemList = this.model.collectorItemList.concat([item]);
-    this.eventHappened.emit(AppEvents.ADD)
+    this.eventHappened.emit(AppEvents.ADD);
   }
 
   private processEdit(item: CollectorItem): void {
     this.model.collectorItemList.splice((this.editIndex!) - 1, 1, item);
     this.model.collectorItemList = [...this.model.collectorItemList];
-    this.eventHappened.emit(AppEvents.EDIT)
+    this.eventHappened.emit(AppEvents.EDIT);
   }
 
   private processDelete(index: number): void {
-    this.model.collectorItemList.splice(index, 1)
+    this.model.collectorItemList.splice(index, 1);
     this.model.collectorItemList = [...this.model.collectorItemList];
     this.eventHappened.emit(AppEvents.DELETE);
   }
@@ -197,6 +214,18 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this.formOpenedStatus.emit(false);
   }
 
+  private toggleLicenseEndDate() {
+    this.isPermanent = this.licenseDurationType == LicenseDurationType.PERMANENT;
+    const licenseEnDateValidator = this.isPermanent ? [] : [CustomValidators.required];
+    this.licenseEndDate?.setValidators(licenseEnDateValidator);
+    this.isPermanent && this.licenseEndDate?.disable();
+    !this.isPermanent && this.licenseEndDate?.enable();
+  }
+
+  get licenseEndDate() {
+    return this.form?.get('licenseEndDate');
+  }
+
   searchForLicense() {
     console.log('SEARCH');
   }
@@ -205,5 +234,14 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+  }
+
+  private listenToLicenseDurationTypeChanges() {
+    this._licenseDurationType
+      .pipe(takeUntil(this.destroy$))
+      .pipe(skip(1))
+      .subscribe(() => {
+        this.toggleLicenseEndDate();
+      });
   }
 }

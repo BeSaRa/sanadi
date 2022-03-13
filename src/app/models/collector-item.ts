@@ -53,7 +53,7 @@ export class CollectorItem extends LicenseApproval {
       relationship: controls ? [relationship, [CustomValidators.required]] : relationship,
       jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
       phone: controls ? [phone, [CustomValidators.required]] : phone,
-      licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
+      licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
     }
   }

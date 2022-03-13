@@ -11,6 +11,7 @@ import { ApprovalFormComponent } from './shared/approval-form/approval-form.comp
 import {MapsModule} from "@app/modules/maps/maps.module";
 import { CollectorApprovalComponent } from './pages/collector-approval/collector-approval.component';
 import { CollectorItemComponent } from './shared/collector-item/collector-item.component';
+import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { CollectorItemComponent } from './shared/collector-item/collector-item.c
     CollectionApprovalApproveTaskPopupComponent,
     ApprovalFormComponent,
     CollectorApprovalComponent,
-    CollectorItemComponent
+    CollectorItemComponent,
+    CollectorApprovalApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

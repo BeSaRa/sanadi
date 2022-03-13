@@ -10,6 +10,11 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {CollectorApprovalInterceptor} from '@app/model-interceptors/collector-approval-interceptor';
 import {FactoryService} from '@app/services/factory.service';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  CollectorApprovalApproveTaskPopupComponent
+} from '@app/modules/collection/popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +62,10 @@ export class CollectorApprovalService extends EServiceGenericService<CollectorAp
     return this.urlService;
   }
 
+  approveTask(model: CollectorApproval, action: WFResponseType): DialogRef {
+    return this.dialog.show(CollectorApprovalApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
 }

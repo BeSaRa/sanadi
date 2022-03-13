@@ -5,6 +5,8 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {CollectorItem} from '@app/models/collector-item';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 export class CollectorApproval extends CaseModel<CollectorApprovalService, CollectorApproval> {
 
@@ -60,6 +62,14 @@ export class CollectorApproval extends CaseModel<CollectorApprovalService, Colle
     return {
       description: controls ? [description, [CustomValidators.required]] : description,
     }
+  }
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 
   hasInvalidCollectorItems(): boolean {

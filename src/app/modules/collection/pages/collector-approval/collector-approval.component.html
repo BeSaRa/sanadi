@@ -34,6 +34,7 @@
         <div class="row">
           <collector-item (formOpenedStatus)="collectorItemFormStatusChanged($event)"
                            [disableAdd]="basicInfo.invalid"
+                            [licenseDurationType]="licenseDurationType.value"
                            (eventHappened)="checkDisableFields()"
                            [disableSearch]="disableSearchField"
                            [model]="model!"></collector-item>
