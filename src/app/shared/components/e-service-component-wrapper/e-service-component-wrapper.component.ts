@@ -173,6 +173,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       {
         type: 'action',
         label: 'btn_save',
+        show: () => !this.internal,
         disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
@@ -211,6 +212,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
+        show: () => !this.internal,
         disabled: (item) => {
           return this.component.form.invalid || item?.alreadyStarted()
         },
@@ -297,6 +299,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
+        show: () => !this.internal,
         disabled: () => this.component.readonly,
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
