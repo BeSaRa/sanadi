@@ -54,17 +54,17 @@
             <button [disabled]="disabled" [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
                     (click)="uploadAttachment(row , uploader)"
                     [class.btn-success]="row.id"
-                    class="btn shadow-sm btn-secondary d-flex align-items-center justify-content-start">
+                    class="btn btn-sm shadow-sm btn-secondary d-flex align-items-center justify-content-start">
               <i [class.mdi-progress-upload]="row.id" [class.mdi-upload]="!row.id" class="mdi mdi-upload"></i>
             </button>
             <button [tooltip]="lang.map.view" (click)="viewFile(row)"
                     [disabled]="!row.id"
-                    class="btn shadow-sm btn-info d-flex align-items-center justify-content-start">
+                    class="btn btn-sm shadow-sm btn-info d-flex align-items-center justify-content-start">
               <i [class.mdi-eye-off]="!row.id" [class.mdi-eye]="row.id" class="mdi text-white"></i>
             </button>
             <button [tooltip]="lang.map.btn_delete" (click)="deleteFile(row)"
                     [disabled]="disabled"
-                    class="btn shadow-sm btn-danger d-flex align-items-center justify-content-start">
+                    class="btn btn-sm shadow-sm btn-danger d-flex align-items-center justify-content-start">
               <i [class.mdi-delete-off]="!row.id" [class.mdi-delete]="row.id" class="mdi"></i>
             </button>
           </div>
