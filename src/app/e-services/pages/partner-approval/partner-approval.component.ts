@@ -464,7 +464,24 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$),
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestType.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return {selected: licenses[0], details: data};
+                }),
+                catchError((e) => {
+                  return of(null);
+                })
+              )
+          } else {
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$;
+          }
+        }),
         // allow only if the user select license
         filter<{ selected: PartnerApproval, details: PartnerApproval }, any>
         ((selection): selection is { selected: PartnerApproval, details: PartnerApproval } => {
@@ -496,10 +513,10 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
-    if (!value) {
+    /*if (!value) {
       this.dialog.info(this.lang.map.need_license_number_to_search)
       return;
-    }
+    }*/
     this.licenseSearch$.next(value);
   }
 

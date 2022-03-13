@@ -7,7 +7,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {ToastService} from '@app/services/toast.service';
-import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FinalExternalOfficeApproval} from '@app/models/final-external-office-approval';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -404,20 +404,18 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     if (this.requestTypeField.valid) {
       value = this.isNewRequestType() ? this.initialLicenseFullSerialField.value : this.oldLicenseFullSerialField.value;
     }
-    if (!CommonUtils.isValidValue(value)) {
+    /*if (!CommonUtils.isValidValue(value)) {
       this.dialogService.info(this.lang.map.need_license_number_to_search);
       return;
-    }
+    }*/
     this.licenseSearch$.next(value);
   }
 
 
   loadLicencesByCriteria(criteria: (Partial<InitialExternalOfficeApprovalSearchCriteria> | Partial<FinalExternalOfficeApprovalSearchCriteria>)): (Observable<InitialExternalOfficeApprovalResult[] | FinalExternalOfficeApprovalResult[]>) {
     if (this.isNewRequestType()) {
-      console.log('NEW');
       return this.initialApprovalService.licenseSearch(criteria as Partial<InitialExternalOfficeApprovalSearchCriteria>);
     } else {
-      console.log('OLD');
       return this.service.licenseSearch(criteria as Partial<FinalExternalOfficeApprovalSearchCriteria>);
     }
   }
@@ -438,9 +436,24 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => {
-          const displayColumns = this.isNewRequestType() ? this.initialApprovalService.selectLicenseDisplayColumns : this.service.selectLicenseDisplayColumns;
-          return this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return {selected: licenses[0], details: data};
+                }),
+                catchError((e) => {
+                  return of(null);
+                })
+              )
+          } else {
+            const displayColumns = this.isNewRequestType() ? this.initialApprovalService.selectLicenseDisplayColumns : this.service.selectLicenseDisplayColumns;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$
+          }
         }),
         // allow only if the user select license
         filter<{ selected: InitialExternalOfficeApprovalResult | FinalExternalOfficeApprovalResult, details: InitialExternalOfficeApproval | FinalExternalOfficeApproval }, any>
