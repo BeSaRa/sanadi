@@ -222,8 +222,7 @@
                              class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
                       <div class="col-md-8 col-sm-12 mb-4 position-relative">
                         <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
-                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')"
-                               [mask]="inputMaskPatterns.NUMBER_ONLY">
+                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')" trimInput>
                         <app-field-error-message
                           [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
                       </div>

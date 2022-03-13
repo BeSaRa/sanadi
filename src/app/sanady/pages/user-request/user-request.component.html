@@ -261,7 +261,7 @@
             <div class="col-md-8 col-sm-12 mb-4">
               <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
                      formControlName="phoneNumber1" class="form-control" type="text"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
+                     trimInput [readOnly]="readOnly || isPartialRequest">
               <app-field-error-message
                 [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
             </div>
@@ -637,7 +637,7 @@
           <div class="col-md-8 col-sm-12 mb-4">
             <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
                    formControlName="homePhoneNumber" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
+                   trimInput [readOnly]="readOnly || isPartialRequest">
             <app-field-error-message
               [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
           </div>

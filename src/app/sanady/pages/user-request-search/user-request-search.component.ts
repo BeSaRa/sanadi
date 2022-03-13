@@ -174,7 +174,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           statusDateModifiedTo: []
         }),
         beneficiary: this.fb.group({
-          phoneNumber1: [null, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+          phoneNumber1: [null, CustomValidators.commonValidations.phone],
           benNationality: [],
           occuptionStatus: []
         }),

@@ -60,10 +60,8 @@ export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
       ]] : enName,
       status: controls ? [status, CustomValidators.required] : status,
-      phoneNumber1: controls ? [phoneNumber1, [
-        CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber1,
-      phoneNumber2: controls ? [phoneNumber2, [
-        CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber2,
+      phoneNumber1: controls ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
+      phoneNumber2: controls ? [phoneNumber2, CustomValidators.commonValidations.phone] : phoneNumber2,
       address: controls ? [address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
       isMain: controls ? [isMain, [CustomValidators.required]] : isMain
     }

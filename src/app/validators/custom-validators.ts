@@ -41,8 +41,8 @@ const commonValidations = {
   gccId: [number, maxLength(20)],
   gccRId: [number, maxLength(20)],
   visa: [number, maxLength(20)],
-  phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
-  mobileNo: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  phone: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  mobileNo: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
     let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);

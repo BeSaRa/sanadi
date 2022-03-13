@@ -50,7 +50,7 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
         CustomValidators.maxLength(100),
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
       email: control ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
-      mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
+      mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       occupation: control ? [occupation, [CustomValidators.maxLength(100)]] : occupation,
       organization: control ? [organization, [CustomValidators.maxLength(100)]] : organization,
       requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
