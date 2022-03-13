@@ -160,6 +160,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     this.model && (this.model.collectionItemList = [])
     this.operation = OperationTypes.CREATE;
     this.setDefaultValues();
+    this.checkDisableFields();
   }
 
   private setDefaultValues(): void {

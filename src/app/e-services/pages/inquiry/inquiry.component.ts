@@ -25,6 +25,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {NavigationService} from "@app/services/navigation.service";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'inquiry-component',
   templateUrl: './inquiry.component.html',
