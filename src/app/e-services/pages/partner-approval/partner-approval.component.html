@@ -72,36 +72,6 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <!-- Request Classification -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="requestClassification" for="requestClassification"
-                 class="form-label">{{lang.map.request_classification}}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
-                     placeholder="{{lang.map.select}}" id="requestClassification"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
-                     formControlName="requestClassification" validationClasses="requestClassification">
-            <ng-option [value]="requestClassification.lookupKey"
-                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="requestClassification"></app-field-error-message>
-        </div>
-        <!-- Arabic Name -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
-          <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                 validationClasses="arName" class="form-control" trimInput id="arName">
-          <app-field-error-message controlName="arName"></app-field-error-message>
-        </div>
-        <!-- English Name -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
-          <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                 validationClasses="enName" class="form-control" trimInput id="enName">
-          <app-field-error-message controlName="enName"></app-field-error-message>
-        </div>
-      </div>
       <div *ngIf="selectedLicense">
         <app-table #table
                    [data]="[selectedLicense]"
@@ -149,6 +119,36 @@
             <tr cdk-row *cdkRowDef="let row; columns: service.selectLicenseDisplayColumns;"></tr>
           </table>
         </app-table>
+      </div>
+      <div class="row">
+        <!-- Request Classification -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="requestClassification" for="requestClassification"
+                 class="form-label">{{lang.map.request_classification}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestClassification"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
+                     formControlName="requestClassification" validationClasses="requestClassification">
+            <ng-option [value]="requestClassification.lookupKey"
+                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestClassification"></app-field-error-message>
+        </div>
+        <!-- Arabic Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="arName" class="form-control" trimInput id="arName">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <!-- English Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+          <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="enName" class="form-control" trimInput id="enName">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
       </div>
       <div class="row">
         <!-- Country -->
