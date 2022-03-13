@@ -1055,7 +1055,7 @@
               <i class="mdi mdi-close-box"></i>
             </button>
             <button (click)="editAid(row, i, $event)" class="icon-btn text-primary"
-                    [disabled]="readOnly"
+                    [disabled]="readOnly || (isPartialRequest && currentRequest && !currentRequest.isUnderProcessing())"
                     tooltip="{{langService.map.btn_edit}}">
               <i class="mdi mdi-pen"></i>
             </button>
