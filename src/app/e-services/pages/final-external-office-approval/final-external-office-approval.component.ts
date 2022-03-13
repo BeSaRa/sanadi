@@ -547,6 +547,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       return;
     }
 
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+      this.readonly = true;
+      return;
+    }
+
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
