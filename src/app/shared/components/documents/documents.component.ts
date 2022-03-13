@@ -1,17 +1,18 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {FileNetDocument} from '../../../models/file-net-document';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {LookupService} from '../../../services/lookup.service';
-import {DocumentService} from '../../../services/document.service';
+import {FileNetDocument} from '@app/models/file-net-document';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {LookupService} from '@app/services/lookup.service';
+import {DocumentService} from '@app/services/document.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {interval, Subject} from 'rxjs';
-import {LangService} from '../../../services/lang.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {LangService} from '@app/services/lang.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {UploadDocumentPopupComponent} from '../../popups/upload-document-popup/upload-document-popup.component';
-import {BlobModel} from '../../../models/blob-model';
+import {BlobModel} from '@app/models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-documents',
   templateUrl: './documents.component.html',
@@ -20,7 +21,6 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class DocumentsComponent implements OnInit, OnDestroy {
   _caseId: string = '';
   @Input()
-
   set caseId(value: string | undefined) {
     this._caseId = value ? value : '';
     if (value) {
