@@ -6,6 +6,7 @@ export interface IAppUrls {
   CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES: string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
+  FOLLOWUP_CONFIGURATION: string;
   COLLECTION_APPROVAL: string;
   FUNDRAISING: string;
   ORG_UNIT_FIELD: string;

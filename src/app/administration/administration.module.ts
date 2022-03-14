@@ -64,6 +64,8 @@ import { BankComponent } from './pages/bank/bank.component';
 import { BankPopupComponent } from './popups/bank-popup/bank-popup.component';
 import { DonorComponent } from './pages/donor/donor.component';
 import { DonorPopupComponent } from './popups/donor-popup/donor-popup.component';
+import { FollowupConfigurationComponent } from './pages/followup-configuration/followup-configuration.component';
+import { FollowupConfigurationPopupComponent } from './popups/followup-configuration-popup/followup-configuration-popup.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +122,8 @@ import { DonorPopupComponent } from './popups/donor-popup/donor-popup.component'
     BankPopupComponent,
     DonorComponent,
     DonorPopupComponent,
+    FollowupConfigurationComponent,
+    FollowupConfigurationPopupComponent,
   ],
   imports: [
     SharedModule,

@@ -17,6 +17,10 @@
            [title]="langService.map.custom_settings"
            [hasError]="fm.getFieldInvalidStatus('customSettings')"
            *ngIf="model.hasCustomSettings()"></tab>
+           <tab [name]="tabsData.basic.followup"
+           [template]="followupTabTemplate"
+           [title]="langService.map.followup_configuration"
+           ></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -265,6 +269,9 @@
           </div>
         </div>
       </div>
+    </ng-template>
+    <ng-template #followupTabTemplate>
+      <followup-configuration></followup-configuration>
     </ng-template>
   </form>
 </div>

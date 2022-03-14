@@ -59,6 +59,11 @@ export interface ILanguageKeys {
   collector_type: string;
   collector_items: string;
   menu_collector_approval: string;
+  followup_days: string;
+  concerned_team: string;
+  responsible_team: string;
+  name: string;
+  followup_configuration: string;
   back_to_the_marker: string;
   loading_map: string;
   please_add_marker_to_perform_this_action: string;
@@ -610,7 +615,6 @@ export interface ILanguageKeys {
   lbl_description: string;
   lbl_permissions: string;
   lbl_basic_info: string;
-  emergency_funds_info: string;
   lbl_edit_custom_role: string;
   lbl_edit_localization: string;
   lbl_add_custom_role: string;

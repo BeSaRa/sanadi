@@ -37,7 +37,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   tabsData: IKeyValue = {
     basic: {name: 'basic'},
     customSettings: {name: 'customSettings'},
-    steps: {name: 'steps'}
+    steps: {name: 'steps'},
+    followup:{name: 'followup'}
   };
   list: ServiceData[] = [];
   stepsList: ServiceDataStep[] = [];
