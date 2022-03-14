@@ -197,9 +197,17 @@ export class FundraisingComponent extends EServicesGenericComponent<
     // throw new Error('Method not implemented.');
   }
   _updateForm(model: Fundraising | undefined): void {
-    throw new Error("Method not implemented.");
+    if (!model) {
+      return;
+    }
+    this.model = model;
+    this.form.patchValue({
+      basicInfo: model?.buildBasicInfo(),
+      explanation: model?.buildExplanation(),
+    });
   }
   _resetForm(): void {
-    throw new Error("Method not implemented.");
+    this.form.reset();
+    this.model = this._getNewInstance();
   }
 }
