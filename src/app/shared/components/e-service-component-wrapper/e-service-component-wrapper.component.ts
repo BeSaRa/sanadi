@@ -26,13 +26,14 @@ import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ToastService} from "@app/services/toast.service";
 import {InboxService} from "@app/services/inbox.service";
 import {merge, Subject} from "rxjs";
-import {skip, startWith, takeUntil} from "rxjs/operators";
+import {startWith, takeUntil} from "rxjs/operators";
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {IESComponent} from "@app/interfaces/iescomponent";
 import {OrgUser} from "@app/models/org-user";
 import {InternalUser} from "@app/models/internal-user";
+// import {ChecklistItem} from "@app/models/checklist-item";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -79,6 +80,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   destroy$: Subject<any> = new Subject<any>();
   loadAttachments: boolean = false;
 
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  //checklist: ChecklistItem[] = [];
   saveTypes: typeof SaveTypes = SaveTypes;
   excludedDraftTypes: number[] = [
     CaseTypes.INQUIRY,
@@ -105,6 +108,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component.fromWrapperComponent = true;
 
     if (this.info && this.route.snapshot.queryParamMap.has('item')) {
+      //this.checklist = this.info.checklist;
       this.component.outModel = this.info.model;
       this.model = this.info.model;
       this.model.setInboxService(this.inboxService);
@@ -575,6 +579,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (!this.shouldFollowTheOpenFrom(openFrom)) {
       openFrom = this.getTheRightOpenForm();
     }
+    this.openFrom = openFrom;
     switch (openFrom) {
       case OpenFrom.USER_INBOX:
         this.buildUserInboxActions();
