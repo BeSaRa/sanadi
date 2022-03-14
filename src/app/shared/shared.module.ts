@@ -90,6 +90,7 @@ import {
   EServiceComponentWrapperComponent
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { CaseInfoComponent } from './components/case-info/case-info.component';
+import { StepCheckListComponent } from './components/step-check-list/step-check-list.component';
 
 @NgModule({
   declarations: [
@@ -165,7 +166,8 @@ import { CaseInfoComponent } from './components/case-info/case-info.component';
     ReadUnreadDirective,
     RiskStatusDirective,
     EServiceComponentWrapperComponent,
-    CaseInfoComponent
+    CaseInfoComponent,
+    StepCheckListComponent
   ],
   imports: [
     CommonModule,

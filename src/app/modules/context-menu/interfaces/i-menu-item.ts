@@ -1,6 +1,7 @@
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 export interface IMenuItem<T> {
+  askChecklist?: boolean;
   class?: string;
   name?: string;
   type: 'action' | 'divider';

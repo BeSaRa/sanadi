@@ -3,7 +3,7 @@ import {ChecklistItem} from '@app/models/checklist-item';
 import {FactoryService} from '@app/services/factory.service';
 import {LookupService} from '@app/services/lookup.service';
 
-export class ChecklistItemInterceptor implements IModelInterceptor<ChecklistItem>{
+export class ChecklistItemInterceptor implements IModelInterceptor<ChecklistItem> {
   receive(model: ChecklistItem): ChecklistItem {
     const lookupService = FactoryService.getService('LookupService') as LookupService;
     model.statusInfo = (lookupService.listByCategory.CommonStatus.find(s => s.lookupKey == model.status)!);
@@ -16,6 +16,7 @@ export class ChecklistItemInterceptor implements IModelInterceptor<ChecklistItem
     delete model.langService;
     delete model.service;
     delete model.statusInfo;
+    delete model.checked;
     return model;
   }
 }

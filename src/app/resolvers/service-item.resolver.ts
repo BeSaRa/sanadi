@@ -8,6 +8,7 @@ import {INavigatedItem} from "@app/interfaces/inavigated-item";
 import {map, switchMap} from "rxjs/operators";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {IOpenedInfo} from "@app/interfaces/i-opened-info";
+import {ChecklistService} from "@app/services/checklist.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class ServiceItemResolver implements Resolve<IOpenedInfo | null> {
   private info?: INavigatedItem;
 
   constructor(private inboxService: InboxService,
+              private checklistService: ChecklistService,
               private encrypt: EncryptionService) {
   }
 
@@ -44,7 +46,13 @@ export class ServiceItemResolver implements Resolve<IOpenedInfo | null> {
     return of(openFrom)
       .pipe(switchMap(() => iif(() => openFrom === OpenFrom.SEARCH, service.getById(caseId), service.getTask(taskId!))))
       .pipe(map((model: CaseModel<any, any>) => {
-        return {model, ...this.info} as IOpenedInfo
+        return {model, ...this.info, checklist: []} as IOpenedInfo
+      }))
+      .pipe(switchMap((info) => {
+        return taskId ? this.checklistService.criteria({
+          stepName: info.model.taskDetails.name,
+          caseType: info.caseType
+        }).pipe(map(list => ({...info, checklist: list} as IOpenedInfo))) : of(info)
       }))
   }
 
