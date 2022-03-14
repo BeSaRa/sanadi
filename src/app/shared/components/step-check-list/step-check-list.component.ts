@@ -46,6 +46,8 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
 
   destroy$: Subject<any> = new Subject<any>();
 
+  afterMarkAllCallback?: () => void
+
   constructor(public lang: LangService,
               private element: ElementRef,
               private animationBuilder: AnimationBuilder) {
@@ -68,7 +70,7 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
     this.checklist.forEach((item) => {
       item.checked = true;
     });
-    of(null).pipe(delay(100), take(1)).subscribe(() => this.toggleSlide());
+    of(null).pipe(delay(100), take(1)).subscribe(() => this.closeSlide());
   }
 
   openedFromInbox(): boolean {
@@ -77,8 +79,12 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
 
   toggleSlide() {
     this.buildPlayer();
+    this.player && this.player.onDone(() => {
+      console.log('DONE');
+      this.isOpened = !this.isOpened;
+      !this.isOpened && this.runAfterMarkAllCallback()
+    })
     this.player && this.player.play();
-    this.isOpened = !this.isOpened;
   }
 
   private buildRTLAnimation(): AnimationMetadata | AnimationMetadata[] {
@@ -114,7 +120,8 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
     return this.checklist.length ? (!this.checklist.some(item => !item.checked)) : true;
   }
 
-  openSlide(): void {
+  openSlide(callback?: () => void): void {
+    this.afterMarkAllCallback = callback;
     !this.isOpened && this.toggleSlide();
   }
 
@@ -127,6 +134,10 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
     if (this.isAllMarked()) {
       this.closeSlide();
     }
+  }
+
+  private runAfterMarkAllCallback(): void {
+    (this.afterMarkAllCallback && this.afterMarkAllCallback()) || (this.afterMarkAllCallback = undefined);
   }
 
   private listenToLanguageChanges() {

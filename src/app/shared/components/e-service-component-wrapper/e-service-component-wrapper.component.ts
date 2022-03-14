@@ -868,7 +868,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private runActionAfterCheck(callback: () => void) {
-    this.isValidCheckList() ? callback() : this.checklistComponent.openSlide();
+    this.isValidCheckList() ? callback() : this.checklistComponent.openSlide(callback);
   }
 
   private isValidCheckList(): boolean {
