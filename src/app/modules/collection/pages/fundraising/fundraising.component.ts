@@ -18,8 +18,10 @@ import { LangService } from "@app/services/lang.service";
 import { LookupService } from "@app/services/lookup.service";
 import { Observable, of, Subject } from "rxjs";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { delay, filter, takeUntil, tap } from "rxjs/operators";
+import { catchError, delay, exhaustMap, filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import { CustomValidators } from "@app/validators/custom-validators";
+import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
+import { LicenseService } from "@app/services/license.service";
 
 @Component({
   selector: "fundraising",
@@ -40,7 +42,8 @@ export class FundraisingComponent extends EServicesGenericComponent<
     public fb: FormBuilder,
     public service: FundraisingService,
     private lookupService: LookupService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private licenseService: LicenseService
   ) {
     super();
   }
@@ -103,6 +106,54 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _initComponent(): void {
     // throw new Error('Method not implemented.');
+    this.listenToLicenseSearch();
+  }
+
+  loadLicencesByCriteria(
+    criteria: Partial<FundraisingSearchCriteria>
+  ): Observable<Fundraising[]> {
+    return this.service.licenseSearch(criteria);
+  }
+
+  private listenToLicenseSearch() {
+    this.licenseSearch$
+      .pipe(
+        exhaustMap((oldLicenseFullSerial) => {
+          return this.loadLicencesByCriteria({
+            fullSerial: oldLicenseFullSerial,
+          }).pipe(catchError(() => of([])));
+        })
+      )
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) =>
+          !list.length
+            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            : null
+        ),
+        // allow only the collection if it has value
+        filter((result) => !!result.length),
+        // switch to the dialog ref to use it later and catch the user response
+        switchMap(
+          (license) =>
+            this.licenseService.openSelectLicenseDialog(
+              license,
+              this.model?.clone({ requestType: this.requestType.value || null })
+            ).onAfterClose$
+        ),
+        // allow only if the user select license
+        filter<{ selected: Fundraising; details: Fundraising }, any>(
+          (
+            selection
+          ): selection is { selected: Fundraising; details: Fundraising } => {
+            return !!selection;
+          }
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.details, false);
+      });
   }
 
   _buildForm(): void {
@@ -156,7 +207,26 @@ export class FundraisingComponent extends EServicesGenericComponent<
     ignoreUpdateForm: boolean
   ) {
     this.selectedLicense = licenseDetails;
-    // Todo: complete implementation whenever licenses starts getting fetched
+    // update form fields if i have license
+    if (licenseDetails && !ignoreUpdateForm) {
+      let value: any = new Fundraising().clone(licenseDetails);
+      value.organizationId = licenseDetails.organizationId;
+      value.requestType = this.requestType.value;
+      value.arName = licenseDetails.arName;
+      value.enName = licenseDetails.enName;
+      value.licenseDuration = licenseDetails.licenseDuration;
+      value.licenseStartDate = licenseDetails.licenseStartDate;
+      value.licenseDurationType = licenseDetails.licenseDurationType;
+      value.about = licenseDetails.about;
+      value.workingMechanism = licenseDetails.workingMechanism;
+      value.riskAssessment = licenseDetails.riskAssessment;
+
+      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseId = licenseDetails.id;
+      value.oldLicenseSerial = licenseDetails.serial;
+
+      this._updateForm(value);
+    }
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

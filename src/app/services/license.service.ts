@@ -44,6 +44,9 @@ import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCr
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { FundraisingSearchCriteria } from '@app/models/FundRaisingSearchCriteria';
 
 @Injectable({
   providedIn: 'root'
@@ -78,6 +81,15 @@ export class LicenseService {
   partnerApprovalLicenseSearch(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<PartnerApproval[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
+  }
+
+  @Generator(Fundraising, true, {
+    property: "rs",
+    interceptReceive: (new FundraisingInterceptor()).receive,
+  })
+  fundRaisingLicenseSearch(criteria: Partial<FundraisingSearchCriteria>): Observable<Fundraising[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id: undefined};
+    return this.http.post<Fundraising[]>(this.urlService.URLS.FUNDRAISING + "/license/search",{ ...criteria, ...orgId });
   }
 
 
@@ -234,7 +246,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | Fundraising[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

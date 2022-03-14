@@ -6,9 +6,12 @@ import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { FundraisingInterceptor } from "@app/model-interceptors/fundraising-interceptor";
 import { Fundraising } from "@app/models/fundraising";
+import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
+import { Observable } from "rxjs";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
+import { LicenseService } from "./license.service";
 import { UrlService } from "./url.service";
 
 @Injectable({
@@ -27,7 +30,8 @@ export class FundraisingService extends EServiceGenericService<Fundraising> {
     public domSanitizer: DomSanitizer,
     public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService,
-    private urlService: UrlService
+    private urlService: UrlService,
+    private licenseService: LicenseService
   ) {
     super();
     FactoryService.registerService("FundraisingService", this);
@@ -46,7 +50,7 @@ export class FundraisingService extends EServiceGenericService<Fundraising> {
   }
 
   getSearchCriteriaModel<S extends Fundraising>(): Fundraising {
-    throw new Error("Method not implemented.");
+    return new FundraisingSearchCriteria();
   }
 
   getCaseComponentName(): string {
@@ -55,5 +59,9 @@ export class FundraisingService extends EServiceGenericService<Fundraising> {
 
   _getUrlService(): UrlService {
     return this.urlService;
+  }
+
+  licenseSearch(criteria: Partial<FundraisingSearchCriteria> = {}): Observable<Fundraising[]> {
+    return this.licenseService.fundRaisingLicenseSearch(criteria);
   }
 }
