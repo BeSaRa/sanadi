@@ -22,6 +22,7 @@ import { catchError, delay, exhaustMap, filter, switchMap, takeUntil, tap } from
 import { CustomValidators } from "@app/validators/custom-validators";
 import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
 import { LicenseService } from "@app/services/license.service";
+import { ToastService } from "@app/services/toast.service";
 
 @Component({
   selector: "fundraising",
@@ -43,7 +44,8 @@ export class FundraisingComponent extends EServicesGenericComponent<
     public service: FundraisingService,
     private lookupService: LookupService,
     private dialog: DialogService,
-    private licenseService: LicenseService
+    private licenseService: LicenseService,
+    private toast:ToastService
   ) {
     super();
   }
@@ -239,7 +241,8 @@ export class FundraisingComponent extends EServicesGenericComponent<
     throw new Error("Method not implemented.");
   }
   _afterLaunch(): void {
-    throw new Error("Method not implemented.");
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): Fundraising | Observable<Fundraising> {
     const model = new Fundraising().clone({
@@ -255,7 +258,15 @@ export class FundraisingComponent extends EServicesGenericComponent<
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    throw new Error("Method not implemented.");
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
   _saveFail(error: any): void {
     throw new Error("Method not implemented.");
