@@ -20,6 +20,8 @@ export class TableDataSource extends DataSource<any> {
 
   useSearchMethodToFilter: boolean = false;
 
+  searchFieldsName: string = 'searchFields';
+
   private _paginator?: PaginatorComponent;
 
   set paginator(val: PaginatorComponent | undefined) {
@@ -201,8 +203,8 @@ export class TableDataSource extends DataSource<any> {
    */
   filterPredicate: ((data: any, filter: string) => boolean) = (data: any, filter: string): boolean => {
     // Transform the data into a lowercase string of all property values.
-    if (typeof data.search === 'function' && data.searchFields && this.useSearchMethodToFilter) {
-      return data.search(filter);
+    if (typeof data.search === 'function' && data[this.searchFieldsName] && this.useSearchMethodToFilter) {
+      return data.search(filter, this.searchFieldsName);
     }
 
     const dataStr = Object.keys(data).reduce((currentTerm: string, key: string) => {

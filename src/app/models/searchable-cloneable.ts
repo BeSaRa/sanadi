@@ -5,18 +5,19 @@ import {ISearchFieldsMap, searchFunctionType} from '../types/types';
 export abstract class SearchableCloneable<T> extends Cloneable<T> implements ISearchFields<T> {
   searchFields: ISearchFieldsMap<T> = {};
 
-  search(searchText: string): boolean {
+  search(searchText: string, searchFieldsName: string = 'searchFields'): boolean {
     const self = this as unknown as ISearchFields<any>;
-    const fields = (this as unknown as ISearchFields<any>).searchFields;
+    const fields = (this as unknown as ISearchFields<any>)[searchFieldsName as keyof ISearchFields<any>];
     const keys = Object.keys(fields);
     if (!searchText) {
       return true;
     }
     return keys.some((key) => {
-      if (typeof self.searchFields[key] === 'function') {
-        return (self.searchFields[key] as searchFunctionType).apply(this, [searchText.trim().toLowerCase(), self]);
+      let searchFields = self[searchFieldsName as keyof ISearchFields<any>];
+      if (typeof searchFields[key] === 'function') {
+        return (searchFields[key] as searchFunctionType).apply(this, [searchText.trim().toLowerCase(), self]);
       } else {
-        const field = self.searchFields[key] as string;
+        const field = searchFields[key] as string;
         const value = (this as unknown as any)[field] ? ((this as unknown as any)[field] as string) + '' : '';
         return value.toLowerCase().indexOf(searchText.trim().toLowerCase()) !== -1;
       }
