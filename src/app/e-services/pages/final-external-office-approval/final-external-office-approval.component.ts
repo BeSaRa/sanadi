@@ -30,8 +30,6 @@ import {ExecutiveManagementComponent} from '@app/e-services/shared/executive-man
 import {BankBranchComponent} from '@app/e-services/shared/bank-branch/bank-branch.component';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {JobTitleService} from '@app/services/job-title.service';
-import {JobTitle} from '@app/models/job-title';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
@@ -107,7 +105,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   operation: OperationTypes = OperationTypes.CREATE;
 
   countriesList: Country[] = [];
-  jobTitlesList: JobTitle[] = [];
 
   unprocessedLicensesList: any[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -137,7 +134,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
               private configurationService: ConfigurationService,
               private toastService: ToastService,
               private countryService: CountryService,
-              private jobTitleService: JobTitleService,
               private sharedService: SharedService,
               public fb: FormBuilder) {
     super();
@@ -154,7 +150,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   _initComponent(): void {
     this.loadCountries();
-    this.loadJobTitles();
     this.listenToLicenseSearch();
   }
 
@@ -306,11 +301,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries)
-  }
-
-  private loadJobTitles() {
-    this.jobTitleService.loadComposite()
-      .subscribe((jobTitles) => this.jobTitlesList = jobTitles);
   }
 
   private setDefaultValuesForExternalUser(): void {

@@ -57,118 +57,12 @@
         <div class="row">
           <!-- Job Title -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="jobTitleId" for="jobTitleId" class="form-label">{{lang.map.job_title}}</label>
-            <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false"
-                       placeholder="{{lang.map.select}}" id="jobTitleId"
-                       [notFoundText]="lang.map.msg_not_found"
-                       appendTo="body"
-                       formControlName="jobTitleId" validationClasses="jobTitleId">
-              <ng-option *ngFor="let option of jobTitlesList" [value]="option.id">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message controlName="jobTitleId"></app-field-error-message>
+            <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
+            <input id="jobTitle" validationClasses="jobTitle"
+                   formControlName="jobTitle" trimInput class="form-control">
+            <app-field-error-message controlName="jobTitle"></app-field-error-message>
           </div>
         </div>
-
-
-
-        <!--<div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="arabicName" asteriskIfRequired="arabicName"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.arabic_name}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="arabicName" validationClasses="arabicName"
-                       formControlName="arabicName" class="form-control">
-                <app-field-error-message controlName="arabicName"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="englishName" asteriskIfRequired="englishName"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.english_name}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="englishName" validationClasses="englishName"
-                       formControlName="englishName" class="form-control">
-                <app-field-error-message controlName="englishName"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="phone" asteriskIfRequired="phone"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_phone}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="phone" validationClasses="phone"
-                       formControlName="phone" class="form-control">
-                <app-field-error-message controlName="phone"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="mobileNo" asteriskIfRequired="mobileNo"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.mobile_number}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="mobileNo" validationClasses="mobileNo"
-                       formControlName="mobileNo" class="form-control">
-                <app-field-error-message controlName="mobileNo"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="email" asteriskIfRequired="email"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.lbl_email}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input id="email" validationClasses="email"
-                       formControlName="email" class="form-control">
-                <app-field-error-message controlName="email"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="country" asteriskIfRequired="country"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.country}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false"
-                           placeholder="{{lang.map.select}}" id="country"
-                           [notFoundText]="lang.map.msg_not_found"
-                           formControlName="country" validationClasses="country">
-                  <ng-option *ngFor="let option of countriesList" [value]="option.id"
-                             [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="country"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="jobTitleId" asteriskIfRequired="jobTitleId"
-                     class="col-sm-12 col-md-4 col-form-label">{{lang.map.job_title}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="jobTitleId" [clearable]="false"
-                           placeholder="{{lang.map.select}}" id="jobTitleId"
-                           [notFoundText]="lang.map.msg_not_found"
-                           formControlName="jobTitleId" validationClasses="jobTitleId">
-                  <ng-option *ngFor="let option of jobTitlesList" [value]="option.id">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-select>
-                <app-field-error-message controlName="jobTitleId"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>-->
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="save()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
                   class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>

@@ -328,7 +328,6 @@
     <ng-template #managementCouncilsTemplate>
       <management-council #managementCouncilsTab
                           [countriesList]="countries"
-                          [jobTitlesList]="jobTitles"
                           [list]="model?.managementCouncilList || []"
                           [readonly]="(isExtendOrCancelRequestType() || readonly)"
                           (readyEvent)="managementCouncilsTabStatus = $event"></management-council>
@@ -337,7 +336,7 @@
     <ng-template #executiveManagementsTemplate>
       <executive-management #executiveManagementsTab
                             [countriesList]="countries"
-                            [jobTitlesList]="jobTitles" [pageTitleKey]="'executive_management'"
+                            [pageTitleKey]="'executive_management'"
                             [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event"></executive-management>

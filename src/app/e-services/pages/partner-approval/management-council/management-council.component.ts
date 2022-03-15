@@ -10,7 +10,6 @@ import {ReadinessStatus} from "@app/types/types";
 import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {JobTitleService} from "@app/services/job-title.service";
 import {JobTitle} from "@app/models/job-title";
 
 @Component({
@@ -24,7 +23,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
               private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private jobTitleService: JobTitleService,
               private fb: FormBuilder) {
   }
 
@@ -39,7 +37,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   }
 
   @Input() countriesList: Country[] = [];
-  @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();

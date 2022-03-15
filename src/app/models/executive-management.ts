@@ -5,7 +5,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   arabicName!: string;
   englishName!: string;
   email!: string;
-  jobTitleId!: number;
+  jobTitle!: number;
   phone!: string;
   country!: number;
 
@@ -14,7 +14,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       arabicName,
       englishName,
       email,
-      jobTitleId,
+      jobTitle,
       phone,
       country
     } = this;
@@ -27,7 +27,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
         CustomValidators.maxLength(100),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : englishName,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
-      jobTitleId: control ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
+      jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       country: control ? [country, [CustomValidators.required]] : country
     }
