@@ -109,7 +109,6 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   }
 
   ngOnInit(): void {
-    console.log('INIT');
     this.service.ping();
     this.loadDepartments();
     this.buildForm();

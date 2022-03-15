@@ -73,14 +73,9 @@ export class StepCheckListComponent implements OnDestroy, OnInit {
     of(null).pipe(delay(100), take(1)).subscribe(() => this.closeSlide());
   }
 
-  openedFromInbox(): boolean {
-    return this.openFrom == OpenFrom.USER_INBOX;
-  }
-
   toggleSlide() {
     this.buildPlayer();
     this.player && this.player.onDone(() => {
-      console.log('DONE');
       this.isOpened = !this.isOpened;
       !this.isOpened && this.runAfterMarkAllCallback()
     })

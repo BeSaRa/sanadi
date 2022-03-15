@@ -85,6 +85,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   loadAttachments: boolean = false;
 
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+
   checklist: ChecklistItem[] = [];
   saveTypes: typeof SaveTypes = SaveTypes;
   excludedDraftTypes: number[] = [
@@ -864,7 +865,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   checkIfChecklistMarked(action: IMenuItem<CaseModel<any, any>>, callback: () => void): void {
-    action.askChecklist ? this.runActionAfterCheck(callback) : callback();
+    action.askChecklist && this.checklist.length && this.checklistComponent ? this.runActionAfterCheck(callback) : callback();
   }
 
   private runActionAfterCheck(callback: () => void) {
@@ -886,5 +887,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     }
     return OpenFrom.ADD_SCREEN;
+  }
+
+  isOpenedFromInbox(): boolean {
+    return this.openFrom === OpenFrom.USER_INBOX;
   }
 }

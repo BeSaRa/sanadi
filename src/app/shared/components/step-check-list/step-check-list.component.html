@@ -1,27 +1,25 @@
-<ng-container *ngIf="openedFromInbox()">
-  <div id="check-list-wrapper" class="shadow shadow-lg position-absolute bg-white border rounded-1 border-1">
-    <button
-      [tooltip]="lang.map.toggle_checklist"
-      (click)="toggleSlide()"
-      class="btn icon-btn position-absolute end-100 top-0 m-0 p-2 shadow shadow-sm rounded-1 bg-white border border-1">
-      <i class="mdi text-primary mdi-format-list-checks"></i>
-    </button>
-    <div class="h5 bg-primary text-white p-2">{{lang.map.step_checklist}}</div>
-    <div class="p-2">
-      <ul>
-        <li *ngFor="let item of checklist" class="d-flex flex-column border border-1 rounded-1 p-2 mb-2">
-          <button (click)="toggleItem(item)"
-                  class="btn d-flex align-items-center gap-2 justify-content-start icon-btn ms-0"><i
-            class="mdi mdi-checkbox-blank-circle-outline"
-            [ngClass]="{'mdi-checkbox-marked-circle text-success': item.checked}"></i>
-            <span class="text-primary h6 m-0">{{item.getName()}}</span>
-          </button>
-          <div class="check-item-description p-2">{{item.getDescription()}}</div>
-        </li>
-      </ul>
-    </div>
-    <div class="px-2 pb-2">
-      <button (click)="markAllDone()" class="btn btn-primary">{{lang.map.mark_all_as_done}}</button>
-    </div>
+<div id="check-list-wrapper" class="shadow shadow-lg position-absolute bg-white border rounded-1 border-1">
+  <button
+    [tooltip]="lang.map.toggle_checklist"
+    (click)="toggleSlide()"
+    class="btn icon-btn position-absolute end-100 top-0 m-0 p-2 shadow shadow-sm rounded-1 bg-white border border-1">
+    <i class="mdi text-primary mdi-format-list-checks"></i>
+  </button>
+  <div class="h5 bg-primary text-white p-2">{{lang.map.step_checklist}}</div>
+  <div class="p-2">
+    <ul>
+      <li *ngFor="let item of checklist" class="d-flex flex-column border border-1 rounded-1 p-2 mb-2">
+        <button (click)="toggleItem(item)"
+                class="btn d-flex align-items-center gap-2 justify-content-start icon-btn ms-0"><i
+          class="mdi mdi-checkbox-blank-circle-outline"
+          [ngClass]="{'mdi-checkbox-marked-circle text-success': item.checked}"></i>
+          <span class="text-primary h6 m-0">{{item.getName()}}</span>
+        </button>
+        <div class="check-item-description p-2">{{item.getDescription()}}</div>
+      </li>
+    </ul>
   </div>
-</ng-container>
+  <div class="px-2 pb-2">
+    <button (click)="markAllDone()" class="btn btn-primary">{{lang.map.mark_all_as_done}}</button>
+  </div>
+</div>
