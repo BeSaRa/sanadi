@@ -96,6 +96,11 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
       })
   }
 
+  clearSearch($event: MouseEvent) {
+    $event?.preventDefault();
+    this.filterControl.setValue('');
+  }
+
   hasFilterCriteria(): boolean {
     return !isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
   }

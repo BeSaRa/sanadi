@@ -51,6 +51,10 @@
   <div class="position-relative">
     <i class="mdi zoom-icon mdi-magnify position-absolute translate-middle-y top-50 start-0 ms-1"></i>
     <input [formControl]="filterControl" placeholder="{{lang.map.lbl_search}}"
-           class="form-control form-control-sm ps-4"/>
+           class="form-control form-control-sm px-4"/>
+    <button *ngIf="filterControl.value" class="btn icon-btn position-absolute me-0 pe-2 end-0 btn-clear top-0"
+            (click)="clearSearch($event)">
+      <i class="mdi mdi-close"></i>
+    </button>
   </div>
 </div>
