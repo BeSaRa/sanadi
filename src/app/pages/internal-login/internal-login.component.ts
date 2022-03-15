@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
@@ -83,6 +83,12 @@ export class InternalLoginComponent implements OnInit {
     ).subscribe((navigate) => {
       return navigate ? this.router.navigate(['/home']) : null;
     });
+  }
+
+  @HostListener('window:keydown.f1')
+  switchLoginPage() {
+    this.router.navigate(['/login-external']).then()
+    return false;
   }
 
 }
