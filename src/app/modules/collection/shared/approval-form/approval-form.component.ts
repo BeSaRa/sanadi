@@ -173,6 +173,6 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   }
 
   private afterBuildForm() {
-    this.licenseEndDateField.setValidators((this.model.licenseDurationType === LicenseDurationType.PERMANENT ? CustomValidators.required : null))
+    this.licenseEndDateField.setValidators((this.model.licenseDurationType === LicenseDurationType.PERMANENT ? null : CustomValidators.required))
   }
 }
