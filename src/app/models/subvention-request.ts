@@ -146,8 +146,8 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
       });
   }
 
-  showLog($event: MouseEvent): void {
-    $event.preventDefault();
+  showLogs($event?: MouseEvent): void {
+    $event?.preventDefault();
     this.service.openLogDialog(this.id)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();

@@ -99,62 +99,84 @@
   </ng-template>
 </form>
 <ng-template #searchResult>
-  <div *ngIf="logRecords.length">
-    <div class="row">
-      <div class="col-6 d-flex align-items-center justify-content-start">
-        <button class="btn btn-link outline-none"
-                tooltip="{{langService.map.btn_reload}}"
-                (click)="reloadSearchResults()">
-          <i class="mdi mdi-reload"></i></button>
-      </div>
-      <div class="col-6 d-flex align-items-center justify-content-end">
-        <button class="btn btn-link outline-none"
-                tooltip="{{langService.map.print}}"
-                (click)="printResult()">
-          <i class="mdi mdi-printer"></i></button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered caption-top">
-            <thead role="rowgroup">
-            <tr>
-              <th class="serial-column">{{langService.map.request_number}}</th>
-              <th class="date-column">{{langService.map.request_date}}</th>
-              <th>{{langService.map.beneficiary_category}}</th>
-              <th>{{langService.map.reason_of_request}}</th>
-              <th>{{langService.map.request_summary}}</th>
-              <th>{{langService.map.action_type}}</th>
-              <th class="date-column">{{langService.map.action_date}}</th>
-              <th>{{langService.map.user_organization}}</th>
-              <th>{{langService.map.user}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let record of logRecords;">
-              <tr>
-                <td class="serial-column">
-                  <div class="d-flex flex-row">
-                    <a href="#" (click)="$event.preventDefault()"
-                       class="dir-ltr d-inline-block text-decoration-none flex-grow-1 text-start"> {{record.requestFullSerial}} </a>
-                  </div>
-                </td>
-                <td class="date-column">{{record.creationDateString}}</td>
-                <td>{{record.benCategoryInfo.getName()}}</td>
-                <td>{{record.requestTypeInfo.getName()}}</td>
-                <td>{{record.requestSummary}}</td>
-                <td>{{record.actionTypeInfo.getName()}}</td>
-                <td class="date-column">{{record.actionDateString}}</td>
-                <td>{{record.orgAndBranchInfo?.getName()}}</td>
-                <td>{{record.orgUserInfo.getName()}}</td>
-              </tr>
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table sortableTable [paginator]="paginator" [data]="logRecords" [columns]="displayedColumns"
+                   [filter]="filterControl.value" [useSearchToFilter]="true">
+          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="requests" [reload$]="reload$"
+                              [sort]="table.dataSource.sort"
+                              (textChange)="filterControl.setValue($event)">
+                  <button class="btn icon-btn outline-none"
+                          tooltip="{{langService.map.print}}"
+                          (click)="printResult()">
+                    <i class="mdi mdi-printer"></i></button>
+                </table-header>
+              </th>
             </ng-container>
-            </tbody>
+            <ng-container cdkColumnDef="requestFullSerial">
+              <th cdk-header-cell *cdkHeaderCellDef class="serial-column"
+                  sortable-header> {{langService.map.request_number}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="serial-column">
+                <div class="d-flex flex-row">
+                  <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestDate">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header
+                  [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestDate"> {{langService.map.request_date}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="beneficiaryCategory">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.benCategoryInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestType">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestType"> {{langService.map.reason_of_request}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.requestTypeInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestSummary">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_summary}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.requestSummary}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="actionType">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.actionType"> {{langService.map.action_type}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.actionTypeInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="actionDate">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.actionDate"> {{langService.map.action_date}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.actionDateString}}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="userOrganization">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.userOrganization"> {{langService.map.user_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="orgUser">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.orgUser"> {{langService.map.user}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUserInfo.getName()}}</span></td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
           </table>
-        </div>
+          <app-paginator #paginator [length]="(logRecords.length || 0)"></app-paginator>
+        </app-table>
       </div>
     </div>
   </div>
-
 </ng-template>

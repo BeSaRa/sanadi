@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  requests: string;
   loading_language_please_wait: string;
   toggle_checklist: string;
   mark_all_as_done: string;

@@ -30,6 +30,10 @@ export class SubventionAidInterceptor {
     delete model.orgUserInfo;
     delete model.approvalDateString;
     delete model.aidStartPayDateString;
+    delete model.searchFields;
+    delete model.searchFieldsPartial;
+    delete model.searchFieldsPartialRequestDetails;
+
     /*model.approvalDate = model.approvalDate ? (new Date(model.approvalDate)).toISOString() : '';
     model.aidStartPayDate = model.aidStartPayDate ? (new Date(model.aidStartPayDate)).toISOString() : '';*/
 

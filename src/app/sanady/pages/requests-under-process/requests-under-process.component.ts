@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {Router} from '@angular/router';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {debounceTime, switchMap, take} from 'rxjs/operators';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {switchMap, take, takeUntil} from 'rxjs/operators';
 import {SubventionRequest} from '@app/models/subvention-request';
 import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
@@ -12,6 +12,8 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FormControl} from '@angular/forms';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -19,17 +21,7 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['./requests-under-process.component.scss']
 })
 export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
-  requests: SubventionRequest[] = [];
-  requestsClone: SubventionRequest[] = [];
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
-  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'actions'];
-  fileIconsEnum = FileIconsEnum;
-  filterControl: FormControl = new FormControl('');
+  private destroy$: Subject<any> = new Subject<any>();
 
   constructor(private subventionRequestService: SubventionRequestService,
               private router: Router,
@@ -39,15 +31,61 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.listenToSearch();
-    this.listenToInternalSearch();
     this.listenToReload();
   }
 
   ngOnDestroy(): void {
-    this.searchSubscription?.unsubscribe();
-    this.internalSearchSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
+
+  requests: SubventionRequest[] = [];
+  headerColumn: string[] = ['extra-header'];
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'actions'];
+  fileIconsEnum = FileIconsEnum;
+  filterControl: FormControl = new FormControl('');
+  actions: IMenuItem<SubventionRequest>[] = [
+    // print request
+    {
+      type: 'action',
+      icon: ActionIconsEnum.PRINT,
+      label: 'print_request_form',
+      onClick: (item: SubventionRequest) => this.printRequest(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.LOGS,
+      label: 'logs',
+      onClick: (item: SubventionRequest) => item.showLogs()
+    },
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT_BOOK,
+      label: 'btn_edit',
+      onClick: (item: SubventionRequest) => this.editRequest(item),
+      show: (item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+    },
+    // cancel request
+    {
+      type: 'action',
+      icon: ActionIconsEnum.CANCEL_BOOK,
+      label: 'btn_cancel',
+      onClick: (item: SubventionRequest) => this.cancelRequest(item),
+      show: (item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE_TRASH,
+      label: 'btn_delete',
+      onClick: (item: SubventionRequest) => this.deleteRequest(item),
+      show: (item) => item.isUnderProcessing()
+    }
+  ];
 
   sortingCallbacks = {
     requestDate: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
@@ -72,8 +110,8 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  printRequest($event: MouseEvent, request: SubventionRequest): void {
-    $event.preventDefault();
+  printRequest(request: SubventionRequest, $event?: MouseEvent): void {
+    $event?.preventDefault();
     request.printRequest('RequestByIdSearchResult.pdf');
   }
 
@@ -99,38 +137,12 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       });
   }
 
-  search(searchText: string): void {
-    this.search$.next(searchText);
-  }
-
-  private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
-      debounceTime(500)
-    ).subscribe((searchText) => {
-      this.requests = this.requestsClone.slice().filter((item) => {
-        return item.search(searchText);
-      });
-    });
-  }
-
-  private listenToInternalSearch(): void {
-    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
-      this.requests = this.requestsClone.slice().filter((item) => {
-        return item.search(searchText);
-      });
-    });
-  }
-
   private listenToReload() {
     this.reload$.pipe(
-      switchMap(() => {
-        return this.subventionRequestService
-          .loadUnderProcess();
-      }),
+      takeUntil(this.destroy$),
+      switchMap(() => this.subventionRequestService.loadUnderProcess()),
     ).subscribe((requests) => {
       this.requests = requests;
-      this.requestsClone = requests.slice();
-      this.internalSearch$.next(this.search$.value);
     });
   }
 }

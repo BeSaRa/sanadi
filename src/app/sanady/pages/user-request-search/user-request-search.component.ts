@@ -1,36 +1,40 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SubventionRequestService} from '../../../services/subvention-request.service';
-import {LangService} from '../../../services/lang.service';
-import {SubventionRequestAid} from '../../../models/subvention-request-aid';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
+import {LangService} from '@app/services/lang.service';
+import {SubventionRequestAid} from '@app/models/subvention-request-aid';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {StringOperator} from '../../../enums/string-operator.enum';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {of, Subject, Subscription} from 'rxjs';
-import {catchError, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {ISubventionRequestCriteria} from '../../../interfaces/i-subvention-request-criteria';
-import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
+import {FormManager} from '@app/models/form-manager';
+import {StringOperator} from '@app/enums/string-operator.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {ISubventionRequestCriteria} from '@app/interfaces/i-subvention-request-criteria';
+import {IBeneficiaryCriteria} from '@app/interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
-import {DialogService} from '../../../services/dialog.service';
-import {isEmptyObject, printBlobData} from '../../../helpers/utils';
+import {DialogService} from '@app/services/dialog.service';
+import {isEmptyObject, printBlobData} from '@app/helpers/utils';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ToastService} from '../../../services/toast.service';
-import {EmployeeService} from '../../../services/employee.service';
-import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
-import {ReadModeService} from '../../../services/read-mode.service';
+import {ToastService} from '@app/services/toast.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import {ReadModeService} from '@app/services/read-mode.service';
 import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {AidTypes} from '../../../enums/aid-types.enum';
-import {StatusEnum} from '../../../enums/status.enum';
-import {AidLookup} from '../../../models/aid-lookup';
-import {AidLookupService} from '../../../services/aid-lookup.service';
-import {ECookieService} from '../../../services/e-cookie.service';
-import {DateUtils} from '../../../helpers/date-utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {StatusEnum} from '@app/enums/status.enum';
+import {AidLookup} from '@app/models/aid-lookup';
+import {AidLookupService} from '@app/services/aid-lookup.service';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {DateUtils} from '@app/helpers/date-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {DatepickerOptionsMap} from '@app/types/types';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-user-request-search',
@@ -39,56 +43,7 @@ import {DatepickerOptionsMap} from '@app/types/types';
 })
 export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
-  tabIndex$: Subject<number> = new Subject<number>();
-  years: number[] = this.configurationService.getSearchYears();
-  idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
-  stringOperators: Lookup[] = this.lookupService.getStringOperators();
-  requestTypes: Lookup[] = this.lookupService.listByCategory.SubRequestType;
-  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
-  requestsStatus: Lookup[] = this.lookupService.listByCategory.SubRequestStatus;
-  employmentStatus: Lookup[] = this.lookupService.listByCategory.BenOccuptionStatus;
-  form: FormGroup = {} as FormGroup;
-  fm: FormManager = {} as FormManager;
-  stringOperationMap: typeof StringOperator = StringOperator;
-  private search$: Subject<any> = new Subject<any>();
-  searchSubscription!: Subscription;
-  private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
-  private latestCriteriaString: string = '';
-  private skipQueryParamSearch: boolean = true;
-  requests: SubventionRequestAid[] = [];
-  subAidLookupsArray: AidLookup[] = [];
-  fileIconsEnum = FileIconsEnum;
 
-  private idTypesValidationsMap: { [index: number]: any } = {
-    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
-    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
-    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
-    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId
-  };
-
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    statusDateModifiedTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
-  }
-  private datepickerFieldPathMap: IKeyValue = {
-    creationDateFrom: 'advancedSearch.request.creationDateFrom',
-    creationDateTo: 'advancedSearch.request.creationDateTo',
-    statusDateFrom: 'advancedSearch.request.statusDateModifiedFrom',
-    statusDateTo: 'advancedSearch.request.statusDateModifiedTo',
-    statusDateModifiedFrom: 'advancedSearch.request.statusDateModifiedFrom',
-    statusDateModifiedTo: 'advancedSearch.request.statusDateModifiedTo',
-  };
-
-  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    this.setRelatedMinDate(fromFieldName, toFieldName);
-    this.setRelatedMaxDate(fromFieldName, toFieldName);
-  }
 
   constructor(public langService: LangService,
               private toastService: ToastService,
@@ -109,7 +64,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
-    this.searchSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -120,6 +74,167 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     this.listenToSearch();
     this.setInitialValues();
     this.listenToQueryParams();
+    this.listenToReload();
+  }
+
+  tabIndex$: Subject<number> = new Subject<number>();
+  years: number[] = this.configurationService.getSearchYears();
+  idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
+  stringOperators: Lookup[] = this.lookupService.getStringOperators();
+  requestTypes: Lookup[] = this.lookupService.listByCategory.SubRequestType;
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
+  requestsStatus: Lookup[] = this.lookupService.listByCategory.SubRequestStatus;
+  employmentStatus: Lookup[] = this.lookupService.listByCategory.BenOccuptionStatus;
+  form: FormGroup = {} as FormGroup;
+  fm: FormManager = {} as FormManager;
+  stringOperationMap: typeof StringOperator = StringOperator;
+  private search$: Subject<any> = new Subject<any>();
+  private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
+  private latestCriteriaString: string = '';
+  private skipQueryParamSearch: boolean = true;
+  requests: SubventionRequestAid[] = [];
+  subAidLookupsArray: AidLookup[] = [];
+  fileIconsEnum = FileIconsEnum;
+
+  private idTypesValidationsMap: { [index: number]: any } = {
+    [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
+    [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
+    [BeneficiaryIdTypes.QID]: CustomValidators.commonValidations.qId,
+    [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId
+  };
+
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    statusDateModifiedTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+  }
+  private datepickerFieldPathMap: IKeyValue = {
+    creationDateFrom: 'advancedSearch.request.creationDateFrom',
+    creationDateTo: 'advancedSearch.request.creationDateTo',
+    statusDateFrom: 'advancedSearch.request.statusDateModifiedFrom',
+    statusDateTo: 'advancedSearch.request.statusDateModifiedTo',
+    statusDateModifiedFrom: 'advancedSearch.request.statusDateModifiedFrom',
+    statusDateModifiedTo: 'advancedSearch.request.statusDateModifiedTo',
+  };
+
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  filterControl: FormControl = new FormControl('');
+  headerColumn: string[] = ['extra-header'];
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'createdBy', 'requestStatus', 'estimatedAmount', 'requestedAidAmount', 'totalApprovedAmount', 'statusDateModified', 'actions'];
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+
+  sortingCallbacks = {
+    requestDate: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.creationDate),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.creationDate);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    organizationAndBranch: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    createdBy: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestStatus: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    estimatedAmount: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidSuggestedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidSuggestedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    totalApprovedAmount: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidTotalPayedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidTotalPayedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    statusDateModified: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.statusDateModified!),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.statusDateModified!);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  actions: IMenuItem<SubventionRequestAid>[] = [
+    // show aids
+    {
+      type: 'action',
+      icon: ActionIconsEnum.AID_HELP,
+      label: 'show_aids',
+      displayInGrid: false,
+      onClick: (item: SubventionRequestAid) => item.showAids()
+    },
+    // print request
+    {
+      type: 'action',
+      icon: ActionIconsEnum.PRINT,
+      label: 'print_request_form',
+      onClick: (item: SubventionRequestAid) => this.printRequest(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.LOGS,
+      label: 'show_logs',
+      onClick: (item: SubventionRequestAid) => item.showLogs()
+    },
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT_BOOK,
+      label: 'btn_edit',
+      onClick: (item: SubventionRequestAid) => this.editRequest(item),
+      disabled:(item:SubventionRequestAid) => item.notUnderProcess(),
+      show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+    },
+    // cancel
+    {
+      type: 'action',
+      icon: ActionIconsEnum.CANCEL_BOOK,
+      label: 'btn_cancel',
+      onClick: (item: SubventionRequestAid) => this.cancelRequest(item),
+      disabled:(item:SubventionRequestAid) => item.notUnderProcess(),
+      show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE_TRASH,
+      label: 'btn_delete',
+      onClick: (item: SubventionRequestAid) => this.deleteRequest(item),
+      show:(item:SubventionRequestAid) => !item.notUnderProcess()
+    },
+    // inquire beneficiary
+    {
+      type: 'action',
+      icon: ActionIconsEnum.SEARCH_USER,
+      label: 'inquire_beneficiary',
+      onClick: (item: SubventionRequestAid) => this.getRelatedBeneficiaryData(item),
+      show: (item: SubventionRequestAid) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
+    },
+  ];
+
+  private listenToReload() {
+    this.reload$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init')
+    ).subscribe(() => {
+      this.searchByQueryString();
+    });
+  }
+
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    this.setRelatedMinDate(fromFieldName, toFieldName);
+    this.setRelatedMaxDate(fromFieldName, toFieldName);
   }
 
   listenToQueryParams(): void {
@@ -259,7 +374,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
+    this.search$.pipe(
+      takeUntil(this.destroy$),
       map(() => {
         return this.getAdvancedSearchValues();
       }),
@@ -277,26 +393,22 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     ).subscribe(result => this.requests = result);
   }
 
-  private searchByQueryString(): void {
+  private searchByQueryString(): any {
     this.skipQueryParamSearch = true;
-    this.subventionRequestService.loadByCriteria(this.latestCriteriaString)
+    return this.subventionRequestService.loadByCriteria(this.latestCriteriaString)
       .pipe(
+        takeUntil(this.destroy$),
         catchError(() => {
           return of([]);
         })
       ).subscribe((result: SubventionRequestAid[]) => {
-      this.requests = result
-      return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
-    });
+        this.requests = result
+        return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
+      });
   }
 
   onSearch(): void {
     this.search$.next(true);
-  }
-
-  reloadSearchResults() {
-    // this.onSearch()
-    this.searchByQueryString();
   }
 
   private clearSimpleSearch(): void {
@@ -429,8 +541,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  printRequest($event: MouseEvent, request: SubventionRequestAid): void {
-    $event.preventDefault();
+  printRequest(request: SubventionRequestAid, $event?: MouseEvent): void {
+    $event?.preventDefault();
     request.printRequest('RequestByIdSearchResult.pdf');
   }
 
@@ -443,7 +555,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((status) => {
         status ? this.toastService.success(this.langService.map.request_cancelled_successfully) : null;
-        this.reloadSearchResults();
+        this.reload$.next(null);
       });
   }
 
@@ -452,7 +564,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((status) => {
         status ? this.toastService.success(this.langService.map.msg_delete_success) : null;
-        this.reloadSearchResults();
+        this.reload$.next(null);
       });
   }
 

@@ -3,8 +3,8 @@ import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
-import {forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
-import {catchError, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {BehaviorSubject, forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
 import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
@@ -23,6 +23,9 @@ import {OrganizationUserService} from '@app/services/organization-user.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from '@app/helpers/date-utils';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {SubventionRequestAid} from '@app/models/subvention-request-aid';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -31,24 +34,6 @@ import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 })
 export class PartialRequestReportsComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
-  tabIndex$: Subject<number> = new Subject<number>();
-  form: FormGroup = {} as FormGroup;
-  private search$: Subject<any> = new Subject<any>();
-  searchSubscription!: Subscription;
-  private latestCriteria: Partial<ISubventionRequestPartialLogCriteria> = {} as Partial<ISubventionRequestPartialLogCriteria>;
-
-  logRecords: SubventionRequestPartialLog[] = [];
-  datepickerControlsMap: DatepickerControlsMap = {};
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    fromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
-  };
-  private datepickerFieldPathMap: IKeyValue = {
-    fromDate: 'fromDate',
-    toDate: 'toDate',
-  };
-  orgUnitsList: OrgUnit[] = [];
-  orgUsersList: OrgUser[] = [];
 
   constructor(public langService: LangService,
               private toastService: ToastService,
@@ -63,8 +48,69 @@ export class PartialRequestReportsComponent implements OnInit {
               private subventionRequestPartialLogService: SubventionRequestPartialLogService) {
   }
 
+  tabIndex$: Subject<number> = new Subject<number>();
+  form: FormGroup = {} as FormGroup;
+  private search$: Subject<any> = new Subject<any>();
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+  searchSubscription!: Subscription;
+  private latestCriteria: Partial<ISubventionRequestPartialLogCriteria> = {} as Partial<ISubventionRequestPartialLogCriteria>;
+
+  logRecords: SubventionRequestPartialLog[] = [];
+  datepickerControlsMap: DatepickerControlsMap = {};
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    fromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+  };
+
+  orgUnitsList: OrgUnit[] = [];
+  orgUsersList: OrgUser[] = [];
+
+  filterControl: FormControl = new FormControl('');
+  headerColumn: string[] = ['extra-header'];
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'beneficiaryCategory', 'requestType', 'requestSummary', 'actionType', 'actionDate', 'userOrganization', 'orgUser'];
+
+  sortingCallbacks = {
+    requestDate: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.creationDate),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.creationDate);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    beneficiaryCategory: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benCategoryInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.benCategoryInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestType: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionType: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.actionTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.actionTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionDate: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.actionTime!),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.actionTime!);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    userOrganization: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    orgUser: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+
   ngOnInit(): void {
     this.buildForm();
+    this.listenToReload();
     this.listenToSearch();
     this._buildDatepickerControlsMap();
 
@@ -79,6 +125,16 @@ export class PartialRequestReportsComponent implements OnInit {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
     this.searchSubscription?.unsubscribe();
+  }
+
+  private listenToReload() {
+    this.reload$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init')
+    ).subscribe(() => {
+      debugger
+      this.search$.next(false);
+    });
   }
 
   private _loadInitData(): Observable<{ orgUnits: OrgUnit[] }> {

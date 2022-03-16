@@ -4,13 +4,23 @@ import {FactoryService} from '../services/factory.service';
 import {SubventionRequestService} from '../services/subvention-request.service';
 import {isValidValue, printBlobData} from '../helpers/utils';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {searchFunctionType} from '../types/types';
+import {ISearchFieldsMap, searchFunctionType} from '../types/types';
 import {Observable} from 'rxjs';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
 import {SubventionRequestStatus} from '../enums/subvention-request-status';
+import {dateSearchFields} from '@app/helpers/date-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
 
-export class SubventionRequestAid {
+export class SubventionRequestAid extends SearchableCloneable<SubventionRequestAid> {
+
+  constructor() {
+    super();
+    this.subventionRequestService = FactoryService.getService('SubventionRequestService');
+  }
+
   requestId!: number;
   requestedAidAmount!: number;
   aidSuggestedAmount!: number;
@@ -39,25 +49,21 @@ export class SubventionRequestAid {
   aidPayedAmount!: number;
   aidAmount!: number;
 
-
   // extra properties
   private subventionRequestService: SubventionRequestService;
   creationDateString!: string;
   statusDateModifiedString: string | null = '';
-
-  underProcessingSearchFields: { [key: string]: searchFunctionType | string } = {
-    requestNumber: 'requestFullSerial',
-    requestDate: 'creationDateString',
-    organization: (text) => {
-      return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
-    },
-    requestStatus: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
-  };
   aidCount: any = 0;
 
-  constructor() {
-    this.subventionRequestService = FactoryService.getService('SubventionRequestService');
-  }
+  searchFieldsInquiry: ISearchFieldsMap<SubventionRequestAid> = {
+    ...infoSearchFields(['orgAndBranchInfo', 'statusInfo']),
+    ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestedAidAmount', 'aidTotalPayedAmount'])
+  };
+
+  searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid>  = {
+    ...infoSearchFields(['orgAndBranchInfo', 'orgUserInfo', 'statusInfo']),
+    ...normalSearchFields(['requestFullSerial', 'creationDateString', 'aidSuggestedAmount', 'requestedAidAmount', 'aidTotalPayedAmount', 'statusDateModifiedString'])
+  };
 
   get orgAndBranchInfo() {
     if (!isValidValue(this.orgInfo.getName())) {
@@ -76,16 +82,16 @@ export class SubventionRequestAid {
       });
   }
 
-  showLog($event: MouseEvent): void {
-    $event.preventDefault();
+  showLogs($event?: MouseEvent): void {
+    $event?.preventDefault();
     this.subventionRequestService.openLogDialog(this.requestId)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
   }
 
-  showAids($event: MouseEvent): void {
-    $event.preventDefault();
+  showAids($event?: MouseEvent): void {
+    $event?.preventDefault();
     this.subventionRequestService.openAidDialog(this.requestId, this.isPartial)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();

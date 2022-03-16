@@ -18,6 +18,12 @@ import {SubventionRequest} from '@app/models/subvention-request';
 import {Beneficiary} from '@app/models/beneficiary';
 import {DialogService} from '@app/services/dialog.service';
 import {AuditDetailsPopupComponent} from '@app/sanady/popups/audit-details-popup/audit-details-popup.component';
+import {FormControl} from '@angular/forms';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {DateUtils} from '@app/helpers/date-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-subvention-log-popup',
@@ -25,43 +31,6 @@ import {AuditDetailsPopupComponent} from '@app/sanady/popups/audit-details-popup
   styleUrls: ['./subvention-log-popup.component.scss']
 })
 export class SubventionLogPopupComponent implements OnInit, OnDestroy {
-  userClick: typeof UserClickOn = UserClickOn;
-  displayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'comments'];
-  auditDisplayColumns: string[] = ['organization', 'branch', 'user', 'operation', 'updatedOn', 'actions'];
-  search$: Subject<string> = new Subject<string>();
-  internalSearch$: Subject<string> = new Subject<string>();
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
-  logList: SubventionLog[];
-  logListClone: SubventionLog[] = [];
-  requestId: number;
-
-  auditBeneficiaryData: SanadiAuditResult[] = [];
-  auditSubventionRequestData: SanadiAuditResult[] = [];
-  auditSubventionAidData: SanadiAuditResult[] = [];
-
-  tabsData: IKeyValue = {
-    general: {
-      name: 'generalTab',
-      langKey: 'lbl_general'
-    },
-    audit: {
-      name: 'auditTab',
-      langKey: 'lbl_audit'
-    },
-    auditBeneficiary: {
-      name: 'auditBeneficiaryTab',
-      langKey: 'lbl_audit'
-    },
-    auditRequest: {
-      name: 'auditRequestTab',
-      langKey: 'lbl_audit'
-    },
-    auditAid: {
-      name: 'auditAidTab',
-      langKey: 'lbl_audit'
-    },
-  }
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SubventionLog[]>,
               public langService: LangService,
@@ -86,6 +55,115 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     this.searchSubscription?.unsubscribe();
     this.internalSearchSubscription?.unsubscribe();
   }
+
+  userClick: typeof UserClickOn = UserClickOn;
+  generalDisplayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'userComments'];
+  auditDisplayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'actions'];
+  search$: Subject<string> = new Subject<string>();
+  internalSearch$: Subject<string> = new Subject<string>();
+  searchSubscription!: Subscription;
+  internalSearchSubscription!: Subscription;
+  logList: SubventionLog[];
+  logListClone: SubventionLog[] = [];
+  requestId: number;
+
+  auditBeneficiaryData: SanadiAuditResult[] = [];
+  auditSubventionRequestData: SanadiAuditResult[] = [];
+  auditSubventionAidData: SanadiAuditResult[] = [];
+
+  headerColumn: string[] = ['extra-header'];
+  generalFilterControl: FormControl = new FormControl('');
+  auditFilterControl: FormControl = new FormControl('');
+
+  generalSortingCallbacks = {
+    organization: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    branch: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    user: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionType: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.actionTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.actionTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionTime: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.actionTime),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.actionTime);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  auditSortingCallbacks = {
+    organization: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    branch: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    user: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionType: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.operationInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.operationInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    actionTime: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.updatedOn),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.updatedOn);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  auditActions: IMenuItem<SanadiAuditResult>[] = [
+    // show details
+    {
+      type: 'action',
+      label: 'show_details',
+      icon: ActionIconsEnum.DETAILS,
+      onClick: (item: SanadiAuditResult) => this.showAuditDetails(item)
+    }
+  ];
+
+  tabsData: IKeyValue = {
+    general: {
+      name: 'generalTab',
+      langKey: 'lbl_general'
+    },
+    audit: {
+      name: 'auditTab',
+      langKey: 'lbl_audit'
+    },
+    auditBeneficiary: {
+      name: 'auditBeneficiaryTab',
+      langKey: 'lbl_audit'
+    },
+    auditRequest: {
+      name: 'auditRequestTab',
+      langKey: 'lbl_audit'
+    },
+    auditAid: {
+      name: 'auditAidTab',
+      langKey: 'lbl_audit'
+    },
+  }
+
 
   search(searchText: string): void {
     this.search$.next(searchText);
@@ -128,9 +206,9 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     })
   }
 
-  showAuditDetails($event: MouseEvent, record: SanadiAuditResult): void {
+  showAuditDetails(record: SanadiAuditResult, $event?: MouseEvent): void {
     $event?.preventDefault();
-    record.showAuditDetails($event)
+    record.showAuditDetails()
       .subscribe((details: SubventionAid | SubventionRequest | Beneficiary) => {
         this.dialogService.show(AuditDetailsPopupComponent, {
           record,

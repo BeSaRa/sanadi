@@ -46,6 +46,16 @@
                  [data]="results"
                  [columns]="searchColumns">
         <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header
+                (textChange)="filter = $event"
+                [tableTitle]="selectedServiceKey"
+                [sort]="table.dataSource.sort"
+                [reload$]="search$"></table-header>
+            </th>
+          </ng-container>
+
           <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
@@ -123,15 +133,6 @@
           <ng-container cdkColumnDef="requestTypeInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="extra-header">
-            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header
-                (textChange)="filter = $event"
-                [tableTitle]="selectedServiceKey"
-                [sort]="table.dataSource.sort"
-                [reload$]="search$"></table-header>
-            </th>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
