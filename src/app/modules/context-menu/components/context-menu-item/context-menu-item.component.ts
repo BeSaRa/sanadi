@@ -245,4 +245,8 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   isDivider(action: IMenuItem<any>): boolean {
     return action.type === 'divider';
   }
+
+  isActionDisabled(action: IMenuItem<any>): boolean {
+    return action.disabled ? (typeof action.disabled === 'function' ? action.disabled(this.item) : action.disabled) : false;
+  }
 }

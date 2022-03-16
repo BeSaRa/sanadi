@@ -3,12 +3,12 @@
     <ul class="dropdown-menu show shadow-sm context-menu-item-list">
       <ng-container *ngFor="let action of filteredAction; first as isFirst; last as isLast">
         <li *ngIf="isAction(action)">
-          <a (click)="onClick($event , action)"
+          <button (click)="onClick($event , action)" [disabled]="isActionDisabled(action)"
              class="dropdown-item context-menu-item d-flex align-items-center justify-content-start px-2" href="#">
             <i *ngIf="action.icon" class="mdi" [ngClass]="action.icon"></i>
             <i *ngIf="!action.icon" class="mdi mdi-hand invisible"></i>
             <span class="mx-3">{{displayLabel(action)}}</span>
-          </a>
+          </button>
         </li>
         <li *ngIf="isDivider(action) && !isFirst && !isLast">
           <hr class="dropdown-divider">
