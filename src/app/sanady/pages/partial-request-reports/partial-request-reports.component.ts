@@ -4,11 +4,10 @@ import {ToastService} from '@app/services/toast.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
 import {forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
-import {FormManager} from '@app/models/form-manager';
 import {catchError, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
 import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
-import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {isEmptyObject, printBlobData} from '@app/helpers/utils';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DialogService} from '@app/services/dialog.service';
@@ -23,7 +22,7 @@ import {Router} from '@angular/router';
 import {OrganizationUserService} from '@app/services/organization-user.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from '@app/helpers/date-utils';
-import {DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -34,12 +33,12 @@ export class PartialRequestReportsComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
   tabIndex$: Subject<number> = new Subject<number>();
   form: FormGroup = {} as FormGroup;
-  fm: FormManager = {} as FormManager;
   private search$: Subject<any> = new Subject<any>();
   searchSubscription!: Subscription;
   private latestCriteria: Partial<ISubventionRequestPartialLogCriteria> = {} as Partial<ISubventionRequestPartialLogCriteria>;
 
   logRecords: SubventionRequestPartialLog[] = [];
+  datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
     fromDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
@@ -67,6 +66,7 @@ export class PartialRequestReportsComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.listenToSearch();
+    this._buildDatepickerControlsMap();
 
     this._loadInitData()
       .subscribe(result => {
@@ -105,57 +105,19 @@ export class PartialRequestReportsComponent implements OnInit {
       fromDate: [null, CustomValidators.required],
       toDate: [null, CustomValidators.required]
     });
-    this.fm = new FormManager(this.form, this.langService);
 
     this.setInitValue();
   }
 
+  private _buildDatepickerControlsMap() {
+    this.datepickerControlsMap = {
+      fromDate: this.fromDateField,
+      toDate: this.toDateField
+    };
+  }
+
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    this.setRelatedMinDate(fromFieldName, toFieldName);
-    this.setRelatedMaxDate(fromFieldName, toFieldName);
-  }
-
-  setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
-    setTimeout(() => {
-      let toFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
-      const fromDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
-      if (!fromDate) {
-        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
-      } else {
-        const disableDate = new Date(fromDate);
-        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
-        if (!disableSelectedFromRelated) {
-          disableDate.setDate(disableDate.getDate() - 1);
-        }
-        toFieldDateOptions.disableUntil = {
-          year: disableDate.getFullYear(),
-          month: disableDate.getMonth() + 1,
-          day: disableDate.getDate()
-        }
-      }
-      this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
-    }, 100);
-  }
-
-  setRelatedMaxDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
-    setTimeout(() => {
-      let fromFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
-      const toDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
-      if (!toDate) {
-        fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
-      } else {
-        const disableDate = new Date(toDate);
-        if (!disableSelectedFromRelated) {
-          disableDate.setDate(disableDate.getDate() + 1);
-        }
-        fromFieldDateOptions.disableSince = {
-          year: disableDate.getFullYear(),
-          month: disableDate.getMonth() + 1,
-          day: disableDate.getDate()
-        }
-      }
-      this.datepickerOptionsMap[fromFieldName] = fromFieldDateOptions;
-    }, 100);
+    DateUtils.setRelatedMinMaxDate({fromFieldName: fromFieldName, toFieldName: toFieldName, controlOptionsMap: this.datepickerOptionsMap, controlsMap: this.datepickerControlsMap})
   }
 
   private getSearchCriteria() {
@@ -243,19 +205,19 @@ export class PartialRequestReportsComponent implements OnInit {
   }
 
   get orgUnitField(): FormControl {
-    return this.fm.getFormField('orgId') as FormControl;
+    return this.form.get('orgId') as FormControl;
   }
 
   get orgUserField(): FormControl {
-    return this.fm.getFormField('orgUserId') as FormControl;
+    return this.form.get('orgUserId') as FormControl;
   }
 
   get fromDateField(): FormControl {
-    return this.fm.getFormField('fromDate') as FormControl;
+    return this.form.get('fromDate') as FormControl;
   }
 
   get toDateField(): FormControl {
-    return this.fm.getFormField('toDate') as FormControl;
+    return this.form.get('toDate') as FormControl;
   }
 
 }

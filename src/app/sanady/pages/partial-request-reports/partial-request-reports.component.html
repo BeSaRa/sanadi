@@ -14,36 +14,39 @@
     <div class="row">
       <div class="col-sm-12 col-md-6">
         <div class="row">
-          <label for="orgId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_organization}}</label>
-          <div class="col-md-8 col-sm-12 mb-4 position-relative">
+          <label for="orgId" class="col-sm-12 col-md-4 col-form-label"
+                 asteriskIfRequired="orgId">{{langService.map.lbl_organization}}</label>
+          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgId"
                        [notFoundText]="langService.map.msg_not_found"
-                       (change)="loadUsersByOrgUnit()"
-                       formControlName="orgId">
+                       (change)="loadUsersByOrgUnit()" appendTo="body"
+                       validationClasses="ordId" formControlName="orgId">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitsList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('orgId')"></app-field-error-message>
+            <app-field-error-message controlName="orgId"></app-field-error-message>
           </div>
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
         <div class="row">
-          <label for="orgUserId" class="col-sm-12 col-md-4 col-form-label">{{langService.map.user}}</label>
+          <label for="orgUserId" class="col-sm-12 col-md-4 col-form-label"
+                 asteriskIfRequired="orgUserId">{{langService.map.user}}</label>
           <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
             <ng-select [selectOnTab]="true" labelForId="orgUserId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="orgUserId"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="orgUserId">
+                       validationClasses="orgUserId"
+                       formControlName="orgUserId" appendTo="body">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUsersList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
+            <app-field-error-message controlName="orgUserId"></app-field-error-message>
           </div>
         </div>
       </div>
@@ -59,10 +62,9 @@
               <div class="form-control" formControlName="fromDate"
                    id="fromDate" [options]="datepickerOptionsMap.fromDate"
                    (click)="dpFromDate.toggleCalendar()" #dpFromDate="angular-mydatepicker"
-                   angular-mydatepicker
+                   angular-mydatepicker validationClasses="fromDate"
                    (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"></div>
-              <app-field-error-message
-                [control]="fm.getFormField('fromDate')"></app-field-error-message>
+              <app-field-error-message controlName="fromDate"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -77,10 +79,9 @@
               <div class="form-control" formControlName="toDate"
                    id="toDate" [options]="datepickerOptionsMap.toDate"
                    (click)="dpToDate.toggleCalendar()" #dpToDate="angular-mydatepicker"
-                   angular-mydatepicker
+                   angular-mydatepicker validationClasses="toDate"
                    (inputFieldChanged)="onDateChange($event, 'fromDate', 'toDate')"></div>
-              <app-field-error-message
-                [control]="fm.getFormField('toDate')"></app-field-error-message>
+              <app-field-error-message controlName="toDate"></app-field-error-message>
             </div>
           </div>
         </div>
