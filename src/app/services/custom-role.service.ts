@@ -13,41 +13,27 @@ import {OperationTypes} from '../enums/operation-types.enum';
 import {IDialogData} from '../interfaces/i-dialog-data';
 import {BackendGenericService} from '../generics/backend-generic-service';
 import {CustomRolePermissionService} from './custom-role-permission.service';
+import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CustomRoleService extends BackendGenericService<CustomRole> {
+export class CustomRoleService extends BackendWithDialogOperationsGenericService<CustomRole> {
   list!: CustomRole[];
-  _loadDone$!: Subject<CustomRole[]>;
+  interceptor: CustomRoleInterceptor = new CustomRoleInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
               private customRolePermissionService: CustomRolePermissionService,
-              private  dialogService: DialogService) {
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('CustomRoleService', this);
 
   }
 
-
-  openCreateDialog(): DialogRef {
-    return this.dialogService.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
-      model: new CustomRole(),
-      operation: OperationTypes.CREATE,
-      customRolePermissions: []
-    });
-  }
-
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.getById(modelId)
-      .pipe(switchMap((role) => {
-        return of(this.dialogService.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
-          model: role,
-          operation: OperationTypes.UPDATE,
-          customRolePermissions: role.permissionSet
-        }));
-      }));
+  _getDialogComponent(): ComponentType<any> {
+    return CustomRolePopupComponent;
   }
 
   _getModel(): any {
@@ -55,7 +41,7 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   }
 
   _getSendInterceptor(): any {
-    return CustomRoleInterceptor.send;
+    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
@@ -63,6 +49,34 @@ export class CustomRoleService extends BackendGenericService<CustomRole> {
   }
 
   _getReceiveInterceptor(): any {
-    return CustomRoleInterceptor.receive;
+    return this.interceptor.receive;
+  }
+
+  addDialog(): DialogRef {
+    return this.dialog.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
+      model: new CustomRole(),
+      operation: OperationTypes.CREATE,
+      customRolePermissions: []
+    });
+  }
+
+  editDialog(model: CustomRole): Observable<DialogRef> {
+    return this._openUpdateDialog(model.id, false);
+  }
+
+  editDialogComposite(model: CustomRole): Observable<DialogRef> {
+    return this._openUpdateDialog(model.id, true);
+  }
+
+  private _openUpdateDialog(modelId: number, isCompositeLoad: boolean): Observable<DialogRef> {
+    let request = isCompositeLoad ? this.getByIdComposite(modelId) : this.getById(modelId);
+    return request
+      .pipe(switchMap((role) => {
+        return of(this.dialog.show<IDialogData<CustomRole>>(CustomRolePopupComponent, {
+          model: role,
+          operation: OperationTypes.UPDATE,
+          customRolePermissions: role.permissionSet
+        }));
+      }));
   }
 }

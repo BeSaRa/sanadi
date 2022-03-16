@@ -4,6 +4,7 @@
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "BAW_UI": "http://eblaepm.no-ip.org:9026/eservices/api/",
+    "BAW_UI_IP": "http://100.100.15.216:9026/eservices/api/",
     "BAW_DEV": "http://100.100.15.102:9011/eservices/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9084/eservices/api"
   },
@@ -49,7 +50,10 @@
   "E_SERVICES_PERMISSIONS_GROUP": [
     "INQUIRY",
     "CONSULTATION",
-    "INTERNATIONAL_COOPERATION"
+    "INTERNATIONAL_COOPERATION",
+    "INITIAL_EXTERNAL_OFFICE_APPROVAL",
+    "PARTNER_APPROVAL",
+    "FINAL_EXTERNAL_OFFICE_APPROVAL"
   ],
   "PROJECTS_PERMISSION_GROUP": [
     "INTERNAL_PROJECT_LICENSE",
@@ -72,6 +76,9 @@
   ],
   "TRAINING_PROGRAMS_PAGE_GROUP": [
     "TRAINING_BUNDLE",
+    "TRAINING_ADD_TRAINEE",
+    "TRAINING_CHARITY_MANAGEMENT",
+    "TRAINING_CERTIFICATE_TEMPLATE",
     "TRAINING_CERTIFICATE_TRAINEE",
     "TRAINING_ADD_PUBLISH_PROGRAM",
     "TRAINING_MANAGE_TRAINEE"

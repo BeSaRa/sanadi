@@ -177,8 +177,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : arName,
-      phoneNumber1: control ? [phoneNumber1, [CustomValidators.required,
-        CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : phoneNumber1,
+      phoneNumber1: control ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
       employeer: control ? [employeer, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : employeer,
       benDependentsCount: control ? [benDependentsCount, [CustomValidators.required,
         CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
@@ -236,8 +235,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
         Validators.maxLength(20)]] : buildingName,
       zone: control ? [zone, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : zone,
       unit: control ? [unit, [CustomValidators.number, CustomValidators.maxLength(20)]] : unit,
-      homePhoneNumber: control ? [homePhoneNumber, [CustomValidators.number,
-        Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]] : homePhoneNumber,
+      homePhoneNumber: control ? [homePhoneNumber, CustomValidators.commonValidations.phone] : homePhoneNumber,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
     };
   }

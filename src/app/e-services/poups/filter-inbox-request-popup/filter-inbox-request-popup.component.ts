@@ -7,9 +7,9 @@ import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
-import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'filter-inbox-request-popup',
@@ -21,9 +21,9 @@ export class FilterInboxRequestPopupComponent implements OnInit {
   criteria: any;
   form: FormGroup = {} as FormGroup;
 
-  datepickerControlsMap: { [key: string]: FormControl } = {};
+  datepickerControlsMap: DatepickerControlsMap = {};
 
-  datepickerOptionsMap: { [key: string]: IAngularMyDpOptions } = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     createdDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     createdDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };

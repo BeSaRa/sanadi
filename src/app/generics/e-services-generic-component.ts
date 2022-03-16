@@ -172,6 +172,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .subscribe(() => {
         (this.model as unknown as CaseModel<any, any>).caseStatus = CaseStatus.STARTED;
         this._afterLaunch();
+        this.onModelChange$.emit(this._getNewInstance());
       })
   }
 

@@ -89,7 +89,7 @@ export class InternalDepartmentService extends BackendWithDialogOperationsGeneri
 
   updateStamp(departmentId: number, file: File): Observable<boolean> {
     let form = new FormData();
-    form.append('file', file);
+    form.append('content', file);
     return this.http.post<boolean>(this._getServiceURL() + '/stamp?departmentId=' + departmentId, form);
   }
 

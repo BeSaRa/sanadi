@@ -1,140 +1,119 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {OrgUnit} from '../../../models/org-unit';
-import {OrgBranch} from '../../../models/org-branch';
-import {Lookup} from '../../../models/lookup';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {LookupService} from '../../../services/lookup.service';
-import {ToastService} from '../../../services/toast.service';
-import {LangService} from '../../../services/lang.service';
-import {LookupCategories} from '../../../enums/lookup-categories';
-import {extender} from '../../../helpers/extender';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {of, Subject} from 'rxjs';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {OrgUnit} from '@app/models/org-unit';
+import {OrgBranch} from '@app/models/org-branch';
+import {Lookup} from '@app/models/lookup';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupCategories} from '@app/enums/lookup-categories';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable} from 'rxjs';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'app-organization-branch-popup',
   templateUrl: './organization-branch-popup.component.html',
   styleUrls: ['./organization-branch-popup.component.scss']
 })
-export class OrganizationBranchPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
-  fm!: FormManager;
-  operation: OperationTypes;
-  model: OrgBranch;
-  orgUnit: OrgUnit;
-  orgUnitStatusList: Lookup[];
-
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    users: {name: 'users'}
-  };
-  saveVisible = true;
-  validateFieldsVisible = true;
-
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgBranch>,
+export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBranch> implements AfterViewInit {
+  constructor(public dialogRef: DialogRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgBranch>,
               private lookupService: LookupService,
-              private fb: FormBuilder,
+              public fb: FormBuilder,
+              private cd: ChangeDetectorRef,
               private toast: ToastService,
-              public langService: LangService,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              public langService: LangService) {
+    super();
     this.operation = data.operation;
     this.model = data.model;
     this.orgUnit = data.orgUnit;
-    this.orgUnitStatusList = lookupService.getByCategory(LookupCategories.ORG_STATUS);
   }
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
+
+  form!: FormGroup;
+  model: OrgBranch;
+  operation: OperationTypes;
+  saveVisible = true;
+
+  orgUnit: OrgUnit;
+  orgUnitStatusList: Lookup[] = [];
+
+  tabsData: IKeyValue = {
+    basic: {name: 'basic', langKey: 'lbl_basic_info', validStatus: () => this.form && this.form.valid},
+    users: {name: 'users', langKey: 'lbl_org_users', validStatus: ()=> true}
+  };
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
     this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
 
-  ngOnInit(): void {
-    this.buildForm();
-    this._saveModel();
+  initPopup(): void {
+    this.orgUnitStatusList = this.lookupService.getByCategory(LookupCategories.ORG_STATUS);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
-
-  get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_branch : this.langService.map.lbl_edit_org_branch;
-  }
-
-  private buildForm(): void {
-    this.form = this.fb.group({
-      basic: this.fb.group({
-        orgId: [this.orgUnit.id],
-        arName: [this.model.arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-        ]],
-        enName: [this.model.enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-        ]],
-        status: [this.model.status, CustomValidators.required],
-        // email: [this.model.email, [Validators.email, Validators.maxLength(50)]],
-        phoneNumber1: [this.model.phoneNumber1, [
-          CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-        phoneNumber2: [this.model.phoneNumber2, [
-          CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
-        address: [this.model.address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]],
-        // buildingName: [this.model.buildingName, [CustomValidators.required, Validators.maxLength(200)]],
-        // unitName: [this.model.unitName, [CustomValidators.required, Validators.maxLength(200)]],
-        // street: [this.model.street, [CustomValidators.required, Validators.maxLength(200)]],
-        // zone: [this.model.zone, [CustomValidators.required, Validators.maxLength(100)]],
-        isMain: [this.model.isMain, [CustomValidators.required]]
-      }, {validators: CustomValidators.validateFieldsStatus(['orgId', 'arName', 'enName', 'status', 'phoneNumber1', 'phoneNumber2', 'address', 'isMain'])})
-    });
-    this.fm = new FormManager(this.form, this.langService);
-
+  private _afterViewInit(): void {
     if (this.operation === OperationTypes.UPDATE) {
-      this.fm.displayFormValidity();
+      this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
   }
 
-  saveModel(): void {
-    this.save$.next();
+  ngAfterViewInit(): void {
+    // used the private function to reuse functionality of afterViewInit if needed
+    this._afterViewInit();
+    this.cd.detectChanges();
   }
 
-  _saveModel(): void {
-    this.save$
-      .pipe(
-        takeUntil(this.destroy$),
-        exhaustMap(() => {
-          const orgBranch = extender<OrgBranch>(OrgBranch, {...this.model, ...this.fm.getFormField('basic')?.value});
-          return orgBranch.save().pipe(
-            catchError((err) => {
-              this.exceptionHandlerService.handle(err);
-              return of(null);
-            }));
-        }))
-      .subscribe((orgBranch: OrgBranch | null) => {
-        if (!orgBranch) {
-          return;
-        }
-        const message = (this.operation === OperationTypes.CREATE)
-          ? this.langService.map.msg_create_x_success
-          : this.langService.map.msg_update_x_success;
+  get popupTitle(): string {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.langService.map.lbl_add_org_branch;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.langService.map.lbl_edit_org_branch;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.langService.map.view;
+    }
+    return '';
+  }
 
-        this.toast.success(message.change({x: orgBranch.getName()}));
-        this.model = orgBranch;
-        this.operation = OperationTypes.UPDATE;
-      });
+  public buildForm(): void {
+    let record = (new OrgBranch()).clone(this.model);
+    record.orgId = this.orgUnit.id;
+
+    this.form = this.fb.group(record.buildForm(true), {validators: record.setFormCrossValidations()});
+  }
+
+  get isMainField(): FormControl {
+    return this.form.get('isMain') as FormControl;
+  }
+
+  beforeSave(model: OrgBranch, form: FormGroup): boolean | Observable<boolean> {
+    return this.form.valid;
+  }
+  prepareModel(model: OrgBranch, form: FormGroup): OrgBranch | Observable<OrgBranch> {
+    return (new OrgBranch()).clone({...model, ...form.value});
+  }
+  afterSave(model: OrgBranch, dialogRef: DialogRef): void {
+    const message = (this.operation === OperationTypes.CREATE)
+      ? this.langService.map.msg_create_x_success
+      : this.langService.map.msg_update_x_success;
+
+    this.toast.success(message.change({x: model.getName()}));
+    this.model = model;
+    this.operation = OperationTypes.UPDATE;
+  }
+
+  saveFail(error: Error): void {
+    throw new Error('Method not implemented.');
+  }
+
+  destroyPopup(): void {
   }
 
 }

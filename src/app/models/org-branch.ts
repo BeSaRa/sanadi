@@ -9,6 +9,8 @@ import {Lookup} from './lookup';
 import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
   orgId: number | undefined;
@@ -43,6 +45,30 @@ export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
     this.service = FactoryService.getService('OrganizationBranchService');
     this.langService = FactoryService.getService('LangService');
     this.lookupService = FactoryService.getService('LookupService');
+  }
+
+  buildForm(controls?: boolean): any {
+    const {orgId, arName, enName, status, phoneNumber1, phoneNumber2, address, isMain} = this;
+    return {
+      orgId: controls ? [orgId] : orgId,
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+      ]] : enName,
+      status: controls ? [status, CustomValidators.required] : status,
+      phoneNumber1: controls ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
+      phoneNumber2: controls ? [phoneNumber2, CustomValidators.commonValidations.phone] : phoneNumber2,
+      address: controls ? [address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
+      isMain: controls ? [isMain, [CustomValidators.required]] : isMain
+    }
+  }
+
+  setFormCrossValidations(): any {
+    return CustomValidators.validateFieldsStatus(['orgId', 'arName', 'enName', 'status', 'phoneNumber1', 'phoneNumber2', 'address', 'isMain']);
   }
 
   create(): Observable<OrgBranch> {

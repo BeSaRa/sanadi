@@ -84,11 +84,11 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
     let controls: IKeyValue = {
         arName: [this.model.arName, [
           CustomValidators.required, CustomValidators.maxLength(100),
-          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM_ONE_AR')
         ]],
         enName: [this.model.enName, [
           CustomValidators.required, CustomValidators.maxLength(100),
-          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+          CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM_ONE_ENG')
         ]],
         status: [this.model.status, [CustomValidators.required]],
         riskLevel: [this.model.riskLevel, [CustomValidators.decimal(5), CustomValidators.maxLength(10)]]

@@ -141,9 +141,8 @@
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="phoneNumber" for="phoneNumber"
                  class="form-label">{{lang.map.home_phone_number}}</label>
-          <input id="phoneNumber"
-                 validationClasses="phoneNumber"
-                 formControlName="phoneNumber" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <input id="phoneNumber" validationClasses="phoneNumber" trimInput
+                 formControlName="phoneNumber" class="form-control">
           <app-field-error-message controlName="phoneNumber"></app-field-error-message>
         </div>
       </div>

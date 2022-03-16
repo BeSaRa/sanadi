@@ -7,6 +7,9 @@ import {INames} from '../interfaces/i-names';
 import {CustomRolePermission} from './custom-role-permission';
 import {Permission} from './permission';
 import {searchFunctionType} from '../types/types';
+import {Lookup} from '@app/models/lookup';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   status: boolean = true;
@@ -15,15 +18,38 @@ export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   service: CustomRoleService;
   langService: LangService;
 
+  statusInfo!: Lookup;
+
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
-    enName: 'enName'
+    enName: 'enName',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {
     super();
     this.service = FactoryService.getService('CustomRoleService');
     this.langService = FactoryService.getService('LangService');
+  }
+
+  buildForm(controls?: boolean): any {
+    const {arName, enName, description, status} = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+      ]]: arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+      ]]: enName ,
+      description: controls ? [description, Validators.maxLength(200)]: description,
+      status: controls ? [status] : status
+    }
+  }
+
+  setBasicFormCrossValidations(): any {
+    return CustomValidators.validateFieldsStatus(['arName', 'enName', 'description']);
   }
 
   create(): Observable<CustomRole> {

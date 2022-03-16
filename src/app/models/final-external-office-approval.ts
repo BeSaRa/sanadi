@@ -3,14 +3,16 @@ import {FactoryService} from '../services/factory.service';
 import {BankAccount} from './bank-account';
 import {BankBranch} from './bank-branch';
 import {ExecutiveManagement} from './executive-management';
-import {CaseModel} from './case-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
-import {CommonUtils} from '@app/helpers/common-utils';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {DateUtils} from '@app/helpers/date-utils';
 import {AdminResult} from '@app/models/admin-result';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExternalOfficeApprovalService, FinalExternalOfficeApproval> {
   caseType: number = CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
@@ -47,12 +49,18 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   managerDecisionInfo!: AdminResult;
   generalManagerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
-  initialLicenseFullserial!: string;
+  initialLicenseFullSerial!: string;
   initialLicenseId!: string;
   initialLicenseSerial!: number;
   licenseStatusInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
+
+  searchFields: ISearchFieldsMap<FinalExternalOfficeApproval> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo']),
+    ...normalSearchFields(['subject', 'fullSerial'])
+  }
 
   constructor() {
     super();
@@ -63,10 +71,9 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
     const {
       requestType,
       initialLicenseId,
-      initialLicenseFullserial,
+      initialLicenseFullSerial,
       initialLicenseSerial,
-      // licenseNumber,
-      oldLicenseFullserial,
+      oldLicenseFullSerial,
       oldLicenseId,
       oldLicenseSerial,
       country,
@@ -84,11 +91,10 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
 
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      initialLicenseFullserial: control ? [initialLicenseFullserial, [CustomValidators.maxLength(250)]] : initialLicenseFullserial,
+      initialLicenseFullSerial: control ? [initialLicenseFullSerial, [CustomValidators.maxLength(250)]] : initialLicenseFullSerial,
       initialLicenseId: control ? [initialLicenseId] : initialLicenseId,
       initialLicenseSerial: control ? [initialLicenseSerial] : initialLicenseSerial,
-      // licenseNumber: control ? [licenseNumber] : licenseNumber,
-      oldLicenseFullserial: control ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
       country: control ? [country, [CustomValidators.required]] : country,

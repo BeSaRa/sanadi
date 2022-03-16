@@ -28,10 +28,13 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {SharedService} from '@app/services/shared.service';
-import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
+import {
+  InitialExternalOfficeApprovalSearchCriteria
+} from '@app/models/initial-external-office-approval-search-criteria';
 import {
   SearchInitialExternalOfficeApprovalCriteria
 } from '@app/models/search-initial-external-office-approval-criteria';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -107,15 +110,15 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   _afterBuildForm(): void {
     this.setDefaultOrganization();
 
-    // setTimeout(() => {
+
     this.handleReadonly();
     if (this.fromDialog) {
       this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
         this.oldLicenseFullSerialField.updateValueAndValidity();
       });
     }
-    this.listenToRequestTypeChange();
-    // });
+    // this.listenToRequestTypeChange();
+
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -166,12 +169,14 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   _updateForm(model: InitialExternalOfficeApproval): void {
     this.model = model;
     this.form.patchValue(model.buildForm());
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.setSelectedLicense(undefined, true);
     this.setDefaultOrganization();
   }
 
@@ -211,7 +216,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('oldLicenseFullserial')) as FormControl;
+    return (this.form.get('oldLicenseFullSerial')) as FormControl;
   }
 
   private loadCountries(): void {
@@ -244,7 +249,40 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }
   }
 
-  listenToRequestTypeChange(): void {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestType.setValue(requestTypeValue);
+    }
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestType && this.requestType.value;
+    }
+    this._handleRequestTypeDependentControls();
+
+    // if no requestType or (requestType = new)
+    // if new record or draft, reset license and its validations
+    // also reset the values in model
+    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.oldLicenseFullSerialField.reset();
+        this.oldLicenseFullSerialField.setValidators([]);
+        this.setSelectedLicense(undefined, true);
+
+        if (this.model) {
+          this.model.licenseNumber = '';
+          this.model.licenseDuration = 0;
+          this.model.licenseStartDate = '';
+        }
+      }
+    } else {
+      this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
+        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+      }]);
+    }
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  /*listenToRequestTypeChange(): void {
     this.requestType?.valueChanges.pipe(
       delay(50),
       takeUntil(this.destroy$)
@@ -273,7 +311,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       }
       this.oldLicenseFullSerialField.updateValueAndValidity();
     });
-  }
+  }*/
 
   loadLicencesByCriteria(criteria: Partial<InitialExternalOfficeApprovalSearchCriteria>): Observable<InitialExternalOfficeApprovalResult[]> {
     return this.service.licenseSearch(criteria);
@@ -291,7 +329,24 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$),
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestType.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return {selected: licenses[0], details: data};
+                }),
+                catchError((e) => {
+                  return of(null);
+                })
+              )
+          } else {
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$;
+          }
+        }),
         // allow only if the user select license
         filter<{ selected: InitialExternalOfficeApprovalResult, details: InitialExternalOfficeApproval }, any>
         ((selection): selection is { selected: InitialExternalOfficeApprovalResult, details: InitialExternalOfficeApproval } => {
@@ -303,23 +358,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         this.setSelectedLicense(selection.details, false);
       })
   }
-
-  /*private setSelectedLicense(license?: InitialApprovalDocument, licenseDetails?: InitialExternalOfficeApproval) {
-    this.selectedLicense = license;
-    // update form fields if i have license
-    if (license && licenseDetails) {
-      this._updateForm((new InitialExternalOfficeApproval()).clone({
-        organizationId: license.organizationId,
-        requestType: this.requestType.value,
-        licenseNumber: license.licenseNumber,
-        country: license.country,
-        region: license.region,
-        licenseDuration: license.licenseDuration,
-        licenseStartDate: license.licenseStartDate
-      }))
-    }
-    this._handleRequestTypeDependentControls();
-  }*/
 
   private setSelectedLicense(licenseDetails: InitialExternalOfficeApproval | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
@@ -333,7 +371,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       value.licenseDuration = licenseDetails.licenseDuration;
       value.licenseStartDate = licenseDetails.licenseStartDate;
 
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
       value.fullSerial = null;
@@ -346,12 +384,13 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }
   }
 
-  licenseSearch(): void {
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
     const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
-    if (!value) {
+    /*if (!value) {
       this.dialog.info(this.lang.map.need_license_number_to_search)
       return;
-    }
+    }*/
     this.licenseSearch$.next(value);
   }
 
@@ -382,29 +421,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }*/
   }
 
-  /*private loadSelectedLicense(licenseNumber: string): void {
-    if (!this.model || !licenseNumber) {
-      return;
-    }
-    this.service
-      .licenseSearch({licenseNumber})
-      .pipe(
-        filter(list => {
-          /!* // if license number exists, set it and regions will be loaded inside
-           // otherwise load regions separately
-           if (list.length === 0) {
-             this.loadRegions(this.country.value);
-           }*!/
-          return list.length > 0;
-        }),
-        map(list => list[0]),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((license) => {
-        this.setSelectedLicense(license, undefined)
-      })
-  }*/
-
   private loadSelectedLicenseById(id: string, callback?: any): void {
     if (!id) {
       return;
@@ -431,6 +447,14 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+      this.readonly = true;
       return;
     }
 
@@ -471,52 +495,13 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   isEditCountryAllowed(): boolean {
     let requestType = this.requestType.value,
-      isAllowed = !(requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL);
+      isAllowed = !(requestType === ServiceRequestTypes.RENEW || this.isExtendOrCancelRequestType());
 
     if (!this.model?.id || (!!this.model?.id && this.model.canCommit())) {
       return isAllowed;
     } else {
       return isAllowed && !this.readonly;
     }
-  }
-
-  isEditRequestTypeAllowed1(): boolean {
-    // allow edit if new record
-    if (!this.model?.id) {
-      return true;
-    }
-
-    let allowEdit = false;
-    if (this.openFrom === OpenFrom.ADD_SCREEN) {
-      // add screen, allow edit if saved as draft
-      allowEdit = this.model.canCommit();
-    } else {
-      let caseStatusEnum = this.service.caseStatusEnumMap[this.model?.caseType!];
-
-      if (this.openFrom === OpenFrom.USER_INBOX) {
-        // if final approved or final rejected, can't change
-        // otherwise if charity manager or charity user, allow change if its returned request
-        if (this.model?.caseStatus === caseStatusEnum.FINAL_APPROVE || this.model?.caseStatus === caseStatusEnum.FINAL_REJECTION) {
-          allowEdit = false;
-        } else if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
-          allowEdit = this.model.isReturned();
-        }
-      } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-        // if not claimed, don't allow edit
-        // otherwise after claim, if charity manager or charity user, allow change if its returned request
-        if (this.model.taskDetails.actions.includes(WFActions.ACTION_CLAIM)) {
-          allowEdit = false;
-        } else if (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) {
-          allowEdit = this.model.isReturned();
-        }
-      } else if (this.openFrom === OpenFrom.SEARCH) {
-        // if saved as draft and opened by creator who is charity user, allow edit
-        if (this.model?.canCommit() && this.employeeService.isCharityUser() && this.employeeService.getUser()?.id === this.model.creatorInfo?.id) {
-          allowEdit = true;
-        }
-      }
-    }
-    return allowEdit;
   }
 
   isAttachmentReadonly(): boolean {
@@ -548,5 +533,28 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       isAllowed = this.model.taskDetails.isClaimed();
     }
     return isAllowed;
+  }
+
+  isNewRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW)
+  }
+
+  isRenewOrUpdateRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.UPDATE);
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

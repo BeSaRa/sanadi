@@ -7,7 +7,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list>
+    <tabs-list [tabByIndex$]="selectedTabIndex$">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
       <tab [name]="tabsData.subDacOchas.name" [template]="subDacOchasTabTemplate"
            [title]="lang.map.sub_dac_ochas.change({x: classification.getName()})"
@@ -56,12 +56,11 @@
         <h1 class="h6 text-primary">{{lang.map.sub_dac_ochas.change({x: classification.getName()})}}</h1>
         <div>
           <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSubDacOchas$.next()">
-            <i
-              class="mdi mdi-reload"></i></button>
+            <i class="mdi {{actionIconsEnum.RELOAD}}"></i></button>
         </div>
         <div>
           <button (click)="addSubDacOcha()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
-            class="mdi mdi-plus-box"></i></button>
+            class="mdi {{actionIconsEnum.ADD}}"></i></button>
         </div>
       </div>
       <div class="row">
@@ -88,10 +87,10 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <a href="#" (click)="delete($event, row)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
-                        <i class="mdi mdi-close-box"></i>
+                        <i class="mdi {{actionIconsEnum.DELETE}}"></i>
                       </a>
                       <a href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
-                        <i class="mdi mdi-pen"></i>
+                        <i class="mdi {{actionIconsEnum.EDIT}}"></i>
                       </a>
                     </div>
                   </td>

@@ -81,7 +81,6 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     this.form = this.fb.group((new CollectionItem).buildApprovalForm(true));
   }
 
-  // noinspection JSUnusedLocalSymbols
   private updateForm(model: LicenseApprovalInterface): void {
     this.form.patchValue(model.clone({publicTerms: model.publicTerms ? model.publicTerms : this.servicePublicTerms}).buildApprovalForm(false))
   }
@@ -112,6 +111,53 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     return this.form.get('conditionalLicenseIndicator')!
   }
 
+  private loadTerms() {
+    this.serviceDataService
+      .loadByCaseType(this.model.caseType)
+      .pipe(tap(service => {
+        this.servicePublicTerms = service.serviceTerms
+      }))
+      .pipe(switchMap(_ => {
+        return this.loadUserCustomTerms()
+      }))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe()
+  }
+
+  private listenToLicenseChange() {
+    this._license$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val) => {
+        val ? this.updateForm(val) : this.form.reset();
+      })
+  }
+
+  private afterBuildForm() {
+    this.applyLicenseEndDateValidationAndStatus();
+  }
+
+  private isPermanent(): boolean {
+    return this.model.licenseDurationType === LicenseDurationType.PERMANENT;
+  }
+
+  private applyLicenseEndDateValidationAndStatus(): void {
+    this.licenseEndDateField.setValidators((this.isPermanent() ? null : CustomValidators.required))
+    this.isPermanent() ? this.licenseEndDateField.disable() : this.licenseEndDateField.enable();
+  }
+
+  saveApprovalInfo() {
+    if (!this.license) {
+      return;
+    }
+    const form = {...this.form.getRawValue()} as LicenseApprovalInterface;
+    this.saveInfo.emit(this.license.clone({
+      ...form,
+      followUpDate: form.followUpDate ? DateUtils.getDateStringFromDate(form.followUpDate) : '',
+      licenseStartDate: form.licenseStartDate ? DateUtils.getDateStringFromDate(form.licenseStartDate) : '',
+      licenseEndDate: form.licenseEndDate ? DateUtils.getDateStringFromDate(form.licenseEndDate) : ''
+    }))
+  }
+
   openAddCustomTermDialog() {
     const customTerm = new CustomTerm().clone({caseType: this.model.getCaseType()});
     this.dialog.show(CustomTermPopupComponent, {
@@ -138,41 +184,4 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     })
   }
 
-  private loadTerms() {
-    this.serviceDataService
-      .loadByCaseType(this.model.caseType)
-      .pipe(tap(service => {
-        this.servicePublicTerms = service.serviceTerms
-      }))
-      .pipe(switchMap(_ => {
-        return this.loadUserCustomTerms()
-      }))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe()
-  }
-
-  saveApprovalInfo() {
-    if (!this.license) {
-      return;
-    }
-    const form = {...this.form.getRawValue()} as LicenseApprovalInterface;
-    this.saveInfo.emit(this.license.clone({
-      ...form,
-      followUpDate: form.followUpDate ? DateUtils.getDateStringFromDate(form.followUpDate) : '',
-      licenseStartDate: form.licenseStartDate ? DateUtils.getDateStringFromDate(form.licenseStartDate) : '',
-      licenseEndDate: form.licenseEndDate ? DateUtils.getDateStringFromDate(form.licenseEndDate) : ''
-    }))
-  }
-
-  private listenToLicenseChange() {
-    this._license$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val) => {
-        val ? this.updateForm(val) : this.form.reset();
-      })
-  }
-
-  private afterBuildForm() {
-    this.licenseEndDateField.setValidators((this.model.licenseDurationType === LicenseDurationType.PERMANENT ? CustomValidators.required : null))
-  }
 }

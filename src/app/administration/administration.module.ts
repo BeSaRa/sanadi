@@ -59,6 +59,7 @@ import { ServiceDataStepPopupComponent } from './popups/service-data-step-popup/
 import { ChecklistPopupComponent } from './popups/checklist-popup/checklist-popup.component';
 import { ChecklistItemPopupComponent } from './popups/checklist-item-popup/checklist-item-popup.component';
 import { OrgUnitFieldPopupComponent } from './popups/org-unit-field-popup/org-unit-field-popup.component';
+import { OrganizationUnitServicesComponent } from './shared/organization-unit-services/organization-unit-services.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { OrgUnitFieldPopupComponent } from './popups/org-unit-field-popup/org-un
     ChecklistPopupComponent,
     ChecklistItemPopupComponent,
     OrgUnitFieldPopupComponent,
+    OrganizationUnitServicesComponent,
   ],
   imports: [
     SharedModule,

@@ -18,6 +18,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DacOchaService} from '@app/services/dac-ocha.service';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'dac-ocha-popup',
@@ -27,6 +28,7 @@ import {DacOchaService} from '@app/services/dac-ocha.service';
 export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   dacOchaTypeId!: number;
   classification!: Lookup;
+  actionIconsEnum = ActionIconsEnum;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: FormGroup;
   fm!: FormManager;
@@ -35,9 +37,11 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   validateFieldsVisible = true;
   saveVisible = true;
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    subDacOchas: {name: 'subDacOchas'}
+    basic: {name: 'basic', index: 0},
+    subDacOchas: {name: 'subDacOchas', index: 1}
   };
+  selectedTabIndex$: Subject<number> = new Subject<number>();
+  selectedTab: string = 'basic';
   validToAddSubDacOchas = false;
   columns = ['arName', 'enName', 'status', 'actions'];
   subDacOchas: DacOcha[] = [];
@@ -56,6 +60,7 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
     this.operation = data.operation;
     this.model = data.model;
     this.dacOchaTypeId = data.dacOchaTypeId;
+    this.selectedTab = data.selectedTab;
   }
 
   initPopup(): void {
@@ -65,6 +70,16 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
 
     this.classification = this.lookupService.listByCategory.ServiceWorkField
       .find(classification => classification.lookupKey === this.dacOchaTypeId)!;
+
+    this._setSelectedTab();
+  }
+
+  private _setSelectedTab(): void {
+    setTimeout(() => {
+      if (this.tabsData.hasOwnProperty(this.selectedTab) && this.tabsData[this.selectedTab]) {
+        this.selectedTabIndex$.next(this.tabsData[this.selectedTab].index);
+      }
+    })
   }
 
   buildForm(): void {

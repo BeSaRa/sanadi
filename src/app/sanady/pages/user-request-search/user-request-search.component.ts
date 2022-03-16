@@ -30,6 +30,7 @@ import {AidLookupService} from '../../../services/aid-lookup.service';
 import {ECookieService} from '../../../services/e-cookie.service';
 import {DateUtils} from '../../../helpers/date-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'app-user-request-search',
@@ -67,7 +68,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     statusDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
@@ -173,7 +174,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           statusDateModifiedTo: []
         }),
         beneficiary: this.fb.group({
-          phoneNumber1: [null, [CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+          phoneNumber1: [null, CustomValidators.commonValidations.phone],
           benNationality: [],
           occuptionStatus: []
         }),

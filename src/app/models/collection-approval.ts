@@ -8,6 +8,7 @@ import {CollectionItem} from "@app/models/collection-item";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 
+
 export class CollectionApproval extends CaseModel<CollectionApprovalService, CollectionApproval> {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
   organizationId!: number;

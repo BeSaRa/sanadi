@@ -28,6 +28,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   abstract displayedColumns: string[];
   //  you can override this property from child class to use load or loadComposite
   useCompositeToLoad: boolean = true;
+  //  you can override this property from child class to use editDialog or editDialogComposite
+  useCompositeToEdit: boolean = true;
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -83,7 +85,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return (this.useCompositeToLoad ?
+        return (this.useCompositeToEdit ?
           this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
           this.service.editDialog(model).pipe(catchError(_ => of(null))))
       }))

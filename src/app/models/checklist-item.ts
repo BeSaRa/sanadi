@@ -6,7 +6,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 
-export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService>{
+export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService> {
   langService: LangService;
   service!: ChecklistService;
   arDesc!: string;
@@ -15,6 +15,9 @@ export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService>{
   stepOrder!: number;
   status: number = 1;
   statusInfo!: Lookup;
+
+  // not related to the model will remove it while sending to the backend
+  checked: boolean = false;
 
   constructor() {
     super();
@@ -69,5 +72,9 @@ export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService>{
       status: controls ? [status] : status,
       stepId: controls ? [stepId] : stepId,
     }
+  }
+
+  getDescription() {
+    return this[(this.langService.map.lang + 'Desc') as keyof INames];
   }
 }

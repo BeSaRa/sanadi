@@ -41,6 +41,7 @@
     <div class="col-12">
       <app-table #table sortableTable
                  [filter]="filter"
+                 [useSearchToFilter]="true"
                  [paginator]="paginator"
                  [data]="results"
                  [columns]="searchColumns">

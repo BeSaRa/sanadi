@@ -59,7 +59,7 @@
               <label asteriskIfRequired="mobileNo" for="mobileNo"
                      class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_phone}}</label>
               <div class="col-md-8 mb-3 position-relative col-sm-12">
-                <input id="mobileNo" [mask]="inputMaskPatterns.NUMBER_ONLY" validationClasses="mobileNo"
+                <input id="mobileNo" validationClasses="mobileNo" trimInput
                        formControlName="mobileNo" class="form-control">
                 <app-field-error-message controlName="mobileNo"></app-field-error-message>
               </div>

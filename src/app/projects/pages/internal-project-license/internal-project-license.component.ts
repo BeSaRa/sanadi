@@ -35,6 +35,7 @@ import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'internal-project-license',
@@ -163,7 +164,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InternalProjectLicense;
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     expectedImpactDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
@@ -252,7 +253,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterBuildForm(): void {
-    // setTimeout(() => {
+
     this.handleReadonly();
     this.loadAidLookup(AidTypes.CLASSIFICATIONS);
     this.listenToAddProjectComponent();
@@ -266,7 +267,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this.oldLicenseFullSerialField.updateValueAndValidity();
       });
     }
-    // })
+
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -375,7 +376,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       specialExplanations: model.getSpecialExplanationFields()
     });
 
-    this.handleRequestTypeChange(model.requestType);
+    this.handleRequestTypeChange(model.requestType, false);
     this.handleChangeMainCategory(model.domain, false);
     this.handleChangeSubCategory1(model.firstSubDomain, false);
     this.updateBeneficiaryValidations();
@@ -388,9 +389,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
-
-    this.selectedLicense = undefined;
-
+    this.setSelectedLicense(undefined, true);
     this.subCategories1List = [];
     this.subCategories2List = [];
     this.projectTotalCostField.setValue(null);
@@ -471,7 +470,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   get oldLicenseFullSerialField(): FormControl {
-    return (this.basicInfoGroup?.get('oldLicenseFullserial')) as FormControl;
+    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as FormControl;
   }
 
   get mainCategoryField(): FormControl {
@@ -576,6 +575,14 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       return;
     }
 
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+      this.readonly = true;
+      return;
+    }
+
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
@@ -622,12 +629,15 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
   }
 
-  handleRequestTypeChange(requestTypeValue: number): void {
-    this._handleRequestTypeDependentControls();
-
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestTypeField.setValue(requestTypeValue);
+    }
     if (!requestTypeValue) {
       requestTypeValue = this.requestTypeField && this.requestTypeField.value;
     }
+    this._handleRequestTypeDependentControls();
 
     // if no requestType or (requestType = new)
     // if new record or draft, reset license and its validations
@@ -649,7 +659,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
       }]);
     }
-
     this.oldLicenseFullSerialField.updateValueAndValidity();
   }
 
@@ -778,13 +787,13 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       })
   }
 
-  licenseSearch($event: Event): void {
-    $event.preventDefault();
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
     const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
-    if (!value) {
+    /*if (!value) {
       this.dialogService.info(this.lang.map.need_license_number_to_search)
       return;
-    }
+    }*/
     this.licenseSearch$.next(value);
   }
 
@@ -800,7 +809,24 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         // allow only the collection if it has value
         filter(result => !!result.length),
         // switch to the dialog ref to use it later and catch the user response
-        switchMap(license => this.licenseService.openSelectLicenseDialog(license, this.model?.clone({requestType: this.requestTypeField.value || null}), true).onAfterClose$),
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return {selected: licenses[0], details: data};
+                }),
+                catchError((e) => {
+                  return of(null);
+                })
+              )
+          } else {
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null})).onAfterClose$;
+          }
+        }),
         // allow only if the user select license
         filter<{ selected: InternalProjectLicenseResult, details: InternalProjectLicense }, any>
         ((selection): selection is { selected: InternalProjectLicenseResult, details: InternalProjectLicense } => {
@@ -819,7 +845,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = (new InternalProjectLicense()).clone(licenseDetails);
       value.requestType = this.requestTypeField.value;
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
       value.documentTitle = '';

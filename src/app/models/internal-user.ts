@@ -63,11 +63,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
       domainName,
       email,
       empNum,
-      // jobTitle,
-      // officialPhoneNumber,
       phoneNumber,
       status,
-      // phoneExtension,
       customRoleId
     } = this;
     return {
@@ -98,20 +95,8 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
         CustomValidators.number,
         CustomValidators.maxLength(10)
       ]] : empNum,
-      /*jobTitle: controls ? [jobTitle, [CustomValidators.required]] : jobTitle,
-      officialPhoneNumber: controls ? [officialPhoneNumber, [
-        CustomValidators.number,
-        Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
-      ]] : officialPhoneNumber,*/
-      phoneNumber: controls ? [phoneNumber, [
-        CustomValidators.number,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)
-      ]] : phoneNumber,
+      phoneNumber: controls ? [phoneNumber, CustomValidators.commonValidations.phone] : phoneNumber,
       status: controls ? [status, [CustomValidators.required]] : status,
-      /*phoneExtension: controls ? [phoneExtension, [
-        CustomValidators.number,
-        CustomValidators.maxLength(10)
-      ]] : phoneExtension,*/
       customRoleId: controls ? [customRoleId] : customRoleId
     }
   }

@@ -15,16 +15,19 @@ import {DialogService} from './dialog.service';
 import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
 import {OrgUnit} from '../models/org-unit';
 import {AuditLogService} from './audit-log.service';
+import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
+import {ComponentType} from '@angular/cdk/portal';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationBranchService extends BackendGenericService<OrgBranch> {
+export class OrganizationBranchService extends BackendWithDialogOperationsGenericService<OrgBranch> {
   list!: OrgBranch[];
+  interceptor: OrganizationBranchInterceptor = new OrganizationBranchInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationBranchService', this);
@@ -34,12 +37,16 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
     return OrgBranch;
   }
 
+  _getDialogComponent(): ComponentType<any> {
+    return OrganizationBranchPopupComponent;
+  }
+
   _getSendInterceptor(): any {
-    return OrganizationBranchInterceptor.send;
+    return this.interceptor.send;
   }
 
   _getReceiveInterceptor(): any {
-    return OrganizationBranchInterceptor.receive;
+    return this.interceptor.receive;
   }
 
   _getServiceURL(): string {
@@ -60,7 +67,7 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
   }
 
   openCreateDialog(orgUnit: OrgUnit): DialogRef {
-    return this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
+    return this.dialog.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
       model: new OrgBranch(),
       orgUnit,
       operation: OperationTypes.CREATE
@@ -70,7 +77,7 @@ export class OrganizationBranchService extends BackendGenericService<OrgBranch> 
   openUpdateDialog(modelId: number, orgUnit: OrgUnit): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((branch: OrgBranch) => {
-        return of(this.dialogService.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
+        return of(this.dialog.show<IDialogData<OrgBranch>>(OrganizationBranchPopupComponent, {
           model: branch,
           orgUnit,
           operation: OperationTypes.UPDATE

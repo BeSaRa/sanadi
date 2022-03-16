@@ -30,8 +30,9 @@
     <ng-template formGroupName="basic" #basicTemplate>
       <div class="row">
         <!-- Organization -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{lang.map.lbl_organization}}</label>
+        <div *ngIf="employeeService.isInternalUser()" class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="organizationId" for="organizationId"
+                 class="form-label">{{lang.map.lbl_organization}}</label>
           <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
                      placeholder="{{lang.map.select}}" id="organizationId"
                      [notFoundText]="lang.map.msg_not_found"
@@ -41,61 +42,34 @@
           </ng-select>
           <app-field-error-message controlName="organizationId"></app-field-error-message>
         </div>
-        <!-- Request Classification -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="requestClassification" for="requestClassification" class="form-label">{{lang.map.request_classification}}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
-                     placeholder="{{lang.map.select}}" id="requestClassification"
-                     [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
-                     formControlName="requestClassification" validationClasses="requestClassification">
-            <ng-option [value]="requestClassification.lookupKey"
-                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
-          </ng-select>
-          <app-field-error-message controlName="requestClassification"></app-field-error-message>
-        </div>
         <!-- Request Type -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{lang.map.request_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                      placeholder="{{lang.map.select}}" id="requestType"
                      [notFoundText]="lang.map.msg_not_found"
+                     (change)="handleRequestTypeChange($event, true)"
                      [readonly]="!isEditRequestTypeAllowed()" appendTo="body"
                      formControlName="requestType" validationClasses="requestType">
             <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
         <!-- License Number -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="oldLicenseFullserial" for="oldLicenseFullserial" class="form-label">{{lang.map.license_number}}</label>
+          <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+                 class="form-label">{{lang.map.license_number}}</label>
           <div class="input-group">
             <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
                     class="input-group-text"><i
               class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
-                   formControlName="oldLicenseFullserial" trimInput
+            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                   formControlName="oldLicenseFullSerial" trimInput
                    type="text" [readOnly]="!isEditLicenseAllowed()"
-                   validationClasses="oldLicenseFullserial" [onlyInvalid]="false" class="form-control"
-                   id="oldLicenseFullserial">
-            <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
+                   validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
+                   id="oldLicenseFullSerial">
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
           </div>
-        </div>
-        <!-- Arabic Name -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
-          <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                 validationClasses="arName" class="form-control" trimInput id="arName">
-          <app-field-error-message controlName="arName"></app-field-error-message>
-        </div>
-        <!-- English Name -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
-          <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                 validationClasses="enName" class="form-control" trimInput id="enName">
-          <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
       </div>
       <div *ngIf="selectedLicense">
@@ -147,19 +121,55 @@
         </app-table>
       </div>
       <div class="row">
-        <!-- Country -->
+        <!-- Request Classification -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
-          <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
-                     placeholder="{{lang.map.select}}" id="country"
+          <label asteriskIfRequired="requestClassification" for="requestClassification"
+                 class="form-label">{{lang.map.request_classification}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestClassification" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestClassification"
                      [notFoundText]="lang.map.msg_not_found"
-                     [readonly]="!isEditCountryAllowed()" appendTo="body"
-                     (change)="handleCountryChange($event)"
-                     formControlName="country" validationClasses="country">
-            <ng-option *ngFor="let option of countries" [value]="option.id"
-                       [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+                     [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
+                     formControlName="requestClassification" validationClasses="requestClassification">
+            <ng-option [value]="requestClassification.lookupKey"
+                       *ngFor="let requestClassification of requestClassifications">{{requestClassification.getName()}}</ng-option>
           </ng-select>
-          <app-field-error-message controlName="country"></app-field-error-message>
+          <app-field-error-message controlName="requestClassification"></app-field-error-message>
+        </div>
+        <!-- Arabic Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <input formControlName="arName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="arName" class="form-control" trimInput id="arName">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <!-- English Name -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+          <input formControlName="enName" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="enName" class="form-control" trimInput id="enName">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Country -->
+        <div class="col-sm-12 col-md-4">
+          <div class="d-flex align-items-center justify-content-start gap-2">
+            <div class="mb-4 ng-select-wrapper flex-grow-1 ">
+              <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
+              <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                         placeholder="{{lang.map.select}}" id="country"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [readonly]="!isEditCountryAllowed()" appendTo="body"
+                         (change)="handleCountryChange($event)"
+                         formControlName="country" validationClasses="country">
+                <ng-option *ngFor="let option of countries" [value]="option.id"
+                           [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="country"></app-field-error-message>
+            </div>
+            <button *ngIf="isEditCountryAllowed() && this.employeeService.checkPermissions('MANAGE_CITIES')"
+                    (click)="addCountry($event)" class="btn btn-primary mt-2">{{lang.map.btn_add}}</button>
+          </div>
         </div>
         <!-- Region -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -170,7 +180,8 @@
         </div>
         <!-- Headquarter  Type -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="headQuarterType" for="headQuarterType" class="form-label">{{lang.map.headquarter_type}}</label>
+          <label asteriskIfRequired="headQuarterType" for="headQuarterType"
+                 class="form-label">{{lang.map.headquarter_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="headQuarterType" [clearable]="true"
                      placeholder="{{lang.map.select}}" id="headQuarterType"
                      [notFoundText]="lang.map.msg_not_found"
@@ -186,7 +197,8 @@
       <div class="row">
         <!-- Establishment Date -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="establishmentDate" for="establishmentDate" class="form-label">{{lang.map.establishment_date}}</label>
+          <label asteriskIfRequired="establishmentDate" for="establishmentDate"
+                 class="form-label">{{lang.map.establishment_date}}</label>
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="establishmentDate"
@@ -262,21 +274,25 @@
       <div class="row">
         <!-- Social Media 1 -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="firstSocialMedia" for="firstSocialMedia" class="form-label">{{lang.map.social_media_1}}</label>
+          <label asteriskIfRequired="firstSocialMedia" for="firstSocialMedia"
+                 class="form-label">{{lang.map.social_media_1}}</label>
           <input formControlName="firstSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="firstSocialMedia" class="form-control" trimInput id="firstSocialMedia">
           <app-field-error-message controlName="firstSocialMedia"></app-field-error-message>
         </div>
         <!-- Social Media 2 -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="secondSocialMedia" for="secondSocialMedia" class="form-label">{{lang.map.social_media_2}}</label>
-          <input formControlName="secondSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+          <label asteriskIfRequired="secondSocialMedia" for="secondSocialMedia"
+                 class="form-label">{{lang.map.social_media_2}}</label>
+          <input formControlName="secondSocialMedia" type="text"
+                 [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="secondSocialMedia" class="form-control" trimInput id="secondSocialMedia">
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
         <!-- Social Media 3 -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="thirdSocialMedia" for="thirdSocialMedia" class="form-label">{{lang.map.social_media_3}}</label>
+          <label asteriskIfRequired="thirdSocialMedia" for="thirdSocialMedia"
+                 class="form-label">{{lang.map.social_media_3}}</label>
           <input formControlName="thirdSocialMedia" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="thirdSocialMedia" class="form-control" trimInput id="thirdSocialMedia">
           <app-field-error-message controlName="thirdSocialMedia"></app-field-error-message>
@@ -285,7 +301,8 @@
       <div class="row">
         <!-- Special Explanation -->
         <div class="col-sm-12 mb-4 position-relative">
-          <label asteriskIfRequired="description" for="description" class="form-label">{{lang.map.special_explanations}}</label>
+          <label asteriskIfRequired="description" for="description"
+                 class="form-label">{{lang.map.special_explanations}}</label>
           <textarea rows="5" id="description" validationClasses="description" formControlName="description"
                     class="form-control" trimInput [readOnly]="readonly"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>

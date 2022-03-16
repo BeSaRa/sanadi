@@ -41,8 +41,8 @@ const commonValidations = {
   gccId: [number, maxLength(20)],
   gccRId: [number, maxLength(20)],
   visa: [number, maxLength(20)],
-  phone: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
-  mobileNo: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  phone: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  mobileNo: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
     let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);
@@ -111,6 +111,8 @@ const errorKeys: IKeyValue = {
   AR_ONLY: {key: 'err_arabic_only', replaceValues: null},
   ENG_NUM_ONLY: {key: 'err_english_num_only', replaceValues: null},
   AR_NUM_ONLY: {key: 'err_arabic_num_only', replaceValues: null},
+  ENG_NUM_ONE_ENG: {key: 'err_english_num_one_eng', replaceValues: null},
+  AR_NUM_ONE_AR: {key: 'err_arabic_num_one_ar', replaceValues: null},
   ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
   ENG_AR_NUM_ONLY: {key: 'err_english_arabic_num_only', replaceValues: null},
   PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},

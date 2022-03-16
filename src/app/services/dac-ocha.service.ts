@@ -16,6 +16,7 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SubDacOchaPopupComponent} from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -67,17 +68,19 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
     return this.dialog.show<IDialogData<DacOcha>>(DacOchaPopupComponent, {
       model: new DacOcha(),
       operation: OperationTypes.CREATE,
-      dacOchaTypeId: dacOchaTypeId
+      dacOchaTypeId: dacOchaTypeId,
+      selectedTab: 'basic'
     });
   }
 
-  openUpdateDacOchaDialog(modelId: number, dacOchaTypeId: number): Observable<DialogRef> {
+  openUpdateDacOchaDialog(modelId: number, dacOchaTypeId: number, selectedTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((dacOcha: DacOcha) => {
         return of(this.dialog.show<IDialogData<DacOcha>>(DacOchaPopupComponent, {
           model: dacOcha,
           operation: OperationTypes.UPDATE,
-          dacOchaTypeId: dacOchaTypeId
+          dacOchaTypeId: dacOchaTypeId,
+          selectedTab: (CommonUtils.isValidValue(selectedTab) ? selectedTab : 'basic')
         }));
       })
     );

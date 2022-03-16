@@ -3,7 +3,7 @@ import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-w
 import {ChecklistItem} from '@app/models/checklist-item';
 import {ComponentType} from '@angular/cdk/overlay';
 import {ChecklistPopupComponent} from '@app/administration/popups/checklist-popup/checklist-popup.component';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from '@app/services/url.service';
 import {DialogService} from '@app/services/dialog.service';
 import {FactoryService} from '@app/services/factory.service';
@@ -15,7 +15,10 @@ import {ServiceDataStep} from '@app/models/service-data-step';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Observable, of} from 'rxjs';
 import {Generator} from '@app/decorators/generator';
-import {ChecklistItemPopupComponent} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
+import {
+  ChecklistItemPopupComponent
+} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
+import {IChecklistCriteria} from "@app/interfaces/ichecklist-criteria";
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +80,19 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
       operation: OperationTypes.UPDATE,
       stepId: stepId
     });
+  }
+
+  @Generator(ChecklistItem, true)
+  private _criteria(criteria: IChecklistCriteria) {
+    return this.http.get(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({
+        fromObject: {...criteria}
+      })
+    });
+  }
+
+  criteria(criteria: IChecklistCriteria) {
+    return this._criteria(criteria);
   }
 
   // openEditChecklistItemDialog(stepId: number, checklistItemId: number): Observable<DialogRef> {

@@ -120,7 +120,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }*/
 
   get initialOfficeApprovalGeneratedLicenseNumber(): string {
-    return this.loadedModel.exportedLicenseFullserial || '';
+    return this.loadedModel.exportedLicenseFullSerial || '';
   }
 
   get initialOfficeApprovalGeneratedLicenseId(): string {
@@ -147,7 +147,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   get partnerApprovalGeneratedLicenseNumber(): string {
-    return this.loadedModel.exportedLicenseFullserial || '';
+    return this.loadedModel.exportedLicenseFullSerial || '';
   }
 
   get partnerApprovalGeneratedLicenseId(): string {
@@ -175,7 +175,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   get finalExternalOfficeApprovalGeneratedLicenseNumber(): string {
-    return this.loadedModel.exportedLicenseFullserial || '';
+    return this.loadedModel.exportedLicenseFullSerial || '';
   }
 
   get finalExternalOfficeApprovalGeneratedLicenseId(): string {
@@ -202,7 +202,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   get internalProjectGeneratedLicenseNumber(): string {
-    return this.loadedModel.exportedLicenseFullserial || '';
+    return this.loadedModel.exportedLicenseFullSerial || '';
   }
 
   get internalProjectGeneratedLicenseId(): string {

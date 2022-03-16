@@ -23,6 +23,7 @@ import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {LicenseApprovalModel} from "@app/models/license-approval-model";
 import {INavigatedItem} from "@app/interfaces/inavigated-item";
 import {EncryptionService} from "@app/services/encryption.service";
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
@@ -240,14 +241,32 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return this.inboxService!.sendToMultiDepartments(this.taskDetails.tkiid, this.caseType, false, this);
   }
 
+  getAskSingleWFResponseByCaseType(caseType?: number): string {
+    let servicesMap = {
+      [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.PARTNER_APPROVAL]: WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.COLLECTION_APPROVAL]: WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT
+    }
+
+    if (!caseType) {
+      caseType = this.caseType;
+    }
+
+    // @ts-ignore
+    return servicesMap[caseType];
+  }
+
   sendToSupervisionAndControlDepartment(): Observable<any> {
-    let taskName: string = WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+    let service = this.inboxService!.getService(this.caseType),
+      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {
       taskName = taskName.split('askSingle:')[1];
     }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, this.service);
+    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
   }
 
   sendToUser(): DialogRef {

@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
-import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {filter, map, skip, switchMap, takeUntil, tap} from "rxjs/operators";
 import {FileNetDocument} from "@app/models/file-net-document";
 import {LangService} from "@app/services/lang.service";
 import {FormControl} from "@angular/forms";
@@ -14,6 +14,7 @@ import {TableComponent} from "@app/shared/components/table/table.component";
 import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'attachments',
   templateUrl: './attachments.component.html',
@@ -23,6 +24,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   attachmentTypes: AttachmentTypeServiceData[] = [];
   attachments: FileNetDocument[] = [];
   fileIconsEnum = FileIconsEnum;
+  defaultAttachments: FileNetDocument[] = [];
 
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   // only the true value will emit
@@ -32,8 +34,16 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   private loaded: boolean = false;
   @Input()
   forceLoadEveryTime: boolean = false;
+  private _caseId: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   @Input()
-  caseId?: string
+  set caseId(value: string | undefined) {
+    this._caseId.next(value);
+  }
+
+  get caseId(): string | undefined {
+    return this._caseId.value;
+  }
+
   @Input()
   disabled: boolean = false;
   @Input()
@@ -74,6 +84,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToReload();
+    this.listenToCaseIdChanges();
   }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
@@ -88,7 +99,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         tap(_ => this.loaded = true),
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType)
           .pipe(tap(types => this.attachmentTypes = types)) : of([])),
-        map<AttachmentTypeServiceData[], FileNetDocument[]>(attachmentTypes => attachmentTypes.map(type => type.convertToAttachment())),
+        map<AttachmentTypeServiceData[], FileNetDocument[]>((attachmentTypes) => attachmentTypes.map(type => type.convertToAttachment())),
+        tap(attachments => this.defaultAttachments = attachments.slice()),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
         takeUntil(this.destroy$)
       )
@@ -115,7 +127,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if(!this.caseId){
+    if (!this.caseId) {
       this.dialog.info(this.lang.map.this_action_cannot_be_performed_before_saving_the_request);
       return;
     }
@@ -222,5 +234,19 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   forceReload() {
     this.loaded = false;
     this.loadingStatus.next(true);
+  }
+
+  private listenToCaseIdChanges() {
+    this._caseId
+      .pipe(skip(1))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter<undefined | string, undefined>((value): value is undefined => !value))
+      .subscribe(() => {
+        this.resetAttachments();
+      })
+  }
+
+  private resetAttachments() {
+    this.attachments = this.defaultAttachments.slice();
   }
 }

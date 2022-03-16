@@ -23,14 +23,14 @@ export class TeamSecurityConfiguration extends BaseModel<TeamSecurityConfigurati
   }
 
   convertToUserSecurity(generalUserId: number): Partial<UserSecurityConfiguration> {
-    const {teamId, caseType, serviceId, canAdd, canManage, canView} = this;
+    const {teamId, caseType, serviceId} = this;
     return {
       teamId,
       caseType,
       serviceId,
-      canAdd,
-      canManage,
-      canView,
+      canAdd: false,
+      canManage: false,
+      canView: false,
       generalUserId
     }
   }

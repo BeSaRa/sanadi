@@ -135,11 +135,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
           disabled: !!this.model.id
         }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
         empNum: [this.model.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-        phoneNumber: [this.model.phoneNumber, [
-          CustomValidators.required, CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+        phoneNumber: [this.model.phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
         phoneExtension: [this.model.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]],
-        officialPhoneNumber: [this.model.officialPhoneNumber, [
-          CustomValidators.number, Validators.maxLength(CustomValidators.defaultLengths.PHONE_NUMBER_MAX)]],
+        officialPhoneNumber: [this.model.officialPhoneNumber, CustomValidators.commonValidations.phone],
         email: [this.model.email, [
           CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
         jobTitle: [this.model.jobTitle, [CustomValidators.required]],
@@ -174,7 +172,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       exhaustMap(() => {
         const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
-        if(!this.isDuplicatedUserMobileNumberOrEmail(orgUser)) {
+        if (!this.isDuplicatedUserMobileNumberOrEmail(orgUser)) {
           return orgUser.save()
             .pipe(
               catchError((err) => {
@@ -224,12 +222,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   isDuplicatedUserMobileNumberOrEmail(orgUser: OrgUser) {
     let isDuplicatedMobileNumber = false;
     let isDuplicatedEmail = false;
-    if(this.isDuplicatedUserMobileNumber(orgUser)) {
+    if (this.isDuplicatedUserMobileNumber(orgUser)) {
       this.toast.error(this.langService.map.phone_number_is_duplicated);
       isDuplicatedMobileNumber = true;
     }
 
-    if(this.isDuplicatedUserEmail(orgUser)) {
+    if (this.isDuplicatedUserEmail(orgUser)) {
       this.toast.error(this.langService.map.email_is_duplicated);
       isDuplicatedEmail = true;
     }
@@ -311,7 +309,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     } else {
       this.permissionsControl.addValidators(Validators.requiredTrue);
     }
-    if (forceUpdateValueAndValidation){
+    if (forceUpdateValueAndValidation) {
       this.permissionsControl.updateValueAndValidity();
     }
   }

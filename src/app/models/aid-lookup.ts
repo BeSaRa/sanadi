@@ -7,6 +7,10 @@ import {LangService} from '../services/lang.service';
 import {Lookup} from './lookup';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   aidCode!: string;
@@ -35,6 +39,33 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
     super();
     this.service = FactoryService.getService('AidLookupService');
     this.langService = FactoryService.getService('LangService');
+  }
+
+  buildForm(controls?: boolean) {
+    const {
+      arName,
+      enName,
+      aidCode,
+      aidType,
+      parent,
+      status,
+      statusDateModified
+    } = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+      ]] : enName,
+      aidCode: controls ? [aidCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(50)]] : aidCode,
+      aidType: controls ? [aidType, [CustomValidators.required]] : aidType,
+      parent: controls ? [parent] : parent,
+      status: controls ? [status, [CustomValidators.required]] : status,
+      statusDateModified: controls ? [statusDateModified] : statusDateModified
+    }
   }
 
   create(): Observable<AidLookup> {

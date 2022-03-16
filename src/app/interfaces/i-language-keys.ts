@@ -4,6 +4,9 @@ export interface ILanguageKeys {
   about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
+  toggle_checklist: string;
+  mark_all_as_done: string;
+  step_checklist: string;
   back_to_the_marker: string;
   loading_map: string;
   please_add_marker_to_perform_this_action: string;
@@ -171,6 +174,7 @@ export interface ILanguageKeys {
   training_program_attendance_proof: string;
   please_select_team_to_link: string;
   select_team: string;
+  select_service: string;
   training_program_save_and_approve: string;
   training_x_canceled_successfully: string;
   training_x_published_successfully: string;
@@ -316,6 +320,7 @@ export interface ILanguageKeys {
   login_name: string;
   link_teams: string;
   link_services: string;
+  linked_services: string;
   lbl_required: string;
   lbl_global: string;
   lbl_mandatory: string;
@@ -894,4 +899,5 @@ export interface ILanguageKeys {
   file_video: string;
   file_powerpoint: string;
   signature: string;
+  msg_please_select_service_to_add: string;
 }

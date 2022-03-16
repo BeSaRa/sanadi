@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
 import {of, Subject} from "rxjs";
 import {LangService} from "@app/services/lang.service";
@@ -87,6 +87,12 @@ export class ExternalLoginComponent implements OnInit {
 
   get externalUserNameField(): AbstractControl {
     return this.loginFromExternal?.get('username') as AbstractControl;
+  }
+
+  @HostListener('window:keydown.f1')
+  switchLoginPage() {
+    this.router.navigate(['/login']).then()
+    return false;
   }
 
 }

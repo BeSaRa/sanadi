@@ -36,6 +36,7 @@
   "CUSTOM_ROLE_PERMISSIONS": "custom-role-permissions",
   "LOOKUPS": "lookups",
   "ORGANIZATION_UNIT": "admin/ou",
+  "ORGANIZATION_UNIT_SERVICES": "admin/ou-service",
   "ORGANIZATION_BRANCH": "admin/ou/branch",
   "PERMISSIONS": "admin/permission",
   "AID_LOOKUPS": "admin/aid-lookup",

@@ -58,13 +58,13 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')
+        CustomValidators.pattern('AR_NUM_ONE_AR')
       ]] : arName,
       enName: controls ? [enName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM')
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
       status: controls ? [status, [CustomValidators.required]] : status,
       type: controls ? [type, [CustomValidators.required]] : type

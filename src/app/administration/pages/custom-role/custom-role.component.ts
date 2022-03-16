@@ -1,42 +1,74 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {CustomRoleService} from '../../../services/custom-role.service';
-import {CustomRole} from '../../../models/custom-role';
-import {PageComponentInterface} from '../../../interfaces/page-component-interface';
-import {debounceTime, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ToastService} from '../../../services/toast.service';
-import {DialogService} from '../../../services/dialog.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {IGridAction} from '../../../interfaces/i-grid-action';
-import {cloneDeep as _deepClone} from 'lodash';
-import {searchInObject} from '../../../helpers/utils';
-import {SharedService} from '../../../services/shared.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {Component, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {CustomRoleService} from '@app/services/custom-role.service';
+import {CustomRole} from '@app/models/custom-role';
+import {takeUntil} from 'rxjs/operators';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {SharedService} from '@app/services/shared.service';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-custom-role',
   templateUrl: './custom-role.component.html',
   styleUrls: ['./custom-role.component.scss']
 })
-export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInterface<CustomRole> {
-  add$: Subject<any> = new Subject<any>();
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  customRoles: CustomRole[] = [];
-  customRolesClone: CustomRole[] = [];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-  reloadSubscription!: Subscription;
-  addSubscription!: Subscription;
-  searchSubscription!: Subscription;
-  internalSearchSubscription!: Subscription;
-  commonStatusEnum = CommonStatusEnum;
-  destroy$: Subject<any> = new Subject<any>();
+export class CustomRoleComponent extends AdminGenericComponent<CustomRole, CustomRoleService> {
+  constructor(public langService: LangService,
+              private dialogService: DialogService,
+              public service: CustomRoleService,
+              private toast: ToastService,
+              private sharedService: SharedService) {
+    super();
+  }
 
-  selectedRecords: CustomRole[] = [];
-  actionsList: IGridAction[] = [
+  useCompositeToLoad = false;
+  useCompositeToEdit = false;
+  @ViewChild('table') table!: TableComponent;
+
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+
+  actions: IMenuItem<CustomRole>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CustomRole) => this.edit(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: CustomRole) => this.delete(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: CustomRole) => this.toggleStatus(item),
+      show: (item) => !item.status
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: CustomRole) => this.toggleStatus(item),
+      show: (item) => item.status
+    }
+  ];
+
+  bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
@@ -46,85 +78,41 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
     }
   ];
 
-  private _addSelected(record: CustomRole): void {
-    this.selectedRecords.push(_deepClone(record));
-  }
-
-  private _removeSelected(record: CustomRole): void {
-    const index = this.selectedRecords.findIndex((item) => {
-      return item.id === record.id;
-    });
-    this.selectedRecords.splice(index, 1);
-  }
-
-  get isIndeterminateSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length < this.customRoles.length;
-  }
-
-  get isFullSelection(): boolean {
-    return this.selectedRecords.length > 0 && this.selectedRecords.length === this.customRoles.length;
-  }
-
-  isSelected(record: CustomRole): boolean {
-    return !!this.selectedRecords.find((item) => {
-      return item.id === record.id;
-    });
-  }
-
-  onSelect($event: Event, record: CustomRole): void {
-    const checkBox = $event.target as HTMLInputElement;
-    if (checkBox.checked) {
-      this._addSelected(record);
-    } else {
-      this._removeSelected(record);
+  sortingCallbacks = {
+    statusInfo: (a: CustomRole, b: CustomRole, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
 
-  onSelectAll($event: Event): void {
-    if (this.selectedRecords.length === this.customRoles.length) {
-      this.selectedRecords = [];
-    } else {
-      this.selectedRecords = _deepClone(this.customRoles);
-    }
+  _init(): void {
+    this.listenToLoadDone();
   }
 
-  constructor(public langService: LangService,
-              private dialogService: DialogService,
-              private customRoleService: CustomRoleService,
-              private toast: ToastService,
-              private sharedService: SharedService) {
+  get selectedRecords(): CustomRole[] {
+    return this.table.selection.selected;
   }
 
-
-  ngOnDestroy(): void {
-    this.reloadSubscription.unsubscribe();
-    this.addSubscription.unsubscribe();
-    this.searchSubscription?.unsubscribe();
-    this.internalSearchSubscription?.unsubscribe();
+  listenToLoadDone(): void {
+    this.service._loadDone$
+      .pipe(takeUntil((this.destroy$)))
+      .subscribe((result) => {
+        this.table.selection.clear();
+      });
   }
 
-  ngOnInit(): void {
-    this.listenToAdd();
-    this.listenToReload();
-    this.listenToSearch();
-    this.listenToInternalSearch();
+  edit(model: CustomRole, event?: MouseEvent): void {
+    event?.preventDefault();
+    this.edit$.next(model);
   }
 
-  add(): void {
-    const sub = this.customRoleService.openCreateDialog().onAfterClose$.subscribe(() => {
-      this.reload$.next(null);
-      sub.unsubscribe();
-    });
-  }
-
-  delete(model: CustomRole, event: MouseEvent): void {
-    event.preventDefault();
-    // @ts-ignore
+  delete(model: CustomRole, event?: MouseEvent): void {
+    event?.preventDefault();
     this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const sub = model.delete().subscribe(() => {
-            // @ts-ignore
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
             this.reload$.next(null);
             sub.unsubscribe();
@@ -142,9 +130,9 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.customRoleService.deleteBulk(ids).subscribe((response) => {
+          const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-              .subscribe(()=> {
+              .subscribe(() => {
                 this.reload$.next(null);
                 sub.unsubscribe();
               });
@@ -154,70 +142,17 @@ export class CustomRoleComponent implements OnInit, OnDestroy, PageComponentInte
     }
   }
 
-  edit(model: CustomRole, event: MouseEvent): void {
-    event.preventDefault();
-    const sub = this.customRoleService.openUpdateDialog(model.id).subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
-    });
-  }
-
-  listenToAdd(): void {
-    this.addSubscription = this.add$.pipe(
-      tap(() => {
-        this.add();
-      })
-    ).subscribe();
-  }
-
-  listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(
-      switchMap(() => {
-        return this.customRoleService.load();
-      })
-    ).subscribe((roles) => {
-      this.customRoles = roles;
-      this.customRolesClone = roles;
-      this.selectedRecords = [];
-      this.internalSearch$.next(this.search$.value);
-    });
-  }
-
-  search(searchText: string): void {
-    this.search$.next(searchText);
-  }
-
-  private listenToSearch(): void {
-    this.searchSubscription = this.search$.pipe(
-      debounceTime(500)
-    ).subscribe((searchText) => {
-      this.customRoles = this.customRolesClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
-  private listenToInternalSearch(): void {
-    this.internalSearchSubscription = this.internalSearch$.subscribe((searchText) => {
-      this.customRoles = this.customRolesClone.slice().filter((item) => {
-        return searchInObject(item, searchText);
-      });
-    });
-  }
-
   toggleStatus(model: CustomRole) {
     model.toggleStatus().update()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-      // @ts-ignore
-      this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
-      this.reload$.next(null);
-    }, () => {
-      // @ts-ignore
-      this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
-      this.reload$.next(null);
-    });
+        // @ts-ignore
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        // @ts-ignore
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
   }
 }

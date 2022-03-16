@@ -1,5 +1,7 @@
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {Localization} from '../models/localization';
+import {IAngularMyDpOptions} from 'angular-mydatepicker';
+import {AbstractControl} from '@angular/forms';
 
 export type  LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
@@ -11,6 +13,8 @@ export type customValidationTypes =
   | 'AR_ONLY'
   | 'ENG_NUM_ONLY'
   | 'AR_NUM_ONLY'
+  | 'ENG_NUM_ONE_ENG'
+  | 'AR_NUM_ONE_AR'
   | 'ENG_AR_ONLY'
   | 'ENG_AR_NUM_ONLY'
   | 'PASSPORT'
@@ -33,3 +37,7 @@ export type FilterEventTypes = 'OPEN' | 'CLEAR' | 'RESET';
 export type ISearchFieldsMap<T = any> = { [key: string]: (string | searchFunctionType<T>) };
 
 export type ReadinessStatus = 'READY' | 'NOT_READY';
+
+export type DatepickerOptionsMap = { [key: string]: IAngularMyDpOptions };
+
+export type DatepickerControlsMap = { [key: string]: AbstractControl };

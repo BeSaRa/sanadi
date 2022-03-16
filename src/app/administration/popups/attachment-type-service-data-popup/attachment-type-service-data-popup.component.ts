@@ -19,6 +19,7 @@ import {ToastService} from '@app/services/toast.service';
 import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CustomProperty} from '@app/models/custom-property';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'attachment-type-service-data-popup',
@@ -155,7 +156,12 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   getCustomPropertyName(name: string): string {
-    return 'cp_' + name.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    const local = 'cp_' + name.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    try {
+     return this.lang.getLocalByKey(local as unknown as keyof ILanguageKeys).getName();
+    }catch (e){
+      return local;
+    }
   }
 
   onCustomPropertyChange(index: number) {

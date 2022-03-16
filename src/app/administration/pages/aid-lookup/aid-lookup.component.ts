@@ -1,11 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {PageComponentInterface} from '@app/interfaces/page-component-interface';
+import {Component, Input, ViewChild} from '@angular/core';
 import {AidLookup} from '@app/models/aid-lookup';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {of} from 'rxjs';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
-import {switchMap, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {AidLookupService} from '@app/services/aid-lookup.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -16,32 +15,54 @@ import {ConfigurationService} from '@app/services/configuration.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {FormControl} from '@angular/forms';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {AidLookupStatusEnum} from '@app/enums/aid-lookup-status.enum';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 
 @Component({
   selector: 'app-aid-lookup',
   templateUrl: './aid-lookup.component.html',
   styleUrls: ['./aid-lookup.component.scss']
 })
-export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInterface<AidLookup> {
+export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLookupService> {
   @Input() aidType!: number;
   @Input() parentId!: number;
 
-  aidLookups: AidLookup[] = [];
-  aidLookupsClone: AidLookup[] = [];
   displayedColumns: string[] = ['rowSelection', 'aidCode', 'arName', 'enName', 'status', 'statusDateModified', 'actions'];
-  add$ = new Subject<any>();
-  addSubscription!: Subscription;
-  reload$ = new BehaviorSubject<any>(null);
-  reloadSubscription!: Subscription;
   aidLookupStatusEnum = AidLookupStatusEnum;
-  filterControl: FormControl = new FormControl('');
 
   @ViewChild('table') table!: TableComponent;
+
+  constructor(public langService: LangService,
+              public service: AidLookupService,
+              private dialogService: DialogService,
+              public configService: ConfigurationService,
+              private sharedService: SharedService,
+              public toast: ToastService) {
+    super();
+  }
+
+  getTitleText(): (keyof ILanguageKeys) {
+    let title: keyof ILanguageKeys = 'menu_aid_class';
+    switch (this.aidType) {
+      case AidTypes.CLASSIFICATIONS:
+        title = 'menu_aid_class';
+        break;
+      case AidTypes.MAIN_CATEGORY:
+        title = 'menu_aid_main_category';
+        break;
+      case AidTypes.SUB_CATEGORY:
+        title = 'menu_aid_sub_category';
+        break;
+    }
+    return title;
+  }
+
+  get selectedRecords(): AidLookup[] {
+    return this.table.selection.selected;
+  }
 
   sortingCallbacks = {
     statusDate: (a: AidLookup, b: AidLookup, dir: SortEvent): number => {
@@ -110,62 +131,41 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     }
   ]
 
-  constructor(public langService: LangService, private dialogService: DialogService,
-              public configService: ConfigurationService, private sharedService: SharedService,
-              public toast: ToastService, public aidLookupService: AidLookupService) {
-  }
-
-  get selectedRecords(): AidLookup[] {
-    return this.table.selection.selected;
-  }
-
-  ngOnInit(): void {
-    this.listenToReload();
-    this.listenToAdd();
-  }
-
-  listenToAdd(): void {
-    this.addSubscription = this.add$.pipe(tap(() => {
-      this.add();
-    })).subscribe();
-
-  }
-
   listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(switchMap(() => {
-      // TODO if status empty the BE default status true
-      const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId};
-      return this.aidLookupService.loadByCriteria(criteria);
-    })).subscribe(aidLookups => {
-      this.aidLookups = aidLookups;
-      this.aidLookupsClone = aidLookups;
-      this.table.selection.clear();
-      //this.internalSearch$.next(this.search$.value);
-    });
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(switchMap(() => {
+        const criteria: IAidLookupCriteria = {aidType: this.aidType, parent: this.parentId};
+        const load = this.service.loadByCriteria(criteria);
+        return load.pipe(
+          catchError(_ => of([]))
+        );
+      }))
+      .subscribe((list: AidLookup[]) => {
+        this.models = list;
+        this.table.selection.clear();
+      })
   }
 
-  add(): void {
-    const sub = this.aidLookupService.openCreateDialog(this.aidType, this.parentId)
-      .onAfterClose$.subscribe(() => {
-        this.reload$.next(null);
-        sub.unsubscribe();
-      });
+  listenToAdd() {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.aidType, this.parentId).onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => this.service.openUpdateDialog(model.id, this.aidType).pipe(catchError(_ => of(null)))))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   edit(aidLookup: AidLookup, $event?: MouseEvent): void {
     $event?.preventDefault();
-    const sub = this.aidLookupService.openUpdateDialog(aidLookup.id, this.aidType)
-      .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe((_) => {
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      });
-  }
-
-  delete(aidLookup: AidLookup, $event: MouseEvent): void {
-    $event.preventDefault();
-    return;
+    this.edit$.next(aidLookup);
   }
 
   deactivate(aidLookup: AidLookup, $event?: MouseEvent): void {
@@ -192,7 +192,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
           const ids = this.selectedRecords.map((item) => {
             return item.id;
           });
-          const sub = this.aidLookupService.deactivateBulk(ids).subscribe((response) => {
+          const sub = this.service.deactivateBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
                 this.reload$.next(null);
@@ -204,28 +204,6 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
     }
   }
 
-  getTitleText(): (keyof ILanguageKeys) {
-    let title: keyof ILanguageKeys;
-    switch (this.aidType) {
-      case AidTypes.CLASSIFICATIONS:
-        title = 'menu_aid_class';
-        break;
-      case AidTypes.MAIN_CATEGORY:
-        title = 'menu_aid_main_category';
-        break;
-      case AidTypes.SUB_CATEGORY:
-        title = 'menu_aid_sub_category';
-        break;
-    }
-    // @ts-ignore
-    return title;
-  }
-
-  ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
-    this.addSubscription?.unsubscribe();
-  }
-
   showAuditLogs(aidLookup: AidLookup, $event?: MouseEvent): void {
     $event?.preventDefault();
     aidLookup.showAuditLogs()
@@ -235,7 +213,7 @@ export class AidLookupComponent implements OnInit, OnDestroy, PageComponentInter
   }
 
   toggleStatus(aidLookup: AidLookup) {
-    this.aidLookupService.updateStatus(aidLookup.id, aidLookup.status!)
+    this.service.updateStatus(aidLookup.id, aidLookup.status!)
       .subscribe(() => {
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: aidLookup.getName()}));
         this.reload$.next(null);

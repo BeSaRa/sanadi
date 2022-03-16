@@ -4,6 +4,10 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {AdminResult} from "@app/models/admin-result";
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 // noinspection JSUnusedGlobalSymbols
 export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialExternalOfficeApprovalService, InitialExternalOfficeApproval> {
@@ -32,8 +36,13 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   licenseStatusInfo!: AdminResult;
   countryInfo!: AdminResult;
 
-  // properties to be delete while send to the backend
+  // properties to be deleted while send to the backend
   service: InitialExternalOfficeApprovalService;
+  searchFields: ISearchFieldsMap<InitialExternalOfficeApproval> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo']),
+    ...normalSearchFields(['subject', 'fullSerial'])
+  }
 
   constructor() {
     super();
@@ -41,12 +50,20 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   }
 
   buildForm(controls?: boolean): any {
-    const {requestType, licenseNumber, oldLicenseFullserial, oldLicenseId, oldLicenseSerial, country, region, description, organizationId} = this;
+    const {
+      requestType,
+      oldLicenseFullSerial,
+      oldLicenseId,
+      oldLicenseSerial,
+      country,
+      region,
+      description,
+      organizationId
+    } = this;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       organizationId: controls ? [organizationId, [CustomValidators.required]] : organizationId,
-      // licenseNumber: controls ? [licenseNumber, []] : licenseNumber,
-      oldLicenseFullserial: controls ? [oldLicenseFullserial, [CustomValidators.maxLength(250)]] : oldLicenseFullserial,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: controls ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: controls ? [oldLicenseSerial] : oldLicenseSerial,
       country: controls ? [country, [CustomValidators.required]] : country,

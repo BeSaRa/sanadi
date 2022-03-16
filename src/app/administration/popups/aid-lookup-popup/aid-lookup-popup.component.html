@@ -7,49 +7,44 @@
   <form novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
-           [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
+           [hasError]="form.invalid"></tab>
       <tab [name]="tabsData.childAids.name" [template]="childAidsTabTemplate" [title]="getTabTitleText()"
            [disabled]="!model.id" *ngIf="isAidTabVisible"></tab>
       <ng-template #basicTabTemplate>
-        <div formGroupName="basic">
-          <div class="row">
-            <div class="col-sm-6 mb-4 position-relative">
-              <label asteriskIfRequired="arName" for="arName"
-                     class="form-label">{{langService.map.lbl_arabic_name}}</label>
-              <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
-                     class="form-control"/>
-              <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
-            </div>
-            <div class="col-sm-6 mb-4 position-relative">
-              <label asteriskIfRequired="enName" for="enName"
-                     class="form-label">{{langService.map.lbl_english_name}}</label>
-              <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
-                     class="form-control"/>
-              <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
-            </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label asteriskIfRequired="arName" for="arName"
+                   class="form-label">{{langService.map.lbl_arabic_name}}</label>
+            <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput>
+            <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
-          <div class="row">
-            <div class="col-sm-6 mb-4 position-relative">
-              <label asteriskIfRequired="aidCode" for="aidCode"
-                     class="form-label">{{langService.map.lbl_aid_code}}</label>
-              <input id="aidCode" [ngClass]="fm.getStatusClass('basic.aidCode')"
-                     formControlName="aidCode" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-              <app-field-error-message [control]="fm.getFormField('basic.aidCode')"></app-field-error-message>
-            </div>
-            <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
-              <label asteriskIfRequired="status" for="status" class="form-label">{{langService.map.lbl_status}}</label>
-              <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                         placeholder="{{langService.map.select}}" id="status"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="status"
-                         [ngClass]="fm.getStatusClass('basic.status')">
-                <ng-option *ngFor="let option of aidLookupStatusList" [value]="option.lookupKey"
-                           [disabled]="option.isRetiredAidLookupStatus()">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
-            </div>
+          <div class="col-sm-6 mb-4 position-relative">
+            <label asteriskIfRequired="enName" for="enName"
+                   class="form-label">{{langService.map.lbl_english_name}}</label>
+            <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" trimInput>
+            <app-field-error-message controlName="enName"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 position-relative">
+            <label asteriskIfRequired="aidCode" for="aidCode"
+                   class="form-label">{{langService.map.lbl_aid_code}}</label>
+            <input id="aidCode" validationClasses="aidCode" trimInput
+                   formControlName="aidCode" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="aidCode"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 mb-4 position-relative ng-select-wrapper">
+            <label asteriskIfRequired="status" for="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="status"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="status" validationClasses="status">
+              <ng-option *ngFor="let option of aidLookupStatusList" [value]="option.lookupKey"
+                         [disabled]="option.isRetiredAidLookupStatus()">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="status"></app-field-error-message>
           </div>
         </div>
       </ng-template>
@@ -61,12 +56,12 @@
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button *ngIf="saveVisible" [disabled]="form.invalid" (click)="saveModel()"
+  <button *ngIf="saveVisible" [disabled]="form.invalid" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

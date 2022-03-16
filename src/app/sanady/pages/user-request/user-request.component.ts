@@ -44,7 +44,7 @@ import {ReadModeService} from '../../../services/read-mode.service';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {isValidValue} from '../../../helpers/utils';
 import {IKeyValue} from '../../../interfaces/i-key-value';
-import {CanNavigateOptions} from '../../../types/types';
+import {CanNavigateOptions, DatepickerOptionsMap} from '../../../types/types';
 import {NavigationService} from '../../../services/navigation.service';
 import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
 import {SubventionResponseService} from '../../../services/subvention-response.service';
@@ -105,7 +105,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
 
-  datepickerOptionsMap: IKeyValue = {
+  datepickerOptionsMap: DatepickerOptionsMap = {
     dateOfBirth: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     creationDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     statusDateModified: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),

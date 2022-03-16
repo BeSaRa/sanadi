@@ -10,6 +10,7 @@ import {ProjectModel} from "@app/models/project-model";
 import {BlobModel} from "@app/models/blob-model";
 import {ProjectModelService} from "@app/services/project-model.service";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'case-info',
   templateUrl: './case-info.component.html',
@@ -50,7 +51,7 @@ export class CaseInfoComponent implements OnInit {
   }
 
   get generatedLicenseNumber(): string {
-    return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullserial || '';
+    return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullSerial || '';
   }
 
   get generatedLicenseId(): string {

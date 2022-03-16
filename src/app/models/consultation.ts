@@ -3,6 +3,10 @@ import {ConsultationService} from '../services/consultation.service';
 import {FactoryService} from '../services/factory.service';
 import {CustomValidators} from '../validators/custom-validators';
 import {AdminResult} from './admin-result';
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
 
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
   caseType: number = 2;
@@ -12,9 +16,14 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   mobileNo!: string;
   organizationId!: number;
   requestBody!: string;
-
+  categoryInfo!: AdminResult;
   service: ConsultationService;
   organizationInfo!: AdminResult;
+  searchFields: ISearchFieldsMap<Consultation> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'organizationInfo', 'categoryInfo']),
+    ...normalSearchFields(['fullName', 'fullSerial'])
+  }
 
   constructor() {
     super();
@@ -40,7 +49,7 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
         CustomValidators.minLength(4),
         CustomValidators.maxLength(100),
         CustomValidators.pattern('ENG_AR_NUM_ONLY')]] : fullName,
-      mobileNo: control ? [mobileNo, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : mobileNo,
+      mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       email: control ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
       requestBody: control ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
       competentDepartmentID: control ? [competentDepartmentID] : competentDepartmentID,

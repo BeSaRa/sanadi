@@ -1,5 +1,5 @@
 import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
@@ -10,6 +10,10 @@ import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {FileStore} from './file-store';
 import {DialogRef} from '../shared/models/dialog-ref';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
+import {OrganizationUnitServicesService} from '@app/services/organization-unit-services.service';
+import {OrgUnitService} from '@app/models/org-unit-service';
 
 export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
@@ -73,6 +77,116 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
     this.lookupService = FactoryService.getService('LookupService');
   }
 
+  buildFormBasic(controls?: boolean): any {
+    const {
+      arName,
+      enName,
+      orgUnitType,
+      orgCode,
+      status,
+      email,
+      phoneNumber1,
+      phoneNumber2,
+      address,
+      buildingName,
+      unitName,
+      street,
+      zone,
+      city,
+      orgNationality,
+      poBoxNum,
+      hotLine,
+      faxNumber,
+      registryCreator,
+      registryDate,
+      licensingAuthority,
+      workField,
+      orgFieldId,
+      promoteExtProj
+    } = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+      ]] : enName,
+      orgUnitType: controls ? [orgUnitType, CustomValidators.required] : orgUnitType,
+      orgCode: controls ? [orgCode, [CustomValidators.required, Validators.maxLength(10)]] : orgCode,
+      status: controls ? [status, CustomValidators.required] : status,
+      email: controls ? [email, [CustomValidators.required, Validators.email, Validators.maxLength(50)]] : email,
+      phoneNumber1: controls ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
+      phoneNumber2: controls ? [phoneNumber2, CustomValidators.commonValidations.phone] : phoneNumber2,
+      address: controls ? [address, [Validators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
+      buildingName: controls ? [buildingName, [CustomValidators.required, Validators.maxLength(200)]] : buildingName,
+      unitName: controls ? [unitName, [CustomValidators.required, Validators.maxLength(200)]] : unitName,
+      street: controls ? [street, [CustomValidators.required, Validators.maxLength(200)]] : street,
+      zone: controls ? [zone, [CustomValidators.required, Validators.maxLength(100)]] : zone,
+      city: controls ? [city, [CustomValidators.required]] : city,
+      orgNationality: controls ? [orgNationality, CustomValidators.required] : orgNationality,
+      poBoxNum: controls ? [poBoxNum, [CustomValidators.number, Validators.maxLength(10)]] : poBoxNum,
+      hotLine: controls ? [hotLine, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : hotLine,
+      faxNumber: controls ? [faxNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : faxNumber,
+      registryCreator: controls ? [registryCreator] : registryCreator,
+      registryDate: controls ? [registryDate, CustomValidators.maxDate(new Date())] : registryDate,
+      licensingAuthority: controls ? [licensingAuthority, CustomValidators.required] : licensingAuthority,
+      workField: controls ? [workField, CustomValidators.required] : workField,
+      orgFieldId: controls ? [orgFieldId, CustomValidators.required] : orgFieldId,
+      promoteExtProj: controls ? [promoteExtProj] : promoteExtProj
+    }
+  }
+
+  setBasicFormCrossValidations(): any {
+    return CustomValidators.validateFieldsStatus([
+      'arName', 'enName', 'orgUnitType', 'orgCode', 'status', 'email', 'phoneNumber1', 'phoneNumber2',
+      'address', 'buildingName', 'unitName', 'street', 'zone', 'city', 'orgNationality', 'poBoxNum', 'hotLine', 'faxNumber', 'registryCreator',
+      'registryDate', 'licensingAuthority', 'workField'
+    ])
+  }
+
+  buildFormAdvanced(controls?: boolean): any {
+    const {
+      unifiedEconomicRecord,
+      webSite,
+      establishmentDate,
+      registryNumber,
+      budgetClosureDate,
+      orgUnitAuditor,
+      linkToInternalSystem,
+      lawSubjectedName,
+      boardDirectorsPeriod,
+      arabicBoardMembers,
+      enBoardMembers,
+      arabicBrief,
+      enBrief
+    } = this;
+    return {
+      unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.maxLength(150)]] : unifiedEconomicRecord,
+      webSite: controls ? [webSite, [Validators.maxLength(350)]] : webSite,
+      establishmentDate: controls ? [establishmentDate] : establishmentDate,
+      registryNumber: controls ? [registryNumber, [Validators.maxLength(50)]] : registryNumber,
+      budgetClosureDate: controls ? [budgetClosureDate] : budgetClosureDate,
+      orgUnitAuditor: controls ? [orgUnitAuditor, [Validators.maxLength(350)]] : orgUnitAuditor,
+      linkToInternalSystem: controls ? [linkToInternalSystem, [Validators.maxLength(450)]] : linkToInternalSystem,
+      lawSubjectedName: controls ? [lawSubjectedName, [Validators.maxLength(450)]] : lawSubjectedName,
+      boardDirectorsPeriod: controls ? [boardDirectorsPeriod, [Validators.maxLength(350)]] : boardDirectorsPeriod,
+      arabicBoardMembers: controls ? [arabicBoardMembers] : arabicBoardMembers,
+      enBoardMembers: controls ? [enBoardMembers] : enBoardMembers,
+      arabicBrief: controls ? [arabicBrief, [CustomValidators.pattern('AR_NUM'), Validators.maxLength(2000)]] : arabicBrief,
+      enBrief: controls ? [enBrief, [CustomValidators.pattern('ENG_NUM'), Validators.maxLength(2000)]] : enBrief
+    }
+  }
+
+  setAdvancedFormCrossValidations(): any {
+    return CustomValidators.validateFieldsStatus([
+      'unifiedEconomicRecord', 'webSite', 'establishmentDate', 'registryNumber', 'budgetClosureDate',
+      'orgUnitAuditor', 'linkToInternalSystem', 'lawSubjectedName', 'boardDirectorsPeriod',
+      'arabicBoardMembers', 'enBoardMembers', 'arabicBrief', 'enBrief'
+    ])
+  }
+
   create(): Observable<OrgUnit> {
     return this.service.create(this);
   }
@@ -113,6 +227,14 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
 
   showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
+  }
+
+  loadLinkedServices(): Observable<OrgUnitService[]> {
+    if (!this.id) {
+      return of([]);
+    }
+    let orgUnitLinkedServicesService: OrganizationUnitServicesService = FactoryService.getService('OrganizationUnitServicesService');
+    return orgUnitLinkedServicesService.loadLinkedServicesByOrgId(this.id);
   }
 
 }

@@ -16,12 +16,13 @@ import {
   CollectionApprovalApproveTaskPopupComponent
 } from "@app/modules/collection/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {CollectionApprovalSearchCriteria} from "@app/models/collection-approval-search-criteria";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollectionApprovalService extends EServiceGenericService<CollectionApproval> {
-  jsonSearchFile: string = 'asdad';
+  jsonSearchFile: string = 'collection_approval_search.json';
   interceptor: IModelInterceptor<CollectionApproval> = new CollectionApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -40,11 +41,11 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
   }
 
   getSearchCriteriaModel<S extends CollectionApproval>(): CollectionApproval {
-    throw new Error('Method not implemented.');
+    return new CollectionApprovalSearchCriteria();
   }
 
   getCaseComponentName(): string {
-    throw new Error('Method not implemented.');
+    return 'CollectionApprovalComponent';
   }
 
   _getUrlService(): UrlService {

@@ -121,7 +121,7 @@ export class InboxService {
 
   getService(serviceNumber: number): EServiceGenericService<any> {
     if (!this.services.has(serviceNumber)) {
-      throw new Error('Service number' + serviceNumber + ' Not register in InboxServices');
+      console.log('Service number' + serviceNumber + ' Not register in InboxServices');
     }
     return (this.services.get(serviceNumber) as EServiceGenericService<any>);
   }

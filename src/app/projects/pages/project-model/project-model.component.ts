@@ -9,7 +9,7 @@ import {ProjectModelService} from "@app/services/project-model.service";
 import {Observable, of, Subject} from 'rxjs';
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {DacOchaService} from "@app/services/dac-ocha.service";
@@ -35,6 +35,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -140,7 +141,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               public employeeService: EmployeeService,
               private dacOchaService: DacOchaService,
               private lookupService: LookupService,
-              private countyService: CountryService,
+              private countryService: CountryService,
               private sdgService: SDGoalService,
               public service: ProjectModelService) {
     super();
@@ -480,7 +481,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private loadCountries(): void {
-    this.countyService.loadCountries()
+    this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -692,14 +693,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onRequestTypeChange() {
+    const value = this.requestType.value;
+    this._resetForm();
+    this.requestType.setValue(value);
+
     this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.EDIT;
     this.templateSerialControl.setValidators(CustomValidators.required);
   }
 
   searchForTemplate() {
-    if (!this.templateSerialControl.value) {
+    /*if (!this.templateSerialControl.value) {
       return;
-    }
+    }*/
     this.searchTemplate$.next(this.templateSerialControl.value);
   }
 
@@ -709,8 +714,26 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       .pipe(switchMap(val => this.service.searchTemplateBySerial(val)))
       .pipe(tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null))
       .pipe(filter(v => !!v))
-      .pipe(switchMap(list => this.service.openSelectTemplate(list).onAfterClose$))
+      .pipe(switchMap(list => {
+        if (list.length === 1) {
+          return this.service.getTemplateById(list[0].id)
+            .pipe(
+              map((data) => {
+                if (!data) {
+                  return of(null);
+                }
+                return data;
+              }),
+              catchError((e) => {
+                return of(null);
+              })
+            )
+        } else {
+          return this.service.openSelectTemplate(list).onAfterClose$;
+        }
+      }))
       .subscribe((result: UserClickOn | ProjectModel) => {
+        debugger
         if (result instanceof ProjectModel) {
           this.selectedModel = result;
           this.templateSerialControl.setValue(result.templateFullSerial);
@@ -724,7 +747,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
                 this.loadSubDacOcha(this.getSelectedMainDacOchId())
                 return of(null);
               })
-            ).subscribe(()=> this.onDomainChange())
+            ).subscribe(() => this.onDomainChange())
 
           this._updateForm(result.clone({
             id: undefined,
@@ -792,5 +815,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }
     }
     return failedList;
+  }
+
+  addCountry($event?: MouseEvent): void {
+    $event?.preventDefault();
+    this.countryService.openCreateDialog()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe(() => {
+          this.loadCountries();
+        });
+      });
   }
 }

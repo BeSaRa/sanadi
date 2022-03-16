@@ -34,7 +34,7 @@
                      class="form-label">{{lang.map.request_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                          placeholder="{{lang.map.select}}" id="requestType"
-                         (change)="handleRequestTypeChange($event)"
+                         (change)="handleRequestTypeChange($event, true)"
                          [notFoundText]="lang.map.msg_not_found"
                          [readonly]="!isEditRequestTypeAllowed()"
                          formControlName="requestType" validationClasses="requestType">
@@ -43,6 +43,21 @@
                 </ng-option>
               </ng-select>
               <app-field-error-message controlName="requestType"></app-field-error-message>
+            </div>
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <label for="oldLicenseFullSerial" asteriskIfRequired="oldLicenseFullSerial"
+                     class="form-label">{{lang.map.license_number}}</label>
+              <div class="input-group">
+                <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
+                        class="input-group-text"><i
+                  class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                       formControlName="oldLicenseFullSerial"
+                       type="text" [readOnly]="!isEditLicenseAllowed()"
+                       validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
+                       id="oldLicenseFullSerial">
+                <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+              </div>
             </div>
             <div class="col-sm-12 col-md-4 mb-4 position-relative">
               <label for="projectType" asteriskIfRequired="projectType"
@@ -57,21 +72,6 @@
                 </ng-option>
               </ng-select>
               <app-field-error-message controlName="requestType"></app-field-error-message>
-            </div>
-            <div class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label for="oldLicenseFullserial" asteriskIfRequired="oldLicenseFullserial"
-                     class="form-label">{{lang.map.license_number}}</label>
-              <div class="input-group">
-                <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
-                        class="input-group-text"><i
-                  class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-                <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
-                       formControlName="oldLicenseFullserial"
-                       type="text" [readOnly]="!isEditLicenseAllowed()"
-                       validationClasses="oldLicenseFullserial" [onlyInvalid]="false" class="form-control"
-                       id="oldLicenseFullserial">
-                <app-field-error-message controlName="oldLicenseFullserial"></app-field-error-message>
-              </div>
             </div>
           </div>
           <div *ngIf="selectedLicense">
