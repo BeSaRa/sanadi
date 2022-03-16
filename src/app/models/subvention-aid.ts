@@ -29,7 +29,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
-  aidLookupInfo!: Partial<AdminResult>;
+  aidLookupInfo!: AdminResult;
   periodicTypeInfo!: AdminResult;
 
   service: SubventionAidService;
