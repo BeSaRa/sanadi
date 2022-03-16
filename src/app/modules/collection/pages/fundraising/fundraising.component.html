@@ -22,21 +22,6 @@
                         </ng-select>
                         <app-field-error-message controlName="requestType"></app-field-error-message>
                     </div>
-                    <!-- Previous License Number -->
-                    <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isEditLicenseAllowed()">
-                        <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
-                            for="oldLicenseFullSerial">{{lang.map.previous_license_number}}</label>
-                        <div class="input-group">
-                            <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
-                                class="input-group-text"><i
-                                    class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-                            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
-                                formControlName="oldLicenseFullSerial" trimInput type="text"
-                                [readOnly]="!isEditLicenseAllowed()" validationClasses="oldLicenseFullSerial"
-                                [onlyInvalid]="false" class="form-control" id="oldLicenseFullSerial">
-                            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
-                        </div>
-                    </div>
                     <!-- License Type -->
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="licenseDurationType"
@@ -48,6 +33,21 @@
                                 {{option.getName()}}</ng-option>
                         </ng-select>
                         <app-field-error-message controlName="licenseDurationType"></app-field-error-message>
+                    </div>
+                    <!--License Number -->
+                    <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                        <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
+                            for="oldLicenseFullSerial">{{lang.map.license_number}}</label>
+                        <div class="input-group">
+                            <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
+                                class="input-group-text"><i
+                                    class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch()"
+                                formControlName="oldLicenseFullSerial" trimInput type="text"
+                                [readOnly]="!isEditLicenseAllowed()" validationClasses="oldLicenseFullSerial"
+                                [onlyInvalid]="false" class="form-control" id="oldLicenseFullSerial">
+                            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+                        </div>
                     </div>
                 </div>
                 <!-- channel/media name -->
