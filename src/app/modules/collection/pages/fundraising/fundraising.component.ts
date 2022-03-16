@@ -238,7 +238,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error("Method not implemented.");
+    return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
     this._resetForm();
