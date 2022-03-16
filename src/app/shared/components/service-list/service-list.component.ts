@@ -7,6 +7,7 @@ import {MenuItem} from '@app/models/menu-item';
 import {Router} from '@angular/router';
 
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-service-list',
   templateUrl: './service-list.component.html',

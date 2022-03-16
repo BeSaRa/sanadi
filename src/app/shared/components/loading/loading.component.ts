@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',

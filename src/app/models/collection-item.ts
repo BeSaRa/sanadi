@@ -71,8 +71,8 @@ export class CollectionItem extends Cloneable<CollectionItem> implements License
       streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
       zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
       unitNumber: controls ? [unitNumber, [CustomValidators.required]] : unitNumber,
-      latitude: controls ? [latitude, [CustomValidators.required]] : latitude,
-      longitude: controls ? [longitude, [CustomValidators.required]] : longitude,
+      latitude: controls ? [{value: latitude, disabled: true}, [CustomValidators.required]] : latitude,
+      longitude: controls ? [{value: longitude, disabled: true}, [CustomValidators.required]] : longitude,
       licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
     }

@@ -1,13 +1,13 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from './url.service';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
 import {Localization} from '../models/localization';
 import {Language} from '../models/language';
 import {IAvailableLanguages} from '../interfaces/i-available-languages';
 import {DOCUMENT} from '@angular/common';
 import {Styles} from '../enums/styles.enum';
-import {delay, map, switchMap} from 'rxjs/operators';
+import {delay, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
 import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
@@ -36,7 +36,7 @@ export class LangService extends BackendGenericService<Localization> {
     en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
     ar: new Language(2, 'العربية', 'ar', 'rtl', Styles.BOOTSTRAP_RTL, 'English')
   };
-  private languageToggler: { [index: string]: string } = {
+  private languageSwitcher: { [index: string]: string } = {
     ar: 'en',
     en: 'ar'
   };
@@ -50,6 +50,9 @@ export class LangService extends BackendGenericService<Localization> {
     ar: 1,
     en: 2
   };
+
+  private changeStatusTrigger: Subject<{ language: Language, silent: boolean }> = new Subject<{ language: Language, silent: boolean }>();
+  changeStatus$: Subject<'Start' | 'InProgress' | 'Done'> = new Subject<"Start" | "InProgress" | "Done">()
 
   constructor(@Inject(DOCUMENT) private document: Document,
               public http: HttpClient,
@@ -69,6 +72,7 @@ export class LangService extends BackendGenericService<Localization> {
       this.prepareCurrentLang();
       this.prepareLocalizationMap();
     });
+    this.listenToChangeTrigger();
   }
 
 
@@ -118,14 +122,31 @@ export class LangService extends BackendGenericService<Localization> {
    * @param silent
    */
   changeLanguage(language: Language, silent: boolean = false): void {
-    this.changeHTMLDirection(language.direction);
-    this.changeStyleHref(language.style);
+    this.changeStatusTrigger.next({
+      language,
+      silent
+    })
+  }
 
-    this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
-    if (!silent) {
-      this.languageChange.next(language);
-    }
-    this.prepareCurrentLang();
+  private listenToChangeTrigger(): void {
+    this.changeStatusTrigger
+      .pipe(tap(_ => this.changeStatus$.next("Start")))
+      .pipe(delay(300))
+      .pipe(tap(_ => this.changeStatus$.next("InProgress")))
+      .pipe(exhaustMap(({language, silent}) => {
+        this.changeHTMLDirection(language.direction);
+        this.changeStyleHref(language.style);
+        this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
+        if (!silent) {
+          this.languageChange.next(language);
+        }
+        this.prepareCurrentLang();
+        return of(true)
+      }))
+      .pipe(delay(300))
+      .subscribe(() => {
+        this.changeStatus$.next("Done")
+      })
   }
 
   /**
@@ -133,10 +154,11 @@ export class LangService extends BackendGenericService<Localization> {
    */
   toggleLanguage(): Observable<Language> {
     return new Observable((subscriber) => {
-      const code = this.languageToggler[this.languageChange.value.code];
+      const code = this.languageSwitcher[this.languageChange.value.code];
       const lang = this.languages[code];
       let sub: Subscription;
       if (this.employeeService.loggedIn()) {
+        this.changeStatus$.next('Start');
         sub = this._changeUserLanguage(code)
           .subscribe((result) => {
             this.authService.isAuthenticatedTrigger$.next(result);

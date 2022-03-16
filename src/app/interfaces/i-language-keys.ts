@@ -4,6 +4,7 @@ export interface ILanguageKeys {
   about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
+  loading_language_please_wait: string;
   toggle_checklist: string;
   mark_all_as_done: string;
   step_checklist: string;
