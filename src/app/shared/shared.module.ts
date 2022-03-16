@@ -91,6 +91,7 @@ import {
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { CaseInfoComponent } from './components/case-info/case-info.component';
 import { StepCheckListComponent } from './components/step-check-list/step-check-list.component';
+import { LangLoaderComponent } from './components/lang-loader/lang-loader.component';
 
 @NgModule({
   declarations: [
@@ -167,7 +168,9 @@ import { StepCheckListComponent } from './components/step-check-list/step-check-
     RiskStatusDirective,
     EServiceComponentWrapperComponent,
     CaseInfoComponent,
-    StepCheckListComponent
+    StepCheckListComponent,
+    LangLoaderComponent,
+    LangLoaderComponent
   ],
   imports: [
     CommonModule,
@@ -246,7 +249,8 @@ import { StepCheckListComponent } from './components/step-check-list/step-check-
     InboxGridActionsComponent,
     ReadUnreadDirective,
     RiskStatusDirective,
-    EServiceComponentWrapperComponent
+    EServiceComponentWrapperComponent,
+    LangLoaderComponent
   ]
 })
 export class SharedModule {
