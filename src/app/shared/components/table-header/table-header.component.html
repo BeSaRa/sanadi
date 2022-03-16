@@ -1,5 +1,5 @@
 <div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white">
-  <h1 class="h6 my-1">{{lang.map[tableTitle]}}</h1>
+  <h1 class="h6 my-1">{{tableTitle ? lang.map[tableTitle] : ''}}</h1>
   <div>
     <button [tooltip]="lang.map.btn_reload"
             (click)="reload()" *ngIf="reload$"
