@@ -10,7 +10,9 @@
   <div *ngIf="customTemplate">
     <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
   </div>
+
   <div class="flex-grow-1"></div>
+  <!-- Risk Status -->
   <div class="d-flex gap-3 risk-status">
     <div class="d-flex" *ngIf="selectedFilter">
       <button (click)="selectFilter(selectedFilter)" class="btn btn-sm"
@@ -26,14 +28,20 @@
               *ngFor="let filter of riskStatus">
         {{filter.getName()}}
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-        {{stats && stats[riskCounter[filter.lookupKey]]}}
-          <span class="visually-hidden">unread messages</span>
-      </span>
+          {{stats && stats[riskCounter[filter.lookupKey]]}}
+            <span class="visually-hidden">unread messages</span>
+        </span>
       </button>
+      <div class="vr"></div>
     </ng-container>
   </div>
-  <div class="px-3"></div>
-  <div class="vr"></div>
+
+  <!-- outer content -->
+  <div class="d-flex" #contentRef>
+    <ng-content></ng-content>
+  </div>
+  <div class="vr" *ngIf="contentRef.children.length"></div>
+
   <button (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
           class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
