@@ -168,6 +168,14 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _afterBuildForm(): void {
     this.listenToRequestTypeChange();
+    this.checkReadOnlyFlagAndSetFormState();
+  }
+
+  checkReadOnlyFlagAndSetFormState() {
+    //if readonly is true,disable all the controls inside form
+    if(this.readonly){
+      this.form.disable();
+    }
   }
 
   listenToRequestTypeChange(): void {
