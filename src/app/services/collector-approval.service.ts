@@ -15,12 +15,13 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   CollectorApprovalApproveTaskPopupComponent
 } from '@app/modules/collection/popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
+import {CollectorApprovalSearchCriteria} from '@app/models/collector-approval-search-criteria';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollectorApprovalService extends EServiceGenericService<CollectorApproval> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'collector_approval_form.json';
   interceptor: IModelInterceptor<CollectorApproval> = new CollectorApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_collector_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -51,11 +52,11 @@ export class CollectorApprovalService extends EServiceGenericService<CollectorAp
   }
 
   getSearchCriteriaModel<S extends CollectorApproval>(): CollectorApproval {
-    throw new Error('Method not implemented.');
+    throw new CollectorApprovalSearchCriteria();
   }
 
   getCaseComponentName(): string {
-    throw new Error('Method not implemented.');
+    return 'CollectorApprovalComponent';
   }
 
   _getUrlService(): UrlService {

@@ -7,6 +7,11 @@ export class CollectorItemInterceptor implements IModelInterceptor<CollectorItem
   send(model: Partial<CollectorItem>): Partial<CollectorItem> {
     model.licenseEndDate = DateUtils.getDateStringFromDate(model.licenseEndDate);
     delete model.collectorTypeInfo;
+    delete model.licenseStatusInfo;
+    delete model.licenseDurationTypeInfo;
+    delete model.relationshipInfo;
+    delete model.genderInfo;
+    delete model.nationalityInfo;
     return model;
   }
 
