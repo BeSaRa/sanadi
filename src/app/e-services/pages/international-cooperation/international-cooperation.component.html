@@ -14,94 +14,68 @@
   <ng-template #basicInfoTabTemplate>
     <fieldset [disabled]="readonly">
       <form [formGroup]="form" autocomplete="off">
-        <div class="row mb-3">
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.competent_dep}}</label>
-              <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
-                <ng-select [readonly]="readonly" (change)="onCompetentDepChange($event)"
-                           validationClasses="competentDepartmentID"
-                           formControlName="competentDepartmentID"
-                           id="competentDepartmentID">
-                  <ng-option [value]="department.id" [disabled]="!department.isActive()"
-                             *ngFor="let department of departments">{{department.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <!-- Competent Department -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
+                   class="form-label">{{lang.map.competent_dep}}</label>
+            <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="competentDepartmentID"
+                       [notFoundText]="lang.map.msg_not_found"
+                       (change)="onCompetentDepChange($event)"
+                       [readonly]="readonly" appendTo="body"
+                       formControlName="competentDepartmentID" validationClasses="competentDepartmentID">
+              <ng-option [value]="department.id" [disabled]="!department.isActive()"
+                         *ngFor="let department of departments">{{department.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
           </div>
-          <div class="col-md-6 col-sm-12">
-            <div class="row">
-              <label asteriskIfRequired="country" for="country"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.country}}</label>
-              <div class="col-md-8 col-sm-12 mb-3 position-relative ng-select-wrapper">
-                <ng-select [readonly]="readonly" validationClasses="country"
-                           formControlName="country"
-                           id="country">
-                  <ng-option [value]="option.id" *ngFor="let option of countries"
-                             [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
-                </ng-select>
-                <app-field-error-message controlName="country"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Country -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
+            <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="country"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="readonly" appendTo="body"
+                       formControlName="country" validationClasses="country">
+              <ng-option [value]="option.id" *ngFor="let option of countries"
+                         [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="country"></app-field-error-message>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="fullName" asteriskIfRequired="fullName"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.full_name}}</label>
-              <div class="col-md-8 mb-3 col-sm-12 position-relative">
-                <input id="fullName" validationClasses="fullName" name="fullName" formControlName="fullName"
-                       class="form-control">
-                <app-field-error-message controlName="fullName"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="email" asteriskIfRequired="email"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_email}}</label>
-              <div class="col-md-8 mb-3 col-sm-12 position-relative">
-                <input id="email" validationClasses="email" name="email" formControlName="email"
-                       class="form-control">
-                <app-field-error-message controlName="email"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Full Name -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
+            <input id="fullName" validationClasses="fullName" formControlName="fullName" trimInput class="form-control">
+            <app-field-error-message controlName="fullName"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="organization" asteriskIfRequired="organization"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.lbl_organization}}</label>
-              <div class="col-md-8 mb-3 col-sm-12 position-relative">
-                <input id="organization" validationClasses="organization" name="organization"
-                       formControlName="organization"
-                       class="form-control">
-                <app-field-error-message controlName="organization"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <!-- Email -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+            <input id="email" validationClasses="email" formControlName="email" trimInput class="form-control">
+            <app-field-error-message controlName="email"></app-field-error-message>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row">
-              <label for="mobileNo" asteriskIfRequired="mobileNo"
-                     class="col-md-4 col-sm-12 col-form-label">{{lang.map.mobile_number}}</label>
-              <div class="col-md-8 mb-3 col-sm-12 position-relative">
-                <input id="mobileNo" validationClasses="mobileNo" name="mobileNo" formControlName="mobileNo"
-                       class="form-control" trimInput>
-                <app-field-error-message controlName="mobileNo"></app-field-error-message>
-              </div>
-            </div>
+          <!-- Organization -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="organization" for="organization" class="form-label">{{lang.map.lbl_organization}}</label>
+            <input id="organization" validationClasses="organization" formControlName="organization" trimInput class="form-control">
+            <app-field-error-message controlName="organization"></app-field-error-message>
+          </div>
+          <!-- Mobile Number -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="mobileNo" for="mobileNo" class="form-label">{{lang.map.mobile_number}}</label>
+            <input id="mobileNo" validationClasses="mobileNo" formControlName="mobileNo" trimInput class="form-control">
+            <app-field-error-message controlName="mobileNo"></app-field-error-message>
           </div>
         </div>
-        <div class="row mb-3">
-          <label asteriskIfRequired="requestBody" for="requestBody"
-                 class="col-md-2 col-sm-12 col-form-label">{{lang.map.request_body}}</label>
-          <div class="col-md-10 col-sm-12 mb-3 position-relative">
-          <textarea rows="5" id="requestBody" formControlName="requestBody" validationClasses="requestBody"
-                    class="form-control"></textarea>
+        <div class="row">
+          <!-- Request Body -->
+          <div class="col-12 mb-4 position-relative">
+            <label asteriskIfRequired="requestBody" for="requestBody" class="form-label">{{lang.map.request_body}}</label>
+            <textarea rows="5" id="requestBody" formControlName="requestBody" validationClasses="requestBody"
+                      class="form-control" trimInput></textarea>
             <app-field-error-message controlName="requestBody"></app-field-error-message>
           </div>
         </div>
