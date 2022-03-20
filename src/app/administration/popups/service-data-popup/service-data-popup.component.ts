@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {of, Subject} from 'rxjs';
+import {iif, of, Subject} from 'rxjs';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ServiceData} from '@app/models/service-data';
@@ -7,7 +7,7 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {extender} from '@app/helpers/extender';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -20,6 +20,9 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ServiceDataStep} from '@app/models/service-data-step';
 import {ServiceDataStepService} from '@app/services/service-data-step.service';
 import {ChecklistService} from '@app/services/checklist.service';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'service-data-popup',
@@ -53,7 +56,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
               public langService: LangService, private fb: FormBuilder, private toast: ToastService,
               private dialogRef: DialogRef, private exceptionHandlerService: ExceptionHandlerService,
               private serviceDataStepsService: ServiceDataStepService,
-              private checklistService: ChecklistService) {
+              private checklistService: ChecklistService, private serviceData: ServiceDataService, private dialog: DialogService) {
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
@@ -66,6 +69,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.listenToSave();
     this.listenToEdit();
     this.reloadSteps();
+    this.listenToFollowUpStatus();
   }
 
   displayFormValidity(elmRefToScroll: HTMLElement) {
@@ -100,7 +104,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         serviceTerms: [this.model.serviceTerms, [CustomValidators.required, CustomValidators.maxLength(1000)]],
         fees: [this.model.fees, [CustomValidators.number, CustomValidators.maxLength(10)]],
         serviceStepsArabic: [this.model.serviceStepsArabic, [CustomValidators.maxLength(1000)]],
-        serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]]
+        serviceStepsEnglish: [this.model.serviceStepsEnglish, [CustomValidators.maxLength(1000)]],
+        followUp: [this.model.followUp]
       }),
       customSettings: this.fb.group({
         maxTargetAmount: [this.model.maxTargetAmount, [CustomValidators.number]],
@@ -158,7 +163,9 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       this.showMaxElementsCount = true;
     }
   }
-
+  get serviceFollowUp(){
+    return this.form.get('basic.followUp')!;
+  }
   get maxTargetAmount() {
     return this.form.get('customSettings.maxTargetAmount');
   }
@@ -208,5 +215,26 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+  }
+
+  private listenToFollowUpStatus() {
+    this.serviceFollowUp.valueChanges
+      .pipe(tap(v => console.log("v"+ v)))
+      .pipe(switchMap(value => iif(()=> {
+        return value === true}, of(value),
+        this.dialog.confirm(this.langService.map.followup_change_status_confirm).onAfterClose$
+          .pipe(filter( value=> {
+           console.log('value'+ value);
+           console.log("user" + UserClickOn.YES);
+
+            return value === UserClickOn.YES
+
+          }), map( _=> value))
+      )))
+      .pipe(switchMap(value=> {
+        console.log(value);
+        return this.serviceData.toggleFollowUpStatus(this.model.id, value);
+      }))
+      .subscribe(res => this.model.followUp = res);
   }
 }

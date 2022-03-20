@@ -17,9 +17,10 @@
            [title]="langService.map.custom_settings"
            [hasError]="fm.getFieldInvalidStatus('customSettings')"
            *ngIf="model.hasCustomSettings()"></tab>
-           <tab [name]="tabsData.basic.followup"
+      <tab [name]="tabsData.basic.followup"
            [template]="followupTabTemplate"
            [title]="langService.map.followup_configuration"
+           [disabled]="!model.followUp"
            ></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
@@ -173,6 +174,14 @@
             <app-field-error-message controlName="serviceStepsEnglish"></app-field-error-message>
           </div>
         </div>
+        <div class="col-sm-6 mb-4">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="followUp"
+                   [checked]="model.followUp">
+            <label class="form-check-label"
+                   for="allowCompletion">{{langService.map.enable_followUp}}</label>
+          </div>
+        </div>
       </div>
     </ng-template>
     <ng-template #stepsTabTemplate>
@@ -271,7 +280,7 @@
       </div>
     </ng-template>
     <ng-template #followupTabTemplate>
-      <followup-configuration></followup-configuration>
+      <followup-configuration [serviceData]="model"></followup-configuration>
     </ng-template>
   </form>
 </div>

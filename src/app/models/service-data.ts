@@ -35,7 +35,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   activateDevelopmentField: boolean = false;
   sLA!: number;
   serviceReviewLimit!: number;
-
+  followUp!:boolean;
 
   service: ServiceDataService;
   langService: LangService;

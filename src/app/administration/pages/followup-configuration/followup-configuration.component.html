@@ -1,5 +1,9 @@
   <div class="row pb-3">
-    <app-page-header [pageTitle]="'followup_configuration'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+    <app-page-header
+      [pageTitle]="'followup_configuration'"
+      [clickOnReload$]="reload$"
+      [useReloadValue]="true"
+      [clickOnNew$]="add$" >
     </app-page-header>
     <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
   </div>
@@ -17,7 +21,7 @@
                 <td cdk-cell *cdkCellDef="let row">{{row.getName()}}</td>
               </ng-container>
               <ng-container cdkColumnDef="followUpType">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.followup_type}}</th>
                 <td cdk-cell *cdkCellDef="let row">{{row.followUpTypeInfo.getName()}}</td>
               </ng-container>
               <ng-container cdkColumnDef="requestType">
@@ -26,17 +30,29 @@
               </ng-container>
               <ng-container cdkColumnDef="responsibleTeamId">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.responsible_team}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.responsibleTeamId}}</td>
+                <td cdk-cell *cdkCellDef="let row">{{row.responsibleTeamInfo.getName()}}</td>
               </ng-container>
               <ng-container cdkColumnDef="concernedTeamId">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.concerned_team}}</th>
-                <td cdk-cell *cdkCellDef="let row">{{row.concernedTeamId}}</td>
+                <td cdk-cell *cdkCellDef="let row">{{row.concernedTeamInfo.getName()}}</td>
               </ng-container>
               <ng-container cdkColumnDef="days">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.followup_days}}</th>
                 <td cdk-cell *cdkCellDef="let row">{{row.days}}</td>
               </ng-container>
-
+              <ng-container cdkColumnDef="actions">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                  <div class="d-flex flex-row">
+                    <a href="#" (click)="delete(row, $event)" tooltip="{{lang.map.btn_delete}}" class="icon-btn">
+                      <i class="mdi mdi-close-box"></i>
+                    </a>
+                    <a href="#" (click)="edit(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
+                      <i class="mdi mdi-pen"></i>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
 
               <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
               <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
