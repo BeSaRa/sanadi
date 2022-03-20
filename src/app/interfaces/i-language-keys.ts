@@ -50,6 +50,7 @@ export interface ILanguageKeys {
   search_by_serial_number: string;
   requests: string;
   loading_language_please_wait: string;
+  followup: string;
   followup_change_status_confirm: string;
   enable_followUp: string;
   followup_type: string;

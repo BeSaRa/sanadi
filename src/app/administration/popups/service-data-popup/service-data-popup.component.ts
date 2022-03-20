@@ -1,13 +1,13 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {iif, of, Subject} from 'rxjs';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ServiceData} from '@app/models/service-data';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {catchError, exhaustMap, filter, map, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {extender} from '@app/helpers/extender';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -41,7 +41,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     basic: {name: 'basic'},
     customSettings: {name: 'customSettings'},
     steps: {name: 'steps'},
-    followup:{name: 'followup'}
+    followup: {name: 'followup'}
   };
   list: ServiceData[] = [];
   stepsList: ServiceDataStep[] = [];
@@ -52,11 +52,17 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   showMaxElementsCount = false;
   showActivateDevelopmentField = false;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>, private lookupService: LookupService,
-              public langService: LangService, private fb: FormBuilder, private toast: ToastService,
-              private dialogRef: DialogRef, private exceptionHandlerService: ExceptionHandlerService,
+  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
+              private lookupService: LookupService,
+              public lang: LangService,
+              private fb: FormBuilder,
+              private toast: ToastService,
+              private dialogRef: DialogRef,
+              private exceptionHandlerService: ExceptionHandlerService,
               private serviceDataStepsService: ServiceDataStepService,
-              private checklistService: ChecklistService, private serviceData: ServiceDataService, private dialog: DialogService) {
+              private checklistService: ChecklistService,
+              private serviceData: ServiceDataService,
+              private dialog: DialogService) {
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
@@ -113,7 +119,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         activateDevelopmentField: [this.model.activateDevelopmentField]
       })
     });
-    this.fm = new FormManager(this.form, this.langService);
+    this.fm = new FormManager(this.form, this.lang);
   }
 
   saveModel(): void {
@@ -136,7 +142,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       if (!_serviceData) {
         return;
       }
-      const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
+      const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
       this.toast.success(message.change({x: _serviceData.getName()}));
       this.model = _serviceData;
       this.operation = OperationTypes.UPDATE;
@@ -145,27 +151,29 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_service : this.langService.map.lbl_edit_service;
+    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_service : this.lang.map.lbl_edit_service;
   }
 
   validateCustomSettingsFields() {
-    if(this.model.isExternalProjectModels()) {
+    if (this.model.isExternalProjectModels()) {
       this.showActivateDevelopmentField = true;
     }
 
-    if(this.model.isUrgentInterventionLicensing()) {
+    if (this.model.isUrgentInterventionLicensing()) {
       this.maxTargetAmount?.setValidators([CustomValidators.required, CustomValidators.number]);
       this.showMaxTargetAmount = true;
     }
 
-    if(this.model.isCollectorLicensing()) {
+    if (this.model.isCollectorLicensing()) {
       this.maxElementsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
       this.showMaxElementsCount = true;
     }
   }
-  get serviceFollowUp(){
-    return this.form.get('basic.followUp')!;
+
+  get followUpStatus(): FormControl {
+    return this.form.get('basic.followUp') as FormControl;
   }
+
   get maxTargetAmount() {
     return this.form.get('customSettings.maxTargetAmount');
   }
@@ -205,10 +213,10 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.checklistService.openListDialog(serviceDataStep)
       .pipe(takeUntil(this.destroy$))
       .subscribe((dialog: DialogRef) => {
-      dialog.onAfterClose$.subscribe((_) => {
-        // sub.unsubscribe();
+        dialog.onAfterClose$.subscribe((_) => {
+          // sub.unsubscribe();
+        });
       });
-    });
   }
 
   ngOnDestroy(): void {
@@ -218,23 +226,19 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   }
 
   private listenToFollowUpStatus() {
-    this.serviceFollowUp.valueChanges
-      .pipe(tap(v => console.log("v"+ v)))
-      .pipe(switchMap(value => iif(()=> {
-        return value === true}, of(value),
-        this.dialog.confirm(this.langService.map.followup_change_status_confirm).onAfterClose$
-          .pipe(filter( value=> {
-           console.log('value'+ value);
-           console.log("user" + UserClickOn.YES);
-
-            return value === UserClickOn.YES
-
-          }), map( _=> value))
+    this.followUpStatus
+      .valueChanges
+      .pipe(switchMap(value => iif(() => value, of(value), of(value)
+        .pipe(switchMap(_ => this.dialog.confirm(this.lang.map.followup_change_status_confirm).onAfterClose$))
+        .pipe(tap(val => val === UserClickOn.NO && this.followUpStatus.patchValue((this.model.followUp = true), {emitEvent: false})))
+        .pipe(filter(val => val === UserClickOn.YES), mapTo(value))
       )))
-      .pipe(switchMap(value=> {
-        console.log(value);
-        return this.serviceData.toggleFollowUpStatus(this.model.id, value);
+      .pipe(switchMap((value) => {
+        return this.serviceData.toggleFollowUpStatus(this.model.id, value).pipe(mapTo(value));
       }))
-      .subscribe(res => this.model.followUp = res);
+      .subscribe(res => {
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x:this.lang.map.followup}))
+        this.model = this.model.clone({followUp: res})
+      });
   }
 }
