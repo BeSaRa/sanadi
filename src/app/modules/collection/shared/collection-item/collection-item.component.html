@@ -8,7 +8,7 @@
         <label class="form-label" asteriskIfRequired=""
                [control]="searchControl"
                for="searchControl">{{lang.map.serial_number}}</label>
-        <div class="input-group">
+        <div validationClasses="" [control]="searchControl" class="input-group">
           <input (keydown.enter)="searchForLicense()" id="searchControl" validationClasses="" [control]="searchControl"
                  [formControl]="searchControl"
                  class="form-control">
@@ -16,6 +16,7 @@
             <i class="mdi mdi-magnify text-primary"></i>
           </button>
         </div>
+        <app-field-error-message [control]="searchControl"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"

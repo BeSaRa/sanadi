@@ -7,7 +7,7 @@ import {LicenseDurationType} from "@app/enums/license-duration-type";
 
 type CanLicenseApproval = Constructor<HasLicenseApproval> & AbstractConstructor<HasLicenseApproval>
 
-/** Mixin to augment a directive with a `disabled` property. */
+/** Mixin to augment a directive with a `Approval License Properties` */
 export function mixinApprovalLicenseWithDuration<T extends AbstractConstructor<{}>>(base: T): CanLicenseApproval & T;
 export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base: T): CanLicenseApproval & T {
   return class Approval extends base {
@@ -29,6 +29,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
     licenseVSID!: string
     currentVersion!: number
     currentVersionDate!: string
+
     buildApprovalForm(controls: boolean = false): any {
       const {
         licenseStartDate,

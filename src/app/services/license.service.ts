@@ -44,6 +44,8 @@ import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCr
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import {CollectionLicense} from "@app/license-models/collection-license";
+import {CollectionLicenseInterceptor} from "@app/license-interceptors/collection-license-interceptor";
 
 @Injectable({
   providedIn: 'root'
@@ -221,7 +223,20 @@ export class LicenseService {
     });
   }
 
-  validateLicenseByRequestType(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | undefined> {
+  @Generator(CollectionLicense, false, {
+    property: 'rs',
+    interceptReceive: (new CollectionLicenseInterceptor()).receive
+  })
+  private _validateCollectionLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.urlService.URLS.COLLECTION_APPROVAL + '/draft/validate', {
+      requestType,
+      collectionItemList: [{
+        oldLicenseId
+      }]
+    });
+  }
+
+  validateLicenseByRequestType<T>(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | T | undefined> {
     if (caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) {
       return this._validateInitialApprovalLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.PARTNER_APPROVAL) {
@@ -230,11 +245,13 @@ export class LicenseService {
       return this._validateFinalExternalOfficeLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
       return this._validateInternalProjectLicenseByRequestType(requestType, licenseId);
+    } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
+      return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
 
-  openSelectLicenseDialog(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
@@ -252,7 +269,7 @@ export class LicenseService {
     });
   }
 
-  showLicenseContent(license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult), caseType: number): Observable<BlobModel> {
+  showLicenseContent<T extends { id: string }>(license: T, caseType: number): Observable<BlobModel> {
     let url!: string;
 
     switch (caseType) {
@@ -268,6 +285,9 @@ export class LicenseService {
       case CaseTypes.INTERNAL_PROJECT_LICENSE:
         url = this.urlService.URLS.INTERNAL_PROJECT_LICENSE;
         break;
+      case CaseTypes.COLLECTION_APPROVAL:
+        url = this.urlService.URLS.COLLECTION_APPROVAL;
+        break;
     }
 
     if (!url) {
@@ -281,5 +301,17 @@ export class LicenseService {
         catchError(_ => {
           return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
         })));
+  }
+
+  @Generator(CollectionLicense, true, {
+    property: 'rs',
+    interceptReceive: (new CollectionLicenseInterceptor).receive
+  })
+  private _collectionSearch<C>(model: Partial<C>): Observable<CollectionLicense[]> {
+    return this.http.post<CollectionLicense[]>(this.urlService.URLS.COLLECTION_APPROVAL + '/license/search', model)
+  }
+
+  collectionSearch<C>(model: Partial<C>): Observable<CollectionLicense[]> {
+    return this._collectionSearch(model);
   }
 }

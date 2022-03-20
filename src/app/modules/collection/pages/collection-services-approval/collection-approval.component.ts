@@ -82,9 +82,10 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   _afterBuildForm(): void {
     this.setDefaultValues();
-    this.listenToRequestTypeChanges()
+    this.listenToRequestTypeChanges();
     this.checkDisableFields();
-    this.listenToDurationChanges()
+    this.listenToDurationChanges();
+    this.listenToRequestClassificationChanges();
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -175,6 +176,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: ServiceRequestTypes) => {
         this.disableSearchField = val === ServiceRequestTypes.NEW
+        this.model!.requestType = val;
       })
   }
 
@@ -200,6 +202,15 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     this.requestType.enable();
     this.licenseDurationType.enable();
     this.requestClassification.enable();
+  }
+
+  private listenToRequestClassificationChanges() {
+    this.requestClassification
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.model && (this.model.requestClassification = value);
+      })
   }
 
   private listenToDurationChanges() {

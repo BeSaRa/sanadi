@@ -4,7 +4,7 @@ import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {MapService} from "@app/services/map.service";
 import {FactoryService} from "@app/services/factory.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {mixinApprovalLicenseWithDuration} from "@app/helpers/mixin-approval-license-with-duration";
+import {mixinApprovalLicenseWithDuration} from "@app/mixins/mixin-approval-license-with-duration";
 
 const _LicenseApproval = mixinApprovalLicenseWithDuration(class {
 })
