@@ -6,7 +6,7 @@ import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {CommonUtils} from "@app/helpers/common-utils";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {LicenseApprovalInterface} from "@app/interfaces/license-approval-interface";
+import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {CollectionItem} from "@app/models/collection-item";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {DialogService} from "@app/services/dialog.service";
@@ -24,7 +24,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
 
-  selectedLicense: LicenseApprovalInterface | null = null;
+  selectedLicense: HasLicenseApproval | null = null;
 
   selectedIndex: number | false = false;
   action$: Subject<any> = new Subject<any>();
@@ -59,12 +59,12 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
     this.listenToAction()
   }
 
-  setSelectedLicense({item, index}: { item: LicenseApprovalInterface, index: number }) {
+  setSelectedLicense({item, index}: { item: HasLicenseApproval, index: number }) {
     this.selectedLicense = item;
     this.selectedIndex = (++index); // add one to the selected inbox to avoid the  check false value
   }
 
-  saveLicenseInfo(license: LicenseApprovalInterface) {
+  saveLicenseInfo(license: HasLicenseApproval) {
     if (this.selectedIndex) {
       this.data.model.collectionItemList.splice(this.selectedIndex - 1, 1, (license as unknown as CollectionItem))
       this.data.model.collectionItemList = this.data.model.collectionItemList.slice();

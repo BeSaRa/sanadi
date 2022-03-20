@@ -100,7 +100,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap(_ => this.item = new CollectionItem().clone({
+      .pipe(tap(_ => this.item = new CollectionItem().clone<CollectionItem>({
         licenseDurationType: this.model.licenseDurationType,
         requestClassification: this.model.requestClassification
       })))
@@ -212,7 +212,6 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     this.resetForm();
     this.formOpenedStatus.emit(false);
   }
-
 
   openMapMarker() {
     (this.item!).openMap()

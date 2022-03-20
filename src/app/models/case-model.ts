@@ -49,7 +49,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
   itemDetails: string = '';
   encrypt!: EncryptionService;
 
-  protected constructor() {
+  constructor() {
     super();
     this.employeeService = FactoryService.getService('EmployeeService');
     this.encrypt = new EncryptionService();

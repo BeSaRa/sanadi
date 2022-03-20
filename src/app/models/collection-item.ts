@@ -1,34 +1,17 @@
 import {AdminResult} from "@app/models/admin-result";
 import {CustomValidators} from "@app/validators/custom-validators";
-import {Cloneable} from "@app/models/cloneable";
-import {LicenseApprovalInterface} from "@app/interfaces/license-approval-interface";
-import {DateUtils} from "@app/helpers/date-utils";
-import {LicenseDurationType} from "@app/enums/license-duration-type";
+import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {MapService} from "@app/services/map.service";
 import {FactoryService} from "@app/services/factory.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
+import {mixinApprovalLicenseWithDuration} from "@app/helpers/mixin-approval-license-with-duration";
 
-export class CollectionItem extends Cloneable<CollectionItem> implements LicenseApprovalInterface {
-  followUpDate!: string;
-  conditionalLicenseIndicator: boolean = false;
-  publicTerms!: string;
-  customTerms!: string
-  exportedLicenseFullSerial!: string
-  exportedLicenseId!: string
-  exportedLicenseSerial!: number
-  licenseStatus!: number
-  licenseStartDate!: string
-  licenseApprovedDate!: string
-  licenseEndDate!: string
-  oldLicenseFullSerial!: string
-  oldLicenseId!: string
-  oldLicenseSerial!: number
+const _LicenseApproval = mixinApprovalLicenseWithDuration(class {
+})
+
+export class CollectionItem extends _LicenseApproval implements HasLicenseApproval {
   buildingNumber!: string
   identificationNumber!: string
-  licenseDurationType!: number
-  licenseVSID!: string
-  currentVersion!: number
-  currentVersionDate!: string
   locationDetails!: string
   latitude!: string
   longitude!: string
@@ -76,37 +59,6 @@ export class CollectionItem extends Cloneable<CollectionItem> implements License
       licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
     }
-  }
-
-  buildApprovalForm(controls: boolean = false): any {
-    const {
-      licenseStartDate,
-      licenseEndDate,
-      followUpDate,
-      conditionalLicenseIndicator,
-      publicTerms,
-      customTerms,
-    } = this;
-    return {
-      licenseStartDate: controls ? [DateUtils.changeDateToDatepicker(licenseStartDate), CustomValidators.required] : DateUtils.changeDateToDatepicker(licenseStartDate),
-      licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(licenseEndDate)] : DateUtils.changeDateToDatepicker(licenseEndDate),
-      followUpDate: controls ? [DateUtils.changeDateToDatepicker(followUpDate)] : DateUtils.changeDateToDatepicker(followUpDate),
-      conditionalLicenseIndicator: controls ? [conditionalLicenseIndicator] : conditionalLicenseIndicator,
-      publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
-      customTerms: controls ? [customTerms] : customTerms
-    }
-  }
-
-  private hasLicenseStartDate(): boolean {
-    return !!this.licenseStartDate;
-  }
-
-  private hasLicenseEndDate(): boolean {
-    return !!this.licenseEndDate;
-  }
-
-  hasValidApprovalInfo(): boolean {
-    return this.licenseDurationType === LicenseDurationType.PERMANENT ? (this.hasLicenseStartDate() && this.hasLicenseEndDate()) : this.hasLicenseStartDate()
   }
 
   hasMarker(): boolean {

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {LicenseApprovalInterface} from "@app/interfaces/license-approval-interface";
+import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {LangService} from "@app/services/lang.service";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {CustomTerm} from "@app/models/custom-term";
@@ -36,17 +36,17 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Output()
   formCancel: EventEmitter<null> = new EventEmitter<null>();
 
-  _license$: BehaviorSubject<LicenseApprovalInterface | null> = new BehaviorSubject<LicenseApprovalInterface | null>(null)
+  _license$: BehaviorSubject<HasLicenseApproval | null> = new BehaviorSubject<HasLicenseApproval | null>(null)
 
   @Output()
-  saveInfo: EventEmitter<LicenseApprovalInterface> = new EventEmitter<LicenseApprovalInterface>();
+  saveInfo: EventEmitter<HasLicenseApproval> = new EventEmitter<HasLicenseApproval>();
 
   @Input()
-  set license(val: LicenseApprovalInterface | null) {
+  set license(val: HasLicenseApproval | null) {
     this._license$.next(val);
   }
 
-  get license(): LicenseApprovalInterface | null {
+  get license(): HasLicenseApproval | null {
     return this._license$.value;
   }
 
@@ -81,8 +81,8 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     this.form = this.fb.group((new CollectionItem).buildApprovalForm(true));
   }
 
-  private updateForm(model: LicenseApprovalInterface): void {
-    this.form.patchValue(model.clone({publicTerms: model.publicTerms ? model.publicTerms : this.servicePublicTerms}).buildApprovalForm(false))
+  private updateForm(model: HasLicenseApproval): void {
+    this.form.patchValue(model.clone<CollectionItem>({publicTerms: model.publicTerms ? model.publicTerms : this.servicePublicTerms}).buildApprovalForm(false))
   }
 
   private loadUserCustomTerms(): Observable<CustomTerm[]> {
@@ -149,7 +149,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     if (!this.license) {
       return;
     }
-    const form = {...this.form.getRawValue()} as LicenseApprovalInterface;
+    const form = {...this.form.getRawValue()} as HasLicenseApproval;
     this.saveInfo.emit(this.license.clone({
       ...form,
       followUpDate: form.followUpDate ? DateUtils.getDateStringFromDate(form.followUpDate) : '',
