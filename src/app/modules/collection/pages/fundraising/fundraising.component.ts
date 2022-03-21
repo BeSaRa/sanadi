@@ -23,6 +23,8 @@ import { CustomValidators } from "@app/validators/custom-validators";
 import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
 import { LicenseService } from "@app/services/license.service";
 import { ToastService } from "@app/services/toast.service";
+import { OpenFrom } from "@app/enums/open-from.enum";
+import { EmployeeService } from "@app/services/employee.service";
 
 @Component({
   selector: "fundraising",
@@ -45,7 +47,8 @@ export class FundraisingComponent extends EServicesGenericComponent<
     private lookupService: LookupService,
     private dialog: DialogService,
     private licenseService: LicenseService,
-    private toast:ToastService
+    private toast:ToastService,
+    public employeeService: EmployeeService
   ) {
     super();
   }
@@ -168,13 +171,24 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _afterBuildForm(): void {
     this.listenToRequestTypeChange();
-    this.checkReadOnlyFlagAndSetFormState();
+    this.handleFormState();
   }
 
-  checkReadOnlyFlagAndSetFormState() {
-    //if readonly is true,disable all the controls inside form
-    if(this.readonly){
-      this.form.disable();
+  handleFormState() {
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        if (!this.model?.taskDetails.isClaimed()) {
+          this.form.disable();
+        }
+      } else if (this.employeeService.isCharityUser()) {
+        if (this.model?.isReturned()) {
+          this.form.enable();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if (!this.model?.taskDetails.isClaimed()) {
+        this.form.disable();
+      }
     }
   }
 
