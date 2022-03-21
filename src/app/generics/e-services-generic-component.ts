@@ -67,7 +67,6 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     of(null)
       .pipe(tap(_ => this._initComponent()))
       .pipe(tap(_ => this._buildForm()))
-      .pipe(tap(_ => this._handleReadOnly()))
       .pipe(tap(_ => this._listenToSave()))
       .pipe(tap(_ => this._listenToModelChange()))
       .pipe(tap(_ => this._listenToResetForm()))
@@ -236,12 +235,5 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   launch(): void {
     this.launch$.next(null);
-  }
-
-  // It seems, there is no need of following function as same is happening from wrapper component
-  _handleReadOnly(): void {
-    if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      this.readonly = true;
-    }
   }
 }
