@@ -186,8 +186,10 @@ export class FundraisingComponent extends EServicesGenericComponent<
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if (!this.model?.taskDetails.isClaimed()) {
-        this.form.disable();
+      if(this.employeeService.isCharityManager()){
+        if (!this.model?.taskDetails.isClaimed()) {
+          this.form.disable();
+        }
       }
     }
   }
