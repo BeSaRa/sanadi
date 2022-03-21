@@ -89,8 +89,36 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
       oldLicenseFullSerial: controls
         ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
         : oldLicenseFullSerial,
-      arName: controls ? [arName, [CustomValidators.required]] : arName,
-      enName: controls ? [enName, [CustomValidators.required]] : enName,
+      arName: controls
+        ? [
+            arName,
+            [
+              CustomValidators.required,
+              CustomValidators.pattern("AR_ONLY"),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ARABIC_NAME_MAX
+              ),
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+            ],
+          ]
+        : arName,
+      enName: controls
+        ? [
+            enName,
+            [
+              CustomValidators.required,
+              CustomValidators.pattern("ENG_ONLY"),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+            ],
+          ]
+        : enName,
       about: controls ? [about, [CustomValidators.required]] : about,
       workingMechanism: controls
         ? [workingMechanism, [CustomValidators.required]]
