@@ -7,7 +7,7 @@
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired=""
                [control]="searchControl"
-               for="searchControl">{{lang.map.serial_number}}</label>
+               for="searchControl">{{lang.map.search_by_serial_number}}</label>
         <div validationClasses="" [control]="searchControl" class="input-group">
           <input (keydown.enter)="searchForLicense()" id="searchControl" validationClasses="" [control]="searchControl"
                  [formControl]="searchControl"
@@ -19,12 +19,21 @@
         <app-field-error-message [control]="searchControl"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
+               for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
+        <input id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial" formControlName="oldLicenseFullSerial"
+               class="form-control">
+        <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
                class="form-control">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="locationDetails"
                for="locationDetails">{{lang.map.location_details}}</label>
@@ -32,8 +41,6 @@
                class="form-control">
         <app-field-error-message controlName="locationDetails"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="zoneNumber"
                for="zoneNumber">{{lang.map.lbl_zone}}</label>
@@ -46,6 +53,8 @@
         <input id="streetNumber" validationClasses="streetNumber" formControlName="streetNumber" class="form-control">
         <app-field-error-message controlName="streetNumber"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="buildingNumber"
                for="buildingNumber">{{lang.map.building_number}}</label>
@@ -53,8 +62,6 @@
                class="form-control">
         <app-field-error-message controlName="buildingNumber"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="unitNumber"
                for="unitNumber">{{lang.map.unit}}</label>
@@ -63,25 +70,15 @@
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="latitude"
-               for="latitude">{{lang.map.latitude}}</label>
+               for="latitude">{{lang.map.latitude}} / {{lang.map.longitude}}</label>
         <div class="input-group">
           <input id="latitude" validationClasses="latitude" formControlName="latitude" class="form-control">
-          <button (click)="openMapMarker()" class="input-group-text">
+          <button type="button" (click)="openMapMarker()" class="input-group-text">
             <i class="mdi mdi-map-marker text-primary"></i>
           </button>
+          <input id="longitude" validationClasses="longitude" formControlName="longitude" class="form-control">
         </div>
         <app-field-error-message controlName="latitude"></app-field-error-message>
-      </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="longitude"
-               for="longitude">{{lang.map.longitude}}</label>
-        <div class="input-group">
-          <input id="longitude" validationClasses="longitude" formControlName="longitude" class="form-control">
-          <button (click)="openMapMarker()" class="input-group-text">
-            <i class="mdi mdi-map-marker text-primary"></i>
-          </button>
-        </div>
-        <app-field-error-message controlName="longitude"></app-field-error-message>
       </div>
     </div>
     <div class="row">

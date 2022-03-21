@@ -1,41 +1,71 @@
 import {AdminResult} from "@app/models/admin-result";
+import {FileNetDocument} from "@app/models/file-net-document";
+import {mixinCollectionItemBuildForm} from "@app/mixins/mixin-collection-item-build-form";
+import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
+import {CollectionItem} from "@app/models/collection-item";
 
-export class CollectionLicense {
+const _collectionItemBuildForm = mixinCollectionItemBuildForm(FileNetDocument)
+
+export class CollectionLicense extends _collectionItemBuildForm implements HasCollectionItemBuildForm {
   caseStatusInfo!: AdminResult
+  chiefDecision!: number
   chiefDecisionInfo!: AdminResult
-  classDescription!: string;
-  conditionalLicenseIndicator!: boolean
-  createdOn!: string;
-  creatorInfo!: AdminResult
+  chiefJustification!: number
+  conditionalLicenseIndicator!: false
+  currentVersion!: number
+  currentVersionDate!: string;
   customTerms!: string;
-  documentTitle!: string
   followUpDate!: string;
   fullSerial!: string;
-  id!: string;
-  inRenewalPeriod!: number
-  lastModified!: string;
+  inRenewalPeriod!: boolean
   licenseApprovedDate!: string;
   licenseDuration!: number
-  licenseDurationTypeInfo!: AdminResult;
-  licenseEndDate!: string;
+  licenseDurationType!: number
+  licenseDurationTypeInfo!: AdminResult
   licenseStartDate!: string;
   licenseStatus!: number
   licenseStatusInfo!: AdminResult
   licenseType!: number
-  lockOwner!: string
-  lockTimeout!: string
+  managerDecision!: number
   managerDecisionInfo!: AdminResult
-  mimeType!: string;
+  managerJustification!: number
   orgInfo!: AdminResult
-  organizationCode!: string;
+  organizationCode!: string
   organizationId!: number
-  ouInfo!: AdminResult;
   publicTerms!: string;
-  requestClassificationInfo!: AdminResult;
-  requestTypeInfo!: AdminResult;
-  reviewerDepartmentDecisionInfo!: AdminResult;
-  secondSpecialistDecisionInfo!: AdminResult;
-  serial!: number
-  specialistDecision!: number
-  specialistDecisionInfo!: AdminResult;
+  requestCaseId!: string;
+  requestClassification!: 4
+  requestClassificationInfo!: AdminResult
+  requestType!: 1
+  requestTypeInfo!: AdminResult
+  reviewerDepartmentDecision!: number
+  reviewerDepartmentDecisionInfo!: AdminResult
+  reviewerDepartmentJustification!: number
+  secondSpecialistDecision!: 1
+  secondSpecialistDecisionInfo!: AdminResult
+  secondSpecialistJustification!: null
+  serial!: number;
+  specialistDecision!: number;
+  specialistDecisionInfo!: AdminResult
+  specialistJustification!: number
+  subject!: string;
+
+  convertToCollectionItem(): CollectionItem {
+    return new CollectionItem().clone<CollectionItem>({
+      oldLicenseId: this.id,
+      oldLicenseFullSerial: this.fullSerial,
+      oldLicenseSerial: this.serial,
+      buildingNumber: this.buildingNumber,
+      identificationNumber: this.identificationNumber,
+      locationDetails: this.locationDetails,
+      latitude: this.latitude,
+      longitude: this.longitude,
+      requestClassification: this.requestClassification,
+      streetNumber: this.streetNumber,
+      unitNumber: this.unitNumber,
+      zoneNumber: this.zoneNumber,
+      licenseStatusInfo: this.licenseStatusInfo,
+      licenseDurationTypeInfo: this.licenseDurationTypeInfo,
+    })
+  }
 }

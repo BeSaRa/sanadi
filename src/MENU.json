@@ -564,7 +564,7 @@
     "path": "/home/collection/collection-services-approval",
     "icon": "mdi-currency-usd",
     "isSvg": false,
-    "permission": null,
+    "permission": "COLLECTION_APPROVAL",
     "permissionGroup": null,
     "parent": 43,
     "group": "collection",

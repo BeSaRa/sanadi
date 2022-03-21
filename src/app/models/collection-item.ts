@@ -1,15 +1,16 @@
 import {AdminResult} from "@app/models/admin-result";
-import {CustomValidators} from "@app/validators/custom-validators";
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {MapService} from "@app/services/map.service";
 import {FactoryService} from "@app/services/factory.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {mixinApprovalLicenseWithDuration} from "@app/mixins/mixin-approval-license-with-duration";
+import {mixinCollectionItemBuildForm} from "@app/mixins/mixin-collection-item-build-form";
+import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
 
-const _LicenseApproval = mixinApprovalLicenseWithDuration(class {
-})
+const _LicenseApproval = mixinCollectionItemBuildForm(mixinApprovalLicenseWithDuration(class {
+}))
 
-export class CollectionItem extends _LicenseApproval implements HasLicenseApproval {
+export class CollectionItem extends _LicenseApproval implements HasLicenseApproval, HasCollectionItemBuildForm {
   buildingNumber!: string
   identificationNumber!: string
   locationDetails!: string
@@ -32,33 +33,6 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
   constructor() {
     super();
     this.mapService = FactoryService.getService('MapService');
-  }
-
-  buildForm(controls: boolean = false): any {
-    const {
-      identificationNumber,
-      locationDetails,
-      buildingNumber,
-      streetNumber,
-      zoneNumber,
-      unitNumber,
-      latitude,
-      longitude,
-      licenseEndDate,
-      oldLicenseFullSerial
-    } = this;
-    return {
-      identificationNumber: controls ? [identificationNumber, [CustomValidators.required]] : identificationNumber,
-      locationDetails: controls ? [locationDetails, [CustomValidators.required]] : locationDetails,
-      buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
-      streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
-      zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
-      unitNumber: controls ? [unitNumber, [CustomValidators.required]] : unitNumber,
-      latitude: controls ? [{value: latitude, disabled: true}, [CustomValidators.required]] : latitude,
-      longitude: controls ? [{value: longitude, disabled: true}, [CustomValidators.required]] : longitude,
-      licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
-    }
   }
 
   hasMarker(): boolean {

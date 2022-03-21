@@ -7,11 +7,13 @@ export class CollectionItemInterceptor implements IModelInterceptor<CollectionIt
     delete model.licenseDurationTypeInfo;
     delete model.defaultLatLng;
     delete model.mapService;
+    delete model.licenseStatusInfo;
     return model
   }
 
   receive(model: CollectionItem): CollectionItem {
     model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo)
+    model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo)
     return model;
   }
 }
