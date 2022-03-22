@@ -198,8 +198,8 @@
               <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
               <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="aidColumns"></tr>
               <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
-              <tr class="cdk-row" *cdkNoDataRow>
-                <td class="cdk-cell text-center" colSpan="100">{{langService.map.msg_no_records_found}}</td>
+              <tr *cdkNoDataRow>
+                <td class="text-center" colSpan="100">{{langService.map.msg_no_records_found}}</td>
               </tr>
             </table>
             <app-paginator #paginator [length]="(aidList.length || 0)"></app-paginator>

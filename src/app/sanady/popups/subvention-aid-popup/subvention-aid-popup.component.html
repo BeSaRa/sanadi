@@ -70,7 +70,7 @@
             <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
             <tr *cdkNoDataRow>
-              <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
             </tr>
           </table>
           <app-paginator #paginator [length]="(aidList.length || 0)"></app-paginator>

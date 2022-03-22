@@ -66,7 +66,7 @@
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
-            <td colspan="10" class="text-center">{{langService.map.no_records_to_display}}</td>
+            <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
           </tr>
         </table>
       </app-table>

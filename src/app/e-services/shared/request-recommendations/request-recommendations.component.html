@@ -21,8 +21,8 @@
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
-          <tr *cdkNoDataRow class="text-center">
-            <td [colSpan]="table.columns.length" class="text-center">{{langService.map.no_records_to_display}}</td>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
           </tr>
         </table>
       </app-table>
