@@ -14,6 +14,7 @@ import {InboxService} from "@app/services/inbox.service";
 import {FormControl} from "@angular/forms";
 import {IWFResponse} from "@app/interfaces/i-w-f-response";
 import {DialogRef} from "@app/shared/models/dialog-ref";
+import {ToastService} from "@app/services/toast.service";
 
 @Component({
   selector: 'collection-approval-approve-task-popup',
@@ -37,6 +38,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   constructor(
     private dialog: DialogService,
     private dialogRef: DialogRef,
+    private toast: ToastService,
     private inboxService: InboxService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
       model: CollectionApproval,
@@ -92,7 +94,8 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
       .pipe(exhaustMap(_ => this.data.model.save()))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
       .subscribe(() => {
-        this.dialogRef.close();
+        this.toast.success(this.lang.map.process_has_been_done_successfully);
+        this.dialogRef.close(true);
       })
   }
 

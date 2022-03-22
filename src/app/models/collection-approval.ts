@@ -9,9 +9,12 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {HasRequestType} from "@app/interfaces/has-request-type";
-const _RequestType = mixinRequestType(CaseModel);
+import {mixinLicenseDurationType} from "@app/mixins/mixin-license-duration";
+import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
 
-export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType {
+const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
+
+export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType, HasLicenseDurationType {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
   organizationId!: number;
   serviceSteps!: string[];
