@@ -86,4 +86,5 @@ export interface ILookupMap {
   LicenseDurationType: Lookup[];
   CollectorType: Lookup[];
   CollectorRelation: Lookup[];
+  CollectionStatus: Lookup[];
 }

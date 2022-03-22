@@ -1,5 +1,5 @@
-import {IFormField} from './iform-field';
+import {IFormFieldOptions} from './i-form-field-options';
 
 export interface IFormRowGroup {
-  fields?: IFormField[]
+  fields?: IFormFieldOptions[]
 }
