@@ -11,6 +11,10 @@ import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {HasRequestType} from "@app/interfaces/has-request-type";
 import {mixinLicenseDurationType} from "@app/mixins/mixin-license-duration";
 import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
+import {ISearchFieldsMap} from "@app/types/types";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 
@@ -49,6 +53,12 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   licenseDurationTypeInfo!: AdminResult;
 
   service: CollectionApprovalService;
+
+  searchFields: ISearchFieldsMap<CollectionApproval> = {
+    ...normalSearchFields(['fullSerial']),
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'ouInfo', 'caseStatusInfo'])
+  }
 
   constructor() {
     super();
