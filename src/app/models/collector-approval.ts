@@ -7,22 +7,28 @@ import {CollectorItem} from '@app/models/collector-item';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {HasRequestType} from '@app/interfaces/has-request-type';
+import {mixinLicenseDurationType} from '@app/mixins/mixin-license-duration';
+import {HasLicenseDurationType} from '@app/interfaces/has-license-duration-type';
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {dateSearchFields} from '@app/helpers/date-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 
-export class CollectorApproval extends CaseModel<CollectorApprovalService, CollectorApproval> {
-
+export class CollectorApproval extends _RequestType<CollectorApprovalService, CollectorApproval> implements HasRequestType, HasLicenseDurationType{
   serviceSteps: string[] = [];
   caseType: number = CaseTypes.COLLECTOR_LICENSING;
   organizationId!: number;
   chiefDecision!: number;
   chiefJustification!: string;
   description!: string;
-  licenseDurationType!: number;
   licenseStartDate!: string;
   licenseEndDate!: string;
   managerDecision!: number;
   managerJustification!: string;
   publicTerms!: string;
-  requestType!: number;
   reviewerDepartmentDecision!: number;
   reviewerDepartmentJustification!: string;
   secondSpecialistDecision!: number;
@@ -41,6 +47,11 @@ export class CollectorApproval extends CaseModel<CollectorApprovalService, Colle
   requestClassificationInfo!: AdminResult;
   licenseDurationTypeInfo!: AdminResult;
   organizationCode!: string;
+  searchFields: ISearchFieldsMap<CollectorApproval> = {
+    ...normalSearchFields(['fullSerial']),
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo'])
+  }
 
   service: CollectorApprovalService;
 

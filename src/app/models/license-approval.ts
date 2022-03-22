@@ -1,10 +1,13 @@
-import {LicenseApprovalInterface} from '@app/interfaces/license-approval-interface';
 import {DateUtils} from '@app/helpers/date-utils';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {Cloner} from '@app/models/cloner';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {mixinApprovalLicenseWithDuration} from '@app/mixins/mixin-approval-license-with-duration';
+import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 
-export abstract class LicenseApproval extends Cloner implements LicenseApprovalInterface {
+const _LicenseApproval = mixinApprovalLicenseWithDuration(class {
+})
+
+export abstract class LicenseApproval extends _LicenseApproval implements HasLicenseApproval {
   licenseStatus!: number;
   licenseStartDate!: string;
   licenseEndDate!: string | IMyDateModel;

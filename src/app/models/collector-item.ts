@@ -1,19 +1,19 @@
-import {LicenseApproval} from '@app/models/license-approval';
-import {LicenseDurationType} from '@app/enums/license-duration-type';
 import {AdminResult} from '@app/models/admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {mixinApprovalLicenseWithDuration} from '@app/mixins/mixin-approval-license-with-duration';
+import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 
-export class CollectorItem extends LicenseApproval {
+const _LicenseApproval = mixinApprovalLicenseWithDuration(class {
+})
+
+export class CollectorItem extends _LicenseApproval implements HasLicenseApproval {
+  id!: string;
   arabicName!: string;
   collectorNumber!: string;
   collectorType!: number;
-  currentVersion!: number;
-  currentVersionDate!: string;
   gender!: number;
   identificationNumber!: string;
   jobTitle!: string;
-  licenseDurationType!: number;
-  licenseVSID!: string;
   mobileNo!: string;
   nationality!: number;
   phone!: string;
@@ -52,21 +52,9 @@ export class CollectorItem extends LicenseApproval {
       nationality: controls ? [nationality, [CustomValidators.required]] : nationality,
       relationship: controls ? [relationship, [CustomValidators.required]] : relationship,
       jobTitle: controls ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
-      phone: controls ? [phone, [CustomValidators.required]] : phone,
+      phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
     }
-  }
-
-  private hasLicenseStartDate(): boolean {
-    return !!this.licenseStartDate;
-  }
-
-  private hasLicenseEndDate(): boolean {
-    return !!this.licenseEndDate;
-  }
-
-  hasValidApprovalInfo(): boolean {
-    return this.licenseDurationType === LicenseDurationType.PERMANENT ? (this.hasLicenseStartDate() && this.hasLicenseEndDate()) : this.hasLicenseStartDate()
   }
 }

@@ -11,7 +11,6 @@ import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/cus
 import {DialogService} from "@app/services/dialog.service";
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {DateUtils} from "@app/helpers/date-utils";
-import {CollectionApproval} from "@app/models/collection-approval";
 import {ServiceDataService} from "@app/services/service-data.service";
 import {CollectionItem} from "@app/models/collection-item";
 import {LicenseDurationType} from "@app/enums/license-duration-type";

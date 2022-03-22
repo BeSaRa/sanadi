@@ -577,7 +577,7 @@
     "path": "/home/collection/collector-approval",
     "icon": "mdi-human-male",
     "isSvg": false,
-    "permission": null,
+    "permission": "COLLECTOR_LICENSING",
     "permissionGroup": null,
     "parent": 43,
     "group": "collection",

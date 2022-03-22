@@ -1,7 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {LicenseApprovalInterface} from '@app/interfaces/license-approval-interface';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {CollectorApproval} from '@app/models/collector-approval';
 import {FormControl} from '@angular/forms';
@@ -14,6 +13,8 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {CollectorItem} from '@app/models/collector-item';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
+import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
+import {ToastService} from '@app/services/toast.service';
 
 @Component({
   selector: 'collector-approval-approve-task-popup',
@@ -24,7 +25,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
 
-  selectedLicense: LicenseApprovalInterface | null = null;
+  selectedLicense: HasLicenseApproval | null = null;
 
   selectedIndex: number | false = false;
   action$: Subject<any> = new Subject<any>();
@@ -36,6 +37,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
 
   constructor(
     private dialog: DialogService,
+    private toast: ToastService,
     private dialogRef: DialogRef,
     private inboxService: InboxService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
@@ -59,12 +61,12 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
     this.listenToAction()
   }
 
-  setSelectedLicense({item, index}: { item: LicenseApprovalInterface, index: number }) {
+  setSelectedLicense({item, index}: { item: HasLicenseApproval, index: number }) {
     this.selectedLicense = item;
     this.selectedIndex = (++index); // add one to the selected inbox to avoid the  check false value
   }
 
-  saveLicenseInfo(license: LicenseApprovalInterface) {
+  saveLicenseInfo(license: HasLicenseApproval) {
     if (this.selectedIndex) {
       this.data.model.collectorItemList.splice(this.selectedIndex - 1, 1, (license as unknown as CollectorItem))
       this.data.model.collectorItemList = this.data.model.collectorItemList.slice();
@@ -92,7 +94,8 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
       .pipe(exhaustMap(_ => this.data.model.save()))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
       .subscribe(() => {
-        this.dialogRef.close();
+        this.toast.success(this.lang.map.process_has_been_done_successfully);
+        this.dialogRef.close(true);
       })
   }
 

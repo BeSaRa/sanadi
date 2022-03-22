@@ -2,9 +2,9 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
-import {filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {BehaviorSubject, of, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {AppEvents} from '@app/enums/app-events';
 import {CollectorApproval} from '@app/models/collector-approval';
 import {CollectorItem} from '@app/models/collector-item';
@@ -15,6 +15,10 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {LicenseDurationType} from '@app/enums/license-duration-type';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from '@app/models/admin-result';
+import {CollectorApprovalService} from '@app/services/collector-approval.service';
+import {LicenseService} from '@app/services/license.service';
+import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
+import {CollectorLicense} from '@app/license-models/collector-license';
 
 @Component({
   selector: 'collector-item',
@@ -22,6 +26,8 @@ import {AdminResult} from '@app/models/admin-result';
   styleUrls: ['./collector-item.component.scss']
 })
 export class CollectorItemComponent implements OnInit, OnDestroy {
+  private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'actions'];
+
   @Input()
   model!: CollectorApproval;
   destroy$: Subject<any> = new Subject<any>();
@@ -32,14 +38,15 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   editIndex: number | undefined = undefined;
   item?: CollectorItem;
   form!: FormGroup;
-  searchControl: FormControl = new FormControl();
+  oldLicenseFullSerialControl: FormControl = new FormControl();
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
   collectorRelations: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   relationships: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
-  licenseDurationTypeEnum = LicenseDurationType;
   isPermanent!: boolean;
+  licenseSearch$: Subject<string> = new Subject<string>();
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   datepickerOptionsMap: IKeyValue = {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
@@ -81,10 +88,24 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     return this._disableSearch.value;
   }
 
+  private _requestType: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+
+  @Input()
+  set requestType(val: number | null) {
+    console.log('requestType', val);
+    this._requestType.next(val);
+  }
+
+  get requestType() {
+    return this._requestType.value;
+  }
+
   constructor(private fb: FormBuilder,
               public lang: LangService,
               private dialog: DialogService,
-              private lookupService: LookupService) {
+              private lookupService: LookupService,
+              private collectorApprovalService: CollectorApprovalService,
+              private licenseService: LicenseService) {
   }
 
   ngOnInit(): void {
@@ -161,7 +182,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this._disableSearch
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
-        value ? this.searchControl.disable() : this.searchControl.enable();
+        value ? this.oldLicenseFullSerialField.disable() : this.oldLicenseFullSerialField.enable();
       });
   }
 
@@ -226,8 +247,8 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     return this.form?.get('licenseEndDate');
   }
 
-  searchForLicense() {
-    console.log('SEARCH');
+  get oldLicenseFullSerialField(): FormControl {
+    return (this.form.get('oldLicenseFullSerial')) as FormControl;
   }
 
   ngOnDestroy(): void {
@@ -243,5 +264,42 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.toggleLicenseEndDate();
       });
+  }
+
+  private validateSingleLicense(license: CollectorLicense): Observable<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>> {
+    return this.licenseService.validateLicenseByRequestType<CollectorLicense>(this.model.caseType, this.model.requestType, license.id)
+      .pipe(map(validated => {
+        return (validated ? {
+          selected: validated,
+          details: validated
+        } : null) as (null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>);
+      }))
+  }
+
+  private openSelectLicense(licenses: CollectorLicense[]) {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>
+  }
+
+  searchForLicense() {
+    if (!this.oldLicenseFullSerialField.value) {
+      this.dialog.error(this.lang.map.need_license_number_to_search);
+      return;
+    }
+
+    this.licenseService
+      .collectorSearch<CollectorApproval>({
+        fullSerial: this.oldLicenseFullSerialField.value
+      })
+      .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(licenses => !!licenses.length))
+      .pipe(exhaustMap((licenses) => {
+        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
+      }))
+      .pipe(
+        filter<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>, SelectedLicenseInfo<CollectorLicense, CollectorLicense>>
+        ((info): info is SelectedLicenseInfo<CollectorLicense, CollectorLicense> => !!info))
+      .subscribe((_info) => {
+        this.updateForm(this.item = _info.details.convertToItem());
+      })
   }
 }

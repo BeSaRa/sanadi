@@ -157,7 +157,8 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: ServiceRequestTypes) => {
-        this.disableSearchField = val === ServiceRequestTypes.NEW
+        this.disableSearchField = val === ServiceRequestTypes.NEW;
+        this.model!.requestType = val;
       })
   }
 

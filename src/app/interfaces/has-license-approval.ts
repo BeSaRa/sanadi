@@ -1,7 +1,9 @@
+import {IMyDateModel} from 'angular-mydatepicker';
+
 export interface HasLicenseApproval {
   licenseStatus: number;
   licenseStartDate: string;
-  licenseEndDate: string;
+  licenseEndDate: string | IMyDateModel;
   licenseApprovedDate: string;
   customTerms: string;
   publicTerms: string;

@@ -46,6 +46,8 @@ import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 import {CollectionLicense} from "@app/license-models/collection-license";
 import {CollectionLicenseInterceptor} from "@app/license-interceptors/collection-license-interceptor";
+import {CollectorLicense} from '@app/license-models/collector-license';
+import {CollectorLicenseInterceptor} from '@app/license-interceptors/collector-license-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -157,6 +159,19 @@ export class LicenseService {
     return this._loadInternalProjectLicenseByLicenseId(licenseId);
   }
 
+  @Generator(CollectorLicense, false, {
+    property: 'rs',
+    interceptReceive: (new CollectorLicenseInterceptor()).receive
+  })
+  private _validateCollectorLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.urlService.URLS.COLLECTOR_APPROVAL + '/draft/validate', {
+      requestType,
+      collectorItemList: [{
+        oldLicenseId
+      }]
+    });
+  }
+
   @Generator(InitialExternalOfficeApproval, false, {
     property: 'rs',
     interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
@@ -247,6 +262,8 @@ export class LicenseService {
       return this._validateInternalProjectLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
+    } else if(caseType === CaseTypes.COLLECTOR_LICENSING) {
+      return this._validateCollectorLicenseByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
@@ -288,6 +305,9 @@ export class LicenseService {
       case CaseTypes.COLLECTION_APPROVAL:
         url = this.urlService.URLS.COLLECTION_APPROVAL;
         break;
+      case CaseTypes.COLLECTOR_LICENSING:
+        url = this.urlService.URLS.COLLECTOR_APPROVAL;
+        break;
     }
 
     if (!url) {
@@ -313,5 +333,17 @@ export class LicenseService {
 
   collectionSearch<C>(model: Partial<C>): Observable<CollectionLicense[]> {
     return this._collectionSearch(model);
+  }
+
+  @Generator(CollectorLicense, true, {
+    property: 'rs',
+    interceptReceive: (new CollectorLicenseInterceptor).receive
+  })
+  private _collectorSearch<C>(model: Partial<C>): Observable<CollectorLicense[]> {
+    return this.http.post<CollectorLicense[]>(this.urlService.URLS.COLLECTOR_APPROVAL + '/license/search', model)
+  }
+
+  collectorSearch<C>(model: Partial<C>): Observable<CollectorLicense[]> {
+    return this._collectorSearch(model);
   }
 }
