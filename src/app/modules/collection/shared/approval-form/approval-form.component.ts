@@ -16,6 +16,8 @@ import {ServiceDataService} from "@app/services/service-data.service";
 import {CollectionItem} from "@app/models/collection-item";
 import {LicenseDurationType} from "@app/enums/license-duration-type";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {CaseModel} from "@app/models/case-model";
+import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
 
 @Component({
   selector: 'approval-form',
@@ -24,7 +26,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 })
 export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Input()
-  model!: CollectionApproval;
+  model!: HasLicenseDurationType & CaseModel<any, any>;
   @Input()
   service!: EServiceGenericService<any>
   destroy$: Subject<any> = new Subject();
