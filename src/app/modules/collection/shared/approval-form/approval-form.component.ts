@@ -44,6 +44,9 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   saveInfo: EventEmitter<HasLicenseApproval> = new EventEmitter<HasLicenseApproval>();
 
   @Input()
+  multi: boolean = true;
+
+  @Input()
   set license(val: HasLicenseApproval | null) {
     this._license$.next(val);
   }
