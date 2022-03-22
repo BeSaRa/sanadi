@@ -1,12 +1,19 @@
 import { CaseTypes } from "@app/enums/case-types.enum";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
+import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-license-with-duration";
+import { FundraisingApproveTaskPopupComponent } from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
+import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
 
-export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
+const _ApprovalLicense = mixinApprovalLicenseWithDuration(CaseModel);
+export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval {
   service: FundraisingService;
   id!: string;
   createdOn!: string;
@@ -63,9 +70,12 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
   requestTypeInfo!: AdminResult;
   className!: string;
 
+  dialog!: DialogService;
+
   constructor() {
     super();
     this.service = FactoryService.getService("FundraisingService");
+    this.dialog = FactoryService.getService("DialogService");
   }
 
   buildBasicInfo(controls: boolean = false): any {
@@ -136,5 +146,19 @@ export class Fundraising extends CaseModel<FundraisingService, Fundraising> {
         ? [description, [CustomValidators.required]]
         : description,
     };
+  }
+
+  approve(): DialogRef {
+    return this.dialog.show(FundraisingApproveTaskPopupComponent, {
+      model: this,
+      action: WFResponseType.APPROVE,
+    });
+  }
+
+  finalApprove(): DialogRef {
+    return this.dialog.show(FundraisingApproveTaskPopupComponent, {
+      model: this,
+      action: WFResponseType.FINAL_APPROVE,
+    });
   }
 }

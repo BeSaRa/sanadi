@@ -10,6 +10,7 @@ import { CollectionApprovalApproveTaskPopupComponent } from './popups/collection
 import { ApprovalFormComponent } from './shared/approval-form/approval-form.component';
 import {MapsModule} from "@app/modules/maps/maps.module";
 import { FundraisingComponent } from './pages/fundraising/fundraising.component';
+import { FundraisingApproveTaskPopupComponent } from './popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { FundraisingComponent } from './pages/fundraising/fundraising.component'
     CollectionItemComponent,
     CollectionApprovalApproveTaskPopupComponent,
     ApprovalFormComponent,
-    FundraisingComponent
+    FundraisingComponent,
+    FundraisingApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,
