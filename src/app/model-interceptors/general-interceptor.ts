@@ -7,6 +7,7 @@ export class GeneralInterceptor {
     model.taskDetails && (model.taskDetails = new TaskDetails().clone(model.taskDetails));
     model.taskDetails && model.taskDetails.fromUserInfo && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo));
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
+    model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo))
     model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo))
     return model;
   }
@@ -24,6 +25,7 @@ export class GeneralInterceptor {
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.taskDetails;
+    delete model.ouInfo;
     return model;
   }
 }

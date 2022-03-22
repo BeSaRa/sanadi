@@ -1,4 +1,4 @@
-export interface LicenseApprovalInterface {
+export interface HasLicenseApproval {
   licenseStatus: number;
   licenseStartDate: string;
   licenseEndDate: string;
@@ -13,10 +13,14 @@ export interface LicenseApprovalInterface {
   exportedLicenseFullSerial: string;
   exportedLicenseId: string;
   exportedLicenseSerial: number;
+  licenseDurationType: number;
+  licenseVSID: string
+  currentVersion: number
+  currentVersionDate: string
 
   buildApprovalForm(controls: boolean): any
 
   hasValidApprovalInfo(): boolean
 
-  clone(m?: Partial<LicenseApprovalInterface>): LicenseApprovalInterface;
+  clone<T>(m?: Partial<T>): T;
 }

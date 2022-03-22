@@ -7,6 +7,9 @@ import {Observable} from 'rxjs';
 import {Validators} from '@angular/forms';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {isValidValue} from '../helpers/utils';
+import {ISearchFieldsMap} from '@app/types/types';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 
 export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService> {
   installementsCount: number = 0;
@@ -29,12 +32,25 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
-  aidLookupInfo!: Partial<AdminResult>;
+  aidLookupInfo!: AdminResult;
   periodicTypeInfo!: AdminResult;
 
   service: SubventionAidService;
   approvalDateString: string | undefined;
   aidStartPayDateString: string | undefined;
+
+  searchFields: ISearchFieldsMap<SubventionAid> = {
+    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount', 'aidRemainingAmount'])
+  };
+  searchFieldsPartial: ISearchFieldsMap<SubventionAid> = {
+    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
+  };
+  searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {
+    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
+  };
 
   constructor() {
     super();

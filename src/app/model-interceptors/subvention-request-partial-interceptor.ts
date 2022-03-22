@@ -25,6 +25,7 @@ export class SubventionRequestPartialInterceptor {
     delete model.requestTypeInfo;
     delete model.requestTypeInfo;
     delete model.creationDateString;
+    delete model.searchFields;
     return model;
   }
 }

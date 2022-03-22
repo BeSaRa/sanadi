@@ -11,6 +11,20 @@
                  [columns]="tableOptions.columns" [data]="queryResultSet?.items" [filter]="tableOptions.searchText"
                  [useSearchToFilter]="true">
         <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header (onSelectFilter)="onInboxFiltered($event)" tableTitle="menu_team_inbox"
+                            [sort]="table.dataSource.sort"
+                            (textChange)="tableOptions.searchText = $event"
+                            [filterCriteria]="filterCriteria"
+                            [stats]="queryResultSet?.stats"
+                            [useReloadValue]="true"
+                            [customTemplate]="teamsSelect"
+                            (filterClicked)="tableOptions.filterCallback($event)"
+                            [reload$]="inboxChange$"></table-header>
+            </th>
+          </ng-container>
+
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell class="td-checkbox" *cdkHeaderCellDef>
               <input type="checkbox" [disabled]="table.filter"
@@ -76,19 +90,6 @@
           <ng-container cdkColumnDef="orgInfo">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="extra-header">
-            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header (onSelectFilter)="onInboxFiltered($event)" tableTitle="menu_team_inbox"
-                            [sort]="table.dataSource.sort"
-                            (textChange)="tableOptions.searchText = $event"
-                            [filterCriteria]="filterCriteria"
-                            [stats]="queryResultSet?.stats"
-                            [useReloadValue]="true"
-                            [customTemplate]="teamsSelect"
-                            (filterClicked)="tableOptions.filterCallback($event)"
-                            [reload$]="inboxChange$"></table-header>
-            </th>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef></th>

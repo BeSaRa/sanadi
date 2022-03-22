@@ -183,9 +183,9 @@ export class DateUtils {
     return dayjs(DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)).endOf('day');
   }
 
-  static getTimeStampFromDate(date: IMyDateModel | Date | string): any {
+  static getTimeStampFromDate(date: IMyDateModel | Date | string): number  | null {
     if (!date) {
-      return date;
+      return null;
     }
     return DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)?.valueOf() || null;
   }

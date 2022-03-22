@@ -28,7 +28,7 @@
           <ng-select [selectOnTab]="true" labelForId="searchMethod" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="searchMethod"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="operator">
+                     formControlName="operator" appendTo="body">
             <ng-option *ngFor="let option of stringOperators" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -57,7 +57,7 @@
           <ng-select [selectOnTab]="true" labelForId="identification" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="identification"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="identification">
+                     formControlName="identification" appendTo="body">
             <ng-option *ngFor="let option of identifications" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -72,7 +72,7 @@
           <ng-select [selectOnTab]="true" labelForId="idType" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="idType"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="idType">
+                     formControlName="idType" appendTo="body">
             <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -99,7 +99,7 @@
             <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="nationality"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="nationality"
+                       formControlName="nationality" appendTo="body"
                        [ngClass]="fm.getStatusClass('searchById.nationality')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
@@ -113,7 +113,7 @@
             <ng-select [selectOnTab]="true" labelForId="nationalityGulf" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="nationalityGulf"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="nationality"
+                       formControlName="nationality" appendTo="body"
                        [ngClass]="fm.getStatusClass('searchById.nationality')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of gulfCountries" [value]="option.lookupKey">
@@ -261,70 +261,95 @@
     </div><!-- table container-->
   </div>
 </div>
-<div *ngIf="requests.length" class="row">
-  <div class="col">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="personal-aid-tab" data-bs-toggle="tab" href="#personal-aid" role="tab"
-           aria-controls="personal-aids" aria-selected="true">{{langService.map.personal_aid}}</a>
-      </li>
-    </ul>
-    <div class="tab-content py-3">
-      <div class="tab-pane fade show active" id="personal-aid" role="tabpanel" aria-labelledby="personal-aid-tab">
-        <div class="row">
-          <div class="col-12 d-flex align-items-center justify-content-end">
-            <button class="btn btn-link outline-none"
-                    tooltip="{{langService.map.print}}"
-                    (click)="printResult()">
-              <i class="mdi mdi-printer"></i></button>
-          </div>
+<div *ngIf="requests.length" class="row mt-3">
+  <tabs-list>
+    <tab [template]="personalAidsTemplate" [title]="langService.map.personal_aid"></tab>
+  </tabs-list>
+  <ng-template #personalAidsTemplate>
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #table sortableTable [paginator]="paginator" [data]="requests" [columns]="displayedColumns"
+                     [filter]="filterControl.value" [useSearchToFilter]="true"
+                     [searchFieldsName]="'searchFieldsInquiry'">
+            <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="requests"
+                                [sort]="table.dataSource.sort"
+                                (textChange)="filterControl.setValue($event)">
+                    <button class="btn icon-btn outline-none"
+                            tooltip="{{langService.map.print}}"
+                            (click)="printResult()">
+                      <i class="mdi mdi-printer"></i></button>
+                  </table-header>
+                </th>
+              </ng-container>
+
+              <ng-container cdkColumnDef="requestFullSerial">
+                <th cdk-header-cell *cdkHeaderCellDef class="serial-column"
+                    sortable-header> {{langService.map.request_number}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="serial-column">
+                  <div class="d-flex flex-row">
+                    <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
+                    <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="row.isPartial"
+                       tooltip="{{langService.map.partial_request}}"></i>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container cdkColumnDef="requestDate">
+                <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header
+                    [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.requestDate"> {{langService.map.request_date}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="organization">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.organizationAndBranch"> {{langService.map.lbl_organization}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="requestStatus">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.requestStatus"> {{langService.map.request_status}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.statusInfo.getName()}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="requestedAidAmount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_aid_amount}}</th>
+                <td cdk-cell *cdkCellDef="let row">
+                  <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
+              </ng-container>
+              <ng-container cdkColumnDef="totalApprovedAmount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.totalApprovedAmount"> {{langService.map.total_approved_amount}}</th>
+                <td cdk-cell *cdkCellDef="let row">
+                  <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
+              </ng-container>
+              <ng-container cdkColumnDef="actions">
+                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                  <grid-actions [record]="row" [actions]="actions">
+                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
+                       (click)="row.showAids($event)">
+                      <span class="badge bg-primary grid-badge">{{row.aidCount}}</span>
+                    </a>
+                  </grid-actions>
+                </td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
+                  (contextmenu)="menu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #paginator [length]="(requests.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #menu [actions]="actions"></context-menu-item>
         </div>
-        <table class="table table-striped table-bordered caption-top">
-          <thead role="rowgroup">
-          <tr>
-            <th class="serial-column">{{langService.map.request_number}}</th>
-            <th class="date-column">{{langService.map.request_date}}</th>
-            <th>{{langService.map.lbl_org_unit}}</th>
-            <th>{{langService.map.request_status}}</th>
-            <th>{{langService.map.request_aid_amount}}</th>
-            <th>{{langService.map.total_approved_amount}}</th>
-            <th>{{langService.map.lbl_actions}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <ng-container *ngFor="let request of requests;">
-            <tr>
-              <td class="serial-column">
-                <div class="d-flex flex-row">
-                  <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{request.requestFullSerial}} </span>
-                </div>
-              </td>
-              <td class="date-column"> {{request.creationDate|date}} </td>
-              <td> {{request.orgAndBranchInfo?.getName()}} </td>
-              <td> {{request.statusInfo.getName()}} </td>
-              <td> {{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-              <td> {{request.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-              <td class="table-actions">
-                <div class="d-flex flex-row">
-                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
-                     (click)="request.showAids($event)">
-                    <span class="badge bg-primary aid-badge">{{request.aidCount}}</span>
-                  </a>
-                  <a href="#" (click)="printRequest($event, request)"
-                     tooltip="{{langService.map.print_request_form}}" class="icon-btn">
-                    <i class="mdi mdi-printer"></i>
-                  </a>
-                  <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                     class="icon-btn">
-                    <i class="mdi mdi-history"></i>
-                  </a>
-                </div>
-              </td>
-            </tr>
-          </ng-container>
-          </tbody>
-        </table>
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>

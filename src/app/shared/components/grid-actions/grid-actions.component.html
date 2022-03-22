@@ -1,0 +1,29 @@
+<div class="flex-row d-flex align-items-center">
+  <ng-content select="*:not([afterTemplate])"></ng-content>
+  <ng-container *ngFor="let action of filteredActions; first as isFirst; last as isLast">
+    <ng-container *ngIf="isAction(action)">
+      <button *ngIf="!hasChildren(action)" class="btn icon-btn text-primary grid-action-btn"
+              [disabled]="isActionDisabled(action)"
+              [tooltip]="displayLabel(action)" (click)="onClick($event, action)">
+        <i class="mdi {{action.icon}} {{action.class || ''}}"></i>
+      </button>
+      <div class="dropdown" *ngIf="hasChildren(action)">
+        <button type="button" class="btn btn-link outline-none dropdown-toggle grid-action-btn"
+                id="dropdownMenuButton1" [disabled]="isActionDisabled(action)"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="mdi {{action.icon}}"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li *ngFor="let child of action.children">
+            <button class="dropdown-item" type="button" [disabled]="isActionDisabled(child)"
+                    (click)="onClick($event, child)">{{displayLabel(child)}}</button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isDivider(action) && !isFirst && !isLast">
+      <div class="vr"></div>
+    </ng-container>
+  </ng-container>
+  <ng-content select="[afterTemplate]"></ng-content>
+</div>

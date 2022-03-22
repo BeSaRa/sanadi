@@ -1,8 +1,8 @@
 <div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white">
-  <h1 class="h6 my-1">{{lang.map[tableTitle]}}</h1>
+  <h1 class="h6 my-1">{{tableTitle ? lang.map[tableTitle] : ''}}</h1>
   <div>
     <button [tooltip]="lang.map.btn_reload"
-            (click)="reload()"
+            (click)="reload()" *ngIf="reload$"
             class="btn icon-btn">
       <i class="mdi mdi-reload"></i>
     </button>
@@ -10,7 +10,9 @@
   <div *ngIf="customTemplate">
     <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
   </div>
+
   <div class="flex-grow-1"></div>
+  <!-- Risk Status -->
   <div class="d-flex gap-3 risk-status">
     <div class="d-flex" *ngIf="selectedFilter">
       <button (click)="selectFilter(selectedFilter)" class="btn btn-sm"
@@ -26,14 +28,20 @@
               *ngFor="let filter of riskStatus">
         {{filter.getName()}}
         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-        {{stats && stats[riskCounter[filter.lookupKey]]}}
-          <span class="visually-hidden">unread messages</span>
-      </span>
+          {{stats && stats[riskCounter[filter.lookupKey]]}}
+            <span class="visually-hidden">unread messages</span>
+        </span>
       </button>
+      <div class="vr"></div>
     </ng-container>
   </div>
-  <div class="px-3"></div>
-  <div class="vr"></div>
+
+  <!-- outer content -->
+  <div class="d-flex" #contentRef>
+    <ng-content></ng-content>
+  </div>
+  <div class="vr" *ngIf="contentRef.children.length"></div>
+
   <button (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
           class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
@@ -51,6 +59,10 @@
   <div class="position-relative">
     <i class="mdi zoom-icon mdi-magnify position-absolute translate-middle-y top-50 start-0 ms-1"></i>
     <input [formControl]="filterControl" placeholder="{{lang.map.lbl_search}}"
-           class="form-control form-control-sm ps-4"/>
+           class="form-control form-control-sm px-4"/>
+    <button *ngIf="filterControl.value" class="btn icon-btn position-absolute me-0 pe-2 end-0 btn-clear top-0"
+            (click)="clearSearch($event)">
+      <i class="mdi mdi-close"></i>
+    </button>
   </div>
 </div>

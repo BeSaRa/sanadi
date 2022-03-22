@@ -3,8 +3,12 @@ import {SubventionAidService} from '@app/services/subvention-aid.service';
 import {FactoryService} from '@app/services/factory.service';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {ISearchFieldsMap} from '@app/types/types';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 
-export class SanadiAuditResult {
+export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult>{
   id!: number;
   auditId!: number;
   updatedOn!: string;
@@ -27,13 +31,18 @@ export class SanadiAuditResult {
   auditEntity!: 'BENEFICIARY' | 'SUBVENTION_REQUEST' | 'SUBVENTION_AID';
 
   constructor() {
+    super();
     this.subventionAidService = FactoryService.getService('SubventionAidService');
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');
     this.beneficiaryService = FactoryService.getService('BeneficiaryService');
   }
 
-  showAuditDetails($event: MouseEvent): any {
-    $event?.preventDefault();
+  searchFields: ISearchFieldsMap<SanadiAuditResult> = {
+    ...infoSearchFields(['orgInfo', 'orgBranchInfo', 'orgUserInfo', 'operationInfo']),
+    ...normalSearchFields(['updatedOnString'])
+  };
+
+  showAuditDetails(): any {
     if (this.auditEntity === 'SUBVENTION_AID') {
       return this.subventionAidService.loadSubventionAidAuditDetails(this.id);
     } else if (this.auditEntity === 'SUBVENTION_REQUEST') {

@@ -57,6 +57,7 @@ import {ECookieService} from '../../../services/e-cookie.service';
 import {DateUtils} from '../../../helpers/date-utils';
 import {EmployeeService} from '../../../services/employee.service';
 import {DialogRef} from "../../../shared/models/dialog-ref";
+import {AdminResult} from '@app/models/admin-result';
 
 @Component({
   selector: 'app-user-request',
@@ -832,7 +833,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       let message: string;
       if (!this.hasEditAid) {
         this.subventionAid.push(subventionAid.clone({
-          aidLookupInfo: {parent: parentValue}
+          aidLookupInfo: AdminResult.createInstance({parent: parentValue})
         }));
         message = this.langService.map.msg_aid_added_successfully;
       } else {

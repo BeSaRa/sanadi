@@ -384,102 +384,107 @@
   </ng-template>
 </form>
 <ng-template #searchResult>
-  <div *ngIf="requests.length">
-    <div class="row">
-      <div class="col-6 d-flex align-items-center justify-content-start">
-        <button class="btn btn-link outline-none"
-                tooltip="{{langService.map.btn_reload}}"
-                (click)="reloadSearchResults()">
-          <i class="mdi mdi-reload"></i></button>
-      </div>
-      <div class="col-6 d-flex align-items-center justify-content-end">
-        <button class="btn btn-link outline-none"
-                tooltip="{{langService.map.print}}"
-                (click)="printResult()">
-          <i class="mdi mdi-printer"></i></button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="table-responsive">
-          <table class="table table-striped table-bordered caption-top">
-            <thead role="rowgroup">
-            <tr>
-              <th class="serial-column">{{langService.map.request_number}}</th>
-              <th class="date-column">{{langService.map.request_date}}</th>
-              <th>{{langService.map.lbl_organization}}</th>
-              <th>{{langService.map.created_by}}</th>
-              <th>{{langService.map.request_status}}</th>
-              <th>{{langService.map.estimated_amount}}</th>
-              <th>{{langService.map.request_aid_amount}}</th>
-              <th>{{langService.map.total_approved_amount}}</th>
-              <th class="date-column">{{langService.map.lbl_status_date_modified}}</th>
-              <th>{{langService.map.lbl_actions}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let request of requests;">
-              <tr>
-                <td class="serial-column">
-                  <div class="d-flex flex-row">
-                    <a href="#" (click)="showRequestDetails(request , $event)"
-                       class="dir-ltr d-inline-block flex-grow-1 text-start"> {{request.requestFullSerial}} </a>
-                    <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="request.isPartial"
-                       tooltip="{{langService.map.partial_request}}"></i>
-                  </div>
-                </td>
-                <td class="date-column">{{request.creationDateString}}</td>
-                <td>{{request.orgAndBranchInfo?.getName()}}</td>
-                <td>{{request.orgUserInfo.getName()}}</td>
-                <td>{{request.statusInfo.getName()}}</td>
-                <td>{{request.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-                <td>{{request.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-                <td>{{request.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
-                <td class="date-column">{{request.statusDateModifiedString}}</td>
-                <td class="table-actions">
-                  <div class="d-flex flex-row">
-                    <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
-                       (click)="request.showAids($event)">
-                      <span class="badge bg-primary aid-badge">{{request.aidCount}}</span>
-                    </a>
-                    <a href="#" (click)="printRequest($event, request)" tooltip="{{langService.map.print_request_form}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-printer"></i>
-                    </a>
-                    <a href="#" (click)="request.showLog($event)" tooltip="{{langService.map.show_logs}}"
-                       class="icon-btn">
-                      <i class="mdi mdi-history"></i>
-                    </a>
-                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                            [disabled]="request.notUnderProcess()"
-                            (click)="editRequest(request)" tooltip="{{langService.map.btn_edit}}"
-                            class="btn icon-btn text-primary">
-                      <i class="mdi mdi-book-edit"></i>
-                    </button>
-                    <button *ngIf="empService.checkPermissions('EDIT_SUBVENTION_REQUEST')"
-                            (click)="cancelRequest(request)" tooltip="{{langService.map.btn_cancel}}"
-                            [disabled]="request.notUnderProcess()" class="btn icon-btn text-primary">
-                      <i class="mdi mdi-book-cancel"></i>
-                    </button>
-                    <button *ngIf="!request.notUnderProcess()"
-                            (click)="deleteRequest(request)" tooltip="{{langService.map.btn_delete}}"
-                            class="btn icon-btn text-primary">
-                      <i class="mdi mdi-trash-can"></i>
-                    </button>
-                    <button *ngIf="empService.checkPermissions('SUBVENTION_AID_SEARCH')"
-                            (click)="getRelatedBeneficiaryData(request)" tooltip="{{langService.map.inquire_beneficiary}}"
-                            class="btn icon-btn text-primary">
-                      <i class="mdi mdi-account-search"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table sortableTable [paginator]="paginator" [data]="requests" [columns]="displayedColumns"
+                   [filter]="filterControl.value" [useSearchToFilter]="true"
+                   [searchFieldsName]="'searchFieldsSearch'">
+          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="requests" [reload$]="reload$"
+                              [sort]="table.dataSource.sort"
+                              (textChange)="filterControl.setValue($event)">
+                  <button class="btn icon-btn outline-none"
+                          tooltip="{{langService.map.print}}"
+                          (click)="printResult()">
+                    <i class="mdi mdi-printer"></i></button>
+                </table-header>
+              </th>
             </ng-container>
-            </tbody>
+
+            <ng-container cdkColumnDef="requestFullSerial">
+              <th cdk-header-cell *cdkHeaderCellDef class="serial-column"
+                  sortable-header> {{langService.map.request_number}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="serial-column">
+                <div class="d-flex flex-row">
+                  <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
+                  <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="row.isPartial"
+                     tooltip="{{langService.map.partial_request}}"></i>
+                </div>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestDate">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header
+                  [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestDate"> {{langService.map.request_date}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="organization">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.organizationAndBranch"> {{langService.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="createdBy">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.createdBy"> {{langService.map.created_by}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUserInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestStatus">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestStatus"> {{langService.map.request_status}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.statusInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="estimatedAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestedAidAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_aid_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="totalApprovedAmount">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.totalApprovedAmount"> {{langService.map.total_approved_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="statusDateModified">
+              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.statusDateModified"> {{langService.map.lbl_status_date_modified}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.statusDateModifiedString}}</span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                <grid-actions [record]="row" [actions]="actions">
+                  <a tooltip="{{langService.map.show_aids}}" href="#" class="icon-btn"
+                     (click)="row.showAids($event)">
+                    <span class="badge bg-primary grid-badge">{{row.aidCount}}</span>
+                  </a>
+                </grid-actions>
+              </td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
+                (contextmenu)="menu.open($event , row)"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
           </table>
-        </div>
+          <app-paginator #paginator [length]="(requests.length || 0)"></app-paginator>
+        </app-table>
+        <context-menu-item #menu [actions]="actions"></context-menu-item>
       </div>
     </div>
   </div>
-
 </ng-template>

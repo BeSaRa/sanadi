@@ -1,21 +1,26 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../../services/lang.service';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {CustomValidators} from '../../../../validators/custom-validators';
-import {switchMap} from 'rxjs/operators';
-import {SubventionRequestService} from '../../../../services/subvention-request.service';
-import {UserClickOn} from '../../../../enums/user-click-on.enum';
+import {LangService} from '@app/services/lang.service';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {switchMap, takeUntil} from 'rxjs/operators';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {Router} from '@angular/router';
-import {DialogService} from '../../../../services/dialog.service';
-import {IPartialRequestCriteria} from '../../../../interfaces/i-partial-request-criteria';
-import {DialogRef} from '../../../../shared/models/dialog-ref';
-import {isEmptyObject, isValidValue, objectHasValue} from '../../../../helpers/utils';
-import {FilterEventTypes} from '../../../../types/types';
-import {SubventionRequestPartial} from '../../../../models/subvention-request-partial';
-import {SubventionRequestPartialService} from '../../../../services/subvention-request-partial.service';
-import {SubventionResponseService} from '../../../../services/subvention-response.service';
-import {BeneficiaryService} from '../../../../services/beneficiary.service';
-import {EmployeeService} from '../../../../services/employee.service';
+import {DialogService} from '@app/services/dialog.service';
+import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {isEmptyObject, isValidValue, objectHasValue} from '@app/helpers/utils';
+import {FilterEventTypes} from '@app/types/types';
+import {SubventionRequestPartial} from '@app/models/subvention-request-partial';
+import {SubventionRequestPartialService} from '@app/services/subvention-request-partial.service';
+import {SubventionResponseService} from '@app/services/subvention-response.service';
+import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {FormControl} from '@angular/forms';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-partial-request',
@@ -23,14 +28,7 @@ import {EmployeeService} from '../../../../services/employee.service';
   styleUrls: ['./partial-request.component.scss']
 })
 export class PartialRequestComponent implements OnInit, OnDestroy {
-  partialRequests: SubventionRequestPartial[] = [];
-  partialRequestsClone: SubventionRequestPartial[] = [];
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
-  reloadSubscription!: Subscription;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  filterCriteria: Partial<IPartialRequestCriteria> = {};
-  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'benCategory',
-    'requestType', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];
+  private destroy$: Subject<any> = new Subject<any>();
 
   constructor(public langService: LangService,
               private dialogService: DialogService,
@@ -42,12 +40,82 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
               public empService: EmployeeService) {
   }
 
+  partialRequests: SubventionRequestPartial[] = [];
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  filterCriteria: Partial<IPartialRequestCriteria> = {};
+  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'benCategory',
+    'requestType', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];
+  headerColumn: string[] = ['extra-header'];
+  filterControl: FormControl = new FormControl('');
+  actions: IMenuItem<SubventionRequestPartial>[] = [
+    // show details
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DETAILS,
+      label: 'show_details',
+      onClick: (item: SubventionRequestPartial) => item.showPartialRequestDetails()
+    },
+    // add partial request
+    {
+      type: 'action',
+      icon: ActionIconsEnum.ADD_SIMPLE,
+      label: 'btn_add_partial_request',
+      onClick: (item: SubventionRequestPartial) => this.addPartialRequest(item),
+      show: (item) => this.empService.checkPermissions('SUBVENTION_ADD')
+    }
+  ];
+
+  sortingCallbacks = {
+    creationDate: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !isValidValue(a) ? '' : new Date(a.creationDate).valueOf(),
+        value2 = !isValidValue(b) ? '' : new Date(b.creationDate).valueOf();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    organization: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    benCategory: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benCategoryInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.benCategoryInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    gender: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.genderInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.genderInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestType: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    estimatedValue: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidTotalSuggestedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidTotalSuggestedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    totalAidAmount: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidTotalPayedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidTotalPayedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    remainingAmount: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidRemainingAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidRemainingAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
   ngOnInit(): void {
     this.listenToReload();
   }
 
   ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   hasFilterCriteria(): boolean {
@@ -63,13 +131,11 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   }
 
   private listenToReload() {
-    this.reloadSubscription = this.reload$.pipe(
-      switchMap(() => {
-        return this._loadPartialRequests();
-      }),
+    this.reload$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this._loadPartialRequests()),
     ).subscribe((partialRequests: SubventionRequestPartial[]) => {
       this.partialRequests = partialRequests;
-      this.partialRequestsClone = partialRequests.slice();
     });
   }
 
@@ -92,7 +158,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
     }
   }
 
-  addPartialRequest($event: MouseEvent, request: SubventionRequestPartial): void {
+  addPartialRequest(request: SubventionRequestPartial): void {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {

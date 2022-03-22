@@ -5,57 +5,70 @@
 </div>
 <div class="dialog-content">
 
-  <tabs-list>
-    <tab [name]="tabsData.general.name" [template]="generalTabTemplate" [title]="langService.map.lbl_general"></tab>
+  <tabs-list >
+    <tab [name]="tabsData.general.name" [template]="generalTabTemplate" [title]="langService.map.lbl_general"
+         [tabWidth]="'800px'"></tab>
     <tab [name]="tabsData.audit.name" [template]="auditTemplate" [title]="langService.map.lbl_audit"
          [tabWidth]="'800px'"></tab>
   </tabs-list>
 
   <ng-template #generalTabTemplate>
     <div class="row">
-      <div class="col-12 d-flex align-items-center justify-content-end">
-        <button class="btn btn-link outline-none"
-                tooltip="{{langService.map.print}}"
-                (click)="printLogs()">
-          <i class="mdi mdi-printer"></i></button>
-      </div>
-    </div>
-    <div class="row">
       <div class="col-12">
         <div class="table-responsive">
-          <app-table #logTable [paginator]="logPaginator" [data]="logList" [columns]="displayedColumns">
-            <table class="table table-striped table-bordered" cdk-table [dataSource]="logTable.dataSource">
+          <app-table #generalTable sortableTable [paginator]="generalPaginator" [data]="logList"
+                     [columns]="generalDisplayedColumns"
+                     [filter]="generalFilterControl.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered" cdk-table [dataSource]="generalTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header [sort]="generalTable.dataSource.sort"
+                                (textChange)="generalFilterControl.setValue($event)">
+                    <button class="btn icon-btn outline-none"
+                            tooltip="{{langService.map.print}}"
+                            (click)="printLogs()">
+                      <i class="mdi mdi-printer"></i></button>
+                  </table-header>
+                </th>
+              </ng-container>
+
               <ng-container cdkColumnDef="organization">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_org_unit}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="generalSortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="branch">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_branch}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="generalSortingCallbacks.branch"> {{langService.map.lbl_branch}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.orgBranchInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="user">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="generalSortingCallbacks.user"> {{langService.map.user}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="actionType">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.action_type}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="generalSortingCallbacks.actionType"> {{langService.map.action_type}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.actionTypeInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="actionTime">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.action_time}}</th>
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="generalSortingCallbacks.actionTime"> {{langService.map.action_time}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.actionTimeString}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="comments">
-                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.comments}}</th>
+              <ng-container cdkColumnDef="userComments">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.comments}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.userComments}}</td>
               </ng-container>
-              <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-              <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="generalTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: generalTable.columns;"></tr>
               <tr *cdkNoDataRow>
-                <td colspan="10" class="text-center">{{langService.map.no_records_to_display}}</td>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
               </tr>
             </table>
-            <app-paginator #logPaginator [length]="logList.length"></app-paginator>
+            <app-paginator #generalPaginator [length]="logList.length"></app-paginator>
           </app-table>
         </div>
       </div>
@@ -77,7 +90,7 @@
     <div class="row">
       <div class="col-12">
         <ng-container [ngTemplateOutlet]="auditTableTemplate"
-                      [ngTemplateOutletContext]="{data: auditBeneficiaryData, displayColumns: auditDisplayColumns}">
+                      [ngTemplateOutletContext]="{data: auditBeneficiaryData, displayColumns: auditDisplayedColumns}">
         </ng-container>
       </div>
     </div>
@@ -87,7 +100,7 @@
     <div class="row">
       <div class="col-12">
         <ng-container [ngTemplateOutlet]="auditTableTemplate"
-                      [ngTemplateOutletContext]="{data: auditSubventionRequestData, displayColumns: auditDisplayColumns}">
+                      [ngTemplateOutletContext]="{data: auditSubventionRequestData, displayColumns: auditDisplayedColumns}">
         </ng-container>
       </div>
     </div>
@@ -97,7 +110,7 @@
     <div class="row">
       <div class="col-12">
         <ng-container [ngTemplateOutlet]="auditTableTemplate"
-                      [ngTemplateOutletContext]="{data: auditSubventionAidData, displayColumns: auditDisplayColumns}">
+                      [ngTemplateOutletContext]="{data: auditSubventionAidData, displayColumns: auditDisplayedColumns}">
         </ng-container>
       </div>
     </div>
@@ -106,45 +119,58 @@
   <!-- Audit Table Template -->
   <ng-template #auditTableTemplate let-data="data" let-tableColumns="displayColumns">
     <div class="table-responsive">
-      <app-table #auditTable [paginator]="auditPaginator" [data]="data" [columns]="tableColumns">
+      <app-table #auditTable sortableTable [paginator]="auditPaginator" [data]="data" [columns]="tableColumns"
+                 [filter]="auditFilterControl.value" [useSearchToFilter]="true">
         <table class="table table-striped table-bordered" cdk-table [dataSource]="auditTable.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header [sort]="auditTable.dataSource.sort"
+                            (textChange)="auditFilterControl.setValue($event)">
+              </table-header>
+            </th>
+          </ng-container>
+
           <ng-container cdkColumnDef="organization">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_org_unit}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+            [sortCallback]="auditSortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="branch">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_branch}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="auditSortingCallbacks.branch"> {{langService.map.lbl_branch}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgBranchInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="user">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="auditSortingCallbacks.user"> {{langService.map.user}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo.getName()}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="operation">
-            <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.action_type}}</th>
+          <ng-container cdkColumnDef="actionType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="auditSortingCallbacks.actionType"> {{langService.map.action_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.operationInfo.getName()}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="updatedOn">
-            <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_time}}</th>
+          <ng-container cdkColumnDef="actionTime">
+            <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="auditSortingCallbacks.actionTime"> {{langService.map.action_time}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.updatedOnString}} </td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <a href="#" (click)="showAuditDetails($event, row)" tooltip="{{langService.map.show_details}}"
-                 class="icon-btn">
-                <i class="mdi mdi-view-list"></i>
-              </a>
+              <grid-actions [record]="row" [actions]="auditActions"></grid-actions>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="auditTable.columns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: auditTable.columns;"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="auditTable.columns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: auditTable.columns;" (contextmenu)="auditMenu.open($event , row)"></tr>
           <tr *cdkNoDataRow>
-            <td colspan="10" class="text-center">{{langService.map.no_records_to_display}}</td>
+            <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
           </tr>
         </table>
         <app-paginator #auditPaginator [length]="data.length"></app-paginator>
       </app-table>
+      <context-menu-item #auditMenu [actions]="auditActions"></context-menu-item>
     </div>
   </ng-template>
 </div>

@@ -1,28 +1,34 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
-import {LangService} from '../../../services/lang.service';
-import {BeneficiaryService} from '../../../services/beneficiary.service';
-import {Lookup} from '../../../models/lookup';
-import {LookupService} from '../../../services/lookup.service';
+import {FormManager} from '@app/models/form-manager';
+import {LangService} from '@app/services/lang.service';
+import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
 import {forkJoin, of, Subject} from 'rxjs';
 import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
-import {IBeneficiaryCriteria} from '../../../interfaces/i-beneficiary-criteria';
-import {StringOperator} from '../../../enums/string-operator.enum';
-import {Beneficiary} from '../../../models/beneficiary';
-import {DialogService} from '../../../services/dialog.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {SubventionRequestAid} from '../../../models/subvention-request-aid';
-import {SubventionRequestAidService} from '../../../services/subvention-request-aid.service';
-import {SubventionRequestService} from '../../../services/subvention-request.service';
-import {isValidValue, printBlobData} from '../../../helpers/utils';
-import {AdminResult} from '../../../models/admin-result';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import {IBeneficiaryCriteria} from '@app/interfaces/i-beneficiary-criteria';
+import {StringOperator} from '@app/enums/string-operator.enum';
+import {Beneficiary} from '@app/models/beneficiary';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {SubventionRequestAid} from '@app/models/subvention-request-aid';
+import {SubventionRequestAidService} from '@app/services/subvention-request-aid.service';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
+import {isValidValue, printBlobData} from '@app/helpers/utils';
+import {AdminResult} from '@app/models/admin-result';
 import {ActivatedRoute} from '@angular/router';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {EmployeeService} from '../../../services/employee.service';
-import {ECookieService} from '../../../services/e-cookie.service';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {EmployeeService} from '@app/services/employee.service';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SubventionRequestPartial} from '@app/models/subvention-request-partial';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -32,6 +38,25 @@ import {ECookieService} from '../../../services/e-cookie.service';
 export class UserInquiryComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private search$: Subject<any> = new Subject<any>();
+
+
+  constructor(private fb: FormBuilder,
+              public langService: LangService,
+              private dialogService: DialogService,
+              public lookupService: LookupService,
+              private subventionRequestService: SubventionRequestService,
+              private subventionRequestAidService: SubventionRequestAidService,
+              private beneficiaryService: BeneficiaryService,
+              private activeRoute: ActivatedRoute,
+              private empService: EmployeeService,
+              private eCookieService: ECookieService) {
+    this.searchByNamePermission = empService.checkPermissions('BEN_SEARCH_NAME');
+    if (!this.searchByNamePermission) {
+      this.displayIdCriteria = true;
+    }
+    this.prepareLookups();
+  }
+
   form !: FormGroup;
   fm!: FormManager;
   stringOperators: Lookup[] = this.lookupService.getStringOperators();
@@ -78,22 +103,10 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   isBenSearchFromRequest: boolean = false;
   searchByNamePermission: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              public langService: LangService,
-              private dialogService: DialogService,
-              public lookupService: LookupService,
-              private subventionRequestService: SubventionRequestService,
-              private subventionRequestAidService: SubventionRequestAidService,
-              private beneficiaryService: BeneficiaryService,
-              private activeRoute: ActivatedRoute,
-              private empService: EmployeeService,
-              private eCookieService: ECookieService) {
-    this.searchByNamePermission = empService.checkPermissions('BEN_SEARCH_NAME');
-    if (!this.searchByNamePermission){
-      this.displayIdCriteria = true;
-    }
-    this.prepareLookups();
-  }
+  filterControl: FormControl = new FormControl('');
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'totalApprovedAmount', 'actions'];
+  headerColumn: string[] = ['extra-header'];
+  fileIconsEnum = FileIconsEnum;
 
   ngOnInit(): void {
     this.buildPageForm();
@@ -108,6 +121,54 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
+
+  sortingCallbacks = {
+    requestDate: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !isValidValue(a) ? '' : new Date(a.creationDate).valueOf(),
+        value2 = !isValidValue(b) ? '' : new Date(b.creationDate).valueOf();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    organizationAndBranch: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestStatus: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    totalApprovedAmount: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidTotalPayedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidTotalPayedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  actions: IMenuItem<SubventionRequestAid>[] = [
+    // show aids
+    {
+      type: 'action',
+      icon: ActionIconsEnum.AID_HELP,
+      label: 'show_aids',
+      displayInGrid: false,
+      onClick: (item: SubventionRequestAid) => item.showAids()
+    },
+    // print request form
+    {
+      type: 'action',
+      icon: ActionIconsEnum.PRINT,
+      label: 'print_request_form',
+      onClick: (item: SubventionRequestAid) => this.printRequest(item)
+    },
+    // show logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.LOGS,
+      label: 'show_logs',
+      onClick: (item: SubventionRequestAid) => item.showLogs()
+    },
+  ];
 
   private prepareLookups(): void {
     this.idTypesLookup = this.idTypes.reduce((acc, item) => {
@@ -330,8 +391,8 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
       });
   }
 
-  printRequest($event: MouseEvent, request: SubventionRequestAid): void {
-    $event.preventDefault();
+  printRequest(request: SubventionRequestAid, $event?: MouseEvent): void {
+    $event?.preventDefault();
     request.printRequest('InquiryByIdSearchResult.pdf');
   }
 

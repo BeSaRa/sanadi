@@ -41,7 +41,6 @@ export class ExecutiveManagementComponent implements OnInit {
     return this._list;
   }
   @Input() countriesList: Country[] = [];
-  @Input() jobTitlesList: JobTitle[] = [];
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
 

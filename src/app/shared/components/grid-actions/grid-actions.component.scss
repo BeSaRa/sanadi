@@ -1,0 +1,12 @@
+button.grid-action-btn {
+  padding: 0;
+  margin: 6px 6px;
+  border: none;
+  background-color: transparent;
+}
+
+.action-switch {
+  &.switch-off {
+    color: #BFBFBF !important;
+  }
+}

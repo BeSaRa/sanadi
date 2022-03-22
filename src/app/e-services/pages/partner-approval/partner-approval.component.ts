@@ -37,8 +37,6 @@ import {EmployeeService} from "@app/services/employee.service";
 import {OrganizationUnitService} from "@app/services/organization-unit.service";
 import {OrgUnit} from "@app/models/org-unit";
 import {CommonUtils} from "@app/helpers/common-utils";
-import {JobTitleService} from "@app/services/job-title.service";
-import {JobTitle} from "@app/models/job-title";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
@@ -56,7 +54,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   fileIconsEnum = FileIconsEnum;
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
-  jobTitles: JobTitle[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] = this.lookupService.listByCategory.RequestClassification;
@@ -161,7 +158,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
               private countryService: CountryService, private dialog: DialogService,
               private toast: ToastService, private toastService: ToastService,
               private licenseService: LicenseService, private cd: ChangeDetectorRef,
-              private jobTitleService: JobTitleService, private sharedService: SharedService,
+              private sharedService: SharedService,
               public employeeService: EmployeeService, private orgService: OrganizationUnitService) {
     super();
   }
@@ -176,7 +173,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   _initComponent(): void {
     this.loadCountries();
-    this.loadJobTitles();
     this.loadOrganizations();
     this.listenToLicenseSearch();
   }
@@ -304,11 +300,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       .loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
-  }
-
-  private loadJobTitles() {
-    this.jobTitleService.loadComposite()
-      .subscribe((jobTitles) => this.jobTitles = jobTitles);
   }
 
   handleCountryChange(_$event?: MouseEvent): void {

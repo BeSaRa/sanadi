@@ -7,9 +7,11 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {CollectionItem} from "@app/models/collection-item";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import {HasRequestType} from "@app/interfaces/has-request-type";
+const _RequestType = mixinRequestType(CaseModel);
 
-
-export class CollectionApproval extends CaseModel<CollectionApprovalService, CollectionApproval> {
+export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
   organizationId!: number;
   serviceSteps!: string[];
@@ -24,7 +26,6 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
   managerDecision!: number;
   managerJustification!: string;
   publicTerms!: string;
-  requestType!: number;
   requestClassification!: number;
   reviewerDepartmentDecision!: number;
   reviewerDepartmentJustification!: string;
@@ -50,6 +51,7 @@ export class CollectionApproval extends CaseModel<CollectionApprovalService, Col
     super();
     this.service = FactoryService.getService('CollectionApprovalService');
   }
+
 
   buildBasicInfo(controls: boolean = false): any {
     const {requestType, requestClassification, licenseDurationType} = this;

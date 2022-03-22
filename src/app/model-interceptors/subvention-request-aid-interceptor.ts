@@ -23,10 +23,12 @@ export class SubventionRequestAidInterceptor {
 
   static send(model: SubventionRequestAid | any): (SubventionRequestAid | any) {
     delete model.subventionRequestService;
-    delete model.underProcessingSearchFields;
     delete model.creationDateString;
     delete model.aidCount;
     delete model.statusDateModifiedString;
+    delete model.searchFields;
+    delete model.searchFieldsInquiry;
+    delete model.searchFieldsSearch;
     return model;
   }
 }

@@ -6,6 +6,9 @@ import {SubventionRequestPartialService} from '../services/subvention-request-pa
 import {BaseModel} from './base-model';
 import {SubventionRequestService} from '../services/subvention-request.service';
 import {isValidValue} from '../helpers/utils';
+import {ISearchFieldsMap} from '@app/types/types';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 
 export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial, any> {
 
@@ -33,6 +36,11 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   creationDateString!: string;
   service: SubventionRequestPartialService;
   subventionRequestService: SubventionRequestService;
+
+  searchFields: ISearchFieldsMap<SubventionRequestPartial> = {
+    ...infoSearchFields(['orgAndBranchInfo', 'benCategoryInfo', 'requestTypeInfo', 'genderInfo']),
+    ...normalSearchFields(['creationDateString', 'creationYear', 'aidTotalSuggestedAmount', 'aidTotalPayedAmount', 'aidRemainingAmount'])
+  }
 
   constructor() {
     super();
@@ -67,8 +75,7 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
     throw new Error('Method not implemented.');
   }
 
-  showPartialRequestDetails($event: MouseEvent): void {
-    $event.preventDefault();
+  showPartialRequestDetails(): void {
     this.service.openPartialRequestDetailsDialog(this.requestId)
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();

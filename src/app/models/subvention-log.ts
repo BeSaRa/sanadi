@@ -1,11 +1,13 @@
 import {FactoryService} from '../services/factory.service';
 import {SubventionLogService} from '../services/subvention-log.service';
 import {AdminResult} from './admin-result';
-import {searchFunctionType} from '../types/types';
+import {ISearchFieldsMap} from '../types/types';
 import {isValidValue} from '../helpers/utils';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
 
-
-export class SubventionLog {
+export class SubventionLog extends SearchableCloneable<SubventionLog>{
   id!: number;
   subventionRequestId!: number;
   orgId!: number;
@@ -41,16 +43,13 @@ export class SubventionLog {
   private service: SubventionLogService;
   actionTimeString!: string;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    organization: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
-    branch: text => !this.orgBranchInfo ? false : this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
-    user: text => !this.orgUserInfo ? false : this.orgUserInfo.getName().toLowerCase().indexOf(text) !== -1,
-    actionType: text => !this.actionTypeInfo ? false : this.actionTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
-    actionTimeString: 'actionTimeString',
-    userComments: 'userComments'
+  searchFields: ISearchFieldsMap<SubventionLog> = {
+    ...infoSearchFields(['orgInfo', 'orgBranchInfo', 'orgUserInfo', 'actionTypeInfo']),
+    ...normalSearchFields(['actionTimeString', 'userComments'])
   };
 
   constructor() {
+    super();
     this.service = FactoryService.getService('SubventionLogService');
   }
 
