@@ -4,7 +4,6 @@ import {LoadingService} from './services/loading.service';
 import {CacheService} from './services/cache.service';
 import {NavigationService} from './services/navigation.service';
 import {take} from "rxjs/operators";
-import {AuthService} from "@app/services/auth.service";
 import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
@@ -18,9 +17,6 @@ export class AppComponent {
               private cacheService: CacheService,
               private employeeService: EmployeeService,
               private navigationService: NavigationService) {
-
-    // @ts-ignore
-    window['cacheService'] = cacheService;
     this.navigationService.listenRouteChange();
   }
 
