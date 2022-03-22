@@ -1,5 +1,8 @@
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
 import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-license-with-duration";
 import { FundraisingApproveTaskPopupComponent } from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
@@ -7,6 +10,7 @@ import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
 import { FundraisingService } from "@app/services/fundraising.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
+import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
@@ -71,6 +75,11 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
   className!: string;
 
   dialog!: DialogService;
+  searchFields: ISearchFieldsMap<Fundraising> = {
+    ...normalSearchFields(['fullSerial']),
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo'])
+  };
 
   constructor() {
     super();

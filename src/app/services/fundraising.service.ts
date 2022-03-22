@@ -18,11 +18,11 @@ import { UrlService } from "./url.service";
   providedIn: "root",
 })
 export class FundraisingService extends EServiceGenericService<Fundraising> {
-  jsonSearchFile: string = "";  // will understand later
+  jsonSearchFile: string = "fundraising_search.json";  // will understand later
   interceptor: IModelInterceptor<Fundraising> = new FundraisingInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_fundraising';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = [];   // will understand later
+  searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];   // will understand later
 
   constructor(
     public http: HttpClient,

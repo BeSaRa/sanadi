@@ -82,6 +82,14 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.full_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="organization">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.organization}} </td>
