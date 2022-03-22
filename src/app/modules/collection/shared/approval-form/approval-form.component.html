@@ -1,6 +1,6 @@
 <ng-container *ngIf="_license$|async" [formGroup]="form">
-  <div class="d-flex flex-column border border-1 rounded-1 p-2">
-    <ng-container *ngIf="multi" [ngTemplateOutlet]="licenseInfo"></ng-container>
+  <div *ngIf="multi" class="d-flex flex-column border border-1 rounded-1 p-2">
+    <ng-container [ngTemplateOutlet]="licenseInfo"></ng-container>
   </div>
   <ng-container *ngIf="!multi" [ngTemplateOutlet]="licenseInfo"></ng-container>
   <ng-template #licenseInfo>
