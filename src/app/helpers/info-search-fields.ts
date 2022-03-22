@@ -1,6 +1,6 @@
-import {ISearchFieldsMap} from "@app/types/types";
+import {ISearchFieldsMap, OnlyInfoProperty} from "@app/types/types";
 
-export function infoSearchFields<T>(fields: (keyof T)[]): ISearchFieldsMap<T> {
+export function infoSearchFields<T>(fields: (keyof OnlyInfoProperty<T>)[]): ISearchFieldsMap<T> {
   return fields.reduce((fields, field) => {
     return {
       ...fields, [field]: (text: string, model: any): boolean => {
