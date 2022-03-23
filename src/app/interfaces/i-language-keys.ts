@@ -557,6 +557,7 @@ export interface ILanguageKeys {
   lbl_description: string;
   lbl_permissions: string;
   lbl_basic_info: string;
+  emergency_funds_info: string;
   lbl_edit_custom_role: string;
   lbl_edit_localization: string;
   lbl_add_custom_role: string;
@@ -906,4 +907,5 @@ export interface ILanguageKeys {
   file_powerpoint: string;
   signature: string;
   msg_please_select_service_to_add: string;
+  menu_urgent_intervention_license: string;
 }

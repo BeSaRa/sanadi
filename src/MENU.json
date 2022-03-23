@@ -583,5 +583,18 @@
     "group": "collection",
     "itemOrder": 12,
     "svg": null
+  },
+  {
+    "id": 45,
+    "langKey": "menu_urgent_intervention_license",
+    "path": "/home/projects/urgent-intervention-license",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_LICENSING",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 5,
+    "svg": null
   }
 ]

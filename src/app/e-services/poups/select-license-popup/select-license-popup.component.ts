@@ -14,6 +14,7 @@ import {InboxService} from '@app/services/inbox.service';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {CollectorApproval} from '@app/models/collector-approval';
 
 @Component({
@@ -35,7 +36,7 @@ export class SelectLicensePopupComponent {
               private inboxService: InboxService,
               private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]),
+                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[]),
                 caseRecord: any | undefined,
                 select: boolean,
                 displayedColumns: string[]
@@ -44,7 +45,6 @@ export class SelectLicensePopupComponent {
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.requestType = this.data.caseRecord?.getRequestType();
     this.caseService = this.inboxService.getService(this.caseType);
-
 
     if (this.data.displayedColumns.length > 0) {
       this.displayedColumns = [...this.data.displayedColumns];
@@ -65,7 +65,7 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)): void {
+  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult)): void {
     this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .subscribe((licenseDetails) => {
         if (!licenseDetails) {
@@ -75,8 +75,10 @@ export class SelectLicensePopupComponent {
       });
   }
 
-  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)) {
-    return this.licenseService.showLicenseContent(license, (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType)
+  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult)) {
+    let caseType = (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType;
+
+    return this.licenseService.showLicenseContent(license, caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, license);
       });

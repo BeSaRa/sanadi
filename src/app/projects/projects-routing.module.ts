@@ -35,6 +35,17 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'InternalProjectLicenseComponent'
     }
+  },
+  {
+    path: 'urgent-intervention-license', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_LICENSING,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionLicenseComponent'
+    }
   }
 ];
 

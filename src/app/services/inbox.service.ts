@@ -41,6 +41,7 @@ import {Memoize} from "typescript-memoize";
 import {CaseModel} from "@app/models/case-model";
 import {CollectionApprovalService} from "@app/services/collection-approval.service";
 import {CollectorApprovalService} from '@app/services/collector-approval.service';
+import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +63,7 @@ export class InboxService {
               private partnerApprovalService: PartnerApprovalService,
               private collectionApprovalService: CollectionApprovalService,
               private collectorApprovalService: CollectorApprovalService,
+              private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private urlService: UrlService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -75,6 +77,7 @@ export class InboxService {
     this.services.set(CaseTypes.EXTERNAL_PROJECT_MODELS, this.projectModelService);
     this.services.set(CaseTypes.COLLECTION_APPROVAL, this.collectionApprovalService);
     this.services.set(CaseTypes.COLLECTOR_LICENSING, this.collectorApprovalService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
