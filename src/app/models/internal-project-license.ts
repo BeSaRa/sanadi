@@ -20,6 +20,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   constructor() {
     super();
     this.service = FactoryService.getService('InternalProjectLicenseService');
+    this.finalizeSearchFields();
   }
 
   caseType: number = CaseTypes.INTERNAL_PROJECT_LICENSE;
@@ -118,8 +119,16 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   searchFields: ISearchFieldsMap<InternalProjectLicense> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getBasicFormFields(control: boolean = false): any {

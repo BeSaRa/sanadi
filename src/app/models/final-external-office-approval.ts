@@ -58,13 +58,22 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
 
   searchFields: ISearchFieldsMap<FinalExternalOfficeApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 
   constructor() {
     super();
     this.service = FactoryService.getService('FinalExternalOfficeApprovalService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getFormFields(control: boolean = false): any {

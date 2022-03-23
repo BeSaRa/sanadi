@@ -28,6 +28,15 @@ export class Inquiry extends CaseModel<InquiryService, Inquiry> {
   constructor() {
     super();
     this.service = FactoryService.getService('InquiryService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getFormFields(control: boolean = false): any {
