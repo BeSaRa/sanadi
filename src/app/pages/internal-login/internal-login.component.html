@@ -1,8 +1,5 @@
-<div id="login-wrapper" [style.background-image]="background" class="container-fluid h-100 position-relative">
-  <div [style.background-image]="loginBackground"
-       class="position-absolute vw-100 vh-100 start-0 end-0 top-0 bottom-0 login-background">
-  </div>
-  <div class="row justify-content-start h-100">
+<div id="login-wrapper" [style.background-image]="background" class="container-fluid h-100 p-0 position-relative">
+  <div class="d-flex justify-content-start h-100">
     <div id="login-card"
          class="card shadow-lg border-0 p-2 d-flex flex-grow-1 flex-md-grow-0 align-items-center justify-content-center">
       <div class="d-flex flex-column align-items-center justify-content-center">
@@ -61,6 +58,10 @@
             </div>
           </div>
         </form><!-- login form -->
+      </div>
+    </div>
+    <div class="position-relative w-100 h-100">
+      <div [style.background-image]="loginBackground"  class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
       </div>
     </div>
   </div>

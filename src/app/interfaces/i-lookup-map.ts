@@ -84,4 +84,7 @@ export interface ILookupMap {
   TRAINING_SURVEY_ANSWER: Lookup[];
   CollectionClassification: Lookup[];
   LicenseDurationType: Lookup[];
+  CollectorType: Lookup[];
+  CollectorRelation: Lookup[];
+  CollectionStatus: Lookup[];
 }

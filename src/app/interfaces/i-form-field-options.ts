@@ -1,11 +1,11 @@
 import {ILanguageKeys} from './i-language-keys';
 import {Observable} from 'rxjs';
-import {CriteriaFieldType} from "../helpers/FBuilder";
+import {DynamicFieldType} from "../helpers/FBuilder";
 
-export interface IFormField {
+export interface IFormFieldOptions {
   decorator?: boolean,
   key: string,
-  type?: CriteriaFieldType,
+  type?: DynamicFieldType,
   label: keyof ILanguageKeys,
   templateOptions?: {
     rows?: number,
@@ -28,7 +28,6 @@ export interface IFormField {
     defaultValue?: any,
     options?: any[] | Observable<any[]>,
     loader?: string,
-    loadFrom?: string,
     bindValue?: string,
     bindLabel?: string
   },

@@ -583,5 +583,18 @@
     "group": "collection",
     "itemOrder": 11,
     "svg": null
+  },
+  {
+    "id": 46,
+    "langKey": "menu_collector_approval",
+    "path": "/home/collection/collector-approval",
+    "icon": "mdi-human-male",
+    "isSvg": false,
+    "permission": "COLLECTOR_LICENSING",
+    "permissionGroup": null,
+    "parent": 43,
+    "group": "collection",
+    "itemOrder": 12,
+    "svg": null
   }
 ]

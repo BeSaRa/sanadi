@@ -1,6 +1,6 @@
 import {IFormRowGroup} from "../interfaces/iform-row-group";
 import {FormlyFieldConfig} from "@ngx-formly/core/lib/components/formly.field.config";
-import {IFormField} from "../interfaces/iform-field";
+import {IFormFieldOptions} from "../interfaces/i-form-field-options";
 import {CustomFormlyFieldConfig} from "../interfaces/custom-formly-field-config";
 import {DateUtils} from "./date-utils";
 import {DynamicOptionsService} from "../services/dynamic-options.service";
@@ -12,8 +12,8 @@ import {ILanguageKeys} from "../interfaces/i-language-keys";
 const ROWS_SYMBOL = Symbol('ROWS');
 const PREPARED_ROWS_SYMBOL = Symbol('PREPARED_ROWS');
 
-export interface ICriteria {
-  getFieldsCriteria(): FormlyFieldConfig[];
+export interface IDynamicForm {
+  getDynamicFields(): FormlyFieldConfig[];
 }
 
 export enum FieldsPerRow {
@@ -23,7 +23,7 @@ export enum FieldsPerRow {
   TWO
 }
 
-export enum CriteriaFieldType {
+export enum DynamicFieldType {
   TEXT = 'input',
   MASK = 'maskInput',
   DATE = 'dateField',
@@ -40,7 +40,7 @@ export class FBuilder {
     return rows.map(row => FBuilder.generateFormRow(row));
   }
 
-  static field(options?: Partial<IFormField>): PropertyDecorator {
+  static field(options?: Partial<IFormFieldOptions>): PropertyDecorator {
     return (target: any, fieldName: string | symbol) => {
       if (!target[ROWS_SYMBOL]) {
         target[ROWS_SYMBOL] = [];
@@ -49,7 +49,7 @@ export class FBuilder {
     }
   }
 
-  static form(options?: IModelCriteriaOptions): ClassDecorator {
+  static dynamicForm(options?: IModelCriteriaOptions): ClassDecorator {
     return <T extends Function>(constructor: T): T | void => {
       if (!constructor.prototype[ROWS_SYMBOL]) {
         constructor.prototype[ROWS_SYMBOL] = [];
@@ -62,11 +62,11 @@ export class FBuilder {
         fieldGroupClassName: 'row mb-3 formly-row',
         fieldGroup: <FormlyFieldConfig[]>(constructor.prototype[ROWS_SYMBOL]).slice((index * perRow), ((index * perRow) + perRow))
       }));
-      (constructor.prototype as unknown as ICriteria).getFieldsCriteria = function () {
+      (constructor.prototype as unknown as IDynamicForm).getDynamicFields = function () {
         let rows = (this as unknown as any)[PREPARED_ROWS_SYMBOL] as CustomFormlyFieldConfig[];
         rows = rows.map((row) => {
           row.fieldGroup = row.fieldGroup?.map((field, index, row) => {
-            return FBuilder.generateFormField(field as unknown as IFormField, {fields: row as unknown as IFormField[]})
+            return FBuilder.generateFormField(field as unknown as IFormFieldOptions, {fields: row as unknown as IFormFieldOptions[]})
           });
           return row;
         })
@@ -82,19 +82,19 @@ export class FBuilder {
     };
   }
 
-  private static generateFormField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
-    if (field.type === CriteriaFieldType.DATE) {
+  private static generateFormField(field: IFormFieldOptions, row: IFormRowGroup): CustomFormlyFieldConfig {
+    if (field.type === DynamicFieldType.DATE) {
       return FBuilder.generateDateField(field, row);
-    } else if (field.type === CriteriaFieldType.SELECT) {
+    } else if (field.type === DynamicFieldType.SELECT) {
       return FBuilder.generateSelectField(field, row);
-    } else if (field.type === CriteriaFieldType.MASK) {
+    } else if (field.type === DynamicFieldType.MASK) {
       return FBuilder.generateMaskField(field, row);
     } else {
       return FBuilder.generateDefaultFormField(field, row);
     }
   }
 
-  private static generateDateField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
+  private static generateDateField(field: IFormFieldOptions, row: IFormRowGroup): CustomFormlyFieldConfig {
     let defaultValue = field.dateOptions?.defaultValue !== null ? new Date() : null;
     if (field.dateOptions?.value && field.dateOptions.operator && defaultValue) {
       let [number, type] = field.dateOptions.value.split(' ');
@@ -133,7 +133,7 @@ export class FBuilder {
     };
   }
 
-  private static generateSelectField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
+  private static generateSelectField(field: IFormFieldOptions, row: IFormRowGroup): CustomFormlyFieldConfig {
     const dynamicOptionsService: DynamicOptionsService = FactoryService.getService('DynamicOptionsService');
     let options: Observable<any[]>;
     if (field.selectOptions?.loader) {
@@ -160,7 +160,7 @@ export class FBuilder {
     };
   }
 
-  private static generateDefaultFormField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
+  private static generateDefaultFormField(field: IFormFieldOptions, row: IFormRowGroup): CustomFormlyFieldConfig {
     return {
       key: field.key,
       type: field.type,
@@ -176,16 +176,16 @@ export class FBuilder {
     };
   }
 
-  private static generateMaskField(field: IFormField, row: IFormRowGroup): CustomFormlyFieldConfig {
+  private static generateMaskField(field: IFormFieldOptions, row: IFormRowGroup): CustomFormlyFieldConfig {
     return {...FBuilder.generateDefaultFormField(field, row), mask: field.mask};
   }
 
-  private static getValidField(key: string | symbol, options?: Partial<IFormField>): IFormField {
+  private static getValidField(key: string | symbol, options?: Partial<IFormFieldOptions>): IFormFieldOptions {
     return {
       ...options,
       key: options && options.key ? options.key : (key as unknown as string),
       label: options && options.label ? options.label : (key as unknown as keyof ILanguageKeys),
-      type: options && options.type ? options.type : CriteriaFieldType.TEXT,
+      type: options && options.type ? options.type : DynamicFieldType.TEXT,
       decorator: true
     }
   }

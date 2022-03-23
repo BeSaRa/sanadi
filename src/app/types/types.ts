@@ -41,3 +41,10 @@ export type ReadinessStatus = 'READY' | 'NOT_READY';
 export type DatepickerOptionsMap = { [key: string]: IAngularMyDpOptions };
 
 export type DatepickerControlsMap = { [key: string]: AbstractControl };
+
+
+type info = 'Info';
+type InfoProperty<T> = T extends `${infer S}${info}` ? T : never;
+export type OnlyInfoProperty<T> = {
+  [P in InfoProperty<keyof T>]: T[P]
+}

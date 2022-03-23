@@ -26,6 +26,15 @@ const routes: Routes = [
     data: {
       render: 'FundraisingComponent'
     }
+  },
+  {
+    path: 'collector-approval',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      render: 'CollectorApprovalComponent'
+    }
   }
 ];
 

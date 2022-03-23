@@ -12,6 +12,12 @@ export interface ILanguageKeys {
   toggle_checklist: string;
   mark_all_as_done: string;
   step_checklist: string;
+  please_add_collector_items_to_proceed: string;
+  relationship: string;
+  collector_number: string;
+  collector_type: string;
+  collector_items: string;
+  menu_collector_approval: string;
   back_to_the_marker: string;
   loading_map: string;
   please_add_marker_to_perform_this_action: string;

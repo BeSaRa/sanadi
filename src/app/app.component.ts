@@ -3,6 +3,8 @@ import {LangService} from './services/lang.service';
 import {LoadingService} from './services/loading.service';
 import {CacheService} from './services/cache.service';
 import {NavigationService} from './services/navigation.service';
+import {take} from "rxjs/operators";
+import {EmployeeService} from "@app/services/employee.service";
 
 @Component({
   selector: 'app-root',
@@ -13,27 +15,32 @@ export class AppComponent {
   constructor(private langService: LangService,
               public loadingService: LoadingService,
               private cacheService: CacheService,
+              private employeeService: EmployeeService,
               private navigationService: NavigationService) {
-
-    // @ts-ignore
-    window['cacheService'] = cacheService;
     this.navigationService.listenRouteChange();
   }
 
-  @HostListener('window:keydown', ['$event'])
-  languageChangeDetection({ctrlKey, altKey, which, keyCode}: KeyboardEvent): void {
-    if ((keyCode === 76 || which === 76) && ctrlKey && altKey) {
-      // ctrl + alt + L
-      const sub = this.langService.toggleLanguage().subscribe(() => {
-        sub.unsubscribe();
-      });
-    }
-    if ((keyCode === 65 || which === 65) && ctrlKey && altKey) {
-      const sub = this.langService.openCreateDialog().onAfterClose$.subscribe(_ => {
-        this.langService.load(true);
-        sub.unsubscribe();
-      });
-    }
+  @HostListener('window:keydown.control.alt.l')
+  languageChangeDetection(): void {
+    this.langService
+      .toggleLanguage()
+      .pipe(take(1))
+      .subscribe();
+  }
 
+  @HostListener('window:keydown.control.alt.a')
+  addLocalization() {
+    this.employeeService.loggedIn() && this.langService
+      .openCreateDialog()
+      .onAfterClose$
+      .pipe(take(1))
+      .subscribe(_ => {
+        this.langService.load(true);
+      })
+  }
+
+  @HostListener('window:keydown.f2')
+  refreshCache() {
+    this.employeeService.loggedIn() && this.cacheService.refreshCache()
   }
 }
