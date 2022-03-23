@@ -1,8 +1,10 @@
 import {AdminResult} from "@app/models/admin-result";
+import {TaskDetails} from "@app/models/task-details";
 
 export class GeneralInterceptor {
   static receive(model: any): any {
     model.setItemRoute && model.setItemRoute();
+    model.taskDetails && (model.taskDetails = new TaskDetails().clone(model.taskDetails));
     model.taskDetails && model.taskDetails.fromUserInfo && (model.taskDetails.fromUserInfo = AdminResult.createInstance(model.taskDetails.fromUserInfo));
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo))
@@ -23,6 +25,7 @@ export class GeneralInterceptor {
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.taskDetails;
     return model;
   }
 }

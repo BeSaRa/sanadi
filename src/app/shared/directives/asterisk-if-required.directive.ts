@@ -10,6 +10,7 @@ interface ValidatorsInterface {
   _rawValidators: ValidatorFn [] | ValidatorFn | null
 }
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Directive({
   selector: '[asteriskIfRequired]'
 })

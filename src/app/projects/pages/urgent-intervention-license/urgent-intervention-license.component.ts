@@ -27,12 +27,6 @@ import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {DacOcha} from '@app/models/dac-ocha';
-import {DacOchaService} from '@app/services/dac-ocha.service';
-import {Domains} from '@app/enums/domains.enum';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {DateUtils} from '@app/helpers/date-utils';
-import {InternalProjectLicense} from '@app/models/internal-project-license';
 import {ServiceDataService} from '@app/services/service-data.service';
 
 @Component({
@@ -215,11 +209,20 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     this.cd.detectChanges();
   }
 
+  _setDefaultValues(): void {
+    console.log(this.model);
+    this.domainField.setValue(this.model?.domain);
+    this.licenseDurationField.setValue(this.model?.licenseDuration);
+    this.basicInfoGroup.updateValueAndValidity();
+    this.emergencyFundsGroup.updateValueAndValidity();
+  }
+
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
+    this._setDefaultValues();
   }
 
   isAddCommentAllowed(): boolean {
@@ -269,12 +272,24 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     return (this.basicInfoGroup?.get('requestType')) as FormControl;
   }
 
+  get domainField(): FormControl {
+    return (this.basicInfoGroup?.get('domain')) as FormControl;
+  }
+
   get oldLicenseFullSerialField(): FormControl {
     return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as FormControl;
   }
 
   get targetAmountField(): FormControl {
     return (this.emergencyFundsGroup?.get('targetAmount')) as FormControl;
+  }
+
+  get licenseDurationField(): FormControl {
+    return (this.emergencyFundsGroup?.get('licenseDuration')) as FormControl;
+  }
+
+  get currencyField(): FormControl {
+    return (this.emergencyFundsGroup?.get('currency')) as FormControl;
   }
 
   get specialExplanationsField(): AbstractControl {
@@ -361,7 +376,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
 
         if (this.model) {
           this.model.licenseNumber = '';
-          this.model.licenseDuration = 0;
+          // this.model.licenseDuration = 0;
           this.model.licenseStartDate = '';
         }
       }

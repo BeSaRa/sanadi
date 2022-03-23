@@ -15,6 +15,11 @@ import {Observable} from 'rxjs';
 import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {LicenseService} from '@app/services/license.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {
+  UrgentInterventionApproveTaskPopupComponent
+} from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 
 @Injectable({
   providedIn: 'root'
@@ -66,4 +71,13 @@ export class UrgentInterventionLicensingService extends EServiceGenericService<U
   licenseSearch(criteria: Partial<UrgentInterventionLicenseSearchCriteria> = {}): Observable<UrgentInterventionLicenseResult[]> {
     return this.licenseService.urgentInterventionLicenseSearch(criteria);
   }
+
+  approveTask(model: UrgentInterventionLicense, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentInterventionApproveTaskPopupComponent, {
+      model,
+      action
+    })
+  }
+
+
 }

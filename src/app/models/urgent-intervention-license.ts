@@ -1,4 +1,3 @@
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {FactoryService} from '@app/services/factory.service';
@@ -8,23 +7,33 @@ import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Domains} from '@app/enums/domains.enum';
-import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {TaskDetails} from '@app/models/task-details';
 import {AdminResult} from '@app/models/admin-result';
 import {LangService} from '@app/services/lang.service';
 import {Validators} from '@angular/forms';
 import {EmployeeService} from '@app/services/employee.service';
+import {CaseModel} from "@app/models/case-model";
+import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
+import {HasLicenseApprovalMonthly} from "@app/interfaces/has-license-approval-monthly";
+import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import {HasRequestType} from "@app/interfaces/has-request-type";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {CurrencyEnum} from "@app/enums/currency-enum";
+import {isValidAdminResult} from "@app/helpers/utils";
 
-export class UrgentInterventionLicense extends LicenseApprovalModel<UrgentInterventionLicensingService, UrgentInterventionLicense> {
+const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
+
+export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements HasLicenseApprovalMonthly, HasRequestType {
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSING;
   domain: number = Domains.HUMAN; // fixed value, so info will also be fixed always
+  licenseDuration: number = 12; // fixed value
+  currency: number = CurrencyEnum.UNITED_STATE_DOLLAR; // fixed value
   serviceSteps: string[] = [];
   organizationId!: number;
   accountNumber!: string;
   arName!: string;
   bankName!: string;
-  currency!: number;
   description!: string;
   enName!: string;
   expectedResults!: string;
@@ -79,6 +88,7 @@ export class UrgentInterventionLicense extends LicenseApprovalModel<UrgentInterv
     this.langService = FactoryService.getService('LangService');
     this.employeeService = FactoryService.getService('EmployeeService');
     this.domainInfo = this.getDomainInfo();
+    this.currencyInfo = this.getCurrencyInfo();
     this.finalizeSearchFields();
   }
 
@@ -151,11 +161,37 @@ export class UrgentInterventionLicense extends LicenseApprovalModel<UrgentInterv
   }
 
   getDomainInfo(): AdminResult {
+    if(this.domainInfo && isValidAdminResult(this.domainInfo)){
+      return this.domainInfo;
+    }
+
     let lookupService: LookupService = FactoryService.getService('LookupService'),
       lookup = lookupService.listByCategory.Domain.find(x => x.lookupKey === this.domain);
     return AdminResult.createInstance(!lookup ? {} : {
       arName: lookup.arName,
       enName: lookup.enName
     });
+  }
+
+  getCurrencyInfo(): AdminResult {
+    if(this.currencyInfo && isValidAdminResult(this.currencyInfo)){
+      return this.currencyInfo;
+    }
+
+    let lookupService: LookupService = FactoryService.getService('LookupService'),
+      lookup = lookupService.listByCategory.Currency.find(x => x.lookupKey === this.currency);
+    return AdminResult.createInstance(!lookup ? {} : {
+      arName: lookup.arName,
+      enName: lookup.enName
+    });
+  }
+
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }
