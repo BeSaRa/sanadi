@@ -171,6 +171,54 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _afterBuildForm(): void {
     this.listenToRequestTypeChange();
+    this.handleReadonly();
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+    if (
+      caseStatusEnum &&
+      (caseStatus == caseStatusEnum.FINAL_APPROVE ||
+        caseStatus === caseStatusEnum.FINAL_REJECTION)
+    ) {
+      this.readonly = true;
+      this.toggleFormState(this.readonly);
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+    this.toggleFormState(this.readonly);
+
+  }
+
+  toggleFormState(readonly:boolean){
+    readonly ? this.form.disable() : this.form.enable();
   }
 
   listenToRequestTypeChange(): void {
