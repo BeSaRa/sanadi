@@ -210,9 +210,9 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   }
 
   _setDefaultValues(): void {
-    console.log(this.model);
     this.domainField.setValue(this.model?.domain);
     this.licenseDurationField.setValue(this.model?.licenseDuration);
+    this.currencyField.setValue(this.model?.currency);
     this.basicInfoGroup.updateValueAndValidity();
     this.emergencyFundsGroup.updateValueAndValidity();
   }
