@@ -7,6 +7,7 @@ import {BaseModel} from './base-model';
 import {Lookup} from './lookup';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Team} from '@app/models/team';
+import {FollowUpType} from '@app/enums/followUp-type.enum';
 
 export class FollowupConfiguration extends BaseModel<FollowupConfiguration, FollowupConfigurationService> {
   service: FollowupConfigurationService;
@@ -55,10 +56,11 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
       enDesc: controls? [enDesc, [CustomValidators.required] ] : enDesc ,
       followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
       requestType: controls? [requestType, [CustomValidators.required] ] : requestType ,
-      responsibleTeamId: controls? [responsibleTeamId] : responsibleTeamId ,
-      concernedTeamId: controls? [concernedTeamId] : concernedTeamId ,
+      responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
+      concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
       days: controls? [days, [CustomValidators.required] ] : days
     }
   }
+
 
 }

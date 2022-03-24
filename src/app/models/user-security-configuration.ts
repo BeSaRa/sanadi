@@ -13,6 +13,7 @@ export class UserSecurityConfiguration extends BaseModel<UserSecurityConfigurati
   canManage!: boolean;
   generalUserId!: number
   approval!: boolean
+  followUp!:boolean;
 
   teamInfo!: AdminResult;
   serviceInfo!: AdminResult;
