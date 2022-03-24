@@ -171,27 +171,6 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _afterBuildForm(): void {
     this.listenToRequestTypeChange();
-    this.handleFormState();
-  }
-
-  handleFormState() {
-    if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
-        if (!this.model?.taskDetails.isClaimed()) {
-          this.form.disable();
-        }
-      } else if (this.employeeService.isCharityUser()) {
-        if (this.model?.isReturned()) {
-          this.form.enable();
-        }
-      }
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if(this.employeeService.isCharityManager()){
-        if (!this.model?.taskDetails.isClaimed()) {
-          this.form.disable();
-        }
-      }
-    }
   }
 
   listenToRequestTypeChange(): void {
