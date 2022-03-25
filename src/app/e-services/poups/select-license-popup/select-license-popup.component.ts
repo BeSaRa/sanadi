@@ -76,7 +76,7 @@ export class SelectLicensePopupComponent {
       });
   }
 
-  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)) {
+  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | Fundraising)) {
     return this.licenseService.showLicenseContent(license, (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, license);

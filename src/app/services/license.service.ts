@@ -320,6 +320,9 @@ export class LicenseService {
       case CaseTypes.COLLECTOR_LICENSING:
         url = this.urlService.URLS.COLLECTOR_APPROVAL;
         break;
+      case CaseTypes.FUNDRAISING_LICENSING:
+        url = this.urlService.URLS.FUNDRAISING;
+        break;
     }
 
     if (!url) {
