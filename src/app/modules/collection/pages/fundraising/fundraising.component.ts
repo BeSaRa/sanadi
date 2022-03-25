@@ -92,10 +92,10 @@ export class FundraisingComponent extends EServicesGenericComponent<
     const value =
       this.oldLicenseFullSerialField.value &&
       this.oldLicenseFullSerialField.value.trim();
-    if (!value) {
-      this.dialog.info(this.lang.map.need_license_number_to_search);
-      return;
-    }
+    // if (!value) {
+    //   this.dialog.info(this.lang.map.need_license_number_to_search);
+    //   return;
+    // }
     this.licenseSearch$.next(value);
   }
 

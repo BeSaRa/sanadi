@@ -4,7 +4,9 @@ import { dateSearchFields } from "@app/helpers/date-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
+import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-license-with-duration";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import { FundraisingApproveTaskPopupComponent } from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
 import { DialogService } from "@app/services/dialog.service";
 import { FactoryService } from "@app/services/factory.service";
@@ -16,8 +18,8 @@ import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
 
-const _ApprovalLicense = mixinApprovalLicenseWithDuration(CaseModel);
-export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval {
+const _ApprovalLicense = mixinApprovalLicenseWithDuration(mixinRequestType(CaseModel));
+export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval,HasRequestType {
   service: FundraisingService;
   id!: string;
   createdOn!: string;

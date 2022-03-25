@@ -15,6 +15,7 @@ import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CollectorApproval} from '@app/models/collector-approval';
+import { Fundraising } from '@app/models/fundraising';
 
 @Component({
   selector: 'select-license-popup',
@@ -35,7 +36,7 @@ export class SelectLicensePopupComponent {
               private inboxService: InboxService,
               private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[]),
+                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | Fundraising[]),
                 caseRecord: any | undefined,
                 select: boolean,
                 displayedColumns: string[]
