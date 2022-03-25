@@ -250,6 +250,17 @@ export class LicenseService {
     });
   }
 
+  @Generator(Fundraising, false, {
+    property: 'rs',
+    interceptReceive: (new FundraisingInterceptor()).receive
+  })
+  _validateFundraisingLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<Fundraising> {
+    return this.http.post<Fundraising>(this.urlService.URLS.FUNDRAISING + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @Generator(CollectionLicense, false, {
     property: 'rs',
     interceptReceive: (new CollectionLicenseInterceptor()).receive
@@ -263,7 +274,7 @@ export class LicenseService {
     });
   }
 
-  validateLicenseByRequestType<T>(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | T | undefined> {
+  validateLicenseByRequestType<T>(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | T | undefined | Fundraising> {
     if (caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) {
       return this._validateInitialApprovalLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.PARTNER_APPROVAL) {
@@ -276,6 +287,9 @@ export class LicenseService {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
     } else if(caseType === CaseTypes.COLLECTOR_LICENSING) {
       return this._validateCollectorLicenseByRequestType<T>(requestType, licenseId);
+    }
+    else if(caseType === CaseTypes.FUNDRAISING_LICENSING) {
+      return this._validateFundraisingLicenseByRequestType(requestType, licenseId);
     }
     return of(undefined);
   }

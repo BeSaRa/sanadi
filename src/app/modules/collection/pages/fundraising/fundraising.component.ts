@@ -88,7 +88,8 @@ export class FundraisingComponent extends EServicesGenericComponent<
     );
   }
 
-  licenseSearch(): void {
+  licenseSearch($event:Event): void {
+    $event?.preventDefault();
     const value =
       this.oldLicenseFullSerialField.value &&
       this.oldLicenseFullSerialField.value.trim();
@@ -263,10 +264,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = new Fundraising().clone(licenseDetails);
-      value.organizationId = licenseDetails.organizationId;
       value.requestType = this.requestType.value;
-      value.arName = licenseDetails.arName;
-      value.enName = licenseDetails.enName;
       value.licenseDuration = licenseDetails.licenseDuration;
       value.licenseStartDate = licenseDetails.licenseStartDate;
       value.licenseDurationType = licenseDetails.licenseDurationType;
@@ -274,7 +272,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
       value.workingMechanism = licenseDetails.workingMechanism;
       value.riskAssessment = licenseDetails.riskAssessment;
 
-      value.oldLicenseFullserial = licenseDetails.fullSerial;
+      value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
 
@@ -341,5 +339,6 @@ export class FundraisingComponent extends EServicesGenericComponent<
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
+    this.setSelectedLicense(undefined, true);
   }
 }

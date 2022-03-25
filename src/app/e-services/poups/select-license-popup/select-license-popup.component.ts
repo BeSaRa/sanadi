@@ -66,7 +66,7 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult)): void {
+  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | Fundraising)): void {
     this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .subscribe((licenseDetails) => {
         if (!licenseDetails) {
