@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -65,7 +65,7 @@ import {BuildingPlateComponent} from '@app/shared/components/building-plate/buil
   templateUrl: './user-request.component.html',
   styleUrls: ['./user-request.component.scss']
 })
-export class UserRequestComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UserRequestComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
@@ -231,12 +231,6 @@ export class UserRequestComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.currentRequest?.id) {
       this.readModeService.deleteReadOnly(this.currentRequest.id);
     }
-  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.buildingPlate.resetForm();
-    }, 10000)
   }
 
   private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
