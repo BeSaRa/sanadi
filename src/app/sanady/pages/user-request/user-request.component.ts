@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {LookupService} from '../../../services/lookup.service';
-import {DialogService} from '../../../services/dialog.service';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '../../../models/form-manager';
+import {FormManager} from '@app/models/form-manager';
 import {BehaviorSubject, merge, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
@@ -20,51 +20,52 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import {BeneficiaryService} from '../../../services/beneficiary.service';
-import {Beneficiary} from '../../../models/beneficiary';
-import {ConfigurationService} from '../../../services/configuration.service';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {ToastService} from '../../../services/toast.service';
-import {SubventionRequest} from '../../../models/subvention-request';
-import {SubventionRequestService} from '../../../services/subvention-request.service';
-import {SubventionAid} from '../../../models/subvention-aid';
-import {AidLookupService} from '../../../services/aid-lookup.service';
-import {AidLookup} from '../../../models/aid-lookup';
-import {Lookup} from '../../../models/lookup';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {SubventionAidService} from '../../../services/subvention-aid.service';
-import {StatusEnum} from '../../../enums/status.enum';
+import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {Beneficiary} from '@app/models/beneficiary';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ToastService} from '@app/services/toast.service';
+import {SubventionRequest} from '@app/models/subvention-request';
+import {SubventionRequestService} from '@app/services/subvention-request.service';
+import {SubventionAid} from '@app/models/subvention-aid';
+import {AidLookupService} from '@app/services/aid-lookup.service';
+import {AidLookup} from '@app/models/aid-lookup';
+import {Lookup} from '@app/models/lookup';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {SubventionAidService} from '@app/services/subvention-aid.service';
+import {StatusEnum} from '@app/enums/status.enum';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PeriodicPayment} from '../../../enums/periodic-payment.enum';
-import {SubventionRequestStatus} from '../../../enums/subvention-request-status';
-import {Pair} from '../../../interfaces/pair';
-import {BeneficiarySaveStatus} from '../../../enums/beneficiary-save-status.enum';
+import {PeriodicPayment} from '@app/enums/periodic-payment.enum';
+import {SubventionRequestStatus} from '@app/enums/subvention-request-status';
+import {Pair} from '@app/interfaces/pair';
+import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
-import {ReadModeService} from '../../../services/read-mode.service';
+import {ReadModeService} from '@app/services/read-mode.service';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {isValidValue} from '../../../helpers/utils';
-import {IKeyValue} from '../../../interfaces/i-key-value';
-import {CanNavigateOptions, DatepickerOptionsMap} from '../../../types/types';
-import {NavigationService} from '../../../services/navigation.service';
-import {BeneficiaryIdTypes} from '../../../enums/beneficiary-id-types.enum';
-import {SubventionResponseService} from '../../../services/subvention-response.service';
-import {SubventionResponse} from '../../../models/subvention-response';
-import {SanadiAttachment} from '../../../models/sanadi-attachment';
-import {AttachmentService} from '../../../services/attachment.service';
-import {ExceptionHandlerService} from '../../../services/exception-handler.service';
-import {AidTypes} from '../../../enums/aid-types.enum';
-import {ECookieService} from '../../../services/e-cookie.service';
-import {DateUtils} from '../../../helpers/date-utils';
-import {EmployeeService} from '../../../services/employee.service';
-import {DialogRef} from "../../../shared/models/dialog-ref";
+import {isValidValue} from '@app/helpers/utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {CanNavigateOptions, DatepickerOptionsMap} from '@app/types/types';
+import {NavigationService} from '@app/services/navigation.service';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import {SubventionResponseService} from '@app/services/subvention-response.service';
+import {SubventionResponse} from '@app/models/subvention-response';
+import {SanadiAttachment} from '@app/models/sanadi-attachment';
+import {AttachmentService} from '@app/services/attachment.service';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {AidTypes} from '@app/enums/aid-types.enum';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {DateUtils} from '@app/helpers/date-utils';
+import {EmployeeService} from '@app/services/employee.service';
+import {DialogRef} from "@app/shared/models/dialog-ref";
 import {AdminResult} from '@app/models/admin-result';
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 
 @Component({
   selector: 'app-user-request',
   templateUrl: './user-request.component.html',
   styleUrls: ['./user-request.component.scss']
 })
-export class UserRequestComponent implements OnInit, OnDestroy {
+export class UserRequestComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
@@ -78,7 +79,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
   private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
   private aidChanged$: Subject<SubventionAid | null> = new Subject<SubventionAid | null>();
-  private currentBeneficiary?: Beneficiary;
+  public currentBeneficiary?: Beneficiary;
   private currentAid?: SubventionAid;
   addAid$: Subject<any> = new Subject<any>();
   currentRequest?: SubventionRequest;
@@ -173,6 +174,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     partialSave: 'partialSave'
   };
 
+  @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
+
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -218,8 +221,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToSecondaryIdTypeChange();
     this.preparePeriodicityLookups();
     this.listenToRouteParams();
-  }
 
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -228,6 +231,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (this.currentRequest?.id) {
       this.readModeService.deleteReadOnly(this.currentRequest.id);
     }
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.buildingPlate.resetForm();
+    }, 10000)
   }
 
   private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
@@ -296,14 +305,14 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       requestInfo?.patchValue(request.getInfoFields());
 
       if (request.isPartial) {
-        this.fm.displayFormValidity();
+        this.displayFormValidity();
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
           if (this.readOnly) {
             this.allowCompletionField?.disable();
           }
-          this.fm.displayFormValidity();
+          this.displayFormValidity();
         } else {
           this.readOnly = false;
         }
@@ -397,7 +406,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private listenToSavePartialRequest() {
     const formStatusPartial$ = this.savePartial$.pipe(
       tap(val => console.log(val)),
-      map(() => this.fm.getForm()?.valid)
+      map(() => {
+        return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+      })
     );
 
     // filter invalidForm stream
@@ -427,6 +438,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     requestWithBeneficiaryPartial$
       .pipe(
         switchMap((value) => {
+          debugger
           let data: SubventionResponse = new SubventionResponse().clone({
             request: value.request,
             beneficiary: value.beneficiary,
@@ -474,7 +486,9 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
     // map formStatus
     const formStatus$ = formAidValid$.pipe(
-      map(() => this.fm.getForm()?.valid)
+      map(() => {
+        return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+      })
     );
 
 
@@ -506,6 +520,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(
         map(value => value.beneficiary),
         exhaustMap(beneficiary => {
+          debugger
           return beneficiary.saveWithValidate(this.validateStatus, this.currentRequest).pipe(catchError(() => {
             return of(null);
           }));
@@ -580,7 +595,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.dialogService.error(this.langService.map.msg_all_required_fields_are_filled).onAfterClose$
       .pipe(take(1))
       .subscribe(() => {
-        this.fm.displayFormValidity();
+        this.displayFormValidity();
       });
   }
 
@@ -588,8 +603,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     const personal = this.fm.getFormField('personalTab')?.value;
     const income = this.fm.getFormField('incomeTab')?.value;
     const address = this.fm.getFormField('addressTab')?.value;
+    const buildingPlate = this.buildingPlate.getValue();
+    console.log(this.currentBeneficiary = (new Beneficiary())
+      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate}));
+    debugger;
     return this.currentBeneficiary = (new Beneficiary())
-      .clone({...this.currentBeneficiary, ...personal, ...income, ...address});
+      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate});
   }
 
   private prepareRequest(): SubventionRequest {
@@ -1340,12 +1359,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   saveButtonEnabled(): boolean {
     if (this.isPartialRequest) {
-      return this.form.valid;
+      return this.form.valid && this.buildingPlate.isValidForm();
     } else {
       if (this.readOnly) {
         return false;
       }
-      return this.form.valid;
+      return this.form.valid && this.buildingPlate.isValidForm();
     }
   }
 
@@ -1361,5 +1380,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       return 'ALLOW';
     }
     return 'CONFIRM_UNSAVED_CHANGES';
+  }
+
+  displayFormValidity(contentId: string = ''): void {
+    this.fm.displayFormValidity(contentId);
+    this.buildingPlate.displayFormValidity();
   }
 }

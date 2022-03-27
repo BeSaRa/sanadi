@@ -23,9 +23,9 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
       const {
         identificationNumber,
         locationDetails,
-        buildingNumber,
+        /*buildingNumber,
         streetNumber,
-        zoneNumber,
+        zoneNumber,*/
         unitNumber,
         latitude,
         longitude,
@@ -35,9 +35,9 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
       return {
         identificationNumber: controls ? [identificationNumber, [CustomValidators.required]] : identificationNumber,
         locationDetails: controls ? [locationDetails, [CustomValidators.required]] : locationDetails,
-        buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
+        /*buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
         streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
-        zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
+        zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,*/
         unitNumber: controls ? [unitNumber, [CustomValidators.required]] : unitNumber,
         latitude: controls ? [{value: latitude, disabled: true}, [CustomValidators.required]] : latitude,
         longitude: controls ? [{value: longitude, disabled: true}, [CustomValidators.required]] : longitude,

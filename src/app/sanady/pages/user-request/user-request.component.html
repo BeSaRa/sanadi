@@ -556,92 +556,56 @@
   <ng-template formGroupName="addressTab" #address>
     <div class="row d-flex flex-row">
       <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="city" asteriskIfRequired="residenceCountry"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
-          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
-                       [readonly]="readOnly || isPartialRequest"
-                       placeholder="{{langService.map.select}}" id="city"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="residenceCountry"
-                       [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
-              <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
+        <div class="col-sm-12 ">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="city" asteriskIfRequired="residenceCountry"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
+                         [readonly]="readOnly || isPartialRequest"
+                         placeholder="{{langService.map.select}}" id="city"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="residenceCountry"
+                         [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
+                <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
+                     class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="homePhoneNumber"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
+                     formControlName="homePhoneNumber" class="form-control" type="text"
+                     trimInput [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="zone" asteriskIfRequired="zone"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="street" asteriskIfRequired="streetName"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
-                   formControlName="streetName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="buildingName" asteriskIfRequired="buildingName"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
-                   formControlName="buildingName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="homePhoneNumber"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                   formControlName="homePhoneNumber" class="form-control" type="text"
-                   trimInput [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
-          </div>
-        </div>
+
+      <div class="col-sm-12 col-md-6 mb-4">
+        <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="readOnly || isPartialRequest"
+                        [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone'}"></building-plate>
       </div>
     </div>
     <div class="row d-flex flex-row">
@@ -746,7 +710,7 @@
     </div>
     <div class="row" *ngIf="!isPartialRequest">
       <div class="col-sm-12 mb-4">
-        <div class="border-1-lightgray p-2">
+        <div class="border rounded-1 p-2">
           <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="allowCompletion">
             <label class="form-check-label"
@@ -1082,7 +1046,7 @@
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(fm.mainContentId)"
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(fm.mainContentId)"
             tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
       <i class="mdi mdi-information-outline text-info"></i>
     </button>

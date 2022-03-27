@@ -220,20 +220,20 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       residenceStatus,
       residenceCountry,
       unit,
-      buildingName,
-      zone,
+      // buildingName,
+      // zone,
       addressStatus,
       addressDescription,
-      streetName,
+      // streetName,
       homePhoneNumber
     } = this;
 
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
-      streetName: control ? [streetName, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : streetName,
-      buildingName: control ? [buildingName, [CustomValidators.number, CustomValidators.required,
-        Validators.maxLength(20)]] : buildingName,
-      zone: control ? [zone, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : zone,
+      // streetName: control ? [streetName, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : streetName,
+      // buildingName: control ? [buildingName, [CustomValidators.number, CustomValidators.required,
+      //   Validators.maxLength(20)]] : buildingName,
+      // zone: control ? [zone, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : zone,
       unit: control ? [unit, [CustomValidators.number, CustomValidators.maxLength(20)]] : unit,
       homePhoneNumber: control ? [homePhoneNumber, CustomValidators.commonValidations.phone] : homePhoneNumber,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
