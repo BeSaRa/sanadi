@@ -96,6 +96,7 @@ import {LangLoaderComponent} from './components/lang-loader/lang-loader.componen
 import {
   ApprovalFormMonthlyComponent
 } from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
+import { BuildingPlateComponent } from './components/building-plate/building-plate.component';
 
 @NgModule({
   declarations: [
@@ -176,7 +177,8 @@ import {
     StepCheckListComponent,
     LangLoaderComponent,
     LangLoaderComponent,
-    ApprovalFormMonthlyComponent
+    ApprovalFormMonthlyComponent,
+    BuildingPlateComponent
   ],
   imports: [
     CommonModule,
@@ -258,7 +260,8 @@ import {
     EServiceComponentWrapperComponent,
     GridActionsComponent,
     LangLoaderComponent,
-    ApprovalFormMonthlyComponent
+    ApprovalFormMonthlyComponent,
+    BuildingPlateComponent
   ]
 })
 export class SharedModule {

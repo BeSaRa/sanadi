@@ -1,0 +1,49 @@
+<div class="row plate-container p-2" [formGroup]="form">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12 p-2 pb-1 plate-section">
+        <div class="d-flex justify-content-between">
+          <label for="plateBuildingNo" asteriskIfRequired="buildingNo" dir="ltr" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getEnglishLocalByKey('building_number')}}</label>
+          <label for="plateBuildingNo" asteriskIfRequired="buildingNo" dir="rtl" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getArabicLocalByKey('building_number')}}</label>
+        </div>
+        <div class="plate-input-container position-relative mb-4">
+          <input type="text" id="plateBuildingNo" class="form-control fw-bold fs-3" onlyNumbers
+                 formControlName="buildingNo" validationClasses="buildingNo" trimInput [readonly]="readOnly">
+          <app-field-error-message controlName="buildingNo"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6 p-2 pb-1 plate-section">
+        <div class="d-flex justify-content-between">
+          <label for="plateZone" asteriskIfRequired="zone" dir="ltr" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getEnglishLocalByKey('lbl_zone')}}</label>
+          <label for="plateZone" asteriskIfRequired="zone" dir="rtl" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getArabicLocalByKey('lbl_zone')}}</label>
+        </div>
+        <div class="plate-input-container position-relative mb-4">
+          <input type="text" id="plateZone" class="form-control fw-bold fs-3" onlyNumbers
+                 formControlName="zone" validationClasses="zone" trimInput [readonly]="readOnly">
+          <app-field-error-message controlName="zone"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-6 p-2 pb-1 plate-section">
+        <div class="d-flex justify-content-between">
+          <label for="plateStreet" asteriskIfRequired="street" dir="ltr" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getEnglishLocalByKey('lbl_street')}}</label>
+          <label for="plateStreet" asteriskIfRequired="street" dir="rtl" [customRequiredClass]="requiredElementClass"
+                 class="form-label">{{lang.getArabicLocalByKey('lbl_street')}}</label>
+        </div>
+        <div class="plate-input-container position-relative mb-4">
+          <input type="text" id="plateStreet" class="form-control fw-bold fs-3" onlyNumbers
+                 formControlName="street" validationClasses="street" trimInput [readonly]="readOnly">
+          <app-field-error-message controlName="street"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

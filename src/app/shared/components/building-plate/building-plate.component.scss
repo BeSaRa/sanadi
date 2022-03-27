@@ -1,0 +1,20 @@
+.plate-container {
+  border: 1px solid lightgray;
+  border-radius: 8px;
+}
+
+.plate-section {
+  background: #2F4774;
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+}
+
+.plate-input-container {
+  padding-right: 20% !important;
+  padding-left: 20% !important;
+}
+
+.invalid-feedback {
+  color: yellow !important;
+}
