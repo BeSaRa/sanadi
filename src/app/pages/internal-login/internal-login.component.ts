@@ -22,7 +22,7 @@ export class InternalLoginComponent implements OnInit {
   private login$: Subject<any> = new Subject<any>();
 
   background: string = 'url(assets/images/login-background.png)';
-  loginBackground: string = 'url(assets/images/raca-login-background.png)';
+  loginBackground: string = 'url(assets/images/raca-login-background-1.png)';
 
   constructor(public lang: LangService,
               private router: Router,
