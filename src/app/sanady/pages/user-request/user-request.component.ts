@@ -59,6 +59,11 @@ import {EmployeeService} from '@app/services/employee.service';
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {AdminResult} from '@app/models/admin-result';
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'app-user-request',
@@ -66,6 +71,64 @@ import {BuildingPlateComponent} from '@app/shared/components/building-plate/buil
   styleUrls: ['./user-request.component.scss']
 })
 export class UserRequestComponent implements OnInit, OnDestroy {
+  constructor(public langService: LangService,
+              public lookup: LookupService,
+              private beneficiaryService: BeneficiaryService,
+              private dialogService: DialogService,
+              private configurationService: ConfigurationService,
+              private toastService: ToastService,
+              private subventionRequestService: SubventionRequestService,
+              private subventionResponseService: SubventionResponseService,
+              private subventionAidService: SubventionAidService,
+              private aidLookupService: AidLookupService,
+              private activeRoute: ActivatedRoute,
+              private router: Router,
+              private navigationService: NavigationService,
+              private readModeService: ReadModeService,
+              private attachmentService: AttachmentService, // to use in interceptor
+              private fb: FormBuilder,
+              private empService: EmployeeService,
+              private exceptionHandlerService: ExceptionHandlerService,
+              private eCookieService: ECookieService) {
+
+  }
+
+  get pageTitle(): string {
+    return this.currentRequest?.id ?
+      (this.langService.map.request_number + ' : ' + this.currentRequest.requestFullSerial) :
+      this.langService.map.menu_provide_request;
+  }
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.listenToRequestDateChange();
+    this.listenToBeneficiaryChange();
+    this.listenToRequestChange();
+    this.listenToOccupationStatus();
+    this.listenToAidChange();
+    this.listenToExtraIncome();
+    this.listenToSaveModel();
+    this.listenToSavePartialRequest();
+    this.listenToSaveAid();
+    this.listenToAddAid();
+    this.listenToNationalityChange();
+    this.listenToPrimaryIdTypeChange();
+    this.listenToSecondaryIdTypeChange();
+    this.preparePeriodicityLookups();
+    this.listenToRouteParams();
+
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+    // empty read mode request
+    if (this.currentRequest?.id) {
+      this.readModeService.deleteReadOnly(this.currentRequest.id);
+    }
+  }
+
   private destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
@@ -83,7 +146,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   private currentAid?: SubventionAid;
   addAid$: Subject<any> = new Subject<any>();
   currentRequest?: SubventionRequest;
-  subventionAid: SubventionAid[] = [];
+  subventionAidList: SubventionAid[] = [];
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
   attachmentList: SanadiAttachment[] = [];
   fm!: FormManager;
@@ -91,9 +154,33 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   subAidLookupsArray: AidLookup[] = [];
   subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
   periodicityLookups: Record<number, Lookup> = {};
-  hasEditAid = false;
-  private editAidIndex: number = -1;
+  editAidItem?: SubventionAid;
   editMode = false;
+  headerColumn: string[] = ['extra-header'];
+  aidFilterControl: FormControl = new FormControl('');
+  aidsActions: IMenuItem<SubventionAid>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: SubventionAid) => this.editAid(item),
+      disabled: (item: SubventionAid) => {
+        return this.readOnly || (this.isPartialRequest && !!this.currentRequest && !this.currentRequest.isUnderProcessing());
+      }
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: SubventionAid) => this.deleteAid(item),
+      show: (item: SubventionAid) => {
+        return !this.readOnly && !this.isPartialRequest;
+      }
+    }
+  ];
+
   aidColumns = [
     'approvalDate',
     'aidLookupId',
@@ -116,6 +203,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  actionIconsEnum = ActionIconsEnum;
 
   datepickerFieldPathMap: IKeyValue = {
     dateOfBirth: 'personalTab.dateOfBirth',
@@ -176,60 +264,43 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
 
-  constructor(public langService: LangService,
-              public lookup: LookupService,
-              private beneficiaryService: BeneficiaryService,
-              private dialogService: DialogService,
-              private configurationService: ConfigurationService,
-              private toastService: ToastService,
-              private subventionRequestService: SubventionRequestService,
-              private subventionResponseService: SubventionResponseService,
-              private subventionAidService: SubventionAidService,
-              private aidLookupService: AidLookupService,
-              private activeRoute: ActivatedRoute,
-              private router: Router,
-              private navigationService: NavigationService,
-              private readModeService: ReadModeService,
-              private attachmentService: AttachmentService, // to use in interceptor
-              private fb: FormBuilder,
-              private empService: EmployeeService,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private eCookieService: ECookieService) {
+  @ViewChild('aidsTable') aidsTable!: TableComponent;
 
-  }
-
-  get pageTitle(): string {
-    return this.currentRequest?.id ?
-      (this.langService.map.request_number + ' : ' + this.currentRequest.requestFullSerial) :
-      this.langService.map.menu_provide_request;
-  }
-
-  ngOnInit(): void {
-    this.buildForm();
-    this.listenToRequestDateChange();
-    this.listenToBeneficiaryChange();
-    this.listenToRequestChange();
-    this.listenToOccupationStatus();
-    this.listenToAidChange();
-    this.listenToExtraIncome();
-    this.listenToSaveModel();
-    this.listenToSavePartialRequest();
-    this.listenToSaveAid();
-    this.listenToAddAid();
-    this.listenToNationalityChange();
-    this.listenToPrimaryIdTypeChange();
-    this.listenToSecondaryIdTypeChange();
-    this.preparePeriodicityLookups();
-    this.listenToRouteParams();
-
-  }
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-    // empty read mode request
-    if (this.currentRequest?.id) {
-      this.readModeService.deleteReadOnly(this.currentRequest.id);
+  sortingCallbacks = {
+    approvalDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.approvalDate),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    aidType: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : this.getAidLookup(a.aidLookupId).getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : this.getAidLookup(b.aidLookupId).getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    estimatedAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidSuggestedAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidSuggestedAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    periodicity: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.periodicTypeInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.aidStartPayDate),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.aidStartPayDate);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    givenAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    remainingAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidRemainingAmount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidRemainingAmount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
 
@@ -432,11 +503,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     requestWithBeneficiaryPartial$
       .pipe(
         switchMap((value) => {
-          debugger
           let data: SubventionResponse = new SubventionResponse().clone({
             request: value.request,
             beneficiary: value.beneficiary,
-            aidList: this.subventionAid,
+            aidList: this.subventionAidList,
             attachmentList: this.attachmentList
           });
           return this.subventionResponseService.savePartialRequest(data)
@@ -514,7 +584,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .pipe(
         map(value => value.beneficiary),
         exhaustMap(beneficiary => {
-          debugger
           return beneficiary.saveWithValidate(this.validateStatus, this.currentRequest).pipe(catchError(() => {
             return of(null);
           }));
@@ -598,9 +667,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     const income = this.fm.getFormField('incomeTab')?.value;
     const address = this.fm.getFormField('addressTab')?.value;
     const buildingPlate = this.buildingPlate.getValue();
-    console.log(this.currentBeneficiary = (new Beneficiary())
-      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate}));
-    debugger;
     return this.currentBeneficiary = (new Beneficiary())
       .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate});
   }
@@ -658,8 +724,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }
 
         this.beneficiaryChanged$.next(response.beneficiary);
-        this.subventionAid = response.aidList;
-        this.subventionAidDataSource.next(this.subventionAid);
+        this.subventionAidList = response.aidList;
+        this.subventionAidDataSource.next(this.subventionAidList);
         this.attachmentList = response.attachmentList;
 
         this.form.setControl('requestStatusTab', this.buildRequestStatusTab(response.request));
@@ -743,8 +809,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   cancelAid() {
     this.resetAid();
-    this.editAidIndex = -1;
-    this.hasEditAid = false;
+    this.editAidItem = undefined;
   }
 
   private preparePeriodicityLookups(): void {
@@ -844,20 +909,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       }
 
       let message: string;
-      if (!this.hasEditAid) {
-        this.subventionAid.push(subventionAid.clone({
+      if (!this.editAidItem) {
+        this.subventionAidList.push(subventionAid.clone({
           aidLookupInfo: AdminResult.createInstance({parent: parentValue})
         }));
         message = this.langService.map.msg_aid_added_successfully;
       } else {
-        this.subventionAid.splice(this.editAidIndex, 1, subventionAid);
-        this.hasEditAid = false;
-        this.editAidIndex = -1;
+        let index = this.subventionAidList.findIndex(x => x === this.editAidItem);
+        this.subventionAidList.splice(index, 1, subventionAid);
+        this.editAidItem = undefined;
         message = this.langService.map.msg_aid_updated_successfully;
       }
       this.toastService.success(message);
-      this.subventionAid = this.subventionAid.slice();
-      this.subventionAidDataSource.next(this.subventionAid);
+      this.subventionAidList = this.subventionAidList.slice();
+      this.subventionAidDataSource.next(this.subventionAidList);
       this.aidChanged$.next(null);
     });
   }
@@ -974,8 +1039,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.aidFormArray.get('0.aidStartPayDate') as FormControl;
   }
 
-  deleteAid(subventionAid: SubventionAid, index: number, $event: MouseEvent): any {
-    $event.preventDefault();
+  deleteAid(subventionAid: SubventionAid, $event?: MouseEvent): any {
+    $event?.preventDefault();
     this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
       .onAfterClose$
       .pipe(take(1))
@@ -984,21 +1049,21 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           subventionAid.delete()
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => {
-              this.subventionAid.splice(index, 1);
+              let index = this.subventionAidList.findIndex(x => x === subventionAid);
+              this.subventionAidList.splice(index, 1);
               this.toastService.success(this.langService.map.msg_delete_success);
-              if (!this.subventionAid.length) {
+              if (!this.subventionAidList.length) {
                 this.aidChanged$.next(new SubventionAid());
               }
-              this.subventionAidDataSource.next(this.subventionAid);
+              this.subventionAidDataSource.next(this.subventionAidList);
             });
         }
       });
   }
 
-  editAid(row: SubventionAid, index: number, $event: MouseEvent) {
-    $event.preventDefault();
-    this.hasEditAid = true;
-    this.editAidIndex = index;
+  editAid(row: SubventionAid, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editAidItem = row;
     this.aidChanged$.next(row);
   }
 
@@ -1077,7 +1142,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(([oldValue, newValue]: SubventionRequestStatus[]) => {
-        if (this.requestStatusArray.indexOf(newValue) !== -1 && this.subventionAid.length) {
+        if (this.requestStatusArray.indexOf(newValue) !== -1 && this.subventionAidList.length) {
           this.dialogService.error(this.langService.map.remove_provided_aid_first_to_change_request_status);
           group.get('status')?.setValue(oldValue);
         }
@@ -1105,7 +1170,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     if (!status) {
       return true;
     }
-    return !(status.value === SubventionRequestStatus.APPROVED && !this.subventionAid.length);
+    return !(status.value === SubventionRequestStatus.APPROVED && !this.subventionAidList.length);
   }
 
   private displayRequestStatusMessage(): void {

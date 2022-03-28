@@ -47,6 +47,10 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
     ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
   };
+  searchFieldsUserRequest: ISearchFieldsMap<SubventionAid> = {
+    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
+  };
   searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {
     ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])

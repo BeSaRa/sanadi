@@ -4,21 +4,42 @@ import {Beneficiary} from '../../../models/beneficiary';
 import {UserClickOn} from '../../../enums/user-click-on.enum';
 import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
 import {DialogRef} from '../../../shared/models/dialog-ref';
+import {FormControl} from '@angular/forms';
+import {SubventionRequest} from '@app/models/subvention-request';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-select-beneficiary-popup',
   templateUrl: './select-beneficiary-popup.component.html',
   styleUrls: ['./select-beneficiary-popup.component.scss']
 })
-export class SelectBeneficiaryPopupComponent implements OnInit {
-  userClick: typeof UserClickOn = UserClickOn;
-  displayedColumns: string[] = ['arName', 'enName', 'gender', 'nationality', 'identification',  'sponsors', 'actions'];
-
+export class SelectBeneficiaryPopupComponent {
   constructor(public langService: LangService,
               @Inject(DIALOG_DATA_TOKEN) public list: Beneficiary[], private dialogRef: DialogRef) {
   }
 
-  ngOnInit(): void {
+  userClick: typeof UserClickOn = UserClickOn;
+  headerColumn: string[] = ['extra-header'];
+  displayedColumns: string[] = ['arName', 'enName', 'gender', 'nationality', 'identification',  'sponsors', 'actions'];
+  filterControl: FormControl = new FormControl('');
+
+  sortingCallbacks = {
+    gender: (a: Beneficiary, b: Beneficiary, dir: SortEvent): number =>{
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.genderInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.genderInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    nationality: (a: Beneficiary, b: Beneficiary, dir: SortEvent): number =>{
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benNationalityInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.benNationalityInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    sponsors: (a: Beneficiary, b: Beneficiary, dir: SortEvent): number =>{
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benDependentsCount,
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.benDependentsCount;
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
   selectBeneficiary(beneficiary: Beneficiary, $event: MouseEvent) {

@@ -12,6 +12,9 @@ import {Pair} from '../interfaces/pair';
 import {SubventionRequest} from './subvention-request';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {isValidValue} from '../helpers/utils';
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
 
 export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNationality!: number;
@@ -88,10 +91,23 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNationalityInfo!: AdminResult;
   dateOfBirthString: string | undefined;
 
+  searchFields: ISearchFieldsMap<Beneficiary> = {
+    ...normalSearchFields(['arName', 'enName', 'benDependentsCount', 'benPrimaryIdNumber', 'benSecIdNumber']),
+    ...infoSearchFields(['genderInfo', 'benNationalityInfo', 'benPrimaryIdTypeInfo', 'benSecIdTypeInfo'])
+  }
+
   constructor() {
     super();
     this.service = FactoryService.getService('BeneficiaryService');
     this.langService = FactoryService.getService('LangService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (!this.benSecIdNumber) {
+      delete this.searchFields.benSecIdTypeInfo;
+      delete this.searchFields.benSecIdNumber;
+    }
   }
 
   get orgAndBranchInfo() {

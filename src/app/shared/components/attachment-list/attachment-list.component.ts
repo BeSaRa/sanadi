@@ -5,15 +5,20 @@ import {SubventionRequest} from '@app/models/subvention-request';
 import {FormManager} from '@app/models/form-manager';
 import {SanadiAttachment} from '@app/models/sanadi-attachment';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
 import {AttachmentService} from '@app/services/attachment.service';
 import {ToastService} from '@app/services/toast.service';
-import {catchError, switchMap} from 'rxjs/operators';
-import {BehaviorSubject, of, Subject, Subscription} from 'rxjs';
+import {catchError, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, of, Subject} from 'rxjs';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'app-attachment-list',
@@ -21,7 +26,30 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
   styleUrls: ['./attachment-list.component.scss']
 })
 export class AttachmentListComponent implements OnInit, OnDestroy {
+  constructor(public langService: LangService,
+              private fb: FormBuilder,
+              private toast: ToastService,
+              private dialogService: DialogService,
+              public lookupService: LookupService,
+              private attachmentService: AttachmentService) {
+  }
+
+  ngOnInit(): void {
+    this._checkRequiredInputs();
+    this.listenToReload();
+    this.listenToAddAid();
+    this.attachmentList$.next(this.attachmentList);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
+  }
+
   _request!: SubventionRequest;
+  private destroy$: Subject<any> = new Subject<any>();
+
   @Input()
   set request(val: SubventionRequest | undefined) {
     if (val)
@@ -36,7 +64,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   @Input() attachmentList: SanadiAttachment[] = [];
   @Input() multiUpload: boolean = false;
   @Input() buttonKey: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-  @Input() showList: boolean = true;
 
   @Output() updateList = new EventEmitter<SanadiAttachment[]>();
   @Output() onFormToggle = new EventEmitter<boolean>();
@@ -54,33 +81,69 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     FileExtensionsEnum.DOCX,
     FileExtensionsEnum.TIFF
   ];
-  reload$ = new Subject<any>();
-  reloadSubscription!: Subscription;
+  addAttachment$: Subject<any> = new Subject<any>();
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
-  editIndex: number = -1;
+  headerColumn: string[] = ['extra-header'];
+  filterControl: FormControl = new FormControl('');
+
+  editItem?: SanadiAttachment;
   fm!: FormManager;
   form!: FormGroup;
+
   @ViewChild('fileUploader') fileUploader!: ElementRef;
 
-  constructor(public langService: LangService,
-              private fb: FormBuilder,
-              private toast: ToastService,
-              private dialogService: DialogService,
-              public lookupService: LookupService,
-              private attachmentService: AttachmentService) {
+  actions: IMenuItem<SanadiAttachment>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: SanadiAttachment) => this.editAttachment(item),
+      show: (item: SanadiAttachment) => this.allowEdit(item),
+      disabled: (item: SanadiAttachment) => this.isFormShown()
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: SanadiAttachment) => this.deleteAttachment(item),
+      show: (item: SanadiAttachment) => this.allowDelete(item),
+      disabled: (item: SanadiAttachment) => this.isFormShown()
+
+    },
+    // download
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DOWNLOAD,
+      label: 'btn_download',
+      onClick: (item: SanadiAttachment) => item.downloadAttachment(),
+      disabled: (item: SanadiAttachment) => this.isFormShown()
+    }
+  ];
+
+  sortingCallbacks = {
+    lastModified: (a: SanadiAttachment, b: SanadiAttachment, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.lastModified!),
+        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.lastModified!);
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    attachmentType: (a: SanadiAttachment, b: SanadiAttachment, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.attachmentTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.attachmentTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
-  ngOnInit(): void {
-    this._checkRequiredInputs();
-    this.listenToReload();
-    this.attachmentList$.next(this.attachmentList);
+  isFormShown(): boolean {
+    return this.showForm;
   }
 
-  ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
-  }
-
-  get allowReload(): boolean {
+  allowReload(): boolean {
+    if (this.isFormShown()) {
+      return false;
+    }
     if (!this._request.id) {
       return false;
     } else {
@@ -128,8 +191,17 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     }
   }
 
+  private listenToAddAid() {
+    this.addAttachment$.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.addAttachment();
+      });
+  }
+
   listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(
+    this.reload$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init'),
       switchMap(() => {
         return this.attachmentService.loadByRequestId(this._request.id);
       })
@@ -228,25 +300,26 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.setAttachedFiles(null);
   }
 
-  addAttachment($event: MouseEvent): void {
-    $event.preventDefault();
+  addAttachment($event?: MouseEvent): void {
+    $event?.preventDefault();
     this.setDisplayForm();
   }
 
-  editAttachment($event: MouseEvent, attachment: SanadiAttachment, index: number) {
-    $event.preventDefault();
-    this.editIndex = index;
+  editAttachment(attachment: SanadiAttachment, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = attachment;
     this.setDisplayForm(attachment);
   }
 
-  deleteAttachment($event: MouseEvent, attachment: SanadiAttachment, index: number) {
-    $event.preventDefault();
+  deleteAttachment(attachment: SanadiAttachment, $event?: MouseEvent) {
+    $event?.preventDefault();
     const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: attachment.getName()}))
       .onAfterClose$
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
           if (!this._request.id) {
+            let index = this.attachmentList.findIndex(x => x === this.editItem);
             this.attachmentList.splice(index, 1);
             this.attachmentList$.next(this.attachmentList);
             this.updateList.emit(this.attachmentList);
@@ -274,7 +347,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.onFormToggle.emit(false);
     this.setAttachedFiles(null);
     this.currentAttachment = null;
-    this.editIndex = -1;
+    this.editItem = undefined;
   }
 
   saveAttachment($event: MouseEvent) {
@@ -290,7 +363,8 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       if (this.isNewAttachment) {
         this.attachmentList.push(data);
       } else {
-        this.attachmentList.splice(this.editIndex, 1, data);
+        let index = this.attachmentList.findIndex(x => x === this.editItem);
+        this.attachmentList.splice(index, 1, data);
       }
       this.attachmentList$.next(this.attachmentList);
       this.updateList.emit(this.attachmentList);

@@ -4,8 +4,11 @@ import {AttachmentService} from '../services/attachment.service';
 import {FactoryService} from '../services/factory.service';
 import {AdminResult} from './admin-result';
 import {printBlobData} from '../helpers/utils';
+import {ISearchFieldsMap} from '@app/types/types';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
 
-export class SanadiAttachment extends SanadiDocument {
+export class SanadiAttachment extends SanadiDocument<SanadiAttachment> {
   attachmentType!: number;
   requestId!: number;
   requestFullSerial!: string;
@@ -13,6 +16,12 @@ export class SanadiAttachment extends SanadiDocument {
   //extra properties
   attachmentService: AttachmentService;
   attachmentTypeInfo?: AdminResult;
+  lastModifiedString: string = '';
+
+  searchFields: ISearchFieldsMap<SanadiAttachment> = {
+    ...normalSearchFields(['documentTitle', 'lastModifiedString']),
+    ...infoSearchFields(['attachmentTypeInfo'])
+  }
 
   constructor() {
     super();
@@ -27,7 +36,7 @@ export class SanadiAttachment extends SanadiDocument {
     return this.attachmentService.deleteByVsId(this.vsId);
   }
 
-  downloadAttachment($event: MouseEvent): void {
+  downloadAttachment($event?: MouseEvent): void {
     $event?.preventDefault();
     this.attachmentService.loadByVsIdAsBlob(this.vsId)
       .subscribe((data) => {

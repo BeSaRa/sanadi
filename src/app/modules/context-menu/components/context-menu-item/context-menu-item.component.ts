@@ -265,7 +265,6 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     }
     let parentRow = (event.target as HTMLElement)?.closest('tr');
     if (parentRow) {
-      console.log(parentRow);
       this.removeParentHighlight();
       this.parentRow = parentRow;
       this.renderer.addClass(parentRow, this.highlightClass);
