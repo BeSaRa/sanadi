@@ -551,7 +551,7 @@
     "path": "/home/collection",
     "icon": "mdi-currency-usd",
     "isSvg": false,
-    "permission": null,
+    "permission": "COLLECTION_SERVICES_GROUP",
     "permissionGroup": null,
     "parent": null,
     "group": "main",
