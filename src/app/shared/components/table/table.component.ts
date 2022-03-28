@@ -144,4 +144,19 @@ export class TableComponent implements OnInit, OnDestroy {
       this.selection = new SelectionModel<any>(this.multiSelect);
     }
   }
+
+  /**
+   * @description Gets the actual index of item in table
+   * It will not consider the sorting/searching on table
+   * @param clickedIndex
+   */
+  getActualItemIndex(clickedIndex: number): number | undefined {
+    let paginator = this.dataSource.paginator;
+    if (paginator) {
+      return paginator.pageSize * (paginator.currentPage - 1) + (clickedIndex);
+    }
+    return undefined;
+
+    //(currentPage * perPage) - (perPage -index)
+  }
 }
