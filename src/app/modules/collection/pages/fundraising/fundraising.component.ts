@@ -77,6 +77,10 @@ export class FundraisingComponent extends EServicesGenericComponent<
     return this.form.get("basicInfo.oldLicenseFullSerial") as FormControl;
   }
 
+  isRenewOrCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed =
@@ -171,7 +175,6 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeChange();
     this.handleReadonly();
   }
 
@@ -189,7 +192,6 @@ export class FundraisingComponent extends EServicesGenericComponent<
         caseStatus === caseStatusEnum.FINAL_REJECTION)
     ) {
       this.readonly = true;
-      this.toggleFormState(this.readonly);
       return;
     }
 
@@ -214,47 +216,49 @@ export class FundraisingComponent extends EServicesGenericComponent<
         this.readonly = false;
       }
     }
-    this.toggleFormState(this.readonly);
 
   }
 
-  toggleFormState(readonly:boolean){
-    readonly ? this.form.disable() : this.form.enable();
-  }
+ 
+  handleRequestTypeChange(
+    requestTypeValue: number,
+    userInteraction: boolean = false
+  ): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestType.setValue(requestTypeValue);
+    }
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestType && this.requestType.value;
+    }
 
-  listenToRequestTypeChange(): void {
-    this.requestType?.valueChanges
-      .pipe(delay(50), takeUntil(this.destroy$))
-      .subscribe((requestTypeValue) => {
-        // if no requestType or (requestType = new)
-        // if new record or draft, reset license and its validations
-        // also reset the values in model
-        if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
-          if (!this.model?.id || this.model.canCommit()) {
-            this.oldLicenseFullSerialField.reset();
-            this.oldLicenseFullSerialField.setValidators([]);
+    // if no requestType or (requestType = new)
+    // if new record or draft, reset license and its validations
+    // also reset the values in model
+    if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.oldLicenseFullSerialField.reset();
+        this.oldLicenseFullSerialField.setValidators([]);
+        this.setSelectedLicense(undefined, true);
 
-            this.setSelectedLicense(undefined, true);
-
-            if (this.model) {
-              // this.model.licenseNumber = '';
-              this.model.licenseDuration = 0;
-              this.model.licenseStartDate = "";
-            }
-          }
-        } else {
-          this.oldLicenseFullSerialField.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedLicense &&
-                this.selectedLicense?.fullSerial === control.value
-                ? null
-                : { select_license: true };
-            },
-          ]);
+        if (this.model) {
+          // this.model.licenseNumber = '';
+          this.model.licenseDuration = 0;
+          this.model.licenseStartDate = "";
         }
-        this.oldLicenseFullSerialField.updateValueAndValidity();
-      });
+      }
+    } else {
+      this.oldLicenseFullSerialField.setValidators([
+        CustomValidators.required,
+        (control) => {
+          return this.selectedLicense &&
+            this.selectedLicense?.fullSerial === control.value
+            ? null
+            : { select_license: true };
+        },
+      ]);
+    }
+    this.oldLicenseFullSerialField.updateValueAndValidity();
   }
   setSelectedLicense(
     licenseDetails: Fundraising | undefined,
@@ -271,6 +275,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
       value.about = licenseDetails.about;
       value.workingMechanism = licenseDetails.workingMechanism;
       value.riskAssessment = licenseDetails.riskAssessment;
+      value.description = "";
 
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
@@ -335,6 +340,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
       basicInfo: model?.buildBasicInfo(),
       explanation: model?.buildExplanation(),
     });
+    this.handleRequestTypeChange(model.requestType, false);
   }
   _resetForm(): void {
     this.form.reset();
