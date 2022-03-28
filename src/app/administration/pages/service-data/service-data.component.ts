@@ -84,6 +84,7 @@ export class ServiceDataComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   listenToReload(): void {

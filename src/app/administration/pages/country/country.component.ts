@@ -100,6 +100,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addSubscription?.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   getTitleText(): (keyof ILanguageKeys) {
