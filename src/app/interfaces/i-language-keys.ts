@@ -45,6 +45,13 @@ export interface ILanguageKeys {
   bank_account_purpose: string;
   bank_operation_type: string;
   menu_internal_bank_account_approval: string;
+  msg_success_terminate_followup: string;
+  msg_confirm_terminate_followup: string;
+  btn_terminate: string;
+  status: string;
+  dueDate: string;
+  case_id: string;
+  emergency_funds_info: string;
   edit_cancel_request_need_exists_license: string;
   longitude_latitude_required: string;
   search_by_serial_number: string;

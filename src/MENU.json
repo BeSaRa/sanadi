@@ -687,5 +687,18 @@
     "group": "sanady",
     "itemOrder": 7,
     "svg": null
+  },
+  {
+    "id": 54,
+    "langKey": "menu_external_followup",
+    "path": "home/followup/external-followup",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "EXTERNAL_FOLLOWUP",
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 5,
+    "svg": null
   }
 ]

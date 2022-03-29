@@ -6,20 +6,20 @@
 <div class="dialog-content" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form" class="w800px">
     <tabs-list>
-      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
+      <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.basic.steps"
            [template]="stepsTabTemplate"
-           [title]="langService.map.service_steps"
+           [title]="lang.map.service_steps"
            [hasError]="fm.getFieldInvalidStatus('steps')"></tab>
       <tab [name]="tabsData.basic.customSettings"
            [template]="customSettingsTabTemplate"
-           [title]="langService.map.custom_settings"
+           [title]="lang.map.custom_settings"
            [hasError]="fm.getFieldInvalidStatus('customSettings')"
            *ngIf="model.hasCustomSettings()"></tab>
       <tab [name]="tabsData.basic.followup"
            [template]="followupTabTemplate"
-           [title]="langService.map.followup_configuration"
+           [title]="lang.map.followup_configuration"
            [disabled]="!model.followUp"
            ></tab>
     </tabs-list>
@@ -27,12 +27,12 @@
       <div formGroupName="basic">
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="arName" for="arName" class="form-label">{{langService.map.arabic_name}}</label>
+            <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.arabic_name}}</label>
             <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
             <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="enName" for="enName" class="form-label">{{langService.map.english_name}}</label>
+            <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.english_name}}</label>
             <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
             <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
@@ -40,23 +40,23 @@
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="bawServiceCode" for="bawServiceCode"
-                   class="form-label">{{langService.map.baw_service_code}}</label>
+                   class="form-label">{{lang.map.baw_service_code}}</label>
             <input id="bawServiceCode" validationClasses="bawServiceCode" formControlName="bawServiceCode"
                    class="form-control">
             <app-field-error-message controlName="bawServiceCode"></app-field-error-message>
           </div>
 <!--          <div class="col-sm-6 position-relative">-->
-<!--            <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{langService.map.case_type}}</label>-->
+<!--            <label asteriskIfRequired="caseType" for="caseType" class="form-label">{{lang.map.case_type}}</label>-->
 <!--            <input id="caseType" validationClasses="caseType" formControlName="caseType" class="form-control">-->
 <!--            <app-field-error-message controlName="caseType"></app-field-error-message>-->
 <!--          </div>-->
           <div class="col-sm-6 ng-select-wrapper">
-            <label for="status" asteriskIfRequired="status" class="form-label">{{langService.map.lbl_status}}</label>
+            <label for="status" asteriskIfRequired="status" class="form-label">{{lang.map.lbl_status}}</label>
             <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found"
+                       placeholder="{{lang.map.select}}" id="status"
+                       [notFoundText]="lang.map.msg_not_found"
                        formControlName="status" validationClasses="status">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option value="">{{lang.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
                          [disabled]="option.isRetiredCommonStatus()">
                 {{option.getName()}}
@@ -68,14 +68,14 @@
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="licenseSerialCode" for="licenseSerialCode"
-                   class="form-label">{{langService.map.license_serial_code}}</label>
+                   class="form-label">{{lang.map.license_serial_code}}</label>
             <input id="licenseSerialCode" validationClasses="licenseSerialCode" formControlName="licenseSerialCode"
                    class="form-control">
             <app-field-error-message controlName="licenseSerialCode"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="requestSerialCode" for="requestSerialCode"
-                   class="form-label">{{langService.map.request_serial_code}}</label>
+                   class="form-label">{{lang.map.request_serial_code}}</label>
             <input id="requestSerialCode" validationClasses="requestSerialCode" formControlName="requestSerialCode"
                    class="form-control">
             <app-field-error-message controlName="requestSerialCode"></app-field-error-message>
@@ -84,13 +84,13 @@
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="serviceTimeLimit" for="serviceTimeLimit"
-                   class="form-label">{{langService.map.service_time_limit}}</label>
+                   class="form-label">{{lang.map.service_time_limit}}</label>
             <input id="serviceTimeLimit" validationClasses="serviceTimeLimit" formControlName="serviceTimeLimit"
                    class="form-control">
             <app-field-error-message controlName="serviceTimeLimit"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="fees" for="serviceReviewLimit" class="form-label">{{langService.map.lbl_review_limit}}</label>
+            <label asteriskIfRequired="fees" for="serviceReviewLimit" class="form-label">{{lang.map.lbl_review_limit}}</label>
             <input id="serviceReviewLimit" validationClasses="serviceReviewLimit" formControlName="serviceReviewLimit" class="form-control"
                    [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="serviceReviewLimit"></app-field-error-message>
@@ -99,14 +99,14 @@
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="licenseMinTime" for="licenseMinTime"
-                   class="form-label">{{langService.map.license_min_time + ' (' + langService.map.months +')'}}</label>
+                   class="form-label">{{lang.map.license_min_time + ' (' + langService.map.months +')'}}</label>
             <input id="licenseMinTime" validationClasses="licenseMinTime" formControlName="licenseMinTime"
                    class="form-control">
             <app-field-error-message controlName="licenseMinTime"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
             <label asteriskIfRequired="licenseMaxTime" for="licenseMaxTime"
-                   class="form-label">{{langService.map.license_max_time + ' (' + langService.map.months +')'}}</label>
+                   class="form-label">{{lang.map.license_max_time + ' (' + langService.map.months +')'}}</label>
             <input id="licenseMaxTime" validationClasses="licenseMaxTime" formControlName="licenseMaxTime"
                    class="form-control">
             <app-field-error-message controlName="licenseMaxTime"></app-field-error-message>
@@ -114,12 +114,12 @@
         </div>
         <div class="row mb-4">
           <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="fees" for="fees" class="form-label">{{langService.map.fees}}</label>
+            <label asteriskIfRequired="fees" for="fees" class="form-label">{{lang.map.fees}}</label>
             <input id="fees" validationClasses="fees" formControlName="fees" class="form-control">
             <app-field-error-message controlName="fees"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
-            <label asteriskIfRequired="fees" for="sLA" class="form-label">{{langService.map.lbl_sla}}</label>
+            <label asteriskIfRequired="fees" for="sLA" class="form-label">{{lang.map.lbl_sla}}</label>
             <input id="sLA" validationClasses="sLA" formControlName="sLA" class="form-control"
                    [mask]="inputMaskPatterns.NUMBER_ONLY">
             <app-field-error-message controlName="sLA"></app-field-error-message>
@@ -128,7 +128,7 @@
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">
             <label asteriskIfRequired="serviceTerms" for="serviceTerms"
-                   class="form-label">{{langService.map.service_terms}}</label>
+                   class="form-label">{{lang.map.service_terms}}</label>
             <textarea id="serviceTerms" validationClasses="serviceTerms" formControlName="serviceTerms"
                       class="form-control"></textarea>
             <app-field-error-message controlName="serviceTerms"></app-field-error-message>
@@ -137,7 +137,7 @@
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">
             <label asteriskIfRequired="serviceRequirements" for="serviceRequirements"
-                   class="form-label">{{langService.map.service_requirements}}</label>
+                   class="form-label">{{lang.map.service_requirements}}</label>
             <textarea id="serviceRequirements" validationClasses="serviceRequirements"
                       formControlName="serviceRequirements"
                       class="form-control"></textarea>
@@ -147,7 +147,7 @@
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">
             <label asteriskIfRequired="serviceDescription" for="serviceDescription"
-                   class="form-label">{{langService.map.service_description}}</label>
+                   class="form-label">{{lang.map.service_description}}</label>
             <textarea id="serviceDescription" validationClasses="serviceDescription"
                       formControlName="serviceDescription"
                       class="form-control"></textarea>
@@ -157,7 +157,7 @@
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">
             <label asteriskIfRequired="serviceStepsArabic" for="serviceStepsArabic"
-                   class="form-label">{{langService.map.service_steps_arabic}}</label>
+                   class="form-label">{{lang.map.service_steps_arabic}}</label>
             <textarea id="serviceStepsArabic" validationClasses="serviceStepsArabic"
                       formControlName="serviceStepsArabic"
                       class="form-control"></textarea>
@@ -167,7 +167,7 @@
         <div class="row mb-4">
           <div class="col-sm-12 position-relative">
             <label asteriskIfRequired="serviceStepsEnglish" for="serviceStepsEnglish"
-                   class="form-label">{{langService.map.service_steps_english}}</label>
+                   class="form-label">{{lang.map.service_steps_english}}</label>
             <textarea id="serviceStepsEnglish" validationClasses="serviceStepsEnglish"
                       formControlName="serviceStepsEnglish"
                       class="form-control"></textarea>
@@ -179,16 +179,16 @@
             <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="followUp"
                    [checked]="model.followUp">
             <label class="form-check-label"
-                   for="allowCompletion">{{langService.map.enable_followUp}}</label>
+                   for="allowCompletion">{{lang.map.enable_followUp}}</label>
           </div>
         </div>
       </div>
     </ng-template>
     <ng-template #stepsTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
-        <h1 class="h6 text-primary">{{langService.map.service_steps}}</h1>
+        <h1 class="h6 text-primary">{{lang.map.service_steps}}</h1>
         <div>
-          <button class="btn icon-btn text-primary" [tooltip]="langService.map.btn_reload" (click)="reloadSteps()"><i
+          <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reloadSteps()"><i
             class="mdi mdi-reload"></i></button>
         </div>
         <div>
@@ -202,25 +202,25 @@
                        [data]="stepsList">
               <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
                 <ng-container cdkColumnDef="enName">
-                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{langService.map.english_name}}</th>
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="arName">
-                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{langService.map.arabic_name}}</th>
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.arName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="activityName">
-                  <th cdk-header-cell *cdkHeaderCellDef>{{langService.map.lbl_step_name}}</th>
+                  <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_step_name}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.stepName}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="stepName">
-                  <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+                  <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
-                      <a href="#" (click)="editStep(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
+                      <a href="#" (click)="editStep(row , $event)" tooltip="{{lang.map.btn_edit}}" class="icon-btn">
                         <i class="mdi mdi-pen"></i>
                       </a>
-                      <a href="#" (click)="checklist(row , $event)" tooltip="{{langService.map.lbl_checklist}}" class="icon-btn">
+                      <a href="#" (click)="checklist(row , $event)" tooltip="{{lang.map.lbl_checklist}}" class="icon-btn">
                         <i class="mdi mdi-format-list-bulleted-square"></i>
                       </a>
                     </div>
@@ -230,7 +230,7 @@
                 <tr cdk-header-row *cdkHeaderRowDef="stepsColumns"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: stepsColumns;"></tr>
                 <tr *cdkNoDataRow>
-                  <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+                  <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
                 </tr>
               </table>
             </app-table>
@@ -245,7 +245,7 @@
           <div class="col-sm-6 mb-4 position-relative" *ngIf="showMaxTargetAmount">
             <label for="maxTargetAmount" class="form-label"
                    asteriskIfRequired="maxTargetAmount">
-              {{langService.map.custom_setting_max_target_amount}}
+              {{lang.map.custom_setting_max_target_amount}}
             </label>
             <input id="maxTargetAmount"
                    [ngClass]="fm.getStatusClass('customSettings.maxTargetAmount')"
@@ -257,7 +257,7 @@
           <div class="col-sm-6 mb-4 position-relative" *ngIf="showMaxElementsCount">
             <label for="maxElementsCount" class="form-label"
                    asteriskIfRequired="maxElementsCount">
-              {{langService.map.custom_settings_max_elements_count}}
+              {{lang.map.custom_settings_max_elements_count}}
             </label>
             <input id="maxElementsCount"
                    [ngClass]="fm.getStatusClass('customSettings.maxElementsCount')"
@@ -273,7 +273,7 @@
               <input class="form-check-input" type="checkbox" id="activateDevelopmentField"
                      formControlName="activateDevelopmentField">
               <label class="form-check-label"
-                     for="activateDevelopmentField">{{langService.map.custom_settings_activate_development_field}}</label>
+                     for="activateDevelopmentField">{{lang.map.custom_settings_activate_development_field}}</label>
             </div>
           </div>
         </div>
@@ -286,12 +286,12 @@
 </div>
 
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="displayFormValidity(dialogContent)" tooltip="{{langService.map.validate_fields}}"
+  <button tabindex="-1" (click)="displayFormValidity(dialogContent)" tooltip="{{lang.map.validate_fields}}"
           class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid || form.pending" (click)="saveModel()"
-          class="btn btn-primary">{{langService.map.btn_save}}</button>
-  <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

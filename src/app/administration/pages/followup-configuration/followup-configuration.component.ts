@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { FollowupConfiguration } from '@app/models/followup-configuration';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { FollowupConfigurationService } from '@app/services/followup-configuration.service';
-import { LangService } from '@app/services/lang.service';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {FollowupConfigurationService} from '@app/services/followup-configuration.service';
+import {LangService} from '@app/services/lang.service';
 import {ServiceData} from '@app/models/service-data';
 import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {BehaviorSubject, of, Subject} from 'rxjs';
@@ -17,7 +17,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
   templateUrl: './followup-configuration.component.html',
   styleUrls: ['./followup-configuration.component.scss']
 })
-export class FollowupConfigurationComponent extends AdminGenericComponent<FollowupConfiguration, FollowupConfigurationService>{
+export class FollowupConfigurationComponent extends AdminGenericComponent<FollowupConfiguration, FollowupConfigurationService> {
   actions: IMenuItem<FollowupConfiguration>[] = [];
   displayedColumns: string[] = ['name', 'followUpType', 'requestType', 'responsibleTeamId', 'concernedTeamId', 'days', 'actions'];
   searchText = '';
@@ -27,29 +27,32 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
   constructor(public lang: LangService,
               public service: FollowupConfigurationService,
               private dialog: DialogService,
-              private toast: ToastService){
+              private toast: ToastService) {
     super();
   }
+
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
-  }
-  _init(){
+  };
+
+  _init() {
     this.reload$.next(this.serviceData.caseType);
   }
+
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap((caseType: number) => {
-        return this.service.getByCaseType(caseType)
+        return this.service.getByCaseType(caseType);
       }))
       .subscribe((list: FollowupConfiguration[]) => {
         this.models = list;
-      })
+      });
   }
 
   edit(model: FollowupConfiguration, $event: MouseEvent) {
     $event.preventDefault();
-    this.edit$.next(model)
+    this.edit$.next(model);
   }
 
   listenToEdit(): void {
@@ -58,11 +61,11 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       .pipe(exhaustMap((model) => {
         return (this.useCompositeToEdit ?
           this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
-          this.service.editDialog(model).pipe(catchError(_ => of(null))))
+          this.service.editDialog(model).pipe(catchError(_ => of(null))));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(this.serviceData.caseType))
+      .subscribe(() => this.reload$.next(this.serviceData.caseType));
   }
 
   listenToAdd(): void {
@@ -76,7 +79,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
           return result.pipe(switchMap(ref => ref.onAfterClose$));
         }
       }))
-      .subscribe(() => this.reload$.next(this.serviceData.caseType))
+      .subscribe(() => this.reload$.next(this.serviceData.caseType));
   }
 
   delete(model: FollowupConfiguration, $event: MouseEvent) {
@@ -89,9 +92,9 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
           // @ts-ignore
           this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
           this.reload$.next(this.serviceData.caseType);
-          console.log('deleted');
           sub.unsubscribe();
         });
       }
-    });  }
+    });
+  }
 }

@@ -66,7 +66,6 @@ import { DonorComponent } from './pages/donor/donor.component';
 import { DonorPopupComponent } from './popups/donor-popup/donor-popup.component';
 import { FollowupConfigurationComponent } from './pages/followup-configuration/followup-configuration.component';
 import { FollowupConfigurationPopupComponent } from './popups/followup-configuration-popup/followup-configuration-popup.component';
-import { ExternalFollowupComponent } from './pages/external-followup/external-followup.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +124,6 @@ import { ExternalFollowupComponent } from './pages/external-followup/external-fo
     DonorPopupComponent,
     FollowupConfigurationComponent,
     FollowupConfigurationPopupComponent,
-    ExternalFollowupComponent,
   ],
   imports: [
     SharedModule,

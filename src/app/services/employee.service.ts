@@ -200,7 +200,6 @@ export class EmployeeService {
         permissionKey: permission
       }));
     })
-    this.permissions.push()
     this.setUserData(loginData);
     this.preparePermissionMap();
     this.prepareUserSecurityMap();
@@ -339,6 +338,7 @@ export class EmployeeService {
   private prepareUserSecurityMap(): void {
     this.userSecurityMap.clear();
     const keys = this.userSecConfig && Object.keys(this.userSecConfig);
+    let hasFollowupPermission = false;
     if (!keys) {
       return;
     }
@@ -348,7 +348,15 @@ export class EmployeeService {
       return [...acc, ...list];
     }, [] as UserSecurityConfiguration[]);
 
-    securityArray.forEach((item) => this.addUserSecurityToMap(item));
+    securityArray.forEach((item) => {
+      if(this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission){
+        this.permissionMap?.set('external_followup',new Permission().clone({
+          permissionKey:"EXTERNAL_FOLLOWUP"
+        }))
+        hasFollowupPermission = true;
+      }
+      this.addUserSecurityToMap(item)
+    });
     this.generateEServicesPermissions();
   }
 
