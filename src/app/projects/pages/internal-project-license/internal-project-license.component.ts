@@ -562,7 +562,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   get adminTotalDeductionCostField(): FormControl {
-    return (this.projectBudgetGroup?.get('administrativedeductionAmount')) as FormControl;
+    return (this.projectBudgetGroup?.get('administrativeDeductionAmount')) as FormControl;
   }
 
   get targetCostField(): FormControl {
