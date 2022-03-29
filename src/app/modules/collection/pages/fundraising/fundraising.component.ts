@@ -81,6 +81,11 @@ export class FundraisingComponent extends EServicesGenericComponent<
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.CANCEL);
   }
 
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed =
@@ -269,17 +274,16 @@ export class FundraisingComponent extends EServicesGenericComponent<
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = new Fundraising().clone(licenseDetails);
       value.requestType = this.requestType.value;
-      value.licenseDuration = licenseDetails.licenseDuration;
-      value.licenseStartDate = licenseDetails.licenseStartDate;
-      value.licenseDurationType = licenseDetails.licenseDurationType;
-      value.about = licenseDetails.about;
-      value.workingMechanism = licenseDetails.workingMechanism;
-      value.riskAssessment = licenseDetails.riskAssessment;
-      value.description = "";
-
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
+      value.documentTitle = '';
+      value.fullSerial = null;
+      value.description = '';
+
+      // delete id because license details contains old license id, and we are adding new, so no id is needed
+      delete value.id;
+      delete value.vsId;
 
       this._updateForm(value);
     }
