@@ -16,7 +16,7 @@
             formControlName="serviceId"
             placeholder="{{lang.map.select}}"
             id="serviceId"
-            appendTo="Body"
+            appendTo="body"
             (change)="onServiceChange()">
             <ng-option [value]="service.id" *ngFor="let service of services">{{service.getName()}}</ng-option>
           </ng-select>
@@ -33,7 +33,7 @@
           [clearable]="false"
           placeholder="{{lang.map.select}}" id="userType"
           formControlName="userType"
-          appendTo="Body"
+          appendTo="body"
           [ngClass]="fm.getStatusClass('userType')">
           <ng-option *ngFor="let option of attachmentTypeUsersList" [value]="option.lookupKey">
             {{option.getName()}}

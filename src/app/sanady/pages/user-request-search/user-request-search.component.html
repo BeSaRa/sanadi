@@ -32,7 +32,7 @@
               <ng-select [selectOnTab]="true" labelForId="year" [clearable]="false"
                          placeholder="{{langService.map.select}}" id="year"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="year">
+                         formControlName="year" appendTo="body">
                 <ng-option *ngFor="let option of years" [value]="option">
                   {{option}}
                 </ng-option>
@@ -51,7 +51,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benPrimaryIdType">
+                           formControlName="benPrimaryIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                              [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
@@ -84,7 +84,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benSecIdType"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benSecIdType">
+                           formControlName="benSecIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                              [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
@@ -116,7 +116,7 @@
                 <ng-select [selectOnTab]="true" labelForId="arMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="arMethod"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="operator">
+                           formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
@@ -145,7 +145,7 @@
                 <ng-select [selectOnTab]="true" labelForId="enMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="enMethod"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="operator">
+                           formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
@@ -190,7 +190,7 @@
                         <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="nationality"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="benNationality">
+                                   formControlName="benNationality" appendTo="body">
                           <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -206,7 +206,7 @@
                         <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="occuptionStatus"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="occuptionStatus">
+                                   formControlName="occuptionStatus" appendTo="body">
                           <ng-option *ngFor="let option of employmentStatus" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -236,7 +236,7 @@
                         <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="aidLookupId"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="aidLookupId"
+                                   formControlName="aidLookupId" appendTo="body"
                                    [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
                           <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
                             {{option.getName()}}
@@ -259,7 +259,7 @@
                         <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="status"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="status">
+                                   formControlName="status" appendTo="body">
                           <ng-option *ngFor="let option of requestsStatus" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -275,7 +275,7 @@
                         <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="requestType"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="requestType">
+                                   formControlName="requestType" appendTo="body">
                           <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>

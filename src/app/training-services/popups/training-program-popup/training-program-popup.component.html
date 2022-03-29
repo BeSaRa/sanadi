@@ -351,7 +351,7 @@
                   [(ngModel)]="selectedOrganizationType"
                   [ngModelOptions]="{standalone: true}"
                   id="organizationTypeId"
-                  appendTo="Body"
+                  appendTo="body"
                   (change)="onOrganizationTypeChange()">
                   <ng-option [value]="organizationType.lookupKey"
                              *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
@@ -367,7 +367,7 @@
                   [(ngModel)]="selectedOrganization"
                   [ngModelOptions]="{standalone: true}"
                   id="organizationId"
-                  appendTo="Body">
+                  appendTo="body">
                   <ng-option [value]="-1">{{lang.map.select_all}}</ng-option>
                   <ng-option [value]="organization.id"
                              *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
@@ -445,7 +445,7 @@
                   [(ngModel)]="selectedTrainer"
                   [ngModelOptions]="{standalone: true}"
                   id="trainerId"
-                  appendTo="Body">
+                  appendTo="body">
                   <ng-option [value]="trainer.id" *ngFor="let trainer of trainers">{{trainer.getName()}}</ng-option>
                 </ng-select>
               </div>
