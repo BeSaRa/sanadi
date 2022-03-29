@@ -441,7 +441,6 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = (new UrgentInterventionLicense()).clone(licenseDetails);
-      value._finalizeSearchFields();
       value.requestType = this.requestTypeField.value;
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
