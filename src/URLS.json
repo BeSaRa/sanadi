@@ -1,5 +1,6 @@
 {
   "FUNDRAISING": "/fundraising-channel-licensing",
+  "INTERNAL_BANK_ACCOUNT_APPROVAL": "internal-bank-approval",
   "COLLECTOR_APPROVAL": "collector-licensing",
   "MAP_API_URL": "https://maps.googleapis.com/maps/api/js?libraries=places&key=",
   "COLLECTION_APPROVAL": "/collection-licensing",

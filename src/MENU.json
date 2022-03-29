@@ -598,7 +598,7 @@
     "svg": null
   },
   {
-    "id": 45,
+    "id": 46,
     "langKey": "menu_urgent_intervention_license",
     "path": "/home/projects/urgent-intervention-license",
     "icon": "mdi-license",
@@ -608,6 +608,19 @@
     "parent": 32,
     "group": "projects",
     "itemOrder": 5,
+    "svg": null
+  },
+  {
+    "id": 47,
+    "langKey": "menu_internal_bank_account_approval",
+    "path": "/home/projects/internal-bank-account",
+    "icon": "mdi-bank-plus",
+    "isSvg": false,
+    "permission": "INTERNAL_BANK_ACCOUNT_APPROVAL",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 6,
     "svg": null
   }
 ]

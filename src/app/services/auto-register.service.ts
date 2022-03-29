@@ -27,6 +27,9 @@ import {CollectorApprovalComponent} from '@app/modules/collection/pages/collecto
 import {
   UrgentInterventionLicenseComponent
 } from '@app/projects/pages/urgent-intervention-license/urgent-intervention-license.component';
+import {
+  InternalBankAccountApprovalComponent
+} from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +56,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('FundraisingComponent', FundraisingComponent);
       DynamicComponentService.registerComponent('CollectorApprovalComponent', CollectorApprovalComponent);
       DynamicComponentService.registerComponent('UrgentInterventionLicenseComponent', UrgentInterventionLicenseComponent);
+      DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
 
     });// just to make sure that service constructed and register all dynamic components
 

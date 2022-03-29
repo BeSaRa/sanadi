@@ -12,6 +12,8 @@ import {
 import {
   UrgentInterventionApproveTaskPopupComponent
 } from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
+import { InternalBankAccountApprovalComponent } from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
+import { InternalBankAccountAaprovalApproveTaskPopupComponent } from './popups/internal-bank-account-aaproval-approve-task-popup/internal-bank-account-aaproval-approve-task-popup.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import {
     ProjectModelComponent,
     InternalProjectLicenseComponent,
     UrgentInterventionLicenseComponent,
-    UrgentInterventionApproveTaskPopupComponent
+    UrgentInterventionApproveTaskPopupComponent,
+    InternalBankAccountApprovalComponent,
+    InternalBankAccountAaprovalApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

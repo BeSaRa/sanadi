@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  INTERNAL_BANK_ACCOUNT_APPROVAL: string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
   COLLECTION_APPROVAL: string;

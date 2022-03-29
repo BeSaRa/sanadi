@@ -46,6 +46,14 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentInterventionLicenseComponent'
     }
+  },
+  {
+    path: 'internal-bank-account', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      render: 'InternalBankAccountApprovalComponent'
+    }
   }
 ];
 
