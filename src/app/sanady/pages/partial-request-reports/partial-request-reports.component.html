@@ -135,7 +135,7 @@
             </ng-container>
             <ng-container cdkColumnDef="beneficiaryCategory">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.lbl_organization}}</th>
+                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.beneficiary_category}}</th>
               <td cdk-cell *cdkCellDef="let row"><span>{{row.benCategoryInfo.getName()}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="requestType">
