@@ -258,7 +258,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       simpleSearch: this.fb.group({
         year: [],
         request: this.fb.group({
-          requestSerial: [null, Validators.maxLength(50)]
+          requestFullSerial: [null, Validators.maxLength(50)]
         }),
         beneficiary: this.fb.group({
           benPrimaryIdType: [],

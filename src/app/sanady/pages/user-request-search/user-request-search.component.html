@@ -15,13 +15,13 @@
       <div class="row">
         <div formGroupName="request" class="col-sm-12 col-md-6">
           <div class="row">
-            <label for="requestSerial"
+            <label for="requestFullSerial"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control"
-                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestSerial')">
+              <input formControlName="requestFullSerial" id="requestFullSerial" type="text" class="form-control"
+                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestFullSerial')">
               <app-field-error-message
-                [control]="fm.getFormField('simpleSearch.request.requestSerial')"></app-field-error-message>
+                [control]="fm.getFormField('simpleSearch.request.requestFullSerial')"></app-field-error-message>
             </div>
           </div>
         </div>
