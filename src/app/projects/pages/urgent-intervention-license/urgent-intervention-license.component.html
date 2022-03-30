@@ -48,9 +48,8 @@
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="year" asteriskIfRequired="year" class="form-label">{{lang.map.year}}</label>
-          <input id="year" validationClasses="year" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-                 formControlName="year" trimInput class="form-control" type="text" onlyNumbers maxlength="4">
-          <app-field-error-message controlName="year"></app-field-error-message>
+          <span id="year" class="form-control input-disabled"
+                [innerHTML]="model && model.year || '&nbsp;'"></span>
         </div>
       </div>
       <div *ngIf="selectedLicense">

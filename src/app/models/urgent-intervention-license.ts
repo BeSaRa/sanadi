@@ -113,7 +113,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
 
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      year: control ? [year, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(4)]] : year,
+      year: control ? [year, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,

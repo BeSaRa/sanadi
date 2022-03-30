@@ -105,13 +105,16 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       projectSummary: this.fb.group(objUrgentIntervention.getProjectSummaryFields(true)),
       description: this.fb.control(objUrgentIntervention.description, CustomValidators.required)
     });
+    this._setDefaultValues();
   }
 
   _destroyComponent(): void {
   }
 
   _getNewInstance(): UrgentInterventionLicense {
-    return (new UrgentInterventionLicense()).clone();
+    return (new UrgentInterventionLicense()).clone<UrgentInterventionLicense>({
+      year: new Date().getFullYear()
+    });
   }
 
   _initComponent(): void {
@@ -210,6 +213,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   }
 
   _setDefaultValues(): void {
+    this.yearField.setValue(new Date().getFullYear());
     this.domainField.setValue(this.model?.domain);
     this.licenseDurationField.setValue(this.model?.licenseDuration);
     this.currencyField.setValue(this.model?.currency);
@@ -270,6 +274,10 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
 
   get requestTypeField(): FormControl {
     return (this.basicInfoGroup?.get('requestType')) as FormControl;
+  }
+
+  get yearField(): FormControl {
+    return (this.basicInfoGroup?.get('year')) as FormControl;
   }
 
   get domainField(): FormControl {
