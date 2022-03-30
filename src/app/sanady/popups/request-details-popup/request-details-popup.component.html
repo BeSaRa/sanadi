@@ -40,21 +40,17 @@
         <label class="form-label">{{langService.map.status_date}}</label>
         <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
       </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.family_member_count}}</label>
-        <span class="form-control">{{beneficiary.familyCount || '&nbsp;'}}</span>
-      </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
         <label class="form-label">{{langService.map.request_summary}}</label>
-        <span class="form-control">{{requestDetails.requestSummary || '&nbsp;'}}</span>
+        <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(requestDetails.requestSummary || '&nbsp;')"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
         <label class="form-label">{{langService.map.notes}}</label>
-        <span class="form-control">{{requestDetails.requestNotes || '&nbsp;'}}</span>
+        <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(requestDetails.requestNotes || '&nbsp;')"></textarea>
       </div>
     </div>
   </ng-template>
@@ -83,6 +79,10 @@
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.educational_level}}</label>
         <span class="form-control">{{beneficiary.educationLevelInfo.getName() || '&nbsp;'}}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.family_member_count}}</label>
+        <span class="form-control">{{beneficiary.familyCount || '&nbsp;'}}</span>
       </div>
     </div>
     <span>{{langService.map.income_employment}}</span>
