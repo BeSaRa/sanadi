@@ -6,6 +6,12 @@
     </div>
   </div>
   <case-info [model]="model!"></case-info>
+  <div class="alert alert-{{matrixNotificationType}} alert-dismissible fade show" role="alert"
+       *ngIf="canShowMatrixNotification">
+    {{matrixNotificationMsg}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+            (click)="canShowMatrixNotification = false;"></button>
+  </div>
   <ng-container *ngIf="internal">
     <tabs-list (onTabChange)="onTabChange($event)" class="position-relative">
       <button (click)="print()" [disabled]="!model?.id"

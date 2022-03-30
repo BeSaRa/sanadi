@@ -271,4 +271,9 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   abstract _getUrlService(): UrlService
+
+  checkFinalApproveNotificationByMatrix(caseId: string): Observable<boolean> {
+    return this.http.get<IDefaultResponse<boolean>>(this._getURLSegment() + '/matrix-approval/' + caseId)
+      .pipe(map(response => response.rs));
+  }
 }
