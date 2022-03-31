@@ -6,6 +6,7 @@ import {Domains} from "@app/enums/domains.enum";
 export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<UrgentInterventionLicense> {
   receive(model: UrgentInterventionLicense): UrgentInterventionLicense {
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo))
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo))
     model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo))
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo))
     model.specialistDecisionInfo && (model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo))
@@ -31,6 +32,7 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
   private static _deleteBeforeSend(model: Partial<UrgentInterventionLicense>): void {
     delete model.ouInfo;
     delete model.requestTypeInfo;
+    delete model.caseStatusInfo;
     delete model.managerDecisionInfo;
     delete model.reviewerDepartmentDecisionInfo;
     delete model.licenseStatusInfo;
