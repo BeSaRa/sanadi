@@ -22,6 +22,8 @@ import {CaseStatus} from '@app/enums/case-status.enum';
 import {GeneralSearchCriteriaInterceptor} from "@app/model-interceptors/general-search-criteria-interceptor";
 import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
 import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
+import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
+import {LicenseService} from '@app/services/license.service';
 
 @Component({
   selector: 'services-search',
@@ -61,6 +63,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
               private inboxService: InboxService,
               private employeeService: EmployeeService,
               private configService: ConfigurationService,
+              private licenseService: LicenseService,
               private dialog: DialogService) {
   }
 
@@ -158,6 +161,20 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  actionExportLicense(item: CaseModel<any, any>) {
+    let record;
+    if (item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING) {
+      record = item as unknown as UrgentInterventionLicense;
+    }
+    if (record) {
+      this.licenseService.showLicenseContent({id: record.exportedLicenseId}, item.getCaseType())
+        .subscribe((blob) => {
+          window.open(blob.url);
+          this.search$.next(null);
+        })
+    }
+  }
+
   actionLaunch(item: CaseModel<any, any>, dialogRef?: DialogRef) {
     item.start().subscribe(_ => {
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
@@ -229,7 +246,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
               CaseTypes.PARTNER_APPROVAL,
               CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
               CaseTypes.INTERNAL_PROJECT_LICENSE,
-              CaseTypes.EXTERNAL_PROJECT_MODELS].includes(item.caseType);
+              CaseTypes.EXTERNAL_PROJECT_MODELS,
+              CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
@@ -249,13 +267,28 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           this.actionManageComments(item);
         }
       },
-      // print
+      // print request
       {
         type: 'action',
         icon: 'mdi-printer',
         label: 'print',
         onClick: (item: CaseModel<any, any>) => {
           this.actionExportModel(item);
+        }
+      },
+      // print generated license
+      {
+        type: 'action',
+        icon: 'mdi-printer',
+        label: 'print_license',
+        show: (item: CaseModel<any, any>) => {
+          if (!item.isFinalApproved()) {
+            return false;
+          }
+          return item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING;
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.actionExportLicense(item);
         }
       },
       {type: 'divider'},

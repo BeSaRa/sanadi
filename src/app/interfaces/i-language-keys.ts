@@ -910,4 +910,5 @@ export interface ILanguageKeys {
   menu_urgent_intervention_license: string;
   msg_completion_offer_to_other_ou_if_not_fully_paid: string;
   disclosure_non_disclosure: string;
+  print_license: string;
 }
