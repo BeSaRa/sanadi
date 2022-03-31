@@ -92,7 +92,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
-  ]
+  ];
+
+  finalApproveByMatrixServices: number[] = [
+    CaseTypes.INTERNAL_PROJECT_LICENSE,
+    CaseTypes.URGENT_INTERVENTION_LICENSING
+  ];
+
+  canShowMatrixNotification: boolean = false;
+  matrixNotificationType!: 'success' | 'danger';
+  matrixNotificationMsg!: string;
 
   ngOnDestroy(): void {
     this.destroy$.next('Destroy');
@@ -151,7 +160,27 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.internal ? this.internalContainer.clear() : this.externalContainer.clear();
       this.internal ? this.internalContainer.insert(this.componentRef.hostView) : this.externalContainer.insert(this.componentRef.hostView);
       this.displayRightActions(this.info?.openFrom ? (this.info.openFrom) : OpenFrom.ADD_SCREEN);
+      this.checkForFinalApproveByMatrixNotification();
     });
+  }
+
+  checkForFinalApproveByMatrixNotification(): void {
+    let canShowNotification: boolean = (!!this.model && this.finalApproveByMatrixServices.includes(this.model.getCaseType()))
+      && (this.openFrom === OpenFrom.USER_INBOX || (this.openFrom === OpenFrom.TEAM_INBOX && this.model.taskDetails.isClaimed()))
+      && (this.employeeService.isLicensingManager() || this.employeeService.isLicensingChiefManager());
+
+    if (canShowNotification) {
+      this.component.service.checkFinalApproveNotificationByMatrix(this.model!.id)
+        .subscribe((result: boolean) => {
+          this.canShowMatrixNotification = canShowNotification;
+          this.matrixNotificationType = result ? 'success' : 'danger';
+          if (this.employeeService.isLicensingManager()) {
+            this.matrixNotificationMsg = result ? this.lang.map.based_on_matrix_should_not_send_to_general_manager : this.lang.map.based_on_matrix_should_send_to_general_manager;
+            return;
+          }
+          this.matrixNotificationMsg = result ? this.lang.map.msg_success_final_approve_task_based_on_matrix_notification : this.lang.map.msg_fail_final_approve_task_based_on_matrix_notification;
+        });
+    }
   }
 
   private prepareFromInbox(): void {
@@ -357,7 +386,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSupervisionAndControlDepartmentAction(item);

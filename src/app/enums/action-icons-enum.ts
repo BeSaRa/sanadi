@@ -20,5 +20,6 @@ export enum ActionIconsEnum {
   CURRENCY = 'mdi-currency-rial',
   DOLLAR = 'mdi-currency-usd',
   AID_HELP = 'mdi-handshake',
-  SEARCH_USER = 'mdi-account-search'
+  SEARCH_USER = 'mdi-account-search',
+  DOWNLOAD = 'mdi-download',
 }

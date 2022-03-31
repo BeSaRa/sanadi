@@ -38,7 +38,7 @@
                 (change)="onSelectAuthorityUser()"
                 [(ngModel)]="selectedAuthorityUserId"
                 [ngModelOptions]="{standalone: true}"
-                appendTo="Body"
+                appendTo="body"
                 id="authorityId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let authorityUser of authorityUsers"
@@ -63,7 +63,7 @@
                 (change)="onOrganizationChange()"
                 [(ngModel)]="selectedOrganizationId"
                 [ngModelOptions]="{standalone: true}"
-                appendTo="Body"
+                appendTo="body"
                 id="organizationId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let organization of organizations"
@@ -78,7 +78,7 @@
               <ng-select
                 (change)="onSelectOrganizationUser()"
                 [(ngModel)]="selectedOrganizationUserId"
-                appendTo="Body"
+                appendTo="body"
                 id="organizationUserId"
                 placeholder="{{lang.map.select}}">
                 <ng-option *ngFor="let organizationUser of organizationUsers"

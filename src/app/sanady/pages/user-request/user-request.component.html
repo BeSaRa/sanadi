@@ -556,92 +556,56 @@
   <ng-template formGroupName="addressTab" #address>
     <div class="row d-flex flex-row">
       <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="city" asteriskIfRequired="residenceCountry"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
-          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
-                       [readonly]="readOnly || isPartialRequest"
-                       placeholder="{{langService.map.select}}" id="city"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="residenceCountry"
-                       [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
-              <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
+        <div class="col-sm-12 ">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="city" asteriskIfRequired="residenceCountry"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
+                         [readonly]="readOnly || isPartialRequest"
+                         placeholder="{{langService.map.select}}" id="city"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="residenceCountry"
+                         [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
+                <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
+                     class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                     [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="homePhoneNumber"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
+                     formControlName="homePhoneNumber" class="form-control" type="text"
+                     trimInput [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="zone" asteriskIfRequired="zone"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_zone}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.zone')" id="zone" formControlName="zone"
-                   class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.zone')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="street" asteriskIfRequired="streetName"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_street}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.streetName')" id="street"
-                   formControlName="streetName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.streetName')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="buildingName" asteriskIfRequired="buildingName"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.building_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.buildingName')" id="buildingName"
-                   formControlName="buildingName" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.buildingName')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                   class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="homePhoneNumber"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                   formControlName="homePhoneNumber" class="form-control" type="text"
-                   trimInput [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
-          </div>
-        </div>
+
+      <div class="col-sm-12 col-md-6 mb-4">
+        <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="readOnly || isPartialRequest"
+                        [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone'}"></building-plate>
       </div>
     </div>
     <div class="row d-flex flex-row">
@@ -728,29 +692,41 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6" *ngIf="!isPartialRequest">
-        <div class="row d-flex flex-column flex-md-row">
-          <div class="col-sm-12 mb-4">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="allowCompletion">
-              <label class="form-check-label"
-                     for="allowCompletion">{{langService.map.supplement_amount_with_other_institutes}}</label>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="row d-flex flex-row">
       <div class="col-sm-12">
         <div class="row d-flex flex-column flex-md-row">
           <label asteriskIfRequired="requestSummary" for="requestSummary"
                  class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
-          <div class="col-md-10 col-sm-12">
+          <div class="col-md-10 col-sm-12 mb-4">
                   <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
                             formControlName="requestSummary" rows="5" class="form-control"
                             [readOnly]="readOnly || isPartialRequest"></textarea>
             <app-field-error-message
               [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="!isPartialRequest">
+      <div class="col-sm-12 mb-4">
+        <div class="border rounded-1 p-2">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="allowCompletion">
+            <label class="form-check-label"
+                   for="allowCompletion">{{langService.map.supplement_amount_with_other_institutes}}</label>
+          </div>
+          <span class="text-muted font-12">{{langService.map.msg_completion_offer_to_other_ou_if_not_fully_paid}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4">
+        <div class="border rounded-1 p-2">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="disclosureNonDisclosure">
+            <label class="form-check-label"
+                   for="disclosureNonDisclosure">{{langService.map.disclosure_non_disclosure}}</label>
           </div>
         </div>
       </div>
@@ -999,72 +975,102 @@
         </div>
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="saveAid()"
-                  class="btn btn-primary m-2">{{hasEditAid ? langService.map.btn_save : langService.map.btn_add}}</button>
+                  class="btn btn-primary m-2">{{editAidItem ? langService.map.btn_save : langService.map.btn_add}}</button>
           <button (click)="cancelAid()"
                   class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
         </div>
       </div>
     </ng-container>
-    <app-page-header [hidden]="aidFormArray.controls.length" pageTitle="provided_aid"
-                     [clickOnNew$]="addAid$"
-                     [addPermission]="addAidAllowed()"></app-page-header>
-    <table *ngIf="subventionAid.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
-           [dataSource]="subventionAidDataSource">
-      <ng-container cdkColumnDef="approvalDate">
-        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.approval_date}}</th>
-        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="aidLookupId">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.aid_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="estimatedAmount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.estimated_amount}}</th>
-        <td cdk-cell
-            *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="periodicType">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.payment_periodicity}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="installementsCount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.number_of_installments}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="aidStartPayDate">
-        <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.payment_date}}</th>
-        <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="givenAmount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.given_amount}}</th>
-        <td cdk-cell
-            *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="remainingAmount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.remaining_amount}}</th>
-        <td cdk-cell
-            *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
-      </ng-container>
-      <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-          <div class="d-flex flex-row">
-            <button *ngIf="!readOnly && !isPartialRequest"
-                    (click)="deleteAid(row, i, $event)" class="icon-btn text-primary"
-                    tooltip="{{langService.map.btn_delete}}">
-              <i class="mdi mdi-close-box"></i>
-            </button>
-            <button (click)="editAid(row, i, $event)" class="icon-btn text-primary"
-                    [disabled]="readOnly || (isPartialRequest && currentRequest && !currentRequest.isUnderProcessing())"
-                    tooltip="{{langService.map.btn_edit}}">
-              <i class="mdi mdi-pen"></i>
-            </button>
-          </div>
-        </td>
-      </ng-container>
-      <tr cdk-header-row *cdkHeaderRowDef="aidColumns"></tr>
-      <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
-    </table>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #aidsTable sortableTable [paginator]="aidPaginator" [data]="subventionAidDataSource"
+                     [columns]="aidColumns" [searchFieldsName]="'searchFieldsUserRequest'"
+                     [filter]="aidFilterControl.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="aidsTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="provided_aid"
+                                [sort]="aidsTable.dataSource.sort"
+                                (textChange)="aidFilterControl.setValue($event)"
+                                [add$]="addAid$" [allowAdd]="addAidAllowed() && (aidFormArray.controls.length === 0)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="approvalDate">
+                <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="aidLookupId">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.aidType"> {{langService.map.aid_type}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="estimatedAmount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
+                <td cdk-cell
+                    *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="periodicType">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="installementsCount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="aidStartPayDate">
+                <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.paymentDate"> {{langService.map.payment_date}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="givenAmount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.givenAmount"> {{langService.map.given_amount}}</th>
+                <td cdk-cell
+                    *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="remainingAmount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
+                <td cdk-cell
+                    *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="actions">
+                <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+                <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+                  <grid-actions [record]="row" [actions]="aidsActions"></grid-actions>
+                  <div class="d-flex flex-row">
+                    <button *ngIf="!readOnly && !isPartialRequest"
+                            (click)="deleteAid(row, $event)" class="icon-btn text-primary"
+                            tooltip="{{langService.map.btn_delete}}">
+                      <i class="mdi mdi-close-box"></i>
+                    </button>
+                    <button (click)="editAid(row, $event)" class="icon-btn text-primary"
+                            [disabled]="readOnly || (isPartialRequest && currentRequest && !currentRequest.isUnderProcessing())"
+                            tooltip="{{langService.map.btn_edit}}">
+                      <i class="mdi mdi-pen"></i>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="aidsTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: aidsTable.columns;" (contextmenu)="aidsMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td class="text-center" colSpan="100">{{langService.map.msg_no_records_found}}</td>
+              </tr>
+            </table>
+            <app-paginator #aidPaginator></app-paginator>
+          </app-table>
+          <context-menu-item #aidsMenu [actions]="aidsActions"></context-menu-item>
+        </div>
+      </div>
+    </div>
   </ng-template>
   <!-- Attachments Tab -->
   <ng-template #attachmentsTabTemplate>
@@ -1081,7 +1087,7 @@
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(fm.mainContentId)"
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(fm.mainContentId)"
             tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
       <i class="mdi mdi-information-outline text-info"></i>
     </button>

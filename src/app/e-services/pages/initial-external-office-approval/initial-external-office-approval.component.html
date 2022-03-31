@@ -46,14 +46,14 @@
             <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
                    class="form-label">{{lang.map.license_number}}</label>
             <div class="input-group">
-              <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
-                      class="input-group-text"><i
-                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
               <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
                      formControlName="oldLicenseFullSerial" trimInput
                      type="text" [readOnly]="!isEditLicenseAllowed()"
                      validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
                      id="oldLicenseFullSerial">
+              <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch()"
+                      class="input-group-text"><i
+                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
               <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
             </div>
           </div>
@@ -99,7 +99,7 @@
                 </td>
               </ng-container>
               <tr *cdkNoDataRow>
-                <td colspan="20" class="text-center">{{lang.map.no_records_to_display}}</td>
+                <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
               </tr>
               <tr cdk-header-row *cdkHeaderRowDef="service.selectLicenseDisplayColumns"></tr>
               <tr cdk-row *cdkRowDef="let row; columns: service.selectLicenseDisplayColumns;"></tr>

@@ -67,6 +67,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.destroy$.unsubscribe();
     this.buildGridActions();
   }
 
@@ -173,11 +174,15 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private _getCaseStatusEnum(item: CaseModel<any, any>) {
-    let caseStatusEnum = this.selectedService.caseStatusEnumMap[item.caseType];
-    if (!caseStatusEnum) {
-      caseStatusEnum = CaseStatus;
+    try {
+      let caseStatusEnum = this.selectedService.caseStatusEnumMap[item.caseType];
+      if (!caseStatusEnum) {
+        caseStatusEnum = CaseStatus;
+      }
+      return caseStatusEnum;
+    } catch (e) {
+      return CaseStatus;
     }
-    return caseStatusEnum;
   }
 
   private buildGridActions() {

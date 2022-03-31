@@ -59,7 +59,10 @@ const routes: Routes = [
         data: {configPermissionGroup: PermissionGroup.TRAINING_PROGRAMS_PAGE_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
       },
-      { path: 'collection', loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) }
+      { path: 'collection',
+        canActivate: [PermissionGuard],
+        data: {configPermissionGroup: PermissionGroup.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
+        loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) }
       //{path: '**', redirectTo: '../error'}
     ]
   },

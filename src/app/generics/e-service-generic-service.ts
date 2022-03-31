@@ -45,6 +45,7 @@ import {UrlService} from "@app/services/url.service";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
 import {ProjectModelCaseStatus} from "@app/enums/project-model-case-status";
 import { FundRaisingLicensingApproveCaseStatus } from '@app/enums/fundraising-licensing-approve-case-status.enum';
+import {UrgentInterventionLicenseCaseStatus} from '@app/enums/urgent-intervention-license-case-status';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -93,7 +94,8 @@ export abstract class EServiceGenericService<T extends { id: string }>
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
     [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
     [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelCaseStatus,
-    [CaseTypes.FUNDRAISING_LICENSING]: FundRaisingLicensingApproveCaseStatus
+    [CaseTypes.FUNDRAISING_LICENSING]: FundRaisingLicensingApproveCaseStatus,
+    [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseCaseStatus,
   };
 
   getCFR(): ComponentFactoryResolver {
@@ -271,4 +273,9 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   abstract _getUrlService(): UrlService
+
+  checkFinalApproveNotificationByMatrix(caseId: string): Observable<boolean> {
+    return this.http.get<IDefaultResponse<boolean>>(this._getURLSegment() + '/matrix-approval/' + caseId)
+      .pipe(map(response => response.rs));
+  }
 }

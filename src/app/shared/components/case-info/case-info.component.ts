@@ -31,7 +31,8 @@ export class CaseInfoComponent implements OnInit {
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-    CaseTypes.FUNDRAISING_LICENSING
+    CaseTypes.FUNDRAISING_LICENSING,
+    CaseTypes.URGENT_INTERVENTION_LICENSING
   ]
 
 

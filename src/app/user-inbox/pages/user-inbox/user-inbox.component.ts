@@ -277,11 +277,15 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   }
 
   private _getCaseStatusEnum(item: QueryResult) {
-    let caseStatusEnum = this.inboxService.getService(item.getCaseType()).caseStatusEnumMap[item.getCaseType()];
-    if (!caseStatusEnum) {
-      caseStatusEnum = CaseStatus;
+    try {
+      let caseStatusEnum = this.inboxService.getService(item.getCaseType()).caseStatusEnumMap[item.getCaseType()];
+      if (!caseStatusEnum) {
+        caseStatusEnum = CaseStatus;
+      }
+      return caseStatusEnum;
+    } catch (e) {
+      return CaseStatus;
     }
-    return caseStatusEnum;
   }
 
   private buildGridActions() {

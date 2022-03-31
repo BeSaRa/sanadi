@@ -122,7 +122,8 @@
                   sortable-header> {{langService.map.request_number}}</th>
               <td cdk-cell *cdkCellDef="let row" class="serial-column">
                 <div class="d-flex flex-row">
-                  <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
+                  <a href="#" (click)="$event.preventDefault()"
+                     class="dir-ltr d-inline-block text-decoration-none flex-grow-1 text-start"> {{row.requestFullSerial}} </a>
                 </div>
               </td>
             </ng-container>
@@ -134,7 +135,7 @@
             </ng-container>
             <ng-container cdkColumnDef="beneficiaryCategory">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.lbl_organization}}</th>
+                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.beneficiary_category}}</th>
               <td cdk-cell *cdkCellDef="let row"><span>{{row.benCategoryInfo.getName()}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="requestType">
@@ -171,7 +172,7 @@
             <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
             <tr *cdkNoDataRow>
-              <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
             </tr>
           </table>
           <app-paginator #paginator [length]="(logRecords.length || 0)"></app-paginator>

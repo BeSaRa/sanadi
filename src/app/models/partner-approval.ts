@@ -68,13 +68,22 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   searchFields: ISearchFieldsMap<PartnerApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo' , 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 
   constructor() {
     super();
     this.service = FactoryService.getService('PartnerApprovalService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getBasicFields(control: boolean = false): any {

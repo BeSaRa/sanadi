@@ -15,13 +15,13 @@
       <div class="row">
         <div formGroupName="request" class="col-sm-12 col-md-6">
           <div class="row">
-            <label for="requestSerial"
+            <label for="requestFullSerial"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <input formControlName="requestSerial" id="requestSerial" type="text" class="form-control"
-                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestSerial')">
+              <input formControlName="requestFullSerial" id="requestFullSerial" type="text" class="form-control"
+                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestFullSerial')">
               <app-field-error-message
-                [control]="fm.getFormField('simpleSearch.request.requestSerial')"></app-field-error-message>
+                [control]="fm.getFormField('simpleSearch.request.requestFullSerial')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
               <ng-select [selectOnTab]="true" labelForId="year" [clearable]="false"
                          placeholder="{{langService.map.select}}" id="year"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="year">
+                         formControlName="year" appendTo="body">
                 <ng-option *ngFor="let option of years" [value]="option">
                   {{option}}
                 </ng-option>
@@ -51,7 +51,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benPrimaryIdType">
+                           formControlName="benPrimaryIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                              [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
@@ -84,7 +84,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benSecIdType"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benSecIdType">
+                           formControlName="benSecIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                              [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
@@ -116,7 +116,7 @@
                 <ng-select [selectOnTab]="true" labelForId="arMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="arMethod"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="operator">
+                           formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
@@ -145,7 +145,7 @@
                 <ng-select [selectOnTab]="true" labelForId="enMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="enMethod"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="operator">
+                           formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
@@ -190,7 +190,7 @@
                         <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="nationality"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="benNationality">
+                                   formControlName="benNationality" appendTo="body">
                           <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -206,7 +206,7 @@
                         <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="occuptionStatus"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="occuptionStatus">
+                                   formControlName="occuptionStatus" appendTo="body">
                           <ng-option *ngFor="let option of employmentStatus" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -236,7 +236,7 @@
                         <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="aidLookupId"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="aidLookupId"
+                                   formControlName="aidLookupId" appendTo="body"
                                    [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
                           <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
                             {{option.getName()}}
@@ -259,7 +259,7 @@
                         <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="status"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="status">
+                                   formControlName="status" appendTo="body">
                           <ng-option *ngFor="let option of requestsStatus" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -275,7 +275,7 @@
                         <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
                                    placeholder="{{langService.map.select}}" id="requestType"
                                    [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="requestType">
+                                   formControlName="requestType" appendTo="body">
                           <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">
                             {{option.getName()}}
                           </ng-option>
@@ -409,7 +409,8 @@
                   sortable-header> {{langService.map.request_number}}</th>
               <td cdk-cell *cdkCellDef="let row" class="serial-column">
                 <div class="d-flex flex-row">
-                  <span class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </span>
+                  <a href="#" (click)="showRequestDetails(row , $event)"
+                     class="dir-ltr d-inline-block flex-grow-1 text-start"> {{row.requestFullSerial}} </a>
                   <i class="mdi {{fileIconsEnum.HIDDEN}} text-primary" *ngIf="row.isPartial"
                      tooltip="{{langService.map.partial_request}}"></i>
                 </div>
@@ -478,7 +479,7 @@
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
                 (contextmenu)="menu.open($event , row)"></tr>
             <tr *cdkNoDataRow>
-              <td colspan="15" class="text-center">{{langService.map.no_records_to_display}}</td>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
             </tr>
           </table>
           <app-paginator #paginator [length]="(requests.length || 0)"></app-paginator>

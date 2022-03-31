@@ -89,10 +89,14 @@ import {RiskStatusDirective} from './directives/risk-status.directive';
 import {
   EServiceComponentWrapperComponent
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
-import { CaseInfoComponent } from './components/case-info/case-info.component';
-import { GridActionsComponent } from './components/grid-actions/grid-actions.component';
-import { StepCheckListComponent } from './components/step-check-list/step-check-list.component';
-import { LangLoaderComponent } from './components/lang-loader/lang-loader.component';
+import {CaseInfoComponent} from './components/case-info/case-info.component';
+import {GridActionsComponent} from './components/grid-actions/grid-actions.component';
+import {StepCheckListComponent} from './components/step-check-list/step-check-list.component';
+import {LangLoaderComponent} from './components/lang-loader/lang-loader.component';
+import {
+  ApprovalFormMonthlyComponent
+} from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
+import { BuildingPlateComponent } from './components/building-plate/building-plate.component';
 
 @NgModule({
   declarations: [
@@ -172,7 +176,9 @@ import { LangLoaderComponent } from './components/lang-loader/lang-loader.compon
     GridActionsComponent,
     StepCheckListComponent,
     LangLoaderComponent,
-    LangLoaderComponent
+    LangLoaderComponent,
+    ApprovalFormMonthlyComponent,
+    BuildingPlateComponent
   ],
   imports: [
     CommonModule,
@@ -186,7 +192,7 @@ import { LangLoaderComponent } from './components/lang-loader/lang-loader.compon
     NgxMaskModule.forRoot(),
     NgSelectModule,
     NgOptionHighlightModule,
-    AngularMyDatePickerModule
+    AngularMyDatePickerModule,
   ],
   exports: [
     ContextMenuModule,
@@ -253,7 +259,9 @@ import { LangLoaderComponent } from './components/lang-loader/lang-loader.compon
     RiskStatusDirective,
     EServiceComponentWrapperComponent,
     GridActionsComponent,
-    LangLoaderComponent
+    LangLoaderComponent,
+    ApprovalFormMonthlyComponent,
+    BuildingPlateComponent
   ]
 })
 export class SharedModule {

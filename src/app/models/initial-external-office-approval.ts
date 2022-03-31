@@ -40,13 +40,22 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   service: InitialExternalOfficeApprovalService;
   searchFields: ISearchFieldsMap<InitialExternalOfficeApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 
   constructor() {
     super();
-    this.service = FactoryService.getService('InitialExternalOfficeApprovalService')
+    this.service = FactoryService.getService('InitialExternalOfficeApprovalService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   buildForm(controls?: boolean): any {

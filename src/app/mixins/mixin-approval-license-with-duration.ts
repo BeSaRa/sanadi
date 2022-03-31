@@ -10,7 +10,7 @@ type CanLicenseApproval = Constructor<HasLicenseApproval> & AbstractConstructor<
 /** Mixin to augment a directive with a `Approval License Properties` */
 export function mixinApprovalLicenseWithDuration<T extends AbstractConstructor<{}>>(base: T): CanLicenseApproval & T;
 export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base: T): CanLicenseApproval & T {
-  return class Approval extends base {
+  return class Approval extends base implements HasLicenseApproval {
     licenseStatus!: number;
     licenseStartDate!: string;
     licenseEndDate!: string;

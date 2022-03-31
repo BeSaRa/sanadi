@@ -20,12 +20,13 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
   constructor() {
     super();
     this.service = FactoryService.getService('InternalProjectLicenseService');
+    this.finalizeSearchFields();
   }
 
   caseType: number = CaseTypes.INTERNAL_PROJECT_LICENSE;
   organizationId!: number;
   serviceSteps!: string[];
-  administrativedeductionAmount!: number;
+  administrativeDeductionAmount!: number;
   ageAverageCategory: number = 0;
   arName!: string;
   beneficiaries0to5: number = 0;
@@ -118,8 +119,16 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   searchFields: ISearchFieldsMap<InternalProjectLicense> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getBasicFormFields(control: boolean = false): any {
@@ -258,7 +267,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     const {
       deductionPercent,
       projectTotalCost, // total of all components total cost
-      administrativedeductionAmount,
+      administrativeDeductionAmount,
       targetAmount, // calculated from BE
       expectedImpactDate,
       licenseDuration, // duration in months
@@ -267,7 +276,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     return {
       deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : deductionPercent,
       projectTotalCost: control ? [projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : projectTotalCost,
-      administrativedeductionAmount: control ? [administrativedeductionAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : administrativedeductionAmount,
+      administrativeDeductionAmount: control ? [administrativeDeductionAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : administrativeDeductionAmount,
       targetAmount: control ? [targetAmount] : targetAmount,
       expectedImpactDate: control ? [expectedImpactDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(expectedImpactDate),
       licenseDuration: control ? [licenseDuration, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(3)]] : licenseDuration

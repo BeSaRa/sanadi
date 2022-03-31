@@ -22,7 +22,7 @@ export class ExternalLoginComponent implements OnInit {
   loginFromExternal: FormGroup = {} as FormGroup;
 
   background: string = 'url(assets/images/login-background.png)';
-  loginBackground: string = 'url(assets/images/raca-login-background.png)';
+  loginBackground: string = 'url(assets/images/raca-login-background-1.png)';
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(public lang: LangService,

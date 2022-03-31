@@ -1,5 +1,5 @@
 import {AdminResult} from "@app/models/admin-result";
-import { TaskDetails } from "@app/models/task-details";
+import {TaskDetails} from "@app/models/task-details";
 
 export class GeneralInterceptor {
   static receive(model: any): any {
@@ -26,6 +26,7 @@ export class GeneralInterceptor {
     delete model.creatorInfo;
     delete model.taskDetails;
     delete model.ouInfo;
+    delete model.taskDetails;
     return model;
   }
 }

@@ -4,12 +4,14 @@ import {FactoryService} from '@app/services/factory.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from '@app/models/admin-result';
 import {IMyDateModel} from 'angular-mydatepicker';
-import {searchFunctionType} from '@app/types/types';
+import {ISearchFieldsMap} from '@app/types/types';
 import {TraineeData} from '@app/models/trainee-data';
 import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
 import {TrainingStatus} from "@app/enums/training-status";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {Observable} from "rxjs";
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
 
 export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramService> {
   service: TrainingProgramService;
@@ -64,8 +66,9 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   // unused properties
   trainerInfoList: any;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    activityName: 'activityName'
+  searchFields: ISearchFieldsMap<TrainingProgram> = {
+    ...normalSearchFields(['activityName', 'startDateString', 'endDateString', 'registerationStartDateString', 'registerationClosureDateString']),
+    ...infoSearchFields(['trainingTypeInfo', 'statusInfo' ])
   };
 
   constructor() {

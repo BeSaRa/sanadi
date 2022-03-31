@@ -36,35 +36,38 @@
               </ng-select>
               <app-field-error-message controlName="requestType"></app-field-error-message>
             </div>
-            <!-- Initial License Number -->
-            <div *ngIf="isShowInitialLicenseField()" class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label asteriskIfRequired="initialLicenseFullSerial" for="initialLicenseFullSerial"
-                     class="form-label">{{lang.map.initial_license_number}}</label>
-              <div class="input-group">
-                <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
-                        class="input-group-text">
-                  <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-                <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
-                       formControlName="initialLicenseFullSerial"
-                       type="text" validationClasses="initialLicenseFullSerial" class="form-control"
-                       id="initialLicenseFullSerial" trimInput [readOnly]="!isEditLicenseAllowed()">
-                <app-field-error-message controlName="initialLicenseFullSerial"></app-field-error-message>
-              </div>
-            </div>
             <!-- License Number -->
-            <div *ngIf="isShowNormalLicenseField()" class="col-sm-12 col-md-4 mb-4 position-relative">
-              <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
-                     class="form-label">{{lang.map.license_number}}</label>
-              <div class="input-group">
-                <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
-                        class="input-group-text">
-                  <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-                <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
-                       formControlName="oldLicenseFullSerial"
-                       type="text" validationClasses="oldLicenseFullSerial" class="form-control"
-                       id="oldLicenseFullSerial" trimInput [readOnly]="!isEditLicenseAllowed()">
-                <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
-              </div>
+            <div class="col-sm-12 col-md-4 mb-4 position-relative">
+              <!-- Initial License Number -->
+              <ng-container *ngIf="isShowInitialLicenseField()">
+                <label asteriskIfRequired="initialLicenseFullSerial" for="initialLicenseFullSerial"
+                       class="form-label">{{lang.map.initial_license_number}}</label>
+                <div class="input-group">
+                  <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                         formControlName="initialLicenseFullSerial"
+                         type="text" validationClasses="initialLicenseFullSerial" class="form-control"
+                         id="initialLicenseFullSerial" trimInput [readOnly]="!isEditLicenseAllowed()">
+                  <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
+                          class="input-group-text">
+                    <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                  <app-field-error-message controlName="initialLicenseFullSerial"></app-field-error-message>
+                </div>
+              </ng-container>
+              <!-- License Number -->
+              <ng-container *ngIf="isShowNormalLicenseField()" >
+                <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+                       class="form-label">{{lang.map.license_number}}</label>
+                <div class="input-group">
+                  <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                         formControlName="oldLicenseFullSerial"
+                         type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                         id="oldLicenseFullSerial" trimInput [readOnly]="!isEditLicenseAllowed()">
+                  <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
+                          class="input-group-text">
+                    <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                  <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+                </div>
+              </ng-container>
             </div>
             <!-- External Office Name -->
             <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -115,7 +118,7 @@
                   </td>
                 </ng-container>
                 <tr *cdkNoDataRow>
-                  <td colspan="20" class="text-center">{{lang.map.no_records_to_display}}</td>
+                  <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
                 </tr>
                 <tr cdk-header-row *cdkHeaderRowDef="service.selectLicenseDisplayColumns"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: service.selectLicenseDisplayColumns;"></tr>

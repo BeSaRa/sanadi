@@ -1,6 +1,6 @@
-import {Cloneable} from './cloneable';
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
 
-export class SanadiDocument extends Cloneable<SanadiDocument> {
+export class SanadiDocument<T> extends SearchableCloneable<T> {
   id: number | undefined;
   documentTitle: string | undefined;
   creatorId: number | undefined;

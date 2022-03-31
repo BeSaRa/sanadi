@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {CollectionApproval} from "@app/models/collection-approval";
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
@@ -14,6 +14,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {CollectionLicense} from "@app/license-models/collection-license";
 import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 
 @Component({
   selector: 'collection-item',
@@ -63,6 +64,8 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   licenseSearch$: Subject<string> = new Subject<string>();
 
   private _disableSearch: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
+  @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
 
   @Input()
   set disableSearch(val: boolean) {
@@ -182,7 +185,8 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.processSave(new CollectionItem().clone({
           ...this.item,
-          ...this.form.value
+          ...this.form.value,
+          ...this.buildingPlate.getValue()
         }))
       })
   }
@@ -212,6 +216,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   private formInvalidMessage(): void {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
     this.form.markAllAsTouched();
+    this.buildingPlate.displayFormValidity();
   }
 
   openLocationMap(item: CollectionItem) {
@@ -277,7 +282,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   }
 
   private validateForm(): Observable<boolean> {
-    return of(this.form.valid)
+    return of(this.form.valid && this.buildingPlate.isValidForm())
       .pipe(tap(valid => !valid && this.formInvalidMessage()))
       .pipe(filter((val) => val)) // allow only the valid form
       .pipe(map(_ => !(!this.latitude.value || !this.longitude.value))) // if no lat/lng return false

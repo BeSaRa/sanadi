@@ -28,6 +28,15 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   constructor() {
     super();
     this.service = FactoryService.getService('ConsultationService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   getFormFields(control: boolean = false): any {

@@ -1,10 +1,15 @@
 <div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white">
   <h1 class="h6 my-1">{{tableTitle ? lang.map[tableTitle] : ''}}</h1>
   <div>
-    <button [tooltip]="lang.map.btn_reload"
-            (click)="reload()" *ngIf="reload$"
+    <button [tooltip]="lang.map.btn_add"
+            (click)="add()" *ngIf="isAddAvailable"
             class="btn icon-btn">
-      <i class="mdi mdi-reload"></i>
+      <i class="mdi {{actionIconsEnum.ADD_SIMPLE}}"></i>
+    </button>
+    <button [tooltip]="lang.map.btn_reload"
+            (click)="reload()" *ngIf="isReloadAvailable"
+            class="btn icon-btn">
+      <i class="mdi {{actionIconsEnum.RELOAD}}"></i>
     </button>
   </div>
   <div *ngIf="customTemplate">

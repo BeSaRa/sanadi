@@ -69,6 +69,10 @@ export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
     return Number(this.status) === CommonStatusEnum.ACTIVATED;
   }
 
+  isRetired(): boolean {
+    return Number(this.status) === CommonStatusEnum.RETIRED;
+  }
+
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }

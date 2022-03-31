@@ -12,6 +12,7 @@ export class SanadiAttachmentInterceptor {
     delete model.attachmentService;
     delete model.lastModifiedString;
     delete model.attachmentTypeInfo;
+    delete model.searchFields;
     return model;
   }
 }

@@ -4,7 +4,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {FormControl} from "@angular/forms";
 import {FilterEventTypes} from "@app/types/types";
-import {isEmptyObject, objectHasValue} from "@app/helpers/utils";
+import {objectHasValue} from "@app/helpers/utils";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {DialogService} from "@app/services/dialog.service";
 import {takeUntil} from "rxjs/operators";
@@ -12,6 +12,8 @@ import {SortableTableDirective} from "@app/shared/directives/sortable-table.dire
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
 import {IStats} from "@app/interfaces/istats";
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'table-header',
@@ -47,6 +49,11 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   @Input()
   customTemplate?: TemplateRef<any>;
 
+  @Input() allowReload: boolean = true;
+
+  @Input() add$: Subject<any> = {} as Subject<any>;
+  @Input() allowAdd: boolean = true;
+
   riskStatusClasses: Record<number, string> = {
     1: 'btn-success',
     2: 'btn-warning',
@@ -59,7 +66,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   selectedFilter?: Lookup;
-
+  actionIconsEnum = ActionIconsEnum;
 
   constructor(public lang: LangService,
               private lookupService: LookupService,
@@ -102,7 +109,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   }
 
   hasFilterCriteria(): boolean {
-    return !isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
+    return !CommonUtils.isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
   }
 
   clearFilter(): void {
@@ -132,6 +139,18 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
       this.selectedFilter = filter;
       this.onSelectFilter.emit(filter);
     }
+  }
+
+  get isAddAvailable(): boolean {
+    return !CommonUtils.isEmptyObject(this.add$) && this.allowAdd;
+  }
+
+  add() {
+    this.add$.next(null);
+  }
+
+  get isReloadAvailable(): boolean {
+    return !CommonUtils.isEmptyObject(this.reload$) && this.allowReload;
   }
 
   reload() {

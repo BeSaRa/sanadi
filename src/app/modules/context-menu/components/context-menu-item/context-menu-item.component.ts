@@ -4,7 +4,7 @@ import {
   Inject,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, Renderer2,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -44,6 +44,9 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   event?: MouseEvent;
   menuRef?: EmbeddedViewRef<any>;
 
+  parentRow?: any;
+  highlightClass = 'context-row';
+
   @Input()
   prevent?: (() => boolean) | boolean;
 
@@ -69,7 +72,8 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   constructor(private overlay: Overlay,
               private lang: LangService,
               @Inject(DOCUMENT) private document: HTMLDocument,
-              private viewContainerRef: ViewContainerRef) {
+              private viewContainerRef: ViewContainerRef,
+              private renderer: Renderer2) {
 
   }
 
@@ -191,6 +195,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           list.classList.add('transition');
           list.classList.add(transformClass);
+          this.highlightParent(this.event);
         }, 10);
       });
   }
@@ -216,9 +221,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   }
 
   close() {
+    console.log('close');
     this.menuRef?.detach();
     this.overlayRef.detach();
     this.menuRef = undefined;
+    this.removeParentHighlight();
+
     this.debugInfo(() => {
       console.log('menu closed and ref undefined');
     });
@@ -248,5 +256,26 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   isActionDisabled(action: IMenuItem<any>): boolean {
     return action.disabled ? (typeof action.disabled === 'function' ? action.disabled(this.item) : action.disabled) : false;
+  }
+
+
+  private highlightParent(event?: MouseEvent): void {
+    if (!event || !event.target) {
+      return;
+    }
+    let parentRow = (event.target as HTMLElement)?.closest('tr');
+    if (parentRow) {
+      this.removeParentHighlight();
+      this.parentRow = parentRow;
+      this.renderer.addClass(parentRow, this.highlightClass);
+    }
+  }
+
+  private removeParentHighlight(): void {
+    if (!this.parentRow) {
+      return;
+    }
+    this.renderer.removeClass(this.parentRow, this.highlightClass);
+    this.parentRow = null;
   }
 }

@@ -63,8 +63,16 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   constructor() {
     super();
     this.service = FactoryService.getService('CollectionApprovalService');
+    this.finalizeSearchFields();
   }
 
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
 
   buildBasicInfo(controls: boolean = false): any {
     const {requestType, requestClassification, licenseDurationType} = this;

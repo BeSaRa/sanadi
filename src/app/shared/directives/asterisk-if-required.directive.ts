@@ -10,6 +10,7 @@ interface ValidatorsInterface {
   _rawValidators: ValidatorFn [] | ValidatorFn | null
 }
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Directive({
   selector: '[asteriskIfRequired]'
 })
@@ -42,6 +43,8 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
     return this._controlName;
   }
 
+  @Input() customRequiredClass?: string;
+
   constructor(@Optional() @Host() @SkipSelf() parent: ControlContainer,
               @Inject(DOCUMENT) private document: Document,
               elementRef: ElementRef) {
@@ -61,6 +64,9 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
       console.info(this.element);
       throw new Error('Please Provide Form control name or [formControl]');
     }
+    if (this.customRequiredClass) {
+      this.requiredElement.classList.add(this.customRequiredClass);
+    }
     this.element.appendChild(this.requiredElement);
     this.valueOrValidityChanged$ = this.formControl.valueChanges.pipe(debounceTime(200));
 
@@ -71,7 +77,7 @@ export class AsteriskIfRequiredDirective implements OnInit, OnDestroy {
   }
 
   controlHasRequiredValidator(): boolean {
-    const control = <AbstractControl & ValidatorsInterface> this.formControl;
+    const control = <AbstractControl & ValidatorsInterface>this.formControl;
 
     // workaround to work withFormly fields
     const formlyControl = control as unknown as { _fields: any[] };

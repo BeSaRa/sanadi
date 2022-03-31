@@ -9,12 +9,6 @@
         </button>
       </div>-->
       <div>
-        <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
-                class="btn text-primary p-0 icon-btn">
-          <i class="mdi mdi-printer"></i>
-        </button>
-      </div>
-      <div>
         <select [formControl]="serviceControl" class="form-select mx-4">
           <option [ngValue]="service"
                   *ngFor="let service of serviceNumbers">{{getServiceName(service)}}</option>
@@ -48,11 +42,13 @@
         <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
           <ng-container cdkColumnDef="extra-header">
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-              <table-header
-                (textChange)="filter = $event"
-                [tableTitle]="selectedServiceKey"
-                [sort]="table.dataSource.sort"
-                [reload$]="search$"></table-header>
+              <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
+                            [sort]="table.dataSource.sort" [reload$]="search$">
+                <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
+                        class="btn icon-btn outline-none">
+                  <i class="mdi mdi-printer"></i>
+                </button>
+              </table-header>
             </th>
           </ng-container>
 
@@ -146,7 +142,7 @@
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
-            <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>
         </table>
         <app-paginator #paginator [length]="results.length"></app-paginator>

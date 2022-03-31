@@ -14,7 +14,6 @@ import {isObservable, Observable, of, Subject} from 'rxjs';
 import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {CustomValidators} from '@app/validators/custom-validators';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {ServiceDataService} from '@app/services/service-data.service';
@@ -48,7 +47,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
-    CaseTypes.INTERNAL_PROJECT_LICENSE
+    CaseTypes.INTERNAL_PROJECT_LICENSE,
+    CaseTypes.URGENT_INTERVENTION_LICENSING
   ]
   form!: FormGroup;
 
@@ -119,11 +119,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
-    /*this.displayLicenseForm = this.data.task &&
-      ((this.action === WFResponseType.APPROVE && !this.employeeService.isSupervisionAndControlUser()) || this.action === WFResponseType.FINAL_APPROVE) &&
-      this.specialApproveServices.includes(this.data.task.BD_CASE_TYPE) &&
-      caseDetails.requestType !== ServiceRequestTypes.CANCEL;*/
-
     this.displayLicenseForm = this.data.task &&
       this.specialApproveServices.includes(this.data.task.getCaseType()) &&
       caseDetails.requestType !== ServiceRequestTypes.CANCEL &&
