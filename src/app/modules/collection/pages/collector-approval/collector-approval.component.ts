@@ -13,6 +13,9 @@ import {LookupService} from '@app/services/lookup.service';
 import {filter, map, takeUntil, tap} from 'rxjs/operators';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'collector-approval',
@@ -33,6 +36,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
               public service: CollectorApprovalService,
               private lookupService: LookupService,
               private dialog: DialogService,
+              private employeeService: EmployeeService,
               private toast: ToastService) {
     super();
   }
@@ -187,5 +191,65 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   private enableFields(): void {
     this.requestType.enable();
     this.licenseDurationType.enable();
+  }
+
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+
+    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
+
+  isNewRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW);
+  }
+
+  isRenewOrUpdateRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.UPDATE);
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+  isEditLicenseAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
   }
 }

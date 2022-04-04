@@ -21,14 +21,16 @@
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-               class="form-control">
+               class="form-control" [readonly]="readOnly">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="collectorType"
                for="collectorType">{{lang.map.collector_type}}</label>
         <ng-select validationClasses="collectorType" appendTo="body" [clearable]="true"
-                   id="collectorType"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   id="collectorType" [readonly]="readOnly"
                    formControlName="collectorType">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of collectorTypes">{{option.getName()}}</ng-option>
@@ -40,20 +42,22 @@
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="arabicName"
                for="arabicName">{{lang.map.arabic_name}}</label>
-        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control">
+        <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control"
+               [readonly]="readOnly">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="jobTitle"
                for="jobTitle">{{lang.map.job_title}}</label>
-        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control">
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
+               [readonly]="readOnly">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="collectorNumber"
                for="collectorNumber">{{lang.map.collector_number}}</label>
         <input id="collectorNumber" validationClasses="collectorNumber" formControlName="collectorNumber"
-               class="form-control">
+               class="form-control" [readonly]="readOnly">
         <app-field-error-message controlName="collectorNumber"></app-field-error-message>
       </div>
     </div>
@@ -62,7 +66,9 @@
         <label class="form-label" asteriskIfRequired="gender"
                for="gender">{{lang.map.gender}}</label>
         <ng-select validationClasses="gender" appendTo="body" [clearable]="true"
-                   id="gender"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   id="gender" [readonly]="readOnly"
                    formControlName="gender">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of genders">{{option.getName()}}</ng-option>
@@ -73,7 +79,9 @@
         <label class="form-label" asteriskIfRequired="nationality"
                for="nationality">{{lang.map.lbl_nationality}}</label>
         <ng-select validationClasses="nationality" appendTo="body" [clearable]="true"
-                   id="nationality"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   id="nationality" [readonly]="readOnly"
                    formControlName="nationality">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
@@ -84,7 +92,9 @@
         <label class="form-label" asteriskIfRequired="relationship"
                for="relationship">{{lang.map.relationship}}</label>
         <ng-select validationClasses="relationship" appendTo="body" [clearable]="true"
-                   id="relationship"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   id="relationship" [readonly]="readOnly"
                    formControlName="relationship">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of relationships">{{option.getName()}}</ng-option>
@@ -96,7 +106,8 @@
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="phone"
                for="phone">{{lang.map.lbl_phone}}</label>
-        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control">
+        <input id="phone" validationClasses="phone" formControlName="phone" class="form-control"
+               [readonly]="readOnly">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -105,9 +116,9 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="licenseEndDate"
-               [ngClass]="{'input-disabled': isPermanent}"
+               [ngClass]="{'input-disabled': isPermanent || readOnly}"
                id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
-               (click)="dpLicenseEndDate.toggleCalendar()" #dpLicenseEndDate="angular-mydatepicker"
+               (click)="!readOnly && dpLicenseEndDate.toggleCalendar()" #dpLicenseEndDate="angular-mydatepicker"
                angular-mydatepicker></div>
 <!--          <app-field-error-message controlName="licenseEndDate"></app-field-error-message>-->
         </div>
@@ -115,7 +126,7 @@
     </div>
     <div class="row">
       <div class="d-flex align-items-center justify-content-center gap-2">
-        <button (click)="save$.next(null)"
+        <button (click)="save$.next(null)" *ngIf="!readOnly"
                 class="btn btn-primary">{{editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
         <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
       </div>
@@ -157,17 +168,17 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
-                    class="btn icon-btn">
+                    class="btn icon-btn" [disabled]="readOnly">
               <i class="mdi mdi-pencil text-primary"></i>
             </button>
             <button (click)="remove$.next({item: row, index: itemIndex})" [tooltip]="lang.map.btn_delete"
-                    class="btn icon-btn">
+                    class="btn icon-btn" [disabled]="readOnly">
               <i class="mdi mdi-delete text-primary"></i>
             </button>
           </div>
           <button *ngIf="approvalMode" (click)="approval.emit({item: row , index: itemIndex})"
                   [tooltip]="lang.map.edit_approval_info"
-                  class="btn icon-btn">
+                  class="btn icon-btn" [disabled]="readOnly">
             <i class="mdi mdi-pencil text-primary"></i>
           </button>
         </td>
@@ -175,7 +186,7 @@
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
       <tr *cdkNoDataRow>
-        <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
       </tr>
     </table>
   </app-table>

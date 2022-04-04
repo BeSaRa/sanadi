@@ -29,7 +29,7 @@
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-               class="form-control">
+               class="form-control" [readonly]="readOnly">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
     </div>
@@ -39,13 +39,14 @@
           <label class="form-label" asteriskIfRequired="locationDetails"
                  for="locationDetails">{{lang.map.location_details}}</label>
           <input id="locationDetails" validationClasses="locationDetails" formControlName="locationDetails"
-                 class="form-control">
+                 class="form-control" [readonly]="readOnly">
           <app-field-error-message controlName="locationDetails"></app-field-error-message>
         </div>
         <div class="col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="unitNumber"
                  for="unitNumber">{{lang.map.unit}}</label>
-          <input id="unitNumber" validationClasses="unitNumber" formControlName="unitNumber" class="form-control">
+          <input id="unitNumber" validationClasses="unitNumber" formControlName="unitNumber"
+                 class="form-control" [readonly]="readOnly">
           <app-field-error-message controlName="unitNumber"></app-field-error-message>
         </div>
         <div class="col-sm-12 mb-4 position-relative">
@@ -62,18 +63,13 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-4">
-          <building-plate #buildingPlate [record]="item"
-                          [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber'}"></building-plate>
-        </div>
-
-    </div>
-    <div class="row">
-
-
+        <building-plate #buildingPlate [record]="item" [readOnly]="readOnly"
+                        [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber'}"></building-plate>
+      </div>
     </div>
     <div class="row">
       <div class="d-flex align-items-center justify-content-center gap-2">
-        <button (click)="save$.next(null)"
+        <button (click)="save$.next(null)" *ngIf="!readOnly"
                 class="btn btn-primary">{{editIndex ? lang.map.btn_save : lang.map.btn_add}}</button>
         <button (click)="cancel()" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
       </div>
@@ -127,17 +123,17 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
-                    class="btn icon-btn">
+                    class="btn icon-btn" [disabled]="readOnly">
               <i class="mdi mdi-pencil text-primary"></i>
             </button>
             <button (click)="remove$.next({item: row, index: itemIndex})" [tooltip]="lang.map.btn_delete"
-                    class="btn icon-btn">
+                    class="btn icon-btn" [disabled]="readOnly">
               <i class="mdi mdi-delete text-primary"></i>
             </button>
           </div>
           <button *ngIf="approvalMode" (click)="approval.emit({item: row , index: itemIndex})"
                   [tooltip]="lang.map.edit_approval_info"
-                  class="btn icon-btn">
+                  class="btn icon-btn" [disabled]="readOnly">
             <i class="mdi mdi-pencil text-primary"></i>
           </button>
         </td>

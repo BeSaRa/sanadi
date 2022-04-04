@@ -13,8 +13,10 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
-            <ng-select validationClasses="requestType" appendTo="body" [clearable]="false" id="requestType"
-                       formControlName="requestType">
+            <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       validationClasses="requestType" appendTo="body" id="requestType"
+                       formControlName="requestType" [readonly]="!isEditRequestTypeAllowed()">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="requestType"></app-field-error-message>
@@ -23,8 +25,10 @@
             <label class="form-label" asteriskIfRequired="licenseDurationType"
                    for="licenseDurationType">{{lang.map.license_type}}</label>
             <ng-select validationClasses="licenseDurationType" appendTo="body" [clearable]="true"
-                       id="licenseDurationType"
-                       formControlName="licenseDurationType">
+                       id="licenseDurationType" [selectOnTab]="true" placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       formControlName="licenseDurationType"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
             </ng-select>
@@ -33,12 +37,13 @@
         </div>
         <div class="row">
           <collector-item (formOpenedStatus)="collectorItemFormStatusChanged($event)"
-                           [disableAdd]="basicInfo.invalid"
-                            [licenseDurationType]="licenseDurationType.value"
-                           (eventHappened)="checkDisableFields()"
-                           [disableSearch]="disableSearchField"
+                          [disableAdd]="basicInfo.invalid || readonly"
+                          [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                          [licenseDurationType]="licenseDurationType.value"
+                          (eventHappened)="checkDisableFields()"
+                          [disableSearch]="!isEditLicenseAllowed()"
                           [requestType]="requestType.value"
-                           [model]="model!"></collector-item>
+                          [model]="model!"></collector-item>
         </div>
       </ng-template>
     </ng-container>
@@ -49,7 +54,7 @@
             <label class="form-label" asteriskIfRequired="description"
                    for="description">{{lang.map.special_explanations}}</label>
             <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                      rows="4" class="form-control"></textarea>
+                      rows="4" class="form-control" [readonly]="readonly"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>

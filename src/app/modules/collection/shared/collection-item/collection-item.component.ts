@@ -61,6 +61,8 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   @Input()
   disableAdd: boolean = false;
 
+  @Input() readOnly: boolean = false;
+
   licenseSearch$: Subject<string> = new Subject<string>();
 
   private _disableSearch: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -240,7 +242,12 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   private listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter(val => !!val))
+      .pipe(filter(val => {
+        if (!val) {
+          this.dialog.error(this.lang.map.need_license_number_to_search);
+        }
+        return !!val
+      }))
       .pipe(exhaustMap((serial) => {
         return this.licenseService
           .collectionSearch<CollectionApproval>({
@@ -269,7 +276,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   }
 
   openMapMarker() {
-    (this.item!).openMap()
+    (this.item!).openMap(this.readOnly)
       .onAfterClose$
       .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {

@@ -30,6 +30,9 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
 
   @Input()
   model!: CollectorApproval;
+
+  @Input() readOnly: boolean = false;
+
   destroy$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectorItem, index: number }> = new Subject<{ item: CollectorItem, index: number }>();
@@ -92,7 +95,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
 
   @Input()
   set requestType(val: number | null) {
-    console.log('requestType', val);
+    // console.log('requestType', val);
     this._requestType.next(val);
   }
 
