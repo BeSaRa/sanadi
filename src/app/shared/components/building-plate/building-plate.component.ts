@@ -1,19 +1,19 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {Component, HostBinding, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {BehaviorSubject} from 'rxjs';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {delay} from 'rxjs/operators';
-import {disableDebugTools} from '@angular/platform-browser';
 
 @Component({
   selector: 'building-plate',
   templateUrl: './building-plate.component.html',
   styleUrls: ['./building-plate.component.scss']
 })
-export class BuildingPlateComponent implements OnInit, AfterViewInit {
+export class BuildingPlateComponent implements OnInit {
+  @HostBinding('class') classes = 'row justify-content-center';
   constructor(public lang: LangService,
               private fb: FormBuilder) {
   }
@@ -22,14 +22,22 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
   private fields: IKeyValue = {
     buildingNo: 'buildingNo',
     street: 'street',
-    zone: 'zone'
+    zone: 'zone',
+    unit: 'unit'
+  };
+  private fieldsRequired: IKeyValue = {
+    buildingNo: true,
+    street: true,
+    zone: true,
+    unit: true
   };
 
   @Input() readOnly: boolean = false;
+  @Input() propertyMap?: { buildingNo?: string, street?: string, zone?: string, unit?: string };
+  @Input() propertyRequiredMap?: { buildingNo?: boolean, street?: boolean, zone?: boolean, unit?: boolean };
+
 
   private _record: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
-  @Input() propertyMap?: { buildingNo?: string, street?: string, zone?: string };
 
   @Input()
   set record(value: any) {
@@ -41,16 +49,11 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
   }
 
   requiredElementClass: string = 'text-yellow';
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   ngOnInit(): void {
     this._buildForm();
     this.onRecordChange();
-  }
-
-  ngAfterViewInit() {
-    /*if (this.readonly) {
-      this.form.disable();
-    }*/
   }
 
   private onRecordChange() {
@@ -65,6 +68,10 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
     return this.form.get('buildingNo') as FormControl;
   }
 
+  get unitField(): FormControl {
+    return this.form.get('unit') as FormControl;
+  }
+
   get zoneField(): FormControl {
     return this.form.get('zone') as FormControl;
   }
@@ -77,14 +84,25 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
     return this.form.valid;
   }
 
-  private _getPropertyKey(fieldName: 'buildingNo' | 'zone' | 'street'): string {
-    if (!this.propertyMap || !this.propertyMap[fieldName]) {
+  private _getPropertyKey(fieldName: 'buildingNo' | 'zone' | 'street' | 'unit'): string {
+    if (CommonUtils.isEmptyObject(this.propertyMap) || !this.propertyMap![fieldName]) {
       return this.fields[fieldName];
     }
-    return this.propertyMap[fieldName]!;
+    return this.propertyMap![fieldName]!;
   }
 
-  private _getFieldValue(fieldName: 'buildingNo' | 'zone' | 'street') {
+  private _getPropertyRequired(fieldName: 'buildingNo' | 'zone' | 'street' | 'unit'): boolean {
+    if (CommonUtils.isEmptyObject(this.propertyRequiredMap) || !(this.propertyRequiredMap!.hasOwnProperty(fieldName))) {
+      return this.fieldsRequired[fieldName];
+    }
+    return this.propertyRequiredMap![fieldName]!;
+  }
+
+  private _getPropertyRequiredValidator(fieldName: 'buildingNo' | 'zone' | 'street' | 'unit'): ValidatorFn[] {
+    return this._getPropertyRequired(fieldName) ? [CustomValidators.required] : [];
+  }
+
+  private _getFieldValue(fieldName: 'buildingNo' | 'zone' | 'street' | 'unit') {
     let propertyKey = this._getPropertyKey(fieldName);
     if (!this.record || !this.record.hasOwnProperty(propertyKey)) {
       return '';
@@ -94,20 +112,23 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
 
   private _buildForm() {
     this.form = this.fb.group({
-      buildingNo: [null, [CustomValidators.required, CustomValidators.number]],
-      street: [null, [CustomValidators.required, CustomValidators.number]],
-      zone: [null, [CustomValidators.required, CustomValidators.number]],
+      buildingNo: [null, (this._getPropertyRequiredValidator('buildingNo')).concat([CustomValidators.number])],
+      street: [null, (this._getPropertyRequiredValidator('street')).concat([CustomValidators.number])],
+      zone: [null, (this._getPropertyRequiredValidator('zone')).concat([CustomValidators.number])],
+      unit: [null, (this._getPropertyRequiredValidator('unit')).concat([CustomValidators.number, CustomValidators.maxLength(20)])]
     });
   }
 
   private _updateForm() {
     let buildingNo = this._getFieldValue('buildingNo'),
       street = this._getFieldValue('street'),
-      zone = this._getFieldValue('zone');
+      zone = this._getFieldValue('zone'),
+      unit = this._getFieldValue('unit');
 
     this.buildingNoField.setValue(buildingNo);
     this.streetField.setValue(street);
     this.zoneField.setValue(zone);
+    this.unitField.setValue(unit);
   }
 
   resetForm() {
@@ -124,6 +145,7 @@ export class BuildingPlateComponent implements OnInit, AfterViewInit {
       [this._getPropertyKey('buildingNo')]: this.buildingNoField.value,
       [this._getPropertyKey('zone')]: this.zoneField.value,
       [this._getPropertyKey('street')]: this.streetField.value,
+      [this._getPropertyKey('unit')]: this.unitField.value,
     }
   }
 

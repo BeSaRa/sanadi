@@ -578,26 +578,14 @@
         </div>
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="unit" class="col-sm-12 col-md-4 col-form-label">{{langService.map.unit}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.unit')" id="unit" formControlName="unit"
-                     class="form-control" type="text" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                     [readOnly]="readOnly || isPartialRequest">
+            <label for="addressDescription"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_address}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
+                        formControlName="addressDescription" rows="5" class="form-control"
+                        [readOnly]="readOnly || isPartialRequest"></textarea>
               <app-field-error-message
-                [control]="fm.getFormField('addressTab.unit')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="homePhoneNumber"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                     formControlName="homePhoneNumber" class="form-control" type="text"
-                     trimInput [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
+                [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -605,22 +593,8 @@
 
       <div class="col-sm-12 col-md-6 mb-4">
         <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="readOnly || isPartialRequest"
-                        [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone'}"></building-plate>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="addressDescription"
-                 class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_address}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
-                      formControlName="addressDescription" rows="5" class="form-control"
-                      [readOnly]="readOnly || isPartialRequest"></textarea>
-            <app-field-error-message
-              [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
-          </div>
-        </div>
+                        [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone', unit: 'unit'}"
+                        [propertyRequiredMap]="{unit: false}"></building-plate>
       </div>
     </div>
   </ng-template>
@@ -1060,7 +1034,8 @@
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
               <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="aidsTable.columns"></tr>
-              <tr cdk-row *cdkRowDef="let row; columns: aidsTable.columns;" (contextmenu)="aidsMenu.open($event , row)"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: aidsTable.columns;"
+                  (contextmenu)="aidsMenu.open($event , row)"></tr>
               <tr *cdkNoDataRow>
                 <td class="text-center" colSpan="100">{{langService.map.msg_no_records_found}}</td>
               </tr>
