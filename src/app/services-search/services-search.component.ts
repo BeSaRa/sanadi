@@ -22,9 +22,8 @@ import {CaseStatus} from '@app/enums/case-status.enum';
 import {GeneralSearchCriteriaInterceptor} from "@app/model-interceptors/general-search-criteria-interceptor";
 import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
 import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
-import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
 import {LicenseService} from '@app/services/license.service';
-import { Fundraising } from '@app/models/fundraising';
+import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 
 @Component({
   selector: 'services-search',
@@ -162,18 +161,12 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  actionExportLicense(item: CaseModel<any, any>) {
-    let record;
-    if (item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING) {
-      record = item as unknown as UrgentInterventionLicense;
-    }
-    if (record) {
-      this.licenseService.showLicenseContent({id: record.exportedLicenseId}, item.getCaseType())
-        .subscribe((blob) => {
-          window.open(blob.url);
-          this.search$.next(null);
-        })
-    }
+  actionExportLicense(exportedLicenseId: string, caseType: number) {
+    this.licenseService.showLicenseContent({id: exportedLicenseId}, caseType)
+      .subscribe((blob) => {
+        window.open(blob.url);
+        this.search$.next(null);
+      })
   }
 
   actionLaunch(item: CaseModel<any, any>, dialogRef?: DialogRef) {
@@ -289,7 +282,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           return item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING || item.getCaseType() === CaseTypes.FUNDRAISING_LICENSING;
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.actionExportLicense(item);
+          this.actionExportLicense((item as unknown as HasLicenseApproval).exportedLicenseId, item.getCaseType());
         }
       },
       {type: 'divider'},
