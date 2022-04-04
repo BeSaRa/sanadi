@@ -5,6 +5,9 @@
       <button [tooltip]="lang.map.btn_reload" (click)="forceReload()" class="btn text-primary icon-btn">
         <i class="mdi mdi-reload"></i>
       </button>
+      <button [disabled]="disabled" (click)="addOtherAttachments.next()" [tooltip]="lang.map.btn_add" class="btn text-primary icon-btn">
+        <i class="mdi mdi-plus-box"></i>
+      </button>
     </div>
   </div>
   <app-table [selectable]="true" #table sortableTable [paginator]="paginator"

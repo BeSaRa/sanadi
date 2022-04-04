@@ -13,6 +13,7 @@ import {ToastService} from "@app/services/toast.service";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {AdminResult} from "@app/models/admin-result";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -68,6 +69,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   filter: FormControl = new FormControl();
 
+  addOtherAttachments: Subject<null> = new Subject<null>();
+
   constructor(public lang: LangService,
               private dialog: DialogService,
               private toast: ToastService,
@@ -85,6 +88,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToReload();
     this.listenToCaseIdChanges();
+    this.listenToAddOtherAttachment();
   }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
@@ -97,10 +101,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .pipe(filter(val => (val && (!this.loaded || (this.loaded && this.forceLoadEveryTime)))))
       .pipe(
         tap(_ => this.loaded = true),
-        switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType)
-          .pipe(tap(types => this.attachmentTypes = types)) : of([])),
+        // load attachment types related to the service
+        switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
+        tap(types => this.attachmentTypes = types),
         map<AttachmentTypeServiceData[], FileNetDocument[]>((attachmentTypes) => attachmentTypes.map(type => type.convertToAttachment())),
-        tap(attachments => this.defaultAttachments = attachments.slice()),
+        tap((attachments) => this.defaultAttachments = attachments.slice()),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
         takeUntil(this.destroy$)
       )
@@ -110,16 +115,26 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       })
   }
 
-  private mergeAttachments(attachments: FileNetDocument[], types: FileNetDocument[]): FileNetDocument[] {
-
-    this.loadedAttachments = attachments.reduce((record, attachment) => {
-      return {...record, [attachment.attachmentTypeId]: attachment};
+  private mergeAttachments(attachments: FileNetDocument[] = [], types: FileNetDocument[]): FileNetDocument[] {
+    const typeIds = types.map(type => type.attachmentTypeInfo.id!)
+    const attachmentTypeIds = attachments.map(attachment => attachment.attachmentTypeInfo.id!)
+    // if attachments gt types
+    // if types gt attachments
+    //
+    this.loadedAttachments = types.reduce((acc, file) => {
+      return {...acc, [file.attachmentTypeInfo.id!]: file}
     }, {} as Record<number, FileNetDocument>);
-    return types.map(attachment => {
-      attachment.id = this.loadedAttachments[attachment.attachmentTypeId]?.id;
-      attachment.createdOn = this.loadedAttachments[attachment.attachmentTypeId]?.createdOn;
-      return attachment;
-    });
+
+    const differenceIds = typeIds.filter((id) => !attachmentTypeIds.includes(id))
+
+    attachments = attachments.map(attachment => {
+      if (attachment.attachmentTypeId === -1) {
+        attachment.attachmentTypeInfo = AttachmentsComponent.createOtherLookup()
+      }
+      return attachment
+    })
+
+    return attachments.concat(differenceIds.map(id => this.loadedAttachments[id]))
   }
 
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
@@ -248,5 +263,32 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   private resetAttachments() {
     this.attachments = this.defaultAttachments.slice();
+  }
+
+  private listenToAddOtherAttachment() {
+    this.addOtherAttachments
+      .pipe(map(_ => this.createOtherAttachment()))
+      .subscribe((attachment) => {
+        this.attachments = ([] as FileNetDocument[]).concat([attachment, ...this.attachments])
+      })
+  }
+
+  private static createOtherLookup(): AdminResult {
+    return AdminResult.createInstance({
+      arName: 'اخري',
+      enName: 'Other',
+    })
+  }
+
+  private createOtherAttachment(): FileNetDocument {
+    const descriptions = {
+      en: 'A special type of attachment whose name has not been specified',
+      ar: 'نوع خاص من المرفقات لم يتم تحديد مسمي له '
+    }
+    return new FileNetDocument().clone({
+      attachmentTypeInfo: AttachmentsComponent.createOtherLookup(),
+      attachmentTypeId: -1,
+      description: descriptions[this.lang.map.lang as keyof typeof descriptions]
+    })
   }
 }
