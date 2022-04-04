@@ -118,7 +118,7 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
-                    class="btn icon-btn" >
+                    class="btn icon-btn" [disabled]="readOnly">
               <i class="mdi mdi-pencil text-primary"></i>
             </button>
             <button (click)="remove$.next({item: row, index: itemIndex})" [tooltip]="lang.map.btn_delete"
