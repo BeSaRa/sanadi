@@ -578,6 +578,19 @@
         </div>
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
+            <label for="homePhoneNumber"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
+                     formControlName="homePhoneNumber" class="form-control" type="text"
+                     trimInput [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
             <label for="addressDescription"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_address}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">

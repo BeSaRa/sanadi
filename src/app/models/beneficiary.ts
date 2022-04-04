@@ -31,6 +31,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   educationLevel!: number;
   phoneNumber1!: string;
   phoneNumber2!: string;
+  homePhoneNumber!: string;
   email!: string;
   zone!: string;
   buildingName!: string;
@@ -236,15 +237,12 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       residenceCountry,
       addressStatus,
       addressDescription,
+      homePhoneNumber
     } = this;
 
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
-      // streetName: control ? [streetName, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : streetName,
-      // buildingName: control ? [buildingName, [CustomValidators.number, CustomValidators.required,
-      //   Validators.maxLength(20)]] : buildingName,
-      // zone: control ? [zone, [CustomValidators.number, CustomValidators.required, Validators.maxLength(20)]] : zone,
-      // unit: control ? [unit, [CustomValidators.number, CustomValidators.maxLength(20)]] : unit,
+      homePhoneNumber: control ? [homePhoneNumber, CustomValidators.commonValidations.phone] : homePhoneNumber,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
     };
   }
