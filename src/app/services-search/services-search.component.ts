@@ -24,6 +24,7 @@ import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
 import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
 import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
 import {LicenseService} from '@app/services/license.service';
+import { Fundraising } from '@app/models/fundraising';
 
 @Component({
   selector: 'services-search',
@@ -285,7 +286,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           if (!item.isFinalApproved()) {
             return false;
           }
-          return item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING;
+          return item.getCaseType() === CaseTypes.URGENT_INTERVENTION_LICENSING || item.getCaseType() === CaseTypes.FUNDRAISING_LICENSING;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionExportLicense(item);

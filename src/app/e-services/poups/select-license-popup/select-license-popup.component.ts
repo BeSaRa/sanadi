@@ -16,6 +16,7 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {CollectorApproval} from '@app/models/collector-approval';
+import { Fundraising } from '@app/models/fundraising';
 
 @Component({
   selector: 'select-license-popup',
@@ -36,7 +37,7 @@ export class SelectLicensePopupComponent {
               private inboxService: InboxService,
               private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[]),
+                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | Fundraising[]),
                 caseRecord: any | undefined,
                 select: boolean,
                 displayedColumns: string[]
@@ -65,7 +66,7 @@ export class SelectLicensePopupComponent {
     }
   }
 
-  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult)): void {
+  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult | Fundraising)): void {
     this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .subscribe((licenseDetails) => {
         if (!licenseDetails) {
@@ -75,7 +76,7 @@ export class SelectLicensePopupComponent {
       });
   }
 
-  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult)) {
+  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult | Fundraising)) {
     let caseType = (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType;
 
     return this.licenseService.showLicenseContent(license, caseType)

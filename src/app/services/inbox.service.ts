@@ -40,6 +40,7 @@ import {ProjectModelService} from '@app/services/project-model.service';
 import {Memoize} from "typescript-memoize";
 import {CaseModel} from "@app/models/case-model";
 import {CollectionApprovalService} from "@app/services/collection-approval.service";
+import { FundraisingService } from './fundraising.service';
 import {CollectorApprovalService} from '@app/services/collector-approval.service';
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 
@@ -62,6 +63,7 @@ export class InboxService {
               private exceptionHandlerService: ExceptionHandlerService,
               private partnerApprovalService: PartnerApprovalService,
               private collectionApprovalService: CollectionApprovalService,
+              private fundraisingService: FundraisingService,
               private collectorApprovalService: CollectorApprovalService,
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private urlService: UrlService) {
@@ -76,6 +78,7 @@ export class InboxService {
     this.services.set(CaseTypes.INTERNAL_PROJECT_LICENSE, this.internalProjectLicenseService);
     this.services.set(CaseTypes.EXTERNAL_PROJECT_MODELS, this.projectModelService);
     this.services.set(CaseTypes.COLLECTION_APPROVAL, this.collectionApprovalService);
+    this.services.set(CaseTypes.FUNDRAISING_LICENSING, this.fundraisingService);
     this.services.set(CaseTypes.COLLECTOR_LICENSING, this.collectorApprovalService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
   }

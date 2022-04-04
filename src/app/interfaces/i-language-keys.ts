@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  menu_fundraising: string;
+  previous_license_number: string;
+  about_channel: string;
+  working_mechanism: string;
+  risk_assessment: string;
   edit_cancel_request_need_exists_license: string;
   longitude_latitude_required: string;
   search_by_serial_number: string;

@@ -24,6 +24,7 @@ export class GeneralInterceptor {
     delete model.inboxService;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
+    delete model.taskDetails;
     delete model.ouInfo;
     delete model.taskDetails;
     return model;

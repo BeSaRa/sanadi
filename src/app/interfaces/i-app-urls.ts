@@ -2,6 +2,7 @@ export interface IAppUrls {
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
   COLLECTION_APPROVAL: string;
+  FUNDRAISING: string;
   ORG_UNIT_FIELD: string;
   CHECKLIST: string;
   SERVICE_DATA_STEP: string;

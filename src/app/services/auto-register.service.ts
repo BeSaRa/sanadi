@@ -22,6 +22,7 @@ import {
   CollectionApprovalComponent
 } from "@app/modules/collection/pages/collection-services-approval/collection-approval.component";
 import {MapService} from "@app/services/map.service";
+import { FundraisingComponent } from '@app/modules/collection/pages/fundraising/fundraising.component';
 import {CollectorApprovalComponent} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
 import {
   UrgentInterventionLicenseComponent
@@ -49,6 +50,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('InternalProjectLicenseComponent', InternalProjectLicenseComponent);
       DynamicComponentService.registerComponent('ProjectModelComponent', ProjectModelComponent);
       DynamicComponentService.registerComponent('CollectionApprovalComponent', CollectionApprovalComponent);
+      DynamicComponentService.registerComponent('FundraisingComponent', FundraisingComponent);
       DynamicComponentService.registerComponent('CollectorApprovalComponent', CollectorApprovalComponent);
       DynamicComponentService.registerComponent('UrgentInterventionLicenseComponent', UrgentInterventionLicenseComponent);
 

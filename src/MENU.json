@@ -573,6 +573,19 @@
   },
   {
     "id": 45,
+    "langKey": "menu_fundraising",
+    "path": "/home/collection/fundraising",
+    "icon": "mdi-cash-multiple",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": 43,
+    "group": "collection",
+    "itemOrder": 11,
+    "svg": null
+  },
+  {
+    "id": 46,
     "langKey": "menu_collector_approval",
     "path": "/home/collection/collector-approval",
     "icon": "mdi-human-male",

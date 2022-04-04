@@ -44,6 +44,9 @@ import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCr
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
+import { Fundraising } from '@app/models/fundraising';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
+import { FundraisingSearchCriteria } from '@app/models/FundRaisingSearchCriteria';
 import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
 import {UrgentInterventionLicenseInterceptor} from '@app/model-interceptors/urgent-intervention-license-interceptor';
@@ -90,6 +93,16 @@ export class LicenseService {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<PartnerApproval[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
   }
+
+  @Generator(Fundraising, true, {
+    property: "rs",
+    interceptReceive: (new FundraisingInterceptor()).receive,
+  })
+  fundRaisingLicenseSearch(criteria: Partial<FundraisingSearchCriteria>): Observable<Fundraising[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id: undefined};
+    return this.http.post<Fundraising[]>(this.urlService.URLS.FUNDRAISING + "/license/search",{ ...criteria, ...orgId });
+  }
+
 
   @Generator(FinalExternalOfficeApprovalResult, true, {
     property: 'rs',
@@ -265,6 +278,17 @@ export class LicenseService {
     });
   }
 
+  @Generator(Fundraising, false, {
+    property: 'rs',
+    interceptReceive: (new FundraisingInterceptor()).receive
+  })
+  _validateFundraisingLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<Fundraising> {
+    return this.http.post<Fundraising>(this.urlService.URLS.FUNDRAISING + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @Generator(UrgentInterventionLicense, false, {
     property: 'rs',
     interceptReceive: (new UrgentInterventionLicenseInterceptor()).receive
@@ -289,7 +313,7 @@ export class LicenseService {
     });
   }
 
-  validateLicenseByRequestType<T>(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | UrgentInterventionLicense | T | undefined> {
+  validateLicenseByRequestType<T>(caseType: CaseTypes, requestType: number, licenseId: string): Observable<InitialExternalOfficeApproval | PartnerApproval | FinalExternalOfficeApproval | InternalProjectLicense | UrgentInterventionLicense | T | undefined | Fundraising> {
     if (caseType === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) {
       return this._validateInitialApprovalLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.PARTNER_APPROVAL) {
@@ -305,10 +329,13 @@ export class LicenseService {
     } else if(caseType === CaseTypes.COLLECTOR_LICENSING) {
       return this._validateCollectorLicenseByRequestType<T>(requestType, licenseId);
     }
+    else if(caseType === CaseTypes.FUNDRAISING_LICENSING) {
+      return this._validateFundraisingLicenseByRequestType(requestType, licenseId);
+    }
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | Fundraising[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
@@ -347,6 +374,9 @@ export class LicenseService {
         break;
       case CaseTypes.COLLECTOR_LICENSING:
         url = this.urlService.URLS.COLLECTOR_APPROVAL;
+        break;
+      case CaseTypes.FUNDRAISING_LICENSING:
+        url = this.urlService.URLS.FUNDRAISING;
         break;
       case CaseTypes.URGENT_INTERVENTION_LICENSING:
         url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE;
