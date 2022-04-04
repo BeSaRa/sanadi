@@ -89,6 +89,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.listenToReload();
     this.listenToCaseIdChanges();
     this.listenToAddOtherAttachment();
+    this.loadingStatus.next(true);
   }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {

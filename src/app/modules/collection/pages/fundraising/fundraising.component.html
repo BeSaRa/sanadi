@@ -38,7 +38,7 @@
                     <div class="col-md-4 col-sm-12 mb-4 position-relative">
                         <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                             for="oldLicenseFullSerial">{{lang.map.license_number}}</label>
-                        <div class="input-group"> 
+                        <div class="input-group">
                             <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
                                 formControlName="oldLicenseFullSerial" trimInput type="text"
                                 [readOnly]="!isEditLicenseAllowed()" validationClasses="oldLicenseFullSerial"

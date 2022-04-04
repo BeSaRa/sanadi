@@ -49,7 +49,7 @@ export class AttachmentTypeService extends BackendWithDialogOperationsGenericSer
   }
 
   loadTypesByCaseType(caseId: number): Observable<AttachmentTypeServiceData[]> {
-    return this.attachmentTypeServiceDataService.loadByCaseType(caseId);
+    return this.attachmentTypeServiceDataService.getByCaseType(caseId);
   }
 /*
   openCreateDialog(): DialogRef {

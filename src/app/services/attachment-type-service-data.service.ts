@@ -9,7 +9,9 @@ import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '../interfaces/i-dialog-data';
-import {AttachmentTypeServiceDataPopupComponent} from '../administration/popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
+import {
+  AttachmentTypeServiceDataPopupComponent
+} from '../administration/popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {Observable, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -24,6 +26,11 @@ import {IDefaultResponse} from '../interfaces/idefault-response';
 export class AttachmentTypeServiceDataService extends BackendGenericService<AttachmentTypeServiceData> {
   list!: AttachmentTypeServiceData[];
   interceptor: IModelInterceptor<AttachmentTypeServiceData> = new AttachmentTypeServiceDataInterceptor();
+
+  attachmentTypes: Record<number, {
+    time: number; list: AttachmentTypeServiceData[]
+  }> = {}
+
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -113,6 +120,20 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
   }
 
   loadByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
-    return this._loadByCaseType(caseType);
+    return this._loadByCaseType(caseType).pipe(tap(list => {
+      if (!this.attachmentTypes[caseType]) {
+        this.attachmentTypes[caseType] = {time: 0, list: []}
+      }
+      this.attachmentTypes[caseType].list = list;
+      this.attachmentTypes[caseType].time = Date.now();
+    }));
+  }
+
+  private passedReloadDuration(caseType: number): boolean {
+    return ((Date.now() - this.attachmentTypes[caseType].time) > (5 * 60 * 1000))
+  }
+
+  getByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
+    return this.attachmentTypes[caseType] && !this.passedReloadDuration(caseType) ? of(this.attachmentTypes[caseType].list) : this.loadByCaseType(caseType)
   }
 }

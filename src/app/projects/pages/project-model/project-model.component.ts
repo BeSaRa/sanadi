@@ -654,10 +654,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     selectedId ? this.loadSubDacOcha(selectedId) : this.emptySubCategories();
   }
 
-  onTabChange($event: TabComponent) {
-    this.loadAttachments = $event.name === this.tabsData.attachments.name;
-  }
-
   onClickAddProjectComponent(): void {
     this.currentEditedProjectComponent = undefined;
     this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()})

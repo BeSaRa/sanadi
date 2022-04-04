@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+  <tabs-list [accordionView]="accordionView" class="py-4" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.projectCategory.name" [hasError]="getTabInvalidStatus('projectCategory')"
@@ -689,7 +689,6 @@
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService"
-                 [load]="loadAttachments"></attachments>
+                 [service]="service.documentService"></attachments>
   </ng-template>
 </ng-container>
