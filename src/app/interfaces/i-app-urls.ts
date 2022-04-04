@@ -3,6 +3,7 @@ export interface IAppUrls {
   BANK_ACCOUNT: string;
   BANK: string;
   INTERNAL_BANK_ACCOUNT_APPROVAL: string;
+  CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES: string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
   COLLECTION_APPROVAL: string;

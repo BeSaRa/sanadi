@@ -62,7 +62,8 @@ const routes: Routes = [
       { path: 'collection',
         canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroup.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
-        loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) }
+        loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) },
+      {path: 'remittance', loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule)},
       //{path: '**', redirectTo: '../error'}
     ]
   },

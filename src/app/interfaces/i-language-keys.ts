@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  menu_remittance_services: string;
+  menu_shipping_services_approval: string;
   collectors_max_items_count: string;
   menu_fundraising: string;
   previous_license_number: string;
