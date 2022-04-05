@@ -1,1 +1,174 @@
-<p>shipping-approval works!</p>
+<div class="row">
+    <tabs-list [accordionView]="accordionView">
+        <tab name="basic_info" [hasError]="form.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+        </tab>
+        <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    </tabs-list>
+    <ng-container [formGroup]="form">
+        <ng-template #basic_info>
+            <div class="row">
+                <!-- Request Type -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="requestType"
+                        for="requestType">{{lang.map.request_type}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="requestType" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="requestType" validationClasses="requestType">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="requestType"></app-field-error-message>
+                </div>
+                <!-- Shipment Subject -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="subject" for="subject"
+                        class="form-label">{{lang.map.shipment_subject}}</label>
+                    <input type="text" id="subject" validationClasses="subject" formControlName="subject"
+                        class="form-control">
+                    <app-field-error-message controlName="subject"></app-field-error-message>
+                </div>
+                <!-- Shipment Source -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="shipmentSource"
+                        for="requestType">{{lang.map.shipment_source}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="shipmentSource" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="shipmentSource" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="shipmentSource" validationClasses="shipmentSource">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="shipmentSource"></app-field-error-message>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Shipment Weight -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="shipmentWeight" for="shipmentWeight"
+                        class="form-label">{{lang.map.shipment_weight}}</label>
+                    <input type="number" id="shipmentWeight" validationClasses="shipmentWeight"
+                        formControlName="shipmentWeight" class="form-control">
+                    <app-field-error-message controlName="shipmentWeight"></app-field-error-message>
+                </div>
+                <!-- Bill of lading number -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="waybill" for="waybill"
+                        class="form-label">{{lang.map.bill_of_lading_number}}</label>
+                    <input type="text" id="waybill" validationClasses="waybill" formControlName="waybill"
+                        class="form-control">
+                    <app-field-error-message controlName="waybill"></app-field-error-message>
+                </div>
+                <!-- Shipment Port -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="shipmentPort" for="shipmentPort"
+                        class="form-label">{{lang.map.shipment_port}}</label>
+                    <input type="text" id="shipmentPort" validationClasses="shipmentPort" formControlName="shipmentPort"
+                        class="form-control">
+                    <app-field-error-message controlName="shipmentPort"></app-field-error-message>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Project reference number -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label for="projectLicense" class="form-label">{{lang.map.project_reference_number}}</label>
+                    <input type="text" id="projectLicense" validationClasses="projectLicense"
+                        formControlName="projectLicense" class="form-control">
+                </div>
+                <!-- Project Name -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label for="projectName" class="form-label">{{lang.map.project_name}}</label>
+                    <input type="text" id="projectName" validationClasses="projectName" formControlName="projectName"
+                        class="form-control">
+                </div>
+                <!-- Country -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="country"
+                        for="requestType">{{lang.map.country}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="country" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="country" validationClasses="country">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="country"></app-field-error-message>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Region -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="zoneNumber" for="zoneNumber"
+                        class="form-label">{{lang.map.region}}</label>
+                    <input type="text" id="zoneNumber" validationClasses="zoneNumber" formControlName="zoneNumber"
+                        class="form-control">
+                    <app-field-error-message controlName="zoneNumber"></app-field-error-message>
+                </div>
+                <!-- Recipient type -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="receiverType"
+                        for="receiverType">{{lang.map.recipient_type}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="receiverType" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="receiverType" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="receiverType" validationClasses="receiverType">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="receiverType"></app-field-error-message>
+                </div>
+                <!-- Name of the recipient -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="receiverName"
+                        for="receiverName">{{lang.map.recipient_name}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="receiverName" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="receiverName" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="receiverName" validationClasses="receiverName">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="receiverName"></app-field-error-message>
+                </div>
+            </div>
+            <div class="row">
+                <!-- The name of the other recipient -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label for="otherReceiverName" class="form-label">{{lang.map.other_recipient_name}}</label>
+                    <input type="text" id="otherReceiverName" validationClasses="otherReceiverName"
+                        formControlName="otherReceiverName" class="form-control">
+                </div>
+                <!--  Estimated value of the shipment in riyals -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="shipmentApproximateValue" for="shipmentApproximateValue"
+                        class="form-label">{{lang.map.shipment_approximate_value}}</label>
+                    <input type="text" type="number" id="shipmentApproximateValue"
+                        validationClasses="shipmentApproximateValue" formControlName="shipmentApproximateValue"
+                        class="form-control">
+                    <app-field-error-message controlName="shipmentApproximateValue"></app-field-error-message>
+                </div>
+                <!-- Shipping Method -->
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label class="form-label" asteriskIfRequired="shipmentCarrier"
+                        for="receiverName">{{lang.map.shipping_method}}</label>
+                    <ng-select [selectOnTab]="true" labelForId="shipmentCarrier" [clearable]="true"
+                        placeholder="{{lang.map.select}}" id="shipmentCarrier" [notFoundText]="lang.map.msg_not_found"
+                        appendTo="body" formControlName="shipmentCarrier" validationClasses="shipmentCarrier">
+                        <ng-option [value]="type.lookupKey" *ngFor="let type of requestTypes">{{type.getName()}}
+                        </ng-option>
+                    </ng-select>
+                    <app-field-error-message controlName="shipping_method"></app-field-error-message>
+                </div>
+            </div>
+            <div class="row">
+                <!-- description -->
+                <div class="col-md-12 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="description" for="description"
+                        class="form-label">{{lang.map.lbl_description}}</label>
+                    <textarea name="description" formControlName="description" validationClasses="description"
+                        id="description" rows="4" class="form-control"></textarea>
+                    <app-field-error-message controlName="description"></app-field-error-message>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-template #attachmentsTab>
+        <attachments [caseId]="model?.id" [caseType]="model?.caseType" [service]="service.documentService">
+        </attachments>
+    </ng-template>
+</div>

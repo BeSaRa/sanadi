@@ -1,4 +1,16 @@
 export interface ILanguageKeys {
+  shipment_subject: string;
+  shipment_source: string;
+  shipment_weight: string;
+  bill_of_lading_number: string;
+  shipment_port: string;
+  subordinate_to_project: string;
+  project_reference_number: string;
+  recipient_type: string;
+  recipient_name: string;
+  other_recipient_name: string;
+  shipment_approximate_value: string;
+  shipping_method: string;
   menu_remittance_services: string;
   menu_shipping_services_approval: string;
   collectors_max_items_count: string;

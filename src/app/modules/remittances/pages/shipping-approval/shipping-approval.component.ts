@@ -7,6 +7,9 @@ import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { LangService } from "@app/services/lang.service";
 import { Observable } from "rxjs";
+import { LookupService } from "@app/services/lookup.service";
+import { Lookup } from "@app/models/lookup";
+import { ServiceRequestTypes } from "@app/enums/service-request-types";
 
 @Component({
   selector: "shipping-approval",
@@ -22,10 +25,18 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   constructor(
     public lang: LangService,
     public fb: FormBuilder,
-    public service: ShippingApprovalService
+    public service: ShippingApprovalService,
+    private lookupService: LookupService
   ) {
     super();
   }
+
+  requestTypes: Lookup[] =
+    this.lookupService.listByCategory.ServiceRequestTypeNoRenew.filter(
+      (l) =>
+        l.lookupKey !== ServiceRequestTypes.EXTEND &&
+        l.lookupKey !== ServiceRequestTypes.UPDATE
+    ).sort((a, b) => a.lookupKey - b.lookupKey);
 
   _getNewInstance(): ShippingApproval {
     return new ShippingApproval();
@@ -36,7 +47,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   }
 
   _buildForm(): void {
-    this.form = this.fb.group({});
+    const model = new ShippingApproval();
+    this.form = this.fb.group(model.buildBasicInfo(true));
   }
 
   _afterBuildForm(): void {
