@@ -60,7 +60,7 @@ const routes: Routes = [
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
       },
       { path: 'collection',
-        canActivate: [PermissionGuard],
+        canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroup.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) }
       //{path: '**', redirectTo: '../error'}
