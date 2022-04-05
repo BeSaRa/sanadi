@@ -1,3 +1,4 @@
+import { CaseTypes } from "@app/enums/case-types.enum";
 import { FactoryService } from "@app/services/factory.service";
 import { ShippingApprovalService } from "@app/services/shipping-approval.service";
 import { AdminResult } from "./admin-result";
@@ -18,7 +19,7 @@ export class ShippingApproval extends CaseModel<
   serial!: number;
   fullSerial!: string;
   caseStatus!: number;
-  caseType!: number;
+  caseType: number = CaseTypes.SHIPPING_APPROVAL;
   organizationId!: number;
   taskDetails!: TaskDetails;
   caseStatusInfo!: AdminResult;
