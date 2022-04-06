@@ -108,7 +108,7 @@ export class ShippingApproval extends CaseModel<
         ? [shipmentSource, [CustomValidators.required]]
         : shipmentSource,
       shipmentWeight: controls
-        ? [shipmentWeight, [CustomValidators.required]]
+        ? [shipmentWeight, [CustomValidators.required, CustomValidators.number]]
         : shipmentWeight,
       waybill: controls ? [waybill, [CustomValidators.required]] : waybill,
       shipmentPort: controls
@@ -131,7 +131,7 @@ export class ShippingApproval extends CaseModel<
         : receiverName,
       otherReceiverName: controls ? [otherReceiverName] : otherReceiverName,
       shipmentApproximateValue: controls
-        ? [shipmentApproximateValue, [CustomValidators.required]]
+        ? [shipmentApproximateValue, [CustomValidators.required, CustomValidators.number]]
         : shipmentApproximateValue,
       shipmentCarrier: controls
         ? [shipmentCarrier, [CustomValidators.required]]
