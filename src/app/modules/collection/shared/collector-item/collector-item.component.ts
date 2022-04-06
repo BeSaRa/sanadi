@@ -19,6 +19,7 @@ import {CollectorApprovalService} from '@app/services/collector-approval.service
 import {LicenseService} from '@app/services/license.service';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {CollectorLicense} from '@app/license-models/collector-license';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
 
 @Component({
   selector: 'collector-item',
@@ -304,5 +305,9 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
       .subscribe((_info) => {
         this.updateForm(this.item = _info.details.convertToItem());
       })
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
   }
 }

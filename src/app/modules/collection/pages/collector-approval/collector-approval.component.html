@@ -28,7 +28,7 @@
                        id="licenseDurationType" [selectOnTab]="true" placeholder="{{lang.map.select}}"
                        [notFoundText]="lang.map.msg_not_found"
                        formControlName="licenseDurationType"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                       [readonly]="(readonly)">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
             </ng-select>
@@ -38,7 +38,7 @@
         <div class="row">
           <collector-item (formOpenedStatus)="collectorItemFormStatusChanged($event)"
                           [disableAdd]="basicInfo.invalid || readonly"
-                          [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                          [readOnly]="(readonly)"
                           [licenseDurationType]="licenseDurationType.value"
                           (eventHappened)="checkDisableFields()"
                           [disableSearch]="!isEditLicenseAllowed()"

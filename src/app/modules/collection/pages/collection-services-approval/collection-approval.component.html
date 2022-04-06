@@ -29,7 +29,7 @@
             <ng-select validationClasses="requestClassification" appendTo="body" [clearable]="true"
                        id="requestClassification" placeholder="{{lang.map.select}}"
                        [selectOnTab]="true" [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                       [readonly]="(readonly)"
                        formControlName="requestClassification">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of requestClassifications">{{option.getName()}}</ng-option>
@@ -42,7 +42,7 @@
             <ng-select validationClasses="licenseDurationType" appendTo="body" [clearable]="true"
                        id="licenseDurationType" placeholder="{{lang.map.select}}"
                        [selectOnTab]="true" [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                       [readonly]="(readonly)"
                        formControlName="licenseDurationType">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
@@ -53,7 +53,7 @@
         <div class="row">
           <collection-item (formOpenedStatus)="collectionItemFormStatusChanged($event)"
                            [disableAdd]="basicInfo.invalid || readonly"
-                           [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                           [readOnly]="(readonly)"
                            (eventHappened)="checkDisableFields()"
                            [disableSearch]="!isEditLicenseAllowed()"
                            [model]="model!"></collection-item>

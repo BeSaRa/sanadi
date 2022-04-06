@@ -276,7 +276,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   }
 
   openMapMarker() {
-    (this.item!).openMap(this.readOnly)
+    (this.item!).openMap(this.isExtendOrCancelRequestType() || this.readOnly)
       .onAfterClose$
       .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
@@ -307,5 +307,9 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
 
   private selectedLicenseInvalidMessage() {
     this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license)
+  }
+
+  isExtendOrCancelRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
   }
 }
