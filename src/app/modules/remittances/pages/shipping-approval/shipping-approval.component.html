@@ -45,8 +45,8 @@
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
                     <label asteriskIfRequired="shipmentWeight" for="shipmentWeight"
                         class="form-label">{{lang.map.shipment_weight}}</label>
-                    <input type="number" id="shipmentWeight" validationClasses="shipmentWeight"
-                        formControlName="shipmentWeight" class="form-control">
+                    <input id="shipmentWeight" validationClasses="shipmentWeight" formControlName="shipmentWeight" class="form-control"
+                        [mask]="inputMaskPatterns.NUMBER_ONLY">
                     <app-field-error-message controlName="shipmentWeight"></app-field-error-message>
                 </div>
                 <!-- Bill of lading number -->
@@ -152,9 +152,8 @@
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
                     <label asteriskIfRequired="shipmentApproximateValue" for="shipmentApproximateValue"
                         class="form-label">{{lang.map.shipment_approximate_value}}</label>
-                    <input type="number" id="shipmentApproximateValue"
-                        validationClasses="shipmentApproximateValue" formControlName="shipmentApproximateValue"
-                        class="form-control">
+                    <input id="shipmentApproximateValue" validationClasses="shipmentApproximateValue"
+                        formControlName="shipmentApproximateValue" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
                     <app-field-error-message controlName="shipmentApproximateValue"></app-field-error-message>
                 </div>
             </div>
