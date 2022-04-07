@@ -6,14 +6,16 @@ import { ShippingApprovalService } from "@app/services/shipping-approval.service
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { LangService } from "@app/services/lang.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { LookupService } from "@app/services/lookup.service";
 import { Lookup } from "@app/models/lookup";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { takeUntil } from "rxjs/operators";
+import { filter, takeUntil, tap } from "rxjs/operators";
 import { ReceiverTypes } from "@app/enums/receiver-type.enum";
 import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
 import { CustomValidators } from "@app/validators/custom-validators";
+import { DialogService } from "@app/services/dialog.service";
+import { ToastService } from "@app/services/toast.service";
 
 @Component({
   selector: "shipping-approval",
@@ -30,7 +32,9 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     public lang: LangService,
     public fb: FormBuilder,
     public service: ShippingApprovalService,
-    private lookupService: LookupService
+    private lookupService: LookupService,
+    private dialog: DialogService,
+    private toast: ToastService
   ) {
     super();
   }
@@ -113,23 +117,45 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    throw new Error("Method not implemented.");
+    return of(this.form.valid)
+      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+      .pipe(filter((valid) => valid));
+  }
+  private invalidFormMessage() {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error("Method not implemented.");
+    return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
-    throw new Error("Method not implemented.");
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): ShippingApproval | Observable<ShippingApproval> {
-    throw new Error("Method not implemented.");
+    const model = new ShippingApproval().clone({
+      ...this.model,
+      ...this.form.getRawValue(),
+    });
+    return model;
   }
   _afterSave(
     model: ShippingApproval,
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    throw new Error("Method not implemented.");
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(
+        this.lang.map.msg_request_has_been_added_successfully.change({
+          serial: model.fullSerial,
+        })
+      );
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
   _saveFail(error: any): void {
     throw new Error("Method not implemented.");
@@ -144,6 +170,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     throw new Error("Method not implemented.");
   }
   _resetForm(): void {
-    throw new Error("Method not implemented.");
+    this.form.reset();
+    this.model = this._getNewInstance();
   }
 }
