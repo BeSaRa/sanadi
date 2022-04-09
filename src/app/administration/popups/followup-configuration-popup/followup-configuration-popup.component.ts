@@ -2,18 +2,16 @@ import {Component, Inject} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {FollowupConfiguration} from '@app/models/followup-configuration';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {iif, Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {TeamService} from '@app/services/team.service';
 import {Team} from '@app/models/team';
-import {filter, mapTo, switchMap, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {FollowUpType} from '@app/enums/followUp-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 
@@ -109,5 +107,8 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
       this.responsibleTeam.setValidators(value === FollowUpType.EXTERNAL? [CustomValidators.required]: []);
       this.responsibleTeam.updateValueAndValidity();
     })
+  }
+  get popupTitle(): string {
+    return this.operation === OperationTypes.CREATE ? this.lang.map.followup_configuration_add : this.lang.map.followup_configuration_edit;
   }
 }

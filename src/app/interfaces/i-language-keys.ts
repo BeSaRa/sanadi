@@ -45,6 +45,9 @@ export interface ILanguageKeys {
   bank_account_purpose: string;
   bank_operation_type: string;
   menu_internal_bank_account_approval: string;
+  followup_configuration_edit: string;
+  followup_configuration_add: string;
+  followup_comments: string;
   msg_success_terminate_followup: string;
   msg_confirm_terminate_followup: string;
   btn_terminate: string;
