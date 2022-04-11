@@ -50,6 +50,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   receiverTypes: Lookup[] = this.lookupService.listByCategory.ReceiverType;
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
+  shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   get linkedProject(): AbstractControl {
