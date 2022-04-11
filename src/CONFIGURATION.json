@@ -1,6 +1,7 @@
 {
   "VERSION": "v1.4.1-rc",
   "ENVIRONMENTS_URLS": {
+    "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "BAW_UI": "http://eblaepm.no-ip.org:9026/eservices/api/",
