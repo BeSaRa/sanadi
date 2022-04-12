@@ -6,6 +6,8 @@ import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { ShippingApprovalInterceptor } from "@app/model-interceptors/shipping-approval-interceptor";
 import { ShippingApproval } from "@app/models/shipping-approval";
+import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
+import { Observable } from "rxjs";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
@@ -15,12 +17,12 @@ import { UrlService } from "./url.service";
   providedIn: "root",
 })
 export class ShippingApprovalService extends EServiceGenericService<ShippingApproval> {
-  jsonSearchFile: string = ""; // will understand later
+  jsonSearchFile: string = "shipping_approval.json";
   interceptor: IModelInterceptor<ShippingApproval> =
     new ShippingApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = "menu_shipping_services_approval";
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = []; // will understand later
+  searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];
 
   constructor(
     public http: HttpClient,
@@ -47,7 +49,7 @@ export class ShippingApprovalService extends EServiceGenericService<ShippingAppr
   }
 
   getSearchCriteriaModel<S extends ShippingApproval>(): ShippingApproval {
-    throw new Error("Method not implemented.");
+    return new ShippingApprovalSearchCriteria();
   }
 
   getCaseComponentName(): string {

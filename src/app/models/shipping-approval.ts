@@ -1,6 +1,10 @@
 import { CaseTypes } from "@app/enums/case-types.enum";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { FactoryService } from "@app/services/factory.service";
 import { ShippingApprovalService } from "@app/services/shipping-approval.service";
+import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
@@ -69,6 +73,12 @@ export class ShippingApproval extends CaseModel<
   receiverTypeInfo!: AdminResult;
   receiverNameInfo!: AdminResult;
   className!: string;
+
+  searchFields: ISearchFieldsMap<ShippingApproval> = {
+    ...normalSearchFields(["fullSerial"]),
+    ...dateSearchFields(["createdOn"]),
+    ...infoSearchFields(["requestTypeInfo", "creatorInfo", "caseStatusInfo"]),
+  };
 
   constructor() {
     super();
