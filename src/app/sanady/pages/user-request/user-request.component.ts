@@ -721,8 +721,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           }));
         })
       ).subscribe((request) => {
-      console.log(this.currentBeneficiary);
-      debugger;
       if (!request) {
         return;
       }
@@ -820,7 +818,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
         ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
-        disableDataSharing: this.disableDataSharingField.value,
+        disableDataSharing: this.disableDataSharingField.value || false,
         beneficiaryIncomeSet: this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: this.beneficiaryObligationComponentRef.list
       });
