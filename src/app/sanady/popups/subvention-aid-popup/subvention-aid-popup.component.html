@@ -23,9 +23,14 @@
                   [sortCallback]="sortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
               <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
             </ng-container>
-            <ng-container cdkColumnDef="aidLookupId">
+            <ng-container cdkColumnDef="requestedAidCategory">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.aidType"> {{langService.map.aid_type}}</th>
+                  [sortCallback]="sortingCallbacks.requestedAidCategory"> {{langService.map.requested_aid_category}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupParentInfo.getName()}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="requestedAid">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacks.requestedAid"> {{langService.map.requested_aid}}</th>
               <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="estimatedAmount">

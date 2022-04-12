@@ -42,11 +42,11 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   aidStartPayDateString: string | undefined;
 
   searchFields: ISearchFieldsMap<SubventionAid> = {
-    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartial: ISearchFieldsMap<SubventionAid> = {
-    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
   };
   searchFieldsUserRequest: ISearchFieldsMap<SubventionAid> = {
@@ -54,7 +54,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {
-    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
 

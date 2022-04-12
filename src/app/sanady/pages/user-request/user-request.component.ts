@@ -1049,11 +1049,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       let message: string,
         requestedAidCategory = this.mainAidLookupsList.find(x => x.id === subventionAid.aidLookupParentId),
-        requestedAid = this.subAidLookupsList.find(x => x.id === subventionAid.aidLookupId);
+        requestedAid = this.subAidLookupsList.find(x => x.id === subventionAid.aidLookupId),
+      periodicType = this.lookup.listByCategory.SubAidPeriodicType.find(x => x.lookupKey === subventionAid.periodicType);
 
       let savedRecord = (subventionAid as SubventionAid).clone({
         aidLookupParentInfo: requestedAidCategory ? requestedAidCategory.convertToAdminResult() : new AdminResult(),
-        aidLookupInfo: requestedAid ? requestedAid.convertToAdminResult() : new AdminResult()
+        aidLookupInfo: requestedAid ? requestedAid.convertToAdminResult() : new AdminResult(),
+        periodicTypeInfo: periodicType ? periodicType.convertToAdminResult() : new AdminResult()
       });
 
       if (!this.editAidItem) {

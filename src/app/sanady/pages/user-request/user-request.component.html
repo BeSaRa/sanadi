@@ -1052,7 +1052,7 @@
               <ng-container cdkColumnDef="periodicType">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{getPeriodicityLookup(row.periodicType)?.getName()}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="installementsCount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>

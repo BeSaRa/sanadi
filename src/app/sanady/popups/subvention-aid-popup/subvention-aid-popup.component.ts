@@ -61,7 +61,12 @@ export class SubventionAidPopupComponent implements OnInit {
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    aidType: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+    requestedAidCategory: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestedAid: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);

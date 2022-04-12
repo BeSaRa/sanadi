@@ -65,6 +65,6 @@ export class Lookup extends BaseModel<Lookup, any> {
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id, parent: this.parent, lookupKey: this.lookupKey});
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.lookupKey});
   }
 }

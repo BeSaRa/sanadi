@@ -100,13 +100,12 @@
   <ng-container *ngIf="auditRecord.auditEntity === 'SUBVENTION_AID' && auditSubventionAid">
     <div class="row">
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.aid_type}}</label>
-        <span class="form-control">{{auditSubventionAid.aidLookupInfo?.getName() || '&nbsp;'}}</span>
+        <label class="form-label">{{lang.map.requested_aid_category}}</label>
+        <span class="form-control">{{auditSubventionAid.aidLookupParentInfo?.getName() || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.estimated_amount}}</label>
-        <span
-          class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
+        <label class="form-label">{{lang.map.requested_aid}}</label>
+        <span class="form-control">{{auditSubventionAid.aidLookupInfo?.getName() || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row">
@@ -131,8 +130,9 @@
         <span class="form-control">{{auditSubventionAid.periodicTypeInfo?.getName() || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.number_of_installments}}</label>
-        <span class="form-control">{{auditSubventionAid.installementsCount || '0'}}</span>
+        <label class="form-label">{{lang.map.estimated_amount}}</label>
+        <span
+          class="form-control">{{(auditSubventionAid.aidSuggestedAmount! | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row">
@@ -140,6 +140,10 @@
         <label class="form-label">{{lang.map.given_amount}}</label>
         <span
           class="form-control">{{(auditSubventionAid.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
+      </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{lang.map.number_of_installments}}</label>
+        <span class="form-control">{{auditSubventionAid.installementsCount || '0'}}</span>
       </div>
     </div>
     <div class="row">
