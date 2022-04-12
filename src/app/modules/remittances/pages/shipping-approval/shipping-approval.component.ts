@@ -179,7 +179,11 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     // throw new Error('Method not implemented.');
   }
   _updateForm(model: ShippingApproval | undefined): void {
-    throw new Error("Method not implemented.");
+    if (!model) {
+      return;
+    }
+    this.model = model;
+    this.form.patchValue(model?.buildBasicInfo());
   }
   _resetForm(): void {
     this.form.reset();
