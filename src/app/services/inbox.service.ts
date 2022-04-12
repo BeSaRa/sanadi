@@ -44,6 +44,7 @@ import { FundraisingService } from './fundraising.service';
 import {CollectorApprovalService} from '@app/services/collector-approval.service';
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
+import { ShippingApprovalService } from './shipping-approval.service';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +69,8 @@ export class InboxService {
               private collectorApprovalService: CollectorApprovalService,
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private shippingApprovalService:ShippingApprovalService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -84,6 +86,7 @@ export class InboxService {
     this.services.set(CaseTypes.COLLECTOR_LICENSING, this.collectorApprovalService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
+    this.services.set(CaseTypes.SHIPPING_APPROVAL, this.shippingApprovalService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
