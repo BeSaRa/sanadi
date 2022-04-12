@@ -74,6 +74,7 @@ import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
 import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'app-user-request',
@@ -1435,8 +1436,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       BeneficiarySaveStatus.NDA_RECENT_PERIODIC_AIDS_EXISTING
     ]
     if (stopRequestStatus.includes(value.first)) {
-      // @ts-ignore
-      this.dialogService.info(this.langService.map[value.first]);
+      this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);
       return 'STOP';
     } else {
       return 'CONTINUE';

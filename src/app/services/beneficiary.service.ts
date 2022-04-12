@@ -53,7 +53,10 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
       params: new HttpParams({
         fromObject: {'with-check': validate + ''}
       })
-    }).pipe(map((response: any) => response.rs));
+    }).pipe(map((response: any) => {
+      response.rs.second = response.rs.second ? this._getReceiveInterceptor()(new Beneficiary().clone(response.rs.second)) : response.rs.second;
+      return response.rs;
+    }));
   }
 
   _getModel() {
