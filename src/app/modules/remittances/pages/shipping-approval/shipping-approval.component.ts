@@ -16,6 +16,8 @@ import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
 import { CustomValidators } from "@app/validators/custom-validators";
 import { DialogService } from "@app/services/dialog.service";
 import { ToastService } from "@app/services/toast.service";
+import { Country } from "@app/models/country";
+import { CountryService } from "@app/services/country.service";
 
 @Component({
   selector: "shipping-approval",
@@ -34,7 +36,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     public service: ShippingApprovalService,
     private lookupService: LookupService,
     private dialog: DialogService,
-    private toast: ToastService
+    private toast: ToastService,
+    private countryService: CountryService
   ) {
     super();
   }
@@ -46,7 +49,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
         l.lookupKey !== ServiceRequestTypes.UPDATE
     ).sort((a, b) => a.lookupKey - b.lookupKey);
 
-  countriesList: Lookup[] = this.lookupService.listByCategory.Countries;
+  countriesList: Country[] = [];
   receiverTypes: Lookup[] = this.lookupService.listByCategory.ReceiverType;
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
@@ -74,7 +77,14 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   }
 
   _initComponent(): void {
-    // throw new Error('Method not implemented.');
+    this.loadCountries();
+  }
+
+  private loadCountries(): void {
+    this.countryService
+      .loadCountries()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((countries) => (this.countriesList = countries));
   }
 
   _buildForm(): void {

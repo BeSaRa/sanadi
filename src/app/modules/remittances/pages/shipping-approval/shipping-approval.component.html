@@ -101,7 +101,7 @@
                     <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
                         placeholder="{{lang.map.select}}" id="country" [notFoundText]="lang.map.msg_not_found"
                         appendTo="body" formControlName="country" validationClasses="country">
-                        <ng-option [value]="type.lookupKey" *ngFor="let type of countriesList">{{type.getName()}}
+                        <ng-option [value]="option.id" *ngFor="let option of countriesList">{{option.getName()}}
                         </ng-option>
                     </ng-select>
                     <app-field-error-message controlName="country"></app-field-error-message>
