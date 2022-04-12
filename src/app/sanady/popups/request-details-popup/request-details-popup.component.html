@@ -44,13 +44,15 @@
     <div class="row">
       <div class="col-sm-12 mb-4">
         <label class="form-label">{{langService.map.request_summary}}</label>
-        <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(requestDetails.requestSummary || '&nbsp;')"></textarea>
+        <textarea class="form-control input-disabled bg-transparent" disabled
+                  [innerHTML]="(requestDetails.requestSummary || '&nbsp;')"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
         <label class="form-label">{{langService.map.notes}}</label>
-        <textarea class="form-control input-disabled bg-transparent" disabled [innerHTML]="(requestDetails.requestNotes || '&nbsp;')"></textarea>
+        <textarea class="form-control input-disabled bg-transparent" disabled
+                  [innerHTML]="(requestDetails.requestNotes || '&nbsp;')"></textarea>
       </div>
     </div>
   </ng-template>
@@ -102,41 +104,16 @@
         <label class="form-label">{{langService.map.workplace}}</label>
         <span class="form-control">{{beneficiary.employeerAddress || '&nbsp;'}}</span>
       </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.monthly_income}}</label>
-        <span
-          class="form-control">{{(beneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.extra_income}}</label>
-        <span
-          class="form-control">{{(beneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.extra_income_source}}</label>
-        <span class="form-control">{{beneficiary.benExtraIncomeSource || '&nbsp;'}}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.total_debts}}</label>
-        <span
-          class="form-control">{{(beneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.number_of_installments}}</label>
-        <span class="form-control">{{beneficiary.totalInstalments || '&nbsp;'}}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.monthly_rent}}</label>
-        <span
-          class="form-control">{{(beneficiary.benHouseRent | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
-    </div>
+
+    <hr class="mt-0">
+    <beneficiary-obligation [readonly]="true"
+                            [list]="beneficiary.beneficiaryObligationSet"></beneficiary-obligation>
+
+    <hr class="mt-0">
+    <beneficiary-income [readonly]="true"
+                        [list]="beneficiary.beneficiaryIncomeSet"></beneficiary-income>
+
   </ng-template>
   <ng-template #aidsTemplate>
     <div class="row">

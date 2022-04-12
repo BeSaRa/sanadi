@@ -20,30 +20,14 @@
         <label class="form-label">{{lang.map.mobile_number}}</label>
         <span class="form-control">{{auditBeneficiary.phoneNumber1 || '&nbsp;'}}</span>
       </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.monthly_income}}</label>
-        <span
-          class="form-control">{{(auditBeneficiary.benIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;' }}</span>
-      </div>
     </div>
-    <div class="row">
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.extra_income}}</label>
-        <span
-          class="form-control">{{(auditBeneficiary.benExtraIncome | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.total_debts}}</label>
-        <span
-          class="form-control">{{(auditBeneficiary.totalDebts | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 mb-4">
-        <label class="form-label">{{lang.map.number_of_installments}}</label>
-        <span class="form-control">{{auditBeneficiary.totalInstalments || '&nbsp;'}}</span>
-      </div>
-    </div>
+    <hr class="mt-0">
+    <beneficiary-obligation [readonly]="true"
+                            [list]="auditBeneficiary.beneficiaryObligationSet"></beneficiary-obligation>
+
+    <hr class="mt-0">
+    <beneficiary-income [readonly]="true"
+                        [list]="auditBeneficiary.beneficiaryIncomeSet"></beneficiary-income>
   </ng-container>
   <ng-container *ngIf="auditRecord.auditEntity === 'SUBVENTION_REQUEST' && auditSubventionRequest">
     <tabs-list>

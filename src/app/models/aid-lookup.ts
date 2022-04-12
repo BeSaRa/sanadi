@@ -11,6 +11,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {OperationTypes} from '@app/enums/operation-types.enum';
+import {AdminResult} from '@app/models/admin-result';
 
 export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   aidCode!: string;
@@ -94,5 +95,9 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
 
   showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
+  }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id, parent: this.parent});
   }
 }

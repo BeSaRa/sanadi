@@ -84,6 +84,10 @@ export class BuildingPlateComponent implements OnInit {
     return this.form.valid;
   }
 
+  isTouchedOrDirty(): boolean {
+    return this.form && (this.form.touched || this.form.dirty);
+  }
+
   private _getPropertyKey(fieldName: 'buildingNo' | 'zone' | 'street' | 'unit'): string {
     if (CommonUtils.isEmptyObject(this.propertyMap) || !this.propertyMap![fieldName]) {
       return this.fields[fieldName];

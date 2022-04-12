@@ -2,6 +2,7 @@ import {ILanguageKeys} from '../interfaces/i-language-keys';
 import {Localization} from '../models/localization';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {AbstractControl} from '@angular/forms';
+import {ITabData} from '@app/interfaces/i-tab-data';
 
 export type  LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
@@ -41,6 +42,7 @@ export type ReadinessStatus = 'READY' | 'NOT_READY';
 export type DatepickerOptionsMap = { [key: string]: IAngularMyDpOptions };
 
 export type DatepickerControlsMap = { [key: string]: AbstractControl };
+export type TabMap = { [key: string]: ITabData };
 
 
 type info = 'Info';

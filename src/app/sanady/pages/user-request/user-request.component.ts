@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
-import {BehaviorSubject, merge, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, Observable, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -35,16 +35,19 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SubventionAidService} from '@app/services/subvention-aid.service';
 import {StatusEnum} from '@app/enums/status.enum';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PeriodicPayment} from '@app/enums/periodic-payment.enum';
+import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
 import {SubventionRequestStatus} from '@app/enums/subvention-request-status';
 import {Pair} from '@app/interfaces/pair';
 import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
 import {ReadModeService} from '@app/services/read-mode.service';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {isValidValue} from '@app/helpers/utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {CanNavigateOptions, DatepickerOptionsMap} from '@app/types/types';
+import {
+  CanNavigateOptions,
+  DatepickerControlsMap,
+  DatepickerOptionsMap,
+  ReadinessStatus,
+  TabMap
+} from '@app/types/types';
 import {NavigationService} from '@app/services/navigation.service';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {SubventionResponseService} from '@app/services/subvention-response.service';
@@ -64,13 +67,20 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {
+  BeneficiaryObligationComponent
+} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
+import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
+import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 
 @Component({
   selector: 'app-user-request',
   templateUrl: './user-request.component.html',
   styleUrls: ['./user-request.component.scss']
 })
-export class UserRequestComponent implements OnInit, OnDestroy {
+export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(public langService: LangService,
               public lookup: LookupService,
               private beneficiaryService: BeneficiaryService,
@@ -83,6 +93,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               private aidLookupService: AidLookupService,
               private activeRoute: ActivatedRoute,
               private router: Router,
+              private cd: ChangeDetectorRef,
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
@@ -116,7 +127,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.listenToSecondaryIdTypeChange();
     this.preparePeriodicityLookups();
     this.listenToRouteParams();
+    this.loadMainAidLookups();
 
+  }
+
+  ngAfterViewInit(): void {
+    this.cd.detectChanges();
   }
 
   ngOnDestroy() {
@@ -151,8 +167,10 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   attachmentList: SanadiAttachment[] = [];
   fm!: FormManager;
   form!: FormGroup;
-  subAidLookupsArray: AidLookup[] = [];
-  subAidLookup: Record<number, AidLookup> = {} as Record<number, AidLookup>;
+  mainAidLookupsList: AidLookup[] = [];
+  subAidLookupsList: AidLookup[] = [];
+
+  aidsSubAidLookupsList: AidLookup[] = [];
   periodicityLookups: Record<number, Lookup> = {};
   editAidItem?: SubventionAid;
   editMode = false;
@@ -183,7 +201,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   aidColumns = [
     'approvalDate',
-    'aidLookupId',
+    'requestedAidCategory',
+    'requestedAid',
     'estimatedAmount',
     'periodicType',
     'installementsCount',
@@ -194,6 +213,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   ];
   today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
 
+  datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
     dateOfBirth: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     creationDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
@@ -204,17 +224,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   actionIconsEnum = ActionIconsEnum;
+  fileExtensionsEnum = FileExtensionsEnum;
 
-  datepickerFieldPathMap: IKeyValue = {
-    dateOfBirth: 'personalTab.dateOfBirth',
-    creationDate: 'requestInfoTab.creationDate',
-    requestDate: 'requestInfoTab.creationDate',
-    statusDateModified: 'requestStatusTab.statusDateModified',
-    aidApprovalDate: 'aidTab.0.approvalDate',
-    aidPaymentDate: 'aidTab.0.aidStartPayDate'
-  };
-
-  aidPeriodicTypeSub!: Subscription;
   aidApprovalDateSub!: Subscription;
   readOnly = false;
   isPartialRequest: boolean = false;
@@ -234,15 +245,81 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId,
   };
 
-  tabsData: IKeyValue = {
-    personal: {name: 'personalTab'},
-    income: {name: 'incomeTab'},
-    address: {name: 'addressTab'},
-    requestInfo: {name: 'requestInfoTab'},
-    requestStatus: {name: 'requestStatusTab'},
-    aids: {name: 'aidsTab'},
-    attachments: {name: 'attachmentsTab'}
+
+  @ViewChild('attachmentListComponent') attachmentListComponent!: AttachmentListComponent;
+  @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
+  @ViewChild('beneficiaryObligations') beneficiaryObligationComponentRef!: BeneficiaryObligationComponent;
+  @ViewChild('beneficiaryIncomes') beneficiaryIncomeComponentRef!: BeneficiaryIncomeComponent;
+  beneficiaryObligationsStatus: ReadinessStatus = 'READY';
+  beneficiaryIncomesStatus: ReadinessStatus = 'READY';
+
+  tabsData: TabMap = {
+    personal: {
+      name: 'personalTab',
+      langKey: 'personal_info',
+      index: 0,
+      checkTouchedDirty: true,
+      validStatus: () => this.personalInfoTab && this.personalInfoTab.valid,
+      isTouchedOrDirty: () => this.personalInfoTab && (this.personalInfoTab.touched || this.personalInfoTab.dirty)
+    },
+    income: {
+      name: 'incomeTab',
+      langKey: 'income_employment',
+      index: 1,
+      checkTouchedDirty: false,
+      validStatus: () => {
+        return this.incomeTab && this.incomeTab.valid
+          && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY' && this.beneficiaryObligationComponentRef.list.length > 0))
+          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY' && this.beneficiaryIncomeComponentRef.list.length > 0));
+      },
+      isTouchedOrDirty: () => {
+        return (this.incomeTab && (this.incomeTab.touched || this.incomeTab.dirty))
+          || (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
+          || (this.beneficiaryIncomeComponentRef && this.beneficiaryIncomeComponentRef.isTouchedOrDirty())
+      }
+    },
+    address: {
+      name: 'addressTab',
+      langKey: 'lbl_address',
+      index: 2,
+      checkTouchedDirty: true,
+      validStatus: () => this.addressTab && this.addressTab.valid && !!this.buildingPlate && this.buildingPlate.isValidForm(),
+      isTouchedOrDirty: () => (this.addressTab && (this.addressTab.touched || this.addressTab.dirty)) || (this.buildingPlate && this.buildingPlate.isTouchedOrDirty())
+    },
+    requestInfo: {
+      name: 'requestInfoTab',
+      langKey: 'request_info',
+      index: 3,
+      checkTouchedDirty: true,
+      validStatus: () => this.requestInfoTab && this.requestInfoTab.valid,
+      isTouchedOrDirty: () => this.requestInfoTab && (this.requestInfoTab.touched || this.requestInfoTab.dirty)
+    },
+    requestStatus: {
+      name: 'requestStatusTab',
+      langKey: 'request_status',
+      index: 4,
+      checkTouchedDirty: true,
+      validStatus: () => this.requestStatusTab && this.requestStatusTab.valid,
+      isTouchedOrDirty: () => this.requestStatusTab && (this.requestStatusTab.touched || this.requestStatusTab.dirty)
+    },
+    aids: {
+      name: 'aidsTab',
+      langKey: 'provided_aid',
+      index: 5,
+      checkTouchedDirty: true,
+      validStatus: () => this.aidFormArray && this.aidFormArray.valid,
+      isTouchedOrDirty: () => this.aidFormArray && (this.aidFormArray.touched || this.aidFormArray.dirty)
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      index: 6,
+      checkTouchedDirty: true,
+      validStatus: () => this.attachmentsTab && this.attachmentsTab.valid,
+      isTouchedOrDirty: () => this.attachmentsTab && (this.attachmentsTab.touched || this.attachmentsTab.dirty)
+    }
   };
+
   saveVisible: boolean = true;
   cancelVisible: boolean = true;
   validateFieldsVisible: boolean = true;
@@ -261,20 +338,25 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     saveAndInquire: 'saveAndInquire',
     partialSave: 'partialSave'
   };
-
-  @ViewChild('buildingPlate') buildingPlate!: BuildingPlateComponent;
+  ndaFile: any;
+  ndaAttachment: any;
 
   @ViewChild('aidsTable') aidsTable!: TableComponent;
 
-  sortingCallbacks = {
+  aidsSortingCallbacks = {
     approvalDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.approvalDate),
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    aidType: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : this.getAidLookup(a.aidLookupId).getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : this.getAidLookup(b.aidLookupId).getName().toLowerCase();
+    requestedAidCategory: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    requestedAid: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     estimatedAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
@@ -309,20 +391,36 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
-      incomeTab: this.fb.group(beneficiary.getEmployerFields(true)),
+      incomeTab: this.fb.group(beneficiary.getIncomeFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
+      disableDataSharing: this.fb.control(beneficiary.disableDataSharing),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
       aidTab: this.fb.array([])
     });
     this.fm = new FormManager(this.form, this.langService);
+    this._buildDatepickerControlsMap();
   }
 
   private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
     request = request ? request : new SubventionRequest();
     const group = this.fb.group(request.getStatusFields(true)) as FormGroup;
     this.listenToRequestStatusChange(group);
+    this._buildDatepickerControlsMap();
     return group;
+  }
+
+  private _buildDatepickerControlsMap() {
+    setTimeout(() => {
+      this.datepickerControlsMap = {
+        dateOfBirth: this.dateOfBirthField,
+        creationDate: this.creationDateField,
+        requestDate: this.requestDateField,
+        statusDateModified: this.statusDateModifiedField,
+        aidApprovalDate: this.aidApprovalDate,
+        aidPaymentDate: this.aidPaymentDate
+      };
+    })
   }
 
   private listenToBeneficiaryChange() {
@@ -348,12 +446,16 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       personal?.markAsPristine();
       income?.reset();
       income?.markAsPristine();
+      this.disableDataSharingField.setValue(false);
+      this.beneficiaryIncomeComponentRef.forceClearComponent();
+      this.beneficiaryObligationComponentRef.forceClearComponent();
       address?.reset();
       address?.markAsPristine();
     } else {
       personal?.patchValue(selectedBeneficiary.getPersonalFields());
-      income?.patchValue(selectedBeneficiary.getEmployerFields());
+      income?.patchValue(selectedBeneficiary.getIncomeFields());
       address?.patchValue(selectedBeneficiary.getAddressFields());
+      this.disableDataSharingField.setValue(selectedBeneficiary.disableDataSharing);
     }
 
   }
@@ -365,15 +467,19 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       requestInfo?.reset();
       requestStatus?.reset();
       this.readOnly = false;
+      this.subAidLookupsList = [];
     } else {
       requestStatus?.patchValue(request.getStatusFields());
       requestInfo?.patchValue(request.getInfoFields());
+
+      this.loadSubAidLookups(request.aidLookupParentId);
 
       if (request.isPartial) {
         this.displayFormValidity();
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
+          this.disableDataSharingField?.disable();
           if (this.readOnly) {
             this.allowCompletionField?.disable();
           }
@@ -437,7 +543,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.primaryIdTypeField?.value === this.idMap.passport && isValidValue(this.primaryNationalityField?.value)) {
+      if (this.primaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.primaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.primaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
@@ -448,7 +554,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.secondaryIdTypeField?.value === this.idMap.passport && isValidValue(this.secondaryNationalityField?.value)) {
+      if (this.secondaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.secondaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
@@ -511,7 +617,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           });
           return this.subventionResponseService.savePartialRequest(data)
             .pipe(catchError((err) => {
-              this.exceptionHandlerService.handle(err);
+              // this.exceptionHandlerService.handle(err);
               return of(null);
             }));
         })
@@ -551,7 +657,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     // map formStatus
     const formStatus$ = formAidValid$.pipe(
       map(() => {
-        return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+        let isValid = this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+        if (!!this.currentRequest && this.currentRequest.id) {
+          return isValid;
+        }
+        return isValid && (!this.disableDataSharingField.value ? true : !!this.ndaFile);
       })
     );
 
@@ -588,6 +698,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
             return of(null);
           }));
         }),
+        filter((value) => this.validateBeneficiaryResponse(value) !== 'STOP'),
         tap((value) => this.displayBeneficiaryExistsMessage(value)),
         map(value => {
           return value?.second;
@@ -605,45 +716,62 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }),
         exhaustMap((request: SubventionRequest) => {
           return request.save().pipe(catchError((err) => {
-            this.exceptionHandlerService.handle(err);
+            // this.exceptionHandlerService.handle(err);
             return of(null);
           }));
         })
       ).subscribe((request) => {
+      console.log(this.currentBeneficiary);
+      debugger;
       if (!request) {
         return;
       }
 
-      if (this.editMode) {
-        this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
-      } else {
-        this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
-      }
-      this.currentRequest = request.clone();
-      this.editMode = true;
+      this.uploadNDADocument(request)
+        .subscribe((ndaStatus) => {
+          if (ndaStatus === 'FAILED_NDA_ATTACHMENT') {
+            this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.nda_document}));
+          } else if (ndaStatus !== 'NO_NDA_NEEDED') {
+            this.ndaAttachment.vsId = ndaStatus;
+            this.attachmentList.push(this.ndaAttachment);
+          }
 
-      if (!this.currentRequest.isUnderProcessing()) {
-        this.allowCompletionField?.disable();
-        this.readModeService.setReadOnly(this.currentRequest.id);
-      }
+          if (this.editMode) {
+            this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
+          } else {
+            this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
+          }
+          this.currentRequest = request.clone();
+          this.editMode = true;
 
-      if (!this.requestStatusTab.value) {
-        this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
-      }
-      this.form.markAsPristine({onlySelf: true});
+          this.disableDataSharingField?.disable();
 
-      if (saveType === this.saveActions.validateAndSave) {
-        this.requestChanged$.next(this.currentRequest);
-      } else if (saveType === this.saveActions.saveAndInquire) {
-        this.skipConfirmUnsavedChanges = true;
-        const ben = this.prepareBeneficiary();
-        this.eCookieService.putEObject('b_i_d', {
-          idType: ben.benPrimaryIdType,
-          idNumber: ben.benPrimaryIdNumber,
-          nationality: ben.benPrimaryIdNationality
+          if (!this.currentRequest.isUnderProcessing()) {
+            this.allowCompletionField?.disable();
+            this.readModeService.setReadOnly(this.currentRequest.id);
+          }
+
+          if (!this.requestStatusTab.value) {
+            this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
+          }
+          this.form.markAsPristine({onlySelf: true});
+
+          this.ndaAttachment = undefined;
+
+          if (saveType === this.saveActions.validateAndSave) {
+            this.requestChanged$.next(this.currentRequest);
+          } else if (saveType === this.saveActions.saveAndInquire) {
+            this.skipConfirmUnsavedChanges = true;
+            const ben = this.prepareBeneficiary();
+            this.eCookieService.putEObject('b_i_d', {
+              idType: ben.benPrimaryIdType,
+              idNumber: ben.benPrimaryIdNumber,
+              nationality: ben.benPrimaryIdNationality
+            });
+            this.router.navigate(['/home/sanady/inquiry']).then();
+          }
         });
-        this.router.navigate(['/home/sanady/inquiry']).then();
-      }
+
     });
 
     // if we have invalid forms display dialog to tell the user that is something wrong happened.
@@ -652,6 +780,28 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.checkFormFieldsCallback();
       });
+  }
+
+  private uploadNDADocument(request: SubventionRequest): Observable<any> {
+    // if existing request is updated, then proceed. otherwise, upload nda document
+    if (!!this.currentRequest && this.currentRequest.id) {
+      return of('NO_NDA_NEEDED');
+    } else {
+      let data = (new SanadiAttachment()).clone(this.ndaFile) as SanadiAttachment;
+      data.documentTitle = 'Non-Disclosure Form';
+      data.attachmentType = AttachmentTypeEnum.NON_DISCLOSURE_FORM;
+      let attachmentTypeInfo = this.lookup.listByCategory.ATTACHMENT_TYPE.find(x => x.lookupKey === AttachmentTypeEnum.NON_DISCLOSURE_FORM);
+      data.attachmentTypeInfo = attachmentTypeInfo ? attachmentTypeInfo.convertToAdminResult() : new AdminResult();
+      data.requestFullSerial = request.requestFullSerial;
+      data.requestId = request.id;
+
+      this.ndaAttachment = data;
+
+      return this.attachmentService.saveAttachment(data, this.ndaFile)
+        .pipe(catchError(() => {
+          return of('FAILED_NDA_ATTACHMENT');
+        }));
+    }
   }
 
   private checkFormFieldsCallback() {
@@ -668,7 +818,12 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     const address = this.fm.getFormField('addressTab')?.value;
     const buildingPlate = this.buildingPlate.getValue();
     return this.currentBeneficiary = (new Beneficiary())
-      .clone({...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate});
+      .clone({
+        ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
+        disableDataSharing: this.disableDataSharingField.value,
+        beneficiaryIncomeSet: this.beneficiaryIncomeComponentRef.list,
+        beneficiaryObligationSet: this.beneficiaryObligationComponentRef.list
+      });
   }
 
   private prepareRequest(): SubventionRequest {
@@ -709,7 +864,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
               .pipe(
                 catchError((err) => {
                   this.currentParamType = this.routeParamTypes.normal;
-                  this.exceptionHandlerService.handle(err);
+                  // this.exceptionHandlerService.handle(err);
                   return of(null);
                 })
               );
@@ -744,12 +899,11 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         }
 
         this.requestChanged$.next(response.request);
-        this.loadSubAidCategory().subscribe((_) => {
-          // if partial request page, save it directly
-          if (this.currentParamType === this.routeParamTypes.partial) {
-            this.savePartial$.next(this.saveActions.partialSave);
-          }
-        });
+
+        // if partial request page, save it directly
+        if (this.currentParamType === this.routeParamTypes.partial) {
+          this.savePartial$.next(this.saveActions.partialSave);
+        }
       });
   }
 
@@ -818,31 +972,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }, {} as Record<number, Lookup>);
   }
 
-  private prepareLookupAid(): void {
-    this.subAidLookup = this.subAidLookupsArray.reduce((acc, item) => {
-      return {...acc, [item.id]: item};
-    }, this.subAidLookup);
-  }
-
   private resetAid() {
-    const aidArray = this.fm.getFormField('aidTab') as FormArray;
-    aidArray.clear();
-    aidArray.markAsUntouched();
-    aidArray.markAsPristine();
+    this.aidFormArray.clear();
+    this.aidFormArray.markAsUntouched();
+    this.aidFormArray.markAsPristine();
   }
 
   private validateAidAmount(): 'VALID' | 'INVALID_ONE_TIME' | 'INVALID_MONTHLY' {
     const aidPeriodicType = this.aidPeriodicType?.value,
       givenAmount = this.aidGivenAmountField?.value,
       estimatedAmount = this.aidEstimatedAmountField?.value,
-      numberOfInstallments = this.aidInstallmentsCount?.value,
-      subAidPeriodicType = {
-        monthly: 1,
-        oneTime: 2
-      };
-    if (aidPeriodicType === subAidPeriodicType.oneTime && (Number(givenAmount) > Number(estimatedAmount))) {
+      numberOfInstallments = this.aidInstallmentsCount?.value;
+    if (aidPeriodicType === SubAidPeriodicTypeEnum.ONE_TIME && (Number(givenAmount) > Number(estimatedAmount))) {
       return 'INVALID_ONE_TIME';
-    } else if (aidPeriodicType === subAidPeriodicType.monthly && (Number(givenAmount) * Number(numberOfInstallments)) > Number(estimatedAmount)) {
+    } else if (aidPeriodicType === SubAidPeriodicTypeEnum.MONTHLY && (Number(givenAmount) * Number(numberOfInstallments)) > Number(estimatedAmount)) {
       return 'INVALID_MONTHLY';
     }
     return 'VALID';
@@ -872,14 +1015,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       filter((value: string) => value === 'VALID')
     );
     const invalidForm$ = aidForm$.pipe(filter((form) => form.invalid));
-    let parentValue = 0;
     invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.dialogService
         .error(this.langService.map.msg_all_required_fields_are_filled)
         .onAfterClose$
         .pipe(take(1))
         .subscribe(() => {
-          this.fm.getFormField('aidTab')?.markAllAsTouched();
+          this.aidFormArray?.markAllAsTouched();
         });
     });
 
@@ -889,7 +1031,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         return this.fm.getFormField('aidTab.0') as FormArray;
       }),
       map((form) => {
-        parentValue = form.value.mainAidType;
+
         return (new SubventionAid()).clone({
           ...this.currentAid, ...form.getRawValue(),
           subventionRequestId: this.currentRequest?.id
@@ -899,24 +1041,28 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         if (!this.currentRequest || !this.currentRequest.id) {
           return of(aid);
         }
-        return aid
-          .save()
+        return aid.save()
           .pipe(catchError(() => of(null)));
       })
     ).subscribe((subventionAid) => {
       if (!subventionAid) {
         return;
       }
+      let message: string,
+        requestedAidCategory = this.mainAidLookupsList.find(x => x.id === subventionAid.aidLookupParentId),
+        requestedAid = this.subAidLookupsList.find(x => x.id === subventionAid.aidLookupId);
 
-      let message: string;
+      let savedRecord = (subventionAid as SubventionAid).clone({
+        aidLookupParentInfo: requestedAidCategory ? requestedAidCategory.convertToAdminResult() : new AdminResult(),
+        aidLookupInfo: requestedAid ? requestedAid.convertToAdminResult() : new AdminResult()
+      });
+
       if (!this.editAidItem) {
-        this.subventionAidList.push(subventionAid.clone({
-          aidLookupInfo: AdminResult.createInstance({parent: parentValue})
-        }));
+        this.subventionAidList.push(savedRecord);
         message = this.langService.map.msg_aid_added_successfully;
       } else {
         let index = this.subventionAidList.findIndex(x => x === this.editAidItem);
-        this.subventionAidList.splice(index, 1, subventionAid);
+        this.subventionAidList.splice(index, 1, savedRecord);
         this.editAidItem = undefined;
         message = this.langService.map.msg_aid_updated_successfully;
       }
@@ -966,18 +1112,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private updateAidForm(aid: SubventionAid | undefined) {
-    const aidArray = this.fm.getFormField('aidTab') as FormArray;
-    aidArray.clear();
+    this.aidFormArray.clear();
 
     if (aid) {
-      aidArray.push(this.fb.group(aid.getAidFields(true)));
-      this.loadSubAidCategory().subscribe();
-      this.aidPeriodicTypeSub = this.aidPeriodicType
-        .valueChanges
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((value) => {
-          this.periodicChange(value);
-        });
+      this.aidFormArray.push(this.fb.group(aid.getAidFields(true)));
+      this._buildDatepickerControlsMap();
+      this.loadAidsSubAidLookups(aid.aidLookupParentId);
+      this.aidsPeriodicTypeChange(aid.periodicType);
       this.aidPeriodicType.updateValueAndValidity();
 
       const requestCreationDateValue = DateUtils.changeDateFromDatepicker(this.creationDateField?.value);
@@ -994,7 +1135,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
         this._setPaymentDateValidations();
       });
     } else {
-      this.aidPeriodicTypeSub?.unsubscribe();
       this.aidApprovalDateSub?.unsubscribe();
     }
   }
@@ -1003,12 +1143,48 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('aidTab') as FormArray;
   }
 
+  get personalInfoTab(): FormGroup {
+    return this.fm.getFormField('personalTab') as FormGroup;
+  }
+
+  get incomeTab(): FormGroup {
+    return this.fm.getFormField('incomeTab') as FormGroup;
+  }
+
+  get addressTab(): FormGroup {
+    return this.fm.getFormField('addressTab') as FormGroup;
+  }
+
+  get requestInfoTab(): FormGroup {
+    return this.fm.getFormField('requestInfoTab') as FormGroup;
+  }
+
+  get disableDataSharingField(): FormControl {
+    return this.fm.getFormField('disableDataSharing') as FormControl;
+  }
+
   get requestStatusTab(): FormGroup {
     return this.fm.getFormField('requestStatusTab') as FormGroup;
   }
 
+  get attachmentsTab(): FormGroup {
+    return this.fm.getFormField('attachmentsTab') as FormGroup;
+  }
+
+  get dateOfBirthField(): FormControl {
+    return this.personalInfoTab.get('dateOfBirth') as FormControl;
+  }
+
   get creationDateField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.creationDate') as FormControl;
+    return this.requestInfoTab.get('creationDate') as FormControl;
+  }
+
+  get requestDateField(): FormControl {
+    return this.requestInfoTab.get('creationDate') as FormControl;
+  }
+
+  get statusDateModifiedField(): FormControl {
+    return this.requestStatusTab.get('statusDateModified') as FormControl;
   }
 
   get aidTypeField(): FormControl {
@@ -1039,6 +1215,50 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.aidFormArray.get('0.aidStartPayDate') as FormControl;
   }
 
+  get benNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benNationality') as FormControl;
+  }
+
+  get primaryIdTypeField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdType') as FormControl;
+  }
+
+  get primaryIdNumberField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdNumber') as FormControl;
+  }
+
+  get primaryNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benPrimaryIdNationality') as FormControl;
+  }
+
+  get secondaryIdTypeField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdType') as FormControl;
+  }
+
+  get secondaryIdNumberField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdNumber') as FormControl;
+  }
+
+  get secondaryNationalityField(): FormControl {
+    return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
+  }
+
+  get requestedAidField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.aidLookupId') as FormControl;
+  }
+
+  get aidsRequestedAidField(): FormControl {
+    return this.fm.getFormField('aidTab.0.aidLookupId') as FormControl;
+  }
+
+  get allowCompletionField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
+  }
+
+  get isCurrentRequestPartial(): boolean {
+    return !this.currentRequest ? false : this.currentRequest.isPartial;
+  }
+
   deleteAid(subventionAid: SubventionAid, $event?: MouseEvent): any {
     $event?.preventDefault();
     this.dialogService.confirm(this.langService.map.msg_confirm_delete_selected)
@@ -1067,12 +1287,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.aidChanged$.next(row);
   }
 
-  getLookup(lookupKey: number): Lookup {
+  getPeriodicityLookup(lookupKey: number): Lookup {
     return this.periodicityLookups[lookupKey];
-  }
-
-  getAidLookup(id: number): AidLookup {
-    return this.subAidLookup[id];
   }
 
   private listenToAddAid() {
@@ -1082,23 +1298,58 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadSubAidCategory() {
-    this.subAidLookupsArray = [];
-    return this.aidLookupService
-      .loadByCriteria({
-        aidType: AidTypes.SUB_CATEGORY,
-        status: StatusEnum.ACTIVE
-      })
-      .pipe(
-        take(1),
-        tap(list => {
-          this.subAidLookupsArray = list;
-          this.prepareLookupAid();
-        })
-      );
+  private loadMainAidLookups() {
+    this.mainAidLookupsList = [];
+    return this.aidLookupService.loadByCriteria({
+      aidType: AidTypes.MAIN_CATEGORY,
+      status: StatusEnum.ACTIVE
+    }).pipe(
+      catchError(err => of([]))
+    ).subscribe((list) => {
+      this.mainAidLookupsList = list;
+    });
   }
 
-  periodicChange(value: number) {
+  handleMainAidChange($event: number) {
+    this.requestedAidField.reset();
+    this.loadSubAidLookups($event);
+  }
+
+  private loadSubAidLookups(mainAidId: number) {
+    this.subAidLookupsList = [];
+
+    this.loadSubAidsByMainAidId(mainAidId).subscribe(list => {
+      this.subAidLookupsList = list;
+    });
+  }
+
+  handleAidsMainAidChange($event: number) {
+    this.aidsRequestedAidField.reset();
+    this.loadAidsSubAidLookups($event);
+  }
+
+  private loadAidsSubAidLookups(mainAidId: number) {
+    this.aidsSubAidLookupsList = [];
+
+    this.loadSubAidsByMainAidId(mainAidId).subscribe(list => {
+      this.aidsSubAidLookupsList = list;
+    });
+  }
+
+  private loadSubAidsByMainAidId(mainAidId: number): Observable<AidLookup[]> {
+    if (!mainAidId) {
+      return of([]);
+    }
+    return this.aidLookupService.loadByCriteria({
+      aidType: AidTypes.SUB_CATEGORY,
+      status: StatusEnum.ACTIVE,
+      parent: mainAidId
+    }).pipe(
+      catchError(err => of([]))
+    )
+  }
+
+  aidsPeriodicTypeChange(value: number, userInteraction: boolean = false) {
     if (value === PeriodicPayment.MONTHLY) {
       this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number, Validators.min(1)]);
       this.aidInstallmentsCount.enable();
@@ -1147,7 +1398,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
           group.get('status')?.setValue(oldValue);
         }
         this.setRelatedMinDate('creationDate', 'statusDateModified');
-        // const requestInfoRequestDate = this.fm.getFormField('requestInfoTab.creationDate');
         let creationDate = DateUtils.changeDateFromDatepicker(this.creationDateField?.value);
         if (creationDate) {
           creationDate.setHours(0, 0, 0, 0);
@@ -1177,6 +1427,24 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
   }
 
+  private validateBeneficiaryResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
+    if (!value) {
+      return 'CONTINUE';
+    }
+    let stopRequestStatus = [
+      BeneficiarySaveStatus.NDA_ACTIVE_REQUESTS_EXISTING,
+      BeneficiarySaveStatus.NDA_RECENT_AID_EXISTING,
+      BeneficiarySaveStatus.NDA_RECENT_PERIODIC_AIDS_EXISTING
+    ]
+    if (stopRequestStatus.includes(value.first)) {
+      // @ts-ignore
+      this.dialogService.info(this.langService.map[value.first]);
+      return 'STOP';
+    } else {
+      return 'CONTINUE';
+    }
+  }
+
   private displayBeneficiaryExistsMessage(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): any {
     if (!value) {
       return;
@@ -1201,7 +1469,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
       confirmMsg.onAfterClose$
         .pipe(take(1))
         .subscribe((click: UserClickOn) => {
-          if (!isValidValue(click) || click === UserClickOn.CLOSE) {
+          if (!CommonUtils.isValidValue(click) || click === UserClickOn.CLOSE) {
             return;
           }
           if (click === UserClickOn.YES) {
@@ -1227,25 +1495,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSameDate: boolean = false): void {
-    setTimeout(() => {
-      let toFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
-      const fromDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
-      if (!fromDate) {
-        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
-      } else {
-        const disableDate = new Date(fromDate);
-        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
-        if (!disableSameDate) {
-          disableDate.setDate(disableDate.getDate() - 1);
-        }
-        toFieldDateOptions.disableUntil = {
-          year: disableDate.getFullYear(),
-          month: disableDate.getMonth() + 1,
-          day: disableDate.getDate()
-        }
-      }
-      this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
-    }, 100);
+    DateUtils.setRelatedMinDate({
+      fromFieldName: fromFieldName,
+      toFieldName: toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: this.datepickerControlsMap,
+      disableSelectedFromRelated: disableSameDate
+    });
   }
 
   isPrimaryIdTypeDisabled(optionValue: number): boolean {
@@ -1256,36 +1512,8 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('personalTab.benPrimaryIdType')?.value === optionValue;
   }
 
-  get benNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benNationality') as FormControl;
-  }
-
-  get primaryIdTypeField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdType') as FormControl;
-  }
-
-  get primaryIdNumberField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdNumber') as FormControl;
-  }
-
-  get primaryNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdNationality') as FormControl;
-  }
-
-  get secondaryIdTypeField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdType') as FormControl;
-  }
-
-  get secondaryIdNumberField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdNumber') as FormControl;
-  }
-
-  get secondaryNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
-  }
-
   private setNationalityVisibility(identification: string, idType: number): boolean {
-    if (!isValidValue(idType)) {
+    if (!CommonUtils.isValidValue(idType)) {
       return false;
     }
     let visibility: boolean = (idType === this.idMap.passport || idType === this.idMap.gccId),
@@ -1305,7 +1533,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   }
 
   private getNationalityByIdType(idType: number): string | number {
-    if (!isValidValue(idType)) {
+    if (!CommonUtils.isValidValue(idType)) {
       return '';
     }
     let nationalityValue: string | number = '';
@@ -1315,14 +1543,13 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return nationalityValue;
   }
 
-
   private listenToPrimaryIdTypeChange() {
     this.primaryIdTypeField?.valueChanges.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
       let idValidators: any[] = [CustomValidators.required], nationalityValidators = null;
 
-      if (isValidValue(value)) {
+      if (CommonUtils.isValidValue(value)) {
         idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
 
         if (value === this.idMap.passport || value === this.idMap.gccId) {
@@ -1348,7 +1575,7 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     ).subscribe(value => {
       let idValidators: any[] = [], nationalityValidators = null;
 
-      if (isValidValue(value)) {
+      if (CommonUtils.isValidValue(value)) {
         idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
 
         if (value === this.idMap.passport || value === this.idMap.gccId) {
@@ -1396,14 +1623,6 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     }
   }
 
-  get allowCompletionField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
-  }
-
-  get isCurrentRequestPartial(): boolean {
-    return !this.currentRequest ? false : this.currentRequest.isPartial;
-  }
-
   // setButtonsVisibility(tab: any): void {
   //   /*const tabsNotToShowSave = [this.tabsData.aids.name, this.tabsData.attachments.name];
   //   const tabsNotToShowValidate = [this.tabsData.aids.name, this.tabsData.attachments.name];
@@ -1431,6 +1650,20 @@ export class UserRequestComponent implements OnInit, OnDestroy {
     return !this.readOnly && !this.isPartialRequest;
   }
 
+  handleNDAFieldChange($event: any): void {
+    if (!this.disableDataSharingField.value) {
+      this.ndaFile = undefined;
+    }
+  }
+
+  setNDAFile(file: File | File[] | undefined): void {
+    if (!file || file instanceof File) {
+      this.ndaFile = file;
+    } else {
+      this.ndaFile = file[0];
+    }
+  }
+
   /**
    * @description Check if user can navigate to other pages
    */
@@ -1444,5 +1677,24 @@ export class UserRequestComponent implements OnInit, OnDestroy {
   displayFormValidity(contentId: string = ''): void {
     this.fm.displayFormValidity(contentId);
     this.buildingPlate.displayFormValidity();
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    let validStatus = this.tabsData[tabName].validStatus();
+    if (!this.tabsData[tabName].checkTouchedDirty) {
+      return !validStatus;
+    }
+    return !validStatus && this.tabsData[tabName].isTouchedOrDirty();
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
   }
 }

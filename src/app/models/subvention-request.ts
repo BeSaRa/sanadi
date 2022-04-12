@@ -22,7 +22,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   requestSerial!: number;
   requestFullSerial!: string;
   requestChannel!: number;
-  requestType!: number;
   requestedAidAmount!: number;
   requestYear!: number;
   requestSummary!: string;
@@ -41,6 +40,8 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   allowCompletion: boolean = false;
   aidTotalPayedAmount: number = 0;
   requestParentId?: number;
+  aidLookupId!: number;
+  aidLookupParentId!: number;
 
   // not belongs to the Model
   service: SubventionRequestService;
@@ -118,9 +119,10 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   }
 
   getInfoFields(control: boolean = false): any {
-    const {requestType, creationDate, requestedAidAmount, requestSummary, allowCompletion} = this;
+    const {aidLookupParentId, aidLookupId, creationDate, requestedAidAmount, requestSummary, allowCompletion} = this;
     return {
-      requestType: control ? [requestType, CustomValidators.required] : requestType,
+      aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
+      aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
       creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
       requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : requestedAidAmount,
       requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary,

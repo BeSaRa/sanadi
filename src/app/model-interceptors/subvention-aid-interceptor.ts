@@ -10,6 +10,7 @@ export class SubventionAidInterceptor {
     model.approvalDate = DateUtils.changeDateToDatepicker(model.approvalDate);
     model.aidStartPayDate = DateUtils.changeDateToDatepicker(model.aidStartPayDate);
 
+    model.aidLookupParentInfo = AdminResult.createInstance(model.aidLookupParentInfo);
     model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
     model.periodicTypeInfo = AdminResult.createInstance(model.periodicTypeInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
@@ -24,6 +25,7 @@ export class SubventionAidInterceptor {
     delete model.enName;
     delete model.mainAidType;
     delete model.aidLookupInfo;
+    delete model.aidLookupParentInfo;
     delete model.periodicTypeInfo;
     delete model.orgInfo;
     delete model.orgBranchInfo;
@@ -34,9 +36,6 @@ export class SubventionAidInterceptor {
     delete model.searchFieldsPartial;
     delete model.searchFieldsUserRequest;
     delete model.searchFieldsPartialRequestDetails;
-
-    /*model.approvalDate = model.approvalDate ? (new Date(model.approvalDate)).toISOString() : '';
-    model.aidStartPayDate = model.aidStartPayDate ? (new Date(model.aidStartPayDate)).toISOString() : '';*/
 
     model.approvalDate = !model.approvalDate ? '' : DateUtils.changeDateFromDatepicker(model.approvalDate)?.toISOString();
     model.aidStartPayDate = !model.aidStartPayDate ? '' : DateUtils.changeDateFromDatepicker(model.aidStartPayDate)?.toISOString();

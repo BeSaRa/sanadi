@@ -4,3 +4,8 @@ export enum PeriodicPayment {
   QUARTERLY,
   ONE_TIME
 }
+
+export enum SubAidPeriodicTypeEnum {
+  MONTHLY = 1,
+  ONE_TIME
+}

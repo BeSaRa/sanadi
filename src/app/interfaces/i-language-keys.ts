@@ -498,6 +498,10 @@ export interface ILanguageKeys {
   months_count: string;
   payment_date: string;
   payment_periodicity: string;
+  beneficiary_obligations: string;
+  beneficiary_incomes: string;
+  income_type: string;
+  obligation_type: string;
   approval_date: string;
   request_summary: string;
   reason_of_request: string;
@@ -916,4 +920,12 @@ export interface ILanguageKeys {
   msg_completion_offer_to_other_ou_if_not_fully_paid: string;
   disclosure_non_disclosure: string;
   print_license: string;
+  requested_aid_category: string;
+  requested_aid: string;
+  nda_document: string;
+  msg_save_fail_x: string;
+  non_disclosure: string;
+  BENEIFICARY_NDA_ACTIVE_REQUESTS_EXISTING: string; // don't change this as it is mapped to BE response
+  BENEIFICARY_NDA_RECENT_AID_EXISTING: string; // don't change this as it is mapped to BE response
+  BENEIFICARY_NDA_RECENT_PERIODIC_AIDS_EXISTING: string; // don't change this as it is mapped to BE response
 }

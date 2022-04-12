@@ -30,21 +30,18 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
   }
 
   @Generator(undefined, true)
-  private _loadByCriteria(criteria: Partial<ISubventionRequestCriteria> | string): Observable<SubventionRequestAid[]> {
+  private _loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
+    /*debugger;
     let paramsString = '';
     if (typeof criteria === 'string'){
       paramsString = criteria;
     } else {
       paramsString = this._parseObjectToQueryString(criteria);
-    }
-    return this.http.get<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria', {
-      params: new HttpParams({
-        fromString: paramsString
-      })
-    });
+    }*/
+    return this.http.post<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria', criteria);
   }
 
-  loadByCriteria(criteria: Partial<ISubventionRequestCriteria> | string): Observable<SubventionRequestAid[]> {
+  loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this._loadByCriteria(criteria);
   }
 

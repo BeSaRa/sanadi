@@ -28,11 +28,13 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
+  aidLookupParentId!: number;
   // not belong to the model
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   aidLookupInfo!: AdminResult;
+  aidLookupParentInfo!: AdminResult;
   periodicTypeInfo!: AdminResult;
 
   service: SubventionAidService;
@@ -48,7 +50,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
   };
   searchFieldsUserRequest: ISearchFieldsMap<SubventionAid> = {
-    ...infoSearchFields(['aidLookupInfo', 'periodicTypeInfo']),
+    ...infoSearchFields([ 'aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {
@@ -96,6 +98,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidSuggestedAmount,
       aidDescription,
       aidStartPayDate,
+      aidLookupParentId,
       aidLookupId,
       installementsCount
     } = this;
@@ -108,6 +111,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidSuggestedAmount: control ? [aidSuggestedAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : aidSuggestedAmount,
       aidDescription: control ? [aidDescription, [CustomValidators.required, CustomValidators.maxLength(1000)]] : aidDescription,
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
+      aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
       installementsCount: control ? [installementsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installementsCount
     };

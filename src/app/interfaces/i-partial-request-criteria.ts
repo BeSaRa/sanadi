@@ -4,4 +4,6 @@ export interface IPartialRequestCriteria {
   benCategory: number,
   requestType: string,
   gender: number
+  aidLookupParentId: number
+  aidLookupId: number
 }

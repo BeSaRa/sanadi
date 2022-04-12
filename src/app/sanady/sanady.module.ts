@@ -17,6 +17,8 @@ import {FilterRequestPopupComponent} from "./popups/filter-request-popup/filter-
 import {PartialRequestReportsComponent} from "./pages/partial-request-reports/partial-request-reports.component";
 import {SubventionAidPopupComponent} from "./popups/subvention-aid-popup/subvention-aid-popup.component";
 import { AuditDetailsPopupComponent } from './popups/audit-details-popup/audit-details-popup.component';
+import { BeneficiaryObligationComponent } from './shared/beneficiary-obligation/beneficiary-obligation.component';
+import { BeneficiaryIncomeComponent } from './shared/beneficiary-income/beneficiary-income.component';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { AuditDetailsPopupComponent } from './popups/audit-details-popup/audit-d
     RequestDetailsPopupComponent,
     FilterRequestPopupComponent,
     PartialRequestReportsComponent,
-    AuditDetailsPopupComponent
+    AuditDetailsPopupComponent,
+    BeneficiaryObligationComponent,
+    BeneficiaryIncomeComponent
   ],
   imports: [
     CommonModule,

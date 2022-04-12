@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {Router} from '@angular/router';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {switchMap, take, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {catchError, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {SubventionRequest} from '@app/models/subvention-request';
 import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
@@ -141,7 +141,12 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   private listenToReload() {
     this.reload$.pipe(
       takeUntil(this.destroy$),
-      switchMap(() => this.subventionRequestService.loadUnderProcess()),
+      switchMap(() => {
+        return this.subventionRequestService.loadUnderProcess()
+          .pipe(
+            catchError((err) => of([]))
+          )
+      })
     ).subscribe((requests) => {
       this.requests = requests;
     });

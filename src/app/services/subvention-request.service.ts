@@ -67,15 +67,17 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return SubventionRequestInterceptor.receive;
   }
 
-  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria> | string): Observable<Blob> {
-    let finalCriteriaString;
+  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+    debugger;
+    /*let finalCriteriaString;
     if (typeof criteria === 'string') {
       finalCriteriaString = criteria;
     } else {
       finalCriteriaString = this._parseObjectToQueryString({...criteria});
     }
-    finalCriteriaString = finalCriteriaString + '&lang=' + this.langService.getPrintingLanguage();
-    return this.http.get(this._getServiceURL() + '/criteria/export?' + finalCriteriaString, {responseType: 'blob'});
+    finalCriteriaString = finalCriteriaString + '&lang=' + this.langService.getPrintingLanguage();*/
+    criteria.lang = this.langService.getPrintingLanguage();
+    return this.http.post(this._getServiceURL() + '/criteria/export', criteria, {responseType: 'blob'});
   }
 
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
@@ -90,7 +92,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.subventionAidService.loadByCriteria(criteria);
   }
 
-  loadByCriteria(criteria: Partial<ISubventionRequestCriteria> | string): Observable<SubventionRequestAid[]> {
+  loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByCriteria(criteria);
   }
 

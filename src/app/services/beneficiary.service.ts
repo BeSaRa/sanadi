@@ -21,12 +21,16 @@ import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
 import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
+import {BeneficiaryIncomeInterceptor} from '@app/model-interceptors/beneficiary-income-interceptor';
+import {BeneficiaryObligationInterceptor} from '@app/model-interceptors/beneficiary-obligation-interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   list!: Beneficiary[];
+  beneficiaryIncomeInterceptor = new BeneficiaryIncomeInterceptor();
+  beneficiaryObligationInterceptor = new BeneficiaryObligationInterceptor();
 
   constructor(public http: HttpClient, private urlService: UrlService, private dialogService: DialogService) {
     super();
@@ -35,11 +39,7 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
 
   @Generator(undefined, true)
   private _loadByCriteria(criteria: Partial<IBeneficiaryCriteria>): Observable<Beneficiary[]> {
-    return this.http.get<Beneficiary[]>(this.urlService.URLS.BENEFICIARY + '/criteria', {
-      params: new HttpParams({
-        fromString: this._parseObjectToQueryString(criteria)
-      })
-    });
+    return this.http.post<Beneficiary[]>(this.urlService.URLS.BENEFICIARY + '/criteria', criteria);
   }
 
   loadByCriteria(criteria: Partial<IBeneficiaryCriteria>): Observable<Beneficiary[]> {

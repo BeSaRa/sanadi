@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {Router} from '@angular/router';
@@ -125,16 +125,16 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
 
   private _loadPartialRequests(): Observable<SubventionRequestPartial[]> {
     if (!this.hasFilterCriteria()) {
-      return this.subventionRequestPartialService.loadPartialRequests();
+      return this.subventionRequestPartialService.loadPartialRequests()
     } else {
-      return this.subventionRequestPartialService.loadPartialRequestsByCriteria(this.filterCriteria);
+      return this.subventionRequestPartialService.loadPartialRequestsByCriteria(this.filterCriteria)
     }
   }
 
   private listenToReload() {
     this.reload$.pipe(
       takeUntil(this.destroy$),
-      switchMap(() => this._loadPartialRequests()),
+      switchMap(() => this._loadPartialRequests().pipe(catchError((_) => of([])))),
     ).subscribe((partialRequests: SubventionRequestPartial[]) => {
       this.partialRequests = partialRequests;
     });

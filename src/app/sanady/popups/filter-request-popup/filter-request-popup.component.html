@@ -10,10 +10,10 @@
       <div class="col-sm-12 col-md-6">
         <label for="requestYear" class="form-label">{{langService.map.year}}</label>
         <div class="mb-4 ng-select-wrapper">
-          <ng-select [selectOnTab]="true" labelForId="requestYear" [clearable]="false"
+          <ng-select [selectOnTab]="true" labelForId="requestYear" [clearable]="true"
                      placeholder="{{langService.map.select}}" id="requestYear"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="requestYear">
+                     formControlName="requestYear" appendTo="body" >
             <ng-option value="">{{langService.map.lbl_none}}</ng-option>
             <ng-option *ngFor="let option of years" [value]="option">
               {{option}}
@@ -21,21 +21,6 @@
           </ng-select>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <label for="orgId" class="form-label">{{langService.map.request_type}}</label>
-        <div class="mb-4 ng-select-wrapper">
-          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
-                     placeholder="{{langService.map.select}}" id="requestType"
-                     [notFoundText]="langService.map.msg_not_found"
-                     formControlName="requestType">
-            <ng-option *ngFor="let option of lookupService.listByCategory.SubRequestType" [value]="option.lookupKey">
-              {{option.getName()}}
-            </ng-option>
-          </ng-select>
-        </div>
-      </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="benCategory" class="form-label">{{langService.map.beneficiary_category}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -50,6 +35,37 @@
           </ng-select>
         </div>
       </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <label for="orgId" class="form-label">{{langService.map.request_type}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="true"
+                     placeholder="{{langService.map.select}}" id="aidLookupParentId"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="aidLookupParentId" appendTo="body"
+                     (change)="handleMainAidChange($event)">
+            <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <label for="orgId" class="form-label">{{langService.map.requested_aid}}</label>
+        <div class="mb-4 ng-select-wrapper">
+          <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="aidLookupId"
+                     [notFoundText]="langService.map.msg_not_found"
+                     formControlName="aidLookupId" appendTo="body">
+            <ng-option *ngFor="let option of subAidLookupsList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-12 col-md-6">
         <label for="gender" class="form-label">{{langService.map.gender}}</label>
         <div class="mb-4 ng-select-wrapper">
@@ -64,8 +80,6 @@
           </ng-select>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6" *ngIf="empService.checkPermissions('SUBVENTION_PROVIDER_SHOW')">
         <label for="orgId" class="form-label">{{langService.map.lbl_organization}}</label>
         <div class="mb-4 ng-select-wrapper">

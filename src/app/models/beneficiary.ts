@@ -15,6 +15,8 @@ import {isValidValue} from '../helpers/utils';
 import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
+import {BeneficiaryIncome} from '@app/models/beneficiary-income';
 
 export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNationality!: number;
@@ -31,7 +33,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   educationLevel!: number;
   phoneNumber1!: string;
   phoneNumber2!: string;
-  homePhoneNumber!: string;
   email!: string;
   zone!: string;
   buildingName!: string;
@@ -48,11 +49,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   govOccupationName!: string;
   govEmploymentStartDate!: string;
   govEmployementEndDate!: string;
-  benIncome!: number;
-  benExtraIncome!: number;
-  benExtraIncomeSource!: string;
   maritalStatus!: number;
-  benHouseRent!: number;
   benWivesCount!: number;
   benDependentsCount!: number;
   benDependentsUnder18Count!: number;
@@ -63,10 +60,10 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   streetName!: string;
   addressDescription!: string;
   benNotes!: string;
-  benCategory!: number;
-  totalInstalments!: number;
-  totalDebts!: number;
   familyCount!: number;
+  disableDataSharing!: boolean;
+  beneficiaryObligationSet: BeneficiaryObligation[] = [];
+  beneficiaryIncomeSet: BeneficiaryIncome[] = [];
 
   // not belong to the model
   service: BeneficiaryService;
@@ -170,7 +167,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       benSecIdType,
       benSecIdNationality,
       benNotes,
-      benCategory,
       familyCount
     } = this;
 
@@ -200,50 +196,41 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
       maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
       benNotes: control ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
-      benCategory: control ? [benCategory, CustomValidators.required] : benCategory,
       familyCount: control ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount
     };
   }
 
-  getEmployerFields(controls: boolean = false): any {
+  getIncomeFields(controls: boolean = false): any {
     const {
       occuptionStatus,
       occuption,
-      employeerAddress,
-      benIncome,
-      benExtraIncome,
-      benExtraIncomeSource,
-      benHouseRent,
-      totalInstalments,
-      totalDebts
+      employeerAddress
     } = this;
 
     return {
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
       occuption: controls ? [occuption, CustomValidators.maxLength(100)] : occuption,
-      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress,
-      benIncome: controls ? [benIncome, [CustomValidators.number, Validators.min(0)]] : benIncome,
-      benExtraIncome: controls ? [benExtraIncome, [CustomValidators.number, Validators.min(0)]] : benExtraIncome,
-      benExtraIncomeSource: controls ? [benExtraIncomeSource, [Validators.maxLength(100)]] : benExtraIncomeSource,
-      benHouseRent: controls ? [benHouseRent, [CustomValidators.number, Validators.min(0)]] : benHouseRent,
-      totalInstalments: controls ? [totalInstalments, [CustomValidators.number, Validators.min(1)]] : totalInstalments,
-      totalDebts: controls ? [totalDebts, [CustomValidators.number, Validators.min(0)]] : totalDebts
+      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress
     };
   }
 
   getAddressFields(control: boolean = false): any {
     const {
-      residenceStatus,
       residenceCountry,
-      addressStatus,
-      addressDescription,
-      homePhoneNumber
+      addressDescription
     } = this;
 
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
-      homePhoneNumber: control ? [homePhoneNumber, CustomValidators.commonValidations.phone] : homePhoneNumber,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
+    };
+  }
+
+  getNDAFields(control: boolean = false): any {
+    const {disableDataSharing} = this;
+
+    return {
+      disableDataSharing: control ? [disableDataSharing] : disableDataSharing
     };
   }
 }

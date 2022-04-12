@@ -4,6 +4,7 @@ import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {AdminResult} from '@app/models/admin-result';
 
 export class Lookup extends BaseModel<Lookup, any> {
   service: any;
@@ -61,5 +62,9 @@ export class Lookup extends BaseModel<Lookup, any> {
 
   isRetiredCommonStatus(): boolean {
     return Number(this.category) === Number(LookupCategories.COMMON_STATUS_CAT_ID) && this.lookupKey === CommonStatusEnum.RETIRED;
+  }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id, parent: this.parent, lookupKey: this.lookupKey});
   }
 }

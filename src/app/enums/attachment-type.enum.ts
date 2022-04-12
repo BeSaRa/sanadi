@@ -1,0 +1,5 @@
+export enum AttachmentTypeEnum {
+  IDENTIFICATION_DOCUMENTS = 1,
+  SUPPLEMENTARY_DOCUMENTS = 2,
+  NON_DISCLOSURE_FORM = 3,
+}

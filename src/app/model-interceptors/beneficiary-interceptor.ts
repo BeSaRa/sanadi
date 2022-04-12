@@ -1,7 +1,11 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
-import {isValidValue} from '../helpers/utils';
 import {DateUtils} from '../helpers/date-utils';
+import {FactoryService} from '@app/services/factory.service';
+import {BeneficiaryService} from '@app/services/beneficiary.service';
+import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
+import {BeneficiaryIncome} from '@app/models/beneficiary-income';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 export class BeneficiaryInterceptor {
   static receive(model: Beneficiary): Beneficiary {
@@ -26,10 +30,41 @@ export class BeneficiaryInterceptor {
     model.dateOfBirthString = DateUtils.getDateStringFromDate(model.dateOfBirth);
     model.dateOfBirth = DateUtils.changeDateToDatepicker(model.dateOfBirth);
 
+    let beneficiaryService = FactoryService.getService<BeneficiaryService>('BeneficiaryService');
+    model.beneficiaryObligationSet = model.beneficiaryObligationSet.map((x: any) => beneficiaryService.beneficiaryObligationInterceptor.receive(new BeneficiaryObligation().clone(x)));
+    model.beneficiaryIncomeSet = model.beneficiaryIncomeSet.map((x: any) => beneficiaryService.beneficiaryIncomeInterceptor.receive(new BeneficiaryIncome().clone(x)));
+
     return model;
   }
 
   static send(model: any): any {
+    BeneficiaryInterceptor._deleteBeforeSend(model);
+
+    model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : DateUtils.changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
+
+    //if no secondary id type is selected, clear secondary id and nationality fields
+    if (!CommonUtils.isValidValue(model.benSecIdType)) {
+      model.benSecIdNationality = null;
+      model.benSecIdNumber = null;
+    }
+
+    // trim the arName, enName, primary id number, secondary id number
+    model.arName = !!model.arName ? ('' + model.arName).trim() : model.arName;
+    model.enName = !!model.enName ? ('' + model.enName).trim() : model.enName;
+    model.benPrimaryIdNumber = !!model.benPrimaryIdNumber ? ('' + model.benPrimaryIdNumber).trim() : model.benPrimaryIdNumber;
+    model.benSecIdNumber = !!model.benSecIdNumber ? ('' + model.benSecIdNumber).trim() : model.benSecIdNumber;
+
+    let beneficiaryService = FactoryService.getService<BeneficiaryService>('BeneficiaryService');
+    model.beneficiaryObligationSet = model.beneficiaryObligationSet.map((x: BeneficiaryObligation) => {
+      return beneficiaryService.beneficiaryObligationInterceptor.send(x) as BeneficiaryObligation;
+    });
+    model.beneficiaryIncomeSet = model.beneficiaryIncomeSet.map((x: BeneficiaryIncome) => {
+      return beneficiaryService.beneficiaryIncomeInterceptor.send(x) as BeneficiaryIncome;
+    });
+    return model;
+  }
+
+  private static _deleteBeforeSend(model: Partial<Beneficiary> | any): void {
     delete model.langService;
     delete model.service;
     delete model.OccuptionStatusInfo;
@@ -50,21 +85,5 @@ export class BeneficiaryInterceptor {
     delete model.residenceStatusInfo;
     delete model.benNationalityInfo;
     delete model.dateOfBirthString;
-    // model.dateOfBirth = (new Date(model.dateOfBirth)).toISOString();
-    model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : DateUtils.changeDateFromDatepicker(model.dateOfBirth)?.toISOString();
-
-    //if no secondary id type is selected, clear secondary id and nationality fields
-    if (!isValidValue(model.benSecIdType)) {
-      model.benSecIdNationality = null;
-      model.benSecIdNumber = null;
-    }
-
-    // trim the arName, enName, primary id number, secondary id number
-    model.arName = !!model.arName ? ('' + model.arName).trim() : model.arName;
-    model.enName = !!model.enName ? ('' + model.enName).trim() : model.enName;
-    model.benPrimaryIdNumber = !!model.benPrimaryIdNumber ? ('' + model.benPrimaryIdNumber).trim() : model.benPrimaryIdNumber;
-    model.benSecIdNumber = !!model.benSecIdNumber ? ('' + model.benSecIdNumber).trim() : model.benSecIdNumber;
-
-    return model;
   }
 }

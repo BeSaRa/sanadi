@@ -73,7 +73,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
     this.listenToSearch();
     this.setInitialValues();
-    this.listenToQueryParams();
+    // this.listenToQueryParams();
     this.listenToReload();
   }
 
@@ -193,7 +193,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT_BOOK,
       label: 'btn_edit',
       onClick: (item: SubventionRequestAid) => this.editRequest(item),
-      disabled:(item:SubventionRequestAid) => item.notUnderProcess(),
+      disabled: (item: SubventionRequestAid) => item.notUnderProcess(),
       show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // cancel
@@ -202,7 +202,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.CANCEL_BOOK,
       label: 'btn_cancel',
       onClick: (item: SubventionRequestAid) => this.cancelRequest(item),
-      disabled:(item:SubventionRequestAid) => item.notUnderProcess(),
+      disabled: (item: SubventionRequestAid) => item.notUnderProcess(),
       show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // delete
@@ -211,7 +211,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE_TRASH,
       label: 'btn_delete',
       onClick: (item: SubventionRequestAid) => this.deleteRequest(item),
-      show:(item:SubventionRequestAid) => !item.notUnderProcess()
+      show: (item: SubventionRequestAid) => !item.notUnderProcess()
     },
     // inquire beneficiary
     {
@@ -228,7 +228,8 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter(val => val !== 'init')
     ).subscribe(() => {
-      this.searchByQueryString();
+      // this.searchByQueryString();
+      this.search$.next(true);
     });
   }
 
@@ -381,9 +382,11 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       }),
       switchMap((criteria) => {
         return this.subventionRequestService.loadByCriteria(criteria)
-          .pipe(catchError(() => {
-            return of([]);
-          }));
+          .pipe(
+            takeUntil(this.destroy$),
+            catchError(() => {
+              return of([]);
+            }));
       }),
       tap((result: SubventionRequestAid[]) => {
         this.latestCriteriaString = this.subventionRequestService._parseObjectToQueryString({...this.latestCriteria});
@@ -394,7 +397,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   private searchByQueryString(): any {
-    this.skipQueryParamSearch = true;
+    /*this.skipQueryParamSearch = true;
     return this.subventionRequestService.loadByCriteria(this.latestCriteriaString)
       .pipe(
         takeUntil(this.destroy$),
@@ -404,7 +407,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
       ).subscribe((result: SubventionRequestAid[]) => {
         this.requests = result
         return result.length ? this.goToResult() : this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
-      });
+      });*/
   }
 
   onSearch(): void {
@@ -535,8 +538,9 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   printResult(): void {
-    let criteria = isEmptyObject(this.latestCriteria) ? this.latestCriteriaString : this.latestCriteria;
-    this.subventionRequestService.loadByCriteriaAsBlob(criteria).subscribe((data) => {
+    // let criteria = isEmptyObject(this.latestCriteria) ? this.latestCriteriaString : this.latestCriteria;
+    debugger;
+    this.subventionRequestService.loadByCriteriaAsBlob(this.latestCriteria).subscribe((data) => {
       printBlobData(data, 'RequestByCriteriaSearchResult.pdf');
     });
   }

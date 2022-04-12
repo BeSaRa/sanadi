@@ -14,24 +14,23 @@
 
   <tabs-list class="py-4">
     <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
-         [template]="personalInfo" [title]="langService.map.personal_info">{{langService.map.personal_info}}</tab>
-    <tab [name]="tabsData.income.name" [hasError]="fm.getFieldInvalidStatus('incomeTab')"
-         [template]="income" [title]="langService.map.income_employment">{{langService.map.income_employment}}</tab>
-    <tab [name]="tabsData.address.name" [hasError]="fm.getFieldInvalidStatus('addressTab')"
-         [template]="address" [title]="langService.map.lbl_address">{{langService.map.lbl_address}}</tab>
+         [template]="personalInfo" [title]="langService.map.personal_info"></tab>
+    <tab [name]="tabsData.income.name" [hasError]="getTabInvalidStatus('income')"
+         [template]="income" [title]="langService.map.income_employment"></tab>
+    <tab [name]="tabsData.address.name" [hasError]="getTabInvalidStatus('address')"
+         [template]="address" [title]="langService.map.lbl_address"></tab>
     <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
-         [template]="requestInfo" [title]="langService.map.request_info">{{langService.map.request_info}}</tab>
+         [template]="requestInfo" [title]="langService.map.request_info"></tab>
     <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-         [template]="requestStatus" [title]="langService.map.request_status">{{langService.map.request_status}}</tab>
+         [template]="requestStatus" [title]="langService.map.request_status"></tab>
     <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
          *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="fm.getFieldInvalidStatus('aidTab')"
-         [template]="providedAid" [title]="langService.map.provided_aid">{{langService.map.provided_aid}}</tab>
+         [template]="providedAid" [title]="langService.map.provided_aid"></tab>
     <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
-         [template]="attachmentsTabTemplate"
-         [title]="langService.map.attachments">{{langService.map.attachments}}</tab>
+         [template]="attachmentsTabTemplate" [title]="langService.map.attachments"></tab>
   </tabs-list>
   <!--  personal info Tab -->
   <ng-template #personalInfo>
@@ -341,28 +340,6 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="occupationStatus" asteriskIfRequired="benCategory"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.beneficiary_category}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="occupationStatus" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="occupationStatus"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benCategory"
-                         [ngClass]="fm.getStatusClass('personalTab.benCategory')">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenCategory" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benCategory')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
             <label for="educationLevel" asteriskIfRequired="educationLevel"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
             <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
@@ -381,6 +358,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row d-flex flex-row">
         <div class="col-sm-12 col-md-6">
           <div class="row d-flex flex-column flex-md-row">
             <label for="employer" asteriskIfRequired="employeer"
@@ -462,7 +441,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <!--<div class="col-sm-12 col-md-6">
         <div class="row d-flex flex-column flex-md-row">
           <label for="monthlyIncome" asteriskIfRequired="benIncome"
                  class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_income}}</label>
@@ -476,9 +455,28 @@
               [control]="fm.getFormField('incomeTab.benIncome')"></app-field-error-message>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
-    <div class="row d-flex flex-row">
+
+    <h6 class="text-primary">{{langService.map.beneficiary_obligations}}</h6>
+    <hr class="mt-0">
+    <div>
+      <beneficiary-obligation #beneficiaryObligations
+                              [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryObligationSet"
+                              [readonly]="readOnly || isPartialRequest"
+                              (readyEvent)="beneficiaryObligationsStatus = $event">
+      </beneficiary-obligation>
+    </div>
+    <h6 class="text-primary">{{langService.map.beneficiary_incomes}}</h6>
+    <hr class="mt-0">
+    <div>
+      <beneficiary-income #beneficiaryIncomes
+                          [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryIncomeSet"
+                          [readonly]="readOnly || isPartialRequest"
+                          (readyEvent)="beneficiaryObligationsStatus = $event">
+      </beneficiary-income>
+    </div>
+    <!--<div class="row d-flex flex-row">
       <div class="col-sm-12 col-md-6">
         <div class="row d-flex flex-column flex-md-row">
           <label for="extraIncome"
@@ -550,7 +548,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
   </ng-template>
   <!-- address Tab  -->
   <ng-template formGroupName="addressTab" #address>
@@ -578,19 +576,6 @@
         </div>
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
-            <label for="homePhoneNumber"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.home_phone_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="20" [ngClass]="fm.getStatusClass('addressTab.homePhoneNumber')" id="homePhoneNumber"
-                     formControlName="homePhoneNumber" class="form-control" type="text"
-                     trimInput [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.homePhoneNumber')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
             <label for="addressDescription"
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_address}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
@@ -612,109 +597,145 @@
     </div>
   </ng-template>
   <!-- request Info Tab -->
-  <ng-template formGroupName="requestInfoTab" #requestInfo>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="requestType" asteriskIfRequired="requestType"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
-                       [readonly]="readOnly || isPartialRequest"
-                       placeholder="{{langService.map.select}}" id="requestType"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="requestType"
-                       [ngClass]="fm.getStatusClass('requestInfoTab.requestType')">
-              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestType" [value]="option.lookupKey">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('requestInfoTab.requestType')"></app-field-error-message>
+  <ng-template #requestInfo>
+    <div formGroupName="requestInfoTab">
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="aidLookupParentId" asteriskIfRequired="aidLookupParentId"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid_category}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="true"
+                         [readonly]="readOnly || isPartialRequest"
+                         placeholder="{{langService.map.select}}" id="aidLookupParentId"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="aidLookupParentId"
+                         (change)="handleMainAidChange($event)"
+                         [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupParentId')">
+                <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.aidLookupParentId')"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="aidLookupId" asteriskIfRequired="aidLookupId"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid}}</label>
+            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+              <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                         [readonly]="readOnly || isPartialRequest"
+                         placeholder="{{langService.map.select}}" id="aidLookupId"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="aidLookupId"
+                         [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupId')">
+                <ng-option *ngFor="let option of subAidLookupsList" [value]="option.id">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.aidLookupId')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
-          <label for="creationDateReadOnly" asteriskIfRequired="creationDate"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="form-control input-disabled" formControlName="creationDate"
-                 id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDate"
-                 angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
+                     formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
+                     [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                     [readOnly]="readOnly || isPartialRequest">
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
             </div>
-            <app-field-error-message
-              [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
-          <label for="creationDate" asteriskIfRequired="creationDate"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="creationDate"
-                   id="creationDate" [options]="datepickerOptionsMap.creationDate"
-                   (click)="dpCreationDate.toggleCalendar()" #dpCreationDate="angular-mydatepicker"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"></div>
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
+            <label for="creationDateReadOnly" asteriskIfRequired="creationDate"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <div class="form-control input-disabled" formControlName="creationDate"
+                   id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDate"
+                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
+              </div>
               <app-field-error-message
                 [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
-                   formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
+          <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
+            <label for="creationDate" asteriskIfRequired="creationDate"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control" formControlName="creationDate"
+                     id="creationDate" [options]="datepickerOptionsMap.creationDate"
+                     (click)="dpCreationDate.toggleCalendar()" #dpCreationDate="angular-mydatepicker"
+                     angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"></div>
+                <app-field-error-message
+                  [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row">
-          <label asteriskIfRequired="requestSummary" for="requestSummary"
-                 class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
-          <div class="col-md-10 col-sm-12 mb-4">
+      <div class="row d-flex flex-row">
+        <div class="col-sm-12">
+          <div class="row d-flex flex-column flex-md-row">
+            <label asteriskIfRequired="requestSummary" for="requestSummary"
+                   class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
+            <div class="col-md-10 col-sm-12 mb-4">
                   <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
                             formControlName="requestSummary" rows="5" class="form-control"
                             [readOnly]="readOnly || isPartialRequest"></textarea>
-            <app-field-error-message
-              [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+              <app-field-error-message
+                [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row" *ngIf="!isPartialRequest">
-      <div class="col-sm-12 mb-4">
-        <div class="border rounded-1 p-2">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="allowCompletion">
-            <label class="form-check-label"
-                   for="allowCompletion">{{langService.map.supplement_amount_with_other_institutes}}</label>
+      <div class="row" *ngIf="!isPartialRequest">
+        <div class="col-sm-12 mb-4">
+          <div class="border rounded-1 p-2">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="allowCompletion" formControlName="allowCompletion">
+              <label class="form-check-label"
+                     for="allowCompletion">{{langService.map.supplement_amount_with_other_institutes}}</label>
+            </div>
+            <span
+              class="text-muted font-12">{{langService.map.msg_completion_offer_to_other_ou_if_not_fully_paid}}</span>
           </div>
-          <span class="text-muted font-12">{{langService.map.msg_completion_offer_to_other_ou_if_not_fully_paid}}</span>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-4">
         <div class="border rounded-1 p-2">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="disclosureNonDisclosure">
-            <label class="form-check-label"
-                   for="disclosureNonDisclosure">{{langService.map.disclosure_non_disclosure}}</label>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="disclosureNonDisclosure"
+                     formControlName="disableDataSharing" (change)="$event ? handleNDAFieldChange($event) : null">
+              <label class="form-check-label"
+                     for="disclosureNonDisclosure">{{langService.map.non_disclosure}}</label>
+            </div>
           </div>
+          <ng-container *ngIf="!currentRequest?.id && !!disableDataSharingField?.value">
+            <div class="col-md-6 col-sm-12 mb-4 position-relative">
+              <file-uploader [showFileName]="true" [showFilePreview]="false"
+                             labelKey="nda_document"
+                             [allowedExtensions]="[fileExtensionsEnum.PDF]"
+                             (fileUploadEvent)="setNDAFile($event)"
+                             [isRequired]="true"></file-uploader>
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -799,35 +820,42 @@
         <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="aidType" asteriskIfRequired="aidLookupId"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
+              <label for="requestedAidCategory" asteriskIfRequired="aidLookupParentId"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid_category}}</label>
               <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="aidType" [clearable]="false"
+                <ng-select [selectOnTab]="true" labelForId="requestedAidCategory" [clearable]="true"
                            [readonly]="readOnly || isPartialRequest"
-                           placeholder="{{langService.map.select}}" id="aidType"
+                           placeholder="{{langService.map.select}}" id="requestedAidCategory"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="aidLookupId"
-                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
-                  <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
+                           formControlName="aidLookupParentId"
+                           (change)="handleAidsMainAidChange($event)"
+                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupParentId')">
+                  <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
                 <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidLookupParentId')"></app-field-error-message>
               </div>
             </div>
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label for="aidSuggestedAmount" asteriskIfRequired="aidSuggestedAmount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.estimated_amount}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input id="aidSuggestedAmount" maxlength="15"
-                       [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
-                       formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
-                       [readOnly]="readOnly || isPartialRequest">
+              <label for="requestedAid" asteriskIfRequired="aidLookupId"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <ng-select [selectOnTab]="true" labelForId="requestedAid" [clearable]="true"
+                           [readonly]="readOnly || isPartialRequest"
+                           placeholder="{{langService.map.select}}" id="requestedAid"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="aidLookupId"
+                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
+                  <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
                 <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -903,6 +931,7 @@
                            placeholder="{{langService.map.select}}" id="periodicType"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="periodicType"
+                           (change)="aidsPeriodicTypeChange($event, true)"
                            [ngClass]="fm.getStatusClass('aidTab.0.periodicType')">
                   <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType"
                              [value]="option.lookupKey">
@@ -916,15 +945,15 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="installementsCount" for="installementsCount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
+              <label for="aidSuggestedAmount" asteriskIfRequired="aidSuggestedAmount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.estimated_amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
-                       id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                       formControlName="installementsCount" class="form-control"
-                       [readOnly]="readOnly">
+                <input id="aidSuggestedAmount" maxlength="15"
+                       [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
+                       formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
+                       [readOnly]="readOnly || isPartialRequest">
                 <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -941,6 +970,20 @@
                        [readOnly]="readOnly">
                 <app-field-error-message
                   [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
+              <label asteriskIfRequired="installementsCount" for="installementsCount"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
+              <div class="col-md-8 col-sm-12 mb-4">
+                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
+                       id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       formControlName="installementsCount" class="form-control"
+                       [readOnly]="readOnly">
+                <app-field-error-message
+                  [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -987,24 +1030,29 @@
               </ng-container>
               <ng-container cdkColumnDef="approvalDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
+                    [sortCallback]="aidsSortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
                 <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="aidLookupId">
+              <ng-container cdkColumnDef="requestedAidCategory">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.aidType"> {{langService.map.aid_type}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{getAidLookup(row.aidLookupId)?.getName()}} </td>
+                    [sortCallback]="aidsSortingCallbacks.requestedAidCategory"> {{langService.map.requested_aid_category}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupParentInfo.getName()}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="requestedAid">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="aidsSortingCallbacks.requestedAid"> {{langService.map.requested_aid}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="estimatedAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
+                    [sortCallback]="aidsSortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
                 <td cdk-cell
                     *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
               </ng-container>
               <ng-container cdkColumnDef="periodicType">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{getLookup(row.periodicType)?.getName()}} </td>
+                    [sortCallback]="aidsSortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{getPeriodicityLookup(row.periodicType)?.getName()}} </td>
               </ng-container>
               <ng-container cdkColumnDef="installementsCount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
@@ -1012,18 +1060,18 @@
               </ng-container>
               <ng-container cdkColumnDef="aidStartPayDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.paymentDate"> {{langService.map.payment_date}}</th>
+                    [sortCallback]="aidsSortingCallbacks.paymentDate"> {{langService.map.payment_date}}</th>
                 <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
               </ng-container>
               <ng-container cdkColumnDef="givenAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.givenAmount"> {{langService.map.given_amount}}</th>
+                    [sortCallback]="aidsSortingCallbacks.givenAmount"> {{langService.map.given_amount}}</th>
                 <td cdk-cell
                     *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
               </ng-container>
               <ng-container cdkColumnDef="remainingAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
+                    [sortCallback]="aidsSortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
                 <td cdk-cell
                     *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
               </ng-container>
@@ -1031,18 +1079,6 @@
                 <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
                 <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
                   <grid-actions [record]="row" [actions]="aidsActions"></grid-actions>
-                  <div class="d-flex flex-row">
-                    <button *ngIf="!readOnly && !isPartialRequest"
-                            (click)="deleteAid(row, $event)" class="icon-btn text-primary"
-                            tooltip="{{langService.map.btn_delete}}">
-                      <i class="mdi mdi-close-box"></i>
-                    </button>
-                    <button (click)="editAid(row, $event)" class="icon-btn text-primary"
-                            [disabled]="readOnly || (isPartialRequest && currentRequest && !currentRequest.isUnderProcessing())"
-                            tooltip="{{langService.map.btn_edit}}">
-                      <i class="mdi mdi-pen"></i>
-                    </button>
-                  </div>
                 </td>
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
@@ -1062,7 +1098,8 @@
   </ng-template>
   <!-- Attachments Tab -->
   <ng-template #attachmentsTabTemplate>
-    <app-attachment-list [request]="currentRequest"
+    <app-attachment-list #attachmentListComponent
+                         [request]="currentRequest"
                          [attachmentList]="attachmentList"
                          [readOnly]="readOnly"
                          (updateList)="updateAttachmentList($event)"

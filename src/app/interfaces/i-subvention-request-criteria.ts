@@ -15,5 +15,7 @@ export interface ISubventionRequestCriteria {
   orgBranchId: number;
   orgUserId: number;
   orgId: number;
+  aidLookupParentId: number;
   aidLookupId: number;
+  lang: number;
 }
