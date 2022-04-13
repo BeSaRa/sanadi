@@ -210,6 +210,10 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     $event?.preventDefault();
     record.showAuditDetails()
       .subscribe((details: SubventionAid | SubventionRequest | Beneficiary) => {
+        if (!details) {
+          this.dialogService.info(this.langService.map.no_records_to_display);
+          return;
+        }
         this.dialogService.show(AuditDetailsPopupComponent, {
           record,
           details

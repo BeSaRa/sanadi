@@ -36,7 +36,7 @@ export class AuditDetailsPopupComponent {
       this.auditBeneficiary = data.details;
     } else if (this.auditRecord.auditEntity === 'SUBVENTION_REQUEST') {
       this.auditSubventionRequest = data.details;
-    } else { //if (this.auditRecord.auditType === 'subventionAid') {
+    } else if (this.auditRecord.auditEntity === 'SUBVENTION_AID') {
       this.auditSubventionAid = data.details;
     }
   }
@@ -46,7 +46,7 @@ export class AuditDetailsPopupComponent {
     requestStatus: {name: 'requestStatusTab'}
   }
 
-  preventClick($event: Event) : void {
+  preventClick($event: Event): void {
     $event?.preventDefault();
     $event?.stopPropagation();
   }

@@ -7,6 +7,7 @@ import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {ISearchFieldsMap} from '@app/types/types';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import {Observable, of} from 'rxjs';
 
 export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult>{
   id!: number;
@@ -42,13 +43,14 @@ export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult>{
     ...normalSearchFields(['updatedOnString'])
   };
 
-  showAuditDetails(): any {
+  showAuditDetails(): Observable<any> {
     if (this.auditEntity === 'SUBVENTION_AID') {
       return this.subventionAidService.loadSubventionAidAuditDetails(this.id);
     } else if (this.auditEntity === 'SUBVENTION_REQUEST') {
       return this.subventionRequestService.loadSubventionRequestAuditDetails(this.id);
-    } else {
+    } else if (this.auditEntity === 'BENEFICIARY') {
       return this.beneficiaryService.loadBeneficiaryAuditDetails(this.id);
     }
+    return of(null);
   }
 }
