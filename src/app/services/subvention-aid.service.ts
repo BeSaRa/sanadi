@@ -42,11 +42,7 @@ export class SubventionAidService extends BackendGenericService<SubventionAid> {
 
   @Generator(undefined, true)
   private _loadByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
-    return this.http.get<SubventionAid[]>(this._getServiceURL() + '/criteria', {
-      params: new HttpParams({
-        fromObject: criteria
-      })
-    });
+    return this.http.post<SubventionAid[]>(this._getServiceURL() + '/criteria', criteria);
   }
 
   loadByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {

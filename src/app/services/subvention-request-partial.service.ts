@@ -58,7 +58,7 @@ export class SubventionRequestPartialService extends BackendGenericService<Subve
   // @ts-ignore
   @Generator(undefined, true, {property: 'rs'})
   loadPartialRequestsByCriteria(criteria: Partial<IPartialRequestCriteria>): Observable<SubventionRequestPartial[]> {
-    return this.http.get<SubventionRequestPartial[]>(this._getServiceURL() + '/criteria' + this._generateQueryString(criteria));
+    return this.http.post<SubventionRequestPartial[]>(this._getServiceURL() + '/criteria', criteria);
   }
 
   /**

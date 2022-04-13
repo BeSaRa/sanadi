@@ -68,14 +68,6 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
-    debugger;
-    /*let finalCriteriaString;
-    if (typeof criteria === 'string') {
-      finalCriteriaString = criteria;
-    } else {
-      finalCriteriaString = this._parseObjectToQueryString({...criteria});
-    }
-    finalCriteriaString = finalCriteriaString + '&lang=' + this.langService.getPrintingLanguage();*/
     criteria.lang = this.langService.getPrintingLanguage();
     return this.http.post(this._getServiceURL() + '/criteria/export', criteria, {responseType: 'blob'});
   }
