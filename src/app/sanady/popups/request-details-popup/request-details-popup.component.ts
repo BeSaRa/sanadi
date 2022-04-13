@@ -54,7 +54,7 @@ export class RequestDetailsPopupComponent {
     'aidType',
     'estimatedAmount',
     'periodicType',
-    'installementsCount',
+    'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
     'remainingAmount'

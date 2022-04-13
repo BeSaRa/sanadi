@@ -39,7 +39,7 @@ export class SubventionAidPopupComponent implements OnInit {
     'aidLookupId',
     'estimatedAmount',
     'periodicType',
-    'installementsCount',
+    'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
     'totalPaidAmount'

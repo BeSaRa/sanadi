@@ -70,7 +70,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   headerColumn: string[] = ['extra-header'];
-  columns = ['periodicType', 'obligationType', 'amount', 'installementsCount', 'actions'];
+  columns = ['periodicType', 'obligationType', 'amount', 'installmentsCount', 'actions'];
   obligationTypeList = this.lookupService.listByCategory.BENEFICIARY_OBLIGATION;
   periodicTypeList = this.lookupService.listByCategory.SubAidPeriodicType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -292,7 +292,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   get installmentsCountField(): AbstractControl {
-    return this.form.get('installementsCount')!;
+    return this.form.get('installmentsCount')!;
   }
 
 }

@@ -12,7 +12,7 @@ export class BeneficiaryObligation extends SearchableCloneable<BeneficiaryObliga
   benObligationType!: number;
   amount!: number;
   notes!: string;
-  installementsCount!: number;
+  installmentsCount!: number;
 
   updatedBy?: number;
   clientData?: string;
@@ -24,16 +24,16 @@ export class BeneficiaryObligation extends SearchableCloneable<BeneficiaryObliga
 
   searchFields: ISearchFieldsMap<BeneficiaryObligation> = {
     ...infoSearchFields(['periodicTypeInfo', 'benObligationTypeInfo']),
-    ...normalSearchFields(['amount', 'installementsCount'])
+    ...normalSearchFields(['amount', 'installmentsCount'])
   };
 
   buildForm(controls?: boolean): any {
-    const {periodicType, benObligationType, amount, notes, installementsCount} = this;
+    const {periodicType, benObligationType, amount, notes, installmentsCount} = this;
     return {
       periodicType: controls ? [periodicType, [CustomValidators.required]] : periodicType,
       benObligationType: controls ? [benObligationType, [CustomValidators.required]] : benObligationType,
       amount: controls ? [amount, [CustomValidators.required, Validators.min(0)]] : amount,
-      installementsCount: controls ? [installementsCount, [CustomValidators.required, Validators.min(0)]] : installementsCount,
+      installmentsCount: controls ? [installmentsCount, [CustomValidators.required, Validators.min(0)]] : installmentsCount,
       notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(1200)]] : notes
     }
   }

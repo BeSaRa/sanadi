@@ -45,7 +45,7 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   benPrimaryIdNumber!: string;
   benPrimaryIdNationality!: number;
   isPartial: boolean = false;
-  installementsCount!: number;
+  installmentsCount!: number;
   aidPayedAmount!: number;
   aidAmount!: number;
 

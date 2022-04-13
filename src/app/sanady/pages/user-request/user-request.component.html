@@ -975,15 +975,15 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="installementsCount" for="installementsCount"
+              <label asteriskIfRequired="installmentsCount" for="installmentsCount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installementsCount')"
-                       id="installementsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                       formControlName="installementsCount" class="form-control"
+                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installmentsCount')"
+                       id="installmentsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                       formControlName="installmentsCount" class="form-control"
                        [readOnly]="readOnly">
                 <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.installementsCount')"></app-field-error-message>
+                  [control]="fm.getFormField('aidTab.0.installmentsCount')"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -1054,9 +1054,9 @@
                     [sortCallback]="aidsSortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo.getName()}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="installementsCount">
+              <ng-container cdkColumnDef="installmentsCount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount}} </td>
               </ng-container>
               <ng-container cdkColumnDef="aidStartPayDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"

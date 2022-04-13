@@ -206,7 +206,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     'requestedAid',
     'estimatedAmount',
     'periodicType',
-    'installementsCount',
+    'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
     'remainingAmount',
@@ -1201,7 +1201,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get aidInstallmentsCount(): FormControl {
-    return this.aidFormArray.get('0.installementsCount') as FormControl;
+    return this.aidFormArray.get('0.installmentsCount') as FormControl;
   }
 
   get aidPeriodicType(): FormControl {

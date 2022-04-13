@@ -44,12 +44,12 @@
     <div class="row">
       <!-- Installments Count -->
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="installementsCount" for="installementsCount"
+        <label asteriskIfRequired="installmentsCount" for="installmentsCount"
                class="form-label">{{lang.map.number_of_installments}}</label>
-        <input id="installementsCount" validationClasses="installementsCount"
+        <input id="installmentsCount" validationClasses="installmentsCount"
                [mask]="inputMaskPatterns.NUMBER_ONLY" maxlength="20"
-               formControlName="installementsCount" trimInput class="form-control">
-        <app-field-error-message controlName="installementsCount"></app-field-error-message>
+               formControlName="installmentsCount" trimInput class="form-control">
+        <app-field-error-message controlName="installmentsCount"></app-field-error-message>
       </div>
       <!-- Notes -->
       <div class="col-sm-12 col-md-8 mb-4 position-relative">
@@ -100,9 +100,9 @@
               <td cdk-cell
                   *cdkCellDef="let row"> {{row.amount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
             </ng-container>
-            <ng-container cdkColumnDef="installementsCount">
+            <ng-container cdkColumnDef="installmentsCount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.number_of_installments}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

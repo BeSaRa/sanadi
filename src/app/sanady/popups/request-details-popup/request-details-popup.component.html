@@ -155,9 +155,9 @@
                     [sortCallback]="sortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo?.getName()}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="installementsCount">
+              <ng-container cdkColumnDef="installmentsCount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.installementsCount}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount}} </td>
               </ng-container>
               <ng-container cdkColumnDef="aidStartPayDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"

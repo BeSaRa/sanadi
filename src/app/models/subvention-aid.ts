@@ -12,7 +12,7 @@ import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 
 export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService> {
-  installementsCount: number = 0;
+  installmentsCount: number = 0;
   periodicType!: number;
   approvalDate!: IMyDateModel;
   aidAmount!: number;
@@ -43,19 +43,19 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
 
   searchFields: ISearchFieldsMap<SubventionAid> = {
     ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
-    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount', 'aidRemainingAmount'])
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartial: ISearchFieldsMap<SubventionAid> = {
     ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
-    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
   };
   searchFieldsUserRequest: ISearchFieldsMap<SubventionAid> = {
     ...infoSearchFields([ 'aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
-    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {
     ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
-    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installementsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
+    ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
 
   constructor() {
@@ -100,7 +100,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidStartPayDate,
       aidLookupParentId,
       aidLookupId,
-      installementsCount
+      installmentsCount
     } = this;
 
     return {
@@ -113,7 +113,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
-      installementsCount: control ? [installementsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installementsCount
+      installmentsCount: control ? [installmentsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installmentsCount
     };
   }
 }
