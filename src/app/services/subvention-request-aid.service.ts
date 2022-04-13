@@ -8,6 +8,7 @@ import {Generator} from '../decorators/generator';
 import {FactoryService} from './factory.service';
 import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
 import {SubventionRequestAidInterceptor} from '../model-interceptors/subvention-request-aid-interceptor';
+import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -29,15 +30,9 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
     return this._loadByBeneficiaryId(id);
   }
 
+  @SendInterceptor()
   @Generator(undefined, true)
-  private _loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
-    /*debugger;
-    let paramsString = '';
-    if (typeof criteria === 'string'){
-      paramsString = criteria;
-    } else {
-      paramsString = this._parseObjectToQueryString(criteria);
-    }*/
+  private _loadByCriteria(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.http.post<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria', criteria);
   }
 
