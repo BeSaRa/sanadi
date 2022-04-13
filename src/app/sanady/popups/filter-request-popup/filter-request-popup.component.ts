@@ -61,8 +61,6 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
     this.form = this.fb.group({
       requestYear: [this.criteria.requestYear],
       orgId: [this.criteria.orgId],
-      benCategory: [this.criteria.benCategory],
-      // requestType: [this.criteria.requestType],
       gender: [this.criteria.gender],
       aidLookupParentId: [this.criteria.aidLookupParentId],
       aidLookupId: [this.criteria.aidLookupId],
@@ -88,8 +86,8 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
         this.form.patchValue({
           requestYear: null,
           orgId: null,
-          benCategory: null,
-          requestType: null,
+          aidLookupParentId: null,
+          aidLookupId: null,
           gender: null
         });
         if (click === UserClickOn.THIRD_BTN) {

@@ -22,14 +22,14 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <label for="benCategory" class="form-label">{{langService.map.beneficiary_category}}</label>
+        <label for="gender" class="form-label">{{langService.map.gender}}</label>
         <div class="mb-4 ng-select-wrapper">
-          <ng-select [selectOnTab]="true" labelForId="benCategory" [clearable]="false"
-                     placeholder="{{langService.map.select}}" id="benCategory"
+          <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="gender"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="benCategory">
+                     formControlName="gender" appendTo="body">
             <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-            <ng-option *ngFor="let option of lookupService.listByCategory.BenCategory" [value]="option.lookupKey">
+            <ng-option *ngFor="let option of lookupService.listByCategory.Gender" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
           </ng-select>
@@ -38,7 +38,7 @@
     </div>
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        <label for="orgId" class="form-label">{{langService.map.request_type}}</label>
+        <label for="aidLookupParentId" class="form-label">{{langService.map.requested_aid_category}}</label>
         <div class="mb-4 ng-select-wrapper">
           <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="true"
                      placeholder="{{langService.map.select}}" id="aidLookupParentId"
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <label for="orgId" class="form-label">{{langService.map.requested_aid}}</label>
+        <label for="aidLookupId" class="form-label">{{langService.map.requested_aid}}</label>
         <div class="mb-4 ng-select-wrapper">
           <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="aidLookupId"
@@ -66,27 +66,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-6">
-        <label for="gender" class="form-label">{{langService.map.gender}}</label>
-        <div class="mb-4 ng-select-wrapper">
-          <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
-                     placeholder="{{langService.map.select}}" id="gender"
-                     [notFoundText]="langService.map.msg_not_found"
-                     formControlName="gender">
-            <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-            <ng-option *ngFor="let option of lookupService.listByCategory.Gender" [value]="option.lookupKey">
-              {{option.getName()}}
-            </ng-option>
-          </ng-select>
-        </div>
-      </div>
       <div class="col-sm-12 col-md-6" *ngIf="empService.checkPermissions('SUBVENTION_PROVIDER_SHOW')">
         <label for="orgId" class="form-label">{{langService.map.lbl_organization}}</label>
         <div class="mb-4 ng-select-wrapper">
           <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
                      placeholder="{{langService.map.select}}" id="orgId"
                      [notFoundText]="langService.map.msg_not_found"
-                     formControlName="orgId">
+                     formControlName="orgId" appendTo="body">
             <ng-option value="">{{langService.map.lbl_none}}</ng-option>
             <ng-option *ngFor="let option of orgList" [value]="option.id">
               {{option.getName()}}
