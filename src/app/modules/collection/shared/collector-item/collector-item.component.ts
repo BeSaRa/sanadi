@@ -20,6 +20,9 @@ import {LicenseService} from '@app/services/license.service';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {CollectorLicense} from '@app/license-models/collector-license';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ServiceCustomSettings} from '@app/models/service-custom-settings';
 
 @Component({
   selector: 'collector-item',
@@ -104,12 +107,15 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     return this._requestType.value;
   }
 
+  maxElementsCount?: number;
+
   constructor(private fb: FormBuilder,
               public lang: LangService,
               private dialog: DialogService,
               private lookupService: LookupService,
               private collectorApprovalService: CollectorApprovalService,
-              private licenseService: LicenseService) {
+              private licenseService: LicenseService,
+              private serviceDataService: ServiceDataService) {
   }
 
   ngOnInit(): void {
@@ -129,6 +135,14 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this.listenToSave();
     this.listenToDisableSearchField();
     this.listenToLicenseDurationTypeChanges();
+    this.loadCustomSettings();
+  }
+
+  loadCustomSettings() {
+    this.serviceDataService.loadByCaseType(CaseTypes.COLLECTOR_LICENSING).subscribe((service) => {
+      const customSettings = (new ServiceCustomSettings()).clone(JSON.parse(service.customSettings));
+      this.maxElementsCount = +customSettings.maxElementsCount!;
+    });
   }
 
   private buildForm(): void {
@@ -211,8 +225,12 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   }
 
   private processAdd(item: CollectorItem): void {
-    this.model.collectorItemList = this.model.collectorItemList.concat([item]);
-    this.eventHappened.emit(AppEvents.ADD);
+    if (this.model.collectorItemList.length < this.maxElementsCount!) {
+      this.model.collectorItemList = this.model.collectorItemList.concat([item]);
+      this.eventHappened.emit(AppEvents.ADD);
+    } else {
+      this.dialog.error(this.lang.map.collectors_max_items_count.change({x: this.maxElementsCount}));
+    }
   }
 
   private processEdit(item: CollectorItem): void {
@@ -277,11 +295,11 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
           selected: validated,
           details: validated
         } : null) as (null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>);
-      }))
+      }));
   }
 
   private openSelectLicense(licenses: CollectorLicense[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
   }
 
   searchForLicense() {
@@ -304,7 +322,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
         ((info): info is SelectedLicenseInfo<CollectorLicense, CollectorLicense> => !!info))
       .subscribe((_info) => {
         this.updateForm(this.item = _info.details.convertToItem());
-      })
+      });
   }
 
   isExtendOrCancelRequestType(): boolean {

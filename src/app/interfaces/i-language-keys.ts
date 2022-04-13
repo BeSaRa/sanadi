@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  collectors_max_items_count: string;
   menu_fundraising: string;
   previous_license_number: string;
   about_channel: string;
