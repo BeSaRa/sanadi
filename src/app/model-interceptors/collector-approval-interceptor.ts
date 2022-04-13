@@ -23,6 +23,7 @@ export class CollectorApprovalInterceptor implements IModelInterceptor<Collector
     model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo);
     model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
 
+
     return model;
   }
 

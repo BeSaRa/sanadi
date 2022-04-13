@@ -83,6 +83,9 @@ export enum LookupCategories {
   BENEFICIARY_OBLIGATION = 'BENEFICIARY_OBLIGATION',
   BENEFICIARY_INCOME = 'BENEFICIARY_INCOME',
   BENEFICIARY_INCOME_PERIODIC = 'BENEFICIARY_INCOME_PERODIC',
+  BankRequestType = 'BankRequestType',
+  BankOperationType = 'BankOperationType',
+  InternalBankCategory = 'InternalBankCategory',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',

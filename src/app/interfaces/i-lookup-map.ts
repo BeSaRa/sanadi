@@ -95,4 +95,7 @@ export interface ILookupMap {
   BENEFICIARY_OBLIGATION: Lookup[],
   BENEFICIARY_INCOME: Lookup[],
   BENEFICIARY_INCOME_PERODIC: Lookup[],
+  BankRequestType: Lookup[];
+  BankOperationType: Lookup[];
+  InternalBankCategory: Lookup[];
 }

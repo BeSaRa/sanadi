@@ -5,6 +5,10 @@ export interface ILanguageKeys {
   about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
+  account_type: string;
+  main_account: string;
+  bank_account_purpose: string;
+  bank_operation_type: string;
   menu_internal_bank_account_approval: string;
   edit_cancel_request_need_exists_license: string;
   longitude_latitude_required: string;

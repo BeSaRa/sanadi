@@ -58,6 +58,8 @@ import {CollectionLicense} from "@app/license-models/collection-license";
 import {CollectionLicenseInterceptor} from "@app/license-interceptors/collection-license-interceptor";
 import {CollectorLicense} from '@app/license-models/collector-license';
 import {CollectorLicenseInterceptor} from '@app/license-interceptors/collector-license-interceptor';
+import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
+import {InternalBankAccountLicenseInterceptor} from '@app/license-interceptors/internal-bank-account-license-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -246,6 +248,17 @@ export class LicenseService {
     });
   }
 
+  @Generator(InternalBankAccountLicense, false, {
+    property: 'rs',
+    interceptReceive: (new InternalBankAccountLicenseInterceptor()).receive
+  })
+  private _validateInternalBankAccountLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @Generator(UrgentInterventionLicense, false, {
     property: 'rs',
     interceptReceive: (new UrgentInterventionLicenseInterceptor()).receive
@@ -372,6 +385,8 @@ export class LicenseService {
       return this._validateCollectorLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.FUNDRAISING_LICENSING) {
       return this._validateFundraisingLicenseByRequestType(requestType, licenseId);
+    } else if(caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
+      return this._validateInternalBankAccountLicenseByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
@@ -422,5 +437,17 @@ export class LicenseService {
 
   collectorSearch<C>(model: Partial<C>): Observable<CollectorLicense[]> {
     return this._collectorSearch(model);
+  }
+
+  @Generator(InternalBankAccountLicense, true, {
+    property: 'rs',
+    interceptReceive: (new InternalBankAccountLicenseInterceptor).receive
+  })
+  private _internalBankAccountSearch<C>(model: Partial<C>): Observable<InternalBankAccountLicense[]> {
+    return this.http.post<InternalBankAccountLicense[]>(this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL + '/license/search', model)
+  }
+
+  internalBankAccountSearch<C>(model: Partial<C>): Observable<InternalBankAccountLicense[]> {
+    return this._internalBankAccountSearch(model);
   }
 }

@@ -25,6 +25,21 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
       </ng-container>
+      <ng-container cdkColumnDef="bankCategoryInfo">
+        <!-- category will be shown as License number, so label is license number -->
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="mainAccountInfo">
+        <!-- main account will be shown as License number, so label is license number -->
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.main_account}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.mainAccountInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="currencyInfo">
+        <!-- currency will be shown as License number, so label is license number -->
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.currency}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.currencyInfo.getName()}} </td>
+      </ng-container>
       <ng-container cdkColumnDef="creatorInfo">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.created_by}}</th>

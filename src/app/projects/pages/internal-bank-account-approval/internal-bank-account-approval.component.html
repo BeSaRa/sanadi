@@ -1,1 +1,143 @@
-<p>internal-bank-account-approval works!</p>
+<div class="row">
+  <tabs-list [accordionView]="accordionView">
+    <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
+         [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-container formGroupName="basicInfo">
+      <ng-template #basic_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="requestType"
+                   for="requestType">{{lang.map.request_type}}</label>
+            <ng-select validationClasses="requestType" appendTo="body" [clearable]="false" id="requestType"
+                       formControlName="requestType">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="requestType"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="operationType"
+                   for="operationType">{{lang.map.bank_operation_type}}</label>
+            <ng-select validationClasses="operationType" appendTo="body" [clearable]="true"
+                       id="operationType"
+                       formControlName="operationType">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of bankOperationTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="operationType"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired=""
+                   [control]="oldLicenseFullSerialControl"
+                   for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
+            <div class="input-group">
+              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial" validationClasses="" [control]="oldLicenseFullSerialControl"
+                     formControlName="oldLicenseFullSerial"
+                     class="form-control">
+              <button (click)="searchForLicense()" class="input-group-text">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="category"
+                   for="category">{{lang.map.account_type}}</label>
+            <ng-select validationClasses="category" appendTo="body" [clearable]="true"
+                       id="category"
+                       formControlName="category">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of bankCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="category"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="purpose"
+                   for="purpose">{{lang.map.bank_account_purpose}}</label>
+            <input id="purpose" validationClasses="purpose" formControlName="purpose"
+                   class="form-control">
+            <app-field-error-message controlName="purpose"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="bankId"
+                   for="bankId">{{lang.map.bank_name}}</label>
+            <ng-select validationClasses="bankId" appendTo="body" [clearable]="false" id="bankId"
+                       formControlName="bankId">
+              <ng-option [value]="option.id" *ngFor="let option of banks">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="bankId"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="currency"
+                   for="currency">{{lang.map.currency}}</label>
+            <ng-select validationClasses="currency" appendTo="body" [clearable]="true"
+                       id="currency"
+                       formControlName="currency">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of currencies">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="currency"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mainAccount"
+                   for="mainAccount">{{lang.map.main_account}}</label>
+            <ng-select validationClasses="mainAccount" appendTo="body" [clearable]="true"
+                       id="mainAccount"
+                       formControlName="mainAccount">
+              <ng-option [value]="option.accountNumber"
+                         *ngFor="let option of currentBankAccounts">{{option.bankName}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="mainAccount"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row" *ngIf="showUpdateAccountFields">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="accountNumber"
+                   for="accountNumber">{{lang.map.account_number}}</label>
+            <input id="accountNumber" validationClasses="accountNumber" formControlName="accountNumber"
+                   class="form-control">
+            <app-field-error-message controlName="accountNumber"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="iBan"
+                   for="iBan">{{lang.map.iban}}</label>
+            <input id="iBan" validationClasses="iBan" formControlName="iBan"
+                   class="form-control">
+            <app-field-error-message controlName="iBan"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="swiftCode"
+                   for="swiftCode">{{lang.map.swift_code}}</label>
+            <input id="swiftCode" validationClasses="swiftCode" formControlName="swiftCode"
+                   class="form-control">
+            <app-field-error-message controlName="swiftCode"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="explanation">
+      <ng-template #special_explanations>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="description"
+                   for="description">{{lang.map.special_explanations}}</label>
+            <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                      rows="4" class="form-control"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #attachmentsTab>
+    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"></attachments>
+  </ng-template>
+</div>

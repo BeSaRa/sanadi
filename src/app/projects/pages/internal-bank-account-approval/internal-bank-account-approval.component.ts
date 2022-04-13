@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
+import {Component} from '@angular/core';
+import {FormGroup, FormBuilder, AbstractControl, FormControl} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
@@ -10,6 +10,18 @@ import {Observable} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
+import {Lookup} from '@app/models/lookup';
+import {Bank} from '@app/models/bank';
+import {BankAccount} from '@app/models/bank-account';
+import {BankCategory} from '@app/enums/bank-category.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {CollectorApproval} from '@app/models/collector-approval';
+import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
+import {LicenseService} from '@app/services/license.service';
+import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
+import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
+import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -17,19 +29,73 @@ import {ToastService} from '@app/services/toast.service';
   styleUrls: ['./internal-bank-account-approval.component.scss']
 })
 export class InternalBankAccountApprovalComponent extends EServicesGenericComponent<InternalBankAccountApproval, InternalBankAccountApprovalService> {
-  form: FormGroup = new FormGroup({});
+  form!: FormGroup;
+  requestTypes: Lookup[] = this.lookupService.listByCategory.BankRequestType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType;
+  banks: Bank[] = [];
+  // bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
+  bankCategories: Lookup[] = [new Lookup().clone({arName: 'رئيسي', enName: 'Main', lookupKey: 1}),
+    new Lookup().clone({arName: 'فرعي', enName: 'Sub', lookupKey: 2})];
+  currencies: Lookup[] = this.lookupService.listByCategory.Currency;
+  currentBankAccounts: BankAccount[] = [];
+  oldLicenseFullSerialControl: FormControl = new FormControl();
+  private displayedColumns: string[] = ['fullSerial', 'bankCategoryInfo', 'mainAccountInfo', 'currencyInfo', 'actions'];
+  showUpdateAccountFields = false;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
               public service: InternalBankAccountApprovalService,
               private lookupService: LookupService,
               private dialog: DialogService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private licenseService: LicenseService) {
     super();
   }
 
+  get basicInfo(): FormGroup {
+    return this.form.get('basicInfo')! as FormGroup;
+  }
+
+  get specialExplanation(): FormGroup {
+    return this.form.get('explanation')! as FormGroup;
+  }
+
+  get requestType(): AbstractControl {
+    return this.form.get('basicInfo.requestType')!;
+  }
+
+  get operationType(): AbstractControl {
+    return this.form.get('basicInfo.operationType')!;
+  }
+
+  get category(): AbstractControl {
+    return this.form.get('basicInfo.category')!;
+  }
+
+  get mainAccount(): AbstractControl {
+    return this.form.get('basicInfo.mainAccount')!;
+  }
+
+  get oldLicenseFullSerialField(): AbstractControl {
+    return this.form.get('basicInfo.oldLicenseFullSerial')!;
+  }
+
+  get accountNumber(): FormControl {
+    return (this.form.get('basicInfo.accountNumber')) as FormControl;
+  }
+
+  get iban(): FormControl {
+    return (this.form.get('basicInfo.iBan')) as FormControl;
+  }
+
+  get swiftCode(): FormControl {
+    return (this.form.get('basicInfo.swiftCode')) as FormControl;
+  }
+
   _getNewInstance(): InternalBankAccountApproval {
-      return new InternalBankAccountApproval();
+    return new InternalBankAccountApproval();
   }
 
   _initComponent(): void {
@@ -37,42 +103,62 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _buildForm(): void {
-      ////////
+    const model = new InternalBankAccountApproval();
+    this.form = this.fb.group({
+      basicInfo: this.fb.group(model.buildBasicInfo(true)),
+      explanation: this.fb.group(model.buildExplanation(true))
+    });
   }
 
   _afterBuildForm(): void {
-      ////////
+    this.loadBanks();
+    this.listenToBankCategoryChange();
+    this.listenToRequestTypeChanges();
+    this.listenToOperationTypeChanges();
+    // this.listenToRequestTypeAndOperationTypeChanges();
+    // this.toggleRequestType(this.requestType.value);
+    // this.toggleOperationType(this.operationType.value);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-      ////////
-    return  true;
+    return this.form.valid;
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-      ////////
-    return true;
+    return this.form.valid;
   }
 
   _afterLaunch(): void {
-      ////////
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
   _prepareModel(): InternalBankAccountApproval | Observable<InternalBankAccountApproval> {
-      ////////
-    return new InternalBankAccountApproval();
+    return new InternalBankAccountApproval().clone({
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue()
+    });
   }
 
   _afterSave(model: InternalBankAccountApproval, saveType: SaveTypes, operation: OperationTypes): void {
-      ////////
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
 
   _saveFail(error: any): void {
-      throw new Error('Method not implemented.');
+
   }
 
   _launchFail(error: any): void {
-      throw new Error('Method not implemented.');
+
   }
 
   _destroyComponent(): void {
@@ -80,10 +166,235 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _updateForm(model: InternalBankAccountApproval | undefined): void {
-      ////////
+    if (!model) {
+      return;
+    }
+    this.model = (new InternalBankAccountApproval()).clone({...this.model, ...model});
+    this.form.patchValue({
+      basicInfo: this.model?.buildBasicInfo(),
+      explanation: this.model?.buildExplanation()
+    });
+
+    this.toggleMainAccountControl(this.category.value);
+    this.toggleRequestType(this.requestType.value);
   }
 
   _resetForm(): void {
-      ////////
+    this.form.reset();
+    this.operation = OperationTypes.CREATE;
+  }
+
+  loadBanks() {
+    this.service.loadBanks().subscribe(list => {
+      this.banks = list;
+    });
+  }
+
+  loadBankAccounts() {
+    this.service.loadBankAccounts().subscribe(list => {
+      this.currentBankAccounts = list;
+    });
+  }
+
+  enableMainAccount() {
+    this.mainAccount.enable();
+    this.mainAccount.setValidators([CustomValidators.required]);
+    this.mainAccount.updateValueAndValidity();
+  }
+
+  disableMainAccount() {
+    this.mainAccount.patchValue(null);
+    this.mainAccount.disable();
+    this.mainAccount.setValidators([]);
+    this.mainAccount.updateValueAndValidity();
+  }
+
+  listenToBankCategoryChange() {
+    this.category.valueChanges.subscribe(val => {
+      this.toggleMainAccountControl(val);
+    });
+  }
+
+  private listenToRequestTypeChanges() {
+    this.requestType
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val: number) => {
+        this.model!.requestType = val;
+        // this.toggleRequestType(val);
+        this.requestTypeOrOperationTypeChanged();
+      });
+  }
+
+  private listenToOperationTypeChanges() {
+    this.operationType
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val: number) => {
+        this.model!.operationType = val;
+        // this.toggleOperationType(val);
+        this.requestTypeOrOperationTypeChanged();
+      });
+  }
+
+  toggleMainAccountControl(accountCategory: number) {
+    if (accountCategory === BankCategory.SUB) {
+      this.loadBankAccounts();
+      this.enableMainAccount();
+    } else {
+      this.disableMainAccount();
+    }
+  }
+
+  requestTypeOrOperationTypeChanged() {
+    if (this.requestType.value === BankAccountRequestTypes.NEW) {
+      this.oldLicenseFullSerialField.patchValue(null);
+      this.oldLicenseFullSerialField.disable();
+      this.removeUpdateAccountFields();
+    } else if (this.requestType.value === BankAccountRequestTypes.UPDATE) {
+      this.oldLicenseFullSerialField.enable();
+      if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
+        this.addUpdateAccountFields();
+      }
+    } else if(this.requestType.value === BankAccountRequestTypes.CANCEL) {
+      this.oldLicenseFullSerialField.enable();
+      this.removeUpdateAccountFields();
+    } else if(this.requestType.value == null) {
+      this.oldLicenseFullSerialField.patchValue(null);
+      this.oldLicenseFullSerialField.disable();
+      this.removeUpdateAccountFields();
+    }
+
+    if(this.operationType.value === BankAccountOperationTypes.MERGE) {
+      this.removeUpdateAccountFields();
+    } else if(this.operationType.value === BankAccountOperationTypes.INACTIVE) {
+      this.removeUpdateAccountFields();
+    } else if(this.operationType.value == null) {
+      this.removeUpdateAccountFields();
+    }
+  }
+
+  toggleRequestType(val: number) {
+    switch (val) {
+      case BankAccountRequestTypes.NEW: {
+        this.oldLicenseFullSerialField.patchValue(null);
+        this.oldLicenseFullSerialField.disable();
+        this.removeUpdateAccountFields();
+        break;
+      }
+      case BankAccountRequestTypes.UPDATE: {
+        this.oldLicenseFullSerialField.enable();
+        if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
+          this.addUpdateAccountFields();
+        }
+        break;
+      }
+      case BankAccountRequestTypes.CANCEL: {
+        this.oldLicenseFullSerialField.enable();
+        this.removeUpdateAccountFields();
+        break;
+      }
+      default: {
+        this.oldLicenseFullSerialField.patchValue(null);
+        this.oldLicenseFullSerialField.disable();
+        this.removeUpdateAccountFields();
+        break;
+      }
+    }
+    this.model!.requestType = val;
+  }
+
+  toggleOperationType(val: number) {
+    switch (val) {
+      case BankAccountOperationTypes.NEW_ACCOUNT: {
+        if (this.requestType.value == BankAccountRequestTypes.UPDATE) {
+          this.addUpdateAccountFields();
+        }
+        break;
+      }
+      case BankAccountOperationTypes.MERGE: {
+        this.removeUpdateAccountFields();
+        break;
+      }
+      case BankAccountOperationTypes.INACTIVE: {
+        this.removeUpdateAccountFields();
+        break;
+      }
+      default: {
+        this.removeUpdateAccountFields();
+        break;
+      }
+    }
+    this.model!.operationType = val;
+  }
+
+  addUpdateAccountFields() {
+    this.accountNumber.setValidators([CustomValidators.required]);
+    this.iban.setValidators([CustomValidators.required]);
+    this.swiftCode.setValidators([CustomValidators.required]);
+
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
+    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldLicenseFullSerialControl.updateValueAndValidity();
+
+    if (!this.showUpdateAccountFields) {
+      this.showUpdateAccountFields = true;
+    }
+  }
+
+  removeUpdateAccountFields() {
+    this.accountNumber.setValidators([]);
+    this.accountNumber.patchValue(null);
+    this.iban.setValidators([]);
+    this.iban.patchValue(null);
+    this.swiftCode.setValidators([]);
+    this.swiftCode.patchValue(null);
+
+    this.oldLicenseFullSerialField.setValidators([]);
+    this.oldLicenseFullSerialControl.setValidators([]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldLicenseFullSerialControl.updateValueAndValidity();
+
+    if (this.showUpdateAccountFields) {
+      this.showUpdateAccountFields = false;
+    }
+  }
+
+  private validateSingleLicense(license: InternalBankAccountLicense): Observable<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>> {
+    return this.licenseService.validateLicenseByRequestType<InternalBankAccountLicense>(this.model!.caseType, this.model!.requestType, license.id)
+      .pipe(map(validated => {
+        return (validated ? {
+          selected: validated,
+          details: validated
+        } : null) as (null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>);
+      }));
+  }
+
+  private openSelectLicense(licenses: InternalBankAccountLicense[]) {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: InternalBankAccountLicense, details: InternalBankAccountLicense }>;
+  }
+
+  searchForLicense() {
+    if (!this.oldLicenseFullSerialField.value) {
+      this.dialog.error(this.lang.map.need_license_number_to_search);
+      return;
+    }
+
+    this.licenseService
+      .internalBankAccountSearch<CollectorApproval>({
+        fullSerial: this.oldLicenseFullSerialField.value
+      })
+      .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(licenses => !!licenses.length))
+      .pipe(exhaustMap((licenses) => {
+        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
+      }))
+      .pipe(
+        filter<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>, SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>>
+        ((info): info is SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense> => !!info))
+      .subscribe((_info) => {
+        this._updateForm(_info.details.convertToItem());
+      });
   }
 }

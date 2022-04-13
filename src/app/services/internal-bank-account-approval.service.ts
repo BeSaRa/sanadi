@@ -11,6 +11,11 @@ import {UrlService} from './url.service';
 import {InternalBankAccountApprovalInterceptor} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
 import {FactoryService} from '@app/services/factory.service';
 import {InternalBankAccountApprovalSearchCriteria} from '@app/models/internal-bank-account-approval-search-criteria';
+import {Generator} from '@app/decorators/generator';
+import {Observable} from 'rxjs';
+import {Bank} from '@app/models/bank';
+import {BankAccount} from '@app/models/bank-account';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +59,37 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
 
   _getUrlService(): UrlService {
       return this.urlService;
+  }
+
+  getBankCtrlURLSegment(): string {
+    return this.urlService.URLS.BANK;
+  }
+
+
+  private _loadBanks(): Observable<Bank[]> {
+    return this.http.get<any>(this.getBankCtrlURLSegment() + '/composite').pipe(map(response => {
+      let result: Bank[] = [];
+      response.rs.forEach((r: any) => {
+        result.push((new Bank()).clone(r));
+      });
+      return result;
+    }));
+  }
+
+  loadBanks() {
+    return this._loadBanks();
+  }
+
+  getBankAccountCtrlURLSegment(): string {
+    return this.urlService.URLS.BANK_ACCOUNT;
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadBankAccounts(): Observable<BankAccount[]> {
+    return this.http.get<BankAccount[]>(this.getBankAccountCtrlURLSegment() + '/composite');
+  }
+
+  loadBankAccounts() {
+    return this._loadBankAccounts();
   }
 }
