@@ -54,6 +54,8 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   requestChannelInfo!: AdminResult;
   requestStatusInfo!: AdminResult;
   requestTypeInfo!: AdminResult;
+  aidLookupInfo !: AdminResult;
+  aidLookupParentInfo !: AdminResult;
   creationDateString!: string;
   statusDateModifiedString!: string;
 

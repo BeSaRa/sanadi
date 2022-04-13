@@ -17,25 +17,29 @@
     <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.request_date}}</label>
-        <span class="form-control">{{requestDetails.creationDateString}}</span>
+        <span class="form-control">{{requestDetails.creationDateString || '&nbsp;'}}</span>
       </div>
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.reason_of_request}}</label>
-        <span class="form-control">{{requestDetails.requestTypeInfo.getName()}}</span>
+        <label class="form-label">{{langService.map.request_aid_amount}}</label>
+        <span
+          class="form-control">{{(requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || '&nbsp;'}}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6 mb-4">
-        <label class="form-label">{{langService.map.request_aid_amount}}</label>
-        <span
-          class="form-control">{{requestDetails.requestedAidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+        <label class="form-label">{{langService.map.requested_aid_category}}</label>
+        <span class="form-control">{{requestDetails.aidLookupParentInfo.getName() || '&nbsp;'}}</span>
       </div>
+      <div class="col-sm-6 mb-4">
+        <label class="form-label">{{langService.map.requested_aid}}</label>
+        <span class="form-control">{{requestDetails.aidLookupInfo.getName() || '&nbsp;'}}</span>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.request_status}}</label>
         <span class="form-control">{{requestDetails.requestStatusInfo.getName() || '&nbsp;'}}</span>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-6 mb-4">
         <label class="form-label">{{langService.map.status_date}}</label>
         <span class="form-control">{{requestDetails.statusDateModifiedString || '&nbsp;'}}</span>
