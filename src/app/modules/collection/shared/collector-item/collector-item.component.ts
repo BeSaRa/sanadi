@@ -146,6 +146,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.fb.group((new CollectorItem().buildForm(true)));
+    this.toggleLicenseEndDate();
   }
 
   private updateForm(model: CollectorItem): void {
