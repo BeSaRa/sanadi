@@ -18,6 +18,8 @@ import { DialogService } from "@app/services/dialog.service";
 import { ToastService } from "@app/services/toast.service";
 import { Country } from "@app/models/country";
 import { CountryService } from "@app/services/country.service";
+import { AgencyService } from "@app/services/agency-service";
+import { Agency } from "@app/models/agency";
 
 @Component({
   selector: "shipping-approval",
@@ -37,7 +39,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     private lookupService: LookupService,
     private dialog: DialogService,
     private toast: ToastService,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private agencyService: AgencyService
   ) {
     super();
   }
@@ -54,6 +57,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
+  receiverNames: Agency[] = [];
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   get linkedProject(): AbstractControl {
@@ -70,6 +74,10 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   get projectLicense(): AbstractControl {
     return this.form.get("projectLicense")!;
+  }
+
+  get country(): AbstractControl {
+    return this.form.get("country")!;
   }
 
   _getNewInstance(): ShippingApproval {
@@ -125,6 +133,11 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
           this.otherReceiverName.clearValidators();
         }
         this.otherReceiverName.updateValueAndValidity();
+        this.agencyService
+          .loadReceiverNames(this.receiverType.value, this.country.value)
+          .subscribe((receiverNames) => {
+            this.receiverNames = receiverNames;
+          });
       });
   }
 
