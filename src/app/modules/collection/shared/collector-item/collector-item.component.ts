@@ -47,7 +47,6 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   oldLicenseFullSerialControl: FormControl = new FormControl();
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
-  collectorRelations: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   relationships: Lookup[] = this.lookupService.listByCategory.CollectorRelation;
