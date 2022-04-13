@@ -47,21 +47,12 @@
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="jobTitle"
-               for="jobTitle">{{lang.map.job_title}}</label>
-        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
-               [readonly]="(isExtendOrCancelRequestType() || readOnly)">
-        <app-field-error-message controlName="jobTitle"></app-field-error-message>
-      </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="collectorNumber"
                for="collectorNumber">{{lang.map.collector_number}}</label>
         <input id="collectorNumber" validationClasses="collectorNumber" formControlName="collectorNumber"
                class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly)">
         <app-field-error-message controlName="collectorNumber"></app-field-error-message>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="gender"
                for="gender">{{lang.map.gender}}</label>
@@ -75,6 +66,8 @@
         </ng-select>
         <app-field-error-message controlName="gender"></app-field-error-message>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="nationality"
                for="nationality">{{lang.map.lbl_nationality}}</label>
@@ -87,6 +80,13 @@
                      *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="nationality"></app-field-error-message>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="jobTitle"
+               for="jobTitle">{{lang.map.job_title}}</label>
+        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
+               [readonly]="(isExtendOrCancelRequestType() || readOnly)">
+        <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="relationship"
