@@ -32,7 +32,8 @@ const defaultLengths = {
   QID_MIN: 11,
   QID_MAX: 11,
   SWIFT_CODE_MAX: 50,
-  DECIMAL_PLACES: 2
+  DECIMAL_PLACES: 2,
+  EXPLANATIONS: 1200
 };
 
 const commonValidations = {

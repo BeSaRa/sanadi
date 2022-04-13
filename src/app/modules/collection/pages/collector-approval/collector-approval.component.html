@@ -54,7 +54,8 @@
             <label class="form-label" asteriskIfRequired="description"
                    for="description">{{lang.map.special_explanations}}</label>
             <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                      rows="4" class="form-control" [readonly]="readonly"></textarea>
+                      rows="4" class="form-control" [readonly]="readonly"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>

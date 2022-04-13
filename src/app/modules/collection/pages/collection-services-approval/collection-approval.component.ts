@@ -16,6 +16,7 @@ import {ToastService} from "@app/services/toast.service";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {CustomValidators} from "@app/validators/custom-validators";
 
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -44,6 +45,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   form!: FormGroup;
 
   disableSearchField: boolean = true;
+  customValidators = CustomValidators;
 
   get basicInfo(): FormGroup {
     return this.form.get('basicInfo')! as FormGroup;

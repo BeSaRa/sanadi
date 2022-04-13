@@ -16,6 +16,7 @@ import {ToastService} from '@app/services/toast.service';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'collector-approval',
@@ -30,6 +31,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
 
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   disableSearchField: boolean = true;
+  customValidators = CustomValidators;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
