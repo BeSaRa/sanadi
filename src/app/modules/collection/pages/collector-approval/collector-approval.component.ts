@@ -25,8 +25,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 })
 export class CollectorApprovalComponent extends EServicesGenericComponent<CollectorApproval, CollectorApprovalService> {
   form!: FormGroup;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew
-    .filter((l) => l.lookupKey !== ServiceRequestTypes.EXTEND)
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoExtend
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
