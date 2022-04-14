@@ -2,7 +2,6 @@ import {Constructor} from "@app/helpers/constructor";
 import {AbstractConstructor} from "@app/helpers/abstract-constructor";
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {DateUtils} from "@app/helpers/date-utils";
-import {CustomValidators} from "@app/validators/custom-validators";
 import {LicenseDurationType} from "@app/enums/license-duration-type";
 
 type CanLicenseApproval = Constructor<HasLicenseApproval> & AbstractConstructor<HasLicenseApproval>
@@ -40,7 +39,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
         customTerms,
       } = this;
       return {
-        licenseStartDate: controls ? [DateUtils.changeDateToDatepicker(licenseStartDate), CustomValidators.required] : DateUtils.changeDateToDatepicker(licenseStartDate),
+        licenseStartDate: controls ? [DateUtils.changeDateToDatepicker(licenseStartDate)] : DateUtils.changeDateToDatepicker(licenseStartDate),
         licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(licenseEndDate)] : DateUtils.changeDateToDatepicker(licenseEndDate),
         followUpDate: controls ? [DateUtils.changeDateToDatepicker(followUpDate)] : DateUtils.changeDateToDatepicker(followUpDate),
         conditionalLicenseIndicator: controls ? [conditionalLicenseIndicator] : conditionalLicenseIndicator,
@@ -49,16 +48,16 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
       }
     }
 
-    private hasLicenseStartDate(): boolean {
-      return !!this.licenseStartDate;
-    }
+    // private hasLicenseStartDate(): boolean {
+    //   return !!this.licenseStartDate;
+    // }
 
     private hasLicenseEndDate(): boolean {
       return !!this.licenseEndDate;
     }
 
     hasValidApprovalInfo(): boolean {
-      return this.licenseDurationType !== LicenseDurationType.PERMANENT ? (this.hasLicenseStartDate() && this.hasLicenseEndDate()) : this.hasLicenseStartDate()
+      return this.licenseDurationType !== LicenseDurationType.PERMANENT ? (this.hasLicenseEndDate()) : true;
     }
 
     // shallow clone
