@@ -104,6 +104,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   _afterBuildForm(): void {
     this.listenToLinkedProjectChanges();
     this.listenToReceiverTypeChanges();
+    this.listenToCountryChange();
   }
 
   private listenToLinkedProjectChanges() {
@@ -133,11 +134,30 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
           this.otherReceiverName.clearValidators();
         }
         this.otherReceiverName.updateValueAndValidity();
-        this.agencyService
-          .loadReceiverNames(this.receiverType.value, this.country.value)
-          .subscribe((receiverNames) => {
-            this.receiverNames = receiverNames;
-          });
+        this.handleReceiverTypeandCountryChange();
+      });
+  }
+
+  private listenToCountryChange() {
+    this.country.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.handleReceiverTypeandCountryChange());
+  }
+
+  handleReceiverTypeandCountryChange() {
+    if (!this.country.value) {
+      return;
+    }
+    if (
+      !this.receiverType.value ||
+      this.receiverType.value === ReceiverTypes.OTHER
+    ) {
+      return;
+    }
+    this.agencyService
+      .loadReceiverNames(this.receiverType.value, this.country.value)
+      .subscribe((receiverNames) => {
+        this.receiverNames = receiverNames;
       });
   }
 
@@ -197,6 +217,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     }
     this.model = model;
     this.form.patchValue(model?.buildBasicInfo());
+    this.handleReceiverTypeandCountryChange();
   }
   _resetForm(): void {
     this.form.reset();
