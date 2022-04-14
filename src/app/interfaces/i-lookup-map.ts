@@ -87,6 +87,7 @@ export interface ILookupMap {
   CollectorType: Lookup[];
   CollectorRelation: Lookup[];
   CollectionStatus: Lookup[];
+  CollectorStatus: Lookup[];
   UrgentInterventionStatus: Lookup[];
 
   BENEFICIARY_OBLIGATION: Lookup[],
