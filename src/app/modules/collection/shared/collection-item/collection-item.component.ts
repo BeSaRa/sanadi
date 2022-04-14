@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {CollectionApproval} from "@app/models/collection-approval";
 import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
@@ -15,18 +15,23 @@ import {CollectionLicense} from "@app/license-models/collection-license";
 import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {CaseStatusCollectionApproval} from '@app/enums/case-status-collection-approval';
+import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'collection-item',
   templateUrl: './collection-item.component.html',
   styleUrls: ['./collection-item.component.scss']
 })
-export class CollectionItemComponent implements OnInit, OnDestroy {
+export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'ouInfo', 'creatorInfo', 'actions'];
 
   constructor(private fb: FormBuilder,
               public lang: LangService,
               private licenseService: LicenseService,
+              private sharedService: SharedService,
               private dialog: DialogService) {
   }
 
@@ -46,6 +51,36 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
 
   searchControl: FormControl = new FormControl();
 
+  actions: IMenuItem<CollectionItem>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CollectionItem, index: number) => this.edit$.next({item: item, index: index}),
+      show: (item: CollectionItem) => !this.approvalMode,
+      disabled: (item: CollectionItem) => this.readOnly
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE_TRASH,
+      onClick: (item: CollectionItem, index: number) => this.remove$.next({item: item, index: index}),
+      show: (item: CollectionItem) => !this.approvalMode,
+      disabled: (item: CollectionItem) => this.readOnly
+    },
+    // edit approval info (if approval mode)
+    {
+      type: 'action',
+      label: 'edit_approval_info',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CollectionItem, index: number) => this.approval.emit({item: item, index: index}),
+      show: (item: CollectionItem) => this.approvalMode,
+      disabled: (item: CollectionItem) => this.readOnly
+    },
+  ]
+
   @Output()
   approval: EventEmitter<{ item: CollectionItem, index: number }> = new EventEmitter<{ item: CollectionItem; index: number }>();
 
@@ -54,7 +89,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'map', 'actions'];
+  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'map', 'exportedLicenseFullSerial', 'actions'];
   @Input()
   approvalMode: boolean = false;
 
@@ -108,6 +143,12 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
     this.listenToSave();
     this.listenToDisableSearchField();
     this.listenToLicenseSearch();
+  }
+
+  ngAfterViewInit() {
+    if (this.model.getCaseStatus() !== CaseStatusCollectionApproval.FINAL_APPROVE) {
+      this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
+    }
   }
 
   ngOnDestroy(): void {
@@ -166,6 +207,7 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
 
   private resetForm(): void {
     this.form.reset();
+    this.searchControl.reset();
   }
 
   private listenToDisableSearchField() {
@@ -311,5 +353,20 @@ export class CollectionItemComponent implements OnInit, OnDestroy {
 
   isExtendOrCancelRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
+  }
+
+  viewGeneratedLicense(item: CollectionItem): void {
+    if (!item.exportedLicenseFullSerial) {
+      return;
+    }
+    let license = {
+      documentTitle: item.exportedLicenseFullSerial,
+      id: item.exportedLicenseId
+    };
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
   }
 }

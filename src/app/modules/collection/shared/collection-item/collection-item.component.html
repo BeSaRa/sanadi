@@ -9,9 +9,8 @@
                [control]="searchControl"
                for="searchControl">{{lang.map.search_by_serial_number}}</label>
         <div validationClasses="" [control]="searchControl" class="input-group">
-          <input (keydown.enter)="!disableSearch && searchForLicense()" id="searchControl" validationClasses="" [control]="searchControl"
-                 [formControl]="searchControl"
-                 class="form-control">
+          <input (keydown.enter)="!disableSearch && searchForLicense()" id="searchControl" validationClasses=""
+                 [control]="searchControl" [formControl]="searchControl" class="form-control">
           <button *ngIf="!disableSearch" (click)="searchForLicense()" class="input-group-text">
             <i class="mdi mdi-magnify text-primary"></i>
           </button>
@@ -113,24 +112,17 @@
           </div>
         </td>
       </ng-container>
+      <ng-container cdkColumnDef="exportedLicenseFullSerial">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.generated_license_number}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <span class="text-primary text-decoration-none cursor-pointer"
+                (click)="viewGeneratedLicense(row)">{{row.exportedLicenseFullSerial || ''}}</span>
+        </td>
+      </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">
-          <div *ngIf="!approvalMode" class="d-flex">
-            <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
-                    class="btn icon-btn" [disabled]="readOnly">
-              <i class="mdi mdi-pencil text-primary"></i>
-            </button>
-            <button (click)="remove$.next({item: row, index: itemIndex})" [tooltip]="lang.map.btn_delete"
-                    class="btn icon-btn" [disabled]="readOnly">
-              <i class="mdi mdi-delete text-primary"></i>
-            </button>
-          </div>
-          <button *ngIf="approvalMode" (click)="approval.emit({item: row , index: itemIndex})"
-                  [tooltip]="lang.map.edit_approval_info"
-                  class="btn icon-btn" [disabled]="readOnly">
-            <i class="mdi mdi-pencil text-primary"></i>
-          </button>
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
         </td>
       </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
