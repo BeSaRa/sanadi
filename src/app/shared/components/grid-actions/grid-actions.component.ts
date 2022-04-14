@@ -14,6 +14,7 @@ export class GridActionsComponent implements OnInit {
   private _record: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   @Input() actions: IMenuItem<any>[] = [];
+  @Input() itemIndex: number = -1;
 
   @Input()
   set record(value: any) {
@@ -49,7 +50,10 @@ export class GridActionsComponent implements OnInit {
 
   onClick(event: MouseEvent, action: IMenuItem<any>) {
     event.preventDefault();
-    action.onClick && action.onClick(this.record);
+    if (this.isActionDisabled(action)) {
+      return;
+    }
+    action.onClick && action.onClick(this.record, this.itemIndex);
   }
 
   private _filterActionsArray(actions: IMenuItem<any>[], record: any): IMenuItem<any>[] {

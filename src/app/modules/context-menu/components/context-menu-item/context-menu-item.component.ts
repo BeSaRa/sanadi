@@ -36,11 +36,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   private preparedActions: BehaviorSubject<IMenuItem<any>[]> = new BehaviorSubject<IMenuItem<any>[]>([]);
 
-  private open$: Subject<{ $event: MouseEvent, item: any }> = new Subject<{ $event: MouseEvent, item: any }>();
+  private open$: Subject<{ $event: MouseEvent, item: any, itemIndex?: number }> = new Subject<{ $event: MouseEvent, item: any, itemIndex?: number }>();
 
   filteredAction: IMenuItem<any>[] = [];
 
   item: any;
+  itemIndex: number = -1;
   event?: MouseEvent;
   menuRef?: EmbeddedViewRef<any>;
 
@@ -97,12 +98,12 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  open($event: MouseEvent, item?: any): void {
+  open($event: MouseEvent, item?: any, itemIndex?: number): void {
     $event.preventDefault();
 
     this.debugInfo(() => {
       console.log('Open Event fired');
-      console.log({$event, item});
+      console.log({$event, item, itemIndex});
     });
 
     if (typeof this.prevent !== 'undefined') {
@@ -118,7 +119,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         return;
       }
     }
-    this.open$.next({$event: $event, item: item});
+    this.open$.next({$event: $event, item: item, itemIndex: itemIndex});
   }
 
   private listenToItemChange() {
@@ -171,6 +172,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         }
         this.filteredAction = data.actions;
         this.item = data.item;
+        this.itemIndex = data.itemIndex ?? -1;
         this.event = data.$event;
         this.overlayRef.detach();
         this.menuRef = this.overlayRef.attach(new TemplatePortal(this.template, this.viewContainerRef));
@@ -234,7 +236,10 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   onClick(event: MouseEvent, action: IMenuItem<any>) {
     event.preventDefault();
-    action.onClick && action.onClick(this.item);
+    if (this.isActionDisabled(action)){
+      return;
+    }
+    action.onClick && action.onClick(this.item, this.itemIndex);
     this.close();
   }
 
