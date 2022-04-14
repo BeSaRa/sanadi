@@ -9,10 +9,10 @@
                [control]="oldLicenseFullSerialControl"
                for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
         <div class="input-group">
-          <input (keydown.enter)="!disableSearch && searchForLicense()" id="oldLicenseFullSerial" validationClasses="" [control]="oldLicenseFullSerialControl"
+          <input (keydown.enter)="!disableSearch && searchForLicense($event)" id="oldLicenseFullSerial" validationClasses="" [control]="oldLicenseFullSerialControl"
                  formControlName="oldLicenseFullSerial"
                  class="form-control">
-          <button *ngIf="!disableSearch" (click)="searchForLicense()" class="input-group-text">
+          <button *ngIf="!disableSearch" (click)="searchForLicense($event)" class="input-group-text">
             <i class="mdi mdi-magnify text-primary"></i>
           </button>
         </div>

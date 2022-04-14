@@ -299,10 +299,12 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   }
 
   private openSelectLicense(licenses: CollectorLicense[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
+    const licensesByDurationType = licenses.filter(l => l.licenseDurationTypeInfo.lookupKey == this.licenseDurationType);
+    return this.licenseService.openSelectLicenseDialog(licensesByDurationType, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
   }
 
-  searchForLicense() {
+  searchForLicense(event: Event) {
+    event.preventDefault();
     /*if (!this.oldLicenseFullSerialField.value) {
       this.dialog.error(this.lang.map.need_license_number_to_search);
       return;
