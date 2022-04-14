@@ -396,6 +396,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToSupervisionAndControlDepartmentAction(item);
         }
       },
+      // send to risk and compliance department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_risk_and_compliance_department',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+    
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToRiskAndComplianceDepartmentAction(item);
+        }
+      },
       // send to user
       {
         type: 'action',
@@ -713,6 +727,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private sendToSupervisionAndControlDepartmentAction(item: CaseModel<any, any>) {
     item.sendToSupervisionAndControlDepartment().subscribe(() => {
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToRiskAndComplianceDepartmentAction(item: CaseModel<any, any>) {
+    item.sendToRiskAndComplianceDepartment().subscribe(() => {
       this.navigateToSamePageThatUserCameFrom();
     });
   }

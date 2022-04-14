@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  send_to_risk_and_compliance_department: string;
   shipment_subject: string;
   shipment_source: string;
   shipment_weight: string;

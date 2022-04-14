@@ -17,7 +17,6 @@ import { CollectorApprovalComponent } from './pages/collector-approval/collector
 import { CollectorItemComponent } from './shared/collector-item/collector-item.component';
 import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 
-
 @NgModule({
   declarations: [
     CollectionComponent,
@@ -36,6 +35,9 @@ import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-a
     CollectionRoutingModule,
     SharedModule,
     MapsModule
+  ],
+  exports:[
+    ApprovalFormComponent
   ]
 })
 export class CollectionModule {

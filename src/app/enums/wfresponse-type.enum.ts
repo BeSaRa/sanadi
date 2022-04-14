@@ -1,4 +1,5 @@
 export enum WFResponseType {
+  SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewCustomsExemptionRemittance',
   TO_USER = 'toUser',
   APPROVE = 'approve',
   REJECT = 'reject',

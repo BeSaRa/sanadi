@@ -1,14 +1,18 @@
 import { CaseTypes } from "@app/enums/case-types.enum";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { dateSearchFields } from "@app/helpers/date-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { ShippingApproveTaskPopUpComponent } from "@app/modules/remittances/popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component";
 import { FactoryService } from "@app/services/factory.service";
 import { ShippingApprovalService } from "@app/services/shipping-approval.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 import { ISearchFieldsMap } from "@app/types/types";
 import { CustomValidators } from "@app/validators/custom-validators";
 import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
+import { DialogService } from "@app/services/dialog.service";
 
 export class ShippingApproval extends CaseModel<
   ShippingApprovalService,
@@ -74,6 +78,8 @@ export class ShippingApproval extends CaseModel<
   receiverNameInfo!: AdminResult;
   className!: string;
 
+  dialog!: DialogService;
+
   searchFields: ISearchFieldsMap<ShippingApproval> = {
     ...normalSearchFields(["fullSerial"]),
     ...dateSearchFields(["createdOn"]),
@@ -83,6 +89,7 @@ export class ShippingApproval extends CaseModel<
   constructor() {
     super();
     this.service = FactoryService.getService("ShippingApprovalService");
+    this.dialog = FactoryService.getService("DialogService");
   }
 
   buildBasicInfo(controls: boolean = false): any {
@@ -147,5 +154,19 @@ export class ShippingApproval extends CaseModel<
         ? [shipmentCarrier, [CustomValidators.required]]
         : shipmentCarrier,
     };
+  }
+
+  approve(): DialogRef {
+    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+      model: this,
+      action: WFResponseType.APPROVE,
+    });
+  }
+
+  finalApprove(): DialogRef {
+    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+      model: this,
+      action: WFResponseType.FINAL_APPROVE,
+    });
   }
 }

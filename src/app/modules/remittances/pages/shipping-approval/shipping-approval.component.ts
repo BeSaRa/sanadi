@@ -20,6 +20,8 @@ import { Country } from "@app/models/country";
 import { CountryService } from "@app/services/country.service";
 import { AgencyService } from "@app/services/agency-service";
 import { Agency } from "@app/models/agency";
+import { OpenFrom } from "@app/enums/open-from.enum";
+import { EmployeeService } from "@app/services/employee.service";
 
 @Component({
   selector: "shipping-approval",
@@ -40,7 +42,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     private dialog: DialogService,
     private toast: ToastService,
     private countryService: CountryService,
-    private agencyService: AgencyService
+    private agencyService: AgencyService,
+    public employeeService: EmployeeService
   ) {
     super();
   }
@@ -60,6 +63,10 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   receiverNames: Agency[] = [];
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
+  get requestType(): AbstractControl {
+    return this.form.get("requestType")!;
+  }
+
   get linkedProject(): AbstractControl {
     return this.form.get("linkedProject")!;
   }
@@ -78,6 +85,18 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   get country(): AbstractControl {
     return this.form.get("country")!;
+  }
+
+  isCancelRequestType(): boolean {
+    return (
+      this.requestType.value &&
+      this.requestType.value === ServiceRequestTypes.CANCEL
+    );
+  }
+
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
 
   _getNewInstance(): ShippingApproval {
@@ -105,6 +124,47 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.listenToLinkedProjectChanges();
     this.listenToReceiverTypeChanges();
     this.listenToCountryChange();
+    this.handleReadonly();
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus(),
+      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
+    if (
+      caseStatusEnum &&
+      (caseStatus == caseStatusEnum.FINAL_APPROVE ||
+        caseStatus === caseStatusEnum.FINAL_REJECTION)
+    ) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
 
   private listenToLinkedProjectChanges() {
