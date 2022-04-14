@@ -52,7 +52,8 @@ export class CollectorApprovalService extends EServiceGenericService<CollectorAp
   }
 
   getSearchCriteriaModel<S extends CollectorApproval>(): CollectorApproval {
-    return new CollectorApprovalSearchCriteria();
+    const xx = new CollectorApprovalSearchCriteria();
+    return xx;
   }
 
   getCaseComponentName(): string {

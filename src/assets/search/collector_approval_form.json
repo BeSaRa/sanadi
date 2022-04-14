@@ -49,5 +49,40 @@
         }
       }
     ]
+  },
+  {
+    "fields": [
+      {
+        "key": "subject",
+        "type": "input",
+        "label": "subject",
+        "validations": {
+          "required": false
+        }
+      },
+      {
+        "key": "exportedLicenseFullSerial",
+        "type": "input",
+        "label": "license_number",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "type": "selectField",
+        "label": "lbl_organization",
+        "key": "competentDepartmentID",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.loadComposite",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
   }
 ]

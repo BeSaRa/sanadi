@@ -83,10 +83,12 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
+    const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
+    criteria.caseType = caseType;
     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
-      .search(this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames))
+      .search(criteria)
       .subscribe((results: CaseModel<any, any>[]) => {
         this.results = results;
         if (this.results.length) {

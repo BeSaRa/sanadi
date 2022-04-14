@@ -21,6 +21,8 @@ export class CollectorApprovalInterceptor implements IModelInterceptor<Collector
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.requestClassificationInfo = AdminResult.createInstance(model.requestClassificationInfo);
     model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo);
+    model.organizationInfo = AdminResult.createInstance(model.organizationInfo);
+
     return model;
   }
 
@@ -38,7 +40,8 @@ export class CollectorApprovalInterceptor implements IModelInterceptor<Collector
     delete model.requestClassificationInfo;
     delete model.licenseDurationTypeInfo;
     delete model.taskDetails;
-    console.log('collector approval', model);
+    delete model.organizationInfo;
+
     return model;
   }
 }

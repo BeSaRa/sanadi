@@ -38,6 +38,7 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
   subject!: string;
   inRenewalPeriod!: boolean;
   collectorItemList: CollectorItem[] = [];
+  organizationInfo!: AdminResult;
   managerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;

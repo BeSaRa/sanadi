@@ -23,6 +23,7 @@ import {
 import {
   CollectionApprovalSearchCriteriaInterceptor
 } from '@app/search-criteria-interceptors/collection-approval-search-criteria-interceptor';
+import {CollectorApprovalSearchCriteriaInterceptor} from '@app/search-criteria-interceptors/collector-approval-search-criteria-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -32,6 +33,7 @@ interceptors.set(CaseTypes.INTERNATIONAL_COOPERATION, new InternationalCooperati
 interceptors.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, new FinalExternalOfficeApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.COLLECTION_APPROVAL, new CollectionApprovalSearchCriteriaInterceptor());
+interceptors.set(CaseTypes.COLLECTOR_LICENSING, new CollectorApprovalSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it
