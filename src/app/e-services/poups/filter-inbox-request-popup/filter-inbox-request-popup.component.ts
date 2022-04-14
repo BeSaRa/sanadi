@@ -10,6 +10,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 
 @Component({
   selector: 'filter-inbox-request-popup',
@@ -18,11 +19,10 @@ import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 })
 export class FilterInboxRequestPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
-  criteria: any;
+  criteria: Partial<IInboxCriteria>;
   form: FormGroup = {} as FormGroup;
 
   datepickerControlsMap: DatepickerControlsMap = {};
-
   datepickerOptionsMap: DatepickerOptionsMap = {
     createdDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     createdDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
@@ -57,13 +57,7 @@ export class FilterInboxRequestPopupComponent implements OnInit {
   }
 
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinDate({
-      fromFieldName,
-      toFieldName,
-      controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: this.datepickerControlsMap
-    });
-    DateUtils.setRelatedMaxDate({
+    DateUtils.setRelatedMinMaxDate({
       fromFieldName,
       toFieldName,
       controlOptionsMap: this.datepickerOptionsMap,
@@ -94,13 +88,7 @@ export class FilterInboxRequestPopupComponent implements OnInit {
       thirdBtn: 'btn_reset_close'
     }).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES || click === UserClickOn.THIRD_BTN) {
-        this.form.patchValue({
-          requestYear: null,
-          orgId: null,
-          benCategory: null,
-          requestType: null,
-          gender: null
-        });
+        this.form.reset();
         if (click === UserClickOn.THIRD_BTN) {
           this.dialogRef.close({});
         }
