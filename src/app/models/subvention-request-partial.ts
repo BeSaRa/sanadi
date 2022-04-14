@@ -22,11 +22,7 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   statusInfo!: AdminResult;
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
-  benCategory!: number;
   gender!: number;
-  requestType!: number;
-  requestTypeInfo!: AdminResult;
-  benCategoryInfo!: AdminResult;
   genderInfo!: AdminResult;
   aidTotalSuggestedAmount?: number;
   aidTotalPayedAmount?: number;
@@ -38,7 +34,7 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   subventionRequestService: SubventionRequestService;
 
   searchFields: ISearchFieldsMap<SubventionRequestPartial> = {
-    ...infoSearchFields(['orgAndBranchInfo', 'benCategoryInfo', 'requestTypeInfo', 'genderInfo']),
+    ...infoSearchFields(['orgAndBranchInfo', 'genderInfo']),
     ...normalSearchFields(['creationDateString', 'creationYear', 'aidTotalSuggestedAmount', 'aidTotalPayedAmount', 'aidRemainingAmount'])
   }
 

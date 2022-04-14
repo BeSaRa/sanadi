@@ -7,9 +7,7 @@ export class SubventionRequestPartialInterceptor {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
-    model.benCategoryInfo = AdminResult.createInstance(model.benCategoryInfo);
     model.genderInfo = AdminResult.createInstance(model.genderInfo);
-    model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
 
     model.creationDateString = DateUtils.getDateStringFromDate(model.creationDate);
     return model;
@@ -20,10 +18,7 @@ export class SubventionRequestPartialInterceptor {
     delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.statusInfo;
-    delete model.benCategoryInfo;
     delete model.genderInfo;
-    delete model.requestTypeInfo;
-    delete model.requestTypeInfo;
     delete model.creationDateString;
     delete model.searchFields;
     return model;

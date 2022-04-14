@@ -44,8 +44,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterCriteria: Partial<IPartialRequestCriteria> = {};
-  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'benCategory',
-    'requestType', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];
+  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];//'benCategory', 'requestType',
   headerColumn: string[] = ['extra-header'];
   filterControl: FormControl = new FormControl('');
   actions: IMenuItem<SubventionRequestPartial>[] = [
@@ -77,19 +76,9 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    benCategory: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benCategoryInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.benCategoryInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
     gender: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.genderInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.genderInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    requestType: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestTypeInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestTypeInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     estimatedValue: (a: SubventionRequestPartial, b: SubventionRequestPartial, dir: SortEvent): number => {

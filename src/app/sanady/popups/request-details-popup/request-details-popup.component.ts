@@ -51,7 +51,8 @@ export class RequestDetailsPopupComponent {
   headerColumn: string[] = ['extra-header'];
   aidColumns = [
     'approvalDate',
-    'aidType',
+    'requestedAidCategory',
+    'requestedAid',
     'estimatedAmount',
     'periodicType',
     'installmentsCount',
