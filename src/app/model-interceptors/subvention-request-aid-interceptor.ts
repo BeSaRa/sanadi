@@ -25,10 +25,10 @@ export class SubventionRequestAidInterceptor {
 
   static send(model: SubventionRequestAid | any): (SubventionRequestAid | any) {
     const configurationService: ConfigurationService = FactoryService.getService('ConfigurationService');
-    model.creationDateFrom && (model.creationDateFrom = DateUtils.setStartOfDay(model.creationDateFrom).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');
-    model.creationDateTo && (model.creationDateTo = DateUtils.setEndOfDay(model.creationDateTo).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');
-    model.statusDateModifiedFrom && (model.statusDateModifiedFrom = DateUtils.setStartOfDay(model.statusDateModifiedFrom).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');
-    model.statusDateModifiedTo && (model.statusDateModifiedTo = DateUtils.setEndOfDay(model.statusDateModifiedTo).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');
+    model.creationDateFrom && (model.creationDateFrom = DateUtils.setStartOfDay(model.creationDateFrom).format(configurationService.CONFIG.TIMESTAMP).toISOString());
+    model.creationDateTo && (model.creationDateTo = DateUtils.setEndOfDay(model.creationDateTo).format(configurationService.CONFIG.TIMESTAMP).toISOString());
+    model.statusDateModifiedFrom && (model.statusDateModifiedFrom = DateUtils.setStartOfDay(model.statusDateModifiedFrom).format(configurationService.CONFIG.TIMESTAMP).toISOString());
+    model.statusDateModifiedTo && (model.statusDateModifiedTo = DateUtils.setEndOfDay(model.statusDateModifiedTo).format(configurationService.CONFIG.TIMESTAMP).toISOString());
     SubventionRequestAidInterceptor._deleteBeforeSend(model);
     return model;
   }

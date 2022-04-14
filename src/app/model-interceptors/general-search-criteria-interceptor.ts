@@ -45,8 +45,8 @@ export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICase
     delete model.service;
     delete model.employeeService;
 
-    model.createdOnFrom = DateUtils.setStartOfDay(model.createdOnFrom as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
-    model.createdOnTo = DateUtils.setEndOfDay(model.createdOnTo as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
+    model.createdOnFrom = DateUtils.setStartOfDay(model.createdOnFrom as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).toISOString();
+    model.createdOnTo = DateUtils.setEndOfDay(model.createdOnTo as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).toISOString();
     return interceptors.get(model.caseType!)?.send(model) || identity(model);
   }
 
