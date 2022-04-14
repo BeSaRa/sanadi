@@ -101,8 +101,9 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
     },
     BD_CASE_TYPE: (text, model) => {
-      let local = model.lang.map[model.service.getService(model.BD_CASE_TYPE).serviceKey];
-      return local ? local.toLowerCase().indexOf(text) !== -1 : false;
+      let serviceKey = model.service.getService(model.BD_CASE_TYPE)?.serviceKey,
+        serviceName = serviceKey ? model.lang.map[serviceKey] : '';
+      return serviceName ? serviceName.toLowerCase().indexOf(text) !== -1 : false;
     },
     PI_CREATE: (text, model) => {
       let date = (new DatePipe('en')).transform(model.PI_CREATE);
