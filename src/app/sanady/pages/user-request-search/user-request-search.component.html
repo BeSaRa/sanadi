@@ -19,9 +19,8 @@
                    class="col-sm-12 col-md-4 col-form-label">{{langService.map.serial_number}}</label>
             <div class="col-md-8 col-sm-12 mb-4 position-relative">
               <input formControlName="requestFullSerial" id="requestFullSerial" type="text" class="form-control"
-                     [ngClass]="fm.getInvalidClass('simpleSearch.request.requestFullSerial')">
-              <app-field-error-message
-                [control]="fm.getFormField('simpleSearch.request.requestFullSerial')"></app-field-error-message>
+                     validationClasses="requestFullSerial" trimInput>
+              <app-field-error-message controlName="requestFullSerial"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -32,11 +31,13 @@
               <ng-select [selectOnTab]="true" labelForId="year" [clearable]="false"
                          placeholder="{{langService.map.select}}" id="year"
                          [notFoundText]="langService.map.msg_not_found"
+                         validationClasses="year"
                          formControlName="year" appendTo="body">
                 <ng-option *ngFor="let option of years" [value]="option">
                   {{option}}
                 </ng-option>
               </ng-select>
+              <app-field-error-message controlName="year"></app-field-error-message>
             </div>
           </div>
         </div>
@@ -51,6 +52,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                            [notFoundText]="langService.map.msg_not_found"
+                           validationClasses="benPrimaryIdType"
                            formControlName="benPrimaryIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
@@ -58,6 +60,7 @@
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
+                <app-field-error-message controlName="benPrimaryIdType"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -66,11 +69,9 @@
               <label for="benPrimaryIdNumber"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benPrimaryIdNumber')"
-                       id="benPrimaryIdNumber"
+                <input id="benPrimaryIdNumber" validationClasses="benPrimaryIdNumber" trimInput
                        formControlName="benPrimaryIdNumber" type="text" class="form-control">
-                <app-field-error-message
-                  [control]="fm.getFormField('simpleSearch.beneficiary.benPrimaryIdNumber')"></app-field-error-message>
+                <app-field-error-message controlName="benPrimaryIdNumber"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -84,6 +85,7 @@
                 <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="benSecIdType"
                            [notFoundText]="langService.map.msg_not_found"
+                           validationClasses="benSecIdType"
                            formControlName="benSecIdType" appendTo="body">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
@@ -91,6 +93,7 @@
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
+                <app-field-error-message controlName="benSecIdType"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -99,10 +102,9 @@
               <label for="benSecIdNumber"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.id_number}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                <input [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.benSecIdNumber')" id="benSecIdNumber"
+                <input id="benSecIdNumber" validationClasses="benSecIdNumber" trimInput
                        formControlName="benSecIdNumber" type="text" class="form-control">
-                <app-field-error-message
-                  [control]="fm.getFormField('simpleSearch.beneficiary.benSecIdNumber')"></app-field-error-message>
+                <app-field-error-message controlName="benSecIdNumber"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -116,11 +118,13 @@
                 <ng-select [selectOnTab]="true" labelForId="arMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="arMethod"
                            [notFoundText]="langService.map.msg_not_found"
+                           validationClasses="operator"
                            formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
+                <app-field-error-message controlName="operator"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -129,9 +133,8 @@
               <label for="arName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
                 <input formControlName="value" id="arName" type="text" class="form-control"
-                       [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.arName.value')">
-                <app-field-error-message
-                  [control]="fm.getFormField('simpleSearch.beneficiary.arName.value')"></app-field-error-message>
+                       validationClasses="value" trimInput>
+                <app-field-error-message controlName="value"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -145,11 +148,13 @@
                 <ng-select [selectOnTab]="true" labelForId="enMethod" [clearable]="false"
                            placeholder="{{langService.map.select}}" id="enMethod"
                            [notFoundText]="langService.map.msg_not_found"
+                           validationClasses="operator"
                            formControlName="operator" appendTo="body">
                   <ng-option *ngFor="let option of stringOperators" [value]="stringOperationMap[option.lookupKey]">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
+                <app-field-error-message controlName="operator"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -158,9 +163,8 @@
               <label for="enName" class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
               <div class="col-md-8 col-sm-12 mb-4 position-relative">
                 <input id="enName" formControlName="value" type="text" class="form-control"
-                       [ngClass]="fm.getInvalidClass('simpleSearch.beneficiary.enName.value')">
-                <app-field-error-message
-                  [control]="fm.getFormField('simpleSearch.beneficiary.enName.value')"></app-field-error-message>
+                       validationClasses="value" trimInput>
+                <app-field-error-message controlName="value"></app-field-error-message>
               </div>
             </div>
           </div>
@@ -180,110 +184,115 @@
              data-bs-parent="#advancedSearchAccordion">
           <div class="accordion-body">
             <div formGroupName="advancedSearch" id="advanced-search">
-              <div>
-                <div class="row" formGroupName="beneficiary">
-                  <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                      <label for="nationality"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                                   placeholder="{{langService.map.select}}" id="nationality"
-                                   [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="benNationality" appendTo="body">
-                          <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
-                            {{option.getName()}}
-                          </ng-option>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                      <label for="occuptionStatus"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
-                                   placeholder="{{langService.map.select}}" id="occuptionStatus"
-                                   [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="occuptionStatus" appendTo="body">
-                          <ng-option *ngFor="let option of employmentStatus" [value]="option.lookupKey">
-                            {{option.getName()}}
-                          </ng-option>
-                        </ng-select>
-                      </div>
+              <div class="row" formGroupName="beneficiary">
+                <div class="col-sm-12 col-md-6">
+                  <div class="row">
+                    <label for="nationality"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                      <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
+                                 placeholder="{{langService.map.select}}" id="nationality"
+                                 [notFoundText]="langService.map.msg_not_found"
+                                 validationClasses="benNationality"
+                                 formControlName="benNationality" appendTo="body">
+                        <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey">
+                          {{option.getName()}}
+                        </ng-option>
+                      </ng-select>
+                      <app-field-error-message controlName="benNationality"></app-field-error-message>
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-12 col-md-6" formGroupName="beneficiary">
-                    <div class="row">
-                      <label for="phoneNumber1"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 position-relative">
-                        <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
-                               [ngClass]="fm.getInvalidClass('advancedSearch.beneficiary.phoneNumber1')" trimInput>
-                        <app-field-error-message
-                          [control]="fm.getFormField('advancedSearch.beneficiary.phoneNumber1')"></app-field-error-message>
-                      </div>
+                <div class="col-sm-12 col-md-6">
+                  <div class="row">
+                    <label for="occuptionStatus"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                      <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
+                                 placeholder="{{langService.map.select}}" id="occuptionStatus"
+                                 [notFoundText]="langService.map.msg_not_found"
+                                 validationClasses="occuptionStatus"
+                                 formControlName="occuptionStatus" appendTo="body">
+                        <ng-option *ngFor="let option of employmentStatus" [value]="option.lookupKey">
+                          {{option.getName()}}
+                        </ng-option>
+                      </ng-select>
+                      <app-field-error-message controlName="occuptionStatus"></app-field-error-message>
                     </div>
                   </div>
-                  <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                      <label for="aidLookupId"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.aid_type}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
-                                   placeholder="{{langService.map.select}}" id="aidLookupId"
-                                   [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="aidLookupId" appendTo="body"
-                                   [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
-                          <ng-option *ngFor="let option of subAidLookupsArray" [value]="option.id">
-                            {{option.getName()}}
-                          </ng-option>
-                        </ng-select>
-                        <app-field-error-message
-                          [control]="fm.getFormField('advancedSearch.aidLookupId')"></app-field-error-message>
-                      </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-6" formGroupName="beneficiary">
+                  <div class="row">
+                    <label for="phoneNumber1"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 position-relative">
+                      <input formControlName="phoneNumber1" class="form-control" type="text" id="phoneNumber1"
+                             validationClasses="phoneNumber1" trimInput>
+                      <app-field-error-message controlName="phoneNumber1"></app-field-error-message>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6" formGroupName="request">
+                  <div class="row">
+                    <label for="status"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                      <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                                 placeholder="{{langService.map.select}}" id="status"
+                                 [notFoundText]="langService.map.msg_not_found"
+                                 validationClasses="status"
+                                 formControlName="status" appendTo="body">
+                        <ng-option *ngFor="let option of requestsStatus" [value]="option.lookupKey">
+                          {{option.getName()}}
+                        </ng-option>
+                      </ng-select>
+                      <app-field-error-message controlName="status"></app-field-error-message>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" formGroupName="aids">
+                <div class="col-sm-12 col-md-6">
+                  <div class="row">
+                    <label for="aidLookupParentId"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid_category}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                      <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="false"
+                                 placeholder="{{langService.map.select}}" id="aidLookupParentId"
+                                 [notFoundText]="langService.map.msg_not_found"
+                                 (change)="handleAidsMainAidChange($event)"
+                                 validationClasses="aidLookupParentId"
+                                 formControlName="aidLookupParentId" appendTo="body">
+                        <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+                          {{option.getName()}}
+                        </ng-option>
+                      </ng-select>
+                      <app-field-error-message controlName="aidLookupParentId"></app-field-error-message>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <div class="row">
+                    <label for="aidLookupId"
+                           class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid}}</label>
+                    <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                      <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                                 placeholder="{{langService.map.select}}" id="aidLookupId"
+                                 [notFoundText]="langService.map.msg_not_found"
+                                 validationClasses="aidLookupId"
+                                 formControlName="aidLookupId" appendTo="body">
+                        <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
+                          {{option.getName()}}
+                        </ng-option>
+                      </ng-select>
+                      <app-field-error-message controlName="aidLookupId"></app-field-error-message>
                     </div>
                   </div>
                 </div>
               </div>
               <div formGroupName="request">
-                <div class="row">
-                  <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                      <label for="status"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
-                                   placeholder="{{langService.map.select}}" id="status"
-                                   [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="status" appendTo="body">
-                          <ng-option *ngFor="let option of requestsStatus" [value]="option.lookupKey">
-                            {{option.getName()}}
-                          </ng-option>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-12 col-md-6">
-                    <div class="row">
-                      <label for="requestType"
-                             class="col-sm-12 col-md-4 col-form-label">{{langService.map.reason_of_request}}</label>
-                      <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                        <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="false"
-                                   placeholder="{{langService.map.select}}" id="requestType"
-                                   [notFoundText]="langService.map.msg_not_found"
-                                   formControlName="requestType" appendTo="body">
-                          <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">
-                            {{option.getName()}}
-                          </ng-option>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div class="row">
                   <div class="col-sm-12 col-md-6">
                     <div class="row">
@@ -295,11 +304,9 @@
                           <div class="form-control" formControlName="creationDateFrom"
                                id="creationDateFrom" [options]="datepickerOptionsMap.creationDateFrom"
                                (click)="dpCreationDateFrom.toggleCalendar()" #dpCreationDateFrom="angular-mydatepicker"
-                               angular-mydatepicker
-                               [ngClass]="fm.getStatusClass('advancedSearch.request.creationDateFrom')"
+                               angular-mydatepicker validationClasses="creationDateFrom"
                                (inputFieldChanged)="onDateChange($event, 'creationDateFrom', 'creationDateTo')"></div>
-                          <app-field-error-message
-                            [control]="fm.getFormField('advancedSearch.request.creationDateFrom')"></app-field-error-message>
+                          <app-field-error-message controlName="creationDateFrom"></app-field-error-message>
                         </div>
                         <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
                       </div>
@@ -315,11 +322,9 @@
                           <div class="form-control" formControlName="creationDateTo"
                                id="creationDateTo" [options]="datepickerOptionsMap.creationDateTo"
                                (click)="dpCreationDateTo.toggleCalendar()" #dpCreationDateTo="angular-mydatepicker"
-                               angular-mydatepicker
-                               [ngClass]="fm.getStatusClass('advancedSearch.request.creationDateTo')"
+                               angular-mydatepicker validationClasses="creationDateTo"
                                (inputFieldChanged)="onDateChange($event, 'creationDateFrom', 'creationDateTo')"></div>
-                          <app-field-error-message
-                            [control]="fm.getFormField('advancedSearch.request.creationDateTo')"></app-field-error-message>
+                          <app-field-error-message controlName="creationDateTo"></app-field-error-message>
                         </div>
                         <span class="text-muted font-12">{{langService.map.msg_search_date_hint}}</span>
                       </div>
@@ -337,11 +342,9 @@
                           <div class="form-control" formControlName="statusDateModifiedFrom"
                                id="statusDateFrom" [options]="datepickerOptionsMap.statusDateModifiedFrom"
                                (click)="dpStatusDateFrom.toggleCalendar()" #dpStatusDateFrom="angular-mydatepicker"
-                               angular-mydatepicker
-                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedFrom')"
+                               angular-mydatepicker validationClasses="statusDateModifiedFrom"
                                (inputFieldChanged)="onDateChange($event, 'statusDateModifiedFrom', 'statusDateModifiedTo')"></div>
-                          <app-field-error-message
-                            [control]="fm.getFormField('advancedSearch.request.statusDateModifiedFrom')"></app-field-error-message>
+                          <app-field-error-message controlName="statusDateModifiedFrom"></app-field-error-message>
                         </div>
                       </div>
                     </div>
@@ -356,11 +359,9 @@
                           <div class="form-control" formControlName="statusDateModifiedTo"
                                id="statusDateTo" [options]="datepickerOptionsMap.statusDateModifiedTo"
                                (click)="dpStatusDateTo.toggleCalendar()" #dpStatusDateTo="angular-mydatepicker"
-                               angular-mydatepicker
-                               [ngClass]="fm.getStatusClass('advancedSearch.request.statusDateModifiedTo')"
+                               angular-mydatepicker validationClasses="statusDateModifiedTo"
                                (inputFieldChanged)="onDateChange($event, 'statusDateModifiedFrom', 'statusDateModifiedTo')"></div>
-                          <app-field-error-message
-                            [control]="fm.getFormField('advancedSearch.request.statusDateModifiedTo')"></app-field-error-message>
+                          <app-field-error-message controlName="statusDateModifiedTo"></app-field-error-message>
                         </div>
                       </div>
                     </div>

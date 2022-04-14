@@ -12,7 +12,7 @@ export interface IBeneficiaryCriteria {
   benSecIdNationality: number;
   benSecIdNumber: string;
   phoneNumber1: string;
-  phoneNumber2: string
+  occuptionStatus: number
 }
 
 

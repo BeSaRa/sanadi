@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {LangService} from '@app/services/lang.service';
 import {SubventionRequestAid} from '@app/models/subvention-request-aid';
@@ -15,14 +15,13 @@ import {ISubventionRequestCriteria} from '@app/interfaces/i-subvention-request-c
 import {IBeneficiaryCriteria} from '@app/interfaces/i-beneficiary-criteria';
 import * as dayjs from 'dayjs';
 import {DialogService} from '@app/services/dialog.service';
-import {isEmptyObject, printBlobData} from '@app/helpers/utils';
+import {printBlobData} from '@app/helpers/utils';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {ReadModeService} from '@app/services/read-mode.service';
-import {IAngularMyDpOptions, IMyInputFieldChanged} from 'angular-mydatepicker';
-import {IKeyValue} from '@app/interfaces/i-key-value';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {StatusEnum} from '@app/enums/status.enum';
 import {AidLookup} from '@app/models/aid-lookup';
@@ -30,7 +29,7 @@ import {AidLookupService} from '@app/services/aid-lookup.service';
 import {ECookieService} from '@app/services/e-cookie.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
@@ -41,7 +40,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   templateUrl: './user-request-search.component.html',
   styleUrls: ['./user-request-search.component.scss']
 })
-export class UserRequestSearchComponent implements OnInit, OnDestroy {
+export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
 
 
@@ -68,20 +67,26 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadSubAidCategory().subscribe();
+    this.loadMainAidLookups();
     this.onIdTypeChange();
 
     this.listenToSearch();
     this.setInitialValues();
+    this.setInitialValuesAdvanced();
     // this.listenToQueryParams();
     this.listenToReload();
+  }
+
+  ngAfterViewInit() {
+    if (this.aidsRequestedAidCategoryField.value) {
+      this.loadAidsSubAidLookups(this.aidsRequestedAidCategoryField.value);
+    }
   }
 
   tabIndex$: Subject<number> = new Subject<number>();
   years: number[] = this.configurationService.getSearchYears();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
   stringOperators: Lookup[] = this.lookupService.getStringOperators();
-  requestTypes: Lookup[] = this.lookupService.listByCategory.SubRequestType;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   requestsStatus: Lookup[] = this.lookupService.listByCategory.SubRequestStatus;
   employmentStatus: Lookup[] = this.lookupService.listByCategory.BenOccuptionStatus;
@@ -93,8 +98,9 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   private latestCriteriaString: string = '';
   private skipQueryParamSearch: boolean = true;
   requests: SubventionRequestAid[] = [];
-  subAidLookupsArray: AidLookup[] = [];
   fileIconsEnum = FileIconsEnum;
+  mainAidLookupsList: AidLookup[] = [];
+  aidsSubAidLookupsList: AidLookup[] = [];
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -103,6 +109,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     [BeneficiaryIdTypes.GCC_ID]: CustomValidators.commonValidations.gccId
   };
 
+  datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
     creationDateFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     creationDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
@@ -110,14 +117,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     statusDateTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     statusDateModifiedFrom: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     statusDateModifiedTo: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
-  }
-  private datepickerFieldPathMap: IKeyValue = {
-    creationDateFrom: 'advancedSearch.request.creationDateFrom',
-    creationDateTo: 'advancedSearch.request.creationDateTo',
-    statusDateFrom: 'advancedSearch.request.statusDateModifiedFrom',
-    statusDateTo: 'advancedSearch.request.statusDateModifiedTo',
-    statusDateModifiedFrom: 'advancedSearch.request.statusDateModifiedFrom',
-    statusDateModifiedTo: 'advancedSearch.request.statusDateModifiedTo',
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -234,8 +233,12 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    this.setRelatedMinDate(fromFieldName, toFieldName);
-    this.setRelatedMaxDate(fromFieldName, toFieldName);
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName: fromFieldName,
+      toFieldName: toFieldName,
+      controlsMap: this.datepickerControlsMap,
+      controlOptionsMap: this.datepickerOptionsMap
+    });
   }
 
   listenToQueryParams(): void {
@@ -277,12 +280,7 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
         })
       }),
       advancedSearch: this.fb.group({
-        creationDates: this.fb.group({
-          creationDateFrom: [],
-          creationDateTo: [],
-        }),
         request: this.fb.group({
-          requestType: [],
           status: [],
           creationDateFrom: [],
           creationDateTo: [],
@@ -294,10 +292,60 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
           benNationality: [],
           occuptionStatus: []
         }),
-        aidLookupId: []
+        aids: this.fb.group({
+          aidLookupParentId: [],
+          aidLookupId: [],
+        }),
       })
     });
     this.fm = new FormManager(this.form, this.langService);
+    this._buildDatepickerControlsMap();
+  }
+
+  private _buildDatepickerControlsMap() {
+    setTimeout(() => {
+      this.datepickerControlsMap = {
+        creationDateFrom: this.creationDateFromField,
+        creationDateTo: this.creationDateToField,
+        statusDateFrom: this.statusDateFromField,
+        statusDateTo: this.statusDateToField,
+        statusDateModifiedFrom: this.statusDateFromField,
+        statusDateModifiedTo: this.statusDateToField,
+      };
+    })
+  }
+
+  private loadMainAidLookups() {
+    this.mainAidLookupsList = [];
+    return this.aidLookupService.loadByCriteria({
+      aidType: AidTypes.MAIN_CATEGORY,
+      status: StatusEnum.ACTIVE
+    }).pipe(
+      catchError(err => of([]))
+    ).subscribe((list) => {
+      this.mainAidLookupsList = list;
+    });
+  }
+
+  handleAidsMainAidChange($event: number) {
+    this.aidsRequestedAidField.reset();
+    this.loadAidsSubAidLookups($event);
+  }
+
+  private loadAidsSubAidLookups(mainAidId: number) {
+    this.aidsSubAidLookupsList = [];
+    if (!mainAidId) {
+      return;
+    }
+    this.aidLookupService.loadByCriteria({
+      aidType: AidTypes.SUB_CATEGORY,
+      status: StatusEnum.ACTIVE,
+      parent: mainAidId
+    }).pipe(
+      catchError(err => of([]))
+    ).subscribe(list => {
+      this.aidsSubAidLookupsList = list;
+    });
   }
 
   get arNameField(): FormControl {
@@ -328,12 +376,28 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     return this.fm.getFormField('simpleSearch.year')! as FormControl;
   }
 
+  get aidsRequestedAidCategoryField(): FormControl {
+    return this.fm.getFormField('advancedSearch.aids.aidLookupParentId') as FormControl;
+  }
+
+  get aidsRequestedAidField(): FormControl {
+    return this.fm.getFormField('advancedSearch.aids.aidLookupId') as FormControl;
+  }
+
   get creationDateFromField(): FormControl {
-    return this.fm.getFormField('advancedSearch.creationDates.creationDateFrom') as FormControl;
+    return this.fm.getFormField('advancedSearch.request.creationDateFrom') as FormControl;
   }
 
   get creationDateToField(): FormControl {
-    return this.fm.getFormField('advancedSearch.creationDates.creationDateTo') as FormControl;
+    return this.fm.getFormField('advancedSearch.request.creationDateTo') as FormControl;
+  }
+
+  get statusDateFromField(): FormControl {
+    return this.fm.getFormField('advancedSearch.request.statusDateModifiedFrom') as FormControl;
+  }
+
+  get statusDateToField(): FormControl {
+    return this.fm.getFormField('advancedSearch.request.statusDateModifiedTo') as FormControl;
   }
 
   get primaryIdNumberField(): FormControl {
@@ -430,20 +494,20 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   private goToResult(): void {
-    this.skipQueryParamSearch = true;
+    /*this.skipQueryParamSearch = true;
     this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {criteria: this.latestCriteriaString}
       }
     ).then((_) => {
       this.tabIndex$.next(1);
-    });
-
+    });*/
+    this.tabIndex$.next(1);
   }
 
   private getSimpleSearchValues(): Partial<ISubventionRequestCriteria> {
     let request = {...this.fm.getFormField('simpleSearch.request')?.value};
-    const year = this.fm.getFormField('simpleSearch.year')?.value;
+    const year = this.yearField?.value;
     const date = dayjs().set('year', year);
     this.latestCriteria = {
       ...request,
@@ -482,7 +546,6 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
   }
 
   private setInitialValues(): void {
-    // set initial value for the year
     this.yearField.setValue(this.years[0]);
     this.primaryIdTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
     this.secondaryIdTypeField.setValue(null);
@@ -498,48 +561,38 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     let simple = this.getSimpleSearchValues();
     let beneficiary = this.fm.getFormField('advancedSearch.beneficiary')?.value;
     let request = this.fm.getFormField('advancedSearch.request')?.value;
-    let aidLookupId = this.fm.getFormField('advancedSearch.aidLookupId')?.value;
+    let aids = this.fm.getFormField('advancedSearch.aids')?.value;
     this.latestCriteria = {
       ...simple,
       ...request,
+      ...aids,
       beneficiary: {...simple.beneficiary, ...beneficiary},
-      aidLookupId
     };
 
     if (request.creationDateFrom || request.creationDateTo) {
-      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
-      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      /*this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP);
+      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.creationDateTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP);*/
+
+      this.latestCriteria.creationDateFrom = !request.creationDateFrom ? '' : request.creationDateFrom;
+      this.latestCriteria.creationDateTo = !request.creationDateTo ? '' : request.creationDateTo;
     } else {
       this.latestCriteria.creationDateFrom = simple.creationDateFrom;
       this.latestCriteria.creationDateTo = simple.creationDateTo;
     }
 
     if (request.statusDateModifiedFrom || request.statusDateModifiedTo) {
-      this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
-      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+      /*this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedFrom)).startOf('day').format(this.configurationService.CONFIG.TIMESTAMP)
+      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : dayjs(DateUtils.changeDateFromDatepicker(request.statusDateModifiedTo)).endOf('day').format(this.configurationService.CONFIG.TIMESTAMP)*/
+
+      this.latestCriteria.statusDateModifiedFrom = !request.statusDateModifiedFrom ? '' : request.statusDateModifiedFrom;
+      this.latestCriteria.statusDateModifiedTo = !request.statusDateModifiedTo ? '' : request.statusDateModifiedTo;
     }
 
     return {...this.latestCriteria};
   }
 
-  private loadSubAidCategory() {
-    this.subAidLookupsArray = [];
-    return this.aidLookupService
-      .loadByCriteria({
-        aidType: AidTypes.SUB_CATEGORY,
-        status: StatusEnum.ACTIVE
-      })
-      .pipe(
-        take(1),
-        tap(list => {
-          this.subAidLookupsArray = list;
-        })
-      );
-  }
-
   printResult(): void {
     // let criteria = isEmptyObject(this.latestCriteria) ? this.latestCriteriaString : this.latestCriteria;
-    debugger;
     this.subventionRequestService.loadByCriteriaAsBlob(this.latestCriteria).subscribe((data) => {
       printBlobData(data, 'RequestByCriteriaSearchResult.pdf');
     });
@@ -586,48 +639,5 @@ export class UserRequestSearchComponent implements OnInit, OnDestroy {
     $event.preventDefault();
     this.readModeService.setReadOnly(request.requestId);
     this.router.navigate(['/home/sanady/request', request.requestId]).then();
-  }
-
-  setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
-    setTimeout(() => {
-      let toFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[toFieldName]);
-      const fromDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[fromFieldName])?.value);
-      if (!fromDate) {
-        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
-      } else {
-        const disableDate = new Date(fromDate);
-        disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
-        if (!disableSelectedFromRelated) {
-          disableDate.setDate(disableDate.getDate() - 1);
-        }
-        toFieldDateOptions.disableUntil = {
-          year: disableDate.getFullYear(),
-          month: disableDate.getMonth() + 1,
-          day: disableDate.getDate()
-        }
-      }
-      this.datepickerOptionsMap[toFieldName] = toFieldDateOptions;
-    }, 100);
-  }
-
-  setRelatedMaxDate(fromFieldName: string, toFieldName: string, disableSelectedFromRelated: boolean = false): void {
-    setTimeout(() => {
-      let fromFieldDateOptions: IAngularMyDpOptions = DateUtils.getDatePickerOptionsClone(this.datepickerOptionsMap[fromFieldName]);
-      const toDate = DateUtils.changeDateFromDatepicker(this.fm.getFormField(this.datepickerFieldPathMap[toFieldName])?.value);
-      if (!toDate) {
-        fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
-      } else {
-        const disableDate = new Date(toDate);
-        if (!disableSelectedFromRelated) {
-          disableDate.setDate(disableDate.getDate() + 1);
-        }
-        fromFieldDateOptions.disableSince = {
-          year: disableDate.getFullYear(),
-          month: disableDate.getMonth() + 1,
-          day: disableDate.getDate()
-        }
-      }
-      this.datepickerOptionsMap[fromFieldName] = fromFieldDateOptions;
-    }, 100);
   }
 }
