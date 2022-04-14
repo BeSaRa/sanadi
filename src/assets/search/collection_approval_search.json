@@ -27,7 +27,7 @@
   {
     "fields": [
       {
-        "key": "fullSerial",
+        "key": "exportedLicenseFullSerial",
         "type": "input",
         "label": "serial_number",
         "validations": {

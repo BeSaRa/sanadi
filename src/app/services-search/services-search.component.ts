@@ -385,7 +385,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   private getFieldsNames(fields: FormlyFieldConfig[]) {
     this.fieldsNames = fields.map(group => group.fieldGroup).reduce((list, row) => {
       return row ? list.concat(row.map(field => (field.key as string))) : list;
-    }, [] as string[])
+    }, [] as string[]).concat('caseType');
   }
 
   private setOldValues(): void {

@@ -119,7 +119,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
       .filter(field => fields ? fields.indexOf(field) !== -1 : field)
       .reduce((acc, current) => {
-        return (current === 'service' || current === 'caseType') ? acc : {...acc, [current]: self[current]};
+        return (current === 'service') ? acc : {...acc, [current]: self[current]};
       }, {});
   }
 

@@ -20,6 +20,9 @@ import {
 import {
   PartnerApprovalSearchCriteriaInterceptor
 } from "@app/search-criteria-interceptors/partner-approval-search-criteria-interceptor";
+import {
+  CollectionApprovalSearchCriteriaInterceptor
+} from '@app/search-criteria-interceptors/collection-approval-search-criteria-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -28,6 +31,7 @@ interceptors.set(CaseTypes.CONSULTATION, new ConsultationSearchCriteriaIntercept
 interceptors.set(CaseTypes.INTERNATIONAL_COOPERATION, new InternationalCooperationSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, new FinalExternalOfficeApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaInterceptor());
+interceptors.set(CaseTypes.COLLECTION_APPROVAL, new CollectionApprovalSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it
@@ -42,8 +46,7 @@ export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICase
     delete model.employeeService;
 
     model.createdOnFrom = DateUtils.setStartOfDay(model.createdOnFrom as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
-    model.createdOnTo = DateUtils.setEndOfDay(model.createdOnTo  as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
-
+    model.createdOnTo = DateUtils.setEndOfDay(model.createdOnTo as unknown as IMyDateModel).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z';
     return interceptors.get(model.caseType!)?.send(model) || identity(model);
   }
 
