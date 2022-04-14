@@ -285,10 +285,10 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   }
 
   searchForLicense() {
-    if (!this.oldLicenseFullSerialField.value) {
+    /*if (!this.oldLicenseFullSerialField.value) {
       this.dialog.error(this.lang.map.need_license_number_to_search);
       return;
-    }
+    }*/
 
     this.licenseService
       .collectorSearch<CollectorApproval>({

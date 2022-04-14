@@ -284,12 +284,12 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   private listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter(val => {
+      /*.pipe(filter(val => {
         if (!val) {
           this.dialog.error(this.lang.map.need_license_number_to_search);
         }
         return !!val
-      }))
+      }))*/
       .pipe(exhaustMap((serial) => {
         return this.licenseService
           .collectionSearch<CollectionApproval>({
