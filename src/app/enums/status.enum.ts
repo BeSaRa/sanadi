@@ -19,7 +19,8 @@ export enum AidLookupStatusEnum {
 export enum FollowupStatusEnum {
   INACTIVE = 0,
   ACTIVE = 1,
-  TERMINATED = 2,
+  PARTIAL_TERMINATION = 2,
+  TERMINATED = 3,
 }
 
 export enum SubventionRequestStatus {

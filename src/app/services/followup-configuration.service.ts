@@ -76,5 +76,14 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
     return this.getAddDialogWithDefaults(new (this._getModel() as { new(...args: any[]): FollowupConfiguration }), OperationTypes.CREATE,
       serviceId, caseType);
   }
+
+  activate(followUpConfigurationId: number):Observable<FollowupConfiguration>{
+    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId +'/activate',null)
+  }
+
+  deactivate(followUpConfigurationId: number):Observable<FollowupConfiguration>{
+    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId +'/de-activate',null)
+  }
+
 }
 

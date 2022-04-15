@@ -5,6 +5,7 @@ import {FollowupRoutingModule} from '@app/modules/followup/followup-routing.modu
 import {SharedModule} from '@app/shared/shared.module';
 import { ExternalFollowupPopupComponent } from './popups/external-followup-popup/external-followup-popup.component';
 import { FollowupCommentPopupComponent } from './popups/followup-comment-popup/followup-comment-popup.component';
+import { InternalFollowupComponent } from './pages/internal-followup/internal-followup.component';
 
 
 
@@ -12,7 +13,8 @@ import { FollowupCommentPopupComponent } from './popups/followup-comment-popup/f
   declarations: [
     ExternalFollowupComponent,
     ExternalFollowupPopupComponent,
-    FollowupCommentPopupComponent
+    FollowupCommentPopupComponent,
+    InternalFollowupComponent
   ],
   imports: [
     CommonModule,

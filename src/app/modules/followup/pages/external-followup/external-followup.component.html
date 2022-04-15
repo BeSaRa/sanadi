@@ -1,6 +1,6 @@
 <div class="row pb-3">
   <app-page-header
-    [pageTitle]="'followup'"
+    [pageTitle]="'menu_external_followup'"
     [clickOnReload$]="reload$"
     [useReloadValue]="true">
   </app-page-header>
@@ -37,23 +37,28 @@
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.status}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
           </ng-container>
+          <ng-container cdkColumnDef="orgInfo" *ngIf="isInternalUser">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.orgInfo.getName()}}</td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
                 <button class="btn icon-btn text-primary grid-action-btn"
-                        [disabled]="row.status === statusEnum.TERMINATED"
-                        [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
-                  <i class="mdi mdi-close-box"></i>
-                </button>
-                <button class="btn icon-btn text-primary grid-action-btn"
-                        [tooltip]="row.enDesc" >
+                        [tooltip]="row.getDesc()" >
                   <i class="mdi mdi-information"></i>
                 </button>
                 <button class="btn icon-btn text-primary grid-action-btn"
                         [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
                   <i class="mdi mdi-comment"></i>
                 </button>
+                <button class="btn icon-btn text-primary grid-action-btn"
+                        [disabled]="row.status === statusEnum.TERMINATED || row.status === statusEnum.PARTIAL_TERMINATION"
+                        [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
+                  <i class="mdi mdi-close-box"></i>
+                </button>
+
               </div>
             </td>
           </ng-container>

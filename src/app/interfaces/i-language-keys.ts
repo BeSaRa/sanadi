@@ -45,6 +45,12 @@ export interface ILanguageKeys {
   bank_account_purpose: string;
   bank_operation_type: string;
   menu_internal_bank_account_approval: string;
+  msg_success_activate_followup_configuration: string;
+  msg_confirm_activate_followup_configuration: string;
+  msg_success_deactivate_followup_configuration: string;
+  msg_confirm_deactivate_followup_configuration: string;
+  menu_internal_followup: string;
+  menu_external_followup: string;
   followup_configuration_edit: string;
   followup_configuration_add: string;
   followup_comments: string;

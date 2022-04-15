@@ -1,34 +1,36 @@
+<script src="followup-comment-popup.component.ts"></script>
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{lang.map.followup_comments}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content" #dialogContent style="min-width: 600px">
-<ul>
-  <li *ngFor="let comment of comments">
-    {{comment.getName()}}
-  </li>
-</ul>
-  <form [formGroup]="form">
-
-<!--    <div class="row">-->
-<!--      <div class="col-sm-12 mb-4 position-relative">-->
-<!--        <label class="form-label" asteriskIfRequired="enDesc" for="enDesc">{{lang.map.lbl_english_description}}</label>-->
-<!--        <textarea name="enDesc" formControlName="enDesc" validationClasses="enDesc" id="enDesc" rows="4"-->
-<!--                  class="form-control"></textarea>-->
-<!--        <app-field-error-message controlName="enDesc"></app-field-error-message>-->
-<!--      </div>-->
-
-<!--    </div>-->
-  </form>
+<div>
+  <div *ngFor="let comment of comments" >
+    <div class="comment" [ngClass]="comment.generalUseId === user?.generalUserId? 'own-comment': ''">
+      <p>{{comment.generalUseInfo?.enName}}</p>
+     <p>{{comment.statusDateModified | date :'MMM d, y, h:mm:ss a'}}</p>
+      <p>{{comment.comment}}</p>
+    </div>
+  </div>
+</div>
 
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
-          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
-    <i class="mdi mdi-information-outline text-info"></i>
-  </button>
-  <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="save$.next(null)"
-          class="btn btn-primary">{{lang.map.btn_save}}</button>
+
+  <form [formGroup]="form" class="main">
+
+    <div class="row">
+      <div class="col-sm-9 mb-9">
+        <textarea name="enDesc" formControlName="comment" validationClasses="comment" id="comment" rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="comment"></app-field-error-message>
+      </div>
+      <div class="col-sm-3 mb-3 holder" >
+        <button [disabled]="form.invalid" (click)="save$.next(null)"
+                class="btn btn-primary bottom">{{lang.map.btn_add}}</button>
+      </div>
+
+    </div>
+  </form>
 </div>

@@ -4,6 +4,7 @@ export interface IAppUrls {
   BANK: string;
   INTERNAL_BANK_ACCOUNT_APPROVAL: string;
   CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES: string;
+  FOLLOWUP_COMMENT: string;
   FOLLOWUP:string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;

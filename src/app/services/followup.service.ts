@@ -57,7 +57,6 @@ export class FollowupService extends BackendWithDialogOperationsGenericService<F
   }
 
   terminate(followUpId: number):Observable<Followup>{
-    //TO DISCUSS
-    return this.http.put<Followup>(this._getServiceURL() + '/' + followUpId +'/terminate',null)
+    return this.http.put<Followup>(this._getServiceURL() + '/' + followUpId +'/activate',null)
   }
 }

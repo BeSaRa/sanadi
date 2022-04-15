@@ -5,6 +5,7 @@
   "BANK_ACCOUNT": "admin/bank-account",
   "BANK": "admin/bank",
   "INTERNAL_BANK_ACCOUNT_APPROVAL": "internal-bank-approval",
+  "FOLLOWUP_COMMENT": "admin/follow-up-comment",
   "FOLLOWUP": "admin/follow-up",
   "COLLECTOR_APPROVAL": "collector-licensing",
   "MAP_API_URL": "https://maps.googleapis.com/maps/api/js?libraries=places&key=",

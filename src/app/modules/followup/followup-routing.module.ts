@@ -2,6 +2,7 @@ import {ExternalFollowupComponent} from '@app/modules/followup/pages/external-fo
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {PermissionGuard} from '@app/guards/permission-guard';
+import {InternalFollowupComponent} from '@app/modules/followup/pages/internal-followup/internal-followup.component';
 
 const routes: Routes = [
   {
@@ -9,6 +10,12 @@ const routes: Routes = [
     component: ExternalFollowupComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: 'EXTERNAL_FOLLOWUP', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'internal-followup',
+    component: InternalFollowupComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'INTERNAL_FOLLOWUP', configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 

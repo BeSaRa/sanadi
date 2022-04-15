@@ -698,7 +698,20 @@
     "permissionGroup": null,
     "parent": null,
     "group": "main",
-    "itemOrder": 5,
+    "itemOrder": 6,
+    "svg": null
+  },
+  {
+    "id": 47,
+    "langKey": "menu_internal_followup",
+    "path": "home/followup/internal-followup",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "INTERNAL_FOLLOWUP",
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 6,
     "svg": null
   }
 ]

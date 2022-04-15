@@ -1,0 +1,25 @@
+.bottom {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.holder{
+  min-height: 100%;
+  position:relative;
+}
+.main{
+  width: 100%;
+}
+.comment{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin: 10px;
+  padding: 5px;
+  width: auto;
+}
+.own-comment{
+  text-align: right;
+  font-weight: bold;
+}

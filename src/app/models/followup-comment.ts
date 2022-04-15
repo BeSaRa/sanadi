@@ -1,8 +1,9 @@
 import {BaseModel} from '@app/models/base-model';
 import {LangService} from '@app/services/lang.service';
 import {FactoryService} from '@app/services/factory.service';
-import {INames} from '@app/interfaces/i-names';
 import {FollowupCommentService} from '@app/services/followup-comment.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Lookup} from '@app/models/lookup';
 
 export class FollowupComment extends BaseModel<FollowupComment, FollowupCommentService> {
   service: FollowupCommentService;
@@ -21,8 +22,12 @@ export class FollowupComment extends BaseModel<FollowupComment, FollowupCommentS
   commentType!: number;
   status!: number;
   statusDateModified!: string;
+  generalUseInfo!: Lookup;
 
-  getName(): string {
-    return this[(this.langService.map.lang + 'Name') as keyof INames];
+  public buildForm(controls: boolean = false): any {
+    const { comment } = this;
+    return {
+      comment: controls? [comment, [CustomValidators.required] ] : comment
+    }
   }
 }

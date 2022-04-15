@@ -6,14 +6,19 @@ import {ComponentType} from '@angular/cdk/portal';
 import {DialogService} from '@app/services/dialog.service';
 import {HttpClient} from '@angular/common/http';
 import {FactoryService} from '@app/services/factory.service';
+import {UrlService} from '@app/services/url.service';
+import {FollowupCommentInterceptor} from '@app/model-interceptors/followup-comment.interceptor';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FollowupCommentService extends BackendWithDialogOperationsGenericService<FollowupComment>{
+  interceptor: FollowupCommentInterceptor = new FollowupCommentInterceptor();
   list: FollowupComment[] = [];
 
-constructor( public dialog: DialogService, public http: HttpClient) {
+constructor( public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
   super();
   FactoryService.registerService('FollowupCommentService', this);
 
@@ -23,17 +28,27 @@ constructor( public dialog: DialogService, public http: HttpClient) {
   }
 
   _getModel(): any {
+  return FollowupComment
   }
 
   _getReceiveInterceptor(): any {
+    return this.interceptor.receive;
   }
 
   _getSendInterceptor(): any {
+    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
-    return '';
+    return this.urlService.URLS.FOLLOWUP_COMMENT;
   }
 
-
+  getCommentsByFollowupId(followUpId: number):Observable<FollowupComment[]>{
+    return this.http.get<FollowupComment[]>(this._getServiceURL() + '/follow-up/' + followUpId).pipe(
+      map((response: any) => {
+        return response.rs.sort((a: FollowupComment, b: FollowupComment) =>
+          (new Date(b.statusDateModified)).getTime() - (new Date(a.statusDateModified)).getTime()
+        );
+      })
+    )}
 }

@@ -10,7 +10,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {FollowupStatusEnum} from '@app/enums/status.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'external-followup',
@@ -18,20 +18,26 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
   styleUrls: ['./external-followup.component.scss']
 })
 export class ExternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
+
   actions: IMenuItem<Followup>[] = [];
   displayedColumns: string[] = ['requestNumber', 'name', 'serviceType', 'dueDate', 'status', 'actions'];
   searchText = '';
   add$: Subject<any> = new Subject<any>();
+  isInternalUser!: boolean;
 
   constructor(public service: FollowupService,
               public lang: LangService,
               private dialog: DialogService,
+              public employeeService: EmployeeService,
               private toast: ToastService) {
     super();
   }
 
   _init() {
     this.reload$.next(1);
+    this.isInternalUser = this.employeeService.isInternalUser();
+    if(this.isInternalUser)
+      this.displayedColumns.splice(5, 0, "orgInfo");
   }
 
   listenToReload() {
@@ -62,19 +68,19 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
     });
 
   }
-  showComments(model: Followup | null, $event: MouseEvent) {
-    this.dialog.show<IDialogData<Followup>>(this.service._getCommentsDialogComponent());
+
+  showComments(model: Followup, $event: MouseEvent) {
+    this.dialog.show(this.service._getCommentsDialogComponent(), model);
   }
+
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
   };
-  getFollowupStatus(status: number){
-    const indexOfS = Object.values(FollowupStatusEnum).indexOf(status as unknown as FollowupStatusEnum);
-    return Object.keys(FollowupStatusEnum)[indexOfS];
-  }
+
   get statusEnum(){
     return FollowupStatusEnum;
   }
+
   getDateColor(dueDate: any): 'red' |'blue' | 'green'{
     dueDate = (new Date(dueDate.split('T')[0]).setHours(0,0,0,0));
     let currentDate = (new Date().setHours(0,0,0,0));

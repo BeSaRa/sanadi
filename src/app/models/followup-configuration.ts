@@ -58,7 +58,7 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
       requestType: controls? [requestType, [CustomValidators.required] ] : requestType ,
       responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
       concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
-      days: controls? [days, [CustomValidators.required] ] : days
+      days: controls? [days, [CustomValidators.required, CustomValidators.number] ] : days
     }
   }
 
