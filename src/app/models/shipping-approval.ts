@@ -12,6 +12,8 @@ import { AdminResult } from "./admin-result";
 import { CaseModel } from "./case-model";
 import { TaskDetails } from "./task-details";
 import { DialogService } from "@app/services/dialog.service";
+import { ShippingApproveTaskPopUpComponent } from "@app/modules/remittances/popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component";
+import { DateUtils } from "@app/helpers/date-utils";
 
 export class ShippingApproval extends CaseModel<
   ShippingApprovalService,
@@ -152,6 +154,29 @@ export class ShippingApproval extends CaseModel<
       shipmentCarrier: controls
         ? [shipmentCarrier, [CustomValidators.required]]
         : shipmentCarrier,
+    };
+  }
+
+  approve(): DialogRef {
+    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+      model: this,
+      action: WFResponseType.APPROVE,
+    });
+  }
+
+  finalApprove(): DialogRef {
+    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+      model: this,
+      action: WFResponseType.FINAL_APPROVE,
+    });
+  }
+
+  buildApprovalForm(controls: boolean = false): any {
+    const { followUpDate } = this;
+    return {
+      followUpDate: controls
+        ? [DateUtils.changeDateToDatepicker(followUpDate)]
+        : DateUtils.changeDateToDatepicker(followUpDate),
     };
   }
 }
