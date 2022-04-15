@@ -35,9 +35,6 @@ import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-a
     CollectionRoutingModule,
     SharedModule,
     MapsModule
-  ],
-  exports:[
-    ApprovalFormComponent
   ]
 })
 export class CollectionModule {

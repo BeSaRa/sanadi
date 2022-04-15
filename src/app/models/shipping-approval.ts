@@ -3,7 +3,6 @@ import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { dateSearchFields } from "@app/helpers/date-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
-import { ShippingApproveTaskPopUpComponent } from "@app/modules/remittances/popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component";
 import { FactoryService } from "@app/services/factory.service";
 import { ShippingApprovalService } from "@app/services/shipping-approval.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
@@ -154,19 +153,5 @@ export class ShippingApproval extends CaseModel<
         ? [shipmentCarrier, [CustomValidators.required]]
         : shipmentCarrier,
     };
-  }
-
-  approve(): DialogRef {
-    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
-      model: this,
-      action: WFResponseType.APPROVE,
-    });
-  }
-
-  finalApprove(): DialogRef {
-    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
-      model: this,
-      action: WFResponseType.FINAL_APPROVE,
-    });
   }
 }
