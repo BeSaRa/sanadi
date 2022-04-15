@@ -10,7 +10,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 
 @Component({
   selector: 'followup-configuration',
