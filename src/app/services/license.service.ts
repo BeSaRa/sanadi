@@ -72,13 +72,44 @@ export class LicenseService {
     FactoryService.registerService('LicenseService', this);
   }
 
+  getServiceUrlByCaseType(caseType: number) {
+    let url: string = '';
+    switch (caseType) {
+      case CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL:
+        url = this.urlService.URLS.INITIAL_OFFICE_APPROVAL;
+        break;
+      case CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL:
+        url = this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL;
+        break;
+      case CaseTypes.PARTNER_APPROVAL:
+        url = this.urlService.URLS.E_PARTNER_APPROVAL;
+        break;
+      case CaseTypes.INTERNAL_PROJECT_LICENSE:
+        url = this.urlService.URLS.INTERNAL_PROJECT_LICENSE;
+        break;
+      case CaseTypes.COLLECTION_APPROVAL:
+        url = this.urlService.URLS.COLLECTION_APPROVAL;
+        break;
+      case CaseTypes.COLLECTOR_LICENSING:
+        url = this.urlService.URLS.COLLECTOR_APPROVAL;
+        break;
+      case CaseTypes.FUNDRAISING_LICENSING:
+        url = this.urlService.URLS.FUNDRAISING;
+        break;
+      case CaseTypes.URGENT_INTERVENTION_LICENSING:
+        url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE;
+        break;
+    }
+    return url;
+  }
+
   @Generator(InitialExternalOfficeApprovalResult, true, {
     property: 'rs',
     interceptReceive: (new InitialApprovalDocumentInterceptor()).receive
   })
   private _initialLicenseSearch(criteria: Partial<InitialExternalOfficeApprovalSearchCriteria>): Observable<InitialExternalOfficeApprovalResult[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<InitialExternalOfficeApprovalResult[]>(this.urlService.URLS.INITIAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<InitialExternalOfficeApprovalResult[]>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/search', {...criteria, ...orgId})
   }
 
   initialLicenseSearch(criteria: Partial<InitialExternalOfficeApprovalSearchCriteria>): Observable<InitialExternalOfficeApprovalResult[]> {
@@ -91,7 +122,7 @@ export class LicenseService {
   })
   partnerApprovalLicenseSearch(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<PartnerApproval[]>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', {...criteria, ...orgId})
   }
 
   @Generator(Fundraising, true, {
@@ -100,7 +131,7 @@ export class LicenseService {
   })
   fundRaisingLicenseSearch(criteria: Partial<FundraisingSearchCriteria>): Observable<Fundraising[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined};
-    return this.http.post<Fundraising[]>(this.urlService.URLS.FUNDRAISING + "/license/search", {...criteria, ...orgId});
+    return this.http.post<Fundraising[]>(this.getServiceUrlByCaseType(CaseTypes.FUNDRAISING_LICENSING) + "/license/search", {...criteria, ...orgId});
   }
 
   @Generator(FinalExternalOfficeApprovalResult, true, {
@@ -109,7 +140,7 @@ export class LicenseService {
   })
   private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<FinalExternalOfficeApprovalResult[]>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/search', {...criteria, ...orgId})
+    return this.http.post<FinalExternalOfficeApprovalResult[]>(this.getServiceUrlByCaseType(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) + '/license/search', {...criteria, ...orgId})
   }
 
   finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
@@ -122,7 +153,7 @@ export class LicenseService {
   })
   private _internalProjectLicenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<InternalProjectLicenseResult[]>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/license/search', {...criteria, ...orgId})
+    return this.http.post<InternalProjectLicenseResult[]>(this.getServiceUrlByCaseType(CaseTypes.INTERNAL_PROJECT_LICENSE) + '/license/search', {...criteria, ...orgId})
   }
 
   internalProjectLicenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
@@ -135,7 +166,7 @@ export class LicenseService {
   })
   private _urgentInterventionLicenseSearch(criteria: Partial<UrgentInterventionLicenseSearchCriteria>): Observable<UrgentInterventionLicenseResult[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<UrgentInterventionLicenseResult[]>(this.urlService.URLS.URGENT_INTERVENTION_LICENSE + '/license/search', {...criteria, ...orgId})
+    return this.http.post<UrgentInterventionLicenseResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSING) + '/license/search', {...criteria, ...orgId})
   }
 
   urgentInterventionLicenseSearch(criteria: Partial<UrgentInterventionLicenseSearchCriteria>): Observable<UrgentInterventionLicenseResult[]> {
@@ -147,7 +178,7 @@ export class LicenseService {
     interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
   })
   private _loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
-    return this.http.get<InitialExternalOfficeApproval>(this.urlService.URLS.INITIAL_OFFICE_APPROVAL + '/license/' + licenseId + '/details');
+    return this.http.get<InitialExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/' + licenseId + '/details');
   }
 
   loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
@@ -159,7 +190,7 @@ export class LicenseService {
     interceptReceive: (new PartnerApprovalInterceptor()).receive
   })
   private _loadPartnerLicenseByLicenseId(licenseId: string): Observable<PartnerApproval> {
-    return this.http.get<PartnerApproval>(this.urlService.URLS.E_PARTNER_APPROVAL + '/license/' + licenseId + '/details');
+    return this.http.get<PartnerApproval>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/' + licenseId + '/details');
   }
 
   loadPartnerLicenseByLicenseId(licenseId: string): Observable<PartnerApproval> {
@@ -171,7 +202,7 @@ export class LicenseService {
     interceptReceive: (new FinalExternalOfficeApprovalInterceptor()).receive
   })
   private _loadFinalLicenseByLicenseId(licenseId: string): Observable<FinalExternalOfficeApproval> {
-    return this.http.get<FinalExternalOfficeApproval>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/license/' + licenseId + '/details');
+    return this.http.get<FinalExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) + '/license/' + licenseId + '/details');
   }
 
   loadFinalLicenseByLicenseId(licenseId: string): Observable<FinalExternalOfficeApproval> {
@@ -183,7 +214,7 @@ export class LicenseService {
     interceptReceive: (new InternalProjectLicenseInterceptor()).receive
   })
   private _loadInternalProjectLicenseByLicenseId(licenseId: string): Observable<InternalProjectLicense> {
-    return this.http.get<InternalProjectLicense>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/license/' + licenseId + '/details');
+    return this.http.get<InternalProjectLicense>(this.getServiceUrlByCaseType(CaseTypes.INTERNAL_PROJECT_LICENSE) + '/license/' + licenseId + '/details');
   }
 
   loadInternalProjectLicenseByLicenseId(licenseId: string): Observable<InternalProjectLicense> {
@@ -195,7 +226,7 @@ export class LicenseService {
     interceptReceive: (new FundraisingInterceptor()).receive
   })
   private _loadFundraisingLicenseByLicenseId(licenseId: string): Observable<Fundraising> {
-    return this.http.get<Fundraising>(this.urlService.URLS.FUNDRAISING + '/license/' + licenseId + '/details');
+    return this.http.get<Fundraising>(this.getServiceUrlByCaseType(CaseTypes.FUNDRAISING_LICENSING) + '/license/' + licenseId + '/details');
   }
 
   loadFundraisingLicenseByLicenseId(licenseId: string): Observable<Fundraising> {
@@ -207,7 +238,7 @@ export class LicenseService {
     interceptReceive: (new CollectorLicenseInterceptor()).receive
   })
   private _validateCollectorLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
-    return this.http.post<T>(this.urlService.URLS.COLLECTOR_APPROVAL + '/draft/validate', {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.COLLECTOR_LICENSING) + '/draft/validate', {
       requestType,
       collectorItemList: [{
         oldLicenseId
@@ -220,7 +251,7 @@ export class LicenseService {
     interceptReceive: (new UrgentInterventionLicenseInterceptor()).receive
   })
   private _loadUrgentInterventionLicenseByLicenseId(licenseId: string): Observable<UrgentInterventionLicense> {
-    return this.http.get<UrgentInterventionLicense>(this.urlService.URLS.URGENT_INTERVENTION_LICENSE + '/license/' + licenseId + '/details');
+    return this.http.get<UrgentInterventionLicense>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSING) + '/license/' + licenseId + '/details');
   }
 
   loadUrgentInterventionLicenseByLicenseId(licenseId: string): Observable<UrgentInterventionLicense> {
@@ -232,7 +263,7 @@ export class LicenseService {
     interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
   })
   _validateInitialApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InitialExternalOfficeApproval> {
-    return this.http.post<InitialExternalOfficeApproval>(this.urlService.URLS.INITIAL_OFFICE_APPROVAL + '/draft/validate', {
+    return this.http.post<InitialExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -243,7 +274,7 @@ export class LicenseService {
     interceptReceive: (new PartnerApprovalInterceptor()).receive
   })
   _validatePartnerApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<PartnerApproval> {
-    return this.http.post<PartnerApproval>(this.urlService.URLS.E_PARTNER_APPROVAL + '/draft/validate', {
+    return this.http.post<PartnerApproval>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -258,7 +289,7 @@ export class LicenseService {
       data.initialLicenseId = oldLicenseId;
       delete data.oldLicenseId;
     }
-    return this.http.post<IDefaultResponse<InitialExternalOfficeApproval | FinalExternalOfficeApproval>>(this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL + '/draft/validate', data)
+    return this.http.post<IDefaultResponse<InitialExternalOfficeApproval | FinalExternalOfficeApproval>>(this.getServiceUrlByCaseType(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) + '/draft/validate', data)
       .pipe(
         map((response) => {
           let finalResponse, receiveInterceptor;
@@ -283,7 +314,7 @@ export class LicenseService {
     interceptReceive: (new InternalProjectLicenseInterceptor()).receive
   })
   _validateInternalProjectLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InternalProjectLicense> {
-    return this.http.post<InternalProjectLicense>(this.urlService.URLS.INTERNAL_PROJECT_LICENSE + '/draft/validate', {
+    return this.http.post<InternalProjectLicense>(this.getServiceUrlByCaseType(CaseTypes.INTERNAL_PROJECT_LICENSE) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -294,7 +325,7 @@ export class LicenseService {
     interceptReceive: (new FundraisingInterceptor()).receive
   })
   _validateFundraisingLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<Fundraising> {
-    return this.http.post<Fundraising>(this.urlService.URLS.FUNDRAISING + '/draft/validate', {
+    return this.http.post<Fundraising>(this.getServiceUrlByCaseType(CaseTypes.FUNDRAISING_LICENSING) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -305,7 +336,7 @@ export class LicenseService {
     interceptReceive: (new UrgentInterventionLicenseInterceptor()).receive
   })
   _validateUrgentInterventionLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InternalProjectLicense> {
-    return this.http.post<InternalProjectLicense>(this.urlService.URLS.URGENT_INTERVENTION_LICENSE + '/draft/validate', {
+    return this.http.post<InternalProjectLicense>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSING) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -316,7 +347,7 @@ export class LicenseService {
     interceptReceive: (new CollectionLicenseInterceptor()).receive
   })
   private _validateCollectionLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
-    return this.http.post<T>(this.urlService.URLS.COLLECTION_APPROVAL + '/draft/validate', {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.COLLECTION_APPROVAL) + '/draft/validate', {
       requestType,
       collectionItemList: [{
         oldLicenseId
@@ -354,45 +385,8 @@ export class LicenseService {
     });
   }
 
-  openLicenseFullContentDialog(blob: BlobModel, license: (InitialExternalOfficeApprovalResult | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult)): DialogRef {
-    return this.dialog.show(ViewDocumentPopupComponent, {
-      model: license,
-      blob: blob
-    }, {
-      escToClose: true
-    });
-  }
-
   showLicenseContent<T extends { id: string }>(license: T, caseType: number): Observable<BlobModel> {
-    let url!: string;
-
-    switch (caseType) {
-      case CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL:
-        url = this.urlService.URLS.INITIAL_OFFICE_APPROVAL;
-        break;
-      case CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL:
-        url = this.urlService.URLS.E_FINAL_EXTERNAL_OFFICE_APPROVAL;
-        break;
-      case CaseTypes.PARTNER_APPROVAL:
-        url = this.urlService.URLS.E_PARTNER_APPROVAL;
-        break;
-      case CaseTypes.INTERNAL_PROJECT_LICENSE:
-        url = this.urlService.URLS.INTERNAL_PROJECT_LICENSE;
-        break;
-      case CaseTypes.COLLECTION_APPROVAL:
-        url = this.urlService.URLS.COLLECTION_APPROVAL;
-        break;
-      case CaseTypes.COLLECTOR_LICENSING:
-        url = this.urlService.URLS.COLLECTOR_APPROVAL;
-        break;
-      case CaseTypes.FUNDRAISING_LICENSING:
-        url = this.urlService.URLS.FUNDRAISING;
-        break;
-      case CaseTypes.URGENT_INTERVENTION_LICENSING:
-        url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE;
-        break;
-    }
-
+    let url: string = this.getServiceUrlByCaseType(caseType);
     if (!url) {
       return of();
     }
@@ -411,7 +405,7 @@ export class LicenseService {
     interceptReceive: (new CollectionLicenseInterceptor).receive
   })
   private _collectionSearch<C>(model: Partial<C>): Observable<CollectionLicense[]> {
-    return this.http.post<CollectionLicense[]>(this.urlService.URLS.COLLECTION_APPROVAL + '/license/search', model)
+    return this.http.post<CollectionLicense[]>(this.getServiceUrlByCaseType(CaseTypes.COLLECTION_APPROVAL) + '/license/search', model)
   }
 
   collectionSearch<C>(model: Partial<C>): Observable<CollectionLicense[]> {
@@ -423,7 +417,7 @@ export class LicenseService {
     interceptReceive: (new CollectorLicenseInterceptor).receive
   })
   private _collectorSearch<C>(model: Partial<C>): Observable<CollectorLicense[]> {
-    return this.http.post<CollectorLicense[]>(this.urlService.URLS.COLLECTOR_APPROVAL + '/license/search', model)
+    return this.http.post<CollectorLicense[]>(this.getServiceUrlByCaseType(CaseTypes.COLLECTOR_LICENSING) + '/license/search', model)
   }
 
   collectorSearch<C>(model: Partial<C>): Observable<CollectorLicense[]> {
