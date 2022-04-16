@@ -310,6 +310,13 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
       }))
       .pipe(filter((info): info is CollectionLicense => !!info))
+      .pipe(filter((license) => {
+        let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
+        if (isAlreadyAdded) {
+          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
+        }
+        return !isAlreadyAdded;
+      }))
       .subscribe((license) => {
         this.searchControl.patchValue(license.fullSerial);
         this.item = license.convertToCollectionItem();
@@ -379,5 +386,9 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   isTemporaryLicenseDuration(): boolean {
     return this.item!.licenseDurationType === LicenseDurationType.TEMPORARY;
+  }
+
+  isLicenseAlreadyAdded(selectedLicense: any): boolean {
+    return this.model.collectionItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
   }
 }
