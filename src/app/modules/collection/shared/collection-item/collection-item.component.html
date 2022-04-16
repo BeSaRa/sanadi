@@ -42,6 +42,18 @@
                    class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly)">
             <app-field-error-message controlName="locationDetails"></app-field-error-message>
           </div>
+          <div class="col-sm-12 mb-4 position-relative" *ngIf="isTemporaryLicenseDuration()">
+            <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"
+                   class="form-label">{{lang.map.license_end_date}}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="licenseEndDate"
+                   id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
+                   (click)="dpLicenseEndDate.toggleCalendar()" #dpLicenseEndDate="angular-mydatepicker"
+                   angular-mydatepicker validationClasses="licenseEndDate"></div>
+              <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
+            </div>
+          </div>
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="latitude"
                    for="latitude">{{lang.map.latitude}} / {{lang.map.longitude}}</label>
@@ -92,6 +104,10 @@
       <ng-container cdkColumnDef="unitNumber">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.unit}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.unitNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="licenseEndDate">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDateString}} </td>
       </ng-container>
       <ng-container cdkColumnDef="map">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>

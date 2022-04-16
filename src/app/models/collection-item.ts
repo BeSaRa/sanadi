@@ -22,6 +22,7 @@ export class CollectionItem extends _LicenseApproval implements HasLicenseApprov
   zoneNumber!: string
   licenseStatusInfo!: AdminResult
   licenseDurationTypeInfo!: AdminResult
+  licenseEndDateString: string = '';
 
   // to be removed while sending to backend
   mapService: MapService;

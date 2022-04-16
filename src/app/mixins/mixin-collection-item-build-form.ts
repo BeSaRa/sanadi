@@ -2,6 +2,7 @@ import {Constructor} from "@app/helpers/constructor";
 import {AbstractConstructor} from "@app/helpers/abstract-constructor";
 import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {DateUtils} from '@app/helpers/date-utils';
 
 type CanBuildForm = Constructor<HasCollectionItemBuildForm> & AbstractConstructor<HasCollectionItemBuildForm>
 
@@ -41,7 +42,7 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
         unitNumber: controls ? [unitNumber, [CustomValidators.required]] : unitNumber,*/
         latitude: controls ? [{value: latitude, disabled: true}, [CustomValidators.required]] : latitude,
         longitude: controls ? [{value: longitude, disabled: true}, [CustomValidators.required]] : longitude,
-        licenseEndDate: controls ? [licenseEndDate] : licenseEndDate,
+        licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(licenseEndDate)] : DateUtils.changeDateToDatepicker(licenseEndDate),
         oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       }
     }

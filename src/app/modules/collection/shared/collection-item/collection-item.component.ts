@@ -19,6 +19,9 @@ import {CaseStatusCollectionApproval} from '@app/enums/case-status-collection-ap
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {DateUtils} from '@app/helpers/date-utils';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
 
 @Component({
   selector: 'collection-item',
@@ -50,6 +53,10 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   form!: FormGroup;
 
   searchControl: FormControl = new FormControl();
+
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
+  };
 
   actions: IMenuItem<CollectionItem>[] = [
     // edit
@@ -89,7 +96,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'map', 'exportedLicenseFullSerial', 'actions'];
+  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'licenseEndDate', 'map', 'exportedLicenseFullSerial', 'actions'];
   @Input()
   approvalMode: boolean = false;
 
@@ -368,5 +375,9 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
       });
+  }
+
+  isTemporaryLicenseDuration(): boolean {
+    return this.item!.licenseDurationType === LicenseDurationType.TEMPORARY;
   }
 }
