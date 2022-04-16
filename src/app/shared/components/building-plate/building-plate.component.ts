@@ -116,10 +116,10 @@ export class BuildingPlateComponent implements OnInit {
 
   private _buildForm() {
     this.form = this.fb.group({
-      buildingNo: [null, (this._getPropertyRequiredValidator('buildingNo')).concat([CustomValidators.number])],
-      street: [null, (this._getPropertyRequiredValidator('street')).concat([CustomValidators.number])],
-      zone: [null, (this._getPropertyRequiredValidator('zone')).concat([CustomValidators.number])],
-      unit: [null, (this._getPropertyRequiredValidator('unit')).concat([CustomValidators.number, CustomValidators.maxLength(20)])]
+      buildingNo: [null, (this._getPropertyRequiredValidator('buildingNo')).concat([CustomValidators.number, CustomValidators.maxLength(5)])],
+      street: [null, (this._getPropertyRequiredValidator('street')).concat([CustomValidators.number, CustomValidators.maxLength(5)])],
+      zone: [null, (this._getPropertyRequiredValidator('zone')).concat([CustomValidators.number, CustomValidators.maxLength(5)])],
+      unit: [null, (this._getPropertyRequiredValidator('unit')).concat([CustomValidators.number, CustomValidators.maxLength(5)])]
     });
   }
 

@@ -33,8 +33,8 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
         oldLicenseFullSerial
       } = this;
       return {
-        identificationNumber: controls ? [identificationNumber, [CustomValidators.required]] : identificationNumber,
-        locationDetails: controls ? [locationDetails, [CustomValidators.required]] : locationDetails,
+        identificationNumber: controls ? [identificationNumber, [CustomValidators.required, CustomValidators.maxLength(50)]] : identificationNumber,
+        locationDetails: controls ? [locationDetails, [CustomValidators.required, CustomValidators.maxLength(50)]] : locationDetails,
         /*buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
         streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
         zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
