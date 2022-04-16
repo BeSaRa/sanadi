@@ -248,7 +248,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
       [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.COLLECTION_APPROVAL]: WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
-      [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT
     }
 
     if (!caseType) {
@@ -261,7 +262,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
 
   sendToSupervisionAndControlDepartment(): Observable<any> {
     let service = this.inboxService!.getService(this.caseType),
-      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+      taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {
