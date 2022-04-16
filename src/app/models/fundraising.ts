@@ -1,25 +1,28 @@
-import { CaseTypes } from "@app/enums/case-types.enum";
-import { WFResponseType } from "@app/enums/wfresponse-type.enum";
-import { dateSearchFields } from "@app/helpers/date-search-fields";
-import { infoSearchFields } from "@app/helpers/info-search-fields";
-import { normalSearchFields } from "@app/helpers/normal-search-fields";
-import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
-import { HasRequestType } from "@app/interfaces/has-request-type";
-import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-license-with-duration";
-import { mixinRequestType } from "@app/mixins/mixin-request-type";
-import { FundraisingApproveTaskPopupComponent } from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
-import { DialogService } from "@app/services/dialog.service";
-import { FactoryService } from "@app/services/factory.service";
-import { FundraisingService } from "@app/services/fundraising.service";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { ISearchFieldsMap } from "@app/types/types";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { AdminResult } from "./admin-result";
-import { CaseModel } from "./case-model";
-import { TaskDetails } from "./task-details";
+import {CaseTypes} from "@app/enums/case-types.enum";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {dateSearchFields} from "@app/helpers/date-search-fields";
+import {infoSearchFields} from "@app/helpers/info-search-fields";
+import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
+import {HasRequestType} from "@app/interfaces/has-request-type";
+import {mixinApprovalLicenseWithDuration} from "@app/mixins/mixin-approval-license-with-duration";
+import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import {
+  FundraisingApproveTaskPopupComponent
+} from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
+import {DialogService} from "@app/services/dialog.service";
+import {FactoryService} from "@app/services/factory.service";
+import {FundraisingService} from "@app/services/fundraising.service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {ISearchFieldsMap} from "@app/types/types";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {AdminResult} from "./admin-result";
+import {CaseModel} from "./case-model";
+import {TaskDetails} from "./task-details";
 
 const _ApprovalLicense = mixinApprovalLicenseWithDuration(mixinRequestType(CaseModel));
-export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval,HasRequestType {
+
+export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval, HasRequestType {
   service: FundraisingService;
   id!: string;
   createdOn!: string;
@@ -101,57 +104,27 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
       riskAssessment,
     } = this;
     return {
-      requestType: controls
-        ? [requestType, [CustomValidators.required]]
-        : requestType,
-      licenseDurationType: controls
-        ? [licenseDurationType, [CustomValidators.required]]
-        : licenseDurationType,
-      oldLicenseFullSerial: controls
-        ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]]
-        : oldLicenseFullSerial,
-      arName: controls
-        ? [
-            arName,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern("AR_ONLY"),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ARABIC_NAME_MAX
-              ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              ),
-            ],
-          ]
-        : arName,
-      enName: controls
-        ? [
-            enName,
-            [
-              CustomValidators.required,
-              CustomValidators.pattern("ENG_ONLY"),
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              ),
-            ],
-          ]
-        : enName,
-      about: controls ? [about, [CustomValidators.required]] : about,
-      workingMechanism: controls
-        ? [workingMechanism, [CustomValidators.required]]
-        : workingMechanism,
-      riskAssessment: controls
-        ? [riskAssessment, [CustomValidators.required]]
-        : riskAssessment,
+      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
+      licenseDurationType: controls ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
+      arName: controls ? [arName, [
+        CustomValidators.required, CustomValidators.pattern("AR_ONLY"),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]
+      ] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, CustomValidators.pattern("ENG_ONLY"),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)],
+      ] : enName,
+      about: controls ? [about, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : about,
+      workingMechanism: controls ? [workingMechanism, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : workingMechanism,
+      riskAssessment: controls ? [riskAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : riskAssessment,
     };
   }
 
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const {description} = this;
     return {
       description: controls
         ? [description, [CustomValidators.required]]
