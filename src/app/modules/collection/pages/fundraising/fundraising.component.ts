@@ -311,13 +311,11 @@ export class FundraisingComponent extends EServicesGenericComponent<
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): Fundraising | Observable<Fundraising> {
-    const model = new Fundraising().clone<Fundraising>({
+    return new Fundraising().clone<Fundraising>({
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue(),
     });
-    console.log("prepared model in _prepareModel()", model);
-    return model;
   }
   _afterSave(
     model: Fundraising,

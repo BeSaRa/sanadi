@@ -136,6 +136,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       }
     } else {
       this.model = new (this.service._getModel());
+      this.model!.setInboxService(this.inboxService);
     }
     this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
     // listen to model change
@@ -817,6 +818,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private updateActions(model: CaseModel<any, any>): void {
     this.model = model;
+    this.model.setInboxService(this.inboxService);
     this.displayRightActions(this.info?.openFrom || OpenFrom.ADD_SCREEN);
     this.translateActions(this.actions);
   }
