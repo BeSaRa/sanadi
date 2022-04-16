@@ -126,9 +126,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls
-        ? [description, [CustomValidators.required]]
-        : description,
+      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     };
   }
 
