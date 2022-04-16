@@ -49,8 +49,10 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate"
                    id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
-                   (click)="dpLicenseEndDate.toggleCalendar()" #dpLicenseEndDate="angular-mydatepicker"
-                   angular-mydatepicker validationClasses="licenseEndDate"></div>
+                   [ngClass]="{'input-disabled': (isExtendOrCancelRequestType() || readOnly)}"
+                   (click)="!isExtendOrCancelRequestType() && !readOnly && dpLicenseEndDate.toggleCalendar()"
+                   #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker
+                   validationClasses="licenseEndDate"></div>
               <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
             </div>
           </div>
