@@ -224,7 +224,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   }
 
- 
+
   handleRequestTypeChange(
     requestTypeValue: number,
     userInteraction: boolean = false
@@ -290,9 +290,17 @@ export class FundraisingComponent extends EServicesGenericComponent<
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return of(this.form.valid)
-      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
-      .pipe(filter((valid) => valid));
+    if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+      return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return true;
+      }
+      return of(this.form.valid)
+        .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+        .pipe(filter((valid) => valid));
+    }
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
