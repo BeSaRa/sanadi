@@ -27,6 +27,17 @@
   {
     "fields": [
       {
+        "key": "fullSerial",
+        "type": "input",
+        "label": "request_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
+      },
+      {
         "key": "exportedLicenseFullSerial",
         "type": "input",
         "label": "serial_number",
@@ -36,40 +47,29 @@
         "templateOptions": {
           "maxLength": 50
         }
-      },
+      }
+    ]
+  },
+  {
+    "fields": [
       {
         "key": "caseStatus",
         "type": "selectField",
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.ExternalModelingStatus",
-          "bindValue": "lookupKey",
-          "bindLabel": "basedOnLanguage"
-        }
-      }
-    ]
-  },
-  {
-    "fields": [
-      {
-        "key": "domain",
-        "type": "selectField",
-        "label": "the_domain",
-        "selectOptions": {
-          "options": [],
-          "loader": "lookup.Domain",
+          "loader": "lookup.CollectionStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
       },
       {
-        "key": "projectType",
+        "key": "requestClassification",
         "type": "selectField",
-        "label": "project_type",
+        "label": "req_classification",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.ProjectType",
+          "loader": "lookup.CollectionClassification",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
@@ -79,46 +79,9 @@
   {
     "fields": [
       {
-        "key": "executionCountry",
-        "type": "selectField",
-        "label": "execution_country",
-        "selectOptions": {
-          "options": [],
-          "loader": "country.loadCountries",
-          "bindValue": "id",
-          "bindLabel": "basedOnLanguage"
-        }
-      },
-      {
-        "key": "beneficiaryCountry",
-        "type": "selectField",
-        "label": "beneficiary_country",
-        "selectOptions": {
-          "options": [],
-          "loader": "country.loadCountries",
-          "bindValue": "id",
-          "bindLabel": "basedOnLanguage"
-        }
-      }
-    ]
-  },
-  {
-    "fields": [
-      {
-        "key": "executionRegion",
+        "key": "subject",
         "type": "input",
-        "label": "execution_region",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 100
-        }
-      },
-      {
-        "key": "beneficiaryRegion",
-        "type": "input",
-        "label": "beneficiary_region",
+        "label": "subject",
         "validations": {
           "required": false
         },
