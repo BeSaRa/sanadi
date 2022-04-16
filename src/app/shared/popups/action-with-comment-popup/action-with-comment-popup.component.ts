@@ -36,12 +36,13 @@ import {DatepickerOptionsMap} from '@app/types/types';
 })
 export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   label: keyof ILanguageKeys;
-  comment: FormControl = new FormControl();
+  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   done$: Subject<any> = new Subject<any>();
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  customValidators = CustomValidators;
 
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
@@ -269,7 +270,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
   private setRequiredComment(): void {
     if (this.isCommentRequired()) {
-      this.comment.setValidators([CustomValidators.required]);
+      this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
       this.comment.updateValueAndValidity();
     }
   }
