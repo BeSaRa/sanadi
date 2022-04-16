@@ -26,7 +26,7 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
   interceptor: IModelInterceptor<CollectionApproval> = new CollectionApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'caseStatus', 'creatorInfo', 'ouInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'requestClassificationInfo', 'creatorInfo', 'ouInfo', 'createdOn'];
 
   _getModel() {
     return CollectionApproval;
