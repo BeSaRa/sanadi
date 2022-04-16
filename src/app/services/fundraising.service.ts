@@ -22,7 +22,8 @@ export class FundraisingService extends EServiceGenericService<Fundraising> {
   interceptor: IModelInterceptor<Fundraising> = new FundraisingInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_fundraising';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];   // will understand later
+  searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];
+  selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 
   constructor(
     public http: HttpClient,

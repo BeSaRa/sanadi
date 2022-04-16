@@ -1,40 +1,42 @@
-import { Component } from "@angular/core";
+import {Component} from "@angular/core";
 import {
   FormGroup,
   FormBuilder,
   AbstractControl,
   FormControl,
 } from "@angular/forms";
-import { OperationTypes } from "@app/enums/operation-types.enum";
-import { SaveTypes } from "@app/enums/save-types";
-import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { CommonUtils } from "@app/helpers/common-utils";
-import { Fundraising } from "@app/models/fundraising";
-import { Lookup } from "@app/models/lookup";
-import { DialogService } from "@app/services/dialog.service";
-import { FundraisingService } from "@app/services/fundraising.service";
-import { LangService } from "@app/services/lang.service";
-import { LookupService } from "@app/services/lookup.service";
-import { Observable, of, Subject } from "rxjs";
-import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { catchError, delay, exhaustMap, filter, switchMap, takeUntil, tap } from "rxjs/operators";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
-import { LicenseService } from "@app/services/license.service";
-import { ToastService } from "@app/services/toast.service";
-import { OpenFrom } from "@app/enums/open-from.enum";
-import { EmployeeService } from "@app/services/employee.service";
+import {OperationTypes} from "@app/enums/operation-types.enum";
+import {SaveTypes} from "@app/enums/save-types";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
+import {CommonUtils} from "@app/helpers/common-utils";
+import {Fundraising} from "@app/models/fundraising";
+import {Lookup} from "@app/models/lookup";
+import {DialogService} from "@app/services/dialog.service";
+import {FundraisingService} from "@app/services/fundraising.service";
+import {LangService} from "@app/services/lang.service";
+import {LookupService} from "@app/services/lookup.service";
+import {Observable, of, Subject} from "rxjs";
+import {FileIconsEnum} from "@app/enums/file-extension-mime-types-icons.enum";
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {FundraisingSearchCriteria} from "@app/models/FundRaisingSearchCriteria";
+import {LicenseService} from "@app/services/license.service";
+import {ToastService} from "@app/services/toast.service";
+import {OpenFrom} from "@app/enums/open-from.enum";
+import {EmployeeService} from "@app/services/employee.service";
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {SharedService} from '@app/services/shared.service';
+import {CollectionLicense} from '@app/license-models/collection-license';
 
 @Component({
   selector: "fundraising",
   templateUrl: "./fundraising.component.html",
   styleUrls: ["./fundraising.component.scss"],
 })
-export class FundraisingComponent extends EServicesGenericComponent<
-  Fundraising,
-  FundraisingService
-> {
+export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
+  FundraisingService> {
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -47,8 +49,9 @@ export class FundraisingComponent extends EServicesGenericComponent<
     private lookupService: LookupService,
     private dialog: DialogService,
     private licenseService: LicenseService,
-    private toast:ToastService,
-    public employeeService: EmployeeService
+    private toast: ToastService,
+    public employeeService: EmployeeService,
+    private sharedService: SharedService
   ) {
     super();
   }
@@ -97,7 +100,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
     );
   }
 
-  licenseSearch($event:Event): void {
+  licenseSearch($event: Event): void {
     $event?.preventDefault();
     const value =
       this.oldLicenseFullSerialField.value &&
@@ -132,43 +135,36 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   private listenToLicenseSearch() {
     this.licenseSearch$
+      .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldLicenseFullSerial) => {
-          return this.loadLicencesByCriteria({
-            fullSerial: oldLicenseFullSerial,
-          }).pipe(catchError(() => of([])));
+          return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
+            .pipe(catchError(() => of([])));
         })
       )
       .pipe(
         // display message in case there is no returned license
-        tap((list) =>
-          !list.length
-            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-            : null
-        ),
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
         // allow only the collection if it has value
-        filter((result) => !!result.length),
-        // switch to the dialog ref to use it later and catch the user response
-        switchMap(
-          (license) =>
-            this.licenseService.openSelectLicenseDialog(
-              license,
-              this.model?.clone({ requestType: this.requestType.value || null })
-            ).onAfterClose$
-        ),
-        // allow only if the user select license
-        filter<{ selected: Fundraising; details: Fundraising }, any>(
-          (
-            selection
-          ): selection is { selected: Fundraising; details: Fundraising } => {
-            return !!selection;
-          }
-        ),
-        takeUntil(this.destroy$)
+        filter((result) => !!result.length)
       )
-      .subscribe((selection) => {
-        this.setSelectedLicense(selection.details, false);
+      .pipe(exhaustMap((licenses) => {
+        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
+      }))
+      .pipe(filter((info): info is Fundraising => !!info))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, false);
       });
+  }
+
+  private validateSingleLicense(license: Fundraising): Observable<undefined | Fundraising> {
+    return this.licenseService.validateLicenseByRequestType<Fundraising>(this.model!.caseType, this.requestType.value, license.id) as Observable<undefined | Fundraising>
+  }
+
+  private openSelectLicense(licenses: Fundraising[]): Observable<undefined | Fundraising> {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+      .onAfterClose$
+      .pipe(map((result: ({ selected: Fundraising, details: Fundraising } | undefined)) => result ? result.details : result))
   }
 
   _buildForm(): void {
@@ -181,6 +177,11 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   _afterBuildForm(): void {
     this.handleReadonly();
+    if (this.fromDialog) {
+      this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+      });
+    }
   }
 
   handleReadonly(): void {
@@ -224,11 +225,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
 
   }
 
-
-  handleRequestTypeChange(
-    requestTypeValue: number,
-    userInteraction: boolean = false
-  ): void {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
       this._resetForm();
       this.requestType.setValue(requestTypeValue);
@@ -257,14 +254,15 @@ export class FundraisingComponent extends EServicesGenericComponent<
         CustomValidators.required,
         (control) => {
           return this.selectedLicense &&
-            this.selectedLicense?.fullSerial === control.value
+          this.selectedLicense?.fullSerial === control.value
             ? null
-            : { select_license: true };
+            : {select_license: true};
         },
       ]);
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
   }
+
   setSelectedLicense(
     licenseDetails: Fundraising | undefined,
     ignoreUpdateForm: boolean
@@ -306,10 +304,12 @@ export class FundraisingComponent extends EServicesGenericComponent<
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _prepareModel(): Fundraising | Observable<Fundraising> {
     return new Fundraising().clone<Fundraising>({
       ...this.model,
@@ -317,6 +317,7 @@ export class FundraisingComponent extends EServicesGenericComponent<
       ...this.specialExplanation.getRawValue(),
     });
   }
+
   _afterSave(
     model: Fundraising,
     saveType: SaveTypes,
@@ -332,15 +333,19 @@ export class FundraisingComponent extends EServicesGenericComponent<
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
     throw new Error("Method not implemented.");
   }
+
   _launchFail(error: any): void {
     throw new Error("Method not implemented.");
   }
+
   _destroyComponent(): void {
     // throw new Error('Method not implemented.');
   }
+
   _updateForm(model: Fundraising | undefined): void {
     if (!model) {
       return;
@@ -352,9 +357,33 @@ export class FundraisingComponent extends EServicesGenericComponent<
     });
     this.handleRequestTypeChange(model.requestType, false);
   }
+
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
     this.setSelectedLicense(undefined, true);
+  }
+
+  private loadSelectedLicenseById(id: string, callback?: any): void {
+    if (!id) {
+      return;
+    }
+    this.licenseService.loadFundraisingLicenseByLicenseId(id)
+      .pipe(
+        filter(license => !!license),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true);
+
+        callback && callback();
+      })
+  }
+
+  viewLicenseAsPDF(license: Fundraising) {
+    return this.licenseService.showLicenseContent(license, CaseTypes.FUNDRAISING_LICENSING)
+      .subscribe((file) => {
+        return this.sharedService.openViewContentDialog(file, license);
+      });
   }
 }

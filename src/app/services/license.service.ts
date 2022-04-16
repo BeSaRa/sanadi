@@ -44,9 +44,9 @@ import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCr
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
-import { Fundraising } from '@app/models/fundraising';
-import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
-import { FundraisingSearchCriteria } from '@app/models/FundRaisingSearchCriteria';
+import {Fundraising} from '@app/models/fundraising';
+import {FundraisingInterceptor} from '@app/model-interceptors/fundraising-interceptor';
+import {FundraisingSearchCriteria} from '@app/models/FundRaisingSearchCriteria';
 import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
 import {UrgentInterventionLicenseInterceptor} from '@app/model-interceptors/urgent-intervention-license-interceptor';
@@ -99,10 +99,9 @@ export class LicenseService {
     interceptReceive: (new FundraisingInterceptor()).receive,
   })
   fundRaisingLicenseSearch(criteria: Partial<FundraisingSearchCriteria>): Observable<Fundraising[]> {
-    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id: undefined};
-    return this.http.post<Fundraising[]>(this.urlService.URLS.FUNDRAISING + "/license/search",{ ...criteria, ...orgId });
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined};
+    return this.http.post<Fundraising[]>(this.urlService.URLS.FUNDRAISING + "/license/search", {...criteria, ...orgId});
   }
-
 
   @Generator(FinalExternalOfficeApprovalResult, true, {
     property: 'rs',
@@ -189,6 +188,18 @@ export class LicenseService {
 
   loadInternalProjectLicenseByLicenseId(licenseId: string): Observable<InternalProjectLicense> {
     return this._loadInternalProjectLicenseByLicenseId(licenseId);
+  }
+
+  @Generator(Fundraising, false, {
+    property: 'rs',
+    interceptReceive: (new FundraisingInterceptor()).receive
+  })
+  private _loadFundraisingLicenseByLicenseId(licenseId: string): Observable<Fundraising> {
+    return this.http.get<Fundraising>(this.urlService.URLS.FUNDRAISING + '/license/' + licenseId + '/details');
+  }
+
+  loadFundraisingLicenseByLicenseId(licenseId: string): Observable<Fundraising> {
+    return this._loadFundraisingLicenseByLicenseId(licenseId);
   }
 
   @Generator(CollectorLicense, false, {
@@ -322,20 +333,19 @@ export class LicenseService {
       return this._validateFinalExternalOfficeLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
       return this._validateInternalProjectLicenseByRequestType(requestType, licenseId);
-    }else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSING) {
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSING) {
       return this._validateUrgentInterventionLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
-    } else if(caseType === CaseTypes.COLLECTOR_LICENSING) {
+    } else if (caseType === CaseTypes.COLLECTOR_LICENSING) {
       return this._validateCollectorLicenseByRequestType<T>(requestType, licenseId);
-    }
-    else if(caseType === CaseTypes.FUNDRAISING_LICENSING) {
+    } else if (caseType === CaseTypes.FUNDRAISING_LICENSING) {
       return this._validateFundraisingLicenseByRequestType(requestType, licenseId);
     }
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | Fundraising[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
