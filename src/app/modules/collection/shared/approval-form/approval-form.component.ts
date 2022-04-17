@@ -17,6 +17,8 @@ import {LicenseDurationType} from "@app/enums/license-duration-type";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {CaseModel} from "@app/models/case-model";
 import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
+import {HasRequestType} from '@app/interfaces/has-request-type';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
 
 @Component({
   selector: 'approval-form',
@@ -25,7 +27,7 @@ import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type"
 })
 export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Input()
-  model!: HasLicenseDurationType & CaseModel<any, any>;
+  model!: HasRequestType & HasLicenseDurationType & CaseModel<any, any>;
   @Input()
   service!: EServiceGenericService<any>
   destroy$: Subject<any> = new Subject();
@@ -83,6 +85,14 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.fb.group((new CollectionItem).buildApprovalForm(true));
+    if (this.model.requestType === ServiceRequestTypes.CANCEL) {
+      this.handleStartDateValidations();
+    }
+  }
+
+  private handleStartDateValidations(){
+    this.licenseStartDateField.setValidators(null);
+    this.licenseStartDateField.disable();
   }
 
   private updateForm(model: HasLicenseApproval): void {
