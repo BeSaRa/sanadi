@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -23,13 +23,16 @@ import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
+import {CollectionItem} from '@app/models/collection-item';
+import {SharedService} from '@app/services/shared.service';
+import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
 
 @Component({
   selector: 'collector-item',
   templateUrl: './collector-item.component.html',
   styleUrls: ['./collector-item.component.scss']
 })
-export class CollectorItemComponent implements OnInit, OnDestroy {
+export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'actions'];
 
   @Input()
@@ -76,7 +79,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  columns: string[] = ['identificationNumber', 'arabicName', 'collectorType', 'jobTitle', 'actions'];
+  columns: string[] = ['identificationNumber', 'arabicName', 'collectorType', 'jobTitle', 'exportedLicenseFullSerial', 'actions'];
   @Input()
   approvalMode: boolean = false;
 
@@ -114,7 +117,8 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               private collectorApprovalService: CollectorApprovalService,
               private licenseService: LicenseService,
-              private serviceDataService: ServiceDataService) {
+              private serviceDataService: ServiceDataService,
+              private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -143,6 +147,12 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
       const customSettings = (new ServiceCustomSettings()).clone(JSON.parse(service.customSettings));
       this.maxElementsCount = +customSettings.maxElementsCount!;
     });
+  }
+
+  ngAfterViewInit() {
+    if (this.model.getCaseStatus() !== CaseStatusCollectorApproval.FINAL_APPROVE) {
+      this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
+    }
   }
 
   private buildForm(): void {
@@ -332,5 +342,20 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
 
   isExtendOrCancelRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
+  }
+
+  viewGeneratedLicense(item: CollectionItem): void {
+    if (!item.exportedLicenseFullSerial) {
+      return;
+    }
+    let license = {
+      documentTitle: item.exportedLicenseFullSerial,
+      id: item.exportedLicenseId
+    };
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
   }
 }
