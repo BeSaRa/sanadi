@@ -23,7 +23,6 @@ import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
-import {CollectionItem} from '@app/models/collection-item';
 import {SharedService} from '@app/services/shared.service';
 import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
 
