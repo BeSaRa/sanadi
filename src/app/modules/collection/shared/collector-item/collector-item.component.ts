@@ -135,6 +135,7 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     this.listenToDisableSearchField();
     this.listenToLicenseDurationTypeChanges();
     this.loadCustomSettings();
+    this.listenToLicenseSearch();
   }
 
   loadCustomSettings() {
@@ -303,17 +304,19 @@ export class CollectorItemComponent implements OnInit, OnDestroy {
     return this.licenseService.openSelectLicenseDialog(licensesByDurationType, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: CollectorLicense, details: CollectorLicense }>;
   }
 
-  searchForLicense(event: Event) {
-    event.preventDefault();
-    /*if (!this.oldLicenseFullSerialField.value) {
-      this.dialog.error(this.lang.map.need_license_number_to_search);
-      return;
-    }*/
+  searchForLicense() {
+    this.licenseSearch$.next(this.oldLicenseFullSerialField.value);
+  }
 
-    this.licenseService
-      .collectorSearch<CollectorApproval>({
-        fullSerial: this.oldLicenseFullSerialField.value
-      })
+  private listenToLicenseSearch(): void {
+    this.licenseSearch$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((serial) => {
+        return this.licenseService
+          .collectorSearch<CollectorApproval>({
+            fullSerial: serial
+          });
+      }))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
