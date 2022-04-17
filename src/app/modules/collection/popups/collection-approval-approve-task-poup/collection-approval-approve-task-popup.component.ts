@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {CollectionApproval} from "@app/models/collection-approval";
 import {Subject} from "rxjs";
@@ -17,6 +17,9 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {ToastService} from "@app/services/toast.service";
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {ApprovalFormComponent} from '@app/modules/collection/shared/approval-form/approval-form.component';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'collection-approval-approve-task-popup',
@@ -36,6 +39,8 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
 
   model: CollectionApproval;
   comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+
+  @ViewChild(ApprovalFormComponent) approvalForm!: ApprovalFormComponent;
 
   constructor(
     private dialog: DialogService,
@@ -61,7 +66,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
 
   ngOnInit(): void {
     this.listenToAction();
-    if (this.isCommentRequired()){
+    if (this.isCommentRequired()) {
       this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     }
   }
@@ -96,6 +101,9 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
       .pipe(map(_ => this.isCancelRequestType() ? false : this.data.model.hasInvalidCollectionItems()))
       .pipe(tap(invalid => invalid && this.displayInvalidItemMessages()))
       .pipe(filter(invalid => !invalid))
+      .pipe(map(_ => this.isCancelRequestType() ? false : this.approvalForm && this.hasInvalidCollectionItemDateRange()))
+      .pipe(tap(invalid => invalid && this.displayInvalidItemDurationMessage(this.approvalForm.minLicenseMonths, this.approvalForm.maxLicenseMonths)))
+      .pipe(filter(invalid => !invalid))
       .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
@@ -111,6 +119,13 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
     this.dialog.error(this.lang.map.please_make_sure_that_you_filled_out_all_required_data_for_all_license);
   }
 
+  private displayInvalidItemDurationMessage(serviceMinDate: number, serviceMaxDate: number) {
+    this.dialog.error(this.lang.map.msg_license_duration_diff_between_x_and_y_months.change({
+      x: serviceMinDate,
+      y: serviceMaxDate
+    }));
+  }
+
   private getResponse(): Partial<IWFResponse> {
     return this.comment.value ? {
       selectedResponse: this.response,
@@ -124,5 +139,28 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
 
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
+  }
+
+  private isPermanent(): boolean {
+    return this.model.licenseDurationType === LicenseDurationType.PERMANENT;
+  }
+
+  private validateLicenseDateRange(startDate: string, endDate: string) {
+    if (!this.isPermanent() && startDate) {
+      let minLicenseMonths, maxLicenseMonths;
+      this.approvalForm && (minLicenseMonths = this.approvalForm.minLicenseMonths);
+      this.approvalForm && (maxLicenseMonths = this.approvalForm.maxLicenseMonths);
+
+      if (!!minLicenseMonths && !!maxLicenseMonths && minLicenseMonths > 0 && maxLicenseMonths > 0) {
+        let licenseDuration = DateUtils.getDifference(startDate, endDate, 'month');// (dayjs(endDate).diff(startDate, 'month'));
+        return licenseDuration >= minLicenseMonths && licenseDuration <= maxLicenseMonths;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  hasInvalidCollectionItemDateRange(): boolean {
+    return this.data.model.collectionItemList.some(x => !this.validateLicenseDateRange(DateUtils.getDateStringFromDate(x.licenseStartDate), DateUtils.getDateStringFromDate(x.licenseEndDate)));
   }
 }

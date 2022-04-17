@@ -190,6 +190,13 @@ export class DateUtils {
     return DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)?.valueOf() || null;
   }
 
+  static getDifference(startDate: IMyDateModel | Date | string, endDate: IMyDateModel | Date | string, unit: 'day' | 'month' | 'year'): number {
+    if (!startDate || !endDate || !unit) {
+      return 0;
+    }
+    return (dayjs(DateUtils.getDateStringFromDate(endDate)).diff(DateUtils.getDateStringFromDate(startDate), unit));
+  }
+
   static getHoursList(): { val: number, key: string }[] {
     return [
       {

@@ -13,10 +13,12 @@ import {ToastService} from "@app/services/toast.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {Subject} from "rxjs";
-import {takeUntil, exhaustMap, switchMap, tap, map, filter} from "rxjs/operators";
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ApprovalFormComponent} from "../../shared/approval-form/approval-form.component";
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: "fundraising-approve-task-popup",
@@ -75,10 +77,13 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap((_) => this.isCancelRequestType() ? null : this.approvalForm.saveApprovalInfo()))
+      .pipe(tap((_) => this.isCancelRequestType() ? null : this.approvalForm.saveApprovalInfo(true)))
       .pipe(map(_ => this.isCancelRequestType() ? true : this.model.hasValidApprovalInfo()))
       .pipe(tap(valid => !valid && this.displayInvalidFormMessage()))
       .pipe(filter(valid => valid))
+      .pipe(map(_ => this.isCancelRequestType() ? false : this.approvalForm && this.hasInvalidItemDateRange()))
+      .pipe(tap(invalid => invalid && this.displayInvalidItemDurationMessage(this.approvalForm.minLicenseMonths, this.approvalForm.maxLicenseMonths)))
+      .pipe(filter(invalid => !invalid))
       .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
@@ -102,6 +107,13 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
     this.dialog.error(this.lang.map.please_make_sure_that_you_filled_out_all_required_data_for_all_license);
   }
 
+  private displayInvalidItemDurationMessage(serviceMinDate: number, serviceMaxDate: number) {
+    this.dialog.error(this.lang.map.msg_license_duration_diff_between_x_and_y_months.change({
+      x: serviceMinDate,
+      y: serviceMaxDate
+    }));
+  }
+
   private getResponse(): Partial<IWFResponse> {
     return this.comment.value
       ? {
@@ -117,5 +129,28 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
 
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
+  }
+
+  private isPermanent(): boolean {
+    return this.model.licenseDurationType === LicenseDurationType.PERMANENT;
+  }
+
+  private validateLicenseDateRange(startDate: string, endDate: string) {
+    if (!this.isPermanent() && startDate) {
+      let minLicenseMonths, maxLicenseMonths;
+      this.approvalForm && (minLicenseMonths = this.approvalForm.minLicenseMonths);
+      this.approvalForm && (maxLicenseMonths = this.approvalForm.maxLicenseMonths);
+
+      if (!!minLicenseMonths && !!maxLicenseMonths && minLicenseMonths > 0 && maxLicenseMonths > 0) {
+        let licenseDuration = DateUtils.getDifference(startDate, endDate, 'month');// (dayjs(endDate).diff(startDate, 'month'));
+        return licenseDuration >= minLicenseMonths && licenseDuration <= maxLicenseMonths;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  hasInvalidItemDateRange(): boolean {
+    return !this.validateLicenseDateRange(DateUtils.getDateStringFromDate(this.model.licenseStartDate), DateUtils.getDateStringFromDate(this.model.licenseEndDate));
   }
 }

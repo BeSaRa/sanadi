@@ -19,6 +19,7 @@ import {CaseModel} from "@app/models/case-model";
 import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
 import {HasRequestType} from '@app/interfaces/has-request-type';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'approval-form',
@@ -61,6 +62,8 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
   };
+  minLicenseMonths!: number;
+  maxLicenseMonths!: number;
 
   constructor(private fb: FormBuilder,
               private customTermService: CustomTermService,
@@ -85,14 +88,14 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.fb.group((new CollectionItem).buildApprovalForm(true));
-    if (this.model.requestType === ServiceRequestTypes.CANCEL) {
-      this.handleStartDateValidations();
-    }
+    this.handleStartDateValidations();
   }
 
-  private handleStartDateValidations(){
-    this.licenseStartDateField.setValidators(null);
-    this.licenseStartDateField.disable();
+  private handleStartDateValidations() {
+    if (this.model.requestType === ServiceRequestTypes.CANCEL) {
+      this.licenseStartDateField.setValidators(null);
+      this.licenseStartDateField.disable();
+    }
   }
 
   private updateForm(model: HasLicenseApproval): void {
@@ -129,6 +132,10 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     this.serviceDataService
       .loadByCaseType(this.model.caseType)
       .pipe(tap(service => {
+        this.minLicenseMonths = service.licenseMinTime;
+        this.maxLicenseMonths = service.licenseMaxTime;
+      }))
+      .pipe(tap(service => {
         this.servicePublicTerms = service.serviceTerms
       }))
       .pipe(switchMap(_ => {
@@ -159,17 +166,42 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     this.isPermanent() ? this.licenseEndDateField.disable() : this.licenseEndDateField.enable();
   }
 
-  saveApprovalInfo() {
+  private validateLicenseDateRange(startDate: string, endDate: string) {
+    if (!this.isPermanent() && startDate) {
+      if (CommonUtils.isValidValue(this.minLicenseMonths) && CommonUtils.isValidValue(this.maxLicenseMonths) && this.minLicenseMonths > 0 && this.maxLicenseMonths > 0) {
+        let licenseDuration = DateUtils.getDifference(startDate, endDate, 'month');// (dayjs(endDate).diff(startDate, 'month'));
+        return licenseDuration >= this.minLicenseMonths && licenseDuration <= this.maxLicenseMonths;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  saveApprovalInfo(skipValidateDateRange: boolean = false) {
     if (!this.license) {
       return;
     }
-    const form = {...this.form.getRawValue()} as HasLicenseApproval;
-    this.saveInfo.emit(this.license.clone({
-      ...form,
-      followUpDate: form.followUpDate ? DateUtils.getDateStringFromDate(form.followUpDate) : '',
-      licenseStartDate: form.licenseStartDate ? DateUtils.getDateStringFromDate(form.licenseStartDate) : '',
-      licenseEndDate: form.licenseEndDate ? DateUtils.getDateStringFromDate(form.licenseEndDate) : ''
-    }))
+    const form = {...this.form.getRawValue()} as HasLicenseApproval,
+      value = this.license.clone({
+        ...form,
+        followUpDate: DateUtils.getDateStringFromDate(form.followUpDate),
+        licenseStartDate: DateUtils.getDateStringFromDate(form.licenseStartDate),
+        licenseEndDate: DateUtils.getDateStringFromDate(form.licenseEndDate)
+      });
+
+    if (skipValidateDateRange) {
+      this.saveInfo.emit(value);
+      return;
+    }
+
+    if (!this.validateLicenseDateRange(value.licenseStartDate, value.licenseEndDate)) {
+      this.dialog.error(this.lang.map.msg_license_duration_diff_between_x_and_y_months.change({
+        x: this.minLicenseMonths,
+        y: this.maxLicenseMonths
+      }));
+    } else {
+      this.saveInfo.emit(value);
+    }
   }
 
   openAddCustomTermDialog() {
