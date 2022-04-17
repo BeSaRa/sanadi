@@ -344,7 +344,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
     return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
   }
 
-  viewGeneratedLicense(item: CollectionItem): void {
+  viewGeneratedLicense(item: CollectorItem): void {
     if (!item.exportedLicenseFullSerial) {
       return;
     }

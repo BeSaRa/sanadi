@@ -3,10 +3,12 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" style="width: 800px">
-  <collector-item (approval)="setSelectedLicense($event)" [approvalMode]="true" [model]="data.model"></collector-item>
-  <approval-form (formCancel)="formCancel()" (saveInfo)="saveLicenseInfo($event)" [license]="selectedLicense"
-                 [model]="data.model"></approval-form>
+<div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
+  <ng-container *ngIf="!isCancelRequestType()">
+    <collector-item (approval)="setSelectedLicense($event)" [approvalMode]="true" [model]="data.model"></collector-item>
+    <approval-form (formCancel)="formCancel()" (saveInfo)="saveLicenseInfo($event)" [license]="selectedLicense"
+                   [model]="data.model"></approval-form>
+  </ng-container>
   <div class="row">
     <div class="col-sm-12 mb-4 position-relative">
       <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>

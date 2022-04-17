@@ -15,6 +15,8 @@ import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 import {ToastService} from '@app/services/toast.service';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'collector-approval-approve-task-popup',
@@ -33,7 +35,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: CollectorApproval;
-  comment: FormControl = new FormControl();
+  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
 
   constructor(
     private dialog: DialogService,
@@ -58,7 +60,10 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-    this.listenToAction()
+    this.listenToAction();
+    if (this.isCommentRequired()){
+      this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+    }
   }
 
   setSelectedLicense({item, index}: { item: HasLicenseApproval, index: number }) {
@@ -88,8 +93,11 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => this.data.model.hasInvalidCollectorItems()))
+      .pipe(map(_ => this.isCancelRequestType() ? false : this.data.model.hasInvalidCollectorItems()))
       .pipe(tap(invalid => invalid && this.displayInvalidItemMessages()))
+      .pipe(filter(invalid => !invalid))
+      .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
+      .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => this.data.model.save()))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
@@ -108,5 +116,13 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
       selectedResponse: this.response,
       comment: this.comment.value
     } : {selectedResponse: this.response};
+  }
+
+  isCancelRequestType(): boolean {
+    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
+  }
+
+  private isCommentRequired(): boolean {
+    return this.isCancelRequestType();
   }
 }
