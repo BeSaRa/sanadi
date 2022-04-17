@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {CommonUtils} from "@app/helpers/common-utils";
@@ -23,7 +23,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
   templateUrl: "./fundraising-approve-task-popup.component.html",
   styleUrls: ["./fundraising-approve-task-popup.component.scss"],
 })
-export class FundraisingApproveTaskPopupComponent implements OnInit {
+export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewInit {
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
@@ -33,8 +33,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit {
   model: Fundraising;
   comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
 
-  @ViewChild(ApprovalFormComponent, {static: true})
-  approvalForm!: ApprovalFormComponent;
+  @ViewChild(ApprovalFormComponent) approvalForm!: ApprovalFormComponent;
 
   constructor(private dialog: DialogService,
               private dialogRef: DialogRef,
@@ -56,10 +55,13 @@ export class FundraisingApproveTaskPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.listenToAction();
-    this.listenToSave();
     if (this.isCommentRequired()) {
       this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     }
+  }
+
+  ngAfterViewInit() {
+    this.listenToSave();
   }
 
   listenToSave(): void {

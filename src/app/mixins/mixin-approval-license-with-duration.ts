@@ -57,7 +57,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
     }
 
     hasValidApprovalInfo(): boolean {
-      return this.licenseDurationType !== LicenseDurationType.PERMANENT ? (this.hasLicenseEndDate()) : true;
+      return this.licenseDurationType !== LicenseDurationType.PERMANENT ? (this.hasLicenseEndDate()) : true
     }
 
     // shallow clone
