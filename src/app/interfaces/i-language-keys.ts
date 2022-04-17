@@ -473,6 +473,8 @@ export interface ILanguageKeys {
   search_method: string;
   serial_number: string;
   year: string;
+  days: string;
+  months: string;
   msg_are_you_sure_you_want_logout: string;
   search_result: string;
   search_criteria: string;
