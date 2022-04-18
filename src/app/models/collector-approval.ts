@@ -49,7 +49,7 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
   licenseDurationTypeInfo!: AdminResult;
   organizationCode!: string;
   searchFields: ISearchFieldsMap<CollectorApproval> = {
-    ...normalSearchFields(['fullSerial']),
+    ...normalSearchFields(['fullSerial', 'subject']),
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo'])
   }
