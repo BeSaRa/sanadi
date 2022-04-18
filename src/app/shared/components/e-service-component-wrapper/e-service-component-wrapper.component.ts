@@ -492,7 +492,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         icon: 'mdi-check-underline',
         askChecklist: true,
-        label: (item) => item.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
+        label: (item) => this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
         },
@@ -694,6 +694,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       if (component.handleReadonly && typeof component.handleReadonly === 'function') {
         component.handleReadonly();
       }
+      this.checkForFinalApproveByMatrixNotification();
     })
   }
 
