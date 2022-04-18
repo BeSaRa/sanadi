@@ -37,7 +37,7 @@ export class UrgentInterventionLicensingService extends EServiceGenericService<U
     FactoryService.registerService('UrgentInterventionLicensingService', this);
   }
 
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
   selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_license';
   jsonSearchFile: string = 'urgent_intervention_license_search_form.json';
