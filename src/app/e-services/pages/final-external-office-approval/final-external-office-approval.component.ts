@@ -33,7 +33,6 @@ import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-offi
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {SharedService} from '@app/services/shared.service';
 import {
   InitialExternalOfficeApprovalSearchCriteria
 } from '@app/models/initial-external-office-approval-search-criteria';
@@ -134,7 +133,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
               private configurationService: ConfigurationService,
               private toastService: ToastService,
               private countryService: CountryService,
-              private sharedService: SharedService,
               public fb: FormBuilder) {
     super();
   }
@@ -521,14 +519,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
         callback && callback();
       })
-  }
-
-  viewLicenseAsPDF(license: InitialExternalOfficeApprovalResult | FinalExternalOfficeApprovalResult) {
-    let caseType = this.isNewRequestType() ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL;
-    return this.licenseService.showLicenseContent(license, caseType)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
   }
 
   handleReadonly(): void {

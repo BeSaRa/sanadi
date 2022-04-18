@@ -30,10 +30,8 @@ import {DateUtils} from '@app/helpers/date-utils';
 import {ProjectComponent} from '@app/models/project-component';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {LicenseService} from '@app/services/license.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {DatepickerOptionsMap} from '@app/types/types';
 
@@ -54,7 +52,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
               private aidLookupService: AidLookupService,
               private sdGoalService: SDGoalService,
               private licenseService: LicenseService,
-              private sharedService: SharedService,
               public fb: FormBuilder) {
     super();
   }
@@ -1030,13 +1027,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
           }
           this.toastService.success(this.lang.map.msg_delete_success);
         }
-      });
-  }
-
-  viewLicenseAsPDF(license: InternalProjectLicenseResult) {
-    return this.licenseService.showLicenseContent(license, CaseTypes.INTERNAL_PROJECT_LICENSE)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
       });
   }
 

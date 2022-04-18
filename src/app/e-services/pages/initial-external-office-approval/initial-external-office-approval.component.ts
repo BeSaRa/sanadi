@@ -9,7 +9,7 @@ import {LookupService} from "@app/services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {CountryService} from "@app/services/country.service";
 import {Country} from "@app/models/country";
-import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
 import {LicenseService} from "@app/services/license.service";
 import {DialogService} from "@app/services/dialog.service";
@@ -23,17 +23,11 @@ import {ToastService} from "@app/services/toast.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {WFActions} from '@app/enums/wfactions.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {SharedService} from '@app/services/shared.service';
 import {
   InitialExternalOfficeApprovalSearchCriteria
 } from '@app/models/initial-external-office-approval-search-criteria';
-import {
-  SearchInitialExternalOfficeApprovalCriteria
-} from '@app/models/search-initial-external-office-approval-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
@@ -83,7 +77,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               private dialog: DialogService,
               public employeeService: EmployeeService,
               private toast: ToastService,
-              private sharedService: SharedService,
               public service: InitialExternalOfficeApprovalService) {
     super();
 
@@ -435,13 +428,6 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
         callback && callback();
       })
-  }
-
-  viewLicenseAsPDF(license: InitialExternalOfficeApprovalResult) {
-    return this.licenseService.showLicenseContent(license, CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
   }
 
   handleReadonly(): void {

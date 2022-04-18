@@ -1,10 +1,5 @@
 import {Component} from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  AbstractControl,
-  FormControl,
-} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -18,17 +13,13 @@ import {LangService} from "@app/services/lang.service";
 import {LookupService} from "@app/services/lookup.service";
 import {Observable, of, Subject} from "rxjs";
 import {FileIconsEnum} from "@app/enums/file-extension-mime-types-icons.enum";
-import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, takeUntil, tap} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {FundraisingSearchCriteria} from "@app/models/FundRaisingSearchCriteria";
 import {LicenseService} from "@app/services/license.service";
 import {ToastService} from "@app/services/toast.service";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {EmployeeService} from "@app/services/employee.service";
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {SharedService} from '@app/services/shared.service';
-import {CollectionLicense} from '@app/license-models/collection-license';
 
 @Component({
   selector: "fundraising",
@@ -50,8 +41,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     private dialog: DialogService,
     private licenseService: LicenseService,
     private toast: ToastService,
-    public employeeService: EmployeeService,
-    private sharedService: SharedService
+    public employeeService: EmployeeService
   ) {
     super();
   }
@@ -378,12 +368,5 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
 
         callback && callback();
       })
-  }
-
-  viewLicenseAsPDF(license: Fundraising) {
-    return this.licenseService.showLicenseContent(license, CaseTypes.FUNDRAISING_LICENSING)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
   }
 }

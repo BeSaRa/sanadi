@@ -73,52 +73,10 @@
         </div>
       </div>
       <div *ngIf="selectedLicense">
-        <app-table #table
-                   [data]="[selectedLicense]"
-                   [columns]="service.selectLicenseDisplayColumns">
-          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-            <ng-container cdkColumnDef="arName">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.office_arabic_name}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="enName">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.office_english_name}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="licenseNumber">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="fullSerial">
-              <!-- full serial will be shown as License number, so label is license number -->
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="status">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_status}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="endDate">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
-              <td cdk-cell
-                  *cdkCellDef="let row"> {{!row.licenseEndDate ? '' : row.licenseEndDate|date: 'mediumDate'}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="actions">
-              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-              <td cdk-cell *cdkCellDef="let row">
-                <button class="btn btn-link outline-none mx-2"
-                        tooltip="{{lang.map.view_license}}"
-                        (click)="viewLicenseAsPDF(row)">
-                  <i class="mdi {{fileIconsEnum.PDF}}"></i></button>
-              </td>
-            </ng-container>
-            <tr *cdkNoDataRow>
-              <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-            </tr>
-            <tr cdk-header-row *cdkHeaderRowDef="service.selectLicenseDisplayColumns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: service.selectLicenseDisplayColumns;"></tr>
-          </table>
-        </app-table>
+        <selected-license-table [caseType]="caseTypes.PARTNER_APPROVAL"
+                                [caseTypeViewLicense]="caseTypes.PARTNER_APPROVAL"
+                                [licenseList]="[selectedLicense]"
+                                [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
       </div>
       <div class="row">
         <!-- Request Classification -->

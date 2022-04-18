@@ -16,9 +16,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {EmployeeService} from '@app/services/employee.service';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {LicenseService} from '@app/services/license.service';
-import {SharedService} from '@app/services/shared.service';
 import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
 import {UrgentInterventionLicenseSearchCriteria} from '@app/models/urgent-intervention-license-search-criteria';
 import {CaseTypes} from '@app/enums/case-types.enum';
@@ -45,7 +43,6 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
-              private sharedService: SharedService,
               private serviceDataService: ServiceDataService) {
     super();
   }
@@ -499,13 +496,6 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
 
   isExtendOrCancelRequestType(): boolean {
     return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.EXTEND || this.requestTypeField.value === ServiceRequestTypes.CANCEL);
-  }
-
-  viewLicenseAsPDF(license: InternalProjectLicenseResult) {
-    return this.licenseService.showLicenseContent(license, CaseTypes.URGENT_INTERVENTION_LICENSING)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
   }
 
   private _getInvalidTabs(): any {

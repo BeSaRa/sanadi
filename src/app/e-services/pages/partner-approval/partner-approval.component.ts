@@ -40,8 +40,6 @@ import {CommonUtils} from "@app/helpers/common-utils";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {SharedService} from '@app/services/shared.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
@@ -158,7 +156,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
               private countryService: CountryService, private dialog: DialogService,
               private toast: ToastService, private toastService: ToastService,
               private licenseService: LicenseService, private cd: ChangeDetectorRef,
-              private sharedService: SharedService,
               public employeeService: EmployeeService, private orgService: OrganizationUnitService) {
     super();
   }
@@ -509,13 +506,6 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
       return;
     }*/
     this.licenseSearch$.next(value);
-  }
-
-  viewLicenseAsPDF(license: PartnerApproval) {
-    return this.licenseService.showLicenseContent(license, CaseTypes.PARTNER_APPROVAL)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
   }
 
   get basicTab(): FormGroup {

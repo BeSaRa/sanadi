@@ -23,6 +23,7 @@ import {CaseModel} from "@app/models/case-model";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -45,6 +46,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   model?: M
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  caseTypes = CaseTypes;
 
   formValidity$: Subject<any> = new Subject<any>();
 
