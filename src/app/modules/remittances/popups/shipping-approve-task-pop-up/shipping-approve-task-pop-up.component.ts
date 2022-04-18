@@ -56,10 +56,10 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.listenToAction();
-    this.setFollowUpDateIfExits();
+    this.setFollowUpDateIfExists();
   }
 
-  setFollowUpDateIfExits() {
+  setFollowUpDateIfExists() {
     if (!this.model.followUpDate) {
       return;
     }

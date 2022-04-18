@@ -8,6 +8,7 @@ import { ShippingApprovalInterceptor } from "@app/model-interceptors/shipping-ap
 import { ShippingApproval } from "@app/models/shipping-approval";
 import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
 import { Observable } from "rxjs";
+import { CustomsExemptionRemittanceService } from "./customs-exemption-remittance.service";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
@@ -30,7 +31,8 @@ export class ShippingApprovalService extends EServiceGenericService<ShippingAppr
     public domSanitizer: DomSanitizer,
     public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService,
-    private urlService: UrlService
+    private urlService: UrlService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService
   ) {
     super();
     FactoryService.registerService("ShippingApprovalService", this);
@@ -58,5 +60,9 @@ export class ShippingApprovalService extends EServiceGenericService<ShippingAppr
 
   _getUrlService(): UrlService {
     return this.urlService;
+  }
+
+  documentSearch(criteria: Partial<ShippingApprovalSearchCriteria> = {}): Observable<ShippingApproval[]> {
+    return this.customsExemptionRemittanceService.shippingApprovalDocumentSearch(criteria);
   }
 }

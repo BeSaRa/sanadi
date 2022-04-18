@@ -22,6 +22,8 @@ import { AgencyService } from "@app/services/agency-service";
 import { Agency } from "@app/models/agency";
 import { OpenFrom } from "@app/enums/open-from.enum";
 import { EmployeeService } from "@app/services/employee.service";
+import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
+import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 
 @Component({
   selector: "shipping-approval",
@@ -33,6 +35,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   ShippingApprovalService
 > {
   form!: FormGroup;
+  fileIconsEnum = FileIconsEnum;
 
   constructor(
     public lang: LangService,
@@ -85,6 +88,14 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   get country(): AbstractControl {
     return this.form.get("country")!;
+  }
+
+  get fullSerial(): AbstractControl {
+    return this.form.get("fullSerial")!;
+  }
+
+  get exportedBookFullSerial(): AbstractControl {
+    return this.form.get("exportedBookFullSerial")!;
   }
 
   isCancelRequestType(): boolean {
@@ -282,5 +293,24 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
+  }
+
+  documentSearch($event: Event, searchByOrderNumber: boolean): void {
+    $event?.preventDefault();
+    let searchCriteria: Partial<ShippingApprovalSearchCriteria> = {};
+    if (this.fullSerial.value && searchByOrderNumber) {
+      searchCriteria.fullSerial =
+        this.fullSerial.value && this.fullSerial.value.trim();
+    }
+    if (this.exportedBookFullSerial.value && !searchByOrderNumber) {
+      searchCriteria.exportedBookFullSerial =
+        this.exportedBookFullSerial.value &&
+        this.exportedBookFullSerial.value.trim();
+    }
+    this.service
+      .documentSearch(searchCriteria)
+      .subscribe((shippingApproval: ShippingApproval[]) => {
+        console.log(shippingApproval);
+      });
   }
 }

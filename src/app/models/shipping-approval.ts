@@ -112,6 +112,8 @@ export class ShippingApproval extends CaseModel<
       otherReceiverName,
       shipmentApproximateValue,
       shipmentCarrier,
+      fullSerial,
+      exportedBookFullSerial
     } = this;
 
     return {
@@ -154,6 +156,10 @@ export class ShippingApproval extends CaseModel<
       shipmentCarrier: controls
         ? [shipmentCarrier, [CustomValidators.required]]
         : shipmentCarrier,
+      fullSerial: controls ? [fullSerial] : fullSerial,
+      exportedBookFullSerial: controls
+        ? [exportedBookFullSerial]
+        : exportedBookFullSerial,
     };
   }
 

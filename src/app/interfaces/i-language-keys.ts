@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  need_alteast_one_of_order_number_or_document_number_to_search: string;
+  order_number: string;
+  document_number: string;
   send_to_risk_and_compliance_department: string;
   shipment_subject: string;
   shipment_source: string;
