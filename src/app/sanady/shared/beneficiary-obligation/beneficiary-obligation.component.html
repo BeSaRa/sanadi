@@ -54,7 +54,7 @@
       <!-- Notes -->
       <div class="col-sm-12 col-md-8 mb-4 position-relative">
         <label asteriskIfRequired="notes" for="notes" class="form-label">{{lang.map.notes}}</label>
-        <textarea id="notes" validationClasses="notes" maxlength="1200"
+        <textarea id="notes" validationClasses="notes" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                   formControlName="notes" trimInput class="form-control"></textarea>
         <app-field-error-message controlName="notes"></app-field-error-message>
       </div>

@@ -77,6 +77,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   actionIconsEnum = ActionIconsEnum;
   filterControl: FormControl = new FormControl('');
   viewOnly: boolean = false;
+  customValidators = CustomValidators;
 
   add$: Subject<any> = new Subject<any>();
   editItem?: BeneficiaryObligation;

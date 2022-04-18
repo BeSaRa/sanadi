@@ -96,7 +96,6 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     budgetClosureDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   logoPath: string = '';
   logoFile: any;
   logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];

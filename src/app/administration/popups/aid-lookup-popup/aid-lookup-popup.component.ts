@@ -45,7 +45,6 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   isAidTabVisible!: boolean;
   aidLookupStatusList!: Lookup[];
   saveVisible = true;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 

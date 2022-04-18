@@ -155,7 +155,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
       enName: control ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_ONLY'),
         CustomValidators.maxLength(250),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
-      projectDescription: control ? [projectDescription, [CustomValidators.required, CustomValidators.maxLength(1200)]] : projectDescription
+      projectDescription: control ? [projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : projectDescription
     }
   }
 
@@ -205,13 +205,13 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      needsAssessment: control ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(1200)]] : needsAssessment,
-      goals: control ? [goals, [CustomValidators.required, CustomValidators.maxLength(1200)]] : goals,
-      outputs: control ? [outputs, [CustomValidators.required, CustomValidators.maxLength(1200)]] : outputs,
-      successItems: control ? [successItems, [CustomValidators.required, CustomValidators.maxLength(1200)]] : successItems,
-      expectedResults: control ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedResults,
-      expectedImpact: control ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(1200)]] : expectedImpact,
-      sustainabilityItems: control ? [sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(1200)]] : sustainabilityItems,
+      needsAssessment: control ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : needsAssessment,
+      goals: control ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
+      outputs: control ? [outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
+      successItems: control ? [successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : successItems,
+      expectedResults: control ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
+      expectedImpact: control ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
+      sustainabilityItems: control ? [sustainabilityItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
     }
   }
 
@@ -289,7 +289,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
     } = this;
 
     return {
-      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
   }
 

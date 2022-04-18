@@ -52,7 +52,6 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
 
   form!: FormGroup;
   requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   loadAttachments: boolean = false;
 
   fileIconsEnum = FileIconsEnum;

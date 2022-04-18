@@ -77,7 +77,7 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
       oldLicenseSerial: controls ? [oldLicenseSerial] : oldLicenseSerial,
       country: controls ? [country, [CustomValidators.required]] : country,
       region: controls ? [region, [CustomValidators.required, CustomValidators.maxLength(50)]] : region,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
   }
 }

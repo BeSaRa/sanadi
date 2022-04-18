@@ -124,7 +124,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
       firstSocialMedia: control ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(100)]] : firstSocialMedia,
       secondSocialMedia: control ? [secondSocialMedia, CustomValidators.maxLength(100)] : secondSocialMedia,
       thirdSocialMedia: control ? [thirdSocialMedia, CustomValidators.maxLength(100)] : thirdSocialMedia,
-      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description,
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
   }
 }

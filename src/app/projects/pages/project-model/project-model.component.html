@@ -136,7 +136,8 @@
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectDescription"
                    for="projectDescription">{{lang.map.project_description}}</label>
-            <textarea maxlength="1200" name="projectDescription" validationClasses="projectDescription"
+            <textarea name="projectDescription" validationClasses="projectDescription"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                       formControlName="projectDescription" id="projectDescription" rows="6"
                       class="form-control"></textarea>
             <app-field-error-message [ignoreTop]="true" controlName="projectDescription"></app-field-error-message>
@@ -394,9 +395,9 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="needsAssessment"
                    for="needsAssessment">{{lang.map.project_needs_assessment}}</label>
-            <textarea maxlength="1200" name="needsAssessment" formControlName="needsAssessment"
-                      validationClasses="needsAssessment"
-                      id="needsAssessment" rows="4"
+            <textarea name="needsAssessment" formControlName="needsAssessment"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      validationClasses="needsAssessment" id="needsAssessment" rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="needsAssessment"></app-field-error-message>
           </div>
@@ -404,9 +405,9 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="goals" asteriskIfRequired="goals">{{lang.map.project_goals}}</label>
-            <textarea maxlength="1200" name="goals" formControlName="goals" validationClasses="goals" id="goals"
-                      rows="4"
-                      class="form-control"></textarea>
+            <textarea name="goals" formControlName="goals" validationClasses="goals" id="goals"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      rows="4" class="form-control"></textarea>
             <app-field-error-message controlName="goals"></app-field-error-message>
           </div>
         </div>
@@ -522,7 +523,8 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="successItems"
                    asteriskIfRequired="successItems">{{lang.map.project_success_items}}</label>
-            <textarea maxlength="1200" name="successItems" id="successItems" validationClasses="successItems"
+            <textarea name="successItems" id="successItems" validationClasses="successItems"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                       formControlName="successItems" rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="successItems"></app-field-error-message>
@@ -531,9 +533,9 @@
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="outputs" asteriskIfRequired="outputs">{{lang.map.project_outputs}}</label>
-            <textarea maxlength="1200" name="outputs" id="outputs" formControlName="outputs" validationClasses="outputs"
-                      rows="4"
-                      class="form-control"></textarea>
+            <textarea name="outputs" id="outputs" formControlName="outputs" validationClasses="outputs"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      rows="4" class="form-control"></textarea>
             <app-field-error-message controlName="outputs"></app-field-error-message>
           </div>
         </div>
@@ -541,9 +543,9 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="expectedResults"
                    asteriskIfRequired="expectedResults">{{lang.map.project_expected_results}}</label>
-            <textarea maxlength="1200" name="expectedResults" id="expectedResults" validationClasses="expectedResults"
-                      formControlName="expectedResults" rows="4"
-                      class="form-control"></textarea>
+            <textarea name="expectedResults" id="expectedResults" validationClasses="expectedResults"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      formControlName="expectedResults" rows="4" class="form-control"></textarea>
             <app-field-error-message controlName="expectedResults"></app-field-error-message>
           </div>
         </div>
@@ -551,9 +553,9 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="expectedImpact"
                    asteriskIfRequired="expectedImpact">{{lang.map.project_expected_impacts}}</label>
-            <textarea maxlength="1200" name="expectedImpact" id="expectedImpact" validationClasses="expectedImpact"
-                      formControlName="expectedImpact" rows="4"
-                      class="form-control"></textarea>
+            <textarea name="expectedImpact" id="expectedImpact" validationClasses="expectedImpact"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      formControlName="expectedImpact" rows="4" class="form-control"></textarea>
             <app-field-error-message controlName="expectedImpact"></app-field-error-message>
           </div>
         </div>
@@ -561,7 +563,8 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="sustainabilityItems"
                    asteriskIfRequired="sustainabilityItems">{{lang.map.project_sustainability_items}}</label>
-            <textarea maxlength="1200" name="sustainabilityItems" formControlName="sustainabilityItems"
+            <textarea name="sustainabilityItems" formControlName="sustainabilityItems"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                       validationClasses="sustainabilityItems" id="sustainabilityItems" rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="sustainabilityItems"></app-field-error-message>
@@ -669,10 +672,9 @@
         <div class="col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="description"
                  for="description">{{lang.map.special_explanations}}</label>
-          <textarea maxlength="1200" name="description" formControlName="description" validationClasses="description"
-                    id="description"
-                    rows="4"
-                    class="form-control"></textarea>
+          <textarea name="description" formControlName="description" validationClasses="description"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    id="description" rows="4" class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>

@@ -43,7 +43,7 @@ export class CustomTermPopupComponent implements OnInit, OnDestroy {
 
   buildForm(): void {
     this.form = this.fb.group({
-      terms: [this.model.terms, [CustomValidators.required, Validators.maxLength(1200)]],
+      terms: [this.model.terms, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]],
       caseType: this.model.caseType
     });
     this.fm = new FormManager(this.form, this.lang);

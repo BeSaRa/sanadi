@@ -1,14 +1,14 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '../../models/dialog-ref';
-import {ToastService} from '../../../services/toast.service';
-import {EmployeeService} from '../../../services/employee.service';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {AdminResult} from '../../../models/admin-result';
-import {Recommendation} from '../../../models/recommendation';
-import {RecommendationService} from '../../../services/recommendation.service';
+import {ToastService} from '@app/services/toast.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AdminResult} from '@app/models/admin-result';
+import {Recommendation} from '@app/models/recommendation';
+import {RecommendationService} from '@app/services/recommendation.service';
 
 @Component({
   selector: 'recommendation-popup',
@@ -20,6 +20,7 @@ export class RecommendationPopupComponent implements OnInit {
   service: RecommendationService;
   caseId: string;
   form!: FormGroup;
+  customValidators = CustomValidators;
 
   get recommendation(): string {
     return this.form.get('text')?.value || '';

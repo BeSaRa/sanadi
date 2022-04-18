@@ -25,7 +25,6 @@ export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistIte
   model!: ChecklistItem;
   operation!: OperationTypes;
   stepId!: number;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ChecklistItem>,
               public fb: FormBuilder,

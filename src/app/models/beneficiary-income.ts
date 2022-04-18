@@ -32,7 +32,7 @@ export class BeneficiaryIncome extends SearchableCloneable<BeneficiaryIncome> {
       periodicType: controls ? [periodicType, [CustomValidators.required]] : periodicType,
       benIncomeType: controls ? [benIncomeType, [CustomValidators.required]] : benIncomeType,
       amount: controls ? [amount, [CustomValidators.required, Validators.min(0)]] : amount,
-      notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(1200)]] : notes
+      notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : notes
     }
   }
 }

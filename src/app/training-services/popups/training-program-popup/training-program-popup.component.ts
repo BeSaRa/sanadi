@@ -88,8 +88,6 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
   // organizations properties
   selectedOrganizationType!: number;
   selectedOrganizations: OrgUnit[] = [];

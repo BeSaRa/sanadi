@@ -48,7 +48,6 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
     basic: {name: 'basic', langKey: 'lbl_basic_info', validStatus: () => this.form && this.form.valid},
     users: {name: 'users', langKey: 'lbl_org_users', validStatus: ()=> true}
   };
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   setDialogButtonsVisibility(tab: any): void {
     this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);

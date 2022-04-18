@@ -62,7 +62,6 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   form!: FormGroup;
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   validFamilyOrIndividualSwitchMsg: string = '&nbsp;';
   fileIconsEnum = FileIconsEnum;
 

@@ -63,8 +63,6 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   private changeModel: BehaviorSubject<Inquiry | undefined> = new BehaviorSubject<Inquiry | undefined>(new Inquiry());
   private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
 
-  inputMaskPatterns: typeof CustomValidators.inputMaskPatterns = CustomValidators.inputMaskPatterns;
-
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
 

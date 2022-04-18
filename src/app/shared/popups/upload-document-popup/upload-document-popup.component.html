@@ -51,7 +51,8 @@
         <div class="row">
           <div class="col-12">
             <label>{{lang.map.lbl_description}}</label>
-            <textarea class="form-control" formControlName="description" maxlength="1200" rows="2"></textarea>
+            <textarea class="form-control" formControlName="description" rows="2"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>

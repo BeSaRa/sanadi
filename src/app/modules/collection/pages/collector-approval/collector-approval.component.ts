@@ -30,7 +30,6 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
 
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   disableSearchField: boolean = true;
-  customValidators = CustomValidators;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,

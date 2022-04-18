@@ -24,7 +24,6 @@ export class ServiceDataStepPopupComponent extends AdminGenericDialog<ServiceDat
   fm!: FormManager;
   model!: ServiceDataStep;
   operation!: OperationTypes;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceDataStep>,
               public fb: FormBuilder,

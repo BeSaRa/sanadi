@@ -6,6 +6,7 @@ import {OperationTypes} from "@app/enums/operation-types.enum";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {catchError, exhaustMap, filter, switchMap} from "rxjs/operators";
 import {BaseModel} from "@app/models/base-model";
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Directive()
 export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implements OnInit, OnDestroy, IAdminGenericInterface<M> {
@@ -19,6 +20,8 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   save$: Subject<any> = new Subject<any>();
   validateFieldsVisible: boolean = true;
   operationTypes: typeof OperationTypes = OperationTypes;
+  customValidators = CustomValidators;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   ngOnInit(): void {
     this.buildForm();

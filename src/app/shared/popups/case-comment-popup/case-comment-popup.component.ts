@@ -1,14 +1,14 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {CaseComment} from '../../../models/case-comment';
+import {CaseComment} from '@app/models/case-comment';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {CommentService} from '../../../services/comment.service';
-import {LangService} from '../../../services/lang.service';
+import {CommentService} from '@app/services/comment.service';
+import {LangService} from '@app/services/lang.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {ToastService} from '../../../services/toast.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '../../models/dialog-ref';
-import {AdminResult} from '../../../models/admin-result';
-import {EmployeeService} from '../../../services/employee.service';
+import {AdminResult} from '@app/models/admin-result';
+import {EmployeeService} from '@app/services/employee.service';
 import {take} from 'rxjs/operators';
 
 @Component({
@@ -22,6 +22,7 @@ export class CaseCommentPopupComponent implements OnInit {
   caseId: string;
   form!: FormGroup;
   editMode: boolean = false;
+  customValidators = CustomValidators;
 
   get comment(): string {
     return this.form.get('text')?.value || '';

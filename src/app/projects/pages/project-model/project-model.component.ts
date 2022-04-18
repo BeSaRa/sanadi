@@ -59,7 +59,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   isDacOchaLoaded: boolean = false;
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   fileIconsEnum = FileIconsEnum;
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
@@ -615,11 +614,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'thirdSDGoalPercentage'
       ]);
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
-      this.sustainabilityItems.setValidators(CustomValidators.maxLength(1200))
+      this.sustainabilityItems.setValidators(CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS))
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
-      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(1200)])
+      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)])
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
       this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);

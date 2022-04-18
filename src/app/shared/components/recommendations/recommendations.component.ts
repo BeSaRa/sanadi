@@ -1,16 +1,17 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {BehaviorSubject, interval, Subject} from 'rxjs';
-import {DialogService} from '../../../services/dialog.service';
+import {DialogService} from '@app/services/dialog.service';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
-import {RecommendationService} from '../../../services/recommendation.service';
+import {RecommendationService} from '@app/services/recommendation.service';
 import {RecommendationPopupComponent} from '../../popups/recommendation-popup/recommendation-popup.component';
-import {Recommendation} from '../../../models/recommendation';
+import {Recommendation} from '@app/models/recommendation';
 import {FormControl} from '@angular/forms';
-import {CaseModel} from '../../../models/case-model';
-import {AdminResult} from '../../../models/admin-result';
-import {EmployeeService} from '../../../services/employee.service';
-import {ToastService} from '../../../services/toast.service';
+import {CaseModel} from '@app/models/case-model';
+import {AdminResult} from '@app/models/admin-result';
+import {EmployeeService} from '@app/services/employee.service';
+import {ToastService} from '@app/services/toast.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'app-recommendations',
@@ -54,6 +55,7 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
   }
 
   private destroy$: Subject<any> = new Subject();
+  customValidators = CustomValidators;
 
   constructor(public lang: LangService,
               public employeeService: EmployeeService,

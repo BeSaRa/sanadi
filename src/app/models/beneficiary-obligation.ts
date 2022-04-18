@@ -34,7 +34,7 @@ export class BeneficiaryObligation extends SearchableCloneable<BeneficiaryObliga
       benObligationType: controls ? [benObligationType, [CustomValidators.required]] : benObligationType,
       amount: controls ? [amount, [CustomValidators.required, Validators.min(0)]] : amount,
       installmentsCount: controls ? [installmentsCount, [CustomValidators.required, Validators.min(0)]] : installmentsCount,
-      notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(1200)]] : notes
+      notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : notes
     }
   }
 }

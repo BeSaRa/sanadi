@@ -40,7 +40,6 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   validateFieldsVisible = true;
 
   selectedTabName: string;
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country>,
               private toast: ToastService,

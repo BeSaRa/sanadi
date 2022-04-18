@@ -1,21 +1,21 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@app/services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {FileNetDocument} from '../../../models/file-net-document';
-import {DocumentService} from '../../../services/document.service';
+import {FileNetDocument} from '@app/models/file-net-document';
+import {DocumentService} from '@app/services/document.service';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {DialogService} from '../../../services/dialog.service';
-import {ToastService} from '../../../services/toast.service';
-import {ConfigurationService} from '../../../services/configuration.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {ConfigurationService} from '@app/services/configuration.service';
 import {interval, Subject} from 'rxjs';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {DialogRef} from '../../models/dialog-ref';
-import {EmployeeService} from '../../../services/employee.service';
+import {EmployeeService} from '@app/services/employee.service';
 import {HttpClient} from '@angular/common/http';
-import {UrlService} from '../../../services/url.service';
-import {AdminResult} from '../../../models/admin-result';
-import {IDefaultResponse} from '../../../interfaces/idefault-response';
+import {UrlService} from '@app/services/url.service';
+import {AdminResult} from '@app/models/admin-result';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
 
 @Component({
   selector: 'app-upload-document-popup',
@@ -28,6 +28,7 @@ export class UploadDocumentPopupComponent implements OnInit {
   form!: FormGroup;
   service: DocumentService;
   attachmentTypes: AdminResult[] = [];
+  customValidators = CustomValidators;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService },
               public lang: LangService,

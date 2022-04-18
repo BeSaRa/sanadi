@@ -184,14 +184,16 @@
       <div class="row">
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="goals" asteriskIfRequired="goals" class="form-label">{{lang.map.project_goals}}</label>
-          <textarea maxlength="1200" rows="2" id="goals" validationClasses="goals"
+          <textarea rows="2" id="goals" validationClasses="goals"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                     formControlName="goals" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="goals"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="outputs" asteriskIfRequired="outputs" class="form-label">{{lang.map.project_outputs}}</label>
-          <textarea maxlength="1200" rows="2" id="outputs" validationClasses="outputs"
+          <textarea rows="2" id="outputs" validationClasses="outputs"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                     formControlName="outputs" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="outputs"></app-field-error-message>
@@ -201,7 +203,8 @@
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="successItems" asteriskIfRequired="successItems"
                  class="form-label">{{lang.map.project_success_items}}</label>
-          <textarea maxlength="1200" rows="2" id="successItems" validationClasses="successItems"
+          <textarea rows="2" id="successItems" validationClasses="successItems"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                     formControlName="successItems" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="successItems"></app-field-error-message>
@@ -209,7 +212,8 @@
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="expectedResults" asteriskIfRequired="expectedResults"
                  class="form-label">{{lang.map.project_expected_results}}</label>
-          <textarea maxlength="1200" rows="2" id="expectedResults" validationClasses="expectedResults"
+          <textarea rows="2" id="expectedResults" validationClasses="expectedResults"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                     [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                     formControlName="expectedResults" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="expectedResults"></app-field-error-message>
@@ -222,7 +226,8 @@
       <div class="col-sm-12 col-md-12 mb-4 position-relative">
         <label for="description" asteriskIfRequired="description"
                class="form-label">{{lang.map.special_explanations}}</label>
-        <textarea maxlength="1200" rows="5" id="description" validationClasses="description"
+        <textarea rows="5" id="description" validationClasses="description"
+                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                   [readOnly]="(readonly)"
                   formControlName="description" trimInput class="form-control"></textarea>
         <app-field-error-message controlName="description"></app-field-error-message>

@@ -22,6 +22,7 @@ import {LangService} from "@app/services/lang.service";
 import {CaseModel} from "@app/models/case-model";
 import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -42,6 +43,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
   destroy$: Subject<any> = new Subject<any>();
   model?: M
+  customValidators = CustomValidators;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   formValidity$: Subject<any> = new Subject<any>();
 

@@ -75,6 +75,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   actionIconsEnum = ActionIconsEnum;
   filterControl: FormControl = new FormControl('');
   viewOnly: boolean = false;
+  customValidators = CustomValidators;
 
   add$: Subject<any> = new Subject<any>();
   editItem?: BeneficiaryIncome;

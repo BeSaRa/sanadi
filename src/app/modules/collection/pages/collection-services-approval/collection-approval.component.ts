@@ -45,7 +45,6 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   form!: FormGroup;
 
   disableSearchField: boolean = true;
-  customValidators = CustomValidators;
 
   get basicInfo(): FormGroup {
     return this.form.get('basicInfo')! as FormGroup;

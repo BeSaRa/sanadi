@@ -116,7 +116,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : postalCode,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
-      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(1200)]] : description
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
   }
 }

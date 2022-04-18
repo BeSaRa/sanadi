@@ -59,7 +59,7 @@ export class InternationalCooperation extends CaseModel<InternationalCooperation
         CustomValidators.pattern('ENG_AR_ONLY')]] : fullName,
       mobileNo: controls ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       organization: controls ? [organization, [CustomValidators.maxLength(100)]] : organization,
-      requestBody: controls ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(1200)]] : requestBody,
+      requestBody: controls ? [requestBody, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : requestBody,
       competentDepartmentID: controls ? [competentDepartmentID, [CustomValidators.required]] : competentDepartmentID,
       competentDepartmentAuthName: controls ? [competentDepartmentAuthName, [CustomValidators.required]] : competentDepartmentAuthName
     };
