@@ -96,7 +96,8 @@ import {LangLoaderComponent} from './components/lang-loader/lang-loader.componen
 import {
   ApprovalFormMonthlyComponent
 } from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
-import { BuildingPlateComponent } from './components/building-plate/building-plate.component';
+import {BuildingPlateComponent} from './components/building-plate/building-plate.component';
+import {SelectedLicenseTableComponent} from './components/selected-license-table/selected-license-table.component';
 
 @NgModule({
   declarations: [
@@ -178,7 +179,8 @@ import { BuildingPlateComponent } from './components/building-plate/building-pla
     LangLoaderComponent,
     LangLoaderComponent,
     ApprovalFormMonthlyComponent,
-    BuildingPlateComponent
+    BuildingPlateComponent,
+    SelectedLicenseTableComponent
   ],
   imports: [
     CommonModule,
@@ -261,7 +263,8 @@ import { BuildingPlateComponent } from './components/building-plate/building-pla
     GridActionsComponent,
     LangLoaderComponent,
     ApprovalFormMonthlyComponent,
-    BuildingPlateComponent
+    BuildingPlateComponent,
+    SelectedLicenseTableComponent
   ]
 })
 export class SharedModule {
