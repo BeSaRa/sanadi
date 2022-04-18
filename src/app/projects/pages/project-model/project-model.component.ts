@@ -708,7 +708,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(val => this.service.searchTemplateBySerial(val)))
       .pipe(tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null))
-      .pipe(filter(v => !!v))
+      .pipe(filter(v => !!v.length))
       .pipe(switchMap(list => {
         if (list.length === 1) {
           return this.service.getTemplateById(list[0].id)
@@ -728,7 +728,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         }
       }))
       .subscribe((result: UserClickOn | ProjectModel) => {
-        debugger
         if (result instanceof ProjectModel) {
           this.selectedModel = result;
           this.templateSerialControl.setValue(result.templateFullSerial);
