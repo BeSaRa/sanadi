@@ -2,11 +2,16 @@
   <ng-content select="*:not([afterTemplate])"></ng-content>
   <ng-container *ngFor="let action of filteredActions; first as isFirst; last as isLast">
     <ng-container *ngIf="isAction(action)">
-      <button *ngIf="!hasChildren(action)" class="btn icon-btn text-primary grid-action-btn"
-              [disabled]="isActionDisabled(action)"
-              [tooltip]="displayLabel(action)" (click)="onClick($event, action)">
-        <i class="mdi {{action.icon}} {{action.class || ''}}"></i>
-      </button>
+      <ng-container *ngIf="!hasChildren(action)">
+        <button *ngIf="action.icon" class="btn icon-btn text-primary grid-action-btn"
+                [disabled]="isActionDisabled(action)"
+                [tooltip]="displayLabel(action)" (click)="onClick($event, action)">
+          <i class="mdi {{action.icon}} {{action.class || ''}}"></i>
+        </button>
+        <button *ngIf="!action.icon" class="btn btn-primary {{action.class || ''}}"
+                [disabled]="isActionDisabled(action)" type="button"
+                (click)="onClick($event, action)">{{displayLabel(action)}}</button>
+      </ng-container>
       <div class="dropdown" *ngIf="hasChildren(action)">
         <button type="button" class="btn btn-link outline-none dropdown-toggle grid-action-btn"
                 id="dropdownMenuButton1" [disabled]="isActionDisabled(action)"
