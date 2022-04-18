@@ -124,6 +124,12 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   _afterBuildForm(): void {
     this._setMaxTargetAmount();
     this.handleReadonly();
+
+    if (this.fromDialog) {
+      this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+      });
+    }
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -394,6 +400,22 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       }]);
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  private loadSelectedLicenseById(id: string, callback?: any): void {
+    if (!id) {
+      return;
+    }
+    this.licenseService.loadUrgentInterventionLicenseByLicenseId(id)
+      .pipe(
+        filter(license => !!license),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true);
+
+        callback && callback();
+      })
   }
 
   licenseSearch($event?: Event): void {
