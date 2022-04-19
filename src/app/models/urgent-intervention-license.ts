@@ -21,6 +21,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {CurrencyEnum} from "@app/enums/currency-enum";
 import {isValidAdminResult} from "@app/helpers/utils";
+import {DateUtils} from '@app/helpers/date-utils';
 
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
@@ -75,6 +76,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
   langService: LangService;
   employeeService: EmployeeService;
   projectNameInfo!: AdminResult;
+  licenseStartDateString: string = '';
 
   searchFields: ISearchFieldsMap<UrgentInterventionLicense> = {
     ...infoSearchFields(['caseStatusInfo', 'projectNameInfo', 'ouInfo']),
@@ -102,6 +104,8 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
 
   getBasicFormFields(control: boolean = false): any {
     const {
+      arName,
+      enName,
       requestType,
       oldLicenseFullSerial,
       oldLicenseId,
@@ -112,8 +116,10 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
     } = this;
 
     return {
+      arName: control ? [{value: arName,  disabled: true}, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arName,
+      enName: control ? [{value: enName,  disabled: true}, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : enName,
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      year: control ? [year, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
+      year: control ? [{value: enName,  disabled: true}, [CustomValidators.number, CustomValidators.maxLength(4)]] : year,
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
@@ -130,7 +136,8 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
       currency,
       targetAmount,
       bankName,
-      licenseDuration
+      licenseDuration,
+      licenseStartDate
     } = this;
 
     return {
@@ -138,9 +145,10 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
       deductionPercent: control ? [deductionPercent, [CustomValidators.required, CustomValidators.decimal(2), Validators.min(0), Validators.max(100)]] : deductionPercent,
       accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : accountNumber,
       iBan: control ? [iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iBan,
-      currency: control ? [{values: currency, disabled: true}, CustomValidators.required] : currency,
+      currency: control ? [{values: currency, disabled: true}] : currency,
       targetAmount: control ? [targetAmount, [CustomValidators.required, CustomValidators.decimal(2)]] : targetAmount,
-      licenseDuration: control ? [{value: licenseDuration, disabled: true}, CustomValidators.required] : licenseDuration
+      licenseDuration: control ? [{value: licenseDuration, disabled: true}] : licenseDuration,
+      licenseStartDate: control ? [{value: DateUtils.changeDateToDatepicker(licenseStartDate), disabled: true}] : DateUtils.changeDateToDatepicker(licenseStartDate)
     }
   }
 

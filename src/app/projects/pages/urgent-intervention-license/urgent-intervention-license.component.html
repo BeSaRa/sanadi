@@ -59,11 +59,21 @@
                                 [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
       </div>
       <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+          <span id="arName" class="form-control input-disabled" [innerHTML]="model && model.arName || '&nbsp;'"></span>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+          <span id="enName" class="form-control input-disabled" [innerHTML]="model && model.enName || '&nbsp;'"></span>
+        </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="domain" asteriskIfRequired="domain" class="form-label">{{lang.map.domain}}</label>
           <span id="domain" class="form-control input-disabled"
                 [innerHTML]="model && model.domainInfo && model.domainInfo.getName() || '&nbsp;'"></span>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
                  for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
@@ -129,8 +139,14 @@
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="licenseStartDate" asteriskIfRequired="licenseStartDate"
+                 class="form-label">{{lang.map.license_start_date}}</label>
+          <span id="licenseStartDate" class="form-control input-disabled"
+                [innerHTML]="model && model.licenseStartDateString || '&nbsp;'"></span>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="licenseDuration" asteriskIfRequired="licenseDuration"
-                 class="form-label">{{lang.map.license_duration}}</label>
+                 class="form-label">{{lang.map.license_duration + ' (' + lang.map.months + ')'}}</label>
           <span id="licenseDuration" class="form-control input-disabled"
                 [innerHTML]="model && model.licenseDuration || '&nbsp;'"></span>
         </div>

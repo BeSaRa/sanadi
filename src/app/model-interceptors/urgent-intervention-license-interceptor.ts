@@ -2,6 +2,7 @@ import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
 import {AdminResult} from '@app/models/admin-result';
 import {Domains} from "@app/enums/domains.enum";
+import {DateUtils} from '@app/helpers/date-utils';
 
 export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<UrgentInterventionLicense> {
   receive(model: UrgentInterventionLicense): UrgentInterventionLicense {
@@ -20,12 +21,13 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
     model.currencyInfo && (model.currencyInfo = AdminResult.createInstance(model.currencyInfo))
     model.domainInfo && (model.domainInfo = AdminResult.createInstance(model.domainInfo))
     model.projectNameInfo = AdminResult.createInstance({arName: model.arName, enName: model.enName});
+    model.licenseStartDateString = DateUtils.getDateStringFromDate(model.licenseStartDate);
     return model;
   }
 
   send(model: Partial<UrgentInterventionLicense>): Partial<UrgentInterventionLicense> {
     UrgentInterventionLicenseInterceptor._deleteBeforeSend(model);
-    model.domain = model.domain ?? Domains.HUMAN
+    model.domain = model.domain ?? Domains.HUMAN;
     return model;
   }
 
@@ -44,6 +46,7 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
     delete model.mainUNOCHAInfo;
     delete model.currencyInfo;
     delete model.projectNameInfo;
+    delete model.licenseStartDateString;
   }
 
 }
