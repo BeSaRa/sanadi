@@ -1,8 +1,10 @@
 import {CustomValidators} from '@app/validators/custom-validators';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {Bank} from '@app/models/bank';
 
 export class BankAccount extends SearchableCloneable<BankAccount> {
+  id!: number;
   currency!: number;
   accountNumber!: string;
   bankName!: string;
@@ -10,6 +12,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   swiftCode!: string;
   country!: number;
   category!: number;
+  bankAccountInfo!: Bank;
 
   getBankAccountFields(control: boolean = false, caseType?: CaseTypes): any {
     const {

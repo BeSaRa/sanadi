@@ -5,6 +5,9 @@ export interface ILanguageKeys {
   about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
+  selected_item_already_exists: string;
+  bank_accounts_to_be_merged: string;
+  bank_accounts: string;
   account_type: string;
   main_account: string;
   bank_account_purpose: string;

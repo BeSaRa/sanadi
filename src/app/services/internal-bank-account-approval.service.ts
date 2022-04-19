@@ -84,7 +84,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.BANK_ACCOUNT;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(BankAccount, true, {property: 'rs'})
   private _loadBankAccounts(): Observable<BankAccount[]> {
     return this.http.get<BankAccount[]>(this.getBankAccountCtrlURLSegment() + '/composite');
   }

@@ -2,9 +2,13 @@ import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {TaskDetails} from '@app/models/task-details';
 import {AdminResult} from '@app/models/admin-result';
+import {BankAccount} from '@app/models/bank-account';
 
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
+    model.internalBankAccountDTO = model.internalBankAccountDTO?.map(ba => (new BankAccount())
+      .clone({id: ba.id, accountNumber: ba.accountNumber}));
+
     delete model.taskDetails;
     delete model.requestTypeInfo;
     delete model.creatorInfo;

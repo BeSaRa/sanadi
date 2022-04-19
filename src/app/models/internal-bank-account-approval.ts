@@ -6,6 +6,7 @@ import {FactoryService} from '@app/services/factory.service';
 import {AdminResult} from '@app/models/admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {BankAccount} from '@app/models/bank-account';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -33,6 +34,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   exportedLicenseSerial!: number;
   licenseVSID!: string;
   subject!: string;
+  internalBankAccountDTO: BankAccount[] = [];
+  selectedBankAccountToMerge!: BankAccount;
   operationTypeInfo!: AdminResult;
   bankCategoryInfo!: AdminResult;
   mainAccountInfo!: AdminResult;
@@ -46,7 +49,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   }
 
   buildBasicInfo(controls: boolean = false): any {
-    const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category, currency, mainAccount, accountNumber, iBan, swiftCode} = this;
+    const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category, currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge} = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -58,7 +61,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       mainAccount: controls ? [mainAccount] : mainAccount,
       accountNumber: controls ? [accountNumber] : accountNumber,
       iBan: controls ? [iBan] : iBan,
-      swiftCode: controls ? [swiftCode] : swiftCode
+      swiftCode: controls ? [swiftCode] : swiftCode,
+      selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge
     }
   }
 
