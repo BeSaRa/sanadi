@@ -77,6 +77,7 @@ export class ShippingApproval extends CaseModel<
   linkedProjectInfo!: AdminResult;
   receiverTypeInfo!: AdminResult;
   receiverNameInfo!: AdminResult;
+  shipmentCarrierInfo!: AdminResult;
   className!: string;
 
   dialog!: DialogService;
