@@ -6,11 +6,11 @@ import { ShippingApprovalService } from "@app/services/shipping-approval.service
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { LangService } from "@app/services/lang.service";
-import { Observable, of } from "rxjs";
+import { Observable, of, Subject } from "rxjs";
 import { LookupService } from "@app/services/lookup.service";
 import { Lookup } from "@app/models/lookup";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { filter, takeUntil, tap } from "rxjs/operators";
+import { catchError, exhaustMap, filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import { ReceiverTypes } from "@app/enums/receiver-type.enum";
 import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -24,6 +24,7 @@ import { OpenFrom } from "@app/enums/open-from.enum";
 import { EmployeeService } from "@app/services/employee.service";
 import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
+import { CustomsExemptionRemittanceService } from "@app/services/customs-exemption-remittance.service";
 
 @Component({
   selector: "shipping-approval",
@@ -36,6 +37,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 > {
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
+  documentSearchByOrderNo$: Subject<string> = new Subject<string>();
+  documentSearchByDocNo$: Subject<string> = new Subject<string>();
 
   constructor(
     public lang: LangService,
@@ -46,7 +49,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     private toast: ToastService,
     private countryService: CountryService,
     private agencyService: AgencyService,
-    public employeeService: EmployeeService
+    public employeeService: EmployeeService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService
   ) {
     super();
   }
@@ -116,6 +120,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   _initComponent(): void {
     this.loadCountries();
+    this.listenToDocumentSearchByOrderNo();
+    this.listenToDocumentSearchByDocNo();
   }
 
   private loadCountries(): void {
@@ -295,22 +301,100 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.model = this._getNewInstance();
   }
 
-  documentSearch($event: Event, searchByOrderNumber: boolean): void {
+  documentSearchByOrderNo($event: Event): void {
     $event?.preventDefault();
-    let searchCriteria: Partial<ShippingApprovalSearchCriteria> = {};
-    if (this.fullSerial.value && searchByOrderNumber) {
-      searchCriteria.fullSerial =
-        this.fullSerial.value && this.fullSerial.value.trim();
-    }
-    if (this.exportedBookFullSerial.value && !searchByOrderNumber) {
-      searchCriteria.exportedBookFullSerial =
-        this.exportedBookFullSerial.value &&
-        this.exportedBookFullSerial.value.trim();
-    }
-    this.service
-      .documentSearch(searchCriteria)
-      .subscribe((shippingApproval: ShippingApproval[]) => {
-        console.log(shippingApproval);
+    const value = this.fullSerial.value && this.fullSerial.value.trim();
+    this.documentSearchByOrderNo$.next(value);
+  }
+
+  documentSearchByDocNo($event: Event): void {
+    $event?.preventDefault();
+    const value =
+      this.exportedBookFullSerial.value &&
+      this.exportedBookFullSerial.value.trim();
+    this.documentSearchByDocNo$.next(value);
+  }
+
+  loadDocumentsByCriteria(
+    criteria: Partial<ShippingApprovalSearchCriteria>
+  ): Observable<ShippingApproval[]> {
+    return this.service.documentSearch(criteria);
+  }
+
+  private listenToDocumentSearchByOrderNo() {
+    this.documentSearchByOrderNo$
+      .pipe(
+        exhaustMap((fullSerial) => {
+          return this.loadDocumentsByCriteria({
+            fullSerial: fullSerial,
+          }).pipe(catchError(() => of([])));
+        })
+      )
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) =>
+          !list.length
+            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            : null
+        ),
+        // allow only the collection if it has value
+        filter((result) => !!result.length),
+        // switch to the dialog ref to use it later and catch the user response
+        // switchMap(
+        //   (documents) =>
+        //     this.customsExemptionRemittanceService.openSelectDocumentDialog(
+        //       documents,
+        //       this.model?.clone({ requestType: this.requestType.value || null })
+        //     ).onAfterClose$
+        // ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((selection) => {
+        this.setSelectedDocument(selection[0]);
       });
+  }
+
+  private listenToDocumentSearchByDocNo() {
+    this.documentSearchByDocNo$
+      .pipe(
+        exhaustMap((exportedBookFullSerial) => {
+          return this.loadDocumentsByCriteria({
+            exportedBookFullSerial: exportedBookFullSerial,
+          }).pipe(catchError(() => of([])));
+        })
+      )
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) =>
+          !list.length
+            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            : null
+        ),
+        // allow only the collection if it has value
+        filter((result) => !!result.length),
+
+        takeUntil(this.destroy$)
+      )
+      .subscribe((selection) => {
+        this.setSelectedDocument(selection[0]);
+      });
+  }
+
+  setSelectedDocument(documentDetails: ShippingApproval | undefined) {
+    // update form fields if i have document
+    let value: any = new ShippingApproval().clone(documentDetails);
+    value.requestType = this.requestType.value;
+    value.shipmentSource = documentDetails?.shipmentSourceInfo.lookupKey;
+    value.shipmentCarrier = documentDetails?.shipmentCarrierInfo.lookupKey;
+    value.linkedProject = documentDetails?.linkedProjectInfo.lookupKey;
+    value.receiverType = documentDetails?.receiverTypeInfo.lookupKey;
+    value.projectLicense = documentDetails?.projectLicense;
+    value.projectName = documentDetails?.projectName;
+    value.otherReceiverName = documentDetails?.otherReceiverName;
+    value.country = documentDetails?.countryInfo.id;
+
+    delete value.id;
+
+    this._updateForm(value);
   }
 }

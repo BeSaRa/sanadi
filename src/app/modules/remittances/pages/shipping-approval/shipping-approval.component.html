@@ -25,10 +25,10 @@
                     <label class="form-label" asteriskIfRequired="fullSerial"
                         for="fullSerial">{{lang.map.order_number}}</label>
                     <div class="input-group">
-                        <input (keydown.enter)="isCancelRequestType() && documentSearch($event,true)" formControlName="fullSerial"
+                        <input (keydown.enter)="isCancelRequestType() && documentSearchByOrderNo($event)" formControlName="fullSerial"
                             trimInput type="text" [readonly]="!isCancelRequestType()" validationClasses="fullSerial"
                             [onlyInvalid]="false" class="form-control" id="fullSerial">
-                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearch($event,true)"
+                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearchByOrderNo($event)"
                             class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                     </div>
                 </div>
@@ -37,11 +37,11 @@
                     <label class="form-label" asteriskIfRequired="exportedBookFullSerial"
                         for="exportedBookFullSerial">{{lang.map.document_number}}</label>
                     <div class="input-group">
-                        <input (keydown.enter)="isCancelRequestType() && documentSearch($event,false)"
+                        <input (keydown.enter)="isCancelRequestType() && documentSearchByDocNo($event)"
                             formControlName="exportedBookFullSerial" trimInput type="text"
                             [readonly]="!isCancelRequestType()" validationClasses="exportedBookFullSerial"
                             [onlyInvalid]="false" class="form-control" id="exportedBookFullSerial">
-                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearch($event,false)"
+                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearchByDocNo($event)"
                             class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                     </div>
                 </div>

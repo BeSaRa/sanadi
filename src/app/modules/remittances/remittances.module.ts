@@ -5,9 +5,10 @@ import { ShippingApprovalComponent } from "./pages/shipping-approval/shipping-ap
 import { RemittanceComponent } from "./remittance.component";
 import { SharedModule } from "@app/shared/shared.module";
 import { ShippingApproveTaskPopUpComponent } from './popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component';
+import { SelectDocumentPopUpComponent } from './popups/select-document-pop-up/select-document-pop-up.component';
 
 @NgModule({
-  declarations: [ShippingApprovalComponent, RemittanceComponent, ShippingApproveTaskPopUpComponent],
-  imports: [CommonModule, RemittancesRoutingModule, SharedModule],
+  declarations: [ShippingApprovalComponent, RemittanceComponent, ShippingApproveTaskPopUpComponent, SelectDocumentPopUpComponent],
+  imports: [CommonModule, RemittancesRoutingModule, SharedModule]
 })
 export class RemittancesModule {}
