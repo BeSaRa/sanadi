@@ -7,10 +7,16 @@ export class ShippingApprovalInterceptor
 {
   send(model: Partial<ShippingApproval>): Partial<ShippingApproval> {
     delete model.requestTypeInfo;
+    delete model.shipmentSourceInfo;
+    delete model.shipmentCarrierInfo;
+    delete model.receiverNameInfo;
     return model;
   }
   receive(model: ShippingApproval): ShippingApproval {
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
+    model.shipmentSourceInfo = AdminResult.createInstance(model.shipmentSourceInfo);
+    model.shipmentCarrierInfo = AdminResult.createInstance(model.shipmentCarrierInfo);
+    model.receiverNameInfo = AdminResult.createInstance(model.receiverNameInfo);
     return model;
   }
 }

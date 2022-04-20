@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  please_select_document_to_complete_save: string;
+  document: string;
+  select_document: string;
   need_alteast_one_of_order_number_or_document_number_to_search: string;
   order_number: string;
   document_number: string;

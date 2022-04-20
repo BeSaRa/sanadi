@@ -14,11 +14,14 @@ import { TaskDetails } from "./task-details";
 import { DialogService } from "@app/services/dialog.service";
 import { ShippingApproveTaskPopUpComponent } from "@app/modules/remittances/popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component";
 import { DateUtils } from "@app/helpers/date-utils";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { HasRequestType } from "@app/interfaces/has-request-type";
+const _ApprovalDocument = mixinRequestType(CaseModel);
 
-export class ShippingApproval extends CaseModel<
+export class ShippingApproval extends _ApprovalDocument<
   ShippingApprovalService,
   ShippingApproval
-> {
+> implements HasRequestType {
   service: ShippingApprovalService;
   id!: string;
   createdOn!: string;

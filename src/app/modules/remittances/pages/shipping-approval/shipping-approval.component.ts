@@ -10,7 +10,7 @@ import { Observable, of, Subject } from "rxjs";
 import { LookupService } from "@app/services/lookup.service";
 import { Lookup } from "@app/models/lookup";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { catchError, exhaustMap, filter, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { ReceiverTypes } from "@app/enums/receiver-type.enum";
 import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -25,6 +25,7 @@ import { EmployeeService } from "@app/services/employee.service";
 import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { CustomsExemptionRemittanceService } from "@app/services/customs-exemption-remittance.service";
+import { CommonUtils } from "@app/helpers/common-utils";
 
 @Component({
   selector: "shipping-approval",
@@ -39,6 +40,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   fileIconsEnum = FileIconsEnum;
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
   documentSearchByDocNo$: Subject<string> = new Subject<string>();
+  selectedDocument?: ShippingApproval;
+
 
   constructor(
     public lang: LangService,
@@ -114,6 +117,16 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
 
+  isEditOrderNoAndDocNoAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed =
+      !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return (
+      isAllowed &&
+      CommonUtils.isValidValue(this.requestType.value) &&
+      this.requestType.value !== ServiceRequestTypes.NEW
+    );
+  }
   _getNewInstance(): ShippingApproval {
     return new ShippingApproval();
   }
@@ -239,9 +252,17 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return of(this.form.valid)
-      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
-      .pipe(filter((valid) => valid));
+    if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedDocument) {
+      this.dialog.error(this.lang.map.please_select_document_to_complete_save);
+      return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return true;
+      }
+      return of(this.form.valid)
+        .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+        .pipe(filter((valid) => valid));
+    }
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
@@ -254,11 +275,10 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): ShippingApproval | Observable<ShippingApproval> {
-    const model = new ShippingApproval().clone({
+    return new ShippingApproval().clone({
       ...this.model,
       ...this.form.getRawValue(),
     });
-    return model;
   }
   _afterSave(
     model: ShippingApproval,
@@ -323,64 +343,65 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   private listenToDocumentSearchByOrderNo() {
     this.documentSearchByOrderNo$
-      .pipe(
-        exhaustMap((fullSerial) => {
-          return this.loadDocumentsByCriteria({
-            fullSerial: fullSerial,
-          }).pipe(catchError(() => of([])));
-        })
-      )
-      .pipe(
-        // display message in case there is no returned license
-        tap((list) =>
-          !list.length
-            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-            : null
-        ),
-        // allow only the collection if it has value
-        filter((result) => !!result.length),
-        // switch to the dialog ref to use it later and catch the user response
-        // switchMap(
-        //   (documents) =>
-        //     this.customsExemptionRemittanceService.openSelectDocumentDialog(
-        //       documents,
-        //       this.model?.clone({ requestType: this.requestType.value || null })
-        //     ).onAfterClose$
-        // ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((selection) => {
-        this.setSelectedDocument(selection[0]);
-      });
+    .pipe(takeUntil(this.destroy$))
+    .pipe(
+      exhaustMap((fullSerial) => {
+        return this.loadDocumentsByCriteria({fullSerial: fullSerial})
+          .pipe(catchError(() => of([])));
+      })
+    )
+    .pipe(
+      // display message in case there is no returned license
+      tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+      // allow only the collection if it has value
+      filter((result) => !!result.length)
+    )
+    .pipe(exhaustMap((documents) => {
+      return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
+    }))
+    .pipe(filter((info): info is ShippingApproval => !!info))
+    .subscribe((document) => {
+      this.setSelectedDocument(document, false);
+    });
   }
 
   private listenToDocumentSearchByDocNo() {
     this.documentSearchByDocNo$
-      .pipe(
-        exhaustMap((exportedBookFullSerial) => {
-          return this.loadDocumentsByCriteria({
-            exportedBookFullSerial: exportedBookFullSerial,
-          }).pipe(catchError(() => of([])));
-        })
-      )
-      .pipe(
-        // display message in case there is no returned license
-        tap((list) =>
-          !list.length
-            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-            : null
-        ),
-        // allow only the collection if it has value
-        filter((result) => !!result.length),
-
-        takeUntil(this.destroy$)
-      )
-      .subscribe((selection) => {
-        this.setSelectedDocument(selection[0]);
-      });
+    .pipe(takeUntil(this.destroy$))
+    .pipe(
+      exhaustMap((exportedBookFullSerial) => {
+        return this.loadDocumentsByCriteria({exportedBookFullSerial: exportedBookFullSerial})
+          .pipe(catchError(() => of([])));
+      })
+    )
+    .pipe(
+      // display message in case there is no returned license
+      tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+      // allow only the collection if it has value
+      filter((result) => !!result.length)
+    )
+    .pipe(exhaustMap((documents) => {
+      return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
+    }))
+    .pipe(filter((info): info is ShippingApproval => !!info))
+    .subscribe((document) => {
+      this.setSelectedDocument(document, false);
+    });
   }
 
-  setSelectedDocument(documentDetails: ShippingApproval | undefined) {
+  private validateSingleDocument(document: ShippingApproval): Observable<undefined | ShippingApproval> {
+    return this.customsExemptionRemittanceService.validateDocumentByRequestType<ShippingApproval>(this.model!.caseType, this.requestType.value, document.id) as Observable<undefined | ShippingApproval>
+  }
+
+  private openSelectDocument(documents: ShippingApproval[]): Observable<undefined | ShippingApproval> {
+    return this.customsExemptionRemittanceService.openSelectDocumentDialog(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
+      .onAfterClose$
+      .pipe(map((result: ({ selected: ShippingApproval, details: ShippingApproval } | undefined)) => result ? result.details : result))
+  }
+
+  setSelectedDocument(documentDetails: ShippingApproval | undefined,ignoreUpdateForm: boolean) {
+    this.selectedDocument = documentDetails;
+    if (documentDetails && !ignoreUpdateForm) {
     // update form fields if i have document
     let value: any = new ShippingApproval().clone(documentDetails);
     value.requestType = this.requestType.value;
@@ -388,5 +409,6 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     delete value.id;
 
     this._updateForm(value);
+    }
   }
 }

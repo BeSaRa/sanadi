@@ -5,12 +5,13 @@ import { ShippingApprovalInterceptor } from "@app/model-interceptors/shipping-ap
 import { ShippingApproval } from "@app/models/shipping-approval";
 import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { DialogService } from "./dialog.service";
 import { EmployeeService } from "./employee.service";
 import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
 import {SelectDocumentPopUpComponent} from "@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component";
+import { CaseTypes } from "@app/enums/case-types.enum";
 
 @Injectable({
   providedIn: "root",
@@ -55,6 +56,36 @@ export class CustomsExemptionRemittanceService {
       select,
       caseRecord,
       displayedColumns,
+    });
+  }
+
+  getServiceUrlByCaseType(caseType: number) {
+    let url: string = '';
+    switch (caseType) {
+      case CaseTypes.SHIPPING_APPROVAL:
+        url = this.urlService.URLS.CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES;
+        break;
+    }
+    return url;
+  } 
+
+
+validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, documentId: string): Observable<T | undefined | ShippingApproval> {
+    if (caseType === CaseTypes.SHIPPING_APPROVAL) {
+      return this._validateShippingApprovalDocumentByRequestType(requestType, documentId);
+    }
+    return of(undefined);
+  }
+
+
+@Generator(ShippingApproval, false, {
+    property: 'rs',
+    interceptReceive: (new ShippingApprovalInterceptor()).receive
+  })
+  _validateShippingApprovalDocumentByRequestType(requestType: number, oldDocumentId: string): Observable<ShippingApproval> {
+    return this.http.post<ShippingApproval>(this.getServiceUrlByCaseType(CaseTypes.SHIPPING_APPROVAL) + '/draft/validate', {
+      requestType,
+      oldDocumentId
     });
   }
 }

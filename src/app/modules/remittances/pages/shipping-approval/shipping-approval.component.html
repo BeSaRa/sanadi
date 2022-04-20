@@ -25,10 +25,10 @@
                     <label class="form-label" asteriskIfRequired="fullSerial"
                         for="fullSerial">{{lang.map.order_number}}</label>
                     <div class="input-group">
-                        <input (keydown.enter)="isCancelRequestType() && documentSearchByOrderNo($event)" formControlName="fullSerial"
-                            trimInput type="text" [readonly]="!isCancelRequestType()" validationClasses="fullSerial"
+                        <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByOrderNo($event)" formControlName="fullSerial"
+                            trimInput type="text" [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="fullSerial"
                             [onlyInvalid]="false" class="form-control" id="fullSerial">
-                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearchByOrderNo($event)"
+                        <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByOrderNo($event)"
                             class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                     </div>
                 </div>
@@ -37,11 +37,11 @@
                     <label class="form-label" asteriskIfRequired="exportedBookFullSerial"
                         for="exportedBookFullSerial">{{lang.map.document_number}}</label>
                     <div class="input-group">
-                        <input (keydown.enter)="isCancelRequestType() && documentSearchByDocNo($event)"
+                        <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByDocNo($event)"
                             formControlName="exportedBookFullSerial" trimInput type="text"
-                            [readonly]="!isCancelRequestType()" validationClasses="exportedBookFullSerial"
+                            [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="exportedBookFullSerial"
                             [onlyInvalid]="false" class="form-control" id="exportedBookFullSerial">
-                        <button *ngIf="isCancelRequestType()" type="button" (click)="documentSearchByDocNo($event)"
+                        <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByDocNo($event)"
                             class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
                     </div>
                 </div>
