@@ -41,7 +41,6 @@ export class SelectDocumentPopUpComponent {
       displayedColumns: string[];
     }
   ) {
-    console.log(data.documents)
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.requestType = this.data.caseRecord?.getRequestType();
