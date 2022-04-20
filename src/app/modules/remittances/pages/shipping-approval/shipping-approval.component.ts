@@ -384,14 +384,6 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     // update form fields if i have document
     let value: any = new ShippingApproval().clone(documentDetails);
     value.requestType = this.requestType.value;
-    value.shipmentSource = documentDetails?.shipmentSourceInfo.lookupKey;
-    value.shipmentCarrier = documentDetails?.shipmentCarrierInfo.lookupKey;
-    value.linkedProject = documentDetails?.linkedProjectInfo.lookupKey;
-    value.receiverType = documentDetails?.receiverTypeInfo.lookupKey;
-    value.projectLicense = documentDetails?.projectLicense;
-    value.projectName = documentDetails?.projectName;
-    value.otherReceiverName = documentDetails?.otherReceiverName;
-    value.country = documentDetails?.countryInfo.id;
 
     delete value.id;
 
