@@ -36,7 +36,8 @@ export class SubventionAidPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
   displayedColumns = [
     'approvalDate',
-    'aidLookupId',
+    'requestedAidCategory',
+    'requestedAid',
     'estimatedAmount',
     'periodicType',
     'installmentsCount',
