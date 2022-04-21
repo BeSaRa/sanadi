@@ -12,9 +12,9 @@ export class SubventionRequestAidInterceptor {
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.aids = model.aids.map((aid) => {
       aid.aidLookupInfo = AdminResult.createInstance(aid.aidLookupInfo);
-      if (aid.aidAmount) {
+      // if (aid.aidAmount) {
         model.aidCount += 1;
-      }
+      // }
       return aid;
     });
     model.creationDateString = model.creationDate ? DateUtils.getDateStringFromDate(model.creationDate, 'DEFAULT_DATE_FORMAT') : '';
