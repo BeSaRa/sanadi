@@ -12,7 +12,7 @@ export class BeneficiaryObligation extends SearchableCloneable<BeneficiaryObliga
   benObligationType!: number;
   amount!: number;
   notes!: string;
-  installmentsCount!: number;
+  installmentsCount: number = 0;
 
   updatedBy?: number;
   clientData?: string;

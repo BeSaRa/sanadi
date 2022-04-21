@@ -70,7 +70,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   headerColumn: string[] = ['extra-header'];
-  columns = ['periodicType', 'obligationType', 'amount', 'installmentsCount', 'actions'];
+  columns = ['obligationType', 'amount', 'periodicType', 'installmentsCount', 'actions'];
   obligationTypeList = this.lookupService.listByCategory.BENEFICIARY_OBLIGATION;
   periodicTypeList = this.lookupService.listByCategory.SubAidPeriodicType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;

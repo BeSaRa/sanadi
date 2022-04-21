@@ -68,7 +68,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   headerColumn: string[] = ['extra-header'];
-  columns = ['periodicType', 'incomeType', 'amount', 'actions'];
+  columns = ['incomeType', 'amount', 'periodicType', 'actions'];
   incomeTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME;
   periodicTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;

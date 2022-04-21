@@ -7,6 +7,7 @@ import {Lookup} from '@app/models/lookup';
 export class BeneficiaryObligationInterceptor implements IModelInterceptor<BeneficiaryObligation>{
   receive(model: BeneficiaryObligation): BeneficiaryObligation {
     let lookupService = FactoryService.getService<LookupService>('LookupService');
+    model.installmentsCount = model.installmentsCount || 0;
     model.periodicTypeInfo = lookupService.listByCategory.SubAidPeriodicType.find(x=>x.lookupKey === model.periodicType) || new Lookup();
     model.benObligationTypeInfo = lookupService.listByCategory.BENEFICIARY_OBLIGATION.find(x=>x.lookupKey === model.benObligationType) || new Lookup();
     return model;
