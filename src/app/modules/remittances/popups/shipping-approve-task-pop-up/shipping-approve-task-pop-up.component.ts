@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { ServiceRequestTypes } from "@app/enums/service-request-types";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { DateUtils } from "@app/helpers/date-utils";
@@ -96,6 +97,10 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
         this.dialogRef.close(true);
       });
+  }
+
+  isCancelRequestType(): boolean {
+    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
   }
 
   setFollowUpDateValueInModel(): void {
