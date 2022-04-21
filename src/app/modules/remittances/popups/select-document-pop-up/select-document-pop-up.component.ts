@@ -72,7 +72,7 @@ export class SelectDocumentPopUpComponent {
   }
 
   selectDocument(document:ShippingApproval): void {
-    this.customsExemptionRemittanceService.validateDocumentByRequestType(this.caseType, this.requestType, document.id)
+    this.customsExemptionRemittanceService.validateDocumentByRequestType(this.caseType, this.requestType, document.exportedBookId)
       .subscribe((documentDetails) => {
         if (!documentDetails) {
           return;

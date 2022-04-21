@@ -314,11 +314,13 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     }
     this.model = model;
     this.form.patchValue(model?.buildBasicInfo());
+    this.handleRequestTypeChange(model.requestType, false);
     this.handleReceiverTypeandCountryChange();
   }
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
+    this.setSelectedDocument(undefined, true);
   }
 
   documentSearchByOrderNo($event: Event): void {
@@ -343,72 +345,161 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   private listenToDocumentSearchByOrderNo() {
     this.documentSearchByOrderNo$
-    .pipe(takeUntil(this.destroy$))
-    .pipe(
-      exhaustMap((fullSerial) => {
-        return this.loadDocumentsByCriteria({fullSerial: fullSerial})
-          .pipe(catchError(() => of([])));
-      })
-    )
-    .pipe(
-      // display message in case there is no returned license
-      tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
-      // allow only the collection if it has value
-      filter((result) => !!result.length)
-    )
-    .pipe(exhaustMap((documents) => {
-      return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
-    }))
-    .pipe(filter((info): info is ShippingApproval => !!info))
-    .subscribe((document) => {
-      this.setSelectedDocument(document, false);
-    });
+      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        exhaustMap((fullSerial) => {
+          return this.loadDocumentsByCriteria({ fullSerial: fullSerial }).pipe(
+            catchError(() => of([]))
+          );
+        })
+      )
+      .pipe(
+        // display message in case there is no returned document
+        tap((list) =>
+          !list.length
+            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            : null
+        ),
+        // allow only the collection if it has value
+        filter((result) => !!result.length)
+      )
+      .pipe(
+        exhaustMap((documents) => {
+          return documents.length === 1
+            ? this.validateSingleDocument(documents[0])
+            : this.openSelectDocument(documents);
+        })
+      )
+      .pipe(filter((info): info is ShippingApproval => !!info))
+      .subscribe((document) => {
+        this.setSelectedDocument(document, false);
+      });
   }
 
   private listenToDocumentSearchByDocNo() {
     this.documentSearchByDocNo$
-    .pipe(takeUntil(this.destroy$))
-    .pipe(
-      exhaustMap((exportedBookFullSerial) => {
-        return this.loadDocumentsByCriteria({exportedBookFullSerial: exportedBookFullSerial})
-          .pipe(catchError(() => of([])));
-      })
-    )
-    .pipe(
-      // display message in case there is no returned license
-      tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
-      // allow only the collection if it has value
-      filter((result) => !!result.length)
-    )
-    .pipe(exhaustMap((documents) => {
-      return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
-    }))
-    .pipe(filter((info): info is ShippingApproval => !!info))
-    .subscribe((document) => {
-      this.setSelectedDocument(document, false);
-    });
+      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        exhaustMap((exportedBookFullSerial) => {
+          return this.loadDocumentsByCriteria({
+            exportedBookFullSerial: exportedBookFullSerial,
+          }).pipe(catchError(() => of([])));
+        })
+      )
+      .pipe(
+        // display message in case there is no returned document
+        tap((list) =>
+          !list.length
+            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            : null
+        ),
+        // allow only the collection if it has value
+        filter((result) => !!result.length)
+      )
+      .pipe(
+        exhaustMap((documents) => {
+          return documents.length === 1
+            ? this.validateSingleDocument(documents[0])
+            : this.openSelectDocument(documents);
+        })
+      )
+      .pipe(filter((info): info is ShippingApproval => !!info))
+      .subscribe((document) => {
+        this.setSelectedDocument(document, false);
+      });
   }
 
-  private validateSingleDocument(document: ShippingApproval): Observable<undefined | ShippingApproval> {
-    return this.customsExemptionRemittanceService.validateDocumentByRequestType<ShippingApproval>(this.model!.caseType, this.requestType.value, document.id) as Observable<undefined | ShippingApproval>
+  private validateSingleDocument(
+    document: ShippingApproval
+  ): Observable<undefined | ShippingApproval> {
+    return this.customsExemptionRemittanceService.validateDocumentByRequestType<ShippingApproval>(
+      this.model!.caseType,
+      this.requestType.value,
+      document.exportedBookId
+    ) as Observable<undefined | ShippingApproval>;
   }
 
-  private openSelectDocument(documents: ShippingApproval[]): Observable<undefined | ShippingApproval> {
-    return this.customsExemptionRemittanceService.openSelectDocumentDialog(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
-      .onAfterClose$
-      .pipe(map((result: ({ selected: ShippingApproval, details: ShippingApproval } | undefined)) => result ? result.details : result))
+  private openSelectDocument(
+    documents: ShippingApproval[]
+  ): Observable<undefined | ShippingApproval> {
+    return this.customsExemptionRemittanceService
+      .openSelectDocumentDialog(
+        documents,
+        this.model?.clone({ requestType: this.requestType.value || null }),
+        true,
+        this.service.selectDocumentDisplayColumns
+      )
+      .onAfterClose$.pipe(
+        map(
+          (
+            result:
+              | { selected: ShippingApproval; details: ShippingApproval }
+              | undefined
+          ) => (result ? result.details : result)
+        )
+      );
   }
 
-  setSelectedDocument(documentDetails: ShippingApproval | undefined,ignoreUpdateForm: boolean) {
+  setSelectedDocument(
+    documentDetails: ShippingApproval | undefined,
+    ignoreUpdateForm: boolean
+  ) {
     this.selectedDocument = documentDetails;
     if (documentDetails && !ignoreUpdateForm) {
-    // update form fields if i have document
-    let value: any = new ShippingApproval().clone(documentDetails);
-    value.requestType = this.requestType.value;
+      // update form fields if i have document
+      let value: any = new ShippingApproval().clone(documentDetails);
+      value.requestType = this.requestType.value;
 
-    delete value.id;
+      delete value.id;
 
-    this._updateForm(value);
+      this._updateForm(value);
     }
+  }
+
+  handleRequestTypeChange(
+    requestTypeValue: number,
+    userInteraction: boolean = false
+  ): void {
+    if (userInteraction) {
+      this._resetForm();
+      this.requestType.setValue(requestTypeValue);
+    }
+    if (!requestTypeValue) {
+      requestTypeValue = this.requestType && this.requestType.value;
+    }
+
+    // if no requestType or (requestType = new)
+    // if new record or draft, reset order no and document no and its validations
+    // also reset the values in model
+    if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+      if (!this.model?.id || this.model.canCommit()) {
+        this.fullSerial.reset();
+        this.fullSerial.setValidators([]);
+        this.exportedBookFullSerial.reset();
+        this.exportedBookFullSerial.setValidators([]);
+        this.setSelectedDocument(undefined, true);
+      }
+    } else {
+      this.fullSerial.setValidators([
+        CustomValidators.required,
+        (control) => {
+          return this.selectedDocument &&
+            this.selectedDocument?.fullSerial === control.value
+            ? null
+            : { select_document: true };
+        },
+      ]);
+      this.exportedBookFullSerial.setValidators([
+        CustomValidators.required,
+        (control) => {
+          return this.selectedDocument &&
+            this.selectedDocument?.exportedBookFullSerial === control.value
+            ? null
+            : { select_document: true };
+        },
+      ]);
+    }
+    this.fullSerial.updateValueAndValidity();
+    this.exportedBookFullSerial.updateValueAndValidity();
   }
 }

@@ -70,9 +70,9 @@ export class CustomsExemptionRemittanceService {
   } 
 
 
-validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, documentId: string): Observable<T | undefined | ShippingApproval> {
+validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, exportedBookId: string): Observable<T | undefined | ShippingApproval> {
     if (caseType === CaseTypes.SHIPPING_APPROVAL) {
-      return this._validateShippingApprovalDocumentByRequestType(requestType, documentId);
+      return this._validateShippingApprovalDocumentByRequestType(requestType, exportedBookId);
     }
     return of(undefined);
   }
@@ -82,10 +82,10 @@ validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, docum
     property: 'rs',
     interceptReceive: (new ShippingApprovalInterceptor()).receive
   })
-  _validateShippingApprovalDocumentByRequestType(requestType: number, oldDocumentId: string): Observable<ShippingApproval> {
+  _validateShippingApprovalDocumentByRequestType(requestType: number, exportedBookId: string): Observable<ShippingApproval> {
     return this.http.post<ShippingApproval>(this.getServiceUrlByCaseType(CaseTypes.SHIPPING_APPROVAL) + '/draft/validate', {
       requestType,
-      oldDocumentId
+      exportedBookId
     });
   }
 }

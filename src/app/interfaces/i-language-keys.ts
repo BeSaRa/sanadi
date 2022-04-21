@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  err_missing_document: string;
   please_select_document_to_complete_save: string;
   document: string;
   select_document: string;

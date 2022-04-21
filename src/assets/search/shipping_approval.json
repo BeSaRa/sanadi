@@ -43,7 +43,7 @@
           "label": "lbl_status",
           "selectOptions": {
             "options": [],
-            "loader": "lookup.FundRaisingStatus",
+            "loader": "lookup.CustomsExemptionStatus",
             "bindValue": "lookupKey",
             "bindLabel": "basedOnLanguage"
           }
