@@ -123,6 +123,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToSavePartialRequest();
     this.listenToSaveAid();
     this.listenToAddAid();
+    this.listenToReloadAids();
     this.listenToNationalityChange();
     this.listenToPrimaryIdTypeChange();
     this.listenToSecondaryIdTypeChange();
@@ -162,6 +163,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentBeneficiary?: Beneficiary;
   private currentAid?: SubventionAid;
   addAid$: Subject<any> = new Subject<any>();
+  reloadAid$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   currentRequest?: SubventionRequest;
   subventionAidList: SubventionAid[] = [];
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
@@ -1047,29 +1049,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!subventionAid) {
         return;
       }
-      let message: string,
-        requestedAidCategory = this.mainAidLookupsList.find(x => x.id === subventionAid.aidLookupParentId),
-        requestedAid = this.subAidLookupsList.find(x => x.id === subventionAid.aidLookupId),
-      periodicType = this.lookup.listByCategory.SubAidPeriodicType.find(x => x.lookupKey === subventionAid.periodicType);
-
-      let savedRecord = (subventionAid as SubventionAid).clone({
-        aidLookupParentInfo: requestedAidCategory ? requestedAidCategory.convertToAdminResult() : new AdminResult(),
-        aidLookupInfo: requestedAid ? requestedAid.convertToAdminResult() : new AdminResult(),
-        periodicTypeInfo: periodicType ? periodicType.convertToAdminResult() : new AdminResult()
-      });
+      let message: string;
 
       if (!this.editAidItem) {
-        this.subventionAidList.push(savedRecord);
         message = this.langService.map.msg_aid_added_successfully;
       } else {
-        let index = this.subventionAidList.findIndex(x => x === this.editAidItem);
-        this.subventionAidList.splice(index, 1, savedRecord);
         this.editAidItem = undefined;
         message = this.langService.map.msg_aid_updated_successfully;
       }
       this.toastService.success(message);
-      this.subventionAidList = this.subventionAidList.slice();
-      this.subventionAidDataSource.next(this.subventionAidList);
+      this.reloadAid$.next(null);
       this.aidChanged$.next(null);
     });
   }
@@ -1288,15 +1277,24 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.aidChanged$.next(row);
   }
 
-  getPeriodicityLookup(lookupKey: number): Lookup {
-    return this.periodicityLookups[lookupKey];
-  }
-
   private listenToAddAid() {
     this.addAid$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.aidChanged$.next(new SubventionAid());
       });
+  }
+
+  private listenToReloadAids() {
+    this.reloadAid$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init' && !!this.currentRequest && !!this.currentRequest.id),
+      switchMap(() => {
+        return this.subventionAidService.loadByCriteria({requestId: this.currentRequest!.id});
+      })
+    ).subscribe((result) => {
+      this.subventionAidList = result;
+      this.subventionAidDataSource.next(this.subventionAidList);
+    });
   }
 
   private loadMainAidLookups() {

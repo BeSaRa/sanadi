@@ -1024,6 +1024,7 @@
                   <table-header tableTitle="provided_aid"
                                 [sort]="aidsTable.dataSource.sort"
                                 (textChange)="aidFilterControl.setValue($event)"
+                                [reload$]="reloadAid$"
                                 [add$]="addAid$" [allowAdd]="addAidAllowed() && (aidFormArray.controls.length === 0)">
                   </table-header>
                 </th>
