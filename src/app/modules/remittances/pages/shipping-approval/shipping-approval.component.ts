@@ -470,7 +470,6 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
     // if no requestType or (requestType = new)
     // if new record or draft, reset order no and document no and its validations
-    // also reset the values in model
     if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
       if (!this.model?.id || this.model.canCommit()) {
         this.fullSerial.reset();

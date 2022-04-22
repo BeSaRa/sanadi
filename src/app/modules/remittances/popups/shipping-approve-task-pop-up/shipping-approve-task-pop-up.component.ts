@@ -8,13 +8,15 @@ import { IKeyValue } from "@app/interfaces/i-key-value";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { IWFResponse } from "@app/interfaces/i-w-f-response";
 import { ShippingApproval } from "@app/models/shipping-approval";
+import { DialogService } from "@app/services/dialog.service";
 import { InboxService } from "@app/services/inbox.service";
 import { LangService } from "@app/services/lang.service";
 import { ToastService } from "@app/services/toast.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
+import { CustomValidators } from "@app/validators/custom-validators";
 import { Subject } from "rxjs";
-import { exhaustMap, switchMap, takeUntil, tap } from "rxjs/operators";
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 
 @Component({
   selector: "shipping-approve-task-pop-up",
@@ -29,7 +31,7 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: ShippingApproval;
-  comment: FormControl = new FormControl();
+  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   form!: FormGroup;
 
   datepickerOptionsMap: IKeyValue = {
@@ -37,6 +39,7 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   };
 
   constructor(
+    private dialog: DialogService,
     private fb: FormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -57,7 +60,12 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.listenToAction();
-    this.setFollowUpDateIfExists();
+    if(!this.isCancelRequestType()){
+      this.setFollowUpDateIfExists();
+    }
+    if (this.isCommentRequired()) {
+      this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+    }
   }
 
   setFollowUpDateIfExists() {
@@ -82,6 +90,9 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
+      .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
+      .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
+      .pipe(filter(invalid => !invalid))
       .pipe(tap((_) => this.setFollowUpDateValueInModel()))
       .pipe(exhaustMap((_) => this.model.save()))
       .pipe(
@@ -103,7 +114,14 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
     return this.data.model.requestType === ServiceRequestTypes.CANCEL;
   }
 
+  private isCommentRequired(): boolean {
+    return this.isCancelRequestType();
+  }
+
   setFollowUpDateValueInModel(): void {
+    if(this.isCancelRequestType()){
+     return;
+    }
     const form = { ...this.form.getRawValue() };
     if (!form.followUpDate) {
       return;
