@@ -187,7 +187,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       label: 'btn_edit',
       onClick: (item: SubventionAid) => this.editAid(item),
       disabled: (item: SubventionAid) => {
-        return this.readOnly || (this.isPartialRequest && !!this.currentRequest && !this.currentRequest.isUnderProcessing());
+        return this.readOnly || (!!this.currentRequest && this.isPartialRequest && !this.currentRequest.isUnderProcessing());
       }
     },
     // delete
@@ -226,7 +226,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  actionIconsEnum = ActionIconsEnum;
   fileExtensionsEnum = FileExtensionsEnum;
 
   aidApprovalDateSub!: Subscription;
@@ -476,13 +475,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       requestInfo?.patchValue(request.getInfoFields());
 
       this.loadSubAidLookups(request.aidLookupParentId);
+      this.disableDataSharingField?.disable();
 
       if (request.isPartial) {
+        this.readOnly = !request.isUnderProcessing();
         this.displayFormValidity();
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
-          this.disableDataSharingField?.disable();
           if (this.readOnly) {
             this.allowCompletionField?.disable();
           }

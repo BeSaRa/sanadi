@@ -476,79 +476,6 @@
                           (readyEvent)="beneficiaryObligationsStatus = $event">
       </beneficiary-income>
     </div>
-    <!--<div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="extraIncome"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncome')"
-                   formControlName="benExtraIncome" class="form-control" id="extraIncome"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('incomeTab.benExtraIncome')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="extraIncomeSource"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.extra_income_source}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="100" [ngClass]="fm.getStatusClass('incomeTab.benExtraIncomeSource')"
-                   formControlName="benExtraIncomeSource" id="extraIncomeSource" class="form-control" type="text"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('incomeTab.benExtraIncomeSource')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="totalDebts" class="col-sm-12 col-md-4 col-form-label">{{langService.map.total_debts}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalDebts')" id="totalDebts"
-                   formControlName="totalDebts" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('incomeTab.totalDebts')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="totalInstalments"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.totalInstalments')" id="totalInstalments"
-                   formControlName="totalInstalments" class="form-control" type="text"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('incomeTab.totalInstalments')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="monthlyRent"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.monthly_rent}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <input maxlength="20" [ngClass]="fm.getStatusClass('incomeTab.benHouseRent')" id="monthlyRent"
-                   formControlName="benHouseRent" class="form-control"
-                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   [readOnly]="readOnly || isPartialRequest">
-            <app-field-error-message
-              [control]="fm.getFormField('incomeTab.benHouseRent')"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-    </div>-->
   </ng-template>
   <!-- address Tab  -->
   <ng-template formGroupName="addressTab" #address>
@@ -1079,7 +1006,7 @@
               <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
                 <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                  <grid-actions [record]="row" [actions]="aidsActions"></grid-actions>
+                  <grid-actions [record]="row" [actions]="aidsActions" [itemIndex]="i"></grid-actions>
                 </td>
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
