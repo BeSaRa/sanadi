@@ -933,4 +933,5 @@ export interface ILanguageKeys {
   BENEIFICARY_NDA_RECENT_AID_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_PERIODIC_AIDS_EXISTING: string; // don't change this as it is mapped to BE response
   msg_license_duration_diff_between_x_and_y_months: string;
+  total_income: string;
 }

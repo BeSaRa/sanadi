@@ -96,10 +96,23 @@
                 <grid-actions [record]="row" [actions]="actions"></grid-actions>
               </td>
             </ng-container>
+
+            <ng-container cdkColumnDef="totalIncomeLabel">
+              <td cdk-footer-cell [colSpan]="table.columns.length - 2" class="text-end" *cdkFooterCellDef="let row">
+                <span><b> {{lang.map.total_income}}: </b></span>
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="totalIncome">
+              <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
+                <span><b>{{!beneficiary ? 0 : (beneficiary.benTotalIncome || 0)}}</b></span>
+              </td>
+            </ng-container>
+
             <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
             <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
                 (contextmenu)="menu.open($event , row)"></tr>
+            <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!beneficiary || !beneficiary.id"></tr>
             <tr *cdkNoDataRow>
               <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
             </tr>

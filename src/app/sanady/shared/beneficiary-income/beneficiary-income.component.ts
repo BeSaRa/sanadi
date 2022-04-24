@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
@@ -15,6 +15,8 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {Beneficiary} from '@app/models/beneficiary';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'beneficiary-income',
@@ -51,9 +53,11 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   form!: FormGroup;
+  @ViewChild('table') table!: TableComponent;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
+  @Input() beneficiary?: Beneficiary;
 
   // @Input() list: BeneficiaryIncome[] = [];
   private _list: BehaviorSubject<any> = new BehaviorSubject<any>([]);
@@ -69,10 +73,10 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
 
   headerColumn: string[] = ['extra-header'];
   columns = ['incomeType', 'amount', 'periodicType', 'actions'];
+  footerColumns: string[] = ['totalIncomeLabel', 'totalIncome'];
   incomeTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME;
   periodicTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  actionIconsEnum = ActionIconsEnum;
   filterControl: FormControl = new FormControl('');
   viewOnly: boolean = false;
   customValidators = CustomValidators;

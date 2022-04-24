@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
 import {ReadinessStatus} from '@app/types/types';
@@ -16,6 +16,8 @@ import {ToastService} from '@app/services/toast.service';
 import {Lookup} from '@app/models/lookup';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {Beneficiary} from '@app/models/beneficiary';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'beneficiary-obligation',
@@ -52,9 +54,11 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   form!: FormGroup;
+  @ViewChild('table') table!: TableComponent;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
+  @Input() beneficiary?: Beneficiary;
 
   // @Input() list: BeneficiaryObligation[] = [];
 
@@ -71,10 +75,10 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
 
   headerColumn: string[] = ['extra-header'];
   columns = ['obligationType', 'amount', 'periodicType', 'installmentsCount', 'actions'];
+  footerColumns: string[] = ['totalDebtsLabel', 'totalDebts'];
   obligationTypeList = this.lookupService.listByCategory.BENEFICIARY_OBLIGATION;
   periodicTypeList = this.lookupService.listByCategory.SubAidPeriodicType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  actionIconsEnum = ActionIconsEnum;
   filterControl: FormControl = new FormControl('');
   viewOnly: boolean = false;
   customValidators = CustomValidators;

@@ -62,6 +62,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNotes!: string;
   familyCount!: number;
   disableDataSharing!: boolean;
+  benTotalDebts: number = 0;
+  benTotalIncome: number = 0;
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
   beneficiaryIncomeSet: BeneficiaryIncome[] = [];
 

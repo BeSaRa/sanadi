@@ -462,6 +462,7 @@
     <hr class="mt-0">
     <div>
       <beneficiary-obligation #beneficiaryObligations
+                              [beneficiary]="currentBeneficiary"
                               [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryObligationSet"
                               [readonly]="readOnly || isPartialRequest"
                               (readyEvent)="beneficiaryObligationsStatus = $event">
@@ -471,6 +472,7 @@
     <hr class="mt-0">
     <div>
       <beneficiary-income #beneficiaryIncomes
+                          [beneficiary]="currentBeneficiary"
                           [list]="!currentBeneficiary ? [] : currentBeneficiary.beneficiaryIncomeSet"
                           [readonly]="readOnly || isPartialRequest"
                           (readyEvent)="beneficiaryObligationsStatus = $event">
