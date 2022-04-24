@@ -40,6 +40,15 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
     return this._loadByCriteria(criteria);
   }
 
+  @SendInterceptor()
+  private _loadByCriteriaAsBlob(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+    return this.http.post(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria/export', criteria, {responseType: 'blob'})
+  }
+
+  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+    return this._loadByCriteriaAsBlob(criteria);
+  }
+
   _getModel() {
     return SubventionRequestAid;
   }

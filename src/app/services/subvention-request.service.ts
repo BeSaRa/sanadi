@@ -67,11 +67,6 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return SubventionRequestInterceptor.receive;
   }
 
-  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
-    criteria.lang = this.langService.getPrintingLanguage();
-    return this.http.post(this._getServiceURL() + '/criteria/export', criteria, {responseType: 'blob'});
-  }
-
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
     return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export?lang=' + this.langService.getPrintingLanguage(), {responseType: 'blob'});
   }
@@ -86,6 +81,11 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   loadByCriteria(criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.subventionRequestAidService.loadByCriteria(criteria);
+  }
+
+  loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+    criteria.lang = this.langService.getPrintingLanguage();
+    return this.subventionRequestAidService.loadByCriteriaAsBlob(criteria);
   }
 
   @Generator(undefined, true, {property: 'rs'})
