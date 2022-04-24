@@ -43,6 +43,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   destroy$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
+  view$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
   remove$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem; index: number }>();
   save$: Subject<null> = new Subject<null>();
 
@@ -57,8 +58,17 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   datepickerOptionsMap: DatepickerOptionsMap = {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
   };
+  viewOnly: boolean = false;
 
   actions: IMenuItem<CollectionItem>[] = [
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: CollectionItem, index: number) => this.view$.next({item: item, index: index}),
+      show: (item: CollectionItem) => !this.approvalMode && this.readOnly
+    },
     // edit
     {
       type: 'action',
@@ -146,6 +156,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.buildForm();
     this.listenToAdd();
     this.listenToEdit();
+    this.listenToView();
     this.listenToRemove();
     this.listenToSave();
     this.listenToDisableSearchField();
@@ -167,10 +178,13 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   private listenToAdd() {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap(_ => this.item = new CollectionItem().clone<CollectionItem>({
-        licenseDurationType: this.model.licenseDurationType,
-        requestClassification: this.model.requestClassification
-      })))
+      .pipe(tap(_ => {
+        this.item = new CollectionItem().clone<CollectionItem>({
+          licenseDurationType: this.model.licenseDurationType,
+          requestClassification: this.model.requestClassification
+        });
+        this.viewOnly = false;
+      }))
       .subscribe(() => this.formOpenedStatus.emit(true))
   }
 
@@ -181,6 +195,18 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         // always add one here to the selected index to avoid the if condition while process save
         this.editIndex = (++info.index);
         this.item = info.item;
+        this.viewOnly = false;
+        this.updateForm(this.item);
+      }))
+      .subscribe(() => this.formOpenedStatus.emit(true))
+  }
+
+  private listenToView() {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(info => {
+        this.item = info.item;
+        this.viewOnly = true;
         this.updateForm(this.item);
       }))
       .subscribe(() => this.formOpenedStatus.emit(true))
@@ -327,12 +353,13 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   cancel(): void {
     this.item = undefined;
     this.editIndex = undefined;
+    this.viewOnly = false;
     this.resetForm();
     this.formOpenedStatus.emit(false);
   }
 
   openMapMarker() {
-    (this.item!).openMap(this.isExtendOrCancelRequestType() || this.readOnly)
+    (this.item!).openMap(this.isExtendOrCancelRequestType() || this.readOnly || this.viewOnly)
       .onAfterClose$
       .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {

@@ -25,6 +25,8 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
 import {SharedService} from '@app/services/shared.service';
 import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'collector-item',
@@ -43,6 +45,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectorItem, index: number }> = new Subject<{ item: CollectorItem, index: number }>();
   remove$: Subject<{ item: CollectorItem, index: number }> = new Subject<{ item: CollectorItem; index: number }>();
+  view$: Subject<{ item: CollectorItem, index: number }> = new Subject<{ item: CollectorItem; index: number }>();
   save$: Subject<null> = new Subject<null>();
   editIndex: number | undefined = undefined;
   item?: CollectorItem;
@@ -59,6 +62,45 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   datepickerOptionsMap: IKeyValue = {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
+  viewOnly: boolean = false;
+
+  actions: IMenuItem<CollectorItem>[] = [
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: CollectorItem, index: number) => this.view$.next({item: item, index: index}),
+      show: (item: CollectorItem) => !this.approvalMode && this.readOnly
+    },
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CollectorItem, index: number) => this.edit$.next({item: item, index: index}),
+      show: (item: CollectorItem) => !this.approvalMode,
+      disabled: (item: CollectorItem) => this.readOnly
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE_TRASH,
+      onClick: (item: CollectorItem, index: number) => this.remove$.next({item: item, index: index}),
+      show: (item: CollectorItem) => !this.approvalMode,
+      disabled: (item: CollectorItem) => this.readOnly
+    },
+    // edit approval info (if approval mode)
+    {
+      type: 'action',
+      label: 'edit_approval_info',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CollectorItem, index: number) => this.approval.emit({item: item, index: index}),
+      show: (item: CollectorItem) => this.approvalMode,
+      disabled: (item: CollectorItem) => this.readOnly
+    },
+  ];
 
   private _licenseDurationType: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
 
@@ -100,7 +142,6 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   @Input()
   set requestType(val: number | null) {
-    // console.log('requestType', val);
     this._requestType.next(val);
   }
 
@@ -133,6 +174,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
     this.buildForm();
     this.listenToAdd();
     this.listenToEdit();
+    this.listenToView();
     this.listenToRemove();
     this.listenToSave();
     this.listenToDisableSearchField();
@@ -170,9 +212,13 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   private listenToAdd() {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap(_ => this.item = new CollectorItem().clone<CollectorItem>({
-        licenseDurationType: this.model.licenseDurationType
-      })))
+      .pipe(tap(_ => {
+          this.item = new CollectorItem().clone<CollectorItem>({
+            licenseDurationType: this.model.licenseDurationType
+          });
+          this.viewOnly = false;
+        }
+      ))
       .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
@@ -183,6 +229,18 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
         // always add one here to the selected index to avoid the if condition while process save
         this.editIndex = (++info.index);
         this.item = info.item;
+        this.viewOnly = false;
+        this.updateForm(this.item);
+      }))
+      .subscribe(() => this.formOpenedStatus.emit(true));
+  }
+
+  private listenToView() {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(info => {
+        this.item = info.item;
+        this.viewOnly = true;
         this.updateForm(this.item);
       }))
       .subscribe(() => this.formOpenedStatus.emit(true));
@@ -263,6 +321,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   cancel(): void {
     this.item = undefined;
     this.editIndex = undefined;
+    this.viewOnly = false;
     this.resetForm();
     this.formOpenedStatus.emit(false);
   }
