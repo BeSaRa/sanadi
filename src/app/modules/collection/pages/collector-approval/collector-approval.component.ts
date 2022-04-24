@@ -120,7 +120,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   }
 
   _saveFail(error: any): void {
-    throw new Error('Method not implemented.');
+    console.error(error);
   }
 
   _launchFail(error: any): void {

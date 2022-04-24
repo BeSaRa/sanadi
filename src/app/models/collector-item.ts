@@ -45,7 +45,7 @@ export class CollectorItem extends _LicenseApproval implements HasLicenseApprova
     } = this;
     return {
       collectorType: controls ? [collectorType, [CustomValidators.required]] : collectorType,
-      arabicName: controls ? [arabicName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arabicName,
+      arabicName: controls ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_NUM_ONE_AR'), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]] : arabicName,
       collectorNumber: controls ? [collectorNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : collectorNumber,
       gender: controls ? [gender, [CustomValidators.required]] : gender,
       identificationNumber: controls ? [identificationNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : identificationNumber,
