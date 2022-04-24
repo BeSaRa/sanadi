@@ -72,7 +72,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   headerColumn: string[] = ['extra-header'];
-  columns = ['incomeType', 'amount', 'periodicType', 'actions'];
+  columns = ['incomeType', 'periodicType', 'amount', 'actions'];
   footerColumns: string[] = ['totalIncomeLabel', 'totalIncome'];
   incomeTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME;
   periodicTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC;

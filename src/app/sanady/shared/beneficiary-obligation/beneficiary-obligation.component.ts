@@ -42,7 +42,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   ngAfterViewInit() {
-    if (this.readonly){
+    if (this.readonly) {
       this.columns.splice(this.columns.indexOf('actions'), 1);
     }
   }
@@ -74,7 +74,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   headerColumn: string[] = ['extra-header'];
-  columns = ['obligationType', 'amount', 'periodicType', 'installmentsCount', 'actions'];
+  columns = ['obligationType', 'periodicType', 'installmentsCount', 'amount', 'actions'];
   footerColumns: string[] = ['totalDebtsLabel', 'totalDebts'];
   obligationTypeList = this.lookupService.listByCategory.BENEFICIARY_OBLIGATION;
   periodicTypeList = this.lookupService.listByCategory.SubAidPeriodicType;
