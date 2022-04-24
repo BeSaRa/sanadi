@@ -67,7 +67,7 @@ export class PartialRequestReportsComponent implements OnInit {
 
   filterControl: FormControl = new FormControl('');
   headerColumn: string[] = ['extra-header'];
-  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'beneficiaryCategory', 'requestType', 'requestSummary', 'actionType', 'actionDate', 'userOrganization', 'orgUser'];
+  displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'requestedAidCategory', 'requestedAid', 'requestSummary', 'actionType', 'actionDate', 'userOrganization', 'orgUser'];
 
   sortingCallbacks = {
     requestDate: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
@@ -75,14 +75,14 @@ export class PartialRequestReportsComponent implements OnInit {
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.creationDate);
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    beneficiaryCategory: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.benCategoryInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.benCategoryInfo?.getName().toLowerCase();
+    requestAidCategory: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    requestType: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.requestTypeInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.requestTypeInfo?.getName().toLowerCase();
+    requestedAid: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     actionType: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
@@ -173,7 +173,12 @@ export class PartialRequestReportsComponent implements OnInit {
   }
 
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinMaxDate({fromFieldName: fromFieldName, toFieldName: toFieldName, controlOptionsMap: this.datepickerOptionsMap, controlsMap: this.datepickerControlsMap})
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName: fromFieldName,
+      toFieldName: toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: this.datepickerControlsMap
+    })
   }
 
   private getSearchCriteria() {

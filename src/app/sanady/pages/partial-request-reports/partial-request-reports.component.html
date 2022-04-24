@@ -133,15 +133,15 @@
                   [sortCallback]="sortingCallbacks.requestDate"> {{langService.map.request_date}}</th>
               <td cdk-cell *cdkCellDef="let row" class="date-column"><span>{{row.creationDateString}}</span></td>
             </ng-container>
-            <ng-container cdkColumnDef="beneficiaryCategory">
+            <ng-container cdkColumnDef="requestedAidCategory">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.beneficiaryCategory"> {{langService.map.beneficiary_category}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span>{{row.benCategoryInfo.getName()}}</span></td>
+                  [sortCallback]="sortingCallbacks.requestAidCategory"> {{langService.map.requested_aid_category}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.aidLookupParentInfo.getName()}}</span></td>
             </ng-container>
-            <ng-container cdkColumnDef="requestType">
+            <ng-container cdkColumnDef="requestedAid">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.requestType"> {{langService.map.reason_of_request}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span>{{row.requestTypeInfo.getName()}}</span></td>
+                  [sortCallback]="sortingCallbacks.requestedAid"> {{langService.map.requested_aid}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.aidLookupInfo.getName()}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="requestSummary">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.request_summary}}</th>

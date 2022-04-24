@@ -8,8 +8,8 @@ export class SubventionRequestPartialLogInterceptor {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.actionTypeInfo = AdminResult.createInstance(model.actionTypeInfo);
-    model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
-    model.benCategoryInfo = AdminResult.createInstance(model.benCategoryInfo);
+    model.aidLookupParentInfo = AdminResult.createInstance(model.aidLookupParentInfo);
+    model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);
 
     model.creationDateString = DateUtils.getDateStringFromDate(model.creationDate);
     model.actionDateString = DateUtils.getDateStringFromDate(model.actionTime);
@@ -21,8 +21,8 @@ export class SubventionRequestPartialLogInterceptor {
     delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.orgUserInfo;
-    delete model.requestTypeInfo;
-    delete model.benCategoryInfo;
+    delete model.aidLookupParentInfo;
+    delete model.aidLookupInfo;
     delete model.creationDateString;
     delete model.actionDateString;
 

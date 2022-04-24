@@ -22,10 +22,8 @@ export class SubventionRequestPartialLog extends SearchableCloneable<SubventionR
   actionTypeInfo!: AdminResult;
   actionTime?: string;
   requestSummary?: string;
-  benCategory!: number;
-  benCategoryInfo!: AdminResult;
-  requestType!: number;
-  requestTypeInfo!: AdminResult;
+  aidLookupParentInfo!:AdminResult;
+  aidLookupInfo!:AdminResult;
 
   //extra properties
   creationDateString!: string;
@@ -39,7 +37,7 @@ export class SubventionRequestPartialLog extends SearchableCloneable<SubventionR
   }
 
   searchFields: ISearchFieldsMap<SubventionRequestPartialLog> = {
-    ...infoSearchFields(['benCategoryInfo', 'requestTypeInfo', 'actionTypeInfo', 'orgAndBranchInfo', 'orgUserInfo']),
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo','actionTypeInfo', 'orgAndBranchInfo', 'orgUserInfo']), // 'benCategoryInfo', 'requestTypeInfo',
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestSummary', 'actionDateString'])
   }
 
