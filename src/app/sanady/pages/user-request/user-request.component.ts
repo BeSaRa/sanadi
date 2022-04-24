@@ -479,13 +479,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (request.isPartial) {
         this.readOnly = !request.isUnderProcessing();
+        this.toggleAllowCompletionReadonly();
         this.displayFormValidity();
       } else {
         if (request.id) {
           this.readOnly = this.readModeService.isReadOnly(request.id);
-          if (this.readOnly) {
-            this.allowCompletionField?.disable();
-          }
+          this.toggleAllowCompletionReadonly();
           this.displayFormValidity();
         } else {
           this.readOnly = false;
@@ -745,10 +744,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           this.currentRequest = request.clone();
           this.editMode = true;
 
+          this.toggleAllowCompletionReadonly();
           this.disableDataSharingField?.disable();
 
           if (!this.currentRequest.isUnderProcessing()) {
-            this.allowCompletionField?.disable();
             this.readModeService.setReadOnly(this.currentRequest.id);
           }
 
@@ -1651,7 +1650,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   handleNDAFieldChange($event: any): void {
     if (!this.disableDataSharingField.value) {
       this.ndaFile = undefined;
+    } else {
+      this.allowCompletionField.setValue(false);
     }
+    this.toggleAllowCompletionReadonly();
   }
 
   setNDAFile(file: File | File[] | undefined): void {
@@ -1659,6 +1661,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.ndaFile = file;
     } else {
       this.ndaFile = file[0];
+    }
+  }
+
+  private toggleAllowCompletionReadonly(): void {
+    if (this.readOnly || this.disableDataSharingField.value) {
+      this.allowCompletionField?.disable();
+    } else {
+      if (this.currentRequest && !this.currentRequest.isUnderProcessing()) {
+        this.allowCompletionField?.disable();
+      } else {
+        this.allowCompletionField?.enable();
+      }
     }
   }
 
