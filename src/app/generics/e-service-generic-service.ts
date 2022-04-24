@@ -189,7 +189,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
             }
 
             row.fields = row.fields.filter(x => {
-              return !(x.key === 'organizationId' && this.employeeService.isExternalUser());
+              return !((x.key === 'organizationId' || x.key === 'competentDepartmentID') && this.employeeService.isExternalUser());
             });
           }
           rows = rows.filter(x => x.fields && x.fields.length > 0);
