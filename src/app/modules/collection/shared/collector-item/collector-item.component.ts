@@ -393,6 +393,13 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       .pipe(
         filter<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>, SelectedLicenseInfo<CollectorLicense, CollectorLicense>>
         ((info): info is SelectedLicenseInfo<CollectorLicense, CollectorLicense> => !!info))
+      .pipe(filter((license) => {
+        let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
+        if (isAlreadyAdded) {
+          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
+        }
+        return !isAlreadyAdded;
+      }))
       .subscribe((_info) => {
         this.updateForm(this.item = _info.details.convertToItem());
       });
@@ -415,5 +422,9 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
       });
+  }
+
+  isLicenseAlreadyAdded(selectedLicense: any): boolean {
+    return this.model.collectorItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
   }
 }
