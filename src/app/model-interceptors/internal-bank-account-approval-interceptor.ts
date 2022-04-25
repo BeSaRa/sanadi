@@ -38,7 +38,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo) : AdminResult.createInstance({});
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo): AdminResult.createInstance({});
-
+    model.internalBankAccountDTO = model.internalBankAccountDTO || [];
 
     return model;
   }

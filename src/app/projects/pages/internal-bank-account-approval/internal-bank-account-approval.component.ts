@@ -50,7 +50,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'actions'];
   selectedPersonsDisplayedColumns: string[] = ['arName', 'enName', 'email', 'jobTitle', 'actions'];
   updateNewAccountFieldsVisible = false;
-  isNewMerge = false;
+  isNewMerge: boolean = false;
   isUpdateMerge = false;
   isExternalUser!: boolean;
 
@@ -83,6 +83,18 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   get bankAccountCategory(): AbstractControl {
     return this.form.get('basicInfo.category')!;
+  }
+
+  get purpose(): AbstractControl {
+    return this.form.get('basicInfo.purpose')!;
+  }
+
+  get bankId(): AbstractControl {
+    return this.form.get('basicInfo.bankId')!;
+  }
+
+  get currency(): AbstractControl {
+    return this.form.get('basicInfo.currency')!;
   }
 
   get mainAccount(): AbstractControl {
@@ -147,7 +159,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if(this.requestType.value == BankAccountRequestTypes.NEW &&
+    if (this.requestType.value == BankAccountRequestTypes.NEW &&
       this.operationType.value == BankAccountOperationTypes.MERGE) {
       if (this.selectedBankAccounts.length < 2) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_two_bank_accounts);
@@ -155,7 +167,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       }
     }
 
-    if(this.requestType.value == BankAccountRequestTypes.UPDATE &&
+    if (this.requestType.value == BankAccountRequestTypes.UPDATE &&
       this.operationType.value == BankAccountOperationTypes.MERGE) {
       if (this.selectedNPOEmployees.length < 1) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_one_responsible_person);
@@ -182,7 +194,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       ...this.specialExplanation.getRawValue()
     });
     model.organizationId = this.employeeService.getOrgUnit()?.id!;
-    model!.internalBankAccountDTO = this.selectedBankAccounts
+    model!.internalBankAccountDTO = this.selectedBankAccounts;
     model!.bankAccountExecutiveManagementDTOs = this.selectedNPOEmployees;
     return model;
   }
@@ -254,32 +266,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     });
   }
 
-  enableMainAccount() {
-    this.mainAccount.enable();
-    this.mainAccount.setValidators([CustomValidators.required]);
-    this.mainAccount.updateValueAndValidity();
-  }
-
-  disableMainAccount() {
-    this.mainAccount.patchValue(null);
-    this.mainAccount.disable();
-    this.mainAccount.setValidators([]);
-    this.mainAccount.updateValueAndValidity();
-  }
-
-  enableAccountType() {
-    this.bankAccountCategory.enable();
-    this.bankAccountCategory.setValidators([CustomValidators.required]);
-    this.bankAccountCategory.updateValueAndValidity();
-  }
-
-  disableAccountType() {
-    this.bankAccountCategory.patchValue(null);
-    this.bankAccountCategory.disable();
-    this.bankAccountCategory.setValidators([]);
-    this.bankAccountCategory.updateValueAndValidity();
-  }
-
   listenToBankCategoryChange() {
     this.bankAccountCategory.valueChanges.subscribe(val => {
       this.toggleAccountCategoryControl(val);
@@ -318,44 +304,64 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   requestTypeOrOperationTypeChanged() {
     if (this.requestType.value === BankAccountRequestTypes.NEW) {
-      this.oldLicenseFullSerialField.patchValue(null);
-      this.oldLicenseFullSerialField.disable();
-      this.hideUpdateAccountFields();
-      this.hideUpdateMergeFields();
-      this.isUpdateMerge = false;
-      if(this.operationType.value == BankAccountOperationTypes.MERGE) {
-        this.disableMainAccountAndAccountType();
-        this.isNewMerge = true;
-      } else {
-        this.enableMainAccountAndAccountType();
-        this.isNewMerge = false;
-      }
+      this.onSelectNewRequestType();
     } else if (this.requestType.value === BankAccountRequestTypes.UPDATE) {
-      this.oldLicenseFullSerialField.enable();
-
-      if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
-        this.showUpdateBankAccountFields();
-        this.hideUpdateMergeFields();
-        this.enableMainAccountAndAccountType();
-        this.isUpdateMerge = false;
-        this.isNewMerge = false;
-      } else if (this.operationType.value == BankAccountOperationTypes.MERGE) {
-        this.showUpdateBankAccountFields();
-        this.showUpdateMergeFields();
-        this.disableMainAccountAndAccountType();
-        this.isUpdateMerge = true;
-        this.isNewMerge = false;
-      }
-    } else if(this.requestType.value === BankAccountRequestTypes.CANCEL) {
-      this.oldLicenseFullSerialField.enable();
-      this.hideUpdateAccountFields();
-      this.hideUpdateMergeFields();
-    } else if(this.requestType.value == null) {
-      this.oldLicenseFullSerialField.patchValue(null);
-      this.oldLicenseFullSerialField.disable();
-      this.hideUpdateAccountFields();
-      this.hideUpdateMergeFields();
+      this.onSelectUpdateRequestType();
+    } else if (this.requestType.value === BankAccountRequestTypes.CANCEL) {
+      this.onSelectCancelRequestType();
+    } else if (this.requestType.value == null) {
+      this.onSelectNoneRequestType();
     }
+  }
+
+  onSelectNewRequestType() {
+    this.enableCancelAccountFields();
+    this.enableNewNewAccountFields();
+    this.disableNewNewAccountFields();
+    this.hideUpdateAccountFields();
+    this.hideUpdateMergeFields();
+    this.isUpdateMerge = false;
+    if (this.operationType.value == BankAccountOperationTypes.MERGE) {
+      this.disableNewMergeAccountsFields();
+      this.enableNewMergeAccountsFields();
+      this.isNewMerge = true;
+    } else {
+      // this.enableMainAccountAndAccountType();
+      this.isNewMerge = false;
+    }
+  }
+
+  onSelectUpdateRequestType() {
+    this.enableCancelAccountFields();
+    if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
+      this.showUpdateBankAccountFields();
+      this.hideUpdateMergeFields();
+      this.enableUpdateNewAccountFields();
+      this.disableUpdateNewAccountFields();
+      this.isUpdateMerge = false;
+      this.isNewMerge = false;
+    } else if (this.operationType.value == BankAccountOperationTypes.MERGE) {
+      this.showUpdateBankAccountFields();
+      this.showUpdateMergeFields();
+      this.enableUpdateMergeAccountsFields();
+      this.disableUpdateMergeAccountsFields();
+      this.isUpdateMerge = true;
+      this.isNewMerge = false;
+    }
+  }
+
+  onSelectCancelRequestType() {
+    this.enableCancelAccountFields();
+    this.disableCancelAccountFields();
+    this.hideUpdateAccountFields();
+    this.hideUpdateMergeFields();
+  }
+
+  onSelectNoneRequestType() {
+    this.oldLicenseFullSerialField.patchValue(null);
+    this.oldLicenseFullSerialField.disable();
+    this.hideUpdateAccountFields();
+    this.hideUpdateMergeFields();
   }
 
   showUpdateBankAccountFields() {
@@ -399,14 +405,174 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   }
 
+  enableNewNewAccountFields() {
+    this.enableOperationType();
+    this.enableBankAccountCategory();
+    this.enablePurpose();
+    this.enableBankId();
+    this.enableCurrency();
+  }
+
+  disableNewNewAccountFields() {
+    this.enableOperationType();
+    this.disableSearchField();
+  }
+
+  enableUpdateNewAccountFields() {
+    this.enableOperationType();
+    this.enableSearchField();
+    this.enableBankAccountCategory();
+    this.enablePurpose();
+    this.enableBankId();
+    this.enableCurrency();
+  }
+
+  disableUpdateNewAccountFields() {
+    this.enableOperationType();
+  }
+
+  enableNewMergeAccountsFields() {
+    this.enableOperationType();
+  }
+
+  disableNewMergeAccountsFields() {
+    this.enableOperationType();
+    this.disableSearchField();
+    this.disableBankAccountCategory();
+    this.disableMainAccount();
+  }
+
+  enableUpdateMergeAccountsFields() {
+    this.enableOperationType();
+    this.enableSearchField();
+    this.enablePurpose();
+    this.enableBankId();
+    this.enableCurrency();
+  }
+
+  disableUpdateMergeAccountsFields() {
+    this.enableOperationType();
+    this.disableBankAccountCategory();
+    this.disableMainAccount();
+  }
+
+  enableCancelAccountFields() {
+    this.enableOperationType();
+    this.enableSearchField();
+    this.enableBankAccountCategory();
+    this.enablePurpose();
+    this.enableBankId();
+    this.enableCurrency();
+  }
+
+  disableCancelAccountFields() {
+    this.disableOperationType();
+    this.disableBankAccountCategory();
+    this.disablePurpose();
+    this.disableBankId();
+    this.disableCurrency();
+    this.disableMainAccount();
+  }
+
+  enableOperationType() {
+    this.operationType.enable({emitEvent: false});
+    this.operationType.setValidators([CustomValidators.required]);
+    // this.operationType.updateValueAndValidity();
+  }
+
+  disableOperationType() {
+    this.operationType.patchValue(null, {emitEvent: false});
+    this.operationType.disable({emitEvent: false});
+  }
+
+  enableSearchField() {
+    this.oldLicenseFullSerialField.enable();
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
+    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldLicenseFullSerialControl.updateValueAndValidity();
+  }
+
+  disableSearchField() {
+    this.oldLicenseFullSerialField.patchValue(null);
+    this.oldLicenseFullSerialField.disable();
+    this.oldLicenseFullSerialField.setValidators([]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  enableBankAccountCategory() {
+    this.bankAccountCategory.enable();
+    this.bankAccountCategory.setValidators([CustomValidators.required]);
+    this.bankAccountCategory.updateValueAndValidity();
+  }
+
+  disableBankAccountCategory() {
+    this.bankAccountCategory.patchValue(null);
+    this.bankAccountCategory.disable();
+    this.bankAccountCategory.setValidators([]);
+    this.bankAccountCategory.updateValueAndValidity();
+  }
+
+  enablePurpose() {
+    this.purpose.enable();
+    this.purpose.setValidators([CustomValidators.required]);
+    this.purpose.updateValueAndValidity();
+  }
+
+  disablePurpose() {
+    this.purpose.patchValue(null);
+    this.purpose.disable();
+    this.purpose.setValidators([]);
+    this.purpose.updateValueAndValidity();
+  }
+
+  enableBankId() {
+    this.bankId.enable();
+    this.bankId.setValidators([CustomValidators.required]);
+    this.bankId.updateValueAndValidity();
+  }
+
+  disableBankId() {
+    this.bankId.patchValue(null);
+    this.bankId.disable();
+    this.bankId.setValidators([]);
+    this.bankId.updateValueAndValidity();
+  }
+
+  enableCurrency() {
+    this.currency.enable();
+    this.currency.setValidators([CustomValidators.required]);
+    this.currency.updateValueAndValidity();
+  }
+
+  disableCurrency() {
+    this.currency.patchValue(null);
+    this.currency.disable();
+    this.currency.setValidators([]);
+    this.currency.updateValueAndValidity();
+  }
+
+  enableMainAccount() {
+    this.mainAccount.enable();
+    this.mainAccount.setValidators([CustomValidators.required]);
+    this.mainAccount.updateValueAndValidity();
+  }
+
+  disableMainAccount() {
+    this.mainAccount.patchValue(null);
+    this.mainAccount.disable();
+    this.mainAccount.setValidators([]);
+    this.mainAccount.updateValueAndValidity();
+  }
+
   enableMainAccountAndAccountType() {
     this.enableMainAccount();
-    this.enableAccountType();
+    this.enableBankAccountCategory();
   }
 
   disableMainAccountAndAccountType() {
     this.disableMainAccount();
-    this.disableAccountType();
+    this.disableBankAccountCategory();
   }
 
   private validateSingleLicense(license: InternalBankAccountLicense): Observable<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>> {
@@ -448,10 +614,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   addToSelectedBankAccounts() {
     const selectedAccount = this.currentBankAccounts.find(b => b.id == this.selectedBankAccountToMerge.value)!;
-    if(!this.selectedBankAccounts.includes(selectedAccount)) {
+    if (!this.selectedBankAccounts.includes(selectedAccount)) {
       this.selectedBankAccounts = this.selectedBankAccounts.concat(selectedAccount);
     } else {
-      this.dialog.error(this.lang.map.selected_item_already_exists)
+      this.dialog.error(this.lang.map.selected_item_already_exists);
     }
   }
 
@@ -462,10 +628,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   addToSelectedResponsiblePersons() {
     const selectedPerson = this.npoEmployees.find(b => b.id == this.selectedResponsiblePerson.value)!;
-    if(!this.selectedNPOEmployees.includes(selectedPerson)) {
+    if (!this.selectedNPOEmployees.includes(selectedPerson)) {
       this.selectedNPOEmployees = this.selectedNPOEmployees.concat(selectedPerson);
     } else {
-      this.dialog.error(this.lang.map.selected_item_already_exists)
+      this.dialog.error(this.lang.map.selected_item_already_exists);
     }
   }
 
