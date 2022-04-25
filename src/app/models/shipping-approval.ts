@@ -45,6 +45,7 @@ export class ShippingApproval extends _ApprovalDocument<
   description!: string;
   enName!: string;
   exportedBookId!: string;
+  bookId!: string;
   bookTemplateId!: string;
   exportedBookVSID!: string;
   followUpDate!: string;

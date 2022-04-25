@@ -12,6 +12,9 @@ import { FactoryService } from "./factory.service";
 import { UrlService } from "./url.service";
 import {SelectDocumentPopUpComponent} from "@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component";
 import { CaseTypes } from "@app/enums/case-types.enum";
+import { DomSanitizer } from "@angular/platform-browser";
+import { BlobModel } from "@app/models/blob-model";
+import { catchError,map } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
@@ -21,7 +24,8 @@ export class CustomsExemptionRemittanceService {
     private http: HttpClient,
     public urlService: UrlService,
     private employeeService: EmployeeService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    public domSanitizer: DomSanitizer
   ) {
     FactoryService.registerService("CustomsExemptionRemittanceService", this);
   }
@@ -87,6 +91,21 @@ validateDocumentByRequestType<T>(caseType: CaseTypes, requestType: number, expor
       requestType,
       exportedBookId
     });
+  }
+
+  showDocumentContent<T extends { bookId: string }>(document: T, caseType: number): Observable<BlobModel> {
+    let url: string = this.getServiceUrlByCaseType(caseType);
+    if (!url) {
+      return of();
+    }
+
+    return this.http.get(url + '/document/' + document.bookId + '/download', {
+      responseType: 'blob'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+        })));
   }
 }
 

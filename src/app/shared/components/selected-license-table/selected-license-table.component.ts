@@ -4,6 +4,9 @@ import {LicenseService} from '@app/services/license.service';
 import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ShippingApproval } from '@app/models/shipping-approval';
+import { CustomsExemptionRemittanceService } from '@app/services/customs-exemption-remittance.service';
 
 @Component({
   selector: 'selected-license-table',
@@ -11,12 +14,12 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
   styleUrls: ['./selected-license-table.component.scss']
 })
 export class SelectedLicenseTableComponent {
-
-  constructor(public lang: LangService,
-              private licenseService: LicenseService,
-              private sharedService: SharedService) {
-
-  }
+  constructor(
+    public lang: LangService,
+    private licenseService: LicenseService,
+    private sharedService: SharedService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService
+  ) {}
 
   @Input() caseType!: number;
   @Input() caseTypeViewLicense!: number;
@@ -54,9 +57,18 @@ export class SelectedLicenseTableComponent {
       console.error('caseTypeViewLicense is missing');
       return;
     }
-    this.licenseService.showLicenseContent(license, this.caseTypeViewLicense)
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
-      });
+    if (this.caseType === CaseTypes.SHIPPING_APPROVAL) {
+      this.customsExemptionRemittanceService
+        .showDocumentContent(license, this.caseType)
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, license);
+        });
+    } else {
+      this.licenseService
+        .showLicenseContent(license, this.caseTypeViewLicense)
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, license);
+        });
+    }
   }
 }

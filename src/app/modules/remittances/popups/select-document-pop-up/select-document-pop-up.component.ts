@@ -6,6 +6,7 @@ import { ShippingApproval } from "@app/models/shipping-approval";
 import { CustomsExemptionRemittanceService } from "@app/services/customs-exemption-remittance.service";
 import { InboxService } from "@app/services/inbox.service";
 import { LangService } from "@app/services/lang.service";
+import { SharedService } from "@app/services/shared.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 
@@ -33,6 +34,7 @@ export class SelectDocumentPopUpComponent {
     private dialogRef: DialogRef,
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
     private inboxService: InboxService,
+    private sharedService: SharedService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       documents: ShippingApproval[];
@@ -78,6 +80,14 @@ export class SelectDocumentPopUpComponent {
           return;
         }
         this.dialogRef.close({selected: document, details: documentDetails});
+      });
+  }
+
+  viewDocumentAsPDF(document: ShippingApproval) {
+    return this.customsExemptionRemittanceService
+      .showDocumentContent(document, this.caseType)
+      .subscribe((file) => {
+        return this.sharedService.openViewContentDialog(file, document);
       });
   }
 }
