@@ -728,11 +728,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.uploadNDADocument(request)
-        .subscribe((ndaStatus) => {
-          if (ndaStatus === 'FAILED_NDA_ATTACHMENT') {
+        .subscribe((ndaAttachmentStatus) => {
+          if (ndaAttachmentStatus === 'FAILED_NDA_ATTACHMENT') {
             this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.nda_document}));
-          } else if (ndaStatus !== 'NO_NDA_NEEDED') {
-            this.ndaAttachment.vsId = ndaStatus;
+          } else if (ndaAttachmentStatus !== 'NO_NDA_NEEDED') {
+            this.ndaAttachment.vsId = ndaAttachmentStatus;
             this.attachmentList.push(this.ndaAttachment);
           }
 
@@ -783,8 +783,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private uploadNDADocument(request: SubventionRequest): Observable<any> {
-    // if existing request is updated, then proceed. otherwise, upload nda document
-    if (!!this.currentRequest && this.currentRequest.id) {
+    // if NDA not enabled or existing request is updated, then proceed. otherwise, upload nda document
+    if (!this.currentBeneficiary!.disableDataSharing || (this.currentRequest && this.currentRequest.id)) {
       return of('NO_NDA_NEEDED');
     } else {
       let data = (new SanadiAttachment()).clone(this.ndaFile) as SanadiAttachment;
