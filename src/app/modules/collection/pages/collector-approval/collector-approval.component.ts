@@ -75,7 +75,8 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   _afterBuildForm(): void {
     this.listenToRequestTypeChanges()
     this.checkDisableFields();
-    this.listenToDurationChanges()
+    this.listenToDurationChanges();
+    this.handleReadonly();
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
