@@ -5,3 +5,9 @@ export enum ServiceRequestTypes {
   UPDATE = 4,
   CANCEL = 5
 }
+
+export enum CollectionRequestType {
+  NEW = 1,
+  UPDATE = 4,
+  CANCEL = 5
+}

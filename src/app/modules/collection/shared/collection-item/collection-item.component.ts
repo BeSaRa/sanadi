@@ -13,7 +13,7 @@ import {LicenseService} from "@app/services/license.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {CollectionLicense} from "@app/license-models/collection-license";
 import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {CollectionRequestType} from "@app/enums/service-request-types";
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 import {CaseStatusCollectionApproval} from '@app/enums/case-status-collection-approval';
 import {SharedService} from '@app/services/shared.service';
@@ -359,7 +359,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   openMapMarker() {
-    (this.item!).openMap(this.isExtendOrCancelRequestType() || this.readOnly || this.viewOnly)
+    (this.item!).openMap(this.isCancelRequestType() || this.readOnly || this.viewOnly)
       .onAfterClose$
       .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
@@ -378,8 +378,8 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(map(_ => !(!this.latitude.value || !this.longitude.value))) // if no lat/lng return false
       .pipe(tap(validLatLong => !validLatLong && this.longitudeLatitudeInvalidMessage()))
       .pipe(filter((val) => val)) // allow only the valid form
-      .pipe(tap(_ => console.log(this.model.requestType, ServiceRequestTypes.NEW)))
-      .pipe(map(_ => ((this.model.requestType !== ServiceRequestTypes.NEW) ? this.oldLicenseFullSerial.value : true)))
+      .pipe(tap(_ => console.log(this.model.requestType, CollectionRequestType.NEW)))
+      .pipe(map(_ => ((this.model.requestType !== CollectionRequestType.NEW) ? this.oldLicenseFullSerial.value : true)))
       .pipe(tap(validSelected => (!validSelected && this.selectedLicenseInvalidMessage())))
       .pipe(filter((val) => val)) // allow only the valid form
   }
@@ -392,8 +392,8 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license)
   }
 
-  isExtendOrCancelRequestType(): boolean {
-    return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
+  isCancelRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
   }
 
   viewGeneratedLicense(item: CollectionItem): void {

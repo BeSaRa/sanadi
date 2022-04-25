@@ -21,14 +21,14 @@
         <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                for="oldLicenseFullSerial">{{lang.map.serial_number}}</label>
         <input id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial" formControlName="oldLicenseFullSerial"
-               class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-               class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
     </div>
@@ -39,7 +39,7 @@
             <label class="form-label" asteriskIfRequired="locationDetails"
                    for="locationDetails">{{lang.map.location_details}}</label>
             <input id="locationDetails" validationClasses="locationDetails" formControlName="locationDetails"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+                   class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
             <app-field-error-message controlName="locationDetails"></app-field-error-message>
           </div>
           <div class="col-sm-12 mb-4 position-relative" *ngIf="isTemporaryLicenseDuration()">
@@ -49,8 +49,8 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate"
                    id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
-                   [ngClass]="{'input-disabled': (isExtendOrCancelRequestType() || readOnly || viewOnly)}"
-                   (click)="!isExtendOrCancelRequestType() && !readOnly && !viewOnly && dpLicenseEndDate.toggleCalendar()"
+                   [ngClass]="{'input-disabled': (isCancelRequestType() || readOnly || viewOnly)}"
+                   (click)="!isCancelRequestType() && !readOnly && !viewOnly && dpLicenseEndDate.toggleCalendar()"
                    #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker
                    validationClasses="licenseEndDate"></div>
               <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-4 mb-4">
-        <building-plate #buildingPlate [record]="item" [readOnly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)"
+        <building-plate #buildingPlate [record]="item" [readOnly]="(isCancelRequestType() || readOnly || viewOnly)"
                         [propertyMap]="{buildingNo: 'buildingNumber', street:'streetNumber', zone: 'zoneNumber', unit: 'unitNumber'}"></building-plate>
       </div>
     </div>

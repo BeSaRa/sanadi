@@ -21,7 +21,7 @@
         <label class="form-label" asteriskIfRequired="identificationNumber"
                for="identificationNumber">{{lang.map.identification_number}}</label>
         <input id="identificationNumber" validationClasses="identificationNumber" formControlName="identificationNumber"
-               class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -30,7 +30,7 @@
         <ng-select validationClasses="collectorType" appendTo="body" [clearable]="true"
                    placeholder="{{lang.map.select}}"
                    [notFoundText]="lang.map.msg_not_found"
-                   id="collectorType" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)"
+                   id="collectorType" [readonly]="(isCancelRequestType() || readOnly || viewOnly)"
                    formControlName="collectorType">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of collectorTypes">{{option.getName()}}</ng-option>
@@ -43,14 +43,14 @@
         <label class="form-label" asteriskIfRequired="arabicName"
                for="arabicName">{{lang.map.arabic_name}}</label>
         <input id="arabicName" validationClasses="arabicName" formControlName="arabicName" class="form-control"
-               [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="arabicName"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="collectorNumber"
                for="collectorNumber">{{lang.map.collector_number}}</label>
         <input id="collectorNumber" validationClasses="collectorNumber" formControlName="collectorNumber"
-               class="form-control" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               class="form-control" [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="collectorNumber"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -59,7 +59,7 @@
         <ng-select validationClasses="gender" appendTo="body" [clearable]="true"
                    placeholder="{{lang.map.select}}"
                    [notFoundText]="lang.map.msg_not_found"
-                   id="gender" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)"
+                   id="gender" [readonly]="(isCancelRequestType() || readOnly || viewOnly)"
                    formControlName="gender">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of genders">{{option.getName()}}</ng-option>
@@ -74,7 +74,7 @@
         <ng-select validationClasses="nationality" appendTo="body" [clearable]="true"
                    placeholder="{{lang.map.select}}"
                    [notFoundText]="lang.map.msg_not_found"
-                   id="nationality" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)"
+                   id="nationality" [readonly]="(isCancelRequestType() || readOnly || viewOnly)"
                    formControlName="nationality">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
@@ -85,7 +85,7 @@
         <label class="form-label" asteriskIfRequired="jobTitle"
                for="jobTitle">{{lang.map.job_title}}</label>
         <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" class="form-control"
-               [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
       </div>
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -94,7 +94,7 @@
         <ng-select validationClasses="relationship" appendTo="body" [clearable]="true"
                    placeholder="{{lang.map.select}}"
                    [notFoundText]="lang.map.msg_not_found"
-                   id="relationship" [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)"
+                   id="relationship" [readonly]="(isCancelRequestType() || readOnly || viewOnly)"
                    formControlName="relationship">
           <ng-option [value]="option.lookupKey"
                      *ngFor="let option of relationships">{{option.getName()}}</ng-option>
@@ -107,7 +107,7 @@
         <label class="form-label" asteriskIfRequired="phone"
                for="phone">{{lang.map.lbl_phone}}</label>
         <input id="phone" validationClasses="phone" formControlName="phone" class="form-control"
-               [readonly]="(isExtendOrCancelRequestType() || readOnly || viewOnly)">
+               [readonly]="(isCancelRequestType() || readOnly || viewOnly)">
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -116,9 +116,9 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="licenseEndDate"
-               [ngClass]="{'input-disabled': (isPermanent || isExtendOrCancelRequestType() || readOnly || viewOnly)}"
+               [ngClass]="{'input-disabled': (isPermanent || isCancelRequestType() || readOnly || viewOnly)}"
                id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
-               (click)="!(isPermanent || isExtendOrCancelRequestType() || readOnly || viewOnly) && dpLicenseEndDate.toggleCalendar()"
+               (click)="!(isPermanent || isCancelRequestType() || readOnly || viewOnly) && dpLicenseEndDate.toggleCalendar()"
                #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker></div>
           <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
         </div>

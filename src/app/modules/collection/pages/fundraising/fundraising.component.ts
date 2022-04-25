@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {CollectionRequestType} from "@app/enums/service-request-types";
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {CommonUtils} from "@app/helpers/common-utils";
 import {Fundraising} from "@app/models/fundraising";
@@ -46,8 +46,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     super();
   }
 
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType
-    .filter((l) => l.lookupKey !== ServiceRequestTypes.EXTEND && l.lookupKey !== ServiceRequestTypes.RENEW)
+  requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
   licenseDurationTypes: Lookup[] =
@@ -69,8 +68,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     return this.form.get("basicInfo.oldLicenseFullSerial") as FormControl;
   }
 
-  isRenewOrCancelRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.CANCEL);
+  isCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === CollectionRequestType.CANCEL);
   }
 
   isEditRequestTypeAllowed(): boolean {
@@ -85,7 +84,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     return (
       isAllowed &&
       CommonUtils.isValidValue(this.requestType.value) &&
-      this.requestType.value !== ServiceRequestTypes.NEW
+      this.requestType.value !== CollectionRequestType.NEW
     );
   }
 
@@ -226,7 +225,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     // if no requestType or (requestType = new)
     // if new record or draft, reset license and its validations
     // also reset the values in model
-    if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+    if (!requestTypeValue || requestTypeValue === CollectionRequestType.NEW) {
       if (!this.model?.id || this.model.canCommit()) {
         this.oldLicenseFullSerialField.reset();
         this.oldLicenseFullSerialField.setValidators([]);
@@ -277,7 +276,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+    if (this.requestType.value !== CollectionRequestType.NEW && !this.selectedLicense) {
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {

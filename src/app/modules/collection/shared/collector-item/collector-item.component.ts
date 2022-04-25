@@ -19,7 +19,7 @@ import {CollectorApprovalService} from '@app/services/collector-approval.service
 import {LicenseService} from '@app/services/license.service';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {CollectorLicense} from '@app/license-models/collector-license';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CollectionRequestType} from '@app/enums/service-request-types';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
@@ -398,8 +398,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  isExtendOrCancelRequestType(): boolean {
-    return !!this.model && !!this.model.requestType && (this.model.requestType === ServiceRequestTypes.EXTEND || this.model.requestType === ServiceRequestTypes.CANCEL);
+  isCancelRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
   }
 
   viewGeneratedLicense(item: CollectorItem): void {

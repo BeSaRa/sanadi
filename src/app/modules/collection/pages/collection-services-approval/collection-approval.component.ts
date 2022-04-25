@@ -9,15 +9,13 @@ import {LangService} from '@app/services/lang.service';
 import {Observable, of} from 'rxjs';
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@app/services/lookup.service";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {CollectionRequestType} from "@app/enums/service-request-types";
 import {DialogService} from "@app/services/dialog.service";
 import {filter, map, takeUntil, tap} from "rxjs/operators";
 import {ToastService} from "@app/services/toast.service";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {CustomValidators} from "@app/validators/custom-validators";
-
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -36,8 +34,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     super();
   }
 
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew
-    .filter((l) => l.lookupKey !== ServiceRequestTypes.EXTEND)
+  requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
   requestClassifications: Lookup[] = this.lookupService.listByCategory.CollectionClassification;
@@ -180,8 +177,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     this.requestType
       .valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((val: ServiceRequestTypes) => {
-        this.disableSearchField = val === ServiceRequestTypes.NEW
+      .subscribe((val: CollectionRequestType) => {
+        this.disableSearchField = val === CollectionRequestType.NEW
         this.model!.requestType = val;
       })
   }
@@ -271,20 +268,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   isNewRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW);
-  }
-
-  isRenewOrUpdateRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.RENEW || this.requestType.value === ServiceRequestTypes.UPDATE);
-  }
-
-  isExtendOrCancelRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+    return this.requestType.value && (this.requestType.value === CollectionRequestType.NEW);
   }
 
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW;
   }
 }
