@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  NPO_EMPLOYEE: string;
   BANK_ACCOUNT: string;
   BANK: string;
   INTERNAL_BANK_ACCOUNT_APPROVAL: string;

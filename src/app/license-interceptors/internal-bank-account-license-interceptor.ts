@@ -1,6 +1,8 @@
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
 import {AdminResult} from '@app/models/admin-result';
+import {isValidAdminResult} from '@app/helpers/utils';
+import {Lookup} from '@app/models/lookup';
 
 export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<InternalBankAccountLicense> {
   send(model: Partial<InternalBankAccountLicense>): Partial<InternalBankAccountLicense> {
@@ -8,9 +10,11 @@ export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<
   }
 
   receive(model: InternalBankAccountLicense): InternalBankAccountLicense {
-    model.bankCategoryInfo && (model.bankCategoryInfo = AdminResult.createInstance(model.bankCategoryInfo));
-    model.mainAccountInfo && (model.mainAccountInfo = AdminResult.createInstance(model.mainAccountInfo));
-    model.currencyInfo && (model.currencyInfo = AdminResult.createInstance(model.currencyInfo));
+    model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo) : AdminResult.createInstance({});
+    model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
+    model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo) : AdminResult.createInstance({});
+    model.licenseStatusInfo = (model.licenseStatusInfo) ? (new Lookup()).clone(model.licenseStatusInfo) : new Lookup();
+    model.requestTypeInfo = (model.requestTypeInfo) ? (new Lookup()).clone(model.requestTypeInfo) : new Lookup();
     return model;
   }
 }

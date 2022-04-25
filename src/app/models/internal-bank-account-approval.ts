@@ -7,6 +7,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {BankAccount} from '@app/models/bank-account';
+import {NpoEmployee} from '@app/models/npo-employee';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -24,7 +25,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   iBan!: string;
   swiftCode!: string;
   bankDTOs!: string;
-  bankAccountExecutiveManagementDTOs!: number[];
+  bankAccountExecutiveManagementDTOs!: NpoEmployee[];
+  selectedResponsiblePerson!: NpoEmployee;
   description!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
@@ -49,7 +51,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   }
 
   buildBasicInfo(controls: boolean = false): any {
-    const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category, currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge} = this;
+    const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
+      currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge, selectedResponsiblePerson} = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -62,7 +65,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       accountNumber: controls ? [accountNumber] : accountNumber,
       iBan: controls ? [iBan] : iBan,
       swiftCode: controls ? [swiftCode] : swiftCode,
-      selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge
+      selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
+      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson
     }
   }
 

@@ -98,4 +98,5 @@ export interface ILookupMap {
   BankRequestType: Lookup[];
   BankOperationType: Lookup[];
   InternalBankCategory: Lookup[];
+  InternalBankStatus: Lookup[];
 }

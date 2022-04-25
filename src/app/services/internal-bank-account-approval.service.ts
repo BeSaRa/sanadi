@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
@@ -16,16 +16,17 @@ import {Observable} from 'rxjs';
 import {Bank} from '@app/models/bank';
 import {BankAccount} from '@app/models/bank-account';
 import {map} from 'rxjs/operators';
+import {NpoEmployee} from '@app/models/npo-employee';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InternalBankAccountApprovalService extends EServiceGenericService<InternalBankAccountApproval> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'internal_bank_account_approval_search.json';
   interceptor: IModelInterceptor<InternalBankAccountApproval> = new InternalBankAccountApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_internal_bank_account_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['fullSerial', 'caseStatus', 'creatorInfo', 'createdOn'];
 
   constructor(public http: HttpClient,
               public dialog: DialogService,
@@ -38,46 +39,47 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
   }
 
   _getModel() {
-      return InternalBankAccountApproval;
+    return InternalBankAccountApproval;
   }
 
   _getURLSegment(): string {
-      return this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
+    return this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
   }
 
   _getInterceptor(): Partial<IModelInterceptor<InternalBankAccountApproval>> {
-      return this.interceptor;
+    return this.interceptor;
   }
 
   getSearchCriteriaModel<S extends InternalBankAccountApproval>(): InternalBankAccountApproval {
-      return new InternalBankAccountApprovalSearchCriteria();
+    return new InternalBankAccountApprovalSearchCriteria();
   }
 
   getCaseComponentName(): string {
-      return 'InternalBankAccountApprovalComponent';
+    return 'InternalBankAccountApprovalComponent';
   }
 
   _getUrlService(): UrlService {
-      return this.urlService;
+    return this.urlService;
   }
 
   getBankCtrlURLSegment(): string {
     return this.urlService.URLS.BANK;
   }
 
-
+  @Generator(Bank, true, {property: 'rs'})
   private _loadBanks(): Observable<Bank[]> {
-    return this.http.get<any>(this.getBankCtrlURLSegment() + '/composite').pipe(map(response => {
-      let result: Bank[] = [];
-      response.rs.forEach((r: any) => {
-        result.push((new Bank()).clone(r));
-      });
-      return result;
-    }));
+    return this.http.get<any>(this.getBankCtrlURLSegment() + '/composite');
   }
 
   loadBanks() {
-    return this._loadBanks();
+    return this._loadBanks().pipe(map(response => {
+      let result: Bank[] = [];
+      response.forEach((r: any) => {
+        result.push((new Bank()).clone(r));
+      });
+      console.log('banks', result);
+      return result;
+    }));
   }
 
   getBankAccountCtrlURLSegment(): string {
@@ -86,10 +88,39 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
 
   @Generator(BankAccount, true, {property: 'rs'})
   private _loadBankAccounts(): Observable<BankAccount[]> {
-    return this.http.get<BankAccount[]>(this.getBankAccountCtrlURLSegment() + '/composite');
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/composite');
   }
 
   loadBankAccounts() {
-    return this._loadBankAccounts();
+    return this._loadBankAccounts().pipe(map(response => {
+      let result: BankAccount[] = [];
+      response.forEach((r: BankAccount) => {
+        r.bankInfo = (new Bank()).clone(r.bankInfo);
+        result.push((new BankAccount()).clone(r));
+      });
+      console.log('bankAccounts', result);
+      return result;
+    }));
+  }
+
+  getNPOEmployeeCtrlURLSegment(): string {
+    return this.urlService.URLS.NPO_EMPLOYEE;
+  }
+
+  @Generator(NpoEmployee, true, {property: 'rs'})
+  private _loadOrgNPOEmployees(): Observable<NpoEmployee[]> {
+    return this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/composite');
+  }
+
+  loadOrgNPOEmployees() {
+    return this._loadOrgNPOEmployees().
+    pipe(map(response => {
+      let result: NpoEmployee[] = [];
+      response.forEach((r: any) => {
+        result.push((new NpoEmployee()).clone(r));
+      });
+      console.log('NPOs', result);
+      return result;
+    }));
   }
 }

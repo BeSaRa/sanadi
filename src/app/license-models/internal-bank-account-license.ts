@@ -1,5 +1,8 @@
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {AdminResult} from '@app/models/admin-result';
+import {Lookup} from '@app/models/lookup';
+import {BankAccount} from '@app/models/bank-account';
+import {Bank} from '@app/models/bank';
 
 export class InternalBankAccountLicense {
   accountNumber!: string;
@@ -17,7 +20,7 @@ export class InternalBankAccountLicense {
   fullSerial!: string;
   iBan!: string;
   id!: string;
-  internalBankAccountDTOs!: any[];
+  internalBankAccountDTO!: any[];
   lastModified!: string;
   licenseType!: number;
   lockOwner!: boolean;
@@ -32,6 +35,8 @@ export class InternalBankAccountLicense {
   purpose!: string;
   serial!: number;
   swiftCode!: string;
+  licenseStatusInfo!: Lookup;
+  requestTypeInfo!: Lookup;
 
   convertToItem(): InternalBankAccountApproval{
     const internalBankAccountApproval = new InternalBankAccountApproval();
@@ -42,6 +47,13 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.category = this.category;
     internalBankAccountApproval.purpose = this.purpose;
     internalBankAccountApproval.currency = this.currency;
+    internalBankAccountApproval.iBan = this.iBan;
+    internalBankAccountApproval.accountNumber = this.accountNumber;
+    internalBankAccountApproval.swiftCode = this.swiftCode;
+    internalBankAccountApproval.internalBankAccountDTO = this.internalBankAccountDTO.map((ba: BankAccount) => {
+      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
+    });
+    internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs;
 
     return internalBankAccountApproval;
   }

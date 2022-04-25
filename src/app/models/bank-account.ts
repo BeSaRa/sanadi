@@ -12,7 +12,11 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   swiftCode!: string;
   country!: number;
   category!: number;
-  bankAccountInfo!: Bank;
+  bankInfo!: Bank;
+
+  constructor() {
+    super();
+  }
 
   getBankAccountFields(control: boolean = false, caseType?: CaseTypes): any {
     const {

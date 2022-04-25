@@ -5,6 +5,11 @@ export interface ILanguageKeys {
   about_channel: string;
   working_mechanism: string;
   risk_assessment: string;
+  selected_bank_accounts: string;
+  you_have_to_select_at_least_one_responsible_person: string;
+  you_have_to_select_at_least_two_bank_accounts: string;
+  selected_authorized_signatories: string;
+  authorized_signatories: string;
   selected_item_already_exists: string;
   bank_accounts_to_be_merged: string;
   bank_accounts: string;
