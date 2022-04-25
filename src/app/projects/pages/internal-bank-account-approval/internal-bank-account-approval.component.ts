@@ -225,8 +225,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       explanation: this.model?.buildExplanation()
     });
 
-    this.toggleMainAccountControl(this.category.value);
     this.requestTypeOrOperationTypeChanged();
+    this.toggleMainAccountControl(this.category.value);
     this.selectedBankAccounts = this.model.internalBankAccountDTO?.map(ba => {
       ba.bankInfo = (new Bank()).clone(ba.bankInfo);
       return ba;
