@@ -267,7 +267,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     income: {
       name: 'incomeTab',
       langKey: 'income_employment',
-      index: 1,
+      index: 2,
       checkTouchedDirty: false,
       validStatus: () => {
         return this.incomeTab && this.incomeTab.valid
@@ -283,7 +283,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     address: {
       name: 'addressTab',
       langKey: 'lbl_address',
-      index: 2,
+      index: 1,
       checkTouchedDirty: true,
       validStatus: () => this.addressTab && this.addressTab.valid && !!this.buildingPlate && this.buildingPlate.isValidForm(),
       isTouchedOrDirty: () => (this.addressTab && (this.addressTab.touched || this.addressTab.dirty)) || (this.buildingPlate && this.buildingPlate.isTouchedOrDirty())
@@ -299,7 +299,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     requestStatus: {
       name: 'requestStatusTab',
       langKey: 'request_status',
-      index: 4,
+      index: 5,
       checkTouchedDirty: true,
       validStatus: () => this.requestStatusTab && this.requestStatusTab.valid,
       isTouchedOrDirty: () => this.requestStatusTab && (this.requestStatusTab.touched || this.requestStatusTab.dirty)
@@ -307,7 +307,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     aids: {
       name: 'aidsTab',
       langKey: 'provided_aid',
-      index: 5,
+      index: 4,
       checkTouchedDirty: true,
       validStatus: () => this.aidFormArray && this.aidFormArray.valid,
       isTouchedOrDirty: () => this.aidFormArray && (this.aidFormArray.touched || this.aidFormArray.dirty)

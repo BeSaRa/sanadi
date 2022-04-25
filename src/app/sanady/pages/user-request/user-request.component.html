@@ -15,19 +15,19 @@
   <tabs-list class="py-4">
     <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
          [template]="personalInfo" [title]="langService.map.personal_info"></tab>
-    <tab [name]="tabsData.income.name" [hasError]="getTabInvalidStatus('income')"
-         [template]="income" [title]="langService.map.income_employment"></tab>
     <tab [name]="tabsData.address.name" [hasError]="getTabInvalidStatus('address')"
          [template]="address" [title]="langService.map.lbl_address"></tab>
+    <tab [name]="tabsData.income.name" [hasError]="getTabInvalidStatus('income')"
+         [template]="income" [title]="langService.map.income_employment"></tab>
     <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
          [template]="requestInfo" [title]="langService.map.request_info"></tab>
-    <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
-         [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
-         [template]="requestStatus" [title]="langService.map.request_status"></tab>
     <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
          *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="fm.getFieldInvalidStatus('aidTab')"
          [template]="providedAid" [title]="langService.map.provided_aid"></tab>
+    <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+         [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+         [template]="requestStatus" [title]="langService.map.request_status"></tab>
     <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
          [template]="attachmentsTabTemplate" [title]="langService.map.attachments"></tab>
