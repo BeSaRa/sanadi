@@ -81,7 +81,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     return this.form.get('basicInfo.operationType')!;
   }
 
-  get category(): AbstractControl {
+  get bankAccountCategory(): AbstractControl {
     return this.form.get('basicInfo.category')!;
   }
 
@@ -91,10 +91,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   get bankAccountsToMerge(): AbstractControl {
     return this.form.get('basicInfo.internalBankAccountDTO')!;
-  }
-
-  get accountType(): AbstractControl {
-    return this.form.get('basicInfo.category')!;
   }
 
   get oldLicenseFullSerialField(): AbstractControl {
@@ -226,7 +222,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     });
 
     this.requestTypeOrOperationTypeChanged();
-    this.toggleMainAccountControl(this.category.value);
+    this.toggleAccountCategoryControl(this.bankAccountCategory.value);
     this.selectedBankAccounts = this.model.internalBankAccountDTO?.map(ba => {
       ba.bankInfo = (new Bank()).clone(ba.bankInfo);
       return ba;
@@ -272,21 +268,21 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   enableAccountType() {
-    this.accountType.enable();
-    this.accountType.setValidators([CustomValidators.required]);
-    this.accountType.updateValueAndValidity();
+    this.bankAccountCategory.enable();
+    this.bankAccountCategory.setValidators([CustomValidators.required]);
+    this.bankAccountCategory.updateValueAndValidity();
   }
 
   disableAccountType() {
-    this.accountType.patchValue(null);
-    this.accountType.disable();
-    this.accountType.setValidators([]);
-    this.accountType.updateValueAndValidity();
+    this.bankAccountCategory.patchValue(null);
+    this.bankAccountCategory.disable();
+    this.bankAccountCategory.setValidators([]);
+    this.bankAccountCategory.updateValueAndValidity();
   }
 
   listenToBankCategoryChange() {
-    this.category.valueChanges.subscribe(val => {
-      this.toggleMainAccountControl(val);
+    this.bankAccountCategory.valueChanges.subscribe(val => {
+      this.toggleAccountCategoryControl(val);
     });
   }
 
@@ -312,7 +308,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       });
   }
 
-  toggleMainAccountControl(accountCategory: number) {
+  toggleAccountCategoryControl(accountCategory: number) {
     if (accountCategory === BankCategory.SUB) {
       this.enableMainAccount();
     } else {
