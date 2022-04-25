@@ -9,6 +9,8 @@ import {SharedService} from "@app/services/shared.service";
 import {ProjectModel} from "@app/models/project-model";
 import {BlobModel} from "@app/models/blob-model";
 import {ProjectModelService} from "@app/services/project-model.service";
+import { ShippingApproval } from '@app/models/shipping-approval';
+import { CustomsExemptionRemittanceService } from '@app/services/customs-exemption-remittance.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -19,6 +21,7 @@ import {ProjectModelService} from "@app/services/project-model.service";
 export class CaseInfoComponent implements OnInit {
   constructor(public lang: LangService,
               private licenseService: LicenseService,
+              private customsExemptionRemittanceService : CustomsExemptionRemittanceService,
               private sharedService: SharedService) {
   }
 
@@ -33,6 +36,11 @@ export class CaseInfoComponent implements OnInit {
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FUNDRAISING_LICENSING,
     CaseTypes.URGENT_INTERVENTION_LICENSING
+  ]
+
+  // this should be updated when ever you will add a new document service
+  private documentCasList: number[] = [
+    CaseTypes.SHIPPING_APPROVAL
   ]
 
 
@@ -60,6 +68,14 @@ export class CaseInfoComponent implements OnInit {
     return (this.model as LicenseApprovalModel<any, any>).exportedLicenseId || '';
   }
 
+  get generatedDocumentNumber(): string {
+    return (this.model as ShippingApproval).exportedBookFullSerial || '';
+  }
+
+  get generatedDocumentId(): string {
+    return (this.model as ShippingApproval).bookId || '';
+  }
+
   get templateSerial(): string {
     return this.isTemplateModelServiceAndApproved() ? (this.model as ProjectModel).templateFullSerial + '' : ''
   }
@@ -70,6 +86,10 @@ export class CaseInfoComponent implements OnInit {
 
   isLicenseCase(): boolean {
     return this.licenseCasList.includes(this.model.getCaseType()) && this.caseStatusEnum && this.model.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+  }
+
+  isDocumentCase(): boolean {
+    return this.documentCasList.includes(this.model.getCaseType()) && this.caseStatusEnum && this.model.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
   }
 
   viewGeneratedLicense(): void {
@@ -84,6 +104,22 @@ export class CaseInfoComponent implements OnInit {
     this.licenseService.showLicenseContent(license, this.model.getCaseType())
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
+      });
+  }
+
+  viewGeneratedDocument(): void {
+    if (!this.generatedDocumentId) {
+      return;
+    }
+    let document = {
+      documentTitle: this.generatedDocumentNumber,
+      bookId: this.generatedDocumentId
+    };
+
+    this.customsExemptionRemittanceService
+      .showDocumentContent(document, this.model.getCaseType())
+      .subscribe((file) => {
+        return this.sharedService.openViewContentDialog(file, document);
       });
   }
 

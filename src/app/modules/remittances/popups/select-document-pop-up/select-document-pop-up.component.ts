@@ -84,10 +84,11 @@ export class SelectDocumentPopUpComponent {
   }
 
   viewDocumentAsPDF(document: ShippingApproval) {
+    let doc = {...document,documentTitle:document.fullSerial}
     return this.customsExemptionRemittanceService
-      .showDocumentContent(document, this.caseType)
+      .showDocumentContent(doc, this.caseType)
       .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, document);
+        return this.sharedService.openViewContentDialog(file, doc);
       });
   }
 }

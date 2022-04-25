@@ -58,10 +58,11 @@ export class SelectedLicenseTableComponent {
       return;
     }
     if (this.caseType === CaseTypes.SHIPPING_APPROVAL) {
+      let doc = {...license,documentTitle:license.fullSerial};
       this.customsExemptionRemittanceService
-        .showDocumentContent(license, this.caseType)
+        .showDocumentContent(doc, this.caseType)
         .subscribe((file) => {
-          return this.sharedService.openViewContentDialog(file, license);
+          return this.sharedService.openViewContentDialog(file, doc);
         });
     } else {
       this.licenseService
