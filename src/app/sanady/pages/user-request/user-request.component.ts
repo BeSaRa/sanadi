@@ -862,9 +862,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           } else if (this.currentParamType === this.routeParamTypes.partial) {
             return this.subventionResponseService.loadNewPartialRequestDataById(requestId)
               .pipe(
+                map((data: SubventionResponse) => {
+                  data.beneficiary = this.deleteBeneficiaryIds(data.beneficiary);
+                  return data;
+                }),
                 catchError((err) => {
                   this.currentParamType = this.routeParamTypes.normal;
-                  // this.exceptionHandlerService.handle(err);
                   return of(null);
                 })
               );
@@ -939,16 +942,21 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
           return;
         }
-        list.length > 1 ? this.beneficiaryService.openSelectBeneficiaryDialog(list).onAfterClose$.subscribe((beneficiary) => {
-          if (beneficiary instanceof Beneficiary) {
-            // this.beneficiaryChanged$.next(beneficiary);
-            this.setExistingBeneficiary(beneficiary);
-          }
-        }) : this.setExistingBeneficiary(list[0]);//this.beneficiaryChanged$.next(list[0]);
+        if (list.length > 1) {
+          this.beneficiaryService.openSelectBeneficiaryDialog(list).onAfterClose$.subscribe((beneficiary) => {
+            if (beneficiary instanceof Beneficiary) {
+              let ben = this.deleteBeneficiaryIds(beneficiary);
+              this.beneficiaryChanged$.next(ben);
+            }
+          })
+        } else {
+          let ben = this.deleteBeneficiaryIds(list[0]);
+          this.beneficiaryChanged$.next(ben);
+        }
       });
   }
 
-  setExistingBeneficiary(beneficiary: Beneficiary) {
+  deleteBeneficiaryIds(beneficiary: Beneficiary): Beneficiary {
     // @ts-ignore
     delete beneficiary.id;
     beneficiary.beneficiaryObligationSet.map((item) => {
@@ -959,7 +967,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       delete item.id;
       return item;
     });
-    this.beneficiaryChanged$.next(beneficiary);
+    return beneficiary;
   };
 
   disableEnter(event: KeyboardEvent): void {
