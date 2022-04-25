@@ -938,15 +938,29 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!list.length) {
           this.dialogService.info(this.langService.map.no_result_for_your_search_criteria);
           return;
-          // return this.beneficiaryChanged$.next(null);
         }
         list.length > 1 ? this.beneficiaryService.openSelectBeneficiaryDialog(list).onAfterClose$.subscribe((beneficiary) => {
           if (beneficiary instanceof Beneficiary) {
-            this.beneficiaryChanged$.next(beneficiary);
+            // this.beneficiaryChanged$.next(beneficiary);
+            this.setExistingBeneficiary(beneficiary);
           }
-        }) : this.beneficiaryChanged$.next(list[0]);
+        }) : this.setExistingBeneficiary(list[0]);//this.beneficiaryChanged$.next(list[0]);
       });
   }
+
+  setExistingBeneficiary(beneficiary: Beneficiary) {
+    // @ts-ignore
+    delete beneficiary.id;
+    beneficiary.beneficiaryObligationSet.map((item) => {
+      delete item.id;
+      return item;
+    });
+    beneficiary.beneficiaryIncomeSet.map((item) => {
+      delete item.id;
+      return item;
+    });
+    this.beneficiaryChanged$.next(beneficiary);
+  };
 
   disableEnter(event: KeyboardEvent): void {
     const element = event.target as HTMLInputElement;

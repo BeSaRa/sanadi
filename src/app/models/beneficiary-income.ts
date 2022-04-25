@@ -7,7 +7,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 
 export class BeneficiaryIncome extends SearchableCloneable<BeneficiaryIncome> {
-  id!: number;
+  id?: number;
   periodicType!: number;
   benIncomeType!: number;
   amount!: number;

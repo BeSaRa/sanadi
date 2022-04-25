@@ -7,7 +7,7 @@ import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 
 export class BeneficiaryObligation extends SearchableCloneable<BeneficiaryObligation> {
-  id!: number;
+  id?: number;
   periodicType!: number;
   benObligationType!: number;
   amount!: number;

@@ -10,7 +10,7 @@
             class="icon-btn text-primary"><i class="mdi mdi-printer"></i></button>
   </div>
 </div>
-<form autocomplete="off" [formGroup]="form" id="form">
+<form autocomplete="off" [formGroup]="form" id="form" (keydown.enter)="$event.preventDefault()">
 
   <tabs-list class="py-4">
     <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
