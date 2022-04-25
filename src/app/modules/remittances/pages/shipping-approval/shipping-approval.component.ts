@@ -41,6 +41,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
   documentSearchByDocNo$: Subject<string> = new Subject<string>();
   selectedDocument?: ShippingApproval;
+  displayProjectLicenseSearchButton = false;
 
 
   constructor(
@@ -206,9 +207,11 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
             this.projectLicense.enable();
           }
           this.projectLicense.setValidators(CustomValidators.required);
+          this.displayProjectLicenseSearchButton = true;
         } else {
           this.projectLicense.clearValidators();
           this.projectLicense.disable();
+          this.displayProjectLicenseSearchButton = false;
         }
         this.projectLicense.updateValueAndValidity();
       });

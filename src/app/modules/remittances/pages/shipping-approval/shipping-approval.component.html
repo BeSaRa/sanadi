@@ -122,9 +122,12 @@
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
                     <label asteriskIfRequired="projectLicense" for="projectLicense"
                         class="form-label">{{lang.map.project_reference_number}}</label>
-                    <input type="text" id="projectLicense" validationClasses="projectLicense"
-                        [readonly]="(isCancelRequestType() || readonly)" formControlName="projectLicense"
-                        class="form-control">
+                    <div class="input-group">
+                        <input type="text" id="projectLicense" validationClasses="projectLicense" formControlName="projectLicense"
+                            class="form-control" [readonly]="(isCancelRequestType() || readonly)">
+                        <button *ngIf="displayProjectLicenseSearchButton" type="button" class="input-group-text"><i
+                                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+                    </div>
                     <app-field-error-message controlName="projectLicense"></app-field-error-message>
                 </div>
                 <!-- Project Name -->
