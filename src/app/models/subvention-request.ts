@@ -42,6 +42,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   requestParentId?: number;
   aidLookupId!: number;
   aidLookupParentId!: number;
+  disableDataSharing: boolean = false;
 
   // not belongs to the Model
   service: SubventionRequestService;
@@ -121,14 +122,23 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   }
 
   getInfoFields(control: boolean = false): any {
-    const {aidLookupParentId, aidLookupId, creationDate, requestedAidAmount, requestSummary, allowCompletion} = this;
+    const {
+      aidLookupParentId,
+      aidLookupId,
+      creationDate,
+      requestedAidAmount,
+      requestSummary,
+      allowCompletion,
+      disableDataSharing
+    } = this;
     return {
       aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
       creationDate: control ? [creationDate, CustomValidators.required] : creationDate,
       requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : requestedAidAmount,
       requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary,
-      allowCompletion: control ? [allowCompletion] : allowCompletion
+      allowCompletion: control ? [allowCompletion] : allowCompletion,
+      disableDataSharing: control ? [disableDataSharing] : disableDataSharing
     };
   }
 

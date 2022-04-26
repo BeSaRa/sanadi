@@ -61,7 +61,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   addressDescription!: string;
   benNotes!: string;
   familyCount!: number;
-  disableDataSharing!: boolean;
   benTotalDebts: number = 0;
   benTotalIncome: number = 0;
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
@@ -225,14 +224,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
     return {
       residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
-    };
-  }
-
-  getNDAFields(control: boolean = false): any {
-    const {disableDataSharing} = this;
-
-    return {
-      disableDataSharing: control ? [disableDataSharing] : disableDataSharing
     };
   }
 }

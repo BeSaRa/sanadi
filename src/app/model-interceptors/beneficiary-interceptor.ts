@@ -54,8 +54,6 @@ export class BeneficiaryInterceptor {
     model.benPrimaryIdNumber = !!model.benPrimaryIdNumber ? ('' + model.benPrimaryIdNumber).trim() : model.benPrimaryIdNumber;
     model.benSecIdNumber = !!model.benSecIdNumber ? ('' + model.benSecIdNumber).trim() : model.benSecIdNumber;
 
-    model.disableDataSharing = model.disableDataSharing ?? false;
-
     let beneficiaryService = FactoryService.getService<BeneficiaryService>('BeneficiaryService');
     model.beneficiaryObligationSet = model.beneficiaryObligationSet.map((x: BeneficiaryObligation) => {
       return beneficiaryService.beneficiaryObligationInterceptor.send(x) as BeneficiaryObligation;

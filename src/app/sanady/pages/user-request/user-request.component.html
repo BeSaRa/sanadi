@@ -644,27 +644,27 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 mb-4">
-        <div class="border rounded-1 p-2">
-          <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="disclosureNonDisclosure"
-                     formControlName="disableDataSharing" (change)="$event ? handleNDAFieldChange($event) : null">
-              <label class="form-check-label"
-                     for="disclosureNonDisclosure">{{langService.map.non_disclosure}}</label>
-            </div>
-          </div>
-          <ng-container *ngIf="!currentRequest?.id && !!disableDataSharingField?.value">
+      <div class="row">
+        <div class="col-sm-12 mb-4">
+          <div class="border rounded-1 p-2">
             <div class="col-md-6 col-sm-12 mb-4 position-relative">
-              <file-uploader [showFileName]="true" [showFilePreview]="false"
-                             labelKey="nda_document"
-                             [allowedExtensions]="[fileExtensionsEnum.PDF]"
-                             (fileUploadEvent)="setNDAFile($event)"
-                             [isRequired]="true"></file-uploader>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="disclosureNonDisclosure"
+                       formControlName="disableDataSharing" (change)="$event ? handleNDAFieldChange($event) : null">
+                <label class="form-check-label"
+                       for="disclosureNonDisclosure">{{langService.map.non_disclosure}}</label>
+              </div>
             </div>
-          </ng-container>
+            <ng-container *ngIf="!currentRequest?.id && !!disableDataSharingField?.value">
+              <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <file-uploader [showFileName]="true" [showFilePreview]="false"
+                               labelKey="nda_document"
+                               [allowedExtensions]="[fileExtensionsEnum.PDF]"
+                               (fileUploadEvent)="setNDAFile($event)"
+                               [isRequired]="true"></file-uploader>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>

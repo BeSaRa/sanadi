@@ -396,7 +396,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       incomeTab: this.fb.group(beneficiary.getIncomeFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
-      disableDataSharing: this.fb.control(beneficiary.disableDataSharing),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
       aidTab: this.fb.array([])
     });
@@ -448,7 +447,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       personal?.markAsPristine();
       income?.reset();
       income?.markAsPristine();
-      this.disableDataSharingField.setValue(false);
       this.beneficiaryIncomeComponentRef.forceClearComponent();
       this.beneficiaryObligationComponentRef.forceClearComponent();
       address?.reset();
@@ -457,7 +455,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       personal?.patchValue(selectedBeneficiary.getPersonalFields());
       income?.patchValue(selectedBeneficiary.getIncomeFields());
       address?.patchValue(selectedBeneficiary.getAddressFields());
-      this.disableDataSharingField.setValue(selectedBeneficiary.disableDataSharing);
     }
 
   }
@@ -765,7 +762,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private uploadNDADocument(request: SubventionRequest): Observable<any> {
     // if NDA not enabled or existing request is updated, then proceed. otherwise, upload nda document
-    if (!this.currentBeneficiary!.disableDataSharing || (this.currentRequest && this.currentRequest.id)) {
+    if ((this.currentRequest && this.currentRequest.id) || !request.disableDataSharing) {
       return of('NO_NDA_NEEDED');
     } else {
       let data = (new SanadiAttachment()).clone(this.ndaFile) as SanadiAttachment;
@@ -811,7 +808,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
         ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
-        disableDataSharing: this.disableDataSharingField.value || false,
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
@@ -1161,10 +1157,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('requestInfoTab') as FormGroup;
   }
 
-  get disableDataSharingField(): FormControl {
-    return this.fm.getFormField('disableDataSharing') as FormControl;
-  }
-
   get requestStatusTab(): FormGroup {
     return this.fm.getFormField('requestStatusTab') as FormGroup;
   }
@@ -1255,6 +1247,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get allowCompletionField(): FormControl {
     return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
+  }
+
+  get disableDataSharingField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.disableDataSharing') as FormControl;
   }
 
   get isCurrentRequestPartial(): boolean {
