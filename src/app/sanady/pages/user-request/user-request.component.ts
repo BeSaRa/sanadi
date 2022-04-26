@@ -675,7 +675,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           beneficiary: this.prepareBeneficiary(),
           request: this.prepareRequest(),
         };
-      })
+      }),
+      switchMap((requestAndBen) => {
+        if (saveType === this.saveActions.skipValidateAndSave) {
+          return of(requestAndBen);
+        }
+        return this.checkMissingBeneficiaryIncomeObligations(requestAndBen.beneficiary)
+          .pipe(
+            filter(response => response),
+            map(() => requestAndBen)
+          )
+      }),
+      share()
     );
 
     const saveBeneficiary$ = requestWithBeneficiary$
@@ -695,19 +706,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(beneficiary => this.currentBeneficiary = beneficiary)
       );
 
-    saveBeneficiary$
-      .pipe(
-        withLatestFrom(requestWithBeneficiary$),
-        map((value) => {
-          value[1].request.benId = value[0]?.id as number;
-          return value[1].request;
-        }),
-        exhaustMap((request: SubventionRequest) => {
-          return request.save().pipe(catchError((err) => {
-            return of(null);
-          }));
-        })
-      ).subscribe((request) => {
+    saveBeneficiary$.pipe(
+      withLatestFrom(requestWithBeneficiary$),
+      map((value) => {
+        value[1].request.benId = value[0]?.id as number;
+        return value[1].request;
+      }),
+      exhaustMap((request: SubventionRequest) => {
+        return request.save().pipe(catchError((err) => {
+          return of(null);
+        }));
+      })
+    ).subscribe((request) => {
       if (!request) {
         return;
       }
@@ -790,14 +800,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private checkMissingBeneficiaryIncomeObligations(beneficiary: Beneficiary): Beneficiary {
+  private checkMissingBeneficiaryIncomeObligations(beneficiary: Beneficiary): Observable<boolean> {
     if (!beneficiary.beneficiaryIncomeSet.length || !beneficiary.beneficiaryObligationSet.length) {
-      this.dialogService.confirm(this.langService.map.msg_missing_incomes_or_obligations + '<br>' + this.langService.map.msg_confirm_continue)
-        .onAfterClose$.subscribe((userClickOn: UserClickOn) => {
-        return (userClickOn === UserClickOn.YES) ? beneficiary : null;
-      })
+      return this.dialogService.confirm(this.langService.map.msg_missing_incomes_or_obligations + '<br>' + this.langService.map.msg_confirm_continue)
+        .onAfterClose$
+        .pipe(
+          map((userClickOn: UserClickOn) => {
+            return userClickOn === UserClickOn.YES;
+          })
+        );
     }
-    return beneficiary;
+    return of(true);
   }
 
   private prepareBeneficiary(): Beneficiary {
