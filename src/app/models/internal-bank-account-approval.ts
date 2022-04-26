@@ -8,6 +8,8 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {BankAccount} from '@app/models/bank-account';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -42,6 +44,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   bankCategoryInfo!: AdminResult;
   mainAccountInfo!: AdminResult;
   currencyInfo!: AdminResult;
+  followUpDate!: string;
 
   service!: InternalBankAccountApprovalService;
 
@@ -75,5 +78,13 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
     return {
       description: controls ? [description, [CustomValidators.required]] : description,
     }
+  }
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }

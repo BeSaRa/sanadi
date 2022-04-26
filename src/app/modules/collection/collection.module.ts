@@ -16,6 +16,7 @@ import { FundraisingApproveTaskPopupComponent } from './popups/fundraising-appro
 import { CollectorApprovalComponent } from './pages/collector-approval/collector-approval.component';
 import { CollectorItemComponent } from './shared/collector-item/collector-item.component';
 import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
+import { ApprovalFormWithFollowupDateOnlyComponent } from './shared/approval-form-with-followup-date-only/approval-form-with-followup-date-only.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CollectorApprovalApproveTaskPopupComponent } from './popups/collector-a
     FundraisingApproveTaskPopupComponent,
     CollectorApprovalComponent,
     CollectorItemComponent,
-    CollectorApprovalApproveTaskPopupComponent
+    CollectorApprovalApproveTaskPopupComponent,
+    ApprovalFormWithFollowupDateOnlyComponent
   ],
   imports: [
     CommonModule,

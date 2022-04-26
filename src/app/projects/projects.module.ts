@@ -14,6 +14,8 @@ import {
 } from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 import { InternalBankAccountApprovalComponent } from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import { InternalBankAccountAaprovalApproveTaskPopupComponent } from './popups/internal-bank-account-aaproval-approve-task-popup/internal-bank-account-aaproval-approve-task-popup.component';
+import { InternalBankApprovalApproveTaskPopupComponent } from './popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
+import {CollectionModule} from '@app/modules/collection/collection.module';
 
 
 @NgModule({
@@ -24,13 +26,15 @@ import { InternalBankAccountAaprovalApproveTaskPopupComponent } from './popups/i
     UrgentInterventionLicenseComponent,
     UrgentInterventionApproveTaskPopupComponent,
     InternalBankAccountApprovalComponent,
-    InternalBankAccountAaprovalApproveTaskPopupComponent
+    InternalBankAccountAaprovalApproveTaskPopupComponent,
+    InternalBankApprovalApproveTaskPopupComponent
   ],
-  imports: [
-    CommonModule,
-    ProjectsRoutingModule,
-    SharedModule
-  ]
+    imports: [
+        CommonModule,
+        ProjectsRoutingModule,
+        SharedModule,
+        CollectionModule
+    ]
 })
 export class ProjectsModule {
 }

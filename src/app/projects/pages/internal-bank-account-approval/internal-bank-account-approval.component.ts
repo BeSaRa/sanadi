@@ -16,7 +16,6 @@ import {BankAccount} from '@app/models/bank-account';
 import {BankCategory} from '@app/enums/bank-category.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {CollectorApproval} from '@app/models/collector-approval';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {LicenseService} from '@app/services/license.service';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
@@ -596,7 +595,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     }
 
     this.licenseService
-      .internalBankAccountSearch<CollectorApproval>({
+      .internalBankAccountSearch<InternalBankAccountApproval>({
         fullSerial: this.oldLicenseFullSerialField.value
       })
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))

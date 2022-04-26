@@ -17,6 +17,11 @@ import {Bank} from '@app/models/bank';
 import {BankAccount} from '@app/models/bank-account';
 import {map} from 'rxjs/operators';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  InternalBankApprovalApproveTaskPopupComponent
+} from '@app/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -122,5 +127,12 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
       console.log('NPOs', result);
       return result;
     }));
+  }
+
+  approveTask(model: InternalBankAccountApproval, action: WFResponseType): DialogRef {
+    return this.dialog.show(InternalBankApprovalApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
   }
 }
