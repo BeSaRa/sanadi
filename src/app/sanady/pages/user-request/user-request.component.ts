@@ -271,8 +271,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       checkTouchedDirty: false,
       validStatus: () => {
         return this.incomeTab && this.incomeTab.valid
-          && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY' && this.beneficiaryObligationComponentRef.list.length > 0))
-          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY' && this.beneficiaryIncomeComponentRef.list.length > 0));
+          && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
+          && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'));
       },
       isTouchedOrDirty: () => {
         return (this.incomeTab && (this.incomeTab.touched || this.incomeTab.dirty))
@@ -586,16 +586,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // filter invalidForm stream
     const invalidFormPartial$ = formStatusPartial$.pipe(
-      filter(value => {
-        return value === false;
-      })
+      filter(value => value === false)
     );
+
+    // if we have invalid forms display dialog to tell the user that is something wrong happened.
+    invalidFormPartial$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.checkFormFieldsCallback();
+    });
 
     // filter valid form stream
     const validFormPartial$ = formStatusPartial$.pipe(
-      filter(value => {
-        return value === true;
-      })
+      filter(value => value === true)
     );
 
     // prepare the beneficiary/request Models.
@@ -619,7 +620,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           });
           return this.subventionResponseService.savePartialRequest(data)
             .pipe(catchError((err) => {
-              // this.exceptionHandlerService.handle(err);
               return of(null);
             }));
         })
@@ -634,27 +634,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.skipConfirmUnsavedChanges = true;
       this.router.navigate(['/home/sanady/request/', response.request.id]).then();
     });
-
-    // if we have invalid forms display dialog to tell the user that is something wrong happened.
-    invalidFormPartial$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.checkFormFieldsCallback();
-      });
   }
 
   private listenToSaveModel() {
     let saveType: string = '';
-    const formAidValid$ = this.save$
-      .pipe(
-        tap(val => {
-          saveType = val;
-        }),
-        tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
-        filter(_ => this.validRequestStatus()),
-        share()
-      );
-
+    const formAidValid$ = this.save$.pipe(
+      tap(val => saveType = val),
+      tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
+      filter(_ => this.validRequestStatus()),
+      share()
+    );
 
     // map formStatus
     const formStatus$ = formAidValid$.pipe(
@@ -667,20 +656,20 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
 
-
     // filter invalidForm stream
     const invalidForm$ = formStatus$.pipe(
-      filter(value => {
-        return value === false;
-      })
-    );
-    // filter valid form stream
-    const validForm$ = formStatus$.pipe(
-      filter(value => {
-        return value === true;
-      })
+      filter(value => value === false)
     );
 
+    // if we have invalid forms display dialog to tell the user that is something wrong happened.
+    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.checkFormFieldsCallback();
+    });
+
+    // filter valid form stream
+    const validForm$ = formStatus$.pipe(
+      filter(value => value === true)
+    );
 
     // prepare the beneficiary/request Models.
     const requestWithBeneficiary$ = validForm$.pipe(
@@ -718,7 +707,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         }),
         exhaustMap((request: SubventionRequest) => {
           return request.save().pipe(catchError((err) => {
-            // this.exceptionHandlerService.handle(err);
             return of(null);
           }));
         })
@@ -773,13 +761,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
     });
-
-    // if we have invalid forms display dialog to tell the user that is something wrong happened.
-    invalidForm$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.checkFormFieldsCallback();
-      });
   }
 
   private uploadNDADocument(request: SubventionRequest): Observable<any> {
@@ -812,6 +793,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  private checkMissingBeneficiaryIncomeObligations(beneficiary: Beneficiary): Beneficiary {
+    if (!beneficiary.beneficiaryIncomeSet.length || !beneficiary.beneficiaryObligationSet.length) {
+      this.dialogService.confirm(this.langService.map.msg_missing_incomes_or_obligations + '<br>' + this.langService.map.msg_confirm_continue)
+        .onAfterClose$.subscribe((userClickOn: UserClickOn) => {
+        return (userClickOn === UserClickOn.YES) ? beneficiary : null;
+      })
+    }
+    return beneficiary;
+  }
+
   private prepareBeneficiary(): Beneficiary {
     const personal = this.fm.getFormField('personalTab')?.value;
     const income = this.fm.getFormField('incomeTab')?.value;
@@ -821,8 +812,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       .clone({
         ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
         disableDataSharing: this.disableDataSharingField.value || false,
-        beneficiaryIncomeSet: this.beneficiaryIncomeComponentRef.list,
-        beneficiaryObligationSet: this.beneficiaryObligationComponentRef.list
+        beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
+        beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
   }
 
