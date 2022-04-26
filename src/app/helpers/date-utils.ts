@@ -67,7 +67,7 @@ export class DateUtils {
       dateFormat: format.toLowerCase(),
       inputFieldValidation: false,
       divHostElement: {enabled: true, placeholder: ''},
-      appendSelectorToBody: true
+      appendSelectorToBody: customOptions.appendToBody || false
     };
     if (customOptions.disablePeriod === 'none') {
       return options;
@@ -183,7 +183,7 @@ export class DateUtils {
     return dayjs(DateUtils.changeDateFromDatepicker(date as unknown as IMyDateModel)).endOf('day');
   }
 
-  static getTimeStampFromDate(date: IMyDateModel | Date | string): number  | null {
+  static getTimeStampFromDate(date: IMyDateModel | Date | string): number | null {
     if (!date) {
       return null;
     }

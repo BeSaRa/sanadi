@@ -3,4 +3,5 @@ export interface IDatepickerCustomOptions {
   format?: string;
   disableToday?: boolean;
   ignoreDays?: number;
+  appendToBody?: boolean
 }
