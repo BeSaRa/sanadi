@@ -13,6 +13,8 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'internal-bank-approval-approve-task-popup',
@@ -32,6 +34,11 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
 
   model: InternalBankAccountApproval;
   comment: FormControl = new FormControl();
+  followUpDate: FormControl = new FormControl();
+
+  datepickerOptionsMap: IKeyValue = {
+    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+  };
 
   constructor(
     private dialog: DialogService,
@@ -57,6 +64,7 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedLicense = this.model;
+    this.followUpDate.patchValue(this.model.followUpDate);
     this.listenToAction();
   }
 
@@ -79,7 +87,10 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(invalid => invalid && this.displayInvalidItemMessages()))
       .pipe(filter(invalid => !invalid))
-      .pipe(exhaustMap(_ => this.data.model.save()))
+      .pipe(exhaustMap(_ => {
+        this.model.followUpDate = DateUtils.getDateStringFromDate(this.followUpDate.value);
+        return this.data.model.save();
+      }))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
