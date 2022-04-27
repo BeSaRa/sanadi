@@ -64,6 +64,10 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     return this.form.get("basicInfo.requestType")!;
   }
 
+  get licenseDurationTypeField(): AbstractControl {
+    return this.form.get("basicInfo.licenseDurationType")!;
+  }
+
   get oldLicenseFullSerialField(): FormControl {
     return this.form.get("basicInfo.oldLicenseFullSerial") as FormControl;
   }
@@ -79,13 +83,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
 
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
-    let isAllowed =
-      !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return (
-      isAllowed &&
-      CommonUtils.isValidValue(this.requestType.value) &&
-      this.requestType.value !== CollectionRequestType.NEW
-    );
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return (isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW);
   }
 
   licenseSearch($event: Event): void {
@@ -126,7 +125,10 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldLicenseFullSerial) => {
-          return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
+          return this.loadLicencesByCriteria({
+            fullSerial: oldLicenseFullSerial,
+            licenseDurationType: this.licenseDurationTypeField.value
+          })
             .pipe(catchError(() => of([])));
         })
       )
