@@ -9,7 +9,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
     model.internalBankAccountDTOs = model.internalBankAccountDTOs?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber}) as unknown as BankAccount);
-    model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs?.map(npo => ({id: npo.id, arName: npo.arName, enName: npo.enName}) as unknown as NpoEmployee);
+    model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs?.map(npo => ({id: npo.id, arName: npo.arabicName, enName: npo.englishName}) as unknown as NpoEmployee);
 
     delete model.taskDetails;
     delete model.requestTypeInfo;

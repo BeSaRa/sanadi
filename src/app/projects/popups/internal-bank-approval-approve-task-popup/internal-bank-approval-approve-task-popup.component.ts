@@ -64,7 +64,7 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedLicense = this.model;
-    this.followUpDate.patchValue(this.model.followUpDate);
+    this.followUpDate.patchValue(DateUtils.changeDateToDatepicker(this.model.followUpDate));
     this.listenToAction();
   }
 

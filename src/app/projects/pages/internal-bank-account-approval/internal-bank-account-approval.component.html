@@ -199,7 +199,7 @@
                              id="selectedResponsiblePerson"
                              formControlName="selectedResponsiblePerson">
                     <ng-option [value]="option.id"
-                               *ngFor="let option of npoEmployees">{{option.enName}}</ng-option>
+                               *ngFor="let option of npoEmployees">{{option.getName()}}</ng-option>
                   </ng-select>
                 </div>
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -220,11 +220,11 @@
                              class="table table-striped table-bordered caption-top">
                         <ng-container cdkColumnDef="arName">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
-                          <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+                          <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
                         </ng-container>
                         <ng-container cdkColumnDef="enName">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-                          <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+                          <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
                         </ng-container>
                         <ng-container cdkColumnDef="jobTitle">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.job_title}}</th>

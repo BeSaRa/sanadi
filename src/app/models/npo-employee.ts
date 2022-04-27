@@ -1,4 +1,3 @@
-import {INames} from '@app/interfaces/i-names';
 import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
@@ -6,8 +5,8 @@ import {SearchableCloneable} from '@app/models/searchable-cloneable';
 export class NpoEmployee extends SearchableCloneable<NpoEmployee>{
   orgId!: number;
   getqId!: number;
-  arName!: string;
-  enName!: string;
+  arabicName!: string;
+  englishName!: string;
   email!: string;
   jobTitle!: string;
   phone!: string;
@@ -23,6 +22,6 @@ export class NpoEmployee extends SearchableCloneable<NpoEmployee>{
   }
 
   getName(): string {
-    return this[(this.langService?.map.lang + 'Name') as keyof INames] || '';
+    return this.langService?.map.lang == 'ar' ? this.arabicName : this.englishName;
   }
 }
