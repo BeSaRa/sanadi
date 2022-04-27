@@ -8,7 +8,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
 
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
-    model.internalBankAccountDTO = model.internalBankAccountDTO?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber}) as unknown as BankAccount);
+    model.internalBankAccountDTOs = model.internalBankAccountDTOs?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber}) as unknown as BankAccount);
     model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs?.map(npo => ({id: npo.id, arName: npo.arName, enName: npo.enName}) as unknown as NpoEmployee);
 
     delete model.taskDetails;
@@ -38,7 +38,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo) : AdminResult.createInstance({});
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo): AdminResult.createInstance({});
-    model.internalBankAccountDTO = model.internalBankAccountDTO || [];
+    model.internalBankAccountDTOs = model.internalBankAccountDTOs || [];
 
     return model;
   }

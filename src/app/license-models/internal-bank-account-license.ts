@@ -20,7 +20,7 @@ export class InternalBankAccountLicense {
   fullSerial!: string;
   iBan!: string;
   id!: string;
-  internalBankAccountDTO!: any[];
+  internalBankAccountDTOs!: any[];
   lastModified!: string;
   licenseType!: number;
   lockOwner!: boolean;
@@ -50,7 +50,7 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.iBan = this.iBan;
     internalBankAccountApproval.accountNumber = this.accountNumber;
     internalBankAccountApproval.swiftCode = this.swiftCode;
-    internalBankAccountApproval.internalBankAccountDTO = this.internalBankAccountDTO.map((ba: BankAccount) => {
+    internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
       return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs;

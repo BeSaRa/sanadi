@@ -100,10 +100,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     return this.form.get('basicInfo.mainAccount')!;
   }
 
-  get bankAccountsToMerge(): AbstractControl {
-    return this.form.get('basicInfo.internalBankAccountDTO')!;
-  }
-
   get oldLicenseFullSerialField(): AbstractControl {
     return this.form.get('basicInfo.oldLicenseFullSerial')!;
   }
@@ -193,7 +189,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       ...this.specialExplanation.getRawValue()
     });
     model.organizationId = this.employeeService.getOrgUnit()?.id!;
-    model!.internalBankAccountDTO = this.selectedBankAccounts;
+    model!.internalBankAccountDTOs = this.selectedBankAccounts;
     model!.bankAccountExecutiveManagementDTOs = this.selectedNPOEmployees;
     return model;
   }
@@ -234,7 +230,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
     this.requestTypeOrOperationTypeChanged();
     this.toggleAccountCategoryControl(this.bankAccountCategory.value);
-    this.selectedBankAccounts = this.model.internalBankAccountDTO?.map(ba => {
+    this.selectedBankAccounts = this.model.internalBankAccountDTOs?.map(ba => {
       ba.bankInfo = (new Bank()).clone(ba.bankInfo);
       return ba;
     });

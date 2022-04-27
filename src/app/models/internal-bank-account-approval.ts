@@ -38,7 +38,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   exportedLicenseSerial!: number;
   licenseVSID!: string;
   subject!: string;
-  internalBankAccountDTO: BankAccount[] = [];
+  internalBankAccountDTOs: BankAccount[] = [];
   selectedBankAccountToMerge!: BankAccount;
   operationTypeInfo!: AdminResult;
   bankCategoryInfo!: AdminResult;
