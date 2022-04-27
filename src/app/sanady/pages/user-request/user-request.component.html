@@ -46,7 +46,7 @@
               <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
                          [readonly]="beneficiaryPrimaryIdDisabled()"
                          placeholder="{{langService.map.select}}" id="benPrimaryIdType"
-                         [notFoundText]="langService.map.msg_not_found"
+                         [notFoundText]="langService.map.msg_not_found" appendTo="body"
                          formControlName="benPrimaryIdType">
                 <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                            [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
@@ -78,7 +78,7 @@
                 <label for="benPrimaryIdNationality" class="form-label"
                        asteriskIfRequired="benPrimaryIdNationality">{{langService.map.lbl_nationality}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
-                           [readonly]="beneficiaryPrimaryIdDisabled(true)"
+                           [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
                            [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
@@ -91,7 +91,7 @@
                 <label for="benPrimaryIdNationalityGulf" class="form-label"
                        asteriskIfRequired="benPrimaryIdNationality">{{langService.map.country}}</label>
                 <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationalityGulf" [clearable]="false"
-                           [readonly]="beneficiaryPrimaryIdDisabled(true)"
+                           [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
                            [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
@@ -115,7 +115,7 @@
               <label for="benSecIdType" class="form-label"
                      asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
-                         [readonly]="beneficiarySecondaryIdDisabled()"
+                         [readonly]="beneficiarySecondaryIdDisabled()" appendTo="body"
                          placeholder="{{langService.map.select}}" id="benSecIdType"
                          [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
                 <ng-option value="">{{langService.map.lbl_none}}</ng-option>
@@ -142,7 +142,7 @@
                            [readonly]="beneficiarySecondaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benSecIdNationality"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benSecIdNationality"
+                           formControlName="benSecIdNationality" appendTo="body"
                            [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
@@ -157,7 +157,7 @@
                            [readonly]="beneficiarySecondaryIdDisabled(true)"
                            placeholder="{{langService.map.select}}" id="benSecIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="benSecIdNationality"
+                           formControlName="benSecIdNationality" appendTo="body"
                            [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
@@ -240,7 +240,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="gender"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="gender"
+                         formControlName="gender" appendTo="body"
                          [ngClass]="fm.getStatusClass('personalTab.gender')">
                 <ng-option *ngFor="let option of lookup.listByCategory.Gender" [value]="option.lookupKey">
                   {{option.getName()}}
@@ -275,7 +275,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="nationality"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benNationality"
+                         formControlName="benNationality" appendTo="body"
                          [ngClass]="fm.getStatusClass('personalTab.benNationality')">
                 <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
                   {{option.getName()}}
@@ -327,7 +327,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="maritalStatus"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="maritalStatus"
+                         formControlName="maritalStatus" appendTo="body"
                          [ngClass]="fm.getStatusClass('personalTab.maritalStatus')">
                 <ng-option *ngFor="let option of lookup.listByCategory.BenMaritialStatus" [value]="option.lookupKey">
                   {{option.getName()}}
@@ -347,7 +347,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="educationLevel"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="educationLevel"
+                         formControlName="educationLevel" appendTo="body"
                          [ngClass]="fm.getStatusClass('personalTab.educationLevel')">
                 <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
                   {{option.getName()}}
@@ -402,7 +402,7 @@
                        [readonly]="readOnly || isPartialRequest"
                        placeholder="{{langService.map.select}}" id="employmentStatus"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="occuptionStatus"
+                       formControlName="occuptionStatus" appendTo="body"
                        [ngClass]="fm.getStatusClass('incomeTab.occuptionStatus')">
               <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
                 {{option.getName()}}
@@ -492,7 +492,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="city"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="residenceCountry"
+                         formControlName="residenceCountry" appendTo="body"
                          [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
                 <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
                   {{option.getName()}}
@@ -538,7 +538,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="aidLookupParentId"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="aidLookupParentId"
+                         formControlName="aidLookupParentId" appendTo="body"
                          (change)="handleMainAidChange($event)"
                          [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupParentId')">
                 <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
@@ -559,7 +559,7 @@
                          [readonly]="readOnly || isPartialRequest"
                          placeholder="{{langService.map.select}}" id="aidLookupId"
                          [notFoundText]="langService.map.msg_not_found"
-                         formControlName="aidLookupId"
+                         formControlName="aidLookupId" appendTo="body"
                          [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupId')">
                 <ng-option *ngFor="let option of subAidLookupsList" [value]="option.id">
                   {{option.getName()}}
@@ -681,7 +681,7 @@
                        [readonly]="readOnly"
                        placeholder="{{langService.map.select}}" id="requestStatus"
                        [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status"
+                       formControlName="status" appendTo="body"
                        [ngClass]="fm.getStatusClass('requestStatusTab.status')">
               <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
                          [disabled]="option.isRemovedSubRequestStatus() || option.isCancelledSubRequestStatus()"
@@ -756,7 +756,7 @@
                            [readonly]="readOnly || isPartialRequest"
                            placeholder="{{langService.map.select}}" id="requestedAidCategory"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="aidLookupParentId"
+                           formControlName="aidLookupParentId" appendTo="body"
                            (change)="handleAidsMainAidChange($event)"
                            [ngClass]="fm.getStatusClass('aidTab.0.aidLookupParentId')">
                   <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
@@ -777,7 +777,7 @@
                            [readonly]="readOnly || isPartialRequest"
                            placeholder="{{langService.map.select}}" id="requestedAid"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="aidLookupId"
+                           formControlName="aidLookupId" appendTo="body"
                            [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
                   <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
                     {{option.getName()}}
@@ -859,7 +859,7 @@
                            [readonly]="readOnly"
                            placeholder="{{langService.map.select}}" id="periodicType"
                            [notFoundText]="langService.map.msg_not_found"
-                           formControlName="periodicType"
+                           formControlName="periodicType" appendTo="body"
                            (change)="aidsPeriodicTypeChange($event, true)"
                            [ngClass]="fm.getStatusClass('aidTab.0.periodicType')">
                   <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType"

@@ -129,12 +129,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToPrimaryIdTypeChange();
     this.listenToSecondaryIdTypeChange();
     this.preparePeriodicityLookups();
-    this.listenToRouteParams();
     this.loadMainAidLookups();
 
   }
 
   ngAfterViewInit(): void {
+    this.listenToRouteParams();
     this.cd.detectChanges();
   }
 
@@ -576,7 +576,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private listenToSavePartialRequest() {
     const formStatusPartial$ = this.savePartial$.pipe(
-      tap(val => console.log(val)),
+      // tap(val => console.log(val)),
       delay(100),
       map(() => {
         return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
@@ -907,7 +907,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if partial request page, save it directly
         if (this.currentParamType === this.routeParamTypes.partial) {
-          this.savePartial$.next(this.saveActions.partialSave);
+         setTimeout(()=>{
+           this.savePartial$.next(this.saveActions.partialSave);
+         }, 200)
         }
       });
   }
