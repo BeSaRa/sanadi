@@ -7,6 +7,7 @@ import {FormManager} from '@app/models/form-manager';
 import {BehaviorSubject, merge, Observable, of, Subject, Subscription} from 'rxjs';
 import {
   catchError,
+  delay,
   distinctUntilChanged,
   exhaustMap,
   filter,
@@ -576,6 +577,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private listenToSavePartialRequest() {
     const formStatusPartial$ = this.savePartial$.pipe(
       tap(val => console.log(val)),
+      delay(100),
       map(() => {
         return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
       })
