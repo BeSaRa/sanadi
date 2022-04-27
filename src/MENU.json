@@ -501,8 +501,8 @@
     "isSvg": false,
     "permission": "TRAINING_CERTIFICATE_TEMPLATE",
     "permissionGroup": null,
-    "parent": 6,
-    "group": "administration",
+    "parent": 35,
+    "group": "training-services",
     "itemOrder": 4,
     "svg": null
   },

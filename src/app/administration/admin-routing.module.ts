@@ -49,40 +49,65 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: null, configPermissionGroup: 'MANAGE_USER_PERMISSIONS_GROUP', checkAnyPermission: true},
   },
-  {path: 'services', component: ServiceDataComponent},
+  {
+    path: 'services', component: ServiceDataComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_SERVICES_DATA', configPermissionGroup: null, checkAnyPermission: false}
+  },
   {
     path: 'attachment-types', component: AttachmentTypesComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: null, configPermissionGroup: null, checkAnyPermission: false},
+    data: {permissionKey: 'MANAGE_ATTACHMENT_TYPES', configPermissionGroup: null, checkAnyPermission: false},
   },
   {
     path: 'teams', component: TeamComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_TEAMS', configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'countries', component: CountryComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_COUNTRIES', configPermissionGroup: null, checkAnyPermission: false}
   },
-  {path: 'internal-users', component: InternalUserComponent},
-  {path: 'internal-departments', component: InternalDepartmentComponent},
-  {path: 'job-titles', component: JobTitleComponent},
-  {path: 'ocha-dac-class', component: DacOchaComponent},
   {
-    path: 'survey-questions',
+    path: 'internal-users', component: InternalUserComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_INTERNAL_USERS', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'internal-departments', component: InternalDepartmentComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_INTERNAL_DEPARTMENTS', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'job-titles', component: JobTitleComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_JOB_TITLES', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'ocha-dac-class', component: DacOchaComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_DAC_OUCHA_CATEGORIES', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'survey-questions', component: SurveyQuestionComponent,
+    canActivate: [PermissionGuard],
     data: {
       permissionKey: Permissions.TRAINING_SURVEY_EDIT_QUESTION,
       configPermissionGroup: null,
       checkAnyPermission: false
     },
-    canActivate: [PermissionGuard], component: SurveyQuestionComponent
   },
   {
-    path: 'survey-templates', data: {
-      permissionKey: Permissions.TRAINING_SURVEY_TEMPLATE,
-      configPermissionGroup: null,
-      checkAnyPermission: false
-    }, canActivate: [PermissionGuard], component: SurveyTemplateComponent
+    path: 'survey-templates',
+    canActivate: [PermissionGuard], component: SurveyTemplateComponent,
+    data: {permissionKey: Permissions.TRAINING_SURVEY_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false},
   },
-
-  {path: 'sdg', component: SdGoalComponent},
+  {
+    path: 'sdg', component: SdGoalComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_DAC_OUCHA_CATEGORIES', configPermissionGroup: null, checkAnyPermission: false}
+  },
 ];
 
 @NgModule({
