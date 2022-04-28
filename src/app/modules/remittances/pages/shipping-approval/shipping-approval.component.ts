@@ -10,7 +10,7 @@ import { Observable, of, Subject } from "rxjs";
 import { LookupService } from "@app/services/lookup.service";
 import { Lookup } from "@app/models/lookup";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { ReceiverTypes } from "@app/enums/receiver-type.enum";
 import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -155,7 +155,95 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.listenToLinkedProjectChanges();
     this.listenToReceiverTypeChanges();
     this.listenToCountryChange();
+    this.listenToOrderNoChange();
+    this.listenToDocNoChange();
     this.handleReadonly();
+  }
+
+  listenToOrderNoChange() {
+    this.fullSerial.valueChanges
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe(() => {
+        if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
+          this.fullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.fullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+          this.exportedBookFullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.exportedBookFullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+
+          this.fullSerial.updateValueAndValidity();
+          this.exportedBookFullSerial.updateValueAndValidity();
+        } else if (this.fullSerial.value) {
+          this.exportedBookFullSerial.clearValidators();
+          this.exportedBookFullSerial.updateValueAndValidity();
+          this.fullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.fullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+          this.fullSerial.updateValueAndValidity();
+        }
+      });
+  }
+
+  listenToDocNoChange() {
+    this.exportedBookFullSerial.valueChanges
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe(() => {
+        if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
+          this.fullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.fullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+          this.exportedBookFullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.exportedBookFullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+
+          this.fullSerial.updateValueAndValidity();
+          this.exportedBookFullSerial.updateValueAndValidity();
+        } else if (this.exportedBookFullSerial.value) {
+          this.fullSerial.clearValidators();
+          this.fullSerial.updateValueAndValidity();
+          this.exportedBookFullSerial.setValidators([
+            CustomValidators.required,
+            (control) => {
+              return this.selectedDocument &&
+                this.selectedDocument?.exportedBookFullSerial === control.value
+                ? null
+                : { select_document: true };
+            },
+          ]);
+          this.exportedBookFullSerial.updateValueAndValidity();
+        }
+      });
   }
 
   handleReadonly(): void {
@@ -324,6 +412,10 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.form.reset();
     this.model = this._getNewInstance();
     this.setSelectedDocument(undefined, true);
+    this.exportedBookFullSerial.clearValidators();
+    this.exportedBookFullSerial.updateValueAndValidity();
+    this.fullSerial.clearValidators();
+    this.fullSerial.updateValueAndValidity();
   }
 
   documentSearchByOrderNo($event: Event): void {
