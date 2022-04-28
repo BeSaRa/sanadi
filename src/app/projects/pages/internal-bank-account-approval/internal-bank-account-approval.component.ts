@@ -47,7 +47,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   oldLicenseFullSerialControl: FormControl = new FormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'actions'];
-  selectedPersonsDisplayedColumns: string[] = ['arName', 'enName', 'email', 'jobTitle', 'actions'];
+  selectedPersonsDisplayedColumns: string[] = ['arName', 'enName', 'actions'];
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
   isUpdateMerge = false;
