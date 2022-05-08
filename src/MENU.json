@@ -474,7 +474,7 @@
     "icon": "mdi-alpha-p-box-outline",
     "isSvg": false,
     "permission": null,
-    "permissionGroup": "TRAINING_PROGRAMS_PAGE_GROUP",
+    "permissionGroup": "TRAINING_PROGRAMS_MENU_ITEM_GROUP",
     "parent": 35,
     "group": "training-services",
     "itemOrder": 2,

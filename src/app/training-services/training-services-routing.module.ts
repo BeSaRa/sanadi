@@ -21,7 +21,7 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {
       permissionKey: null,
-      configPermissionGroup: PermissionGroup.TRAINING_PROGRAMS_PAGE_GROUP,
+      configPermissionGroup: PermissionGroup.TRAINING_PROGRAMS_MENU_ITEM_GROUP,
       checkAnyPermission: true
     }
   },
