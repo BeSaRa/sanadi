@@ -269,7 +269,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'incomeTab',
       langKey: 'income_employment',
       index: 2,
-      checkTouchedDirty: false,
+      checkTouchedDirty: true,
       validStatus: () => {
         return this.incomeTab && this.incomeTab.valid
           && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
