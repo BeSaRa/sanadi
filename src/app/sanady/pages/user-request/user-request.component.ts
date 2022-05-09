@@ -679,7 +679,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       }),
       switchMap((requestAndBen) => {
-        if (saveType === this.saveActions.skipValidateAndSave) {
+        if (saveType !== this.saveActions.validateAndSave) {
           return of(requestAndBen);
         }
         return this.checkMissingBeneficiaryIncomeObligations(requestAndBen.beneficiary)
@@ -907,9 +907,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if partial request page, save it directly
         if (this.currentParamType === this.routeParamTypes.partial) {
-         setTimeout(()=>{
-           this.savePartial$.next(this.saveActions.partialSave);
-         }, 200)
+          setTimeout(() => {
+            this.savePartial$.next(this.saveActions.partialSave);
+          }, 200)
         }
       });
   }
