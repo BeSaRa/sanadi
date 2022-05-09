@@ -42,7 +42,8 @@ export class ExternalLoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginFromExternal = this.fb.group({
       username: ['', [CustomValidators.required, CustomValidators.number]],
-      password: [''] // for now, it is not required till we make full integration with NAS Services.
+      // password: [''], // for now, it is not required till we make full integration with NAS Services.
+      userPassword: ['', CustomValidators.required]
     });
     this.listenToLoginEvent();
   }
@@ -67,7 +68,8 @@ export class ExternalLoginComponent implements OnInit {
       exhaustMap(() => {
         return this.authService
           .login({
-            qId: this.loginFromExternal.value.username
+            qId: this.loginFromExternal.value.username,
+            userPassword: this.loginFromExternal.value.userPassword
           }, true)
           .pipe(
             mapTo(true),
