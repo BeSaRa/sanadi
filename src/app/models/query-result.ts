@@ -183,7 +183,11 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.PARTNER_APPROVAL]: WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT,
-      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.COLLECTION_APPROVAL]: WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.COLLECTOR_LICENSING]: WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT
     }
 
     if (!caseType) {
@@ -196,7 +200,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   sendToSupervisionAndControlDepartment(_claimBefore: boolean = false): Observable<boolean> {
     let service = this.service.getService(this.BD_CASE_TYPE),
-      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+      taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {
