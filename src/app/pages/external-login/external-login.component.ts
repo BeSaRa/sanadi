@@ -60,7 +60,9 @@ export class ExternalLoginComponent implements OnInit {
   }
 
   processLogin(): void {
-    this.login$.next();
+    if (this.loginFromExternal && this.loginFromExternal.valid) {
+      this.login$.next();
+    }
   }
 
   private listenToLoginEvent(): void {
