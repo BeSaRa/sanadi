@@ -394,7 +394,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
         filter<null | SelectedLicenseInfo<CollectorLicense, CollectorLicense>, SelectedLicenseInfo<CollectorLicense, CollectorLicense>>
         ((info): info is SelectedLicenseInfo<CollectorLicense, CollectorLicense> => !!info))
       .pipe(filter((license) => {
-        let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
+        let isAlreadyAdded = this.isLicenseAlreadyAdded(license.details);
         if (isAlreadyAdded) {
           this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
         }
