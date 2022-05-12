@@ -447,4 +447,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   isLicenseAlreadyAdded(selectedLicense: any): boolean {
     return this.model.collectorItemList.some(x => x.oldLicenseFullSerial === selectedLicense.fullSerial);
   }
+
+  isEditLicenseEndDateDisabled(): boolean {
+    return (this.isPermanent || !this.isNewRequestType() || this.readOnly || this.viewOnly);
+  }
 }

@@ -116,9 +116,9 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="licenseEndDate"
-               [ngClass]="{'input-disabled': (isPermanent || isCancelRequestType() || readOnly || viewOnly)}"
+               [ngClass]="{'input-disabled': isEditLicenseEndDateDisabled()}"
                id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
-               (click)="!(isPermanent || isCancelRequestType() || readOnly || viewOnly) && dpLicenseEndDate.toggleCalendar()"
+               (click)="!isEditLicenseEndDateDisabled() && dpLicenseEndDate.toggleCalendar()"
                #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker></div>
           <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
         </div>
