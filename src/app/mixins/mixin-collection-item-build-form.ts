@@ -24,10 +24,6 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
       const {
         identificationNumber,
         locationDetails,
-        /*buildingNumber,
-        streetNumber,
-        zoneNumber,
-        unitNumber,*/
         latitude,
         longitude,
         licenseEndDate,
@@ -36,10 +32,6 @@ export function mixinCollectionItemBuildForm<T extends Constructor<{}>>(baseClas
       return {
         identificationNumber: controls ? [identificationNumber, [CustomValidators.required, CustomValidators.maxLength(50)]] : identificationNumber,
         locationDetails: controls ? [locationDetails, [CustomValidators.required, CustomValidators.maxLength(50)]] : locationDetails,
-        /*buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
-        streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
-        zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
-        unitNumber: controls ? [unitNumber, [CustomValidators.required]] : unitNumber,*/
         latitude: controls ? [{value: latitude, disabled: true}, [CustomValidators.required]] : latitude,
         longitude: controls ? [{value: longitude, disabled: true}, [CustomValidators.required]] : longitude,
         licenseEndDate: controls ? [DateUtils.changeDateToDatepicker(licenseEndDate)] : DateUtils.changeDateToDatepicker(licenseEndDate),
