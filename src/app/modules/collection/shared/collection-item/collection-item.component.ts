@@ -106,7 +106,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'licenseEndDate', 'map', 'exportedLicenseFullSerial', 'actions'];
+  columns: string[] = ['identificationNumber', 'zoneNumber', 'streetNumber', 'buildingNumber', 'unitNumber', 'licenseEndDate', 'map', 'oldLicenseFullSerial', 'exportedLicenseFullSerial', 'actions'];
   @Input()
   approvalMode: boolean = false;
 
@@ -392,8 +392,27 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license)
   }
 
+  isNewRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.NEW);
+  }
+
   isCancelRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
+  }
+
+  viewOldLicense(item: CollectionItem): void {
+    if (this.isNewRequestType() || !item.oldLicenseFullSerial) {
+      return;
+    }
+    let license = {
+      documentTitle: item.oldLicenseFullSerial,
+      id: item.oldLicenseId
+    };
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
   }
 
   viewGeneratedLicense(item: CollectionItem): void {

@@ -27,6 +27,7 @@ import {SharedService} from '@app/services/shared.service';
 import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {CollectionItem} from '@app/models/collection-item';
 
 @Component({
   selector: 'collector-item',
@@ -120,7 +121,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   @Output()
   formOpenedStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  columns: string[] = ['identificationNumber', 'arabicName', 'collectorType', 'jobTitle', 'exportedLicenseFullSerial', 'actions'];
+  columns: string[] = ['identificationNumber', 'arabicName', 'collectorType', 'jobTitle', 'oldLicenseFullSerial', 'exportedLicenseFullSerial', 'actions'];
   @Input()
   approvalMode: boolean = false;
 
@@ -405,8 +406,27 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
+  isNewRequestType(): boolean {
+    return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.NEW);
+  }
+
   isCancelRequestType(): boolean {
     return !!this.model && !!this.model.requestType && (this.model.requestType === CollectionRequestType.CANCEL);
+  }
+
+  viewOldLicense(item: CollectionItem): void {
+    if (this.isNewRequestType() || !item.oldLicenseFullSerial) {
+      return;
+    }
+    let license = {
+      documentTitle: item.oldLicenseFullSerial,
+      id: item.oldLicenseId
+    };
+
+    this.licenseService.showLicenseContent(license, this.model.getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
+      });
   }
 
   viewGeneratedLicense(item: CollectorItem): void {

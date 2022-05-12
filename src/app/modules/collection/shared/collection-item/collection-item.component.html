@@ -130,6 +130,14 @@
           </div>
         </td>
       </ng-container>
+      <ng-container cdkColumnDef="oldLicenseFullSerial">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <span *ngIf="isNewRequestType()">N/A</span>
+          <span *ngIf="!isNewRequestType()" class="text-primary text-decoration-none cursor-pointer"
+                (click)="viewOldLicense(row)">{{row.oldLicenseFullSerial || ''}}</span>
+        </td>
+      </ng-container>
       <ng-container cdkColumnDef="exportedLicenseFullSerial">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.generated_license_number}}</th>
         <td cdk-cell *cdkCellDef="let row">
