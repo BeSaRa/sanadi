@@ -19,8 +19,8 @@
               <label class="form-label" for="username">{{lang.map.lbl_username}}</label>
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-account"></i>
-                <input (keyup.enter)="processLogin()" formControlName="username" cdkTrapFocus tabindex="1" id="username"
-                       [placeholder]="lang.map.qatari_id_number" onlyNumbers
+                <input formControlName="username" cdkTrapFocus tabindex="1" id="username"
+                       [placeholder]="lang.map.qatari_id_number"
                        class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" type="text">
               </div>
             </div>
@@ -28,7 +28,7 @@
               <label for="userPassword" class="form-label">{{lang.map.lbl_password}}</label>
               <div class="input-group shadow-sm">
                 <i class="input-group-text mdi mdi-lock"></i>
-                <input (keyup.enter)="processLogin()" formControlName="userPassword" tabindex="2" class="form-control p-right"
+                <input formControlName="userPassword" tabindex="2" class="form-control p-right"
                        [placeholder]="lang.map.lbl_enter_your_password_here"
                        id="userPassword"
                        [type]="passwordFieldType">
