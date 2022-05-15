@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {JobTitle} from '@app/models/job-title';
-import {ComponentType} from '@angular/cdk/portal';
-import {JobTitlePopupComponent} from '@app/administration/popups/job-title-popup/job-title-popup.component';
-import {JobTitleInterceptor} from '@app/model-interceptors/job-title-interceptor';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {DialogService} from '@app/services/dialog.service';
-import {FactoryService} from '@app/services/factory.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import {
+  BackendWithDialogOperationsGenericService
+} from '@app/generics/backend-with-dialog-operations-generic-service';
+import { JobTitle } from '@app/models/job-title';
+import { ComponentType } from '@angular/cdk/portal';
+import { JobTitlePopupComponent } from '@app/administration/popups/job-title-popup/job-title-popup.component';
+import { JobTitleInterceptor } from '@app/model-interceptors/job-title-interceptor';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { DialogService } from '@app/services/dialog.service';
+import { FactoryService } from '@app/services/factory.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 
 @Injectable({
   providedIn: 'root'

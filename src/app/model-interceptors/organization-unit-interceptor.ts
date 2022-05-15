@@ -1,7 +1,7 @@
-import {OrgUnit} from '../models/org-unit';
-import {hasValidLength, isValidValue} from '../helpers/utils';
-import {DateUtils} from '../helpers/date-utils';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import { OrgUnit } from '../models/org-unit';
+import { hasValidLength, isValidValue } from '../helpers/utils';
+import { DateUtils } from '../helpers/date-utils';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 
 export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
   receive(model: OrgUnit | any): (OrgUnit | any) {
@@ -9,13 +9,23 @@ export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
     model.registryDate = DateUtils.changeDateToDatepicker(model.registryDate);
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.budgetClosureDate = DateUtils.changeDateToDatepicker(model.budgetClosureDate);
+    try {
+      if (isValidValue(model.arabicBoardMembers) && typeof model.arabicBoardMembers === 'string') {
+        model.arabicBoardMembers = JSON.parse(model.arabicBoardMembers);
+      }
+    } catch (e) {
+      console.log('model.arabicBoardMembers has parsing problem');
+      model.arabicBoardMembers = []
+    }
+    try {
+      if (isValidValue(model.enBoardMembers) && typeof model.enBoardMembers === 'string') {
+        model.enBoardMembers = JSON.parse(model.enBoardMembers);
+      }
+    } catch (e) {
+      console.log('model.enBoardMembers has parsing problem');
+      model.enBoardMembers = []
+    }
 
-    if (isValidValue(model.arabicBoardMembers) && typeof model.arabicBoardMembers === 'string') {
-      model.arabicBoardMembers = JSON.parse(model.arabicBoardMembers);
-    }
-    if (isValidValue(model.enBoardMembers) && typeof model.enBoardMembers === 'string') {
-      model.enBoardMembers = JSON.parse(model.enBoardMembers);
-    }
     return model;
   }
 
