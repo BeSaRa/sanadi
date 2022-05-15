@@ -5,6 +5,7 @@ import { ServiceItemResolver } from "@app/resolvers/service-item.resolver";
 import { EServiceComponentWrapperComponent } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { ShippingApprovalComponent } from "./pages/shipping-approval/shipping-approval.component";
 import { RemittanceComponent } from "./remittance.component";
+import {EServicePermissions} from '@app/enums/e-service-permissions';
 
 const routes: Routes = [
   { path: "", component: RemittanceComponent },
@@ -14,6 +15,9 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
+      permissionKey: EServicePermissions.SHIPPING_APPROVAL,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
       render: "ShippingApprovalComponent",
     },
   },

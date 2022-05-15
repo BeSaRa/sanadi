@@ -52,6 +52,9 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
+      permissionKey: EServicePermissions.INTERNAL_BANK_ACCOUNT_APPROVAL,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
       render: 'InternalBankAccountApprovalComponent'
     }
   }

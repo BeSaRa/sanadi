@@ -59,11 +59,18 @@ const routes: Routes = [
         data: {configPermissionGroup: PermissionGroup.TRAINING_PROGRAMS_PAGE_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
       },
-      { path: 'collection',
+      {
+        path: 'collection',
         canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroup.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
-        loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) },
-      {path: 'remittance', loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule)},
+        loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule)
+      },
+      {
+        path: 'remittance',
+        canActivate: [ServicesGuard],
+        loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule),
+        data: {configPermissionGroup: PermissionGroup.REMITTANCE_PERMISSIONS_GROUP, checkAnyPermission: true}
+      },
       //{path: '**', redirectTo: '../error'}
     ]
   },
