@@ -3,6 +3,7 @@ import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license
 import {AdminResult} from '@app/models/admin-result';
 import {Domains} from "@app/enums/domains.enum";
 import {DateUtils} from '@app/helpers/date-utils';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<UrgentInterventionLicense> {
   receive(model: UrgentInterventionLicense): UrgentInterventionLicense {
@@ -28,6 +29,7 @@ export class UrgentInterventionLicenseInterceptor implements IModelInterceptor<U
   send(model: Partial<UrgentInterventionLicense>): Partial<UrgentInterventionLicense> {
     UrgentInterventionLicenseInterceptor._deleteBeforeSend(model);
     model.domain = model.domain ?? Domains.HUMAN;
+    model.licenseStartDate = !model.licenseStartDate ? undefined : DateUtils.changeDateFromDatepicker(model.licenseStartDate as unknown as IMyDateModel)?.toISOString();
     return model;
   }
 
