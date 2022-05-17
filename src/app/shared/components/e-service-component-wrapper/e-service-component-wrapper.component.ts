@@ -93,6 +93,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
   ];
+  internalUserServices: number[] = [
+    CaseTypes.INQUIRY,
+    CaseTypes.CONSULTATION,
+    CaseTypes.INTERNATIONAL_COOPERATION,
+  ];
 
   finalApproveByMatrixServices: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
@@ -213,7 +218,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'btn_save',
         disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
-        show: (item) => !this.internal,
+        show: (item) => {
+          // show if external user or service which are only for internal user
+          return !this.internal || this.internalUserServices.includes(item.getCaseType());
+        },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
         }
@@ -254,7 +262,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: (item) => {
           return this.component.form.invalid || item?.alreadyStarted()
         },
-        show: (item) => !this.internal,
+        show: (item) => {
+          // show if external user or service which are only for internal user
+          return !this.internal || this.internalUserServices.includes(item.getCaseType());
+        },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
         }
@@ -339,7 +350,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
         disabled: () => this.component.readonly,
-        show: (item) => !this.internal,
+        show: (item) => {
+          // show if external user or service which are only for internal user
+          return !this.internal || this.internalUserServices.includes(item.getCaseType());
+        },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
         }
