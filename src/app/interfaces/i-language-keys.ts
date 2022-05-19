@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  lbl_add_bank: string;
+  lbl_edit_bank: string;
+  menu_bank: string;
   generated_document_number: string;
   view_document: string;
   err_missing_document: string;

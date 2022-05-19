@@ -648,5 +648,18 @@
     "group": "projects",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 51,
+    "langKey": "menu_bank",
+    "path": "/home/administration/bank",
+    "icon": "mdi-bank",
+    "isSvg": false,
+    "permission": "",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 25,
+    "svg": null
   }
 ]

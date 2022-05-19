@@ -60,6 +60,8 @@ import { ChecklistPopupComponent } from './popups/checklist-popup/checklist-popu
 import { ChecklistItemPopupComponent } from './popups/checklist-item-popup/checklist-item-popup.component';
 import { OrgUnitFieldPopupComponent } from './popups/org-unit-field-popup/org-unit-field-popup.component';
 import { OrganizationUnitServicesComponent } from './shared/organization-unit-services/organization-unit-services.component';
+import { BankComponent } from './pages/bank/bank.component';
+import { BankPopupComponent } from './popups/bank-popup/bank-popup.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +114,8 @@ import { OrganizationUnitServicesComponent } from './shared/organization-unit-se
     ChecklistItemPopupComponent,
     OrgUnitFieldPopupComponent,
     OrganizationUnitServicesComponent,
+    BankComponent,
+    BankPopupComponent,
   ],
   imports: [
     SharedModule,
