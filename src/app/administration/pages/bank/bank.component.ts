@@ -21,7 +21,7 @@ import {of} from 'rxjs';
 })
 export class BankComponent extends AdminGenericComponent<Bank, BankService> implements OnInit {
   actions: IMenuItem<Bank>[] = [];
-  displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
   sortingCallbacks = {
