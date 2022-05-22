@@ -963,9 +963,11 @@ export interface ILanguageKeys {
   print_license: string;
   requested_aid_category: string;
   requested_aid: string;
-  nda_document: string;
+  non_disclosure_document: string;
+  disclosure_document: string;
   msg_save_fail_x: string;
   non_disclosure: string;
+  disclosure: string;
   BENEIFICARY_NDA_ACTIVE_REQUESTS_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_AID_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_PERIODIC_AIDS_EXISTING: string; // don't change this as it is mapped to BE response

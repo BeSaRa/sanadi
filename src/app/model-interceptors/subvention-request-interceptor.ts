@@ -16,6 +16,10 @@ export class SubventionRequestInterceptor {
     model.creationDate = DateUtils.changeDateToDatepicker(model.creationDate);
     model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified);
     model.statusDateModified = DateUtils.changeDateToDatepicker(model.statusDateModified);
+
+    //TODO: temporary reverse of value for disableDataSharing  as issawi will change disableDataSharing property to enableSharing and this implementation will be removed later
+    model.disableDataSharing = !model.disableDataSharing;
+
     return model;
   }
 
@@ -23,6 +27,10 @@ export class SubventionRequestInterceptor {
     model.creationDate = !model.creationDate ? model.creationDate : DateUtils.changeDateFromDatepicker(model.creationDate)?.toISOString();
     model.statusDateModified = !model.statusDateModified ? model.statusDateModified : DateUtils.changeDateFromDatepicker(model.statusDateModified)?.toISOString();
     model.disableDataSharing = model.disableDataSharing ?? false;
+
+    //TODO: temporary reverse of value for disableDataSharing as issawi will change disableDataSharing property to enableSharing and this implementation will be removed later
+    model.disableDataSharing = !model.disableDataSharing;
+
     SubventionRequestInterceptor._deleteBeforeSend(model);
 
     return model;

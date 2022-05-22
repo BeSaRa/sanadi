@@ -341,8 +341,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     saveAndInquire: 'saveAndInquire',
     partialSave: 'partialSave'
   };
-  ndaFile: any;
-  ndaAttachment: any;
+  disclosureFile: any;
+  disclosureAttachment: any;
 
   @ViewChild('aidsTable') aidsTable!: TableComponent;
 
@@ -651,7 +651,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!!this.currentRequest && this.currentRequest.id) {
           return isValid;
         }
-        return isValid && (!this.disableDataSharingField.value ? true : !!this.ndaFile);
+        return isValid && (!this.disableDataSharingField.value ? true : !!this.disclosureFile);
       })
     );
 
@@ -724,13 +724,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
 
-      this.uploadNDADocument(request)
-        .subscribe((ndaAttachmentStatus) => {
-          if (ndaAttachmentStatus === 'FAILED_NDA_ATTACHMENT') {
-            this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.nda_document}));
-          } else if (ndaAttachmentStatus !== 'NO_NDA_NEEDED') {
-            this.ndaAttachment.vsId = ndaAttachmentStatus;
-            this.attachmentList.push(this.ndaAttachment);
+      this.uploadDisclosureDocument(request)
+        .subscribe((disclosureAttachmentStatus) => {
+          if (disclosureAttachmentStatus === 'FAILED_DISCLOSURE_ATTACHMENT') {
+            this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.disclosure_document}));
+          } else if (disclosureAttachmentStatus !== 'NO_DISCLOSURE_ATTACHMENT_NEEDED') {
+            this.disclosureAttachment.vsId = disclosureAttachmentStatus;
+            this.attachmentList.push(this.disclosureAttachment);
           }
 
           if (this.editMode) {
@@ -753,7 +753,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.form.markAsPristine({onlySelf: true});
 
-          this.ndaAttachment = undefined;
+          this.disclosureAttachment = undefined;
 
           if (saveType === this.saveActions.validateAndSave) {
             this.requestChanged$.next(this.currentRequest);
@@ -772,24 +772,24 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private uploadNDADocument(request: SubventionRequest): Observable<any> {
-    // if NDA not enabled or existing request is updated, then proceed. otherwise, upload nda document
+  private uploadDisclosureDocument(request: SubventionRequest): Observable<any> {
+    // if Disclosure not enabled or existing request is updated, then proceed. otherwise, upload nda document
     if ((this.currentRequest && this.currentRequest.id) || !request.disableDataSharing) {
-      return of('NO_NDA_NEEDED');
+      return of('NO_DISCLOSURE_ATTACHMENT_NEEDED');
     } else {
-      let data = (new SanadiAttachment()).clone(this.ndaFile) as SanadiAttachment;
-      data.documentTitle = 'Non-Disclosure Form';
+      let data = (new SanadiAttachment()).clone(this.disclosureFile) as SanadiAttachment;
+      data.documentTitle = 'Disclosure Form';
       data.attachmentType = AttachmentTypeEnum.NON_DISCLOSURE_FORM;
       let attachmentTypeInfo = this.lookup.listByCategory.ATTACHMENT_TYPE.find(x => x.lookupKey === AttachmentTypeEnum.NON_DISCLOSURE_FORM);
       data.attachmentTypeInfo = attachmentTypeInfo ? attachmentTypeInfo.convertToAdminResult() : new AdminResult();
       data.requestFullSerial = request.requestFullSerial;
       data.requestId = request.id;
 
-      this.ndaAttachment = data;
+      this.disclosureAttachment = data;
 
-      return this.attachmentService.saveAttachment(data, this.ndaFile)
+      return this.attachmentService.saveAttachment(data, this.disclosureFile)
         .pipe(catchError(() => {
-          return of('FAILED_NDA_ATTACHMENT');
+          return of('FAILED_DISCLOSURE_ATTACHMENT');
         }));
     }
   }
@@ -1673,20 +1673,20 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return !this.readOnly && !this.isPartialRequest;
   }
 
-  handleNDAFieldChange($event: any): void {
+  handleDisclosureFieldChange($event: any): void {
     if (!this.disableDataSharingField.value) {
-      this.ndaFile = undefined;
+      this.disclosureFile = undefined;
     } else {
       this.allowCompletionField.setValue(false);
     }
     this.toggleAllowCompletionReadonly();
   }
 
-  setNDAFile(file: File | File[] | undefined): void {
+  setDisclosureFile(file: File | File[] | undefined): void {
     if (!file || file instanceof File) {
-      this.ndaFile = file;
+      this.disclosureFile = file;
     } else {
-      this.ndaFile = file[0];
+      this.disclosureFile = file[0];
     }
   }
 
