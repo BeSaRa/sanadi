@@ -1,8 +1,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import {Generator} from '@decorators/generator';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {InterceptParam, SendInterceptor} from '@decorators/model-interceptor';
 import {GeneralSearchCriteriaInterceptor} from '../model-interceptors/general-search-criteria-interceptor';
 import {DomSanitizer} from '@angular/platform-browser';
 import {map} from 'rxjs/operators';
@@ -12,7 +12,6 @@ export class SearchService {
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
-    _getModel(): any,
     _getInterceptor(): Partial<IModelInterceptor<any>>,
     domSanitizer: DomSanitizer
   }) {
@@ -34,10 +33,6 @@ export class SearchService {
 
   exportSearch(criteria: Partial<any>): Observable<BlobModel> {
     return this._exportSearch(criteria);
-  }
-
-  _getModel(): any {
-    return this.service._getModel();
   }
 
   _getReceiveInterceptor(): any {

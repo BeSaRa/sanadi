@@ -1,11 +1,12 @@
-import {INames} from '../interfaces/i-names';
-import {ModelCrudInterface} from '../interfaces/model-crud-interface';
-import {Observable} from 'rxjs';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {SearchableCloneable} from './searchable-cloneable';
-import {AdminResult} from "@app/models/admin-result";
+import { INames } from '@contracts/i-names';
+import { ModelCrudInterface } from '@contracts/model-crud-interface';
+import { Observable } from 'rxjs';
+import { BackendGenericService } from '../generics/backend-generic-service';
+import { SearchableCloneable } from './searchable-cloneable';
+import { AdminResult } from "@app/models/admin-result";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
-export abstract class BaseModel<D, S extends BackendGenericService<D>> extends SearchableCloneable<D> implements INames, ModelCrudInterface<D> {
+export abstract class BaseModel<D, S extends BackendGenericService<D> | CrudGenericService<D>> extends SearchableCloneable<D> implements INames, ModelCrudInterface<D> {
   // @ts-ignore
   id: number;
   arName: string = '';
@@ -32,6 +33,6 @@ export abstract class BaseModel<D, S extends BackendGenericService<D>> extends S
   };
 
   createAdminResult(): AdminResult {
-    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id});
+    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id });
   }
 }

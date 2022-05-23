@@ -1,6 +1,6 @@
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-export interface BackendServiceInterface<T> {
+export interface CrudServiceInterface<T> {
 
   load(prepare: boolean): Observable<T[]>;
 
@@ -11,4 +11,5 @@ export interface BackendServiceInterface<T> {
   delete(modelId: number): Observable<boolean>;
 
   getById(modelId: number): Observable<T>;
+
 }

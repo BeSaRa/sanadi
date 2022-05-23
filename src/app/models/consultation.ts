@@ -1,15 +1,24 @@
-import {CaseModel} from './case-model';
-import {ConsultationService} from '../services/consultation.service';
-import {FactoryService} from '../services/factory.service';
-import {CustomValidators} from '../validators/custom-validators';
-import {AdminResult} from './admin-result';
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import { CaseModel } from './case-model';
+import { ConsultationService } from '@services/consultation.service';
+import { FactoryService } from '@services/factory.service';
+import { CustomValidators } from '../validators/custom-validators';
+import { AdminResult } from './admin-result';
+import { ISearchFieldsMap } from "@app/types/types";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { InterceptModel } from "@decorators/intercept-model";
+import { ConsultationInterceptor } from "@app/model-interceptors/consultation-interceptor";
+import { CaseTypes } from "@app/enums/case-types.enum";
 
+const interceptor = new ConsultationInterceptor()
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class Consultation extends CaseModel<ConsultationService, Consultation> {
-  caseType: number = 2;
+  caseType: number = CaseTypes.CONSULTATION;
   category!: number;
   email!: string;
   fullName!: string;

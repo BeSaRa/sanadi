@@ -1,31 +1,32 @@
-import {AdminResult} from './admin-result';
-import {TaskDetails} from './task-details';
-import {FileNetModel} from './FileNetModel';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {Observable} from 'rxjs';
-import {CaseStatus} from '../enums/case-status.enum';
-import {BlobModel} from './blob-model';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {ComponentType} from '@angular/cdk/overlay';
-import {DynamicComponentService} from '../services/dynamic-component.service';
-import {delay, map, take, tap} from 'rxjs/operators';
-import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
-import {IESComponent} from '../interfaces/iescomponent';
-import {OpenFrom} from '../enums/open-from.enum';
-import {EmployeeService} from '../services/employee.service';
-import {FactoryService} from '../services/factory.service';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {ICaseModel} from "@app/interfaces/icase-model";
-import {IBulkResult} from "@app/interfaces/ibulk-result";
-import {InboxService} from "@app/services/inbox.service";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {LicenseApprovalModel} from "@app/models/license-approval-model";
-import {INavigatedItem} from "@app/interfaces/inavigated-item";
-import {EncryptionService} from "@app/services/encryption.service";
-import {CaseTypes} from '@app/enums/case-types.enum';
+import { AdminResult } from './admin-result';
+import { TaskDetails } from './task-details';
+import { FileNetModel } from './FileNetModel';
+import { EServiceGenericService } from '../generics/e-service-generic-service';
+import { Observable } from 'rxjs';
+import { CaseStatus } from '../enums/case-status.enum';
+import { BlobModel } from './blob-model';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { ComponentType } from '@angular/cdk/overlay';
+import { DynamicComponentService } from '@services/dynamic-component.service';
+import { delay, map, take, tap } from 'rxjs/operators';
+import { CaseViewerPopupComponent } from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import { IESComponent } from '@contracts/iescomponent';
+import { OpenFrom } from '../enums/open-from.enum';
+import { EmployeeService } from '@services/employee.service';
+import { FactoryService } from '@services/factory.service';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { ICaseModel } from "@app/interfaces/icase-model";
+import { IBulkResult } from "@app/interfaces/ibulk-result";
+import { InboxService } from "@app/services/inbox.service";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { LicenseApprovalModel } from "@app/models/license-approval-model";
+import { INavigatedItem } from "@app/interfaces/inavigated-item";
+import { EncryptionService } from "@app/services/encryption.service";
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
-export abstract class CaseModel<S extends EServiceGenericService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
+export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;
@@ -119,7 +120,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
       .filter(field => fields ? fields.indexOf(field) !== -1 : field)
       .reduce((acc, current) => {
-        return (current === 'service') ? acc : {...acc, [current]: self[current]};
+        return (current === 'service') ? acc : { ...acc, [current]: self[current] };
       }, {});
   }
 
@@ -153,7 +154,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
           loadedModel: model,
           actions,
           componentService: this.service
-        }, {fullscreen: false})),
+        }, { fullscreen: false })),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit
@@ -271,7 +272,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     } else if (taskName.startsWith('askSingle:')) {
       taskName = taskName.split('askSingle:')[1];
     }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
+    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), { taskName: taskName }, service);
   }
 
   sendToRiskAndComplianceDepartment(): Observable<any> {
@@ -282,7 +283,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T>, T extends F
     } else if (taskName.startsWith('askSingle:')) {
       taskName = taskName.split('askSingle:')[1];
     }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
+    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), { taskName: taskName }, service);
   }
 
   sendToUser(): DialogRef {

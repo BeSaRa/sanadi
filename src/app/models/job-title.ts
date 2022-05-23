@@ -1,13 +1,21 @@
-import {BaseModel} from '@app/models/base-model';
-import {JobTitleService} from '@app/services/job-title.service';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
-import {INames} from '@app/interfaces/i-names';
-import {Lookup} from '@app/models/lookup';
-import {searchFunctionType} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { BaseModel } from '@app/models/base-model';
+import { JobTitleService } from '@app/services/job-title.service';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { INames } from '@app/interfaces/i-names';
+import { Lookup } from '@app/models/lookup';
+import { searchFunctionType } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import { JobTitleInterceptor } from "@app/model-interceptors/job-title-interceptor";
 
+const interceptor: JobTitleInterceptor = new JobTitleInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
   type!: number;
   status!: number;

@@ -1,7 +1,7 @@
-import {Inquiry} from '../models/inquiry';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {TaskDetails} from '../models/task-details';
-import {AdminResult} from '../models/admin-result';
+import { Inquiry } from '../models/inquiry';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { TaskDetails } from '../models/task-details';
+import { AdminResult } from '../models/admin-result';
 
 
 export class InquiryInterceptor implements IModelInterceptor<Inquiry> {
@@ -22,7 +22,6 @@ export class InquiryInterceptor implements IModelInterceptor<Inquiry> {
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.categoryInfo = AdminResult.createInstance(model.categoryInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
-
     return model;
   }
 

@@ -1,5 +1,4 @@
 import { ComponentType } from "@angular/cdk/portal";
-import { BackendGenericService } from "@app/generics/backend-generic-service";
 import { IShowDialog } from "@app/interfaces/ishow-dialog";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { DialogService } from "@app/services/dialog.service";
@@ -7,8 +6,9 @@ import { IDialogData } from "@app/interfaces/i-dialog-data";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { Observable, of } from "rxjs";
 import { exhaustMap } from "rxjs/operators";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
-export abstract class BackendWithDialogOperationsGenericService<T extends { id: number }> extends BackendGenericService<T> implements IShowDialog<T> {
+export abstract class CrudWithDialogGenericService<T extends { id: number }> extends CrudGenericService<T> implements IShowDialog<T> {
   /**
    * @description DialogService you have to inject it as public from your service that will extend this class
    */
@@ -37,7 +37,7 @@ export abstract class BackendWithDialogOperationsGenericService<T extends { id: 
    * @returns DialogRef reference for the opened dialog
    */
   addDialog(): DialogRef | Observable<DialogRef> {
-    return this.getDialog(new (this._getModel() as { new(...args: any[]): T }), OperationTypes.CREATE);
+    return this.getDialog(new (this._getModel()), OperationTypes.CREATE);
   }
 
   /**

@@ -1,27 +1,27 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {UrlService} from './url.service';
-import {Inquiry} from '../models/inquiry';
-import {HttpClient} from '@angular/common/http';
-import {CommentService} from './comment.service';
-import {FactoryService} from './factory.service';
-import {InquiryInterceptor} from '../model-interceptors/inquiry-interceptor';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {DocumentService} from './document.service';
-import {DialogService} from './dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {ActionLogService} from './action-log.service';
-import {RecommendationService} from './recommendation.service';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {SearchService} from './search.service';
-import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
-import {CaseStatus} from '../enums/case-status.enum';
-import {DynamicOptionsService} from './dynamic-options.service';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { UrlService } from './url.service';
+import { Inquiry } from '../models/inquiry';
+import { HttpClient } from '@angular/common/http';
+import { CommentService } from './comment.service';
+import { FactoryService } from './factory.service';
+import { InquiryInterceptor } from '../model-interceptors/inquiry-interceptor';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { DocumentService } from './document.service';
+import { DialogService } from './dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ActionLogService } from './action-log.service';
+import { RecommendationService } from './recommendation.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { SearchService } from './search.service';
+import { InquirySearchCriteria } from '../models/inquiry-search-criteria';
+import { CaseStatus } from '../enums/case-status.enum';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class InquiryService extends EServiceGenericService<Inquiry> {
+export class InquiryService extends BaseGenericEService<Inquiry> {
   _getUrlService(): UrlService {
     return this.urlService;
   }

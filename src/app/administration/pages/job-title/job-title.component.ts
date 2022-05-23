@@ -1,21 +1,21 @@
-import {Component, ViewChild} from '@angular/core';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {JobTitle} from '@app/models/job-title';
-import {JobTitleService} from '@app/services/job-title.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {LangService} from '@app/services/lang.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {SharedService} from '@app/services/shared.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {ToastService} from '@app/services/toast.service';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {of, Subject} from 'rxjs';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {DialogRef} from '@app/shared/models/dialog-ref';
+import { Component, ViewChild } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { JobTitle } from '@app/models/job-title';
+import { JobTitleService } from '@app/services/job-title.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { LangService } from '@app/services/lang.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogService } from '@app/services/dialog.service';
+import { SharedService } from '@app/services/shared.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { ToastService } from '@app/services/toast.service';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'job-title',
@@ -101,16 +101,16 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
         {
           langKey: 'btn_activate',
           icon: '',
-          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (items: JobTitle[]) => {
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: JobTitle[]) => {
             return true;
           }
         },
         {
           langKey: 'btn_deactivate',
           icon: '',
-          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (items: JobTitle[]) => {
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: JobTitle[]) => {
             return true;
           }
         }

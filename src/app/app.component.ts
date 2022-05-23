@@ -1,10 +1,10 @@
-import {Component, HostListener} from '@angular/core';
-import {LangService} from './services/lang.service';
-import {LoadingService} from './services/loading.service';
-import {CacheService} from './services/cache.service';
-import {NavigationService} from './services/navigation.service';
-import {take} from "rxjs/operators";
-import {EmployeeService} from "@app/services/employee.service";
+import { Component, HostListener } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { LoadingService } from '@services/loading.service';
+import { CacheService } from '@services/cache.service';
+import { NavigationService } from '@services/navigation.service';
+import { take } from "rxjs/operators";
+import { EmployeeService } from "@app/services/employee.service";
 
 @Component({
   selector: 'app-root',

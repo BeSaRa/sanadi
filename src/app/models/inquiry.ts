@@ -1,13 +1,21 @@
-import {CaseModel} from './case-model';
-import {CustomValidators} from '../validators/custom-validators';
-import {InquiryService} from '../services/inquiry.service';
-import {FactoryService} from '../services/factory.service';
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {ISearchFieldsMap} from "@app/types/types";
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import { CaseModel } from './case-model';
+import { CustomValidators } from '../validators/custom-validators';
+import { InquiryService } from '@services/inquiry.service';
+import { FactoryService } from '@services/factory.service';
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { ISearchFieldsMap } from "@app/types/types";
+import { CaseTypes } from "@app/enums/case-types.enum";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { InterceptModel } from "@decorators/intercept-model";
+import { InquiryInterceptor } from "@app/model-interceptors/inquiry-interceptor";
 
+const interceptor = new InquiryInterceptor()
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class Inquiry extends CaseModel<InquiryService, Inquiry> {
   caseType: number = CaseTypes.INQUIRY;
   category!: number;

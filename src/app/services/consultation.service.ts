@@ -1,27 +1,32 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {Consultation} from '../models/consultation';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {ActionLogService} from './action-log.service';
-import {CommentService} from './comment.service';
-import {DialogService} from './dialog.service';
-import {DocumentService} from './document.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {HttpClient} from '@angular/common/http';
-import {RecommendationService} from './recommendation.service';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {UrlService} from './url.service';
-import {ConsultationInterceptor} from '../model-interceptors/consultation-interceptor';
-import {FactoryService} from './factory.service';
-import {SearchService} from './search.service';
-import {ConsultationSearchCriteria} from '../models/consultation-search-criteria';
-import {CaseStatus} from '../enums/case-status.enum';
-import {DynamicOptionsService} from './dynamic-options.service';
-
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { Consultation } from '../models/consultation';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { ActionLogService } from './action-log.service';
+import { CommentService } from './comment.service';
+import { DialogService } from './dialog.service';
+import { DocumentService } from './document.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { RecommendationService } from './recommendation.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { UrlService } from './url.service';
+import { ConsultationInterceptor } from '../model-interceptors/consultation-interceptor';
+import { FactoryService } from './factory.service';
+import { SearchService } from './search.service';
+import { ConsultationSearchCriteria } from '../models/consultation-search-criteria';
+import { CaseStatus } from '../enums/case-status.enum';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
+@CastResponseContainer({
+  $default: {
+    model: ()=> Consultation,
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class ConsultationService extends EServiceGenericService<Consultation> {
+export class ConsultationService extends BaseGenericEService<Consultation> {
   _getUrlService(): UrlService {
     return this.urlService;
   }

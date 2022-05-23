@@ -1,64 +1,60 @@
-import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {FileNetDocument} from '../models/file-net-document';
-import {CaseComment} from '../models/case-comment';
-import {CommentService} from '@services/comment.service';
-import {InterceptParam, SendInterceptor} from '@decorators/model-interceptor';
-import {Generator} from '@decorators/generator';
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {BackendServiceModelInterface} from '@contracts/backend-service-model-interface';
-import {DocumentService} from '@services/document.service';
-import {DialogService} from '@services/dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {ActionLogService} from '@services/action-log.service';
-import {BlobModel} from '../models/blob-model';
-import {map} from 'rxjs/operators';
-import {RecommendationService} from '@services/recommendation.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
-import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
+import { Observable, of } from "rxjs";
+import { CastResponse } from "@decorators/cast-response";
+import { FactoryService } from "@services/factory.service";
+import { IModelInterceptor } from "@contracts/i-model-interceptor";
+import { HttpClient } from "@angular/common/http";
+import { DialogService } from "@services/dialog.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import { ILanguageKeys } from "@contracts/i-language-keys";
+import { ComponentFactoryResolver } from "@angular/core";
+import { DynamicOptionsService } from "@services/dynamic-options.service";
+import { MenuItemService } from "@services/menu-item.service";
+import { EmployeeService } from "@services/employee.service";
+import { CommentService } from "@services/comment.service";
+import { RecommendationService } from "@services/recommendation.service";
+import { DocumentService } from "@services/document.service";
+import { ActionLogService } from "@services/action-log.service";
+import { SearchService } from "@services/search.service";
+import { CaseTypes } from "../enums/case-types.enum";
+import { ConsultationCaseStatus } from "../enums/consultation-case-status.enum";
+import { InquiryCaseStatus } from "../enums/inquiry-case-status.enum";
+import { InternationalCaseStatus } from "../enums/international-case-status.enum";
+import { InitialOfficeApproveCaseStatus } from "../enums/initial-office-approve-case-status.enum";
+import { PartnerOfficeApproveCaseStatus } from "../enums/partner-office-approve-case-status.enum";
+import { FinalOfficeApproveCaseStatus } from "../enums/final-office-approve-case-status.enum";
+import { InternalProjectLicenseCaseStatus } from "../enums/internal-project-license-case-status";
+import { ProjectModelCaseStatus } from "../enums/project-model-case-status";
+import { FundRaisingLicensingApproveCaseStatus } from "../enums/fundraising-licensing-approve-case-status.enum";
+import { UrgentInterventionLicenseCaseStatus } from "../enums/urgent-intervention-license-case-status";
+import { ShippingApprovalDocumentCaseStatus } from "../enums/shipping-approval-document-case-status";
+import { CaseStatusCollectionApproval } from "../enums/case-status-collection-approval";
+import { CaseStatusCollectorApproval } from "../enums/case-status-collector-approval";
+import { CaseComment } from "../models/case-comment";
+import { FormlyFieldConfig } from "@ngx-formly/core/lib/components/formly.field.config";
+import { IFormRowGroup } from "@contracts/iform-row-group";
+import { map } from "rxjs/operators";
+import { FBuilder } from "@helpers/FBuilder";
+import { FileNetDocument } from "../models/file-net-document";
+import { BlobModel } from "../models/blob-model";
+import { DialogRef } from "../shared/models/dialog-ref";
+import { ActionRegistryPopupComponent } from "../shared/popups/action-registry-popup/action-registry-popup.component";
+import { ManageCommentPopupComponent } from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
 import {
   ManageRecommendationPopupComponent
-} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
-import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {ComponentFactoryResolver} from '@angular/core';
-import {SearchService} from '@services/search.service';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
-import {IFormRowGroup} from '@contracts/iform-row-group';
-import {DynamicOptionsService} from '@services/dynamic-options.service';
-import {FBuilder} from "@helpers/FBuilder";
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-case-status.enum';
-import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
-import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
-import {InternalProjectLicenseCaseStatus} from '@app/enums/internal-project-license-case-status';
-import {ConsultationCaseStatus} from '@app/enums/consultation-case-status.enum';
-import {InquiryCaseStatus} from '@app/enums/inquiry-case-status.enum';
-import {InternationalCaseStatus} from '@app/enums/international-case-status.enum';
-import {FactoryService} from '@app/services/factory.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {MenuItem} from "@app/models/menu-item";
-import {MenuItemService} from "@app/services/menu-item.service";
-import {IBulkResult} from "@app/interfaces/ibulk-result";
-import {UrlService} from "@app/services/url.service";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {ProjectModelCaseStatus} from "@app/enums/project-model-case-status";
-import { FundRaisingLicensingApproveCaseStatus } from '@app/enums/fundraising-licensing-approve-case-status.enum';
-import {UrgentInterventionLicenseCaseStatus} from '@app/enums/urgent-intervention-license-case-status';
-import {CaseStatusCollectionApproval} from '@app/enums/case-status-collection-approval';
-import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
-import { ShippingApprovalDocumentCaseStatus } from '@app/enums/shipping-approval-document-case-status';
+} from "../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component";
+import { DocumentsPopupComponent } from "../shared/popups/documents-popup/documents-popup.component";
+import { IBulkResult } from "@contracts/ibulk-result";
+import { IDefaultResponse } from "@contracts/idefault-response";
+import { MenuItem } from "../models/menu-item";
+import { UrlService } from "@services/url.service";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
-export abstract class EServiceGenericService<T extends { id: string }>
-  implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
-
+export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
     this.employeeService = FactoryService.getService('EmployeeService');
     this.menuItemService = FactoryService.getService('MenuItemService');
   }
 
-  abstract _getModel(): any;
 
   abstract _getURLSegment(): string;
 
@@ -112,9 +108,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
-  protected _create(@InterceptParam() model: Partial<T>): Observable<T> {
+  @HasInterception
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _create(@InterceptParam() model: Partial<T>): Observable<T> {
     return this.http.post<T>(this._getURLSegment(), model);
   }
 
@@ -122,9 +121,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this._create(model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
-  protected _update(@InterceptParam() model: Partial<T>): Observable<T> {
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _update(@InterceptParam() model: Partial<T>): Observable<T> {
     return this.http.put<T>(this._getURLSegment(), model);
   }
 
@@ -136,9 +138,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return model.id ? this.update(model) : this.create(model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
-  protected _commit(@InterceptParam() model: Partial<T>): Observable<T> {
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _commit(@InterceptParam() model: Partial<T>): Observable<T> {
     return this.http.post<T>(this._getURLSegment() + '/commit', model);
   }
 
@@ -146,9 +151,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this._commit(model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
-  protected _draft(@InterceptParam() model: Partial<T>): Observable<T> {
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _draft(@InterceptParam() model: Partial<T>): Observable<T> {
     return this.http.post<T>(this._getURLSegment() + '/draft', model);
   }
 
@@ -157,15 +165,18 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   private _start(caseId: string): Observable<boolean> {
-    return this.http.request<boolean>('POST', this._getURLSegment() + '/' + caseId + '/start', {body: null});
+    return this.http.request<boolean>('POST', this._getURLSegment() + '/' + caseId + '/start', { body: null });
   }
 
   start(caseId: string): Observable<boolean> {
     return this._start(caseId);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  protected _getById(caseId: string): Observable<T> {
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getById(caseId: string): Observable<T> {
     return this.http.get<T>(this._getURLSegment() + '/' + caseId + '/details');
   }
 
@@ -218,19 +229,19 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   openActionLogs(caseId: string): DialogRef {
-    return this.dialog.show(ActionRegistryPopupComponent, {service: this, caseId});
+    return this.dialog.show(ActionRegistryPopupComponent, { service: this, caseId });
   }
 
   openCommentsDialog(caseId: string): DialogRef {
-    return this.dialog.show(ManageCommentPopupComponent, {service: this, caseId});
+    return this.dialog.show(ManageCommentPopupComponent, { service: this, caseId });
   }
 
   openRecommendationDialog(caseId: string, onlyLogs: boolean = false): DialogRef {
-    return this.dialog.show(ManageRecommendationPopupComponent, {service: this, caseId, onlyLogs});
+    return this.dialog.show(ManageRecommendationPopupComponent, { service: this, caseId, onlyLogs });
   }
 
   openDocumentDialog(caseId: string, caseType?: number): DialogRef {
-    return this.dialog.show(DocumentsPopupComponent, {service: this, caseId, caseType});
+    return this.dialog.show(DocumentsPopupComponent, { service: this, caseId, caseType });
   }
 
   exportModel(caseId: string): Observable<BlobModel> {
@@ -244,8 +255,11 @@ export abstract class EServiceGenericService<T extends { id: string }>
     return this.searchService.exportSearch(criteria);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  protected _getTask(taskId: string): Observable<T> {
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getTask(taskId: string): Observable<T> {
     return this.http.get<T>(this._getURLSegment() + '/task/' + taskId);
   }
 

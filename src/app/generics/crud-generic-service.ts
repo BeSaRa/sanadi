@@ -1,14 +1,16 @@
-import {CrudServiceInterface} from '@contracts/crud-service-interface';
-import {iif, Observable, of, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {Generator} from '@decorators/generator';
-import {InterceptParam, SendInterceptor} from '@decorators/model-interceptor';
-import {IKeyValue} from '@contracts/i-key-value';
-import {isValidValue} from '@helpers/utils';
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import { HttpClient } from "@angular/common/http";
+import { iif, Observable, of, Subject } from "rxjs";
+import { switchMap, tap } from "rxjs/operators";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
+import { IKeyValue } from "@contracts/i-key-value";
+import { isValidValue } from "@helpers/utils";
+import { CrudServiceInterface } from "@contracts/crud-service-interface";
+import { CastResponse } from "@decorators/cast-response";
+import { GetModelContract } from "@contracts/get-model-contract";
 
-export abstract class BackendGenericService<T> implements CrudServiceInterface<T> {
+export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, GetModelContract<T> {
+  abstract _getModel(): new () => T
+
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
@@ -16,19 +18,28 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
   protected _timeRange: number = 15 * 60 * 1000;
   protected _lastLoadTime!: number;
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _load(): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL());
   }
 
-  // noinspection JSUnusedLocalSymbols
-  @Generator(undefined, true, {property: 'rs'})
-  private _loadComposite(options?: any): Observable<T[]> {
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadComposite(_options?: any): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL() + '/composite');
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  private _update(model: T): Observable<T> {
+  @HasInterception
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _update(@InterceptParam() model: T): Observable<T> {
     return this.http.put<T>(this._getServiceURL() + '/full', model);
   }
 
@@ -63,7 +74,11 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
       .pipe(switchMap(list => iif(() => !!list.length, of(list), this.load(prepare))))
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadActive(): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL() + '/active/lookup')
   }
@@ -72,47 +87,56 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
     return this._loadActive();
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
   create(@InterceptParam() model: T): Observable<T> {
     return this.http.post<T>(this._getServiceURL() + '/full', model);
   }
 
+  @CastResponse(undefined, {
+    fallback: '',
+    unwrap: 'rs'
+  })
   delete(modelId: number): Observable<boolean> {
     return this.http.delete<boolean>(this._getServiceURL() + '/' + modelId);
   }
 
+  @CastResponse(undefined, {
+    fallback: '',
+    unwrap: 'rs'
+  })
   deleteBulk(modelIds: any[]): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this._getServiceURL() + '/bulk', {body: modelIds})
-      .pipe(
-        map((response: any) => {
-          return response.rs;
-        })
-      );
+    return this.http.request<Record<number, boolean>>('delete', this._getServiceURL() + '/bulk', { body: modelIds })
   }
 
-  @Generator()
-  getById(modelId: number): Observable<T> {
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _getById(modelId: number): Observable<T> {
     return this.http.get<T>(this._getServiceURL() + '/' + modelId);
   }
 
-  @Generator()
-  getByIdComposite(modelId: number): Observable<T> {
+  getById(modelId: number): Observable<T> {
+    return this._getById(modelId)
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _getByIdComposite(modelId: number): Observable<T> {
     return this.http.get<T>(this._getServiceURL() + '/' + modelId + '/composite');
   }
 
-  @SendInterceptor()
-  update(@InterceptParam() model: T): Observable<T> {
+  getByIdComposite(modelId: number): Observable<T> {
+    return this._getByIdComposite(modelId)
+  }
+
+  update(model: T): Observable<T> {
     return this._update(model);
   }
 
-  abstract _getModel(): any;
-
-  abstract _getSendInterceptor(): any;
-
   abstract _getServiceURL(): string;
-
-  abstract _getReceiveInterceptor(): any;
 
   _generateQueryString(queryStringOptions: IKeyValue): string {
     let queryString = '?';
@@ -151,4 +175,3 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
     }).join('&');
   }
 }
-

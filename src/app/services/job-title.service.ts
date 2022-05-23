@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  BackendWithDialogOperationsGenericService
-} from '@app/generics/backend-with-dialog-operations-generic-service';
 import { JobTitle } from '@app/models/job-title';
 import { ComponentType } from '@angular/cdk/portal';
 import { JobTitlePopupComponent } from '@app/administration/popups/job-title-popup/job-title-popup.component';
-import { JobTitleInterceptor } from '@app/model-interceptors/job-title-interceptor';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from '@app/services/url.service';
 import { DialogService } from '@app/services/dialog.service';
@@ -16,13 +12,23 @@ import { map, switchMap } from 'rxjs/operators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => JobTitle
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class JobTitleService extends BackendWithDialogOperationsGenericService<JobTitle>{
+export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
+  _getModel(): new () => JobTitle {
+    return JobTitle
+  }
+
   list: JobTitle[] = [];
-  interceptor: JobTitleInterceptor = new JobTitleInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -35,17 +41,6 @@ export class JobTitleService extends BackendWithDialogOperationsGenericService<J
     return JobTitlePopupComponent;
   }
 
-  _getModel(): any {
-    return JobTitle;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
 
   _getServiceURL(): string {
     return this.urlService.URLS.JOB_TITLE;

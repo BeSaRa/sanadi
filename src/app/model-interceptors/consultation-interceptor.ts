@@ -1,7 +1,7 @@
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {Consultation} from '../models/consultation';
-import {TaskDetails} from '../models/task-details';
-import {AdminResult} from '../models/admin-result';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { Consultation } from '../models/consultation';
+import { TaskDetails } from '../models/task-details';
+import { AdminResult } from '../models/admin-result';
 
 export class ConsultationInterceptor implements IModelInterceptor<Consultation> {
   receive(model: Consultation): Consultation {

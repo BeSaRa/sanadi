@@ -3,9 +3,33 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "crypto": ["./node_modules/crypto-browserify"],
-      "stream": ["./node_modules/stream-browserify"],
-      "@app/*": ["./src/app/*"]
+      "crypto": [
+        "./node_modules/crypto-browserify"
+      ],
+      "stream": [
+        "./node_modules/stream-browserify"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@services/*": [
+        "./src/app/services/*"
+      ],
+      "@decorators/*": [
+        "./src/app/decorators/*",
+        "./src/app/decorators/decorators/*"
+      ],
+      "@app-types/*": [
+        "./src/app/types/*"
+      ],
+      "@helpers/*": [
+        "./src/app/helpers/*",
+        "./src/app/helpers/helpers/*"
+      ],
+      "@contracts/*": [
+        "./src/app/contracts/*",
+        "./src/app/interfaces/*"
+      ]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
