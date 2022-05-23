@@ -6,7 +6,7 @@
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "BAW_UI": "http://eblaepm.no-ip.org:9026/eservices/api/",
     "BAW_UI_IP": "http://100.100.15.216:9026/eservices/api/",
-    "BAW_DEV": "http://100.100.15.102:9026/eservices/api/",
+    "BAW_DEV": "http://100.100.15.216:9026/eservicesdev/api/v1",
     "BAW_QA": "http://eblaepm.no-ip.org:9096/eservices/api"
   },
   "BASE_ENVIRONMENT": "BAW_UI",
