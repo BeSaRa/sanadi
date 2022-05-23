@@ -1,3 +1,4 @@
+import { JobApplicationService } from './job-application.service';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -70,7 +71,8 @@ export class InboxService {
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
               private urlService: UrlService,
-              private shippingApprovalService:ShippingApprovalService) {
+              private shippingApprovalService:ShippingApprovalService,
+              private jobApplicationService: JobApplicationService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -87,6 +89,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
     this.services.set(CaseTypes.SHIPPING_APPROVAL, this.shippingApprovalService);
+    this.services.set(CaseTypes.JOB_APPLICATION, this.jobApplicationService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})

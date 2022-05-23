@@ -78,6 +78,18 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'FinalExternalOfficeApprovalComponent'
     }
+  },
+  {
+    path: 'job-application',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.FINAL_EXTERNAL_OFFICE_APPROVAL,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'JobApplicationComponent'
+    }
   }
 ];
 

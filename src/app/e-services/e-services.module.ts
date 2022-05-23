@@ -1,3 +1,4 @@
+import { JobApplicationComponent } from './pages/job-application/job-application.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EServicesRoutingModule} from './e-services-routing.module';
@@ -48,7 +49,8 @@ import {SelectTemplatePopupComponent} from './poups/select-template-popup/select
     ContactOfficerComponent,
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
-    SelectTemplatePopupComponent
+    SelectTemplatePopupComponent,
+    JobApplicationComponent
   ],
   imports: [
     CommonModule,

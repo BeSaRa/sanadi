@@ -35,7 +35,8 @@ export class CaseInfoComponent implements OnInit {
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FUNDRAISING_LICENSING,
-    CaseTypes.URGENT_INTERVENTION_LICENSING
+    CaseTypes.URGENT_INTERVENTION_LICENSING,
+    CaseTypes.JOB_APPLICATION
   ]
 
   // this should be updated when ever you will add a new document service
