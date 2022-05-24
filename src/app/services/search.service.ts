@@ -12,6 +12,7 @@ export class SearchService {
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
+    _getModel(): any,
     _getInterceptor(): Partial<IModelInterceptor<any>>,
     domSanitizer: DomSanitizer
   }) {
@@ -33,6 +34,10 @@ export class SearchService {
 
   exportSearch(criteria: Partial<any>): Observable<BlobModel> {
     return this._exportSearch(criteria);
+  }
+
+  _getModel(): any {
+    return this.service._getModel();
   }
 
   _getReceiveInterceptor(): any {

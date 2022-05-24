@@ -58,6 +58,8 @@ export abstract class BaseGenericEService<T extends { id: string }> {
 
   abstract _getURLSegment(): string;
 
+  abstract _getModel(): any;
+
   abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
 
   abstract getSearchCriteriaModel<S extends T>(): T;

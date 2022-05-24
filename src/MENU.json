@@ -651,6 +651,19 @@
   },
   {
     "id": 51,
+    "langKey": "menu_bank",
+    "path": "/home/administration/bank",
+    "icon": "mdi-bank",
+    "isSvg": false,
+    "permission": "",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 25,
+    "svg": null
+  },
+  {
+    "id": 52,
     "langKey": "menu_job_application",
     "path": "/home/e-services/job-application",
     "icon": "mdi-account-tie-outline",
