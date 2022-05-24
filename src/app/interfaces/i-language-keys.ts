@@ -976,4 +976,5 @@ export interface ILanguageKeys {
   msg_missing_incomes_or_obligations: string;
   msg_confirm_continue: string;
   job_application: string;
+  employee_data: string;
 }

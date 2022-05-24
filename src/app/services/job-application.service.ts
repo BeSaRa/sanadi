@@ -1,4 +1,4 @@
-import { CaseStatus } from './../enums/case-status.enum';
+import { JobApplicationSearchCriteria } from './../models/job-application-search-criteria';
 import { JobApplicationInterceptor } from "./../model-interceptors/job-application-interceptor";
 import { FactoryService } from "./factory.service";
 import { JobApplication } from "./../models/job-application";
@@ -38,10 +38,10 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
   }
 
   getCaseComponentName(): string {
-    return "InquiryComponent";
+    return "JobApplicationComponent";
   }
   _getURLSegment(): string {
-    return this.urlService.URLS.E_INQUIRY;
+    return this.urlService.URLS.E_JOB_APPLICATIONS;
   }
   _getInterceptor(): Partial<IModelInterceptor<JobApplication>> {
     return this.interceptor;
@@ -50,7 +50,7 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     return JobApplication;
   }
   getSearchCriteriaModel<S extends JobApplication>(): JobApplication {
-    throw new Error("Method not implemented.");
+    return new JobApplicationSearchCriteria()
   }
   _getUrlService(): UrlService {
     return this.urlService;

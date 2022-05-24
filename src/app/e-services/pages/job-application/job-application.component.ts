@@ -1,3 +1,5 @@
+import { IKeyValue } from "@app/interfaces/i-key-value";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { FormManager } from "./../../../models/form-manager";
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { NavigationService } from "./../../../services/navigation.service";
@@ -48,6 +50,25 @@ export class JobApplicationComponent
   }
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
+
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: "basicInfoTab",
+      langKey: "lbl_basic_info" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    employeeInfo: {
+      name: "employeeInfoTab",
+      langKey: "employee_data",
+      validStatus: () => this.form.valid,
+    },
+    attachments: {
+      name: "attachmentsTab",
+      langKey: "attachments",
+      validStatus: () => true,
+    },
+  };
+
   constructor(
     public service: JobApplicationService,
     private navigationService: NavigationService,
@@ -62,6 +83,9 @@ export class JobApplicationComponent
   private buildForm(): void {
     this.form = this.fb.group({});
     this.fm = new FormManager(this.form, this.lang);
+  }
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
   }
   navigateBack(): void {
     this.navigationService.goToBack();
