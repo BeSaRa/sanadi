@@ -4,6 +4,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
+import { LangService } from "@services/lang.service";
 
 @Component({
   selector: 'app-sidebar-menu-item-list',
@@ -28,12 +29,13 @@ export class SidebarMenuItemListComponent implements OnInit {
   level!: number;
   _searchText: string = '';
 
+
   @Input()
   set searchText(value: string | null) {
     this._searchText = value ? value : '';
   }
 
-  constructor(public empService: EmployeeService, private router: Router) {
+  constructor(public empService: EmployeeService , public lang: LangService, private router: Router) {
   }
 
   ngOnInit(): void {

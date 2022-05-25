@@ -2,7 +2,8 @@
   <ng-container *ngFor="let item of items | menuItemFilter : _searchText">
     <li [class.px-2]="level > 1" [@expendCollapse]="item.expand || _searchText.length ? 'expend' : 'collapse'"
         routerLinkActive="active"
-        [class.expanded]="item.expand" *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
+        [class.expanded]="item.expand"
+        *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <a class="d-none" [routerLink]="item.path"></a>
@@ -20,7 +21,7 @@
           </div>
         </div>
         <span [title]="item.getName()" class="flex-grow-1 sidebar-menu-item-text text-truncate"
-              [innerHTML]="item.getName()|highlight:_searchText"></span>
+              [innerHTML]="item.langKey|translate:lang.map.lang|highlight:_searchText"></span>
       </a>
       <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"
                                   [items]="item.children"></app-sidebar-menu-item-list>
