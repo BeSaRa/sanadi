@@ -1,3 +1,8 @@
+import { EmployeesDataComponent } from './employees-data/employees-data.component';
+import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
+import { Validators } from "@angular/forms";
+import { LookupService } from "./../../../services/lookup.service";
+import { Lookup } from "./../../../models/lookup";
 import { IKeyValue } from "@app/interfaces/i-key-value";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { FormManager } from "./../../../models/form-manager";
@@ -7,13 +12,14 @@ import { LangService } from "./../../../services/lang.service";
 import { JobApplicationService } from "./../../../services/job-application.service";
 import { JobApplication } from "./../../../models/job-application";
 import { IESComponent } from "./../../../interfaces/iescomponent";
-import { Component, EventEmitter, OnInit, Input } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { Component, EventEmitter, OnInit, Input, ViewChild } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { OpenFrom } from "@app/enums/open-from.enum";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { Subject, BehaviorSubject } from "rxjs";
-
+import { EmploymentRequestType } from "@app/enums/employment-request-type";
+import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 @Component({
   selector: "app-job-application",
   templateUrl: "./job-application.component.html",
@@ -22,6 +28,7 @@ import { Subject, BehaviorSubject } from "rxjs";
 export class JobApplicationComponent
   implements OnInit, IESComponent<JobApplication>
 {
+  fileIconsEnum = FileIconsEnum;
   caseType: number = CaseTypes.JOB_APPLICATION;
   afterSave$: EventEmitter<JobApplication> = new EventEmitter<JobApplication>();
   fromWrapperComponent: boolean = false;
@@ -34,6 +41,7 @@ export class JobApplicationComponent
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   operation: OperationTypes = OperationTypes.CREATE;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  @ViewChild('ETable') ETable!: EmployeesDataComponent;
   @Input()
   fromDialog: boolean = false;
 
@@ -51,6 +59,18 @@ export class JobApplicationComponent
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
 
+  EmploymentCategory: Lookup[] =
+    this.lookupService.listByCategory.EmploymentCategory.slice().sort(
+      (a, b) => a.lookupKey - b.lookupKey
+    );
+  EmploymentRequestType: Lookup[] =
+    this.lookupService.listByCategory.EmploymentRequestType.slice().sort(
+      (a, b) => a.lookupKey - b.lookupKey
+    );
+  filterdRequestTypeList: Lookup[] =
+    this.lookupService.listByCategory.EmploymentRequestType.slice().sort(
+      (a, b) => a.lookupKey - b.lookupKey
+    );
   tabsData: IKeyValue = {
     basicInfo: {
       name: "basicInfoTab",
@@ -73,6 +93,7 @@ export class JobApplicationComponent
     public service: JobApplicationService,
     private navigationService: NavigationService,
     private fb: FormBuilder,
+    private lookupService: LookupService,
     public lang: LangService
   ) {}
 
@@ -81,11 +102,55 @@ export class JobApplicationComponent
   }
 
   private buildForm(): void {
-    this.form = this.fb.group({});
-    this.fm = new FormManager(this.form, this.lang);
+    this.form = this.fb.group(new JobApplication().formBuilder(true));
+    this.form.valueChanges.subscribe((data) => {
+      console.log(data);
+    });
+  }
+
+  handleCategoryChange(): void {
+    this.requestType.setValue(null);
+  }
+  handleRequestTypeChange(): void {
+    this._handleIdentificationNumberValidationsByRequestType();
   }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
+  }
+
+  private _handleIdentificationNumberValidationsByRequestType(): void {
+    // set validators to empty
+    this.identificationNumber?.setValidators([]);
+    this.identificationNumber?.setValue(null);
+    if (!this.isNewRequestType()) {
+      this.identificationNumber.setValidators([Validators.required]);
+    }
+    this.identificationNumber.updateValueAndValidity();
+  }
+  getRequestTypeList() {
+    return this.EmploymentRequestType.filter(
+      (eqt) =>
+        !(
+          eqt.lookupKey == EmploymentRequestType.CANCEL &&
+          this.category.value == LookupEmploymentCategory.NOTIFICATION
+        )
+    );
+  }
+  isNewRequestType(): boolean {
+    return (
+      this.requestType.value &&
+      this.requestType.value === EmploymentRequestType.NEW
+    );
+  }
+  searchByIdentificationNumber() {}
+  get identificationNumber(): FormControl {
+    return this.form.get("identificationNumber") as FormControl;
+  }
+  get requestType(): FormControl {
+    return this.form.get("requestType") as FormControl;
+  }
+  get category(): FormControl {
+    return this.form.get("category") as FormControl;
   }
   navigateBack(): void {
     this.navigationService.goToBack();

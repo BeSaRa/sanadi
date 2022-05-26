@@ -980,4 +980,6 @@ export interface ILanguageKeys {
   msg_confirm_continue: string;
   job_application: string;
   employee_data: string;
+  order_type: string;
+  add_new_Employee_data: string;
 }

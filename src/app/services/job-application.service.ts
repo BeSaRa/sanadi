@@ -1,3 +1,5 @@
+import { EmployeeFormPopupComponent } from './../e-services/poups/employee-form-popup/employee-form-popup.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { JobApplicationSearchCriteria } from './../models/job-application-search-criteria';
 import { JobApplicationInterceptor } from "./../model-interceptors/job-application-interceptor";
 import { FactoryService } from "./factory.service";
@@ -39,6 +41,14 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
 
   getCaseComponentName(): string {
     return "JobApplicationComponent";
+  }
+
+  openAddNewEmployee(): DialogRef {
+    return this.dialog.show(EmployeeFormPopupComponent, {
+      service: this
+    }, {
+
+    })
   }
   _getURLSegment(): string {
     return this.urlService.URLS.E_JOB_APPLICATIONS;

@@ -1,3 +1,5 @@
+import { EmployeeFormPopupComponent } from './poups/employee-form-popup/employee-form-popup.component';
+import { EmployeesDataComponent } from './pages/job-application/employees-data/employees-data.component';
 import { JobApplicationComponent } from './pages/job-application/job-application.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -50,7 +52,9 @@ import {SelectTemplatePopupComponent} from './poups/select-template-popup/select
     ApprovalReasonComponent,
     FilterInboxRequestPopupComponent,
     SelectTemplatePopupComponent,
-    JobApplicationComponent
+    JobApplicationComponent,
+    EmployeesDataComponent,
+    EmployeeFormPopupComponent
   ],
   imports: [
     CommonModule,
