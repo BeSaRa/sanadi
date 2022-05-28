@@ -167,6 +167,11 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   private applyLicenseEndDateValidationAndStatus(): void {
     this.licenseEndDateField.setValidators((this.isPermanent() ? null : CustomValidators.required))
     this.isPermanent() ? this.licenseEndDateField.disable() : this.licenseEndDateField.enable();
+
+    if (!this.isPermanent() && this.model.requestType === ServiceRequestTypes.UPDATE) {
+      this.licenseEndDateField.disable()
+      this.licenseStartDateField.disable()
+    }
   }
 
   private validateLicenseDateRange(startDate: string, endDate: string) {

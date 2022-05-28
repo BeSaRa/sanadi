@@ -1,6 +1,6 @@
-import {AdminResult} from '@app/models/admin-result';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {CollectorItem} from '@app/models/collector-item';
+import { AdminResult } from '@app/models/admin-result';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { CollectorItem } from '@app/models/collector-item';
 
 export class CollectorLicense {
   arName!: string;
@@ -77,7 +77,7 @@ export class CollectorLicense {
   secondSpecialistDecisionInfo!: AdminResult;
   specialistDecisionInfo!: AdminResult;
 
-  convertToItem(): CollectorItem{
+  convertToItem(): CollectorItem {
     const collectorItem = new CollectorItem();
     collectorItem.oldLicenseId = this.id;
     collectorItem.oldLicenseFullSerial = this.fullSerial;
@@ -91,7 +91,8 @@ export class CollectorLicense {
     collectorItem.relationship = this.relationship;
     collectorItem.phone = this.phone;
     collectorItem.licenseEndDate = this.licenseEndDate;
-
+    collectorItem.licenseStartDate = this.licenseStartDate || this.licenseApprovedDate
+    collectorItem.licenseEndDate = this.licenseEndDate
     return collectorItem;
   }
 }
