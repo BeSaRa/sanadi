@@ -55,7 +55,7 @@
           </div>
         </div>
         <div *ngIf="selectedLicense">
-          <selected-license-table [caseType]="caseTypes.FUNDRAISING_LICENSING"
+          <selected-license-table (clearLicense)="clearSelectedLicense()" [caseType]="caseTypes.FUNDRAISING_LICENSING"
                                   [caseTypeViewLicense]="caseTypes.FUNDRAISING_LICENSING"
                                   [licenseList]="[selectedLicense]"
                                   [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
