@@ -344,7 +344,8 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         return this.licenseService
           .collectionSearch<CollectionApproval>({
             fullSerial: serial,
-            requestClassification: this.model.requestClassification
+            requestClassification: this.model.requestClassification,
+            licenseDurationType: this.model.licenseDurationType
           })
       }))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))

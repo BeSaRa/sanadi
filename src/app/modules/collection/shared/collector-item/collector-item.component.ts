@@ -383,7 +383,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       .pipe(exhaustMap((serial) => {
         return this.licenseService
           .collectorSearch<CollectorApproval>({
-            fullSerial: serial
+            fullSerial: serial,
+            licenseDurationType: this.model.licenseDurationType
           });
       }))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
