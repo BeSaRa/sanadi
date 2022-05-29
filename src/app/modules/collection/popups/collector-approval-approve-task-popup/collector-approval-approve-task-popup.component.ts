@@ -15,7 +15,7 @@ import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
 import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 import {ToastService} from '@app/services/toast.service';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CollectionRequestType} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ApprovalFormComponent} from '@app/modules/collection/shared/approval-form/approval-form.component';
 import {LicenseDurationType} from '@app/enums/license-duration-type';
@@ -133,7 +133,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   }
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
+    return this.data.model.requestType === CollectionRequestType.CANCEL;
   }
 
   private isCommentRequired(): boolean {
