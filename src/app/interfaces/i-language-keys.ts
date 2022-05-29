@@ -199,6 +199,7 @@ export interface ILanguageKeys {
   lbl_accept: string;
   training_program_accept_or_reject: string;
   departments: string;
+  department: string;
   ldap_user_not_exists: string;
   approve_inbox: string;
   btn_save_and_close: string;
@@ -982,4 +983,15 @@ export interface ILanguageKeys {
   employee_data: string;
   order_type: string;
   add_new_Employee_data: string;
+  identification_type: string;
+  office_name: string;
+  contract_location_type: string;
+  contract_location: string;
+  contract_type: string;
+  job_contract_type: string;
+  contract_status: string;
+  work_start_date: string;
+  work_end_date: string;
+  contract_expiry_date: string;
+  add_employee: string;
 }

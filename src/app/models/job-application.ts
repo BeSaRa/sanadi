@@ -18,7 +18,6 @@ export class JobApplication extends CaseModel<
   service!: JobApplicationService;
   requestType!: number;
   category!: number;
-  identificationNumber!: string;
   constructor() {
     super();
     this.service = FactoryService.getService('JobApplicationService');
@@ -27,13 +26,11 @@ export class JobApplication extends CaseModel<
   formBuilder(controls?: boolean) {
     const {
       requestType,
-      category,
-      identificationNumber
+      category
     } = this;
     return {
       requestType: controls ? [requestType, Validators.required] : requestType,
       category: controls ? [category, Validators.required] : category,
-      identificationNumber: controls ? [identificationNumber] : identificationNumber,
     }
   }
 }

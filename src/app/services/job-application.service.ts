@@ -1,6 +1,6 @@
-import { EmployeeFormPopupComponent } from './../e-services/poups/employee-form-popup/employee-form-popup.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { JobApplicationSearchCriteria } from './../models/job-application-search-criteria';
+import { EmployeeFormPopupComponent } from "./../e-services/poups/employee-form-popup/employee-form-popup.component";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { JobApplicationSearchCriteria } from "./../models/job-application-search-criteria";
 import { JobApplicationInterceptor } from "./../model-interceptors/job-application-interceptor";
 import { FactoryService } from "./factory.service";
 import { JobApplication } from "./../models/job-application";
@@ -19,8 +19,7 @@ import { UrlService } from "./url.service";
 })
 export class JobApplicationService extends BaseGenericEService<JobApplication> {
   searchColumns: string[] = [];
-  caseStatusIconMap: Map<number, string> = new Map<number, string>([
-  ]);
+  caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
   jsonSearchFile: string = "job_application_search-form.json";
   serviceKey: keyof ILanguageKeys = "job_application";
 
@@ -44,11 +43,13 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
   }
 
   openAddNewEmployee(): DialogRef {
-    return this.dialog.show(EmployeeFormPopupComponent, {
-      service: this
-    }, {
-
-    })
+    return this.dialog.show(
+      EmployeeFormPopupComponent,
+      {
+        service: this,
+      },
+      {fullscreen: true}
+    );
   }
   _getURLSegment(): string {
     return this.urlService.URLS.E_JOB_APPLICATIONS;
@@ -60,7 +61,7 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     return JobApplication;
   }
   getSearchCriteriaModel<S extends JobApplication>(): JobApplication {
-    return new JobApplicationSearchCriteria()
+    return new JobApplicationSearchCriteria();
   }
   _getUrlService(): UrlService {
     return this.urlService;

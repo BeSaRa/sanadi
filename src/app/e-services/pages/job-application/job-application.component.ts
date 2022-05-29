@@ -1,6 +1,5 @@
-import { EmployeesDataComponent } from './employees-data/employees-data.component';
+import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
-import { Validators } from "@angular/forms";
 import { LookupService } from "./../../../services/lookup.service";
 import { Lookup } from "./../../../models/lookup";
 import { IKeyValue } from "@app/interfaces/i-key-value";
@@ -94,13 +93,15 @@ export class JobApplicationComponent
     private navigationService: NavigationService,
     private fb: FormBuilder,
     private lookupService: LookupService,
-    public lang: LangService
+    public lang: LangService,
   ) {}
 
   ngOnInit() {
     this.buildForm();
   }
-
+  openForm() {
+    this.service.openAddNewEmployee();
+  }
   private buildForm(): void {
     this.form = this.fb.group(new JobApplication().formBuilder(true));
     this.form.valueChanges.subscribe((data) => {
@@ -112,21 +113,21 @@ export class JobApplicationComponent
     this.requestType.setValue(null);
   }
   handleRequestTypeChange(): void {
-    this._handleIdentificationNumberValidationsByRequestType();
+    // this._handleIdentificationNumberValidationsByRequestType();
   }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
 
-  private _handleIdentificationNumberValidationsByRequestType(): void {
-    // set validators to empty
-    this.identificationNumber?.setValidators([]);
-    this.identificationNumber?.setValue(null);
-    if (!this.isNewRequestType()) {
-      this.identificationNumber.setValidators([Validators.required]);
-    }
-    this.identificationNumber.updateValueAndValidity();
-  }
+  // private _handleIdentificationNumberValidationsByRequestType(): void {
+  //   // set validators to empty
+  //   this.identificationNumber?.setValidators([]);
+  //   this.identificationNumber?.setValue(null);
+  //   if (!this.isNewRequestType()) {
+  //     this.identificationNumber.setValidators([Validators.required]);
+  //   }
+  //   this.identificationNumber.updateValueAndValidity();
+  // }
   getRequestTypeList() {
     return this.EmploymentRequestType.filter(
       (eqt) =>
@@ -141,10 +142,6 @@ export class JobApplicationComponent
       this.requestType.value &&
       this.requestType.value === EmploymentRequestType.NEW
     );
-  }
-  searchByIdentificationNumber() {}
-  get identificationNumber(): FormControl {
-    return this.form.get("identificationNumber") as FormControl;
   }
   get requestType(): FormControl {
     return this.form.get("requestType") as FormControl;

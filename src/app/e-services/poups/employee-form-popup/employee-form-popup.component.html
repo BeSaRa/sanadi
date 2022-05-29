@@ -11,7 +11,412 @@
   ></button>
 </div>
 <div class="dialog-content no-fixed-height">
-  <form style="width: 800px" [formGroup]="form"></form>
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="arName" for="arName" class="form-label">{{
+          lang.map.lbl_arabic_name
+        }}</label>
+        <input
+          id="arName"
+          validationClasses="arName"
+          formControlName="arName"
+          class="form-control"
+        />
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{
+          lang.map.lbl_english_name
+        }}</label>
+        <input
+          id="enName"
+          validationClasses="enName"
+          formControlName="enName"
+          class="form-control"
+        />
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+          lang.map.lbl_phone
+        }}</label>
+        <input
+          id="phone"
+          validationClasses="phone"
+          formControlName="phone"
+          class="form-control"
+        />
+        <app-field-error-message controlName="phone"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="officeName"
+          for="officeName"
+          class="form-label"
+          >{{ lang.map.office_name }}</label
+        >
+        <input
+          id="officeName"
+          validationClasses="officeName"
+          formControlName="officeName"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="officeName"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="department"
+          for="department"
+          class="form-label"
+          >{{ lang.map.department }}</label
+        >
+        <input
+          id="department"
+          validationClasses="department"
+          formControlName="department"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="department"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="jobTitle"
+          for="jobTitle"
+          class="form-label"
+          >{{ lang.map.job_title }}</label
+        >
+        <input
+          id="jobTitle"
+          validationClasses="jobTitle"
+          formControlName="jobTitle"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="jobTitle"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="identificationType"
+          for="identificationType"
+          labelForId="identificationType"
+          class="form-label"
+          >{{ lang.map.identification_type }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="identificationType"
+          formControlName="identificationType"
+        >
+          <ng-option
+            *ngFor="let option of IdentificationType"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="identificationType"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="identificationNumber"
+          for="identificationNumber"
+          class="form-label"
+          >{{ lang.map.identification_number }}</label
+        >
+        <input
+          id="identificationNumber"
+          validationClasses="identificationNumber"
+          formControlName="identificationNumber"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="identificationNumber"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="passportNumber"
+          for="passportNumber"
+          class="form-label"
+          >{{ lang.map.passport_number }}</label
+        >
+        <input
+          id="passportNumber"
+          validationClasses="passportNumber"
+          formControlName="passportNumber"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="passportNumber"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label
+          asteriskIfRequired="gender"
+          for="gender"
+          labelForId="gender"
+          class="form-label"
+          >{{ lang.map.gender }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="gender"
+          formControlName="gender"
+        >
+          <ng-option *ngFor="let option of Gender" [value]="option.lookupKey">{{
+            option.getName()
+          }}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="gender"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="nationality"
+          for="nationality"
+          labelForId="nationality"
+          class="form-label"
+          >{{ lang.map.lbl_nationality }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.msg_select_nationality }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="nationality"
+          formControlName="nationality"
+        >
+          <ng-option
+            *ngFor="let option of Nationality"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="nationality"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="contractLocationType"
+          for="contractLocationType"
+          labelForId="contractLocationType"
+          class="form-label"
+          >{{ lang.map.contract_location_type }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="contractLocationType"
+          formControlName="contractLocationType"
+        >
+          <ng-option
+            *ngFor="let option of ContractLocationType"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="contractLocationType"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="contractLocation"
+          for="contractLocation"
+          class="form-label"
+          >{{ lang.map.contract_location }}</label
+        >
+        <input
+          id="contractLocation"
+          validationClasses="contractLocation"
+          formControlName="contractLocation"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="contractLocation"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="contractType"
+          for="contractType"
+          labelForId="contractType"
+          class="form-label"
+          >{{ lang.map.contract_type }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="contractType"
+          formControlName="contractType"
+        >
+          <ng-option
+            *ngFor="let option of ContractType"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="contractType"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="jobContractType"
+          for="jobContractType"
+          labelForId="jobContractType"
+          class="form-label"
+          >{{ lang.map.job_contract_type }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="jobContractType"
+          formControlName="jobContractType"
+        >
+          <ng-option
+            *ngFor="let option of JobContractType"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="jobContractType"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="contractStatus"
+          for="contractStatus"
+          labelForId="contractStatus"
+          class="form-label"
+          >{{ lang.map.contract_status }}</label
+        >
+        <ng-select
+          [selectOnTab]="true"
+          [clearable]="true"
+          placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found"
+          appendTo="body"
+          id="contractStatus"
+          formControlName="contractStatus"
+        >
+          <ng-option
+            *ngFor="let option of ContractStatus"
+            [value]="option.lookupKey"
+            >{{ option.getName() }}</ng-option
+          >
+        </ng-select>
+        <app-field-error-message
+          controlName="contractStatus"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          for="workStartDate"
+          asteriskIfRequired="workStartDate"
+          class="form-label"
+          >{{ lang.map.work_start_date }}</label
+        >
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div
+            class="form-control"
+            formControlName="workStartDate"
+            id="workStartDate"
+            [options]="datepickerOptionsMap.workStartDate"
+            (click)="dpworkStartDate.toggleCalendar()"
+            #dpworkStartDate="angular-mydatepicker"
+            angular-mydatepicker
+            validationClasses="workStartDate"
+          ></div>
+          <app-field-error-message
+            controlName="workStartDate"
+          ></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          for="workEndDate"
+          asteriskIfRequired="workEndDate"
+          class="form-label"
+          >{{ lang.map.work_end_date }}</label
+        >
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div
+            class="form-control"
+            formControlName="workEndDate"
+            id="workEndDate"
+            [options]="datepickerOptionsMap.workEndDate"
+            (click)="dpworkEndDate.toggleCalendar()"
+            #dpworkEndDate="angular-mydatepicker"
+            angular-mydatepicker
+            validationClasses="workEndDate"
+          ></div>
+          <app-field-error-message
+            controlName="workEndDate"
+          ></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          for="contractExpiryDate"
+          asteriskIfRequired="contractExpiryDate"
+          class="form-label"
+          >{{ lang.map.contract_expiry_date }}</label
+        >
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div
+            class="form-control"
+            formControlName="contractExpiryDate"
+            id="contractExpiryDate"
+            [options]="datepickerOptionsMap.contractExpiryDate"
+            (click)="dpcontractExpiryDate.toggleCalendar()"
+            #dpcontractExpiryDate="angular-mydatepicker"
+            angular-mydatepicker
+            validationClasses="contractExpiryDate"
+          ></div>
+          <app-field-error-message
+            controlName="contractExpiryDate"
+          ></app-field-error-message>
+        </div>
+      </div>
+      <div class="12">
+        <button class="btn btn-primary" type="button" (click)="addEmployee()">{{ lang.map.add_employee }}</button>
+        <button class="btn btn-outline-secondary ml-2" type="button" (click)="reset()">{{ lang.map.btn_reset }}</button>
+      </div>
+    </div>
+  </form>
+  <div>
+    <app-employees-data [employees]="employeesList" #ETable></app-employees-data>
+  </div>
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>

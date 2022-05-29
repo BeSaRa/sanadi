@@ -87,40 +87,16 @@
   </ng-template>
 
   <ng-template #employeeInfoTabTemplate>
-    <fieldset [disabled]="readonly">
-      <form [formGroup]="form" autocomplete="off">
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label
-            asteriskIfRequired="identificationNumber"
-            for="identificationNumber"
-            class="form-label"
-            >{{ lang.map.identification_number }}</label
-          >
-          <div class="input-group">
-            <input
-              id="identificationNumber"
-              [readonly]="isNewRequestType()"
-              formControlName="identificationNumber"
-              trimInput
-              class="form-control"
-            />
-            <button
-              *ngIf="!isNewRequestType()"
-              type="button"
-              [disabled]="!identificationNumber.value"
-              (click)="searchByIdentificationNumber()"
-              class="input-group-text"
-            >
-              <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
-            </button>
-          </div>
-          <app-field-error-message
-            controlName="identificationNumber"
-          ></app-field-error-message>
-        </div>
+    <div class="row">
+      <div class="col-12 mb-2">
+        <button class="btn btn-sm btn-primary px-3" (click)="openForm()">
+          new employee data
+        </button>
+      </div>
+      <div class="col-12">
         <app-employees-data #ETable></app-employees-data>
-      </form>
-    </fieldset>
+      </div>
+    </div>
   </ng-template>
   <ng-template #attachmentsTabTemplate>
     <!-- <div class="d-flex flex-row align-items-center justify-content-start">

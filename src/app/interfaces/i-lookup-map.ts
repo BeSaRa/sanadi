@@ -103,6 +103,12 @@ export interface ILookupMap {
   BankOperationType: Lookup[];
   InternalBankCategory: Lookup[];
   InternalBankStatus: Lookup[];
+
   EmploymentCategory: Lookup[];
   EmploymentRequestType: Lookup[];
+  IdentificationType: Lookup[];
+  JobContractType: Lookup[];
+  ContractType: Lookup[];
+  ContractStatus: Lookup[];
+  ContractLocationType: Lookup[];
 }
