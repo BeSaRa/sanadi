@@ -92,7 +92,7 @@ export class CollectorLicense {
     collectorItem.phone = this.phone;
     collectorItem.licenseEndDate = this.licenseEndDate;
     collectorItem.licenseStartDate = this.licenseStartDate || this.licenseApprovedDate
-    collectorItem.licenseEndDate = this.licenseEndDate
+    // collectorItem.licenseEndDate = this.licenseEndDate
     return collectorItem;
   }
 }

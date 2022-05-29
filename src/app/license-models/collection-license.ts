@@ -66,6 +66,7 @@ export class CollectionLicense extends _collectionItemBuildForm implements HasCo
       zoneNumber: this.zoneNumber,
       licenseStatusInfo: this.licenseStatusInfo,
       licenseDurationTypeInfo: this.licenseDurationTypeInfo,
+      licenseDurationType: this.licenseDurationType,
       licenseStartDate: this.licenseStartDate || this.licenseApprovedDate,
       licenseEndDate: this.licenseEndDate,
     })
