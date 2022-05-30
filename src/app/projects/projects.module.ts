@@ -13,7 +13,6 @@ import {
   UrgentInterventionApproveTaskPopupComponent
 } from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 import { InternalBankAccountApprovalComponent } from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
-import { InternalBankAccountAaprovalApproveTaskPopupComponent } from './popups/internal-bank-account-aaproval-approve-task-popup/internal-bank-account-aaproval-approve-task-popup.component';
 import { InternalBankApprovalApproveTaskPopupComponent } from './popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import {CollectionModule} from '@app/modules/collection/collection.module';
 
@@ -26,7 +25,6 @@ import {CollectionModule} from '@app/modules/collection/collection.module';
     UrgentInterventionLicenseComponent,
     UrgentInterventionApproveTaskPopupComponent,
     InternalBankAccountApprovalComponent,
-    InternalBankAccountAaprovalApproveTaskPopupComponent,
     InternalBankApprovalApproveTaskPopupComponent
   ],
     imports: [
