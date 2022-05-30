@@ -77,13 +77,14 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   }
 
   saveLicenseInfo(license: HasLicenseApproval) {
+    let finalValue = (license as unknown as CollectionItem);
     if (this.selectedIndex) {
-      this.data.model.collectionItemList.splice(this.selectedIndex - 1, 1, (license as unknown as CollectionItem))
+      this.data.model.collectionItemList.splice(this.selectedIndex - 1, 1, finalValue)
       this.data.model.collectionItemList = this.data.model.collectionItemList.slice();
     } else {
       this.data.model.collectionItemList.map((item) => {
         return item.clone({
-          ...(license as unknown as CollectionItem)
+          ...finalValue
         })
       })
     }

@@ -146,7 +146,7 @@
       </ng-container>
       <ng-container cdkColumnDef="collectorType">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.collector_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.collectorTypeInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.collectorTypeInfo?.getName()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="jobTitle">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.job_title}}</th>

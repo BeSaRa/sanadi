@@ -109,7 +109,7 @@
       </ng-container>
       <ng-container cdkColumnDef="licenseEndDate">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDateString}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date: 'yyyy-MM-dd'}} </td>
       </ng-container>
       <ng-container cdkColumnDef="map">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>

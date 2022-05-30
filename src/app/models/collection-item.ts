@@ -13,6 +13,7 @@ const _LicenseApproval = mixinCollectionItemBuildForm(mixinApprovalLicenseWithDu
 export class CollectionItem extends _LicenseApproval implements HasLicenseApproval, HasCollectionItemBuildForm {
   buildingNumber!: string
   identificationNumber!: string
+  itemId!: string
   locationDetails!: string
   latitude!: string
   longitude!: string

@@ -31,6 +31,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   label: keyof ILanguageKeys;
 
   selectedLicense: HasLicenseApproval | null = null;
+  selectedItemOriginal: CollectorItem | null = null;
 
   selectedIndex: number | false = false;
   action$: Subject<any> = new Subject<any>();
@@ -72,17 +73,23 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
 
   setSelectedLicense({item, index}: { item: HasLicenseApproval, index: number }) {
     this.selectedLicense = item;
+    this.selectedItemOriginal = this.model.collectorItemList.find(x => x.itemId === item.itemId) || null;
     this.selectedIndex = (++index); // add one to the selected inbox to avoid the  check false value
   }
 
   saveLicenseInfo(license: HasLicenseApproval) {
+    let finalValue = (license as unknown as CollectorItem);
+    if (this.selectedItemOriginal) {
+      finalValue.collectorType = this.selectedItemOriginal.collectorType;
+      finalValue.collectorTypeInfo = this.selectedItemOriginal.collectorTypeInfo;
+    }
     if (this.selectedIndex) {
-      this.data.model.collectorItemList.splice(this.selectedIndex - 1, 1, (license as unknown as CollectorItem))
+      this.data.model.collectorItemList.splice(this.selectedIndex - 1, 1, finalValue)
       this.data.model.collectorItemList = this.data.model.collectorItemList.slice();
     } else {
       this.data.model.collectorItemList.map((item) => {
         return item.clone({
-          ...(license as unknown as CollectorItem)
+          ...finalValue
         })
       })
     }
@@ -91,6 +98,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
 
   formCancel() {
     this.selectedLicense = null;
+    this.selectedItemOriginal = null;
     this.selectedIndex = false;
   }
 
