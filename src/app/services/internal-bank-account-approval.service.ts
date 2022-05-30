@@ -22,6 +22,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   InternalBankApprovalApproveTaskPopupComponent
 } from '@app/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
+import {BankService} from '@services/bank.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,8 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
               public domSanitizer: DomSanitizer,
               public cfr: ComponentFactoryResolver,
               public dynamicService: DynamicOptionsService,
-              public urlService: UrlService) {
+              public urlService: UrlService,
+              private bankService: BankService) {
     super();
     FactoryService.registerService('InternalBankAccountApprovalService', this);
   }
