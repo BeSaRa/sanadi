@@ -408,14 +408,26 @@
           ></app-field-error-message>
         </div>
       </div>
-      <div class="12">
-        <button class="btn btn-primary" type="button" (click)="addEmployee()">{{ lang.map.add_employee }}</button>
-        <button class="btn btn-outline-secondary ml-2" type="button" (click)="reset()">{{ lang.map.btn_reset }}</button>
+      <div class="col-12 mb-2">
+        <button class="btn btn-primary" type="button" (click)="setEmployee()">
+          {{ !id ? lang.map.btn_add : lang.map.btn_edit }}
+        </button>
+        <button
+          class="btn btn-outline-secondary ms-2"
+          type="button"
+          (click)="reset()"
+        >
+          {{ lang.map.btn_reset }}
+        </button>
       </div>
     </div>
   </form>
   <div>
-    <app-employees-data [employees]="employeesList" #ETable></app-employees-data>
+    <app-employees-data
+      [employees]="employeesList"
+      [actions]="actions"
+      #ETable
+    ></app-employees-data>
   </div>
 </div>
 <div class="dialog-actions">

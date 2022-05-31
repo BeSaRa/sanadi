@@ -1,3 +1,4 @@
+import { IGridAction } from "./../../../interfaces/i-grid-action";
 import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { IEmployeeDto } from "./../../../interfaces/i-employee-dto";
 import { DatepickerOptionsMap } from "@app/types/types";
@@ -16,6 +17,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 export class EmployeeFormPopupComponent implements OnInit {
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   form!: FormGroup;
+  starterId: number = 0;
   employeesList: IEmployeeDto[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
@@ -51,6 +53,27 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.lookupService.listByCategory.ContractLocationType.slice().sort(
       (a, b) => a.lookupKey - b.lookupKey
     );
+  actions: IGridAction[] = [
+    {
+      langKey: "btn_edit",
+      icon: "pen",
+      callback: (e, r) => {
+        console.log(r);
+        this.form.patchValue({
+          ...r,
+        });
+      },
+    },
+    {
+      langKey: "btn_delete",
+      icon: "delete",
+      callback: (e, r) => {
+        let index = this.employeesList.findIndex((e) => e.id == r.id);
+        this.employeesList.splice(index, 1);
+        this.employeesList = this.employeesList.slice();
+      },
+    },
+  ];
   constructor(
     public lang: LangService,
     private fb: FormBuilder,
@@ -62,6 +85,7 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   _buildForm() {
     this.form = this.fb.group({
+      id: [0],
       arName: ["", Validators.required],
       enName: ["", Validators.required],
       jobTitle: [""],
@@ -73,8 +97,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       phone: ["", Validators.required],
       department: ["", Validators.required],
       contractLocation: ["", Validators.required],
-      contractLocationType: [null],
-      // Validators.required
+      contractLocationType: [null, Validators.required],
       officeName: ["", Validators.required],
       contractStatus: [null, Validators.required],
       contractType: [null, Validators.required],
@@ -84,14 +107,26 @@ export class EmployeeFormPopupComponent implements OnInit {
       workEndDate: [new Date(), Validators.required], // مشروط
     });
   }
-  addEmployee() {
+  setEmployee() {
     if (this.form.valid) {
-      this.employeesList = [
-        { id: 0, ...this.form.value },
-        ...this.employeesList,
-      ];
+      if (!this.form.value.id) {
+        this.employeesList = [
+          { ...this.form.value, id: --this.starterId },
+          ...this.employeesList,
+        ];
+      } else {
+        Object.assign(
+          this.employeesList.find((e) => e.id == this.form.value.id),
+          {
+            ...this.form.value,
+          }
+        );
+      }
+      this.form.reset();
     }
-    console.log(this.form, this.employeesList)
+  }
+  get id() {
+    return this.form.controls['id'].value;
   }
   reset() {
     this.form.reset();

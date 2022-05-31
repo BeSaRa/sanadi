@@ -1,4 +1,4 @@
-import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
+import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
 import { LookupService } from "./../../../services/lookup.service";
 import { Lookup } from "./../../../models/lookup";
@@ -11,7 +11,13 @@ import { LangService } from "./../../../services/lang.service";
 import { JobApplicationService } from "./../../../services/job-application.service";
 import { JobApplication } from "./../../../models/job-application";
 import { IESComponent } from "./../../../interfaces/iescomponent";
-import { Component, EventEmitter, OnInit, Input, ViewChild } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Input,
+  ViewChild,
+} from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { OpenFrom } from "@app/enums/open-from.enum";
 import { OperationTypes } from "@app/enums/operation-types.enum";
@@ -19,6 +25,7 @@ import { SaveTypes } from "@app/enums/save-types";
 import { Subject, BehaviorSubject } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
+import { IGridAction } from "@app/interfaces/i-grid-action";
 @Component({
   selector: "app-job-application",
   templateUrl: "./job-application.component.html",
@@ -40,7 +47,7 @@ export class JobApplicationComponent
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   operation: OperationTypes = OperationTypes.CREATE;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
-  @ViewChild('ETable') ETable!: EmployeesDataComponent;
+  @ViewChild("ETable") ETable!: EmployeesDataComponent;
   @Input()
   fromDialog: boolean = false;
 
@@ -87,13 +94,18 @@ export class JobApplicationComponent
       validStatus: () => true,
     },
   };
-
+  actions: IGridAction[] = [
+    {
+      langKey: "attachments",
+      icon: "attachment",
+    },
+  ];
   constructor(
     public service: JobApplicationService,
     private navigationService: NavigationService,
     private fb: FormBuilder,
     private lookupService: LookupService,
-    public lang: LangService,
+    public lang: LangService
   ) {}
 
   ngOnInit() {

@@ -31,7 +31,7 @@
       <th cdk-header-cell *cdkHeaderCellDef>
         {{ lang.map.gender }}
       </th>
-      <td cdk-cell *cdkCellDef="let row">{{ row.gender }}</td>
+      <td cdk-cell *cdkCellDef="let row">{{ getGenderName(row.gender) }}</td>
     </ng-container>
 
     <ng-container cdkColumnDef="actions">
@@ -41,9 +41,9 @@
       <td cdk-cell *cdkCellDef="let row">
         <a
           href="#"
-          *ngFor="let btn of actions"
-          (click)="btn.action(row)"
-          tooltip="{{ btn.tooltip }}"
+          *ngFor="let btn of actions;"
+          (click)="cb($event, btn, row)"
+          tooltip="{{ lang.map[btn.langKey] }}"
           class="icon-btn"
         >
           <i [class]="'mdi mdi-' + btn.icon"></i>

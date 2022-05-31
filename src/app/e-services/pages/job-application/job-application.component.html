@@ -89,12 +89,12 @@
   <ng-template #employeeInfoTabTemplate>
     <div class="row">
       <div class="col-12 mb-2">
-        <button class="btn btn-sm btn-primary px-3" (click)="openForm()">
-          new employee data
+        <button class="btn btn-primary px-3" (click)="openForm()">
+          {{ lang.map.adding_employees }}
         </button>
       </div>
       <div class="col-12">
-        <app-employees-data #ETable></app-employees-data>
+        <app-employees-data #ETable [actions]="actions"></app-employees-data>
       </div>
     </div>
   </ng-template>

@@ -994,4 +994,5 @@ export interface ILanguageKeys {
   work_end_date: string;
   contract_expiry_date: string;
   add_employee: string;
+  adding_employees: string;
 }
