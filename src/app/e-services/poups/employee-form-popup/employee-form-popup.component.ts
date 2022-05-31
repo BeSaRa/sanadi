@@ -1,3 +1,7 @@
+import { ContractLocationTypes } from "./../../../enums/contract-location-types.enum";
+import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
+import { JobApplicationService } from "./../../../services/job-application.service";
+import { DIALOG_DATA_TOKEN } from "./../../../shared/tokens/tokens";
 import { IGridAction } from "./../../../interfaces/i-grid-action";
 import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { IEmployeeDto } from "./../../../interfaces/i-employee-dto";
@@ -7,7 +11,8 @@ import { Lookup } from "./../../../models/lookup";
 import { LookupService } from "@app/services/lookup.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { LangService } from "@app/services/lang.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { ContractTypes } from "@app/enums/contract-types.enum";
 
 @Component({
   selector: "app-employee-form-popup",
@@ -77,7 +82,12 @@ export class EmployeeFormPopupComponent implements OnInit {
   constructor(
     public lang: LangService,
     private fb: FormBuilder,
-    private lookupService: LookupService
+    private lookupService: LookupService,
+    @Inject(DIALOG_DATA_TOKEN)
+    public data: {
+      service: JobApplicationService;
+      parentForm: FormGroup;
+    }
   ) {}
   ngOnInit() {
     this._buildForm();
@@ -89,8 +99,8 @@ export class EmployeeFormPopupComponent implements OnInit {
       arName: ["", Validators.required],
       enName: ["", Validators.required],
       jobTitle: [""],
-      identificationType: [null, Validators.required], //  TODO: ?
-      identificationNumber: [""], // مشروط
+      identificationType: [null, Validators.required],
+      identificationNumber: [""],
       passportNumber: ["", Validators.required],
       gender: [null, Validators.required],
       nationality: [null, Validators.required],
@@ -98,13 +108,13 @@ export class EmployeeFormPopupComponent implements OnInit {
       department: ["", Validators.required],
       contractLocation: ["", Validators.required],
       contractLocationType: [null, Validators.required],
-      officeName: ["", Validators.required],
+      officeName: [""],
       contractStatus: [null, Validators.required],
       contractType: [null, Validators.required],
       jobContractType: [null, Validators.required],
-      contractExpiryDate: [new Date(), Validators.required], // مشروط
+      contractExpiryDate: [new Date()],
       workStartDate: [new Date(), Validators.required],
-      workEndDate: [new Date(), Validators.required], // مشروط
+      workEndDate: [new Date(), Validators.required],
     });
   }
   setEmployee() {
@@ -125,8 +135,75 @@ export class EmployeeFormPopupComponent implements OnInit {
       this.form.reset();
     }
   }
+
+  handleOfficeNameValidationsByContractLocationType(): void {
+    // set validators as empty
+    this.officeName?.setValidators([]);
+    this.officeName?.setValue(null);
+    if (!this.isExternal()) {
+      this.officeName.setValidators([Validators.required]);
+    }
+    this.officeName.updateValueAndValidity();
+  }
+
+  handleContractExpireDateValidationsByContractType(): void {
+    // set validators as empty
+    this.contractExpiryDate?.setValidators([]);
+    this.contractExpiryDate?.setValue(null);
+    if (!this.isInterim()) {
+      this.contractExpiryDate.setValidators([Validators.required]);
+    }
+    this.contractExpiryDate.updateValueAndValidity();
+  }
+  handleEndDateValidationsByContractStatus(): void {
+    // set validators as empty
+    this.workEndDate?.setValidators([]);
+    this.workEndDate?.setValue(null);
+    if (!this.isFinishedContract()) {
+      this.workEndDate.setValidators([Validators.required]);
+    }
+    this.workEndDate.updateValueAndValidity();
+  }
+  isInterim() {
+    return this.contractLocationType == ContractTypes.Interim;
+  }
+  isExternal() {
+    return this.contractLocationType == ContractLocationTypes.External;
+  }
+  isApproval() {
+    return this.category == LookupEmploymentCategory.APPROVAL;
+  }
+  isEditPreviousEmployee() {
+    return this.id > 0;
+  }
+  isFinishedContract() {
+    return false;
+    // return contractStatus() != ContractStatus.
+  }
+
+  get workEndDate() {
+    return this.form.controls.workEndDate.value;
+  }
+  get contractStatus() {
+    return this.form.controls.contractStatus.value;
+  }
+  get contractExpiryDate() {
+    return this.form.controls.contractExpiryDate.value;
+  }
+  get contractLocationType() {
+    return this.form.controls.contractLocationType.value;
+  }
+  get officeName() {
+    return this.form.controls.officeName.value;
+  }
+  get category() {
+    return this.data.parentForm.controls.category.value;
+  }
+  get requestType() {
+    return this.data.parentForm.controls.requestType.value;
+  }
   get id() {
-    return this.form.controls['id'].value;
+    return this.form.controls.id.value;
   }
   reset() {
     this.form.reset();

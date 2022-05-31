@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { EmployeeFormPopupComponent } from "./../e-services/poups/employee-form-popup/employee-form-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { JobApplicationSearchCriteria } from "./../models/job-application-search-criteria";
@@ -42,11 +43,12 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     return "JobApplicationComponent";
   }
 
-  openAddNewEmployee(): DialogRef {
+  openAddNewEmployee(form: FormGroup): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {
         service: this,
+        parentForm: form
       },
       {fullscreen: true}
     );

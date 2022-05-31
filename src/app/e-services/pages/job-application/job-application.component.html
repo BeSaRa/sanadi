@@ -88,7 +88,7 @@
 
   <ng-template #employeeInfoTabTemplate>
     <div class="row">
-      <div class="col-12 mb-2">
+      <div class="col-12 mb-2" *ngIf="category.value">
         <button class="btn btn-primary px-3" (click)="openForm()">
           {{ lang.map.adding_employees }}
         </button>

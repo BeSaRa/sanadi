@@ -112,7 +112,7 @@ export class JobApplicationComponent
     this.buildForm();
   }
   openForm() {
-    this.service.openAddNewEmployee();
+    this.service.openAddNewEmployee(this.form);
   }
   private buildForm(): void {
     this.form = this.fb.group(new JobApplication().formBuilder(true));

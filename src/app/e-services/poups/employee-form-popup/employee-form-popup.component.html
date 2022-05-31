@@ -139,6 +139,7 @@
           validationClasses="identificationNumber"
           formControlName="identificationNumber"
           class="form-control"
+          [readonly]="isEditPreviousEmployee()"
         />
         <app-field-error-message
           controlName="identificationNumber"
@@ -225,6 +226,7 @@
           placeholder="{{ lang.map.select }}"
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
+          (change)="handleOfficeNameValidationsByContractLocationType()"
           id="contractLocationType"
           formControlName="contractLocationType"
         >
@@ -271,6 +273,7 @@
           appendTo="body"
           id="contractType"
           formControlName="contractType"
+          (change)="handleContractExpireDateValidationsByContractType()"
         >
           <ng-option
             *ngFor="let option of ContractType"
@@ -324,6 +327,7 @@
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
           id="contractStatus"
+          (change)="handleEndDateValidationsByContractStatus()"
           formControlName="contractStatus"
         >
           <ng-option
@@ -408,7 +412,7 @@
           ></app-field-error-message>
         </div>
       </div>
-      <div class="col-12 mb-2">
+      <div class="col-12 mb-2" *ngIf="!isApproval()">
         <button class="btn btn-primary" type="button" (click)="setEmployee()">
           {{ !id ? lang.map.btn_add : lang.map.btn_edit }}
         </button>
@@ -422,7 +426,7 @@
       </div>
     </div>
   </form>
-  <div>
+  <div *ngIf="!isApproval()">
     <app-employees-data
       [employees]="employeesList"
       [actions]="actions"
