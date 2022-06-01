@@ -112,7 +112,7 @@ const routes: Routes = [
   {
     path: 'bank', component: BankComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: 'ADMIN_ADD_EDIT_BANK', configPermissionGroup: null, checkAnyPermission: false}
   },
 ];
 
