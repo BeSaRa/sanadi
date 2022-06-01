@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup } from "@angular/forms";
 import { EmployeeFormPopupComponent } from "./../e-services/poups/employee-form-popup/employee-form-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { JobApplicationSearchCriteria } from "./../models/job-application-search-criteria";
@@ -6,7 +6,7 @@ import { JobApplicationInterceptor } from "./../model-interceptors/job-applicati
 import { FactoryService } from "./factory.service";
 import { JobApplication } from "./../models/job-application";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { ComponentFactoryResolver, Injectable } from "@angular/core";
+import { ComponentFactoryResolver, EventEmitter, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
@@ -14,6 +14,7 @@ import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
+import { IEmployeeDto } from "@app/interfaces/i-employee-dto";
 
 @Injectable({
   providedIn: "root",
@@ -23,10 +24,10 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
   jsonSearchFile: string = "job_application_search-form.json";
   serviceKey: keyof ILanguageKeys = "job_application";
+  onSubmit: EventEmitter<IEmployeeDto[]> = new EventEmitter()
 
   interceptor: IModelInterceptor<JobApplication> =
     new JobApplicationInterceptor();
-
   constructor(
     private urlService: UrlService,
     public http: HttpClient,
@@ -48,9 +49,9 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
       EmployeeFormPopupComponent,
       {
         service: this,
-        parentForm: form
+        parentForm: form,
       },
-      {fullscreen: true}
+      { fullscreen: true }
     );
   }
   _getURLSegment(): string {

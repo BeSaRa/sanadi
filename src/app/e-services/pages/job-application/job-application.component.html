@@ -13,13 +13,6 @@
       [template]="employeeInfoTabTemplate"
       [title]="lang.map.employee_data"
     ></tab>
-    <tab
-      *ngIf="!accordionView"
-      [name]="tabsData.attachments.name"
-      [hasError]="getTabInvalidStatus('attachments')"
-      [template]="attachmentsTabTemplate"
-      [title]="lang.map.attachments"
-    ></tab>
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>
@@ -69,7 +62,6 @@
               appendTo="body"
               id="requestType"
               formControlName="requestType"
-              (change)="handleRequestTypeChange()"
             >
               <ng-option
                 *ngFor="let option of getRequestTypeList()"
@@ -81,6 +73,26 @@
               controlName="requestType"
             ></app-field-error-message>
           </div>
+          <div class="col-12 mb-4 position-relative">
+            <label
+              asteriskIfRequired="description"
+              for="description"
+              class="form-label"
+              >{{ lang.map.lbl_description }}</label
+            >
+            <textarea
+              rows="5"
+              id="description"
+              validationClasses="description"
+              formControlName="description"
+              class="form-control"
+              trimInput
+            ></textarea>
+            <app-field-error-message
+              controlName="description"
+            ></app-field-error-message>
+          </div>
+
         </div>
       </form>
     </fieldset>
@@ -94,17 +106,12 @@
         </button>
       </div>
       <div class="col-12">
-        <app-employees-data #ETable [actions]="actions"></app-employees-data>
+        <app-employees-data
+          #ETable
+          [employees]="employees"
+          [actions]="[]"
+        ></app-employees-data>
       </div>
     </div>
-  </ng-template>
-  <ng-template #attachmentsTabTemplate>
-    <!-- <div class="d-flex flex-row align-items-center justify-content-start">
-      <button [disabled]="isAttachmentReadonly()" (click)="attachmentsCtrl.openUploadDialog()"
-              class="d-inline-block btn p-0 icon-btn"><i
-        class="mdi mdi-plus-box text-primary"></i></button>
-    </div>
-    <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                   [readonly]="isAttachmentReadonly()"></app-documents> -->
   </ng-template>
 </div>

@@ -412,17 +412,24 @@
           ></app-field-error-message>
         </div>
       </div>
-      <div class="col-12 mb-2" *ngIf="!isApproval()">
+      <div class="col-12 mb-2 d-flex" *ngIf="!isApproval()">
         <button class="btn btn-primary" type="button" (click)="setEmployee()">
           {{ !id ? lang.map.btn_add : lang.map.btn_edit }}
         </button>
         <button
-          class="btn btn-outline-secondary ms-2"
+          class="btn btn-outline-secondary mx-2"
           type="button"
           (click)="reset()"
         >
           {{ lang.map.btn_reset }}
         </button>
+        <button
+        class="btn btn-outline-danger ms-auto"
+        type="button"
+        (click)="clearAll()"
+      >
+        {{ lang.map.clear_all }}
+      </button>
       </div>
     </div>
   </form>
@@ -436,7 +443,7 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button dialogClose class="btn btn-primary">
+  <button dialogClose [disabled]="attachmentsAdded()" class="btn btn-primary" (click)="submit()">
     {{ lang.map.btn_save }}
   </button>
   <button dialogClose class="btn btn-secondary">

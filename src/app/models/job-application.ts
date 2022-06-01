@@ -1,5 +1,5 @@
-import { Validators } from '@angular/forms';
-import { FactoryService } from './../services/factory.service';
+import { Validators } from "@angular/forms";
+import { FactoryService } from "./../services/factory.service";
 import { InterceptModel } from "@decorators/intercept-model";
 import { JobApplicationInterceptor } from "./../model-interceptors/job-application-interceptor";
 import { JobApplicationService } from "./../services/job-application.service";
@@ -18,19 +18,18 @@ export class JobApplication extends CaseModel<
   service!: JobApplicationService;
   requestType!: number;
   category!: number;
+  description!: string;
   constructor() {
     super();
-    this.service = FactoryService.getService('JobApplicationService');
+    this.service = FactoryService.getService("JobApplicationService");
   }
 
   formBuilder(controls?: boolean) {
-    const {
-      requestType,
-      category
-    } = this;
+    const { requestType, category, description } = this;
     return {
       requestType: controls ? [requestType, Validators.required] : requestType,
       category: controls ? [category, Validators.required] : category,
-    }
+      description: controls ? [description] : description,
+    };
   }
 }

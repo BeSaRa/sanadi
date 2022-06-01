@@ -117,6 +117,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       workEndDate: [new Date(), Validators.required],
     });
   }
+  submit() {
+    this.data.service.onSubmit.emit(this.employeesList);
+  }
   setEmployee() {
     if (this.form.valid) {
       if (!this.form.value.id) {
@@ -135,11 +138,17 @@ export class EmployeeFormPopupComponent implements OnInit {
       this.form.reset();
     }
   }
-
+  attachmentsAdded() {
+    // TODO: complete it
+    return true;
+  }
+  clearAll() {
+    this.employeesList.splice(0, this.employeesList.length);
+    this.employeesList = this.employeesList.slice();
+  }
   handleOfficeNameValidationsByContractLocationType(): void {
     // set validators as empty
     this.officeName?.setValidators([]);
-    this.officeName?.setValue(null);
     if (!this.isExternal()) {
       this.officeName.setValidators([Validators.required]);
     }
@@ -149,7 +158,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   handleContractExpireDateValidationsByContractType(): void {
     // set validators as empty
     this.contractExpiryDate?.setValidators([]);
-    this.contractExpiryDate?.setValue(null);
     if (!this.isInterim()) {
       this.contractExpiryDate.setValidators([Validators.required]);
     }
@@ -158,7 +166,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   handleEndDateValidationsByContractStatus(): void {
     // set validators as empty
     this.workEndDate?.setValidators([]);
-    this.workEndDate?.setValue(null);
     if (!this.isFinishedContract()) {
       this.workEndDate.setValidators([Validators.required]);
     }
@@ -182,19 +189,19 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
 
   get workEndDate() {
-    return this.form.controls.workEndDate.value;
+    return this.form.controls.workEndDate;
   }
   get contractStatus() {
     return this.form.controls.contractStatus.value;
   }
   get contractExpiryDate() {
-    return this.form.controls.contractExpiryDate.value;
+    return this.form.controls.contractExpiryDate;
   }
   get contractLocationType() {
     return this.form.controls.contractLocationType.value;
   }
   get officeName() {
-    return this.form.controls.officeName.value;
+    return this.form.controls.officeName;
   }
   get category() {
     return this.data.parentForm.controls.category.value;

@@ -1,3 +1,4 @@
+import { IEmployeeDto } from '@app/interfaces/i-employee-dto';
 import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
 import { LookupService } from "./../../../services/lookup.service";
@@ -25,7 +26,6 @@ import { SaveTypes } from "@app/enums/save-types";
 import { Subject, BehaviorSubject } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { IGridAction } from "@app/interfaces/i-grid-action";
 @Component({
   selector: "app-job-application",
   templateUrl: "./job-application.component.html",
@@ -34,6 +34,7 @@ import { IGridAction } from "@app/interfaces/i-grid-action";
 export class JobApplicationComponent
   implements OnInit, IESComponent<JobApplication>
 {
+  employees: IEmployeeDto[] = [];
   fileIconsEnum = FileIconsEnum;
   caseType: number = CaseTypes.JOB_APPLICATION;
   afterSave$: EventEmitter<JobApplication> = new EventEmitter<JobApplication>();
@@ -87,29 +88,22 @@ export class JobApplicationComponent
       name: "employeeInfoTab",
       langKey: "employee_data",
       validStatus: () => this.form.valid,
-    },
-    attachments: {
-      name: "attachmentsTab",
-      langKey: "attachments",
-      validStatus: () => true,
-    },
+    }
   };
-  actions: IGridAction[] = [
-    {
-      langKey: "attachments",
-      icon: "attachment",
-    },
-  ];
   constructor(
     public service: JobApplicationService,
     private navigationService: NavigationService,
     private fb: FormBuilder,
     private lookupService: LookupService,
     public lang: LangService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.buildForm();
+    this.service.onSubmit.subscribe(data => {
+      this.employees = [...data];
+    })
   }
   openForm() {
     this.service.openAddNewEmployee(this.form);
@@ -124,22 +118,10 @@ export class JobApplicationComponent
   handleCategoryChange(): void {
     this.requestType.setValue(null);
   }
-  handleRequestTypeChange(): void {
-    // this._handleIdentificationNumberValidationsByRequestType();
-  }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
 
-  // private _handleIdentificationNumberValidationsByRequestType(): void {
-  //   // set validators to empty
-  //   this.identificationNumber?.setValidators([]);
-  //   this.identificationNumber?.setValue(null);
-  //   if (!this.isNewRequestType()) {
-  //     this.identificationNumber.setValidators([Validators.required]);
-  //   }
-  //   this.identificationNumber.updateValueAndValidity();
-  // }
   getRequestTypeList() {
     return this.EmploymentRequestType.filter(
       (eqt) =>
