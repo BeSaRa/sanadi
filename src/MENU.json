@@ -655,7 +655,7 @@
     "path": "/home/administration/bank",
     "icon": "mdi-bank",
     "isSvg": false,
-    "permission": "",
+    "permission": "ADMIN_ADD_EDIT_BANK",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",
