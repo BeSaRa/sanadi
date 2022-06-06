@@ -76,6 +76,8 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
 import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import { Donor } from '@app/models/donor';
+import {DonorService} from '@services/donor.service';
 
 @Component({
   selector: 'app-user-request',
@@ -93,6 +95,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               private subventionResponseService: SubventionResponseService,
               private subventionAidService: SubventionAidService,
               private aidLookupService: AidLookupService,
+              private donorService: DonorService,
               private activeRoute: ActivatedRoute,
               private router: Router,
               private cd: ChangeDetectorRef,
@@ -130,7 +133,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToSecondaryIdTypeChange();
     this.preparePeriodicityLookups();
     this.loadMainAidLookups();
-
+    this.loadDonors();
   }
 
   ngAfterViewInit(): void {
@@ -173,6 +176,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
+  donorList: Donor[] = [];
 
   aidsSubAidLookupsList: AidLookup[] = [];
   periodicityLookups: Record<number, Lookup> = {};
@@ -209,6 +213,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     'requestedAid',
     'estimatedAmount',
     'periodicType',
+    'donor',
     'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
@@ -370,6 +375,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     periodicity: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.periodicTypeInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    donor: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.donorInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.donorInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
@@ -1331,6 +1341,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       catchError(err => of([]))
     ).subscribe((list) => {
       this.mainAidLookupsList = list;
+    });
+  }
+
+  private loadDonors() {
+    this.donorList = [];
+    return this.donorService.loadComposite().pipe(
+      catchError(err => of([]))
+    ).subscribe((list) => {
+      this.donorList = list;
     });
   }
 

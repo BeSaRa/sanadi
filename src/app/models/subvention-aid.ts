@@ -29,6 +29,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   orgId!: number;
   orgUserId!: number;
   aidLookupParentId!: number;
+  donorId!: number;
   // not belong to the model
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
@@ -36,6 +37,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   aidLookupInfo!: AdminResult;
   aidLookupParentInfo!: AdminResult;
   periodicTypeInfo!: AdminResult;
+  donorInfo!: AdminResult;
 
   service: SubventionAidService;
   approvalDateString: string | undefined;
@@ -100,7 +102,8 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidStartPayDate,
       aidLookupParentId,
       aidLookupId,
-      installmentsCount
+      installmentsCount,
+      donorId
     } = this;
 
     return {
@@ -113,6 +116,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
       aidStartPayDate: control ? [aidStartPayDate, [CustomValidators.required]] : aidStartPayDate,
       aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
       aidLookupId: control ? [aidLookupId, CustomValidators.required] : aidLookupId,
+      donorId: control ? [donorId, CustomValidators.required] : donorId,
       installmentsCount: control ? [installmentsCount, [CustomValidators.number, Validators.min(1), CustomValidators.maxLength(20)]] : installmentsCount
     };
   }

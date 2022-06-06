@@ -1,6 +1,6 @@
 import {SubventionAid} from '../models/subvention-aid';
 import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 
 export class SubventionAidInterceptor {
   static receive(model: SubventionAid): SubventionAid {
@@ -16,6 +16,7 @@ export class SubventionAidInterceptor {
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
+    model.donorInfo = AdminResult.createInstance(model.donorInfo);
     return model;
   }
 
@@ -27,6 +28,7 @@ export class SubventionAidInterceptor {
     delete model.aidLookupInfo;
     delete model.aidLookupParentInfo;
     delete model.periodicTypeInfo;
+    delete model.donorInfo;
     delete model.orgInfo;
     delete model.orgBranchInfo;
     delete model.orgUserInfo;

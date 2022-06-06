@@ -874,6 +874,29 @@
           </div>
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
+              <label asteriskIfRequired="donorId" for="donorId"
+                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.donor}}</label>
+              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
+                <ng-select [selectOnTab]="true" labelForId="donorId" [clearable]="false"
+                           [readonly]="readOnly"
+                           placeholder="{{langService.map.select}}" id="donorId"
+                           [notFoundText]="langService.map.msg_not_found"
+                           formControlName="donorId" appendTo="body"
+                           [ngClass]="fm.getStatusClass('aidTab.0.donorId')">
+                  <ng-option *ngFor="let option of donorList" [disabled]="!option.isActive()"
+                             [value]="option.id">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-select>
+                <app-field-error-message
+                  [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex flex-row">
+          <div class="col-sm-12 col-md-6">
+            <div class="row d-flex flex-column flex-md-row">
               <label for="aidSuggestedAmount" asteriskIfRequired="aidSuggestedAmount"
                      class="col-sm-12 col-md-4 col-form-label">{{langService.map.estimated_amount}}</label>
               <div class="col-md-8 col-sm-12 mb-4">
@@ -886,8 +909,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
               <label for="aidAmount" asteriskIfRequired="aidAmount"
@@ -902,6 +923,8 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="row d-flex flex-row">
           <div class="col-sm-12 col-md-6">
             <div class="row d-flex flex-column flex-md-row">
               <label asteriskIfRequired="installmentsCount" for="installmentsCount"
@@ -961,49 +984,54 @@
               <ng-container cdkColumnDef="approvalDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString}} </td>
+                <td cdk-cell *cdkCellDef="let row" class="date-column">{{row.approvalDateString || ''}}</td>
               </ng-container>
               <ng-container cdkColumnDef="requestedAidCategory">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.requestedAidCategory"> {{langService.map.requested_aid_category}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupParentInfo.getName()}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupParentInfo?.getName() || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="requestedAid">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.requestedAid"> {{langService.map.requested_aid}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo.getName()}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo?.getName() || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="estimatedAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
                 <td cdk-cell
-                    *cdkCellDef="let row"> {{row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+                    *cdkCellDef="let row"> {{(row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="periodicType">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo.getName()}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo?.getName() || ''}} </td>
+              </ng-container>
+              <ng-container cdkColumnDef="donor">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="aidsSortingCallbacks.donor"> {{langService.map.donor}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{row.donorInfo?.getName() || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="installmentsCount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount || 0}} </td>
               </ng-container>
               <ng-container cdkColumnDef="aidStartPayDate">
                 <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.paymentDate"> {{langService.map.payment_date}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString}} </td>
+                <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="givenAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.givenAmount"> {{langService.map.given_amount}}</th>
                 <td cdk-cell
-                    *cdkCellDef="let row"> {{row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+                    *cdkCellDef="let row"> {{(row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="remainingAmount">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="aidsSortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
                 <td cdk-cell
-                    *cdkCellDef="let row"> {{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+                    *cdkCellDef="let row"> {{(row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
               </ng-container>
               <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>

@@ -55,13 +55,14 @@ export class RequestDetailsPopupComponent {
     'requestedAid',
     'estimatedAmount',
     'periodicType',
+    'donor',
     'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
     'remainingAmount'
   ];
 
-  sortingCallbacks = {
+  aidsSortingCallbacks = {
     approvalDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.approvalDate),
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
@@ -85,6 +86,11 @@ export class RequestDetailsPopupComponent {
     periodicity: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.periodicTypeInfo.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    donor: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.donorInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.donorInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
