@@ -1,23 +1,24 @@
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { Consultation } from '../models/consultation';
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { ActionLogService } from './action-log.service';
-import { CommentService } from './comment.service';
-import { DialogService } from './dialog.service';
-import { DocumentService } from './document.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
-import { RecommendationService } from './recommendation.service';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { UrlService } from './url.service';
-import { ConsultationInterceptor } from '../model-interceptors/consultation-interceptor';
-import { FactoryService } from './factory.service';
-import { SearchService } from './search.service';
-import { ConsultationSearchCriteria } from '../models/consultation-search-criteria';
-import { CaseStatus } from '../enums/case-status.enum';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {Consultation} from '../models/consultation';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {ActionLogService} from './action-log.service';
+import {CommentService} from './comment.service';
+import {DialogService} from './dialog.service';
+import {DocumentService} from './document.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {HttpClient} from '@angular/common/http';
+import {RecommendationService} from './recommendation.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {UrlService} from './url.service';
+import {ConsultationInterceptor} from '../model-interceptors/consultation-interceptor';
+import {FactoryService} from './factory.service';
+import {SearchService} from './search.service';
+import {ConsultationSearchCriteria} from '../models/consultation-search-criteria';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {CastResponseContainer} from "@decorators/cast-response";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+
 @CastResponseContainer({
   $default: {
     model: ()=> Consultation,
@@ -33,10 +34,10 @@ export class ConsultationService extends BaseGenericEService<Consultation> {
 
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organizationId', 'fullName', 'category', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
-    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
-    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
-    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+    [CommonCaseStatus.CANCELLED, 'mdi mdi-cancel'],
+    [CommonCaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CommonCaseStatus.NEW, 'mdi mdi-file-star-outline'],
+    [CommonCaseStatus.UNDER_PROCESSING, 'mdi mdi-rocket-launch'],
   ]);
 
   jsonSearchFile: string = 'consultation_search_form.json';

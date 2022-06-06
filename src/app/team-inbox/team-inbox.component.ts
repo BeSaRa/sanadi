@@ -26,8 +26,8 @@ import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {Lookup} from "@app/models/lookup";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'team-inbox',
@@ -351,18 +351,6 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private _getCaseStatusEnum(item: QueryResult) {
-    try {
-      let caseStatusEnum = this.inboxService.getService(item.getCaseType()).caseStatusEnumMap[item.getCaseType()];
-      if (!caseStatusEnum) {
-        caseStatusEnum = CaseStatus;
-      }
-      return caseStatusEnum;
-    } catch (e) {
-      return CaseStatus;
-    }
-  }
-
   private buildGridActions() {
     this.actions = [
       // open
@@ -389,9 +377,8 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'manage_attachments',
         data: {hideFromViewer: true},
         show: (item: QueryResult) => {
-          let caseStatus = item.getCaseStatus(),
-            caseStatusEnum = this._getCaseStatusEnum(item);
-          return (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
+          let caseStatus = item.getCaseStatus();
+          return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
         },
         onClick: (item: QueryResult) => {
           this.actionManageAttachments(item);
@@ -418,8 +405,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'manage_comments',
         data: {hideFromViewer: true},
         show: (item: QueryResult) => {
-          let caseStatusEnum = this._getCaseStatusEnum(item);
-          return this.employeeService.isInternalUser() && item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+          return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
         onClick: (item: QueryResult) => {
           this.actionManageComments(item);

@@ -16,6 +16,7 @@ import {ToastService} from "@app/services/toast.service";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -236,10 +237,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }

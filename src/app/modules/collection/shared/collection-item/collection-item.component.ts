@@ -1,27 +1,27 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { CollectionApproval } from "@app/models/collection-approval";
-import { BehaviorSubject, Observable, of, Subject } from "rxjs";
-import { exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
-import { CollectionItem } from "@app/models/collection-item";
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { LangService } from "@app/services/lang.service";
-import { AppEvents } from "@app/enums/app-events";
-import { DialogService } from '@app/services/dialog.service';
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { ICoordinates } from "@app/interfaces/ICoordinates";
-import { LicenseService } from "@app/services/license.service";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { CollectionLicense } from "@app/license-models/collection-license";
-import { HasCollectionItemBuildForm } from "@app/interfaces/has-collection-item-build-form";
-import { CollectionRequestType } from "@app/enums/service-request-types";
-import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
-import { CaseStatusCollectionApproval } from '@app/enums/case-status-collection-approval';
-import { SharedService } from '@app/services/shared.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@app/helpers/date-utils';
-import { LicenseDurationType } from '@app/enums/license-duration-type';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {CollectionApproval} from "@app/models/collection-approval";
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {CollectionItem} from "@app/models/collection-item";
+import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {LangService} from "@app/services/lang.service";
+import {AppEvents} from "@app/enums/app-events";
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {ICoordinates} from "@app/interfaces/ICoordinates";
+import {LicenseService} from "@app/services/license.service";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {CollectionLicense} from "@app/license-models/collection-license";
+import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
+import {CollectionRequestType} from "@app/enums/service-request-types";
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {DateUtils} from '@app/helpers/date-utils';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'collection-item',
@@ -176,7 +176,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    if (this.model.getCaseStatus() !== CaseStatusCollectionApproval.FINAL_APPROVE) {
+    if (this.model.getCaseStatus() !== CommonCaseStatus.FINAL_APPROVE) {
       this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
     }
   }

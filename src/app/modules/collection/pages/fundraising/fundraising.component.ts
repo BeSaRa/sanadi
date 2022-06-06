@@ -1,25 +1,26 @@
-import { Component } from "@angular/core";
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { OperationTypes } from "@app/enums/operation-types.enum";
-import { SaveTypes } from "@app/enums/save-types";
-import { CollectionRequestType } from "@app/enums/service-request-types";
-import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { CommonUtils } from "@app/helpers/common-utils";
-import { Fundraising } from "@app/models/fundraising";
-import { Lookup } from "@app/models/lookup";
-import { DialogService } from "@app/services/dialog.service";
-import { FundraisingService } from "@app/services/fundraising.service";
-import { LangService } from "@app/services/lang.service";
-import { LookupService } from "@app/services/lookup.service";
-import { Observable, of, Subject } from "rxjs";
-import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { catchError, exhaustMap, filter, map, takeUntil, tap } from "rxjs/operators";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
-import { LicenseService } from "@app/services/license.service";
-import { ToastService } from "@app/services/toast.service";
-import { OpenFrom } from "@app/enums/open-from.enum";
-import { EmployeeService } from "@app/services/employee.service";
+import {Component} from "@angular/core";
+import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {OperationTypes} from "@app/enums/operation-types.enum";
+import {SaveTypes} from "@app/enums/save-types";
+import {CollectionRequestType} from "@app/enums/service-request-types";
+import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
+import {CommonUtils} from "@app/helpers/common-utils";
+import {Fundraising} from "@app/models/fundraising";
+import {Lookup} from "@app/models/lookup";
+import {DialogService} from "@app/services/dialog.service";
+import {FundraisingService} from "@app/services/fundraising.service";
+import {LangService} from "@app/services/lang.service";
+import {LookupService} from "@app/services/lookup.service";
+import {Observable, of, Subject} from "rxjs";
+import {FileIconsEnum} from "@app/enums/file-extension-mime-types-icons.enum";
+import {catchError, exhaustMap, filter, map, takeUntil, tap} from "rxjs/operators";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {FundraisingSearchCriteria} from "@app/models/FundRaisingSearchCriteria";
+import {LicenseService} from "@app/services/license.service";
+import {ToastService} from "@app/services/toast.service";
+import {OpenFrom} from "@app/enums/open-from.enum";
+import {EmployeeService} from "@app/services/employee.service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: "fundraising",
@@ -152,7 +153,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   }
 
   private openSelectLicense(licenses: Fundraising[]): Observable<undefined | Fundraising> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestType.value || null }), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: Fundraising, details: Fundraising } | undefined)) => result ? result.details : result))
   }
@@ -180,13 +181,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-    if (
-      caseStatusEnum &&
-      (caseStatus == caseStatusEnum.FINAL_APPROVE ||
-        caseStatus === caseStatusEnum.FINAL_REJECTION)
-    ) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
@@ -246,7 +242,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
           return this.selectedLicense &&
           this.selectedLicense?.fullSerial === control.value
             ? null
-            : { select_license: true };
+            : {select_license: true};
         },
       ]);
     }
@@ -319,7 +315,7 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }

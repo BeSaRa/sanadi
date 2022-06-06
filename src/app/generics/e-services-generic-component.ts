@@ -20,10 +20,10 @@ import {ICaseModel} from "@app/interfaces/icase-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {LangService} from "@app/services/lang.service";
 import {CaseModel} from "@app/models/case-model";
-import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -175,7 +175,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        (this.model as unknown as CaseModel<any, any>).caseStatus = CaseStatus.STARTED;
+        (this.model as unknown as CaseModel<any, any>).caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this._afterLaunch();
         this.onModelChange$.emit(this._getNewInstance());
       })

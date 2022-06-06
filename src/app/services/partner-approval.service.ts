@@ -8,13 +8,12 @@ import {DocumentService} from "./document.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DynamicOptionsService} from "./dynamic-options.service";
 import {HttpClient} from "@angular/common/http";
-import {IModelInterceptor} from "../interfaces/i-model-interceptor";
+import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
 import {RecommendationService} from "./recommendation.service";
 import {SearchService} from "./search.service";
-import {ILanguageKeys} from "../interfaces/i-language-keys";
+import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {FactoryService} from "./factory.service";
 import {UrlService} from "./url.service";
-import {CaseStatus} from "../enums/case-status.enum";
 import {PartnerApprovalInterceptor} from "../model-interceptors/partner-approval-interceptor";
 import {Observable} from "rxjs";
 import {LicenseService} from "@app/services/license.service";
@@ -33,6 +32,7 @@ import {ManagementCouncilInterceptor} from "@app/model-interceptors/ManagementCo
 import {TargetGroupInterceptor} from "@app/model-interceptors/TargetGroupInterceptor";
 import {ContactOfficerInterceptor} from "@app/model-interceptors/ContactOfficerInterceptor";
 import {ApprovalReasonInterceptor} from "@app/model-interceptors/ApprovalReasonInterceptor";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -61,10 +61,10 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
   selectLicenseDisplayColumns = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
-    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
-    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
-    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+    [CommonCaseStatus.CANCELLED, 'mdi mdi-cancel'],
+    [CommonCaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CommonCaseStatus.NEW, 'mdi mdi-file-star-outline'],
+    [CommonCaseStatus.UNDER_PROCESSING, 'mdi mdi-rocket-launch'],
   ]);
 
   constructor(private urlService: UrlService,

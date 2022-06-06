@@ -29,6 +29,7 @@ import {
   InitialExternalOfficeApprovalSearchCriteria
 } from '@app/models/initial-external-office-approval-search-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -436,10 +437,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
@@ -499,12 +498,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;

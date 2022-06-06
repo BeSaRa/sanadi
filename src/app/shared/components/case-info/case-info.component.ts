@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CaseModel} from "@app/models/case-model";
 import {LangService} from '@app/services/lang.service';
 import {CaseTypes} from "@app/enums/case-types.enum";
@@ -9,8 +9,9 @@ import {SharedService} from "@app/services/shared.service";
 import {ProjectModel} from "@app/models/project-model";
 import {BlobModel} from "@app/models/blob-model";
 import {ProjectModelService} from "@app/services/project-model.service";
-import { ShippingApproval } from '@app/models/shipping-approval';
-import { CustomsExemptionRemittanceService } from '@app/services/customs-exemption-remittance.service';
+import {ShippingApproval} from '@app/models/shipping-approval';
+import {CustomsExemptionRemittanceService} from '@app/services/customs-exemption-remittance.service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -18,7 +19,7 @@ import { CustomsExemptionRemittanceService } from '@app/services/customs-exempti
   templateUrl: './case-info.component.html',
   styleUrls: ['./case-info.component.scss']
 })
-export class CaseInfoComponent implements OnInit {
+export class CaseInfoComponent {
   constructor(public lang: LangService,
               private licenseService: LicenseService,
               private customsExemptionRemittanceService : CustomsExemptionRemittanceService,
@@ -27,7 +28,6 @@ export class CaseInfoComponent implements OnInit {
 
   @Input()
   model!: CaseModel<any, any>
-  caseStatusEnum: any;
   // this should be updated when ever you will add a new license service
   private licenseCasList: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
@@ -42,11 +42,6 @@ export class CaseInfoComponent implements OnInit {
   private documentCasList: number[] = [
     CaseTypes.SHIPPING_APPROVAL
   ]
-
-
-  ngOnInit(): void {
-    this.caseStatusEnum = this.model.service.caseStatusEnumMap[this.model.getCaseType()];
-  }
 
   get fullSerial(): string {
     return this.model.fullSerial || '';
@@ -85,11 +80,11 @@ export class CaseInfoComponent implements OnInit {
   }
 
   isLicenseCase(): boolean {
-    return this.licenseCasList.includes(this.model.getCaseType()) && this.caseStatusEnum && this.model.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   isDocumentCase(): boolean {
-    return this.documentCasList.includes(this.model.getCaseType()) && this.caseStatusEnum && this.model.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.documentCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   viewGeneratedLicense(): void {
@@ -124,7 +119,7 @@ export class CaseInfoComponent implements OnInit {
   }
 
   isTemplateModelServiceAndApproved() {
-    return this.model.getCaseType() === CaseTypes.EXTERNAL_PROJECT_MODELS && this.model.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE
+    return this.model.getCaseType() === CaseTypes.EXTERNAL_PROJECT_MODELS && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE
   }
 
   viewProjectModelTemplate(): void {

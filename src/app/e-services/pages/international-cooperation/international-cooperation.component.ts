@@ -8,7 +8,6 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {IESComponent} from '@app/interfaces/iescomponent';
 import {InternationalCooperation} from '@app/models/international-cooperation';
 import {InternationalCooperationService} from '@app/services/international-cooperation.service';
@@ -23,6 +22,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {NavigationService} from "@app/services/navigation.service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -240,7 +240,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   launch() {
     this.model?.start().subscribe(_ => {
       if (this.model) {
-        this.model.caseStatus = CaseStatus.STARTED;
+        this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this.form.reset();
         this.model = new InternationalCooperation();
         this.operation = OperationTypes.CREATE;
@@ -288,14 +288,9 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
-
     return !isAllowed;
   }
 

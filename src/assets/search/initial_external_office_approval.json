@@ -69,7 +69,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.initOfficeStatus",
+          "loader": "lookup.CommonCaseStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }

@@ -15,8 +15,8 @@ import {HttpClient} from '@angular/common/http';
 import {FactoryService} from './factory.service';
 import {SearchService} from './search.service';
 import {InternationalCooperationSearchCriteria} from '../models/international-cooperation-search-criteria';
-import {CaseStatus} from '../enums/case-status.enum';
 import {DynamicOptionsService} from './dynamic-options.service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +28,10 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
 
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'organization', 'fullName', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([
-    [CaseStatus.CANCELLED, 'mdi mdi-cancel'],
-    [CaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
-    [CaseStatus.CREATED, 'mdi mdi-file-star-outline'],
-    [CaseStatus.STARTED, 'mdi mdi-rocket-launch'],
+    [CommonCaseStatus.CANCELLED, 'mdi mdi-cancel'],
+    [CommonCaseStatus.DRAFT, 'mdi mdi-notebook-edit-outline'],
+    [CommonCaseStatus.NEW, 'mdi mdi-file-star-outline'],
+    [CommonCaseStatus.UNDER_PROCESSING, 'mdi mdi-rocket-launch'],
   ]);
   jsonSearchFile: string = 'international_cooperation_search_form.json';
   interceptor: IModelInterceptor<InternationalCooperation> = new InternationalCooperationInterceptor();

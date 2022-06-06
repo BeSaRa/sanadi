@@ -24,10 +24,10 @@ import {ServiceDataService} from '@app/services/service-data.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
 import {SharedService} from '@app/services/shared.service';
-import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CollectionItem} from '@app/models/collection-item';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'collector-item',
@@ -192,7 +192,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
-    if (this.model.getCaseStatus() !== CaseStatusCollectorApproval.FINAL_APPROVE) {
+    if (this.model.getCaseStatus() !== CommonCaseStatus.FINAL_APPROVE) {
       this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
     }
   }

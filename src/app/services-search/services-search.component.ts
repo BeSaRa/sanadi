@@ -18,12 +18,12 @@ import {CaseTypes} from '../enums/case-types.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigurationService} from '@app/services/configuration.service';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {GeneralSearchCriteriaInterceptor} from "@app/model-interceptors/general-search-criteria-interceptor";
 import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
 import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
 import {LicenseService} from '@app/services/license.service';
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'services-search',
@@ -186,18 +186,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .subscribe((blob) => window.open(blob.url));
   }
 
-  private _getCaseStatusEnum(item: CaseModel<any, any>) {
-    try {
-      let caseStatusEnum = this.selectedService.caseStatusEnumMap[item.caseType];
-      if (!caseStatusEnum) {
-        caseStatusEnum = CaseStatus;
-      }
-      return caseStatusEnum;
-    } catch (e) {
-      return CaseStatus;
-    }
-  }
-
   private buildGridActions() {
     this.actions = [
       // open
@@ -222,9 +210,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         label: 'manage_attachments',
         data: {hideFromViewer: true},
         show: (item: CaseModel<any, any>) => {
-          let caseStatus = item.getCaseStatus(),
-            caseStatusEnum = this._getCaseStatusEnum(item);
-          return (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
+          let caseStatus = item.getCaseStatus();
+          return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageAttachments(item);
@@ -256,8 +243,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         label: 'manage_comments',
         data: {hideFromViewer: true},
         show: (item: CaseModel<any, any>) => {
-          let caseStatusEnum = this._getCaseStatusEnum(item);
-          return this.employeeService.isInternalUser() && item.getCaseStatus() !== caseStatusEnum.CANCELLED;
+          return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageComments(item);

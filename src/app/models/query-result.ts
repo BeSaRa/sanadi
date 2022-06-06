@@ -1,17 +1,17 @@
 import {TaskState} from '../enums/task-state';
-import {InboxService} from '../services/inbox.service';
-import {FactoryService} from '../services/factory.service';
+import {InboxService} from '@services/inbox.service';
+import {FactoryService} from '@services/factory.service';
 import {Observable} from 'rxjs';
-import {IBulkResult} from '../interfaces/ibulk-result';
+import {IBulkResult} from '@contracts/ibulk-result';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {BlobModel} from './blob-model';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {delay, map, take, tap} from 'rxjs/operators';
-import {DialogService} from '../services/dialog.service';
+import {DialogService} from '@services/dialog.service';
 import {ComponentType} from '@angular/cdk/overlay';
-import {DynamicComponentService} from '../services/dynamic-component.service';
+import {DynamicComponentService} from '@services/dynamic-component.service';
 import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
-import {IESComponent} from '../interfaces/iescomponent';
+import {IESComponent} from '@contracts/iescomponent';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
 import {CaseModel} from './case-model';
 import {OpenFrom} from '../enums/open-from.enum';
@@ -19,18 +19,18 @@ import {AdminResult} from './admin-result';
 import {SearchableCloneable} from './searchable-cloneable';
 import {ISearchFieldsMap} from '../types/types';
 import {DatePipe} from '@angular/common';
-import {LangService} from '../services/lang.service';
-import {EmployeeService} from '../services/employee.service';
+import {LangService} from '@services/lang.service';
+import {EmployeeService} from '@services/employee.service';
 import {OperationTypes} from '../enums/operation-types.enum';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {WFActions} from "../enums/wfactions.enum";
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {RiskStatus} from "@app/enums/risk-status";
 import {EncryptionService} from "@app/services/encryption.service";
 import {INavigatedItem} from "@app/interfaces/inavigated-item";
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -341,7 +341,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   isDraft(): boolean {
-    return this.BD_CASE_STATUS === CaseStatus.DRAFT;
+    return this.BD_CASE_STATUS === CommonCaseStatus.DRAFT;
   }
 
   getRiskStatusColor(): string {
