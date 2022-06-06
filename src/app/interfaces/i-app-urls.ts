@@ -86,6 +86,7 @@ export interface IAppUrls {
   TRAINING_PROGRAM_BUNDLE: string;
   URGENT_INTERVENTION_LICENSE: string;
   DONOR: string;
+  URGENT_JOINT_RELIEF_CAMPAIGN: string;
 
   [index: string]: string;
 }

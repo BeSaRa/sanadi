@@ -1,4 +1,14 @@
 export interface ILanguageKeys {
+  approval_period: string;
+  target_amount: string;
+  beneficiary_country: string;
+  add_organization: string;
+  participant_organizations: string;
+  campaign_end_date: string;
+  campaign_start_date: string;
+  lbl_extra_phone_number: string;
+  campaign_name: string;
+  menu_urgent_joint_relief_campaign: string;
   lbl_add_bank: string;
   lbl_edit_bank: string;
   menu_bank: string;
@@ -990,7 +1000,7 @@ export interface ILanguageKeys {
   print_license: string;
   requested_aid_category: string;
   requested_aid: string;
-  non_disclosure_document: string;
+  nda_document: string;
   disclosure_document: string;
   msg_save_fail_x: string;
   non_disclosure: string;

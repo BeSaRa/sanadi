@@ -713,5 +713,18 @@
     "group": "main",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 56,
+    "langKey": "menu_urgent_joint_relief_campaign",
+    "path": "/home/projects/urgent-joint-relief-campaign",
+    "icon": "mdi-bank-plus",
+    "isSvg": false,
+    "permission": "",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 7,
+    "svg": null
   }
 ]

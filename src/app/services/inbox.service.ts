@@ -46,6 +46,7 @@ import {UrgentInterventionLicensingService} from '@app/services/urgent-intervent
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
 import {ShippingApprovalService} from './shipping-approval.service';
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +71,7 @@ export class InboxService {
               private collectorApprovalService: CollectorApprovalService,
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
+              private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
               private urlService: UrlService,
               private shippingApprovalService: ShippingApprovalService) {
     FactoryService.registerService('InboxService', this);
@@ -87,6 +89,7 @@ export class InboxService {
     this.services.set(CaseTypes.COLLECTOR_LICENSING, this.collectorApprovalService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
+    this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
     this.services.set(CaseTypes.SHIPPING_APPROVAL, this.shippingApprovalService);
   }
 

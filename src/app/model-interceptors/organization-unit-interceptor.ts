@@ -9,6 +9,7 @@ export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
     model.registryDate = DateUtils.changeDateToDatepicker(model.registryDate);
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.budgetClosureDate = DateUtils.changeDateToDatepicker(model.budgetClosureDate);
+    model.orgUnitTypeInfo
     try {
       if (isValidValue(model.arabicBoardMembers) && typeof model.arabicBoardMembers === 'string') {
         model.arabicBoardMembers = JSON.parse(model.arabicBoardMembers);
