@@ -6,6 +6,8 @@ import {searchFunctionType} from '@app/types/types';
 import {INames} from '@app/interfaces/i-names';
 import {Lookup} from '@app/models/lookup';
 import {IDescriptions} from '@app/interfaces/I-descriptions';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {FollowUpType} from '@app/enums/followUp-type.enum';
 
 export class Followup extends BaseModel<Followup, FollowupService> {
   service: FollowupService;
@@ -46,10 +48,24 @@ export class Followup extends BaseModel<Followup, FollowupService> {
     org: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
   };
 
-  getName(): string {
+  public getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
   getDesc(): string {
     return this[(this.langService.map.lang + 'Desc') as keyof  IDescriptions];
+  }
+
+  buildForm(controls: boolean = false): any {
+    const {arName, enName, arDesc, enDesc, followUpType, responsibleTeamId, concernedTeamId, dueDate} = this;
+    return {
+      arName: controls? [arName, [CustomValidators.required] ] : arName ,
+      enName: controls? [enName, [CustomValidators.required] ] : enName ,
+      arDesc: controls? [arDesc, [CustomValidators.required] ] : arDesc ,
+      enDesc: controls? [enDesc, [CustomValidators.required] ] : enDesc ,
+      followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
+      responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
+      concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
+      dueDate: controls? [dueDate, [CustomValidators.required] ] : dueDate
+    }
   }
 }

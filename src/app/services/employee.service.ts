@@ -348,15 +348,14 @@ export class EmployeeService {
       return [...acc, ...list];
     }, [] as UserSecurityConfiguration[]);
 
-    //To Be Updated
-    if(this.type == UserTypes.INTERNAL){
-      this.permissionMap?.set('internal_followup',new Permission().clone({
-        permissionKey:"INTERNAL_FOLLOWUP"
-      }))
-    }
-    //End of To Be Updated
-
     securityArray.forEach((item) => {
+
+      if(this.type == UserTypes.INTERNAL && item.followUp && !hasFollowupPermission){
+        this.permissionMap?.set('internal_followup',new Permission().clone({
+          permissionKey:"INTERNAL_FOLLOWUP"
+        }))
+        hasFollowupPermission = true;
+      }
 
       if(this.type == UserTypes.INTERNAL || (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission)){
         this.permissionMap?.set('external_followup',new Permission().clone({

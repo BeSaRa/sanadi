@@ -1,8 +1,7 @@
 import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { Followup } from "@app/models/followup";
 import {Lookup} from '@app/models/lookup';
-import {Team} from '@app/models/team';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {DateUtils} from '@app/helpers/date-utils';
 
 
 export class FollowupInterceptor
@@ -23,6 +22,9 @@ export class FollowupInterceptor
     delete model.serviceInfo;
     delete model.statusInfo;
     delete model.orgInfo;
+    model.dueDate = DateUtils.getDateStringFromDate(model.dueDate);
+    model.responsibleTeamId = model.responsibleTeamId ? model.responsibleTeamId : -1;
+    model.concernedTeamId = model.concernedTeamId ? model.concernedTeamId : -1;
     return model;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {FollowupComment} from '@app/models/followup-comment';
 import {FollowupCommentPopupComponent} from '@app/modules/followup/popups/followup-comment-popup/followup-comment-popup.component';
@@ -9,26 +9,27 @@ import {FactoryService} from '@app/services/factory.service';
 import {UrlService} from '@app/services/url.service';
 import {FollowupCommentInterceptor} from '@app/model-interceptors/followup-comment.interceptor';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Generator} from '@app/decorators/generator';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FollowupCommentService extends BackendWithDialogOperationsGenericService<FollowupComment>{
+export class FollowupCommentService extends BackendWithDialogOperationsGenericService<FollowupComment> {
   interceptor: FollowupCommentInterceptor = new FollowupCommentInterceptor();
   list: FollowupComment[] = [];
 
-constructor( public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
-  super();
-  FactoryService.registerService('FollowupCommentService', this);
+  constructor(public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
+    super();
+    FactoryService.registerService('FollowupCommentService', this);
 
-}
+  }
+
   _getDialogComponent(): ComponentType<any> {
     return FollowupCommentPopupComponent;
   }
 
   _getModel(): any {
-  return FollowupComment
+    return FollowupComment;
   }
 
   _getReceiveInterceptor(): any {
@@ -43,12 +44,8 @@ constructor( public dialog: DialogService, public http: HttpClient, private urlS
     return this.urlService.URLS.FOLLOWUP_COMMENT;
   }
 
-  getCommentsByFollowupId(followUpId: number):Observable<FollowupComment[]>{
-    return this.http.get<FollowupComment[]>(this._getServiceURL() + '/follow-up/' + followUpId).pipe(
-      map((response: any) => {
-        return response.rs.sort((a: FollowupComment, b: FollowupComment) =>
-          (new Date(b.statusDateModified)).getTime() - (new Date(a.statusDateModified)).getTime()
-        );
-      })
-    )}
+  @Generator(undefined, true, {interceptReceive: (new FollowupCommentInterceptor().receive), property: 'rs'})
+  getCommentsByFollowupId(followUpId: number): Observable<FollowupComment[]> {
+    return this.http.get<FollowupComment[]>(this._getServiceURL() + '/follow-up/' + followUpId);
+  }
 }

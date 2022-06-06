@@ -140,6 +140,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.service.openCommentsDialog(this.id);
   }
 
+  addfollowup(): DialogRef {
+    return this.service.openFollowupsDialog(this);
+  }
+
   open(actions?: IMenuItem<CaseModel<any, any>>[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
     const componentName = this.service.getCaseComponentName();
     const component: ComponentType<any> = DynamicComponentService.getComponent(componentName);

@@ -7,6 +7,7 @@ import { ExternalFollowupPopupComponent } from './popups/external-followup-popup
 import { FollowupCommentPopupComponent } from './popups/followup-comment-popup/followup-comment-popup.component';
 import { InternalFollowupComponent } from './pages/internal-followup/internal-followup.component';
 import { FollowupComponent } from './pages/followup/followup.component';
+import { FollowupPopupComponent } from './popups/followup-popup/followup-popup.component';
 
 
 
@@ -16,13 +17,13 @@ import { FollowupComponent } from './pages/followup/followup.component';
     ExternalFollowupPopupComponent,
     FollowupCommentPopupComponent,
     InternalFollowupComponent,
-    FollowupComponent
+    FollowupComponent,
+    FollowupPopupComponent
   ],
   imports: [
     CommonModule,
     FollowupRoutingModule,
     SharedModule,
-
   ]
 })
 export class FollowupModule { }

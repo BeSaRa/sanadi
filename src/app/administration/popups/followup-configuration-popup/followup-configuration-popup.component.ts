@@ -53,7 +53,6 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
       // throw new Error('Method not implemented.');
   }
   afterSave(model: FollowupConfiguration, dialogRef: DialogRef): void {
-
     dialogRef.close();
   }
   beforeSave(model: FollowupConfiguration, form: FormGroup): boolean | Observable<boolean> {

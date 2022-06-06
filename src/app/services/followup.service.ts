@@ -56,6 +56,10 @@ export class FollowupService extends BackendWithDialogOperationsGenericService<F
     return this.http.get<Followup[]>(this._getServiceURL() + '/' + followupType);
   }
 
+  @Generator(undefined, true, {interceptReceive: (new FollowupInterceptor().receive), property: 'rs'})
+  getByCaseId(caseId: string): Observable<Followup[]> {
+    return this.http.get<Followup[]>(this._getServiceURL() + '/case/' + caseId);
+  }
   terminate(followUpId: number):Observable<Followup>{
     return this.http.put<Followup>(this._getServiceURL() + '/' + followUpId +'/activate',null)
   }

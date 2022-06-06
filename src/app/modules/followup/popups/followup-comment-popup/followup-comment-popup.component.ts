@@ -56,7 +56,9 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
 
   initPopup(): void {
     this.service.getCommentsByFollowupId(this.followUpId).subscribe( res => {
-      this.comments = res;
+      this.comments = res.sort((a: FollowupComment, b: FollowupComment) =>
+        (new Date(b.statusDateModified)).getTime() - (new Date(a.statusDateModified)).getTime()
+      );
     })
 
     this.user = this.employeeService.isExternalUser()? this.employeeService.getUser(): this.employeeService.getInternalUser();

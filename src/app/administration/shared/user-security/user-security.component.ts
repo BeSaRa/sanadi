@@ -65,7 +65,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];
-  userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox'];
+  userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'followUp', 'teamInbox'];
   private teams: Team[] = [];
 
 
@@ -88,8 +88,6 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     this.listenToTeamSecurityChange();
     if (this.model.isExternal()) {
       this.userSecurityColumns = this.userSecurityColumns.concat(['approval'])
-      this.userSecurityColumns = this.userSecurityColumns.concat(['followUp'])
-
     }
     this.listenToOperationChange();
   }
