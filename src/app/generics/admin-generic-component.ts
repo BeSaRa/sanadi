@@ -8,6 +8,7 @@ import {
 } from "@app/generics/backend-with-dialog-operations-generic-service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends BackendWithDialogOperationsGenericService<M> | CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -33,6 +34,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   useCompositeToLoad: boolean = true;
   //  you can override this property from child class to use editDialog or editDialogComposite
   useCompositeToEdit: boolean = true;
+  // common status enum
+  commonStatusEnum = CommonStatusEnum;
 
   ngOnDestroy(): void {
     this.destroy$.next();

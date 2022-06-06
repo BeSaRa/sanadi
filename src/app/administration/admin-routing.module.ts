@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
 import {LocalizationComponent} from './pages/localization/localization.component';
 import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
@@ -22,6 +22,7 @@ import {SurveyTemplateComponent} from '@app/administration/pages/survey-template
 import {Permissions} from "@app/enums/Permissions";
 import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
+import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -113,6 +114,11 @@ const routes: Routes = [
     path: 'bank', component: BankComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: 'ADMIN_ADD_EDIT_BANK', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'donors', component: DonorComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: Permissions.DONOR_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
 ];
 

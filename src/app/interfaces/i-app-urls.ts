@@ -82,6 +82,7 @@ export interface IAppUrls {
   INTERNAL_PROJECT_LICENSE: string;
   TRAINING_PROGRAM_BUNDLE: string;
   URGENT_INTERVENTION_LICENSE: string;
+  DONOR: string;
 
   [index: string]: string;
 }

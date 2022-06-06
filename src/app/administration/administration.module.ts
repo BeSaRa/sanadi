@@ -62,6 +62,8 @@ import { OrgUnitFieldPopupComponent } from './popups/org-unit-field-popup/org-un
 import { OrganizationUnitServicesComponent } from './shared/organization-unit-services/organization-unit-services.component';
 import { BankComponent } from './pages/bank/bank.component';
 import { BankPopupComponent } from './popups/bank-popup/bank-popup.component';
+import { DonorComponent } from './pages/donor/donor.component';
+import { DonorPopupComponent } from './popups/donor-popup/donor-popup.component';
 
 @NgModule({
   declarations: [
@@ -116,6 +118,8 @@ import { BankPopupComponent } from './popups/bank-popup/bank-popup.component';
     OrganizationUnitServicesComponent,
     BankComponent,
     BankPopupComponent,
+    DonorComponent,
+    DonorPopupComponent,
   ],
   imports: [
     SharedModule,

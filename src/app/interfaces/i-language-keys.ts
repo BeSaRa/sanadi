@@ -978,4 +978,7 @@ export interface ILanguageKeys {
   total_income: string;
   msg_missing_incomes_or_obligations: string;
   msg_confirm_continue: string;
+  menu_donors: string;
+  lbl_add_donor: string;
+  lbl_edit_donor: string;
 }

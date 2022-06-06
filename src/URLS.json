@@ -82,5 +82,6 @@
   "E_FINAL_EXTERNAL_OFFICE_APPROVAL": "/final-office-approval",
   "INTERNAL_USER_PERMISSIONS": "/admin/internal-user-permission",
   "INTERNAL_PROJECT_LICENSE": "/internal-project-licensing",
-  "URGENT_INTERVENTION_LICENSE": "/urgent-intervention-licensing"
+  "URGENT_INTERVENTION_LICENSE": "/urgent-intervention-licensing",
+  "DONOR": "admin/donor"
 }
