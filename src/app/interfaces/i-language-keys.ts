@@ -573,7 +573,7 @@ export interface ILanguageKeys {
   qatari_id_number: string;
   request_status: string;
   provided_aid: string;
-  income_employment: string;
+  income_obligation: string;
   request_info: string;
   print: string;
   approved_aid_amount: string;

@@ -76,7 +76,7 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
 import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import { Donor } from '@app/models/donor';
+import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
 
 @Component({
@@ -122,7 +122,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToRequestChange();
     this.listenToOccupationStatus();
     this.listenToAidChange();
-    this.listenToExtraIncome();
     this.listenToSaveModel();
     this.listenToSavePartialRequest();
     this.listenToSaveAid();
@@ -272,17 +271,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     income: {
       name: 'incomeTab',
-      langKey: 'income_employment',
+      langKey: 'income_obligation',
       index: 2,
       checkTouchedDirty: true,
       validStatus: () => {
-        return this.incomeTab && this.incomeTab.valid
-          && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
+        return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
           && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'));
       },
       isTouchedOrDirty: () => {
-        return (this.incomeTab && (this.incomeTab.touched || this.incomeTab.dirty))
-          || (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
+        return (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
           || (this.beneficiaryIncomeComponentRef && this.beneficiaryIncomeComponentRef.isTouchedOrDirty())
       }
     },
@@ -404,7 +401,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
-      incomeTab: this.fb.group(beneficiary.getIncomeFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
@@ -450,21 +446,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateBeneficiaryFrom(selectedBeneficiary: undefined | Beneficiary) {
     const personal = this.fm.getFormField('personalTab');
-    const income = this.fm.getFormField('incomeTab');
     const address = this.fm.getFormField('addressTab');
 
     if (!selectedBeneficiary) {
       personal?.reset();
       personal?.markAsPristine();
-      income?.reset();
-      income?.markAsPristine();
       this.beneficiaryIncomeComponentRef.forceClearComponent();
       this.beneficiaryObligationComponentRef.forceClearComponent();
       address?.reset();
       address?.markAsPristine();
     } else {
       personal?.patchValue(selectedBeneficiary.getPersonalFields());
-      income?.patchValue(selectedBeneficiary.getIncomeFields());
       address?.patchValue(selectedBeneficiary.getAddressFields());
     }
 
@@ -508,12 +500,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private listenToOccupationStatus() {
-    const requiredList: { [key: string]: any } = {
-      occuption: [CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)],
-      employeerAddress: [CustomValidators.required, CustomValidators.maxLength(512)],
-      benIncome: [CustomValidators.required, CustomValidators.maxLength(20), CustomValidators.number, Validators.min(0)]
-    };
-    this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
+    this.employmentStatusField?.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         map(value => {
@@ -522,10 +509,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((required) => {
-        const keys = Object.keys(requiredList);
-        for (let i = 0; i < keys.length; i++) {
-          const control = this.fm.getFormField(`incomeTab.${keys[i]}`);
-          control?.setValidators(required ? requiredList[keys[i]] : null);
+        const dependentFields = [this.occupationField, this.workPlaceField];
+        for (let i = 0; i < dependentFields.length; i++) {
+          const control = dependentFields[i];
+          if (required) {
+            control?.addValidators(CustomValidators.required);
+          } else {
+            control?.removeValidators(CustomValidators.required);
+          }
           control?.updateValueAndValidity();
         }
       });
@@ -568,19 +559,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
-    });
-  }
-
-  private listenToExtraIncome() {
-    this.fm.getFormField('incomeTab.benExtraIncome')?.valueChanges.pipe(
-      takeUntil(this.destroy$),
-      distinctUntilChanged(),
-      map(value => Number(value))
-    ).subscribe((value) => {
-      const control = this.fm.getFormField('incomeTab.benExtraIncomeSource');
-      value ? control?.setValidators([CustomValidators.required, Validators.maxLength(100)])
-        : control?.setValidators([Validators.maxLength(100)]);
-      control?.updateValueAndValidity();
     });
   }
 
@@ -827,12 +805,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareBeneficiary(): Beneficiary {
     const personal = this.fm.getFormField('personalTab')?.value;
-    const income = this.fm.getFormField('incomeTab')?.value;
     const address = this.fm.getFormField('addressTab')?.value;
     const buildingPlate = this.buildingPlate.getValue();
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
-        ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
+        ...this.currentBeneficiary, ...personal, ...address, ...buildingPlate,
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
@@ -1172,10 +1149,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('personalTab') as FormGroup;
   }
 
-  get incomeTab(): FormGroup {
-    return this.fm.getFormField('incomeTab') as FormGroup;
-  }
-
   get addressTab(): FormGroup {
     return this.fm.getFormField('addressTab') as FormGroup;
   }
@@ -1262,6 +1235,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get secondaryNationalityField(): FormControl {
     return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
+  }
+
+  get employmentStatusField(): FormControl {
+    return this.fm.getFormField('personalTab.occuptionStatus') as FormControl;
+  }
+
+  get occupationField(): FormControl {
+    return this.fm.getFormField('personalTab.occuption') as FormControl;
+  }
+
+  get workPlaceField(): FormControl {
+    return this.fm.getFormField('personalTab.employeerAddress') as FormControl;
   }
 
   get requestedAidField(): FormControl {
