@@ -547,7 +547,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
 
   private setInitialValues(): void {
     this.yearField.setValue(this.years[0]);
-    this.primaryIdTypeField.setValue(this.configurationService.CONFIG.QID_LOOKUP_KEY);
+    this.primaryIdTypeField.setValue(BeneficiaryIdTypes.QID)
     this.secondaryIdTypeField.setValue(null);
     this.arNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
     this.enNameOperatorField.setValue(StringOperator[StringOperator.CONTAINS]);
