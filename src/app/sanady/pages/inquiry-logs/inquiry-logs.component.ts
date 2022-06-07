@@ -47,7 +47,6 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.buildForm();
     this.listenToSearch();
-    this.setInitialValues();
     this.listenToReload();
     this.loadOrganizations();
   }
@@ -100,7 +99,6 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   orgStatusEnum = OrgStatusEnum;
   orgUserStatusEnum = OrgUserStatusEnum;
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterControl: FormControl = new FormControl('');
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['actionTime', 'organization', 'user']; // add the same columns to searchFields
@@ -147,15 +145,14 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
       orgUserId: [{value: null, disabled: true}]
     });
     this._buildDatepickerControlsMap();
+    this.setInitialValues();
   }
 
   private _buildDatepickerControlsMap() {
-    setTimeout(() => {
-      this.datepickerControlsMap = {
-        fromActionTime: this.fromActionTimeField,
-        toActionTime: this.toActionTimeField
-      };
-    })
+    this.datepickerControlsMap = {
+      fromActionTime: this.fromActionTimeField,
+      toActionTime: this.toActionTimeField
+    };
   }
 
   onSearch(): void {
