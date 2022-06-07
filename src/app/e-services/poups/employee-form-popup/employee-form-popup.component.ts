@@ -1,3 +1,4 @@
+import { EmployeeService } from '@app/services/employee.service';
 import { ContractLocationTypes } from "./../../../enums/contract-location-types.enum";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
 import { JobApplicationService } from "./../../../services/job-application.service";
@@ -87,7 +88,8 @@ export class EmployeeFormPopupComponent implements OnInit {
     public data: {
       service: JobApplicationService;
       parentForm: FormGroup;
-    }
+    },
+    private employeeService: EmployeeService
   ) {}
   ngOnInit() {
     this._buildForm();
@@ -140,6 +142,9 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   attachmentsAdded() {
     // TODO: complete it
+    return true;
+  }
+  isExternalOfficeManager() {
     return true;
   }
   clearAll() {

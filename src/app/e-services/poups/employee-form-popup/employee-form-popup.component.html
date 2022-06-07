@@ -443,7 +443,8 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button dialogClose [disabled]="attachmentsAdded()" class="btn btn-primary" (click)="submit()">
+  <!-- [disabled]="attachmentsAdded()"  -->
+  <button dialogClose class="btn btn-primary" (click)="submit()">
     {{ lang.map.btn_save }}
   </button>
   <button dialogClose class="btn btn-secondary">

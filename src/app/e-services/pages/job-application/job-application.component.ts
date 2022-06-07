@@ -102,7 +102,7 @@ export class JobApplicationComponent
   ngOnInit() {
     this.buildForm();
     this.service.onSubmit.subscribe(data => {
-      this.employees = [...data];
+      this.employees = [...this.employees, ...data];
     })
   }
   openForm() {
