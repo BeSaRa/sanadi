@@ -123,6 +123,28 @@ export class LookupService extends BackendGenericService<Lookup> {
     });
   }
 
+  private static _getAllLookupCategoryKeys(lookupMap: any, sorted: boolean = false, asLookupInterface: boolean = false) {
+    let keys = Object.keys(lookupMap);
+    if (sorted) {
+      keys = keys.sort((a: string, b: string) => {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+    if (asLookupInterface) {
+      console.log('{\n' + keys.join(': Lookup[];\n') + '\n}');
+      return;
+    }
+    console.log('{\n' + keys.join(',\n') + '\n}');
+  }
+
   private static _changeLookupArrayToEnum(lookupArray: Lookup[], showInUpperCase: boolean = true, printConsole: boolean = true): string {
     let value = [];
     for (let i = 0; i < lookupArray.length; i++) {

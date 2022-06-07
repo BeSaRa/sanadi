@@ -26,6 +26,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {ServiceDataService} from '@app/services/service-data.service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'urgent-intervention-license',
@@ -251,14 +252,9 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
-
     return !isAllowed;
   }
 
@@ -312,10 +308,8 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-    if (caseStatusEnum && (caseStatus == caseStatusEnum.FINAL_APPROVE || caseStatus === caseStatusEnum.FINAL_REJECTION)) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }

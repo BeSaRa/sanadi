@@ -149,7 +149,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
     return this.service.update(this);
   }
 
-  getPersonalFields(control: boolean = false): any {
+  getPersonalFields(controls: boolean = false): any {
     const {
       benNationality,
       dateOfBirth,
@@ -168,50 +168,42 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       benSecIdType,
       benSecIdNationality,
       benNotes,
-      familyCount
-    } = this;
-
-    return {
-      benPrimaryIdType: control ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
-      benPrimaryIdNumber: control ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
-      benPrimaryIdNationality: control ? [benPrimaryIdNationality, CustomValidators.required] : benPrimaryIdNationality,
-      benSecIdType: control ? [benSecIdType] : benSecIdType,
-      benSecIdNumber: control ? [benSecIdNumber] : benSecIdNumber,
-      benSecIdNationality: control ? [benSecIdNationality] : benSecIdNationality,
-      benNationality: control ? [benNationality, CustomValidators.required] : benNationality,
-      dateOfBirth: control ? [dateOfBirth, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : dateOfBirth,
-      gender: control ? [gender, CustomValidators.required] : gender,
-      enName: control ? [enName, [CustomValidators.required,
-        CustomValidators.pattern('ENG_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
-      arName: control ? [arName, [CustomValidators.required,
-        CustomValidators.pattern('AR_ONLY'),
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
-      ]] : arName,
-      phoneNumber1: control ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
-      employeer: control ? [employeer, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : employeer,
-      benDependentsCount: control ? [benDependentsCount, [CustomValidators.required,
-        CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
-      educationLevel: control ? [educationLevel, CustomValidators.required] : educationLevel,
-      maritalStatus: control ? [maritalStatus, CustomValidators.required] : maritalStatus,
-      benNotes: control ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
-      familyCount: control ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount
-    };
-  }
-
-  getIncomeFields(controls: boolean = false): any {
-    const {
+      familyCount,
       occuptionStatus,
       occuption,
       employeerAddress
     } = this;
 
     return {
-      occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus,
-      occuption: controls ? [occuption, CustomValidators.maxLength(100)] : occuption,
-      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress
+      benPrimaryIdType: controls ? [benPrimaryIdType, CustomValidators.required] : benPrimaryIdType,
+      benPrimaryIdNumber: controls ? [benPrimaryIdNumber, CustomValidators.required] : benPrimaryIdNumber,
+      benPrimaryIdNationality: controls ? [benPrimaryIdNationality, CustomValidators.required] : benPrimaryIdNationality,
+      benSecIdType: controls ? [benSecIdType] : benSecIdType,
+      benSecIdNumber: controls ? [benSecIdNumber] : benSecIdNumber,
+      benSecIdNationality: controls ? [benSecIdNationality] : benSecIdNationality,
+      benNationality: controls ? [benNationality, CustomValidators.required] : benNationality,
+      dateOfBirth: controls ? [dateOfBirth, [CustomValidators.required, CustomValidators.maxDate(new Date())]] : dateOfBirth,
+      gender: controls ? [gender, CustomValidators.required] : gender,
+      enName: controls ? [enName, [CustomValidators.required,
+        CustomValidators.pattern('ENG_ONLY'),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : enName,
+      arName: controls ? [arName, [CustomValidators.required,
+        CustomValidators.pattern('AR_ONLY'),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+      ]] : arName,
+      phoneNumber1: controls ? [phoneNumber1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber1,
+      employeer: controls ? [employeer, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : employeer,
+      benDependentsCount: controls ? [benDependentsCount, [CustomValidators.required,
+        CustomValidators.number, Validators.min(0), CustomValidators.maxLength(2)]] : benDependentsCount,
+      educationLevel: controls ? [educationLevel, CustomValidators.required] : educationLevel,
+      maritalStatus: controls ? [maritalStatus, CustomValidators.required] : maritalStatus,
+      benNotes: controls ? [benNotes, [Validators.maxLength(3000)]] : benNotes,
+      familyCount: controls ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount,
+      occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus, //Employment Status
+      occuption: controls ? [occuption, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : occuption, //Occupation
+      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress //Work Place
     };
   }
 

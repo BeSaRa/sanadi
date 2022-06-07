@@ -15,7 +15,6 @@ import {ConsultationService} from '@app/services/consultation.service';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {OrgUnit} from '@app/models/org-unit';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {InternalDepartment} from '@app/models/internal-department';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {EmployeeService} from '@app/services/employee.service';
@@ -26,6 +25,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {NavigationService} from "@app/services/navigation.service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'consultation',
@@ -189,7 +189,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
   launch() {
     this.model?.start().subscribe(_ => {
       if (this.model) {
-        this.model.caseStatus = CaseStatus.STARTED;
+        this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this.resetForm();
         this.model = new Consultation();
         this.operation = OperationTypes.CREATE;
@@ -334,12 +334,8 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;

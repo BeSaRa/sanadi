@@ -58,7 +58,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.ConsultationStatus",
+          "loader": "lookup.CommonCaseStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }

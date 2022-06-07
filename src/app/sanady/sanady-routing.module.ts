@@ -12,6 +12,8 @@ import {UserRequestComponent} from "./pages/user-request/user-request.component"
 import {PartialRequestReportsComponent} from "./pages/partial-request-reports/partial-request-reports.component";
 import {UserRequestSearchComponent} from "./pages/user-request-search/user-request-search.component";
 import {RequestsUnderProcessComponent} from "./pages/requests-under-process/requests-under-process.component";
+import {Permissions} from '@app/enums/Permissions';
+import {InquiryLogsComponent} from '@app/sanady/pages/inquiry-logs/inquiry-logs.component';
 
 
 const routes: Routes = [
@@ -70,6 +72,11 @@ const routes: Routes = [
     path: 'requests-under-process', component: RequestsUnderProcessComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: 'UNDER_PROCESSING_REQUESTS', configPermissionGroup: null,  checkAnyPermission: false}
+  },
+  {
+    path: 'inquiry-logs', component: InquiryLogsComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: Permissions.INQUIRY_LOGS, configPermissionGroup: null,  checkAnyPermission: false}
   }
 ];
 

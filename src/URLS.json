@@ -83,5 +83,6 @@
   "INTERNAL_USER_PERMISSIONS": "/admin/internal-user-permission",
   "INTERNAL_PROJECT_LICENSE": "/internal-project-licensing",
   "URGENT_INTERVENTION_LICENSE": "/urgent-intervention-licensing",
-  "E_JOB_APPLICATIONS": "/employment"
+  "E_JOB_APPLICATIONS": "/employment",
+  "DONOR": "admin/donor"
 }

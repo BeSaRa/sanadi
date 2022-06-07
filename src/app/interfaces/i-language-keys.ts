@@ -574,7 +574,7 @@ export interface ILanguageKeys {
   qatari_id_number: string;
   request_status: string;
   provided_aid: string;
-  income_employment: string;
+  income_obligation: string;
   request_info: string;
   print: string;
   approved_aid_amount: string;
@@ -996,4 +996,9 @@ export interface ILanguageKeys {
   add_employee: string;
   adding_employees: string;
   clear_all: string;
+  menu_donors: string;
+  lbl_add_donor: string;
+  lbl_edit_donor: string;
+  donor: string;
+  menu_inquiry_logs: string;
 }

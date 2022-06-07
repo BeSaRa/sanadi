@@ -34,10 +34,9 @@ import {AidLookup} from '@app/models/aid-lookup';
 import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SubventionAidService} from '@app/services/subvention-aid.service';
-import {StatusEnum} from '@app/enums/status.enum';
+import {AidLookupStatusEnum, SubventionRequestStatus} from '@app/enums/status.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
-import {SubventionRequestStatus} from '@app/enums/subvention-request-status';
 import {Pair} from '@app/interfaces/pair';
 import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
@@ -76,6 +75,8 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
 import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {Donor} from '@app/models/donor';
+import {DonorService} from '@services/donor.service';
 
 @Component({
   selector: 'app-user-request',
@@ -93,6 +94,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               private subventionResponseService: SubventionResponseService,
               private subventionAidService: SubventionAidService,
               private aidLookupService: AidLookupService,
+              private donorService: DonorService,
               private activeRoute: ActivatedRoute,
               private router: Router,
               private cd: ChangeDetectorRef,
@@ -119,7 +121,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToRequestChange();
     this.listenToOccupationStatus();
     this.listenToAidChange();
-    this.listenToExtraIncome();
     this.listenToSaveModel();
     this.listenToSavePartialRequest();
     this.listenToSaveAid();
@@ -130,7 +131,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToSecondaryIdTypeChange();
     this.preparePeriodicityLookups();
     this.loadMainAidLookups();
-
+    this.loadDonors();
   }
 
   ngAfterViewInit(): void {
@@ -152,12 +153,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
   private saveAid$: Subject<any> = new Subject<any>();
-  private idMap: { [index: string]: number } = {
-    qid: 1,
-    gccId: 2,
-    visa: 4,
-    passport: 3,
-  };
   private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
   private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
   private aidChanged$: Subject<SubventionAid | null> = new Subject<SubventionAid | null>();
@@ -173,6 +168,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
+  donorList: Donor[] = [];
+  subventionRequestStatusEnum = SubventionRequestStatus;
 
   aidsSubAidLookupsList: AidLookup[] = [];
   periodicityLookups: Record<number, Lookup> = {};
@@ -209,6 +206,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     'requestedAid',
     'estimatedAmount',
     'periodicType',
+    'donor',
     'installmentsCount',
     'aidStartPayDate',
     'givenAmount',
@@ -267,17 +265,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     income: {
       name: 'incomeTab',
-      langKey: 'income_employment',
+      langKey: 'income_obligation',
       index: 2,
       checkTouchedDirty: true,
       validStatus: () => {
-        return this.incomeTab && this.incomeTab.valid
-          && (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
+        return (!this.beneficiaryObligationComponentRef || (this.beneficiaryObligationsStatus === 'READY'))
           && (!this.beneficiaryIncomeComponentRef || (this.beneficiaryIncomesStatus === 'READY'));
       },
       isTouchedOrDirty: () => {
-        return (this.incomeTab && (this.incomeTab.touched || this.incomeTab.dirty))
-          || (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
+        return (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
           || (this.beneficiaryIncomeComponentRef && this.beneficiaryIncomeComponentRef.isTouchedOrDirty())
       }
     },
@@ -372,6 +368,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
+    donor: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.donorInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.donorInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
     paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.aidStartPayDate),
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.aidStartPayDate);
@@ -394,7 +395,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     request = request ? request : new SubventionRequest();
     this.form = this.fb.group({
       personalTab: this.fb.group(beneficiary.getPersonalFields(true)),
-      incomeTab: this.fb.group(beneficiary.getIncomeFields(true)),
       addressTab: this.fb.group(beneficiary.getAddressFields(true)),
       requestInfoTab: this.fb.group(request.getInfoFields(true)),
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
@@ -440,21 +440,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateBeneficiaryFrom(selectedBeneficiary: undefined | Beneficiary) {
     const personal = this.fm.getFormField('personalTab');
-    const income = this.fm.getFormField('incomeTab');
     const address = this.fm.getFormField('addressTab');
 
     if (!selectedBeneficiary) {
       personal?.reset();
       personal?.markAsPristine();
-      income?.reset();
-      income?.markAsPristine();
       this.beneficiaryIncomeComponentRef.forceClearComponent();
       this.beneficiaryObligationComponentRef.forceClearComponent();
       address?.reset();
       address?.markAsPristine();
     } else {
       personal?.patchValue(selectedBeneficiary.getPersonalFields());
-      income?.patchValue(selectedBeneficiary.getIncomeFields());
       address?.patchValue(selectedBeneficiary.getAddressFields());
     }
 
@@ -491,19 +487,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // noinspection JSUnusedLocalSymbols
-  private updateSecondaryIdNumber(field: { field: string, value: string }): void {
-    this.fm.getFormField('personalTab.benSecIdNumber')?.setValue(field.value);
-    this.fm.getFormField('personalTab.benSecIdType')?.setValue(field.value.length ? this.idMap[field.field] : null);
-  }
-
   private listenToOccupationStatus() {
-    const requiredList: { [key: string]: any } = {
-      occuption: [CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)],
-      employeerAddress: [CustomValidators.required, CustomValidators.maxLength(512)],
-      benIncome: [CustomValidators.required, CustomValidators.maxLength(20), CustomValidators.number, Validators.min(0)]
-    };
-    this.fm.getFormField('incomeTab.occuptionStatus')?.valueChanges
+    this.employmentStatusField?.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         map(value => {
@@ -512,10 +497,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((required) => {
-        const keys = Object.keys(requiredList);
-        for (let i = 0; i < keys.length; i++) {
-          const control = this.fm.getFormField(`incomeTab.${keys[i]}`);
-          control?.setValidators(required ? requiredList[keys[i]] : null);
+        const dependentFields = [this.occupationField, this.workPlaceField];
+        for (let i = 0; i < dependentFields.length; i++) {
+          const control = dependentFields[i];
+          if (required) {
+            control?.addValidators(CustomValidators.required);
+          } else {
+            control?.removeValidators(CustomValidators.required);
+          }
           control?.updateValueAndValidity();
         }
       });
@@ -543,7 +532,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.primaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.primaryNationalityField?.value)) {
+      if (this.primaryIdTypeField?.value === BeneficiaryIdTypes.PASSPORT && CommonUtils.isValidValue(this.primaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.primaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
@@ -554,23 +543,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.secondaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.secondaryNationalityField?.value)) {
+      if (this.secondaryIdTypeField?.value === BeneficiaryIdTypes.PASSPORT && CommonUtils.isValidValue(this.secondaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
-    });
-  }
-
-  private listenToExtraIncome() {
-    this.fm.getFormField('incomeTab.benExtraIncome')?.valueChanges.pipe(
-      takeUntil(this.destroy$),
-      distinctUntilChanged(),
-      map(value => Number(value))
-    ).subscribe((value) => {
-      const control = this.fm.getFormField('incomeTab.benExtraIncomeSource');
-      value ? control?.setValidators([CustomValidators.required, Validators.maxLength(100)])
-        : control?.setValidators([Validators.maxLength(100)]);
-      control?.updateValueAndValidity();
     });
   }
 
@@ -817,12 +793,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private prepareBeneficiary(): Beneficiary {
     const personal = this.fm.getFormField('personalTab')?.value;
-    const income = this.fm.getFormField('incomeTab')?.value;
     const address = this.fm.getFormField('addressTab')?.value;
     const buildingPlate = this.buildingPlate.getValue();
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
-        ...this.currentBeneficiary, ...personal, ...income, ...address, ...buildingPlate,
+        ...this.currentBeneficiary, ...personal, ...address, ...buildingPlate,
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
@@ -1162,10 +1137,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('personalTab') as FormGroup;
   }
 
-  get incomeTab(): FormGroup {
-    return this.fm.getFormField('incomeTab') as FormGroup;
-  }
-
   get addressTab(): FormGroup {
     return this.fm.getFormField('addressTab') as FormGroup;
   }
@@ -1254,6 +1225,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
   }
 
+  get employmentStatusField(): FormControl {
+    return this.fm.getFormField('personalTab.occuptionStatus') as FormControl;
+  }
+
+  get occupationField(): FormControl {
+    return this.fm.getFormField('personalTab.occuption') as FormControl;
+  }
+
+  get workPlaceField(): FormControl {
+    return this.fm.getFormField('personalTab.employeerAddress') as FormControl;
+  }
+
   get requestedAidField(): FormControl {
     return this.fm.getFormField('requestInfoTab.aidLookupId') as FormControl;
   }
@@ -1326,11 +1309,20 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mainAidLookupsList = [];
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.MAIN_CATEGORY,
-      status: StatusEnum.ACTIVE
+      status: AidLookupStatusEnum.ACTIVE
     }).pipe(
       catchError(err => of([]))
     ).subscribe((list) => {
       this.mainAidLookupsList = list;
+    });
+  }
+
+  private loadDonors() {
+    this.donorList = [];
+    return this.donorService.loadComposite().pipe(
+      catchError(err => of([]))
+    ).subscribe((list) => {
+      this.donorList = list;
     });
   }
 
@@ -1366,7 +1358,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.SUB_CATEGORY,
-      status: StatusEnum.ACTIVE,
+      status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
       catchError(err => of([]))
@@ -1539,9 +1531,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!CommonUtils.isValidValue(idType)) {
       return false;
     }
-    let visibility: boolean = (idType === this.idMap.passport || idType === this.idMap.gccId),
+    let visibility: boolean = (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID),
       nationalityListType: ('normal' | 'gulf') = 'normal';
-    if (idType === this.idMap.gccId) {
+    if (idType === BeneficiaryIdTypes.GCC_ID) {
       nationalityListType = 'gulf';
     }
 
@@ -1555,12 +1547,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return visibility;
   }
 
-  private getNationalityByIdType(idType: number): string | number {
+  private static getNationalityByIdType(idType: number): string | number {
     if (!CommonUtils.isValidValue(idType)) {
       return '';
     }
     let nationalityValue: string | number = '';
-    if (idType === this.idMap.qid || idType === this.idMap.visa) {
+    if (idType === BeneficiaryIdTypes.QID || idType === BeneficiaryIdTypes.VISA) {
       nationalityValue = 1;
     }
     return nationalityValue;
@@ -1575,7 +1567,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
 
-        if (value === this.idMap.passport || value === this.idMap.gccId) {
+        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -1584,7 +1576,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.primaryIdNumberField.setValidators(idValidators);
       this.primaryIdNumberField.updateValueAndValidity();
 
-      this.primaryNationalityField.setValue(this.getNationalityByIdType(value));
+      this.primaryNationalityField.setValue(UserRequestComponent.getNationalityByIdType(value));
       this.primaryNationalityField.setValidators(nationalityValidators);
       this.primaryNationalityField.updateValueAndValidity();
 
@@ -1601,7 +1593,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
 
-        if (value === this.idMap.passport || value === this.idMap.gccId) {
+        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -1610,7 +1602,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.secondaryIdNumberField.setValidators(idValidators);
       this.secondaryIdNumberField.updateValueAndValidity();
 
-      this.secondaryNationalityField.setValue(this.getNationalityByIdType(value));
+      this.secondaryNationalityField.setValue(UserRequestComponent.getNationalityByIdType(value));
       this.secondaryNationalityField.setValidators(nationalityValidators);
       this.secondaryNationalityField.updateValueAndValidity();
 

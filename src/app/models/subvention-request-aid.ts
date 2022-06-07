@@ -8,7 +8,7 @@ import {ISearchFieldsMap, searchFunctionType} from '../types/types';
 import {Observable} from 'rxjs';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
-import {SubventionRequestStatus} from '../enums/subvention-request-status';
+import {SubventionRequestStatus} from '@app/enums/status.enum';
 import {dateSearchFields} from '@app/helpers/date-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';

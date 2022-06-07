@@ -40,7 +40,7 @@
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="status" validationClasses="status">
               <ng-option *ngFor="let option of aidLookupStatusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredAidLookupStatus()">
+                         [disabled]="option.lookupKey === aidLookupStatusEnum.RETIRED">
                 {{option.getName()}}
               </ng-option>
             </ng-select>

@@ -14,6 +14,7 @@ import {BlobModel} from '@app/models/blob-model';
 import {SharedService} from '@app/services/shared.service';
 import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
 import {PartnerApproval} from '@app/models/partner-approval';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'viewer-case-info',
@@ -35,7 +36,6 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   internalProjectGeneratedLicense?: InternalProjectLicenseResult;
 
   destroy$: Subject<any> = new Subject<any>();
-  caseStatusEnum: any;
 
   constructor(public lang: LangService,
               private licenseService: LicenseService,
@@ -43,7 +43,6 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
     // this.showManagerRequestStatus = !!this.loadedModel.managerDecision;
   }
 
@@ -94,8 +93,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
  canShowFinalExternalOfficeGeneratedLicense(): boolean {
-    let caseStatusEnum = this.componentService?.caseStatusEnumMap[this.loadedModel.getCaseType()];
-    return caseStatusEnum && (this.loadedModel.getCaseStatus() === caseStatusEnum.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
+    return (this.loadedModel.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE) && (this.loadedModel.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL);
   }
 
   loadFinalExternalOfficeLicenceByCriteria(value: any): Observable<FinalApprovalDocument[]> {
@@ -128,7 +126,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   canShowInitialOfficeApprovalGeneratedLicense(): boolean {
-    return this.model.getCaseType() === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.model.getCaseType() === CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL && this.loadedModel.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   viewInitialOfficeApprovalGeneratedLicense(): void {
@@ -155,7 +153,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   canShowPartnerApprovalGeneratedLicense(): boolean {
-    return this.model.getCaseType() === CaseTypes.PARTNER_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.model.getCaseType() === CaseTypes.PARTNER_APPROVAL && this.loadedModel.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   viewPartnerApprovalGeneratedLicense(): void {
@@ -183,7 +181,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   canShowFinalExternalOfficeApprovalGeneratedLicense(): boolean {
-    return this.model.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.model.getCaseType() === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.loadedModel.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   viewFinalExternalOfficeApprovalGeneratedLicense(): void {
@@ -210,7 +208,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   }
 
   canShowInternalProjectGeneratedLicense(): boolean {
-    return this.model.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.caseStatusEnum && this.loadedModel.getCaseStatus() === this.caseStatusEnum.FINAL_APPROVE;
+    return this.model.getCaseType() === CaseTypes.INTERNAL_PROJECT_LICENSE && this.loadedModel.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
   viewInternalProjectGeneratedLicense(): void {

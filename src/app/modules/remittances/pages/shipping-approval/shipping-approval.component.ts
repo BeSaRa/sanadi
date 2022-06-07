@@ -26,6 +26,7 @@ import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-se
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { CustomsExemptionRemittanceService } from "@app/services/customs-exemption-remittance.service";
 import { CommonUtils } from "@app/helpers/common-utils";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: "shipping-approval",
@@ -252,13 +253,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-    if (
-      caseStatusEnum &&
-      (caseStatus == caseStatusEnum.FINAL_APPROVE ||
-        caseStatus === caseStatusEnum.FINAL_REJECTION)
-    ) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }

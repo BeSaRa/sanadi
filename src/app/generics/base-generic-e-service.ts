@@ -1,53 +1,39 @@
-import { Observable, of } from "rxjs";
-import { CastResponse } from "@decorators/cast-response";
-import { FactoryService } from "@services/factory.service";
-import { IModelInterceptor } from "@contracts/i-model-interceptor";
-import { HttpClient } from "@angular/common/http";
-import { DialogService } from "@services/dialog.service";
-import { DomSanitizer } from "@angular/platform-browser";
-import { ILanguageKeys } from "@contracts/i-language-keys";
-import { ComponentFactoryResolver } from "@angular/core";
-import { DynamicOptionsService } from "@services/dynamic-options.service";
-import { MenuItemService } from "@services/menu-item.service";
-import { EmployeeService } from "@services/employee.service";
-import { CommentService } from "@services/comment.service";
-import { RecommendationService } from "@services/recommendation.service";
-import { DocumentService } from "@services/document.service";
-import { ActionLogService } from "@services/action-log.service";
-import { SearchService } from "@services/search.service";
-import { CaseTypes } from "../enums/case-types.enum";
-import { ConsultationCaseStatus } from "../enums/consultation-case-status.enum";
-import { InquiryCaseStatus } from "../enums/inquiry-case-status.enum";
-import { InternationalCaseStatus } from "../enums/international-case-status.enum";
-import { InitialOfficeApproveCaseStatus } from "../enums/initial-office-approve-case-status.enum";
-import { PartnerOfficeApproveCaseStatus } from "../enums/partner-office-approve-case-status.enum";
-import { FinalOfficeApproveCaseStatus } from "../enums/final-office-approve-case-status.enum";
-import { InternalProjectLicenseCaseStatus } from "../enums/internal-project-license-case-status";
-import { ProjectModelCaseStatus } from "../enums/project-model-case-status";
-import { FundRaisingLicensingApproveCaseStatus } from "../enums/fundraising-licensing-approve-case-status.enum";
-import { UrgentInterventionLicenseCaseStatus } from "../enums/urgent-intervention-license-case-status";
-import { ShippingApprovalDocumentCaseStatus } from "../enums/shipping-approval-document-case-status";
-import { CaseStatusCollectionApproval } from "../enums/case-status-collection-approval";
-import { CaseStatusCollectorApproval } from "../enums/case-status-collector-approval";
-import { CaseComment } from "../models/case-comment";
-import { FormlyFieldConfig } from "@ngx-formly/core/lib/components/formly.field.config";
-import { IFormRowGroup } from "@contracts/iform-row-group";
-import { map } from "rxjs/operators";
-import { FBuilder } from "@helpers/FBuilder";
-import { FileNetDocument } from "../models/file-net-document";
-import { BlobModel } from "../models/blob-model";
-import { DialogRef } from "../shared/models/dialog-ref";
-import { ActionRegistryPopupComponent } from "../shared/popups/action-registry-popup/action-registry-popup.component";
-import { ManageCommentPopupComponent } from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
+import {Observable, of} from "rxjs";
+import {CastResponse} from "@decorators/cast-response";
+import {FactoryService} from "@services/factory.service";
+import {IModelInterceptor} from "@contracts/i-model-interceptor";
+import {HttpClient} from "@angular/common/http";
+import {DialogService} from "@services/dialog.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {ILanguageKeys} from "@contracts/i-language-keys";
+import {ComponentFactoryResolver} from "@angular/core";
+import {DynamicOptionsService} from "@services/dynamic-options.service";
+import {MenuItemService} from "@services/menu-item.service";
+import {EmployeeService} from "@services/employee.service";
+import {CommentService} from "@services/comment.service";
+import {RecommendationService} from "@services/recommendation.service";
+import {DocumentService} from "@services/document.service";
+import {ActionLogService} from "@services/action-log.service";
+import {SearchService} from "@services/search.service";
+import {CaseComment} from "../models/case-comment";
+import {FormlyFieldConfig} from "@ngx-formly/core/lib/components/formly.field.config";
+import {IFormRowGroup} from "@contracts/iform-row-group";
+import {map} from "rxjs/operators";
+import {FBuilder} from "@helpers/FBuilder";
+import {FileNetDocument} from "../models/file-net-document";
+import {BlobModel} from "../models/blob-model";
+import {DialogRef} from "../shared/models/dialog-ref";
+import {ActionRegistryPopupComponent} from "../shared/popups/action-registry-popup/action-registry-popup.component";
+import {ManageCommentPopupComponent} from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
 import {
   ManageRecommendationPopupComponent
 } from "../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component";
-import { DocumentsPopupComponent } from "../shared/popups/documents-popup/documents-popup.component";
-import { IBulkResult } from "@contracts/ibulk-result";
-import { IDefaultResponse } from "@contracts/idefault-response";
-import { MenuItem } from "../models/menu-item";
-import { UrlService } from "@services/url.service";
-import { HasInterception, InterceptParam } from "@decorators/intercept-model";
+import {DocumentsPopupComponent} from "../shared/popups/documents-popup/documents-popup.component";
+import {IBulkResult} from "@contracts/ibulk-result";
+import {IDefaultResponse} from "@contracts/idefault-response";
+import {MenuItem} from "../models/menu-item";
+import {UrlService} from "@services/url.service";
+import {HasInterception, InterceptParam} from "@decorators/intercept-model";
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -85,22 +71,6 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
   selectLicenseDisplayColumns: string[] = [];
-
-  caseStatusEnumMap: any = {
-    [CaseTypes.CONSULTATION]: ConsultationCaseStatus,
-    [CaseTypes.INQUIRY]: InquiryCaseStatus,
-    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCaseStatus,
-    [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
-    [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
-    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
-    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
-    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelCaseStatus,
-    [CaseTypes.FUNDRAISING_LICENSING]: FundRaisingLicensingApproveCaseStatus,
-    [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseCaseStatus,
-    [CaseTypes.SHIPPING_APPROVAL]: ShippingApprovalDocumentCaseStatus,
-    [CaseTypes.COLLECTION_APPROVAL]: CaseStatusCollectionApproval,
-    [CaseTypes.COLLECTOR_LICENSING]: CaseStatusCollectorApproval,
-  };
 
   getCFR(): ComponentFactoryResolver {
     return this.cfr;

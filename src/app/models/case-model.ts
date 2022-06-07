@@ -1,36 +1,36 @@
-import { AdminResult } from './admin-result';
-import { TaskDetails } from './task-details';
-import { FileNetModel } from './FileNetModel';
-import { EServiceGenericService } from '../generics/e-service-generic-service';
-import { Observable } from 'rxjs';
-import { CaseStatus } from '../enums/case-status.enum';
-import { BlobModel } from './blob-model';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
-import { ComponentType } from '@angular/cdk/overlay';
-import { DynamicComponentService } from '@services/dynamic-component.service';
-import { delay, map, take, tap } from 'rxjs/operators';
-import { CaseViewerPopupComponent } from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
-import { IESComponent } from '@contracts/iescomponent';
-import { OpenFrom } from '../enums/open-from.enum';
-import { EmployeeService } from '@services/employee.service';
-import { FactoryService } from '@services/factory.service';
-import { OperationTypes } from '../enums/operation-types.enum';
-import { ICaseModel } from "@app/interfaces/icase-model";
-import { IBulkResult } from "@app/interfaces/ibulk-result";
-import { InboxService } from "@app/services/inbox.service";
-import { WFResponseType } from "@app/enums/wfresponse-type.enum";
-import { LicenseApprovalModel } from "@app/models/license-approval-model";
-import { INavigatedItem } from "@app/interfaces/inavigated-item";
-import { EncryptionService } from "@app/services/encryption.service";
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {AdminResult} from './admin-result';
+import {TaskDetails} from './task-details';
+import {FileNetModel} from './FileNetModel';
+import {EServiceGenericService} from '../generics/e-service-generic-service';
+import {Observable} from 'rxjs';
+import {BlobModel} from './blob-model';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
+import {ComponentType} from '@angular/cdk/overlay';
+import {DynamicComponentService} from '@services/dynamic-component.service';
+import {delay, map, take, tap} from 'rxjs/operators';
+import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import {IESComponent} from '@contracts/iescomponent';
+import {OpenFrom} from '../enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {FactoryService} from '@services/factory.service';
+import {OperationTypes} from '../enums/operation-types.enum';
+import {ICaseModel} from "@app/interfaces/icase-model";
+import {IBulkResult} from "@app/interfaces/ibulk-result";
+import {InboxService} from "@app/services/inbox.service";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {LicenseApprovalModel} from "@app/models/license-approval-model";
+import {INavigatedItem} from "@app/interfaces/inavigated-item";
+import {EncryptionService} from "@app/services/encryption.service";
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;
-  caseStatus!: CaseStatus;
+  caseStatus!: CommonCaseStatus;
   caseIdentifier!: string;
   caseType!: number;
   taskDetails!: TaskDetails;
@@ -81,26 +81,26 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   }
 
   canDraft(): boolean {
-    return !this.caseStatus || this.caseStatus <= CaseStatus.DRAFT;
+    return !this.caseStatus || this.caseStatus <= CommonCaseStatus.DRAFT;
   }
 
   canSave(): boolean {
-    return !this.caseStatus || this.caseStatus >= CaseStatus.CREATED;
+    return !this.caseStatus || this.caseStatus >= CommonCaseStatus.NEW;
   }
 
   /**
-   * @description CaseStatus.DRAFT
+   * @description CommonCaseStatus.DRAFT
    */
   canCommit(): boolean {
-    return this.caseStatus === CaseStatus.DRAFT;
+    return this.caseStatus === CommonCaseStatus.DRAFT;
   }
 
   canStart(): boolean {
-    return this.caseStatus === CaseStatus.CREATED;
+    return this.caseStatus === CommonCaseStatus.NEW;
   }
 
   alreadyStarted(): boolean {
-    return this.caseStatus >= CaseStatus.STARTED;
+    return this.caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
   }
 
   exportActions(): Observable<BlobModel> {
@@ -195,7 +195,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   }
 
   isReturned(): boolean {
-    return this.caseStatus === this.service.caseStatusEnumMap[this.caseType].RETURNED;
+    return this.caseStatus === CommonCaseStatus.RETURNED;
   }
 
   getCaseType(): number {
@@ -207,7 +207,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   }
 
   isFinalApproved(): boolean {
-    return this.caseStatus === this.service.caseStatusEnumMap[this.caseType].FINAL_APPROVE;
+    return this.caseStatus === CommonCaseStatus.FINAL_APPROVE;
   }
 
   getCaseId(): any {

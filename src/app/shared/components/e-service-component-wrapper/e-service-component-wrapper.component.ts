@@ -35,6 +35,7 @@ import {OrgUser} from "@app/models/org-user";
 import {InternalUser} from "@app/models/internal-user";
 import {ChecklistItem} from "@app/models/checklist-item";
 import {StepCheckListComponent} from "@app/shared/components/step-check-list/step-check-list.component";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -908,12 +909,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       isAllowed = this.component.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.component.model.getCaseStatus(),
-        caseStatusEnum = this.component.service.caseStatusEnumMap[this.component.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.component.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;

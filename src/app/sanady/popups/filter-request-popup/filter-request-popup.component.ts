@@ -13,9 +13,9 @@ import {OrgUnit} from '@app/models/org-unit';
 import {EmployeeService} from '@app/services/employee.service';
 import {AidLookup} from '@app/models/aid-lookup';
 import {AidTypes} from '@app/enums/aid-types.enum';
-import {StatusEnum} from '@app/enums/status.enum';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {catchError} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {AidLookupService} from '@app/services/aid-lookup.service';
 
 @Component({
@@ -110,7 +110,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
     this.mainAidLookupsList = [];
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.MAIN_CATEGORY,
-      status: StatusEnum.ACTIVE
+      status: AidLookupStatusEnum.ACTIVE
     }).pipe(
       catchError(err => of([]))
     ).subscribe((list) => {
@@ -126,7 +126,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
 
     this.aidLookupService.loadByCriteria({
       aidType: AidTypes.SUB_CATEGORY,
-      status: StatusEnum.ACTIVE,
+      status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
       catchError(err => of([]))

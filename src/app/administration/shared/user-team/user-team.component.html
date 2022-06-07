@@ -64,7 +64,7 @@
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row">
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <button (click)="deleteUserTeam(row)" class="btn icon-btn">
             <i class="mdi mdi-delete text-primary"></i>
           </button>

@@ -28,14 +28,6 @@ import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.co
 import {IFormRowGroup} from '@contracts/iform-row-group';
 import {DynamicOptionsService} from '@services/dynamic-options.service';
 import {FBuilder} from "@helpers/FBuilder";
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {InitialOfficeApproveCaseStatus} from '@app/enums/initial-office-approve-case-status.enum';
-import {PartnerOfficeApproveCaseStatus} from '@app/enums/partner-office-approve-case-status.enum';
-import {FinalOfficeApproveCaseStatus} from '@app/enums/final-office-approve-case-status.enum';
-import {InternalProjectLicenseCaseStatus} from '@app/enums/internal-project-license-case-status';
-import {ConsultationCaseStatus} from '@app/enums/consultation-case-status.enum';
-import {InquiryCaseStatus} from '@app/enums/inquiry-case-status.enum';
-import {InternationalCaseStatus} from '@app/enums/international-case-status.enum';
 import {FactoryService} from '@app/services/factory.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {MenuItem} from "@app/models/menu-item";
@@ -43,12 +35,6 @@ import {MenuItemService} from "@app/services/menu-item.service";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {UrlService} from "@app/services/url.service";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {ProjectModelCaseStatus} from "@app/enums/project-model-case-status";
-import { FundRaisingLicensingApproveCaseStatus } from '@app/enums/fundraising-licensing-approve-case-status.enum';
-import {UrgentInterventionLicenseCaseStatus} from '@app/enums/urgent-intervention-license-case-status';
-import {CaseStatusCollectionApproval} from '@app/enums/case-status-collection-approval';
-import {CaseStatusCollectorApproval} from '@app/enums/case-status-collector-approval';
-import { ShippingApprovalDocumentCaseStatus } from '@app/enums/shipping-approval-document-case-status';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -87,22 +73,6 @@ export abstract class EServiceGenericService<T extends { id: string }>
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
   selectLicenseDisplayColumns: string[] = [];
-
-  caseStatusEnumMap: any = {
-    [CaseTypes.CONSULTATION]: ConsultationCaseStatus,
-    [CaseTypes.INQUIRY]: InquiryCaseStatus,
-    [CaseTypes.INTERNATIONAL_COOPERATION]: InternationalCaseStatus,
-    [CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL]: InitialOfficeApproveCaseStatus,
-    [CaseTypes.PARTNER_APPROVAL]: PartnerOfficeApproveCaseStatus,
-    [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: FinalOfficeApproveCaseStatus,
-    [CaseTypes.INTERNAL_PROJECT_LICENSE]: InternalProjectLicenseCaseStatus,
-    [CaseTypes.EXTERNAL_PROJECT_MODELS]: ProjectModelCaseStatus,
-    [CaseTypes.FUNDRAISING_LICENSING]: FundRaisingLicensingApproveCaseStatus,
-    [CaseTypes.URGENT_INTERVENTION_LICENSING]: UrgentInterventionLicenseCaseStatus,
-    [CaseTypes.SHIPPING_APPROVAL]: ShippingApprovalDocumentCaseStatus,
-    [CaseTypes.COLLECTION_APPROVAL]: CaseStatusCollectionApproval,
-    [CaseTypes.COLLECTOR_LICENSING]: CaseStatusCollectorApproval,
-  };
 
   getCFR(): ComponentFactoryResolver {
     return this.cfr;

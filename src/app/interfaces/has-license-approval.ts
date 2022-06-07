@@ -19,6 +19,7 @@ export interface HasLicenseApproval {
   licenseVSID: string
   currentVersion: number
   currentVersionDate: string
+  itemId: string
 
   buildApprovalForm(controls: boolean): any
 

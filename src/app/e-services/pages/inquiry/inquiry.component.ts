@@ -14,9 +14,7 @@ import {SaveTypes} from '@app/enums/save-types';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {InquiryService} from '@app/services/inquiry.service';
-import {CaseStatus} from '@app/enums/case-status.enum';
 import {IESComponent} from '@app/interfaces/iescomponent';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
@@ -24,6 +22,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {NavigationService} from "@app/services/navigation.service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -238,7 +237,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   launch() {
     this.model?.start().subscribe(_ => {
       if (this.model) {
-        this.model.caseStatus = CaseStatus.STARTED;
+        this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this.form.reset();
         this.model = new Inquiry();
         this.operation = OperationTypes.CREATE;
@@ -279,14 +278,9 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
-
     return !isAllowed;
   }
 

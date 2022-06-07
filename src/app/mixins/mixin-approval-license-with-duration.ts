@@ -28,6 +28,7 @@ export function mixinApprovalLicenseWithDuration<T extends Constructor<{}>>(base
     licenseVSID!: string
     currentVersion!: number
     currentVersionDate!: string
+    itemId!: string
 
     buildApprovalForm(controls: boolean = false): any {
       const {

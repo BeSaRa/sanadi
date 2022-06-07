@@ -51,7 +51,8 @@
           </div>
         </div>
         <div class="row">
-          <collection-item (formOpenedStatus)="collectionItemFormStatusChanged($event)"
+          <collection-item [licenseDurationType]="model!.licenseDurationType"
+                           (formOpenedStatus)="collectionItemFormStatusChanged($event)"
                            [disableAdd]="basicInfo.invalid || readonly"
                            [readOnly]="(readonly)"
                            (eventHappened)="checkDisableFields()"

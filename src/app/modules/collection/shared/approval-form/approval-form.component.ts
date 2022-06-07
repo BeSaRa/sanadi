@@ -1,25 +1,27 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
-import {LangService} from "@app/services/lang.service";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {CustomTerm} from "@app/models/custom-term";
-import {switchMap, takeUntil, tap} from "rxjs/operators";
-import {CustomTermService} from "@app/services/custom-term.service";
-import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
-import {DialogService} from "@app/services/dialog.service";
-import {IKeyValue} from "@app/interfaces/i-key-value";
-import {DateUtils} from "@app/helpers/date-utils";
-import {ServiceDataService} from "@app/services/service-data.service";
-import {CollectionItem} from "@app/models/collection-item";
-import {LicenseDurationType} from "@app/enums/license-duration-type";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {CaseModel} from "@app/models/case-model";
-import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
-import {HasRequestType} from '@app/interfaces/has-request-type';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { EServiceGenericService } from "@app/generics/e-service-generic-service";
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
+import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
+import { LangService } from "@app/services/lang.service";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { CustomTerm } from "@app/models/custom-term";
+import { switchMap, takeUntil, tap } from "rxjs/operators";
+import { CustomTermService } from "@app/services/custom-term.service";
+import { CustomTermPopupComponent } from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
+import { DialogService } from "@app/services/dialog.service";
+import { IKeyValue } from "@app/interfaces/i-key-value";
+import { DateUtils } from "@app/helpers/date-utils";
+import { ServiceDataService } from "@app/services/service-data.service";
+import { CollectionItem } from "@app/models/collection-item";
+import { LicenseDurationType } from "@app/enums/license-duration-type";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { CaseModel } from "@app/models/case-model";
+import { HasLicenseDurationType } from "@app/interfaces/has-license-duration-type";
+import { HasRequestType } from '@app/interfaces/has-request-type';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { LicenseService } from "@services/license.service";
+import { CaseTypes } from "@app/enums/case-types.enum";
 
 @Component({
   selector: 'approval-form',
@@ -58,9 +60,9 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   }
 
   datepickerOptionsMap: IKeyValue = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
   };
   minLicenseMonths!: number;
   maxLicenseMonths!: number;
@@ -69,6 +71,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
               private customTermService: CustomTermService,
               private dialog: DialogService,
               private serviceDataService: ServiceDataService,
+              private licenseService: LicenseService,
               public lang: LangService) {
 
   }
@@ -99,7 +102,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   }
 
   private updateForm(model: HasLicenseApproval): void {
-    this.form.patchValue(model.clone<CollectionItem>({publicTerms: model.publicTerms ? model.publicTerms : this.servicePublicTerms}).buildApprovalForm(false))
+    this.form.patchValue(model.clone<CollectionItem>({ publicTerms: model.publicTerms ? model.publicTerms : this.servicePublicTerms }).buildApprovalForm(false))
   }
 
   private loadUserCustomTerms(): Observable<CustomTerm[]> {
@@ -164,6 +167,11 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   private applyLicenseEndDateValidationAndStatus(): void {
     this.licenseEndDateField.setValidators((this.isPermanent() ? null : CustomValidators.required))
     this.isPermanent() ? this.licenseEndDateField.disable() : this.licenseEndDateField.enable();
+
+    if (this.model.requestType === ServiceRequestTypes.UPDATE) {
+      this.licenseEndDateField.disable()
+      this.licenseStartDateField.disable()
+    }
   }
 
   private validateLicenseDateRange(startDate: string, endDate: string) {
@@ -181,7 +189,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
     if (!this.license) {
       return;
     }
-    const form = {...this.form.getRawValue()} as HasLicenseApproval,
+    const form = { ...this.form.getRawValue() } as HasLicenseApproval,
       value = this.license.clone({
         ...form,
         followUpDate: DateUtils.getDateStringFromDate(form.followUpDate),
@@ -189,12 +197,28 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
         licenseEndDate: DateUtils.getDateStringFromDate(form.licenseEndDate)
       });
 
+    if ([CaseTypes.COLLECTION_APPROVAL, CaseTypes.COLLECTOR_LICENSING].includes(this.model.caseType)) {
+      const collectionValidate = this.licenseService
+        .validateMultiLicenseCollection(this.model.caseType, { ...this.model, collectionItemList: [value] })
+      const collectorValidate = this.licenseService
+        .validateMultiLicenseCollector(this.model.caseType, { ...this.model, collectorItemList: [value] })
+      const validate = CaseTypes.COLLECTION_APPROVAL === this.model.caseType ? collectionValidate : collectorValidate;
+      validate
+        .subscribe(() => {
+          this.processSaveInfo(skipValidateDateRange, value)
+        })
+    } else {
+      this.processSaveInfo(skipValidateDateRange, value)
+    }
+  }
+
+  private processSaveInfo(skipValidateDateRange: boolean, value: HasLicenseApproval): void {
     if (skipValidateDateRange) {
       this.saveInfo.emit(value);
       return;
     }
 
-    if (!this.validateLicenseDateRange(value.licenseStartDate, value.licenseEndDate)) {
+    if (!this.validateLicenseDateRange(value.licenseStartDate, value.licenseEndDate as string)) {
       this.dialog.error(this.lang.map.msg_license_duration_diff_between_x_and_y_months.change({
         x: this.minLicenseMonths,
         y: this.maxLicenseMonths
@@ -205,7 +229,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   }
 
   openAddCustomTermDialog() {
-    const customTerm = new CustomTerm().clone({caseType: this.model.getCaseType()});
+    const customTerm = new CustomTerm().clone({ caseType: this.model.getCaseType() });
     this.dialog.show(CustomTermPopupComponent, {
       model: customTerm
     }).onAfterClose$
@@ -229,5 +253,4 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
       }
     })
   }
-
 }

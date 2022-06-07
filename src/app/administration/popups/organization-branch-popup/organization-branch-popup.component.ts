@@ -11,10 +11,10 @@ import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
 import {LookupCategories} from '@app/enums/lookup-categories';
-import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable} from 'rxjs';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-branch-popup',
@@ -43,6 +43,7 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
 
   orgUnit: OrgUnit;
   orgUnitStatusList: Lookup[] = [];
+  orgStatusEnum = OrgStatusEnum;
 
   tabsData: IKeyValue = {
     basic: {name: 'basic', langKey: 'lbl_basic_info', validStatus: () => this.form && this.form.valid},

@@ -20,6 +20,7 @@ import {LicenseService} from "@app/services/license.service";
 import {ToastService} from "@app/services/toast.service";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {EmployeeService} from "@app/services/employee.service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: "fundraising",
@@ -180,13 +181,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus(),
-      caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()];
-    if (
-      caseStatusEnum &&
-      (caseStatus == caseStatusEnum.FINAL_APPROVE ||
-        caseStatus === caseStatusEnum.FINAL_REJECTION)
-    ) {
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
@@ -268,7 +264,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
       value.documentTitle = '';
       value.fullSerial = null;
       value.description = '';
-
+      this.licenseDurationTypeField.disable()
+      value.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete value.id;
       delete value.vsId;
@@ -368,5 +365,13 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
 
         callback && callback();
       })
+  }
+
+  clearSelectedLicense(): void {
+    this.setSelectedLicense(undefined, true);
+    this.selectedLicense = undefined;
+    if (!this.model?.id) {
+      this.licenseDurationTypeField.enable()
+    }
   }
 }

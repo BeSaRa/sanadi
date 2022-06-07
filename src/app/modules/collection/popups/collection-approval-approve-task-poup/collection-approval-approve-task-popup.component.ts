@@ -15,7 +15,7 @@ import {FormControl} from "@angular/forms";
 import {IWFResponse} from "@app/interfaces/i-w-f-response";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {ToastService} from "@app/services/toast.service";
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CollectionRequestType} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ApprovalFormComponent} from '@app/modules/collection/shared/approval-form/approval-form.component';
 import {LicenseDurationType} from '@app/enums/license-duration-type';
@@ -77,13 +77,14 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   }
 
   saveLicenseInfo(license: HasLicenseApproval) {
+    let finalValue = (license as unknown as CollectionItem);
     if (this.selectedIndex) {
-      this.data.model.collectionItemList.splice(this.selectedIndex - 1, 1, (license as unknown as CollectionItem))
+      this.data.model.collectionItemList.splice(this.selectedIndex - 1, 1, finalValue)
       this.data.model.collectionItemList = this.data.model.collectionItemList.slice();
     } else {
       this.data.model.collectionItemList.map((item) => {
         return item.clone({
-          ...(license as unknown as CollectionItem)
+          ...finalValue
         })
       })
     }
@@ -134,7 +135,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   }
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
+    return this.data.model.requestType === CollectionRequestType.CANCEL;
   }
 
   private isCommentRequired(): boolean {

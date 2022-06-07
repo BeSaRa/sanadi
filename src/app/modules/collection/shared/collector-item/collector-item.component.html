@@ -146,7 +146,7 @@
       </ng-container>
       <ng-container cdkColumnDef="collectorType">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.collector_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.collectorTypeInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.collectorTypeInfo?.getName()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="jobTitle">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.job_title}}</th>
@@ -180,7 +180,7 @@
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
           <!--<div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"

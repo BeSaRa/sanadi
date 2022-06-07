@@ -13,6 +13,7 @@ export class CollectorItem extends _LicenseApproval implements HasLicenseApprova
   collectorType!: number;
   gender!: number;
   identificationNumber!: string;
+  itemId!: string;
   jobTitle!: string;
   mobileNo!: string;
   nationality!: number;

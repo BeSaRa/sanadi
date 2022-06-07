@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.4.7-rc",
+  "VERSION": "v1.4.9-rc",
   "ENVIRONMENTS_URLS": {
     "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
@@ -20,7 +20,6 @@
     "https"
   ],
   "UNEMPLOYED_LOOKUP_KEY": 4,
-  "QID_LOOKUP_KEY": 1,
   "DEFAULT_DATE_FORMAT": "MMM D, YYYY",
   "SEARCH_YEARS_RANGE": 10,
   "SEARCH_YEARS_START": 2010,
@@ -52,7 +51,9 @@
     "MANAGE_INTERNAL_USERS",
     "MANAGE_INTERNAL_DEPARTMENTS",
     "MANAGE_JOB_TITLES",
-    "MANAGE_DAC_OUCHA_CATEGORIES"
+    "MANAGE_DAC_OUCHA_CATEGORIES",
+    "ADMIN_ADD_EDIT_BANK",
+    "DONOR_MANAGEMENT"
   ],
   "MANAGE_ORG_PERMISSIONS_GROUP": [
     "ADMIN_ADD_OU",
@@ -122,5 +123,6 @@
   "GIVE_USERS_PERMISSIONS": [
     "NO_PERMISSION"
   ],
-  "MAP_API_KEY": "AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4"
+  "MAP_API_KEY": "AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4",
+  "BENEFICIARY_AUDIT_LIMIT": 50
 }

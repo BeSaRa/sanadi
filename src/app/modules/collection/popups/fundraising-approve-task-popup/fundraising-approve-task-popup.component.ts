@@ -15,7 +15,7 @@ import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {Subject} from "rxjs";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ApprovalFormComponent} from "../../shared/approval-form/approval-form.component";
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CollectionRequestType} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {LicenseDurationType} from '@app/enums/license-duration-type';
 import {DateUtils} from '@app/helpers/date-utils';
@@ -124,7 +124,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   }
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
+    return this.data.model.requestType === CollectionRequestType.CANCEL;
   }
 
   private isCommentRequired(): boolean {

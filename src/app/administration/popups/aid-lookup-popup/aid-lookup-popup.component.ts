@@ -1,34 +1,21 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild
-} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
 import {AidLookup} from '@app/models/aid-lookup';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
-import {extender} from '@app/helpers/extender';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AidTypes} from '@app/enums/aid-types.enum';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {Lookup} from '@app/models/lookup';
 import {LookupCategories} from '@app/enums/lookup-categories';
 import {LookupService} from '@app/services/lookup.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -45,6 +32,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   isAidTabVisible!: boolean;
   aidLookupStatusList!: Lookup[];
   saveVisible = true;
+  aidLookupStatusEnum = AidLookupStatusEnum;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 

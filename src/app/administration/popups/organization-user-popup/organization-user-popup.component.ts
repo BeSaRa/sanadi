@@ -29,6 +29,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OrgUserStatusEnum} from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -64,6 +65,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   validateFieldsVisible = true;
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  orgUserStatusEnum = OrgUserStatusEnum;
 
   displaySaveBtn: boolean = true;
 

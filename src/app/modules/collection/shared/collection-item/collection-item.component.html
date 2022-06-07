@@ -109,7 +109,7 @@
       </ng-container>
       <ng-container cdkColumnDef="licenseEndDate">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDateString}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date: 'yyyy-MM-dd'}} </td>
       </ng-container>
       <ng-container cdkColumnDef="map">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
@@ -147,7 +147,7 @@
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
         </td>
       </ng-container>

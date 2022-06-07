@@ -22,20 +22,19 @@ import {ProjectModelTypes} from "@app/enums/project-model-types";
 import {ProjectTypes} from "@app/enums/project-types";
 import {DomainTypes} from "@app/enums/domain-types";
 import {IDacOchaFields} from "@app/interfaces/idac-ocha-fields";
-import {TabComponent} from "@app/shared/components/tab/tab.component";
 import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
 import {EmployeeService} from "@app/services/employee.service";
 import {AttachmentsComponent} from "@app/shared/components/attachments/attachments.component";
 import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {CaseStatus} from "@app/enums/case-status.enum";
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -198,7 +197,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       return;
     }
 
-    if (this.model?.getCaseStatus() === CaseStatus.CANCELLED || this.model?.getCaseStatus() === CaseStatus.FINAL_APPROVE) {
+    if (this.model?.getCaseStatus() === CommonCaseStatus.CANCELLED || this.model?.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE) {
       this.readonly = true;
     } else {
 
@@ -772,12 +771,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       isAllowed = this.model.taskDetails.isClaimed();
     }
     if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus(),
-        caseStatusEnum = this.service.caseStatusEnumMap[this.model.getCaseType()] || CaseStatus;
-
-      if (caseStatusEnum) {
-        isAllowed = (caseStatus !== caseStatusEnum.CANCELLED && caseStatus !== caseStatusEnum.FINAL_APPROVE && caseStatus !== caseStatusEnum.FINAL_REJECTION);
-      }
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;

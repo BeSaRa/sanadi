@@ -1,8 +1,8 @@
-import {AdminResult} from "@app/models/admin-result";
-import {FileNetDocument} from "@app/models/file-net-document";
-import {mixinCollectionItemBuildForm} from "@app/mixins/mixin-collection-item-build-form";
-import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
-import {CollectionItem} from "@app/models/collection-item";
+import { AdminResult } from "@app/models/admin-result";
+import { FileNetDocument } from "@app/models/file-net-document";
+import { mixinCollectionItemBuildForm } from "@app/mixins/mixin-collection-item-build-form";
+import { HasCollectionItemBuildForm } from "@app/interfaces/has-collection-item-build-form";
+import { CollectionItem } from "@app/models/collection-item";
 
 const _collectionItemBuildForm = mixinCollectionItemBuildForm(FileNetDocument)
 
@@ -66,6 +66,9 @@ export class CollectionLicense extends _collectionItemBuildForm implements HasCo
       zoneNumber: this.zoneNumber,
       licenseStatusInfo: this.licenseStatusInfo,
       licenseDurationTypeInfo: this.licenseDurationTypeInfo,
+      licenseDurationType: this.licenseDurationType,
+      licenseStartDate: this.licenseStartDate || this.licenseApprovedDate,
+      licenseEndDate: this.licenseEndDate,
     })
   }
 }

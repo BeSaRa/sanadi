@@ -155,7 +155,7 @@
                        [ngClass]="fm.getStatusClass('basic.status')">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUserStatusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredOrgUserStatus()">
+                         [disabled]="(option.lookupKey === orgUserStatusEnum.DELETED || option.lookupKey === orgUserStatusEnum.TERMINATED)">
                 {{option.getName()}}
               </ng-option>
             </ng-select>

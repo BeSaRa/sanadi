@@ -7,6 +7,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {catchError, exhaustMap, filter, switchMap} from "rxjs/operators";
 import {BaseModel} from "@app/models/base-model";
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Directive()
 export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implements OnInit, OnDestroy, IAdminGenericInterface<M> {
@@ -22,6 +23,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   operationTypes: typeof OperationTypes = OperationTypes;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  commonStatusEnum = CommonStatusEnum;
 
   ngOnInit(): void {
     this.buildForm();

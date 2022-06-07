@@ -3,9 +3,9 @@ import {ITableOptions} from '@app/interfaces/i-table-options';
 import {FilterEventTypes} from '@app/types/types';
 import {LangService} from '@app/services/lang.service';
 import {AdminResult} from '@app/models/admin-result';
-import {CaseStatus} from "@app/enums/case-status.enum";
 import {CaseTypes} from "@app/enums/case-types.enum";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'request-recommendations',
   templateUrl: './request-recommendations.component.html',

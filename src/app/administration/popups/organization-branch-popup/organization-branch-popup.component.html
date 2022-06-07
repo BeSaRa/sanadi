@@ -75,7 +75,7 @@
                        validationClasses="status">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of orgUnitStatusList" [value]="option.lookupKey"
-                         [disabled]="option.isRetiredOrgStatus()">
+                         [disabled]="option.lookupKey === orgStatusEnum.RETIRED">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
