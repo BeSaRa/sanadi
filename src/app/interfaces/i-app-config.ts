@@ -31,4 +31,5 @@ export interface IAppConfig {
   CHARITY_ORG_TEAM: string;
   SEARCH_PERMISSION_GROUP: string[];
   GIVE_USERS_PERMISSIONS: string[];
+  BENEFICIARY_AUDIT_LIMIT: number;
 }

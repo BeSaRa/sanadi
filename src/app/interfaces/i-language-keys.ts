@@ -982,4 +982,5 @@ export interface ILanguageKeys {
   lbl_add_donor: string;
   lbl_edit_donor: string;
   donor: string;
+  menu_inquiry_logs: string;
 }

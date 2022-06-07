@@ -674,5 +674,18 @@
     "group": "administration",
     "itemOrder": 25,
     "svg": null
+  },
+  {
+    "id": 53,
+    "langKey": "menu_inquiry_logs",
+    "path": "/home/sanady/inquiry-logs",
+    "icon": "mdi-history",
+    "isSvg": false,
+    "permission": "",
+    "permissionGroup": null,
+    "parent": 23,
+    "group": "sanady",
+    "itemOrder": 7,
+    "svg": null
   }
 ]
