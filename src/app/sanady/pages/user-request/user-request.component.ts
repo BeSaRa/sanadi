@@ -154,12 +154,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private savePartial$: Subject<any> = new Subject<any>();
   private saveAid$: Subject<any> = new Subject<any>();
-  private idMap: { [index: string]: number } = {
-    qid: 1,
-    gccId: 2,
-    visa: 4,
-    passport: 3,
-  };
   private beneficiaryChanged$: Subject<Beneficiary | null> = new Subject<Beneficiary | null>();
   private requestChanged$: Subject<SubventionRequest | null> = new Subject<SubventionRequest | null>();
   private aidChanged$: Subject<SubventionAid | null> = new Subject<SubventionAid | null>();
@@ -493,12 +487,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // noinspection JSUnusedLocalSymbols
-  private updateSecondaryIdNumber(field: { field: string, value: string }): void {
-    this.fm.getFormField('personalTab.benSecIdNumber')?.setValue(field.value);
-    this.fm.getFormField('personalTab.benSecIdType')?.setValue(field.value.length ? this.idMap[field.field] : null);
-  }
-
   private listenToOccupationStatus() {
     this.employmentStatusField?.valueChanges
       .pipe(
@@ -544,7 +532,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.primaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.primaryNationalityField?.value)) {
+      if (this.primaryIdTypeField?.value === BeneficiaryIdTypes.PASSPORT && CommonUtils.isValidValue(this.primaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.primaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
@@ -555,7 +543,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((_) => {
-      if (this.secondaryIdTypeField?.value === this.idMap.passport && CommonUtils.isValidValue(this.secondaryNationalityField?.value)) {
+      if (this.secondaryIdTypeField?.value === BeneficiaryIdTypes.PASSPORT && CommonUtils.isValidValue(this.secondaryNationalityField?.value)) {
         this.benNationalityField?.setValue(this.secondaryNationalityField?.value);
         this.benNationalityField?.updateValueAndValidity();
       }
@@ -1543,9 +1531,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!CommonUtils.isValidValue(idType)) {
       return false;
     }
-    let visibility: boolean = (idType === this.idMap.passport || idType === this.idMap.gccId),
+    let visibility: boolean = (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID),
       nationalityListType: ('normal' | 'gulf') = 'normal';
-    if (idType === this.idMap.gccId) {
+    if (idType === BeneficiaryIdTypes.GCC_ID) {
       nationalityListType = 'gulf';
     }
 
@@ -1559,12 +1547,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return visibility;
   }
 
-  private getNationalityByIdType(idType: number): string | number {
+  private static getNationalityByIdType(idType: number): string | number {
     if (!CommonUtils.isValidValue(idType)) {
       return '';
     }
     let nationalityValue: string | number = '';
-    if (idType === this.idMap.qid || idType === this.idMap.visa) {
+    if (idType === BeneficiaryIdTypes.QID || idType === BeneficiaryIdTypes.VISA) {
       nationalityValue = 1;
     }
     return nationalityValue;
@@ -1579,7 +1567,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
 
-        if (value === this.idMap.passport || value === this.idMap.gccId) {
+        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -1588,7 +1576,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.primaryIdNumberField.setValidators(idValidators);
       this.primaryIdNumberField.updateValueAndValidity();
 
-      this.primaryNationalityField.setValue(this.getNationalityByIdType(value));
+      this.primaryNationalityField.setValue(UserRequestComponent.getNationalityByIdType(value));
       this.primaryNationalityField.setValidators(nationalityValidators);
       this.primaryNationalityField.updateValueAndValidity();
 
@@ -1605,7 +1593,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
 
-        if (value === this.idMap.passport || value === this.idMap.gccId) {
+        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -1614,7 +1602,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.secondaryIdNumberField.setValidators(idValidators);
       this.secondaryIdNumberField.updateValueAndValidity();
 
-      this.secondaryNationalityField.setValue(this.getNationalityByIdType(value));
+      this.secondaryNationalityField.setValue(UserRequestComponent.getNationalityByIdType(value));
       this.secondaryNationalityField.setValidators(nationalityValidators);
       this.secondaryNationalityField.updateValueAndValidity();
 
