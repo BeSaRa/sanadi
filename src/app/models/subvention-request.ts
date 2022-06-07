@@ -12,7 +12,7 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {searchFunctionType} from '../types/types';
 import {UserClickOn} from '../enums/user-click-on.enum';
 import {take} from 'rxjs/operators';
-import {SubventionRequestStatus} from '../enums/subvention-request-status';
+import {SubventionRequestStatus} from '@app/enums/status.enum';
 import {ConfigurationService} from '../services/configuration.service';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {DateUtils} from '../helpers/date-utils';

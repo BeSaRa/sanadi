@@ -23,7 +23,7 @@ import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {ReadModeService} from '@app/services/read-mode.service';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {AidTypes} from '@app/enums/aid-types.enum';
-import {StatusEnum} from '@app/enums/status.enum';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {AidLookup} from '@app/models/aid-lookup';
 import {AidLookupService} from '@app/services/aid-lookup.service';
 import {ECookieService} from '@app/services/e-cookie.service';
@@ -319,7 +319,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
     this.mainAidLookupsList = [];
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.MAIN_CATEGORY,
-      status: StatusEnum.ACTIVE
+      status: AidLookupStatusEnum.ACTIVE
     }).pipe(
       catchError(err => of([]))
     ).subscribe((list) => {
@@ -339,7 +339,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
     }
     this.aidLookupService.loadByCriteria({
       aidType: AidTypes.SUB_CATEGORY,
-      status: StatusEnum.ACTIVE,
+      status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
       catchError(err => of([]))

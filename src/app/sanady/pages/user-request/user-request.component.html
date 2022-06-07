@@ -667,7 +667,7 @@
                        formControlName="status" appendTo="body"
                        [ngClass]="fm.getStatusClass('requestStatusTab.status')">
               <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
-                         [disabled]="option.isRemovedSubRequestStatus() || option.isCancelledSubRequestStatus()"
+                         [disabled]="(option.lookupKey === subventionRequestStatusEnum.REMOVED || option.lookupKey === subventionRequestStatusEnum.CANCELED)"
                          [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>

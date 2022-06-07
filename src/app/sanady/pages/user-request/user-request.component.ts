@@ -34,10 +34,9 @@ import {AidLookup} from '@app/models/aid-lookup';
 import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SubventionAidService} from '@app/services/subvention-aid.service';
-import {StatusEnum} from '@app/enums/status.enum';
+import {AidLookupStatusEnum, SubventionRequestStatus} from '@app/enums/status.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
-import {SubventionRequestStatus} from '@app/enums/subvention-request-status';
 import {Pair} from '@app/interfaces/pair';
 import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
@@ -170,6 +169,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
   donorList: Donor[] = [];
+  subventionRequestStatusEnum = SubventionRequestStatus;
 
   aidsSubAidLookupsList: AidLookup[] = [];
   periodicityLookups: Record<number, Lookup> = {};
@@ -1309,7 +1309,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mainAidLookupsList = [];
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.MAIN_CATEGORY,
-      status: StatusEnum.ACTIVE
+      status: AidLookupStatusEnum.ACTIVE
     }).pipe(
       catchError(err => of([]))
     ).subscribe((list) => {
@@ -1358,7 +1358,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return this.aidLookupService.loadByCriteria({
       aidType: AidTypes.SUB_CATEGORY,
-      status: StatusEnum.ACTIVE,
+      status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
       catchError(err => of([]))
