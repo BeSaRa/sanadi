@@ -16,7 +16,7 @@ import {
 import {Pair} from '@contracts/pair';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {map} from 'rxjs/operators';
-import {SendInterceptor} from '@decorators/model-interceptor';
+import {SendInterceptor, InterceptParam as interceptBeforeSend} from '@decorators/model-interceptor';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
@@ -60,7 +60,7 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
   }
 
   @SendInterceptor()
-  createWithValidate(@InterceptParam() beneficiary: Partial<Beneficiary>, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+  createWithValidate(@interceptBeforeSend() beneficiary: Partial<Beneficiary>, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
     delete beneficiary.id;
     return this.http.post<Pair<BeneficiarySaveStatus, Beneficiary>>(this._getServiceURL() + '/validate-save', beneficiary, {
       params: new HttpParams({

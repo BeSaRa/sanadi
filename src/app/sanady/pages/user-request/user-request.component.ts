@@ -469,7 +469,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       requestInfo?.patchValue(request.getInfoFields());
 
       this.loadSubAidLookups(request.aidLookupParentId);
-      this.disableDataSharingField?.disable();
+      this.allowDataSharingField?.disable();
 
       if (request.isPartial) {
         this.readOnly = !request.isUnderProcessing();
@@ -627,7 +627,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!!this.currentRequest && this.currentRequest.id) {
           return isValid;
         }
-        return isValid && (!this.disableDataSharingField.value ? true : !!this.disclosureFile);
+        return isValid && (!this.allowDataSharingField.value ? true : !!this.disclosureFile);
       })
     );
 
@@ -718,7 +718,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           this.editMode = true;
 
           this.toggleAllowCompletionReadonly();
-          this.disableDataSharingField?.disable();
+          this.allowDataSharingField?.disable();
 
           if (!this.currentRequest.isUnderProcessing()) {
             this.readModeService.setReadOnly(this.currentRequest.id);
@@ -750,13 +750,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private uploadDisclosureDocument(request: SubventionRequest): Observable<any> {
     // if Disclosure not enabled or existing request is updated, then proceed. otherwise, upload nda document
-    if ((this.currentRequest && this.currentRequest.id) || !request.disableDataSharing) {
+    if ((this.currentRequest && this.currentRequest.id) || !request.allowDataSharing) {
       return of('NO_DISCLOSURE_ATTACHMENT_NEEDED');
     } else {
       let data = (new SanadiAttachment()).clone(this.disclosureFile) as SanadiAttachment;
       data.documentTitle = 'Disclosure Form';
-      data.attachmentType = AttachmentTypeEnum.NON_DISCLOSURE_FORM;
-      let attachmentTypeInfo = this.lookup.listByCategory.ATTACHMENT_TYPE.find(x => x.lookupKey === AttachmentTypeEnum.NON_DISCLOSURE_FORM);
+      data.attachmentType = AttachmentTypeEnum.DISCLOSURE_FORM;
+      let attachmentTypeInfo = this.lookup.listByCategory.ATTACHMENT_TYPE.find(x => x.lookupKey === AttachmentTypeEnum.DISCLOSURE_FORM);
       data.attachmentTypeInfo = attachmentTypeInfo ? attachmentTypeInfo.convertToAdminResult() : new AdminResult();
       data.requestFullSerial = request.requestFullSerial;
       data.requestId = request.id;
@@ -1249,8 +1249,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
   }
 
-  get disableDataSharingField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.disableDataSharing') as FormControl;
+  get allowDataSharingField(): FormControl {
+    return this.fm.getFormField('requestInfoTab.allowDataSharing') as FormControl;
   }
 
   get isCurrentRequestPartial(): boolean {
@@ -1665,8 +1665,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return !this.readOnly && !this.isPartialRequest;
   }
 
-  handleDisclosureFieldChange($event: any): void {
-    if (!this.disableDataSharingField.value) {
+  handleAllowDataSharingFieldChange($event: any): void {
+    if (!this.allowDataSharingField.value) {
       this.disclosureFile = undefined;
     } else {
       this.allowCompletionField.setValue(false);
@@ -1683,7 +1683,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private toggleAllowCompletionReadonly(): void {
-    if (this.readOnly || this.disableDataSharingField.value) {
+    if (this.readOnly || this.allowDataSharingField.value) {
       this.allowCompletionField?.disable();
     } else {
       if (this.currentRequest && !this.currentRequest.isUnderProcessing()) {
