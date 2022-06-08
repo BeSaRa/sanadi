@@ -24,6 +24,7 @@ import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
 import {LicenseService} from '@app/services/license.service';
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'services-search',
@@ -33,7 +34,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 })
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
-  private selectedService!: EServiceGenericService<any>;
+  private selectedService!: EServiceGenericService<any> | BaseGenericEService<any>;
 
   searchColumns: string[] = [];
   headerColumn: string[] = ['extra-header'];
