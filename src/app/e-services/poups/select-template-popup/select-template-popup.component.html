@@ -41,7 +41,7 @@
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <button (click)="selectModel(row)" class="btn btn-primary">{{lang.map.select}}</button>
         </td>
       </ng-container>

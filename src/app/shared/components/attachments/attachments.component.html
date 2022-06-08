@@ -52,7 +52,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width: 200px" class="bg-primary text-white"
             *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
           <div class="d-flex gap-2">
             <button [disabled]="disabled" [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
                     (click)="uploadAttachment(row , uploader)"
