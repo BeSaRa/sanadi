@@ -7,6 +7,11 @@ import {AdminResult} from '@app/models/admin-result';
 import {FactoryService} from '@services/factory.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {ParticipantOrganization} from '@app/models/participant-organization';
+import {EmployeeService} from '@services/employee.service';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -42,27 +47,32 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   approvalPeriod!: number;
   customTerms!: string;
   publicTerms!: string;
-  organizaionOfficerList!: any[];
+  organizaionOfficerList: OrganizationOfficer[] = [];
   requestTypeInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
-  participatingOrganizaionList: {organizationId: number, arabicName: string, englishName: string}[] = [];
+  participatingOrganizaionList: Partial<ParticipantOrganization>[] = [];
+  donation!: number;
+  workStartDate!: string | IMyDateModel;
+  employeeService!: EmployeeService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('UrgentJointReliefCampaignService');
+    this.employeeService = FactoryService.getService('EmployeeService');
   }
 
   buildBasicInfo(controls: boolean = false): any {
+    const internalUserValidation = !this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
     const {fullName, licenseStartDate, licenseEndDate, phone, extraPhone, approvalPeriod, beneficiaryCountry, targetAmount} = this;
     return {
-      fullName: controls ? [fullName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : fullName,
-      licenseStartDate: controls ? [licenseStartDate, [CustomValidators.required]] : licenseStartDate,
-      licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
-      phone: controls ? [phone, [CustomValidators.required]] : phone,
+      fullName: controls ? [fullName, internalUserValidation.concat([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])] : fullName,
+      licenseStartDate: controls ? [licenseStartDate, internalUserValidation.concat([CustomValidators.required])] : licenseStartDate,
+      licenseEndDate: controls ? [licenseEndDate, internalUserValidation] : licenseEndDate,
+      phone: controls ? [phone, internalUserValidation] : phone,
       extraPhone: controls ? [extraPhone, []] : extraPhone,
-      approvalPeriod: controls ? [approvalPeriod, [CustomValidators.required]] : approvalPeriod,
-      beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required]] : beneficiaryCountry,
-      targetAmount: controls ? [targetAmount, [CustomValidators.required]] : targetAmount
+      approvalPeriod: controls ? [approvalPeriod, internalUserValidation] : approvalPeriod,
+      beneficiaryCountry: controls ? [beneficiaryCountry, internalUserValidation] : beneficiaryCountry,
+      targetAmount: controls ? [targetAmount, internalUserValidation] : targetAmount
     }
   }
 
@@ -73,7 +83,24 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     }
   }
 
+  buildExternalUserData(controls: boolean = false): any {
+    const externalUserValidation = this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
+    const {donation, workStartDate} = this;
+    return {
+      donation: controls ? [donation, externalUserValidation] : donation,
+      workStartDate: controls ? [workStartDate, externalUserValidation] : workStartDate
+    }
+  }
+
   getCaseStatus() {
     return this.caseType;
+  }
+
+  initialApprove(): DialogRef {
+    return this.service.initialApproveTask(this, WFResponseType.INITIAL_APPROVE);
+  }
+
+  validateApprove(): DialogRef {
+    return this.service.validateApproveTask(this, WFResponseType.VALIDATE_APPROVE);
   }
 }

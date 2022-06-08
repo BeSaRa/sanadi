@@ -1,4 +1,9 @@
 export enum WFResponseType {
+  VALIDATE_REJECT = 'validateReject',
+  VALIDATE_APPROVE = 'validateApprove',
+  ORGANIZATION_REJECT = 'orgReject',
+  ORGANIZATION_APPROVE = 'orgApprove',
+  INITIAL_APPROVE = 'initialApprove',
   SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewCustomsExemptionRemittance',
   TO_USER = 'toUser',
   APPROVE = 'approve',

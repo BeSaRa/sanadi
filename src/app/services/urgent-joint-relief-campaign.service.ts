@@ -9,9 +9,14 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {UrgentJointReliefCampaignInterceptor} from '@app/model-interceptors/urgent-joint-relief-campaign-interceptor';
-import {UrgentJointReliefCampaignCriteria} from '@app/models/urgent-joint-relief-campaign-criteria';
+import {UrgentJointReliefCampaignSearchCriteria} from '@app/models/urgent-joint-relief-campaign-search-criteria';
 import {FactoryService} from '@services/factory.service';
 import {CastResponseContainer} from '@decorators/cast-response';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  UrgentJointReliefCampaignInitialApproveTaskPopupComponent
+} from '@app/projects/popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -22,11 +27,11 @@ import {CastResponseContainer} from '@decorators/cast-response';
   providedIn: 'root'
 })
 export class UrgentJointReliefCampaignService extends BaseGenericEService<UrgentJointReliefCampaign> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'urgent_joint_relief_campaign_search.json';
   interceptor: IModelInterceptor<UrgentJointReliefCampaign> = new UrgentJointReliefCampaignInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_urgent_joint_relief_campaign';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [''];
+  searchColumns: string[] = ['fullSerial', 'fullName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
@@ -51,7 +56,7 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
   }
 
   getSearchCriteriaModel<S extends UrgentJointReliefCampaign>(): UrgentJointReliefCampaign {
-    return new UrgentJointReliefCampaignCriteria();
+    return new UrgentJointReliefCampaignSearchCriteria();
   }
 
   getCaseComponentName(): string {
@@ -62,4 +67,17 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     return this.urlService;
   }
 
+  initialApproveTask(model: UrgentJointReliefCampaign, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentJointReliefCampaignInitialApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
+
+  validateApproveTask(model: UrgentJointReliefCampaign, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentJointReliefCampaignInitialApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
 }

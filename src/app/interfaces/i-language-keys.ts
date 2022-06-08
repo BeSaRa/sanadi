@@ -1,4 +1,15 @@
 export interface ILanguageKeys {
+  add_organization_officers: string;
+  enter_donation_and_start_work_date: string;
+  validate_approve_task: string;
+  validate_reject_task: string;
+  organization_reject_task: string;
+  org_approve_task: string;
+  initial_approve_task: string;
+  add_officer: string;
+  organization_officers: string;
+  work_start_date: string;
+  donation_amount: string;
   approval_period: string;
   target_amount: string;
   beneficiary_country: string;

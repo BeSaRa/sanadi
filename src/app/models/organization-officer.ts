@@ -4,12 +4,12 @@ import {LangService} from '@services/lang.service';
 
 export class OrganizationOfficer extends SearchableCloneable<OrganizationOfficer>{
   identificationNumber!: string;
-  organizationId!: string;
+  organizationId!: number;
   fullName!: string;
   email!: string;
   phone!: string;
   extraPhone!: string;
-  langService: LangService;
+  langService?: LangService;
 
   constructor() {
     super();

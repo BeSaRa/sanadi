@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { SaveTypes } from '@app/enums/save-types';
+import {Component} from '@angular/core';
+import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
@@ -22,6 +22,9 @@ import {Lookup} from '@app/models/lookup';
 import {Country} from '@app/models/country';
 import {CountryService} from '@services/country.service';
 import {OrganizationOfficer} from '@app/models/organization-officer';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ParticipantOrganization} from '@app/models/participant-organization';
+import {CaseStepName} from '@app/enums/case-step-name';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -30,21 +33,28 @@ import {OrganizationOfficer} from '@app/models/organization-officer';
 })
 export class UrgentJointReliefCampaignComponent extends EServicesGenericComponent<UrgentJointReliefCampaign, UrgentJointReliefCampaignService> {
   form!: FormGroup;
+  officerForm!: FormGroup;
   fm!: FormManager;
   organizationUnits: OrgUnit[] = [];
   selectedOrganizationUnits: OrgUnit[] = [];
   selectedOrg!: OrgUnit;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
+  selectedOfficer!: OrganizationOfficer | null;
+  selectedOfficerIndex!: number | null;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    workStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
 
   organizationDisplayedColumns: string[] = ['arName', 'enName', 'actions'];
+  organizationOfficerDisplayedColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   countries: Country[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
+  isExternalUser!: boolean;
+  organizationStepNames: string[] = [CaseStepName.ORG_REV, CaseStepName.ORG_REW, CaseStepName.ORG_MNGR_REV];
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -67,20 +77,30 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     return this.form.get('explanation')! as FormGroup;
   }
 
+  get externalUserData(): FormGroup {
+    return this.form.get('externalUserData')! as FormGroup;
+  }
+
+  get organizationOfficer(): FormGroup {
+    return this.officerForm! as FormGroup;
+  }
+
   get selectedOrganizations(): FormControl {
     return (this.form.get('selectedOrganizations.participatingOrganizaionList')) as FormControl;
   }
 
   _initComponent(): void {
+    this.isExternalUser = this.employeeService.isExternalUser();
     this.loadOrgUnits();
     this.loadCountries();
+    this.buildOfficerForm();
   }
 
   loadOrgUnits() {
     this.orgUnitService.loadComposite().subscribe((list) => {
       this.organizationUnits = list;
       this.selectedOrganizationUnits = this.setSelectedOrganizations();
-    })
+    });
   }
 
   setSelectedOrganizations() {
@@ -89,23 +109,49 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         .map(xx => xx.organizationId).includes(x.id));
   }
 
+  setSelectedOfficers() {
+    this.selectedOrganizationOfficers = this.model?.organizaionOfficerList
+      .map(x => (new OrganizationOfficer()).clone({...x}))!;
+  }
+
   loadCountries() {
     this.countryService.loadComposite().subscribe((list) => {
       this.countries = list;
-    })
+    });
   }
 
   _buildForm(): void {
     const model = new UrgentJointReliefCampaign();
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
-      explanation: this.fb.group(model.buildExplanation(true))
+      explanation: this.fb.group(model.buildExplanation(true)),
+      externalUserData: this.fb.group(model.buildExternalUserData(true)),
     });
 
     this.fm = new FormManager(this.form, this.lang);
   }
 
+  buildOfficerForm(): void {
+    this.officerForm = this.fb.group({
+      identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
+      officerFullName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      email: [null, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]],
+      officerPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
+      officerExtraPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)]
+    });
+  }
+
   _afterBuildForm(): void {
+    this.setSelectedOfficers();
+
+    this.enableSaveButtonToExternalUsers();
+  }
+
+  enableSaveButtonToExternalUsers() {
+    const stepName = this.model?.taskDetails?.name!;
+    if (this.organizationStepNames.includes(stepName)) {
+      this.readonly = false;
+    }
   }
 
   _updateForm(model: UrgentJointReliefCampaign | undefined): void {
@@ -115,7 +161,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     this.model = (new UrgentJointReliefCampaign()).clone({...this.model, ...model});
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
-      explanation: this.model?.buildExplanation()
+      explanation: this.model?.buildExplanation(),
+      externalUserData: this.model?.buildExternalUserData()
     });
   }
 
@@ -123,18 +170,30 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _prepareModel(): Observable<UrgentJointReliefCampaign> | UrgentJointReliefCampaign {
-    const model = new UrgentJointReliefCampaign().clone({
+    let model = new UrgentJointReliefCampaign().clone({
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
     });
 
+    if (this.isExternalUser) {
+      model = new UrgentJointReliefCampaign().clone({
+        ...model,
+        ...this.externalUserData.getRawValue()
+      });
+    }
+
     model.participatingOrganizaionList = this.selectedOrganizationUnits.map(x => {
-      return {organizationId: x.id, arabicName: x.arName, englishName: x.enName};
+      const tempOrg = new ParticipantOrganization();
+      tempOrg.organizationId = x.id;
+      tempOrg.arabicName = x.arName;
+      tempOrg.englishName = x.enName;
+      return tempOrg;
     });
 
-    model.requestType = this.requestTypes[0].lookupKey;
+    model.organizaionOfficerList = this.selectedOrganizationOfficers;
 
+    model.requestType = this.requestTypes[0].lookupKey;
     return model;
   }
 
@@ -143,6 +202,17 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if(this.isExternalUser) {
+      if(this.externalUserData.invalid) {
+        this.dialog.error(this.lang.map.enter_donation_and_start_work_date);
+        return false;
+      }
+
+      if(this.selectedOrganizationOfficers.length < 1) {
+        this.dialog.error(this.lang.map.add_organization_officers);
+        return false;
+      }
+    }
     return this.form.valid;
   }
 
@@ -181,7 +251,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   addOrganization() {
-    if(this.selectedOrg && !this.selectedOrganizationUnits.includes(this.selectedOrg)) {
+    if (this.selectedOrg && !this.selectedOrganizationUnits.includes(this.selectedOrg)) {
       this.selectedOrganizationUnits = this.selectedOrganizationUnits.concat(this.selectedOrg);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
@@ -191,5 +261,71 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   removeOrganization(event: MouseEvent, model: OrgUnit) {
     event.preventDefault();
     this.selectedOrganizationUnits = this.selectedOrganizationUnits.filter(x => x.id != model.id);
+  }
+
+  selectOfficer(event: MouseEvent, model: OrganizationOfficer) {
+    event.preventDefault();
+    this.selectedOfficer = this.mapOrganizationOfficerToForm(model);
+    this.officerForm.patchValue(this.selectedOfficer!);
+    this.selectedOfficerIndex = this.selectedOrganizationOfficers
+      .map(x => x.identificationNumber).indexOf(model.identificationNumber);
+  }
+
+  saveOfficer() {
+    const officer = this.mapFormToOrganizationOfficer(this.organizationOfficer.getRawValue());
+    officer.organizationId = this.employeeService.getOrgUnit()?.id!;
+    if (!this.selectedOfficer) {
+      if (!this.selectedOrganizationOfficers.includes(officer)) {
+        this.selectedOrganizationOfficers = this.selectedOrganizationOfficers.concat(officer);
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.selectedOrganizationOfficers.filter(x => x.identificationNumber != officer.identificationNumber).includes(officer)) {
+        this.selectedOrganizationOfficers.splice(this.selectedOfficerIndex!, 1);
+        this.selectedOrganizationOfficers = this.selectedOrganizationOfficers.concat(officer);
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+
+    this.resetOfficerForm();
+  }
+
+  resetOfficerForm() {
+    this.selectedOfficer = null;
+    this.selectedOfficerIndex = null;
+    this.officerForm.reset();
+  }
+
+  removeOfficer(event: MouseEvent, model: OrganizationOfficer) {
+    event.preventDefault();
+    this.selectedOrganizationOfficers = this.selectedOrganizationOfficers.filter(x => x.identificationNumber != model.identificationNumber);
+    this.resetOfficerForm();
+  }
+
+  mapFormToOrganizationOfficer(form: any): OrganizationOfficer {
+    const officer: OrganizationOfficer = new OrganizationOfficer();
+    officer.identificationNumber = form.identificationNumber;
+    officer.fullName = form.officerFullName;
+    officer.email = form.email;
+    officer.phone = form.officerPhone;
+    officer.extraPhone = form.officerExtraPhone;
+
+    return officer;
+  }
+
+  mapOrganizationOfficerToForm(officer: OrganizationOfficer): any {
+    return {
+      identificationNumber: officer.identificationNumber,
+      officerFullName: officer.fullName,
+      email: officer.email,
+      officerPhone: officer.phone,
+      officerExtraPhone: officer.extraPhone
+    };
+  }
+
+  testForm() {
+    console.log('form', this.form);
   }
 }

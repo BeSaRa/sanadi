@@ -318,8 +318,20 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
   }
 
+  initialApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.INITIAL_APPROVE, false, this);
+  }
+
   finalApprove(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_APPROVE, false, this);
+  }
+
+  organizationApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
+  }
+
+  validateApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this);
   }
 
   askForConsultation(): DialogRef {
@@ -337,6 +349,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   reject(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.REJECT, false, this);
+  }
+
+  organizationReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_REJECT, false, this);
+  }
+
+  validateReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_REJECT, false, this);
   }
 
   close(): DialogRef {
