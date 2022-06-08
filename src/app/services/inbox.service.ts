@@ -3,18 +3,18 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
 import {Observable, of} from 'rxjs';
 import {QueryResultSet} from '../models/query-result-set';
-import {Generator} from '../decorators/generator';
+import {Generator} from '@decorators/generator';
 import {QueryResultSetInterceptor} from '../model-interceptors/query-result-set-interceptor';
 import {FactoryService} from './factory.service';
-import {IBulkResult} from '../interfaces/ibulk-result';
+import {IBulkResult} from '@contracts/ibulk-result';
 import {InquiryService} from './inquiry.service';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {DialogService} from './dialog.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {BlobModel} from '../models/blob-model';
 import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
-import {IWFResponse} from '../interfaces/i-w-f-response';
-import {IDefaultResponse} from '../interfaces/idefault-response';
+import {IWFResponse} from '@contracts/i-w-f-response';
+import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
 import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {
@@ -45,6 +45,7 @@ import {CollectorApprovalService} from '@app/services/collector-approval.service
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
 import { ShippingApprovalService } from './shipping-approval.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Injectable({
   providedIn: 'root'
@@ -182,20 +183,20 @@ export class InboxService {
     return service.exportModel(caseId);
   }
 
-  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any>): Observable<boolean> {
+  takeActionOnTask(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any> | BaseGenericEService<any>): Observable<boolean> {
     return this.http.post<IDefaultResponse<boolean>>(service._getURLSegment() + '/task/' + taskId + '/complete', info)
       .pipe(map(response => response.rs));
   }
 
-  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any>): Observable<boolean> {
+  sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any> | BaseGenericEService<any>): Observable<boolean> {
     return this.takeActionOnTask(taskId, info, service);
   }
 
-  sendTaskToMultiple(taskId: string, info: { taskName: string, departments?: number[], users?: number[] }, service: EServiceGenericService<any>): Observable<boolean> {
+  sendTaskToMultiple(taskId: string, info: { taskName: string, departments?: number[], users?: number[] }, service: EServiceGenericService<any> | BaseGenericEService<any>): Observable<boolean> {
     return this.startTaskToMultiple(taskId, info, service);
   }
 
-  startTaskToMultiple(taskId: string, info: { taskName: string, departments?: number[], users?: number[] }, service: EServiceGenericService<any>): Observable<boolean> {
+  startTaskToMultiple(taskId: string, info: { taskName: string, departments?: number[], users?: number[] }, service: EServiceGenericService<any> | BaseGenericEService<any>): Observable<boolean> {
     return this.http.post<IDefaultResponse<boolean>>(service._getURLSegment() + '/task/' + taskId + '/start', info)
       .pipe(map(response => response.rs));
   }
@@ -275,10 +276,6 @@ export class InboxService {
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);
     return this.takeActionOnTask(taskId, {}, service);
-  }
-
-  getCFR(): ComponentFactoryResolver {
-    return this.cfr;
   }
 
   takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {

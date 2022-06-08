@@ -38,7 +38,6 @@ export class CollectionApprovalInterceptor implements IModelInterceptor<Collecti
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo)
     model.requestClassificationInfo = AdminResult.createInstance(model.requestClassificationInfo)
     model.licenseDurationTypeInfo = AdminResult.createInstance(model.licenseDurationTypeInfo)
-
     return model;
   }
 }

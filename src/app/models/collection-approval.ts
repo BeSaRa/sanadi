@@ -1,23 +1,30 @@
-import {CaseModel} from "@app/models/case-model";
-import {CollectionApprovalService} from "@app/services/collection-approval.service";
-import {FactoryService} from "@app/services/factory.service";
-import {AdminResult} from "./admin-result";
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {CollectionItem} from "@app/models/collection-item";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {mixinRequestType} from "@app/mixins/mixin-request-type";
-import {HasRequestType} from "@app/interfaces/has-request-type";
-import {mixinLicenseDurationType} from "@app/mixins/mixin-license-duration";
-import {HasLicenseDurationType} from "@app/interfaces/has-license-duration-type";
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
+import { CaseModel } from "@app/models/case-model";
+import { CollectionApprovalService } from "@app/services/collection-approval.service";
+import { FactoryService } from "@app/services/factory.service";
+import { AdminResult } from "./admin-result";
+import { CaseTypes } from "@app/enums/case-types.enum";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { CollectionItem } from "@app/models/collection-item";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { HasRequestType } from "@app/interfaces/has-request-type";
+import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
+import { HasLicenseDurationType } from "@app/interfaces/has-license-duration-type";
+import { ISearchFieldsMap } from "@app/types/types";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { CollectionApprovalInterceptor } from "@app/model-interceptors/collection-approval-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
+const interceptor = new CollectionApprovalInterceptor();
 
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class CollectionApproval extends _RequestType<CollectionApprovalService, CollectionApproval> implements HasRequestType, HasLicenseDurationType {
   caseType: number = CaseTypes.COLLECTION_APPROVAL;
   organizationId!: number;
@@ -75,7 +82,7 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   }
 
   buildBasicInfo(controls: boolean = false): any {
-    const {requestType, requestClassification, licenseDurationType} = this;
+    const { requestType, requestClassification, licenseDurationType } = this;
     return {
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       requestClassification: controls ? [requestClassification, [CustomValidators.required]] : requestClassification,
@@ -84,7 +91,7 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }

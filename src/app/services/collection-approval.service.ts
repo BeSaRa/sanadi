@@ -1,29 +1,30 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {CollectionApproval} from "@app/models/collection-approval";
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {UrlService} from './url.service';
-import {CollectionApprovalInterceptor} from "@app/model-interceptors/collection-approval-interceptor";
-import {FactoryService} from "@app/services/factory.service";
-import {LangService} from "@app/services/lang.service";
-import {DialogRef} from "@app/shared/models/dialog-ref";
+import { HttpClient } from '@angular/common/http';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CollectionApproval } from "@app/models/collection-approval";
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { UrlService } from './url.service';
+import { FactoryService } from "@app/services/factory.service";
+import { LangService } from "@app/services/lang.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 import {
   CollectionApprovalApproveTaskPopupComponent
 } from "@app/modules/collection/popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {CollectionApprovalSearchCriteria} from "@app/models/collection-approval-search-criteria";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { CollectionApprovalSearchCriteria } from "@app/models/collection-approval-search-criteria";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: { model: () => CollectionApproval }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class CollectionApprovalService extends EServiceGenericService<CollectionApproval> {
+export class CollectionApprovalService extends BaseGenericEService<CollectionApproval> {
   jsonSearchFile: string = 'collection_approval_search.json';
-  interceptor: IModelInterceptor<CollectionApproval> = new CollectionApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'requestClassificationInfo', 'creatorInfo', 'ouInfo', 'createdOn'];
@@ -34,10 +35,6 @@ export class CollectionApprovalService extends EServiceGenericService<Collection
 
   _getURLSegment(): string {
     return this.urlService.URLS.COLLECTION_APPROVAL;
-  }
-
-  _getInterceptor(): Partial<IModelInterceptor<CollectionApproval>> {
-    return this.interceptor;
   }
 
   getSearchCriteriaModel<S extends CollectionApproval>(): CollectionApproval {
