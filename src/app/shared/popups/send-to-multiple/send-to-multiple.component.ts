@@ -32,8 +32,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  WFResponse: typeof WFResponseType = WFResponseType;
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
+  maxSelectionCount!: number;
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
@@ -55,10 +55,14 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private dialog: DialogService,
     public lang: LangService
   ) {
+    if (this.isSendToDepartments() && WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
+      this.maxSelectionCount = 2; // as per business doc
+    }
   }
 
   isSendToDepartments(): boolean {
-    return this.data.sendToResponse === WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS;
+    return this.data.sendToResponse === WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS
+       || this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS;
   }
 
   isSendToUsers(): boolean {

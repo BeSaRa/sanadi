@@ -277,7 +277,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   sendToRiskAndComplianceDepartment(): Observable<any> {
     let service = this.inboxService!.getService(this.caseType),
-      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+      taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {
