@@ -1,19 +1,17 @@
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Generator} from '@decorators/generator';
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {InterceptParam, SendInterceptor} from '@decorators/model-interceptor';
-import {GeneralSearchCriteriaInterceptor} from '../model-interceptors/general-search-criteria-interceptor';
-import {DomSanitizer} from '@angular/platform-browser';
-import {map} from 'rxjs/operators';
-import {BlobModel} from '../models/blob-model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Generator } from '@decorators/generator';
+import { InterceptParam, SendInterceptor } from '@decorators/model-interceptor';
+import { GeneralSearchCriteriaInterceptor } from '../model-interceptors/general-search-criteria-interceptor';
+import { DomSanitizer } from '@angular/platform-browser';
+import { map } from 'rxjs/operators';
+import { BlobModel } from '../models/blob-model';
 
 export class SearchService {
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
     _getModel(): any,
-    _getInterceptor(): Partial<IModelInterceptor<any>>,
     domSanitizer: DomSanitizer
   }) {
   }
@@ -39,11 +37,6 @@ export class SearchService {
   _getModel(): any {
     return this.service._getModel();
   }
-
-  _getReceiveInterceptor(): any {
-    return this.service._getInterceptor().receive;
-  }
-
 
   search(criteria: Partial<any>): Observable<any> {
     return this._search(criteria);

@@ -1,39 +1,38 @@
-import {Observable, of} from "rxjs";
-import {CastResponse} from "@decorators/cast-response";
-import {FactoryService} from "@services/factory.service";
-import {IModelInterceptor} from "@contracts/i-model-interceptor";
-import {HttpClient} from "@angular/common/http";
-import {DialogService} from "@services/dialog.service";
-import {DomSanitizer} from "@angular/platform-browser";
-import {ILanguageKeys} from "@contracts/i-language-keys";
-import {ComponentFactoryResolver} from "@angular/core";
-import {DynamicOptionsService} from "@services/dynamic-options.service";
-import {MenuItemService} from "@services/menu-item.service";
-import {EmployeeService} from "@services/employee.service";
-import {CommentService} from "@services/comment.service";
-import {RecommendationService} from "@services/recommendation.service";
-import {DocumentService} from "@services/document.service";
-import {ActionLogService} from "@services/action-log.service";
-import {SearchService} from "@services/search.service";
-import {CaseComment} from "../models/case-comment";
-import {FormlyFieldConfig} from "@ngx-formly/core/lib/components/formly.field.config";
-import {IFormRowGroup} from "@contracts/iform-row-group";
-import {map} from "rxjs/operators";
-import {FBuilder} from "@helpers/FBuilder";
-import {FileNetDocument} from "../models/file-net-document";
-import {BlobModel} from "../models/blob-model";
-import {DialogRef} from "../shared/models/dialog-ref";
-import {ActionRegistryPopupComponent} from "../shared/popups/action-registry-popup/action-registry-popup.component";
-import {ManageCommentPopupComponent} from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
+import { Observable, of } from "rxjs";
+import { CastResponse } from "@decorators/cast-response";
+import { FactoryService } from "@services/factory.service";
+import { HttpClient } from "@angular/common/http";
+import { DialogService } from "@services/dialog.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import { ILanguageKeys } from "@contracts/i-language-keys";
+import { ComponentFactoryResolver } from "@angular/core";
+import { DynamicOptionsService } from "@services/dynamic-options.service";
+import { MenuItemService } from "@services/menu-item.service";
+import { EmployeeService } from "@services/employee.service";
+import { CommentService } from "@services/comment.service";
+import { RecommendationService } from "@services/recommendation.service";
+import { DocumentService } from "@services/document.service";
+import { ActionLogService } from "@services/action-log.service";
+import { SearchService } from "@services/search.service";
+import { CaseComment } from "../models/case-comment";
+import { FormlyFieldConfig } from "@ngx-formly/core/lib/components/formly.field.config";
+import { IFormRowGroup } from "@contracts/iform-row-group";
+import { map } from "rxjs/operators";
+import { FBuilder } from "@helpers/FBuilder";
+import { FileNetDocument } from "../models/file-net-document";
+import { BlobModel } from "../models/blob-model";
+import { DialogRef } from "../shared/models/dialog-ref";
+import { ActionRegistryPopupComponent } from "../shared/popups/action-registry-popup/action-registry-popup.component";
+import { ManageCommentPopupComponent } from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
 import {
   ManageRecommendationPopupComponent
 } from "../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component";
-import {DocumentsPopupComponent} from "../shared/popups/documents-popup/documents-popup.component";
-import {IBulkResult} from "@contracts/ibulk-result";
-import {IDefaultResponse} from "@contracts/idefault-response";
-import {MenuItem} from "../models/menu-item";
-import {UrlService} from "@services/url.service";
-import {HasInterception, InterceptParam} from "@decorators/intercept-model";
+import { DocumentsPopupComponent } from "../shared/popups/documents-popup/documents-popup.component";
+import { IBulkResult } from "@contracts/ibulk-result";
+import { IDefaultResponse } from "@contracts/idefault-response";
+import { MenuItem } from "../models/menu-item";
+import { UrlService } from "@services/url.service";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -46,8 +45,6 @@ export abstract class BaseGenericEService<T extends { id: string }> {
 
   abstract _getModel(): any;
 
-  abstract _getInterceptor(): Partial<IModelInterceptor<T>>;
-
   abstract getSearchCriteriaModel<S extends T>(): T;
 
   abstract getCaseComponentName(): string;
@@ -57,7 +54,6 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   abstract http: HttpClient;
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
-  abstract interceptor: IModelInterceptor<T>;
   abstract serviceKey: keyof ILanguageKeys;
   abstract cfr: ComponentFactoryResolver;
   abstract caseStatusIconMap: Map<number, string>;
@@ -71,10 +67,6 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
   selectLicenseDisplayColumns: string[] = [];
-
-  getCFR(): ComponentFactoryResolver {
-    return this.cfr;
-  }
 
   ping(): void {
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
@@ -155,7 +147,10 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   getById(caseId: string): Observable<T> {
     return this._getById(caseId);
   }
-
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
   search(model: Partial<T>): Observable<T[]> {
     return this.searchService.search(model);
   }

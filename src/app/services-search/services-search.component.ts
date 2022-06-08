@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
-import {LangService} from '../services/lang.service';
-import {InboxService} from '../services/inbox.service';
+import {LangService} from '@services/lang.service';
+import {InboxService} from '@services/inbox.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {EServiceGenericService} from '../generics/e-service-generic-service';
 import {CaseModel} from '../models/case-model';
-import {DialogService} from '../services/dialog.service';
+import {DialogService} from '@services/dialog.service';
 import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {ToastService} from '../services/toast.service';
+import {ToastService} from '@services/toast.service';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {OpenFrom} from '../enums/open-from.enum';
 import {TabComponent} from '../shared/components/tab/tab.component';
-import {EmployeeService} from '../services/employee.service';
+import {EmployeeService} from '@services/employee.service';
 import {CaseTypes} from '../enums/case-types.enum';
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -24,6 +24,7 @@ import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
 import {LicenseService} from '@app/services/license.service';
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'services-search',
@@ -33,7 +34,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 })
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
-  private selectedService!: EServiceGenericService<any>;
+  private selectedService!: EServiceGenericService<any> | BaseGenericEService<any>;
 
   searchColumns: string[] = [];
   headerColumn: string[] = ['extra-header'];
