@@ -4,89 +4,9 @@
           tabindex="-1" [dialogClose]="userClick.CLOSE" aria-label="Close"></button>
 </div>
 <div class="dialog-content">
-  <div class="row pt-3">
-    <div class="col-12">
-      <div class="table-responsive">
-        <app-table #table sortableTable [paginator]="paginator" [data]="aidList" [columns]="aidColumns"
-                   [filter]="filterControl.value" [useSearchToFilter]="true"
-                   [searchFieldsName]="isPartialRequest ? 'searchFieldsPartial' : 'searchFields'">
-          <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-            <ng-container cdkColumnDef="extra-header">
-              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                <table-header [sort]="table.dataSource.sort"
-                              (textChange)="filterControl.setValue($event)"></table-header>
-              </th>
-            </ng-container>
-            <ng-container cdkColumnDef="approvalDate">
-              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.approvalDate"> {{langService.map.approval_date}}</th>
-              <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.approvalDateString || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="requestedAidCategory">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.requestedAidCategory"> {{langService.map.requested_aid_category}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupParentInfo?.getName() || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="requestedAid">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.requestedAid"> {{langService.map.requested_aid}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.aidLookupInfo?.getName() || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="estimatedAmount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.estimatedAmount"> {{langService.map.estimated_amount}}</th>
-              <td cdk-cell
-                  *cdkCellDef="let row"> {{(row.aidSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="periodicType">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.periodicity"> {{langService.map.payment_periodicity}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo?.getName() || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="donor">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.donor"> {{langService.map.donor}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.donorInfo?.getName() || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="installmentsCount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.number_of_installments}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.installmentsCount || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="aidStartPayDate">
-              <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.paymentDate"> {{langService.map.payment_date}}</th>
-              <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.aidStartPayDateString || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="givenAmount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.givenAmount"> {{langService.map.given_amount}}</th>
-              <td cdk-cell
-                  *cdkCellDef="let row"> {{(row.aidAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="totalPaidAmount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.totalPaidAmount"> {{langService.map.total_paid_amount}}</th>
-              <td cdk-cell
-                  *cdkCellDef="let row"> {{(row.aidPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="remainingAmount">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="aidsSortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
-              <td cdk-cell
-                  *cdkCellDef="let row"> {{(row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR) || ''}} </td>
-            </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
-            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="aidColumns"></tr>
-            <tr cdk-row *cdkRowDef="let row; columns: aidColumns;"></tr>
-            <tr *cdkNoDataRow>
-              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
-            </tr>
-          </table>
-          <app-paginator #paginator [length]="(aidList.length || 0)"></app-paginator>
-        </app-table>
-      </div>
-    </div>
-  </div>
+  <aid-list tableTitle="provided_aid" [list]="aidList" [displayColumns]="aidColumns"
+            [searchFieldsName]="isPartialRequest ? 'searchFieldsPartial' : 'searchFields'">
+  </aid-list>
 </div>
 <div class="dialog-actions">
   <button [dialogClose]="userClick.CLOSE" class="btn btn-secondary">{{langService.map.btn_close}}</button>

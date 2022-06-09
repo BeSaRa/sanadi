@@ -9,6 +9,7 @@ export class SubventionAidInterceptor {
 
     model.approvalDate = DateUtils.changeDateToDatepicker(model.approvalDate);
     model.aidStartPayDate = DateUtils.changeDateToDatepicker(model.aidStartPayDate);
+    model.installmentsCount = model.installmentsCount || 0;
 
     model.aidLookupParentInfo = AdminResult.createInstance(model.aidLookupParentInfo);
     model.aidLookupInfo = AdminResult.createInstance(model.aidLookupInfo);

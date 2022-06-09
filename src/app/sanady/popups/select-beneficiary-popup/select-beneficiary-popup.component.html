@@ -62,7 +62,7 @@
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-              <td cdk-cell *cdkCellDef="let row" class="table-actions">
+              <td cdk-cell *cdkCellDef="let row">
                 <grid-actions [record]="row" [actions]="[]">
                   <button class="btn btn-primary"
                           (click)="selectBeneficiary(row , $event)">{{langService.map.select}}</button>

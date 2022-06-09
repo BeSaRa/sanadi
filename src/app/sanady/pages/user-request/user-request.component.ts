@@ -4,7 +4,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
-import {BehaviorSubject, merge, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
   delay,
@@ -227,7 +227,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   fileExtensionsEnum = FileExtensionsEnum;
 
-  aidApprovalDateSub!: Subscription;
   readOnly = false;
   isPartialRequest: boolean = false;
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
@@ -1054,9 +1053,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.editAidItem) {
         message = this.langService.map.msg_aid_added_successfully;
       } else {
-        this.editAidItem = undefined;
         message = this.langService.map.msg_aid_updated_successfully;
       }
+      this.editAidItem = undefined;
       this.toastService.success(message);
       this.reloadAid$.next(null);
       this.aidChanged$.next(null);
@@ -1119,13 +1118,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this._setPaymentDateValidations();
 
-      this.aidApprovalDateSub = this.aidApprovalDate?.valueChanges.pipe(
+      this.aidApprovalDate?.valueChanges.pipe(
         takeUntil(this.destroy$)
       ).subscribe(_ => {
         this._setPaymentDateValidations();
       });
-    } else {
-      this.aidApprovalDateSub?.unsubscribe();
     }
   }
 
@@ -1270,6 +1267,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               let index = this.subventionAidList.findIndex(x => x === subventionAid);
               this.subventionAidList.splice(index, 1);
               this.toastService.success(this.langService.map.msg_delete_success);
+              this.editAidItem = undefined;
               if (!this.subventionAidList.length) {
                 this.aidChanged$.next(new SubventionAid());
               }
