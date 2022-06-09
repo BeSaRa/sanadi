@@ -144,8 +144,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   private _buildDatepickerControlsMap() {
     this.datepickerControlsMap = {
-      createdDateFrom: this.licenseStartDate,
-      createdDateTo: this.licenseEndDate
+      licenseStartDate: this.licenseStartDate,
+      licenseEndDate: this.licenseEndDate
     };
   }
 
@@ -344,7 +344,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinDate({
+    DateUtils.setRelatedMinMaxDate({
       fromFieldName,
       toFieldName,
       controlOptionsMap: this.datepickerOptionsMap,
