@@ -10,7 +10,6 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {Observable} from 'rxjs';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -56,7 +55,7 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
   }
 
   initPopup(): void {
-    this.orgUnitStatusList = this.lookupService.getByCategory(LookupCategories.ORG_STATUS);
+    this.orgUnitStatusList = this.lookupService.listByCategory.OrgStatus;
   }
 
   private _afterViewInit(): void {

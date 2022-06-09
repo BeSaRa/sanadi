@@ -8,7 +8,6 @@ import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
 import {Lookup} from '@app/models/lookup';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of} from 'rxjs';
@@ -131,11 +130,11 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   initPopup(): void {
     this.loadOrgUnitFields();
     this.orgUnitsList = this.orgUnitService.list;
-    this.orgUnitTypesList = this.lookupService.getByCategory(LookupCategories.ORG_UNIT_TYPE);
-    this.orgUnitStatusList = this.lookupService.getByCategory(LookupCategories.ORG_STATUS);
+    this.orgUnitTypesList = this.lookupService.listByCategory.OrgUnitType;
+    this.orgUnitStatusList = this.lookupService.listByCategory.OrgStatus;
     this.cityList = this.lookupService.listByCategory.Countries;
-    this.licensingAuthorityList = this.lookupService.getByCategory(LookupCategories.LICENSING_AUTHORITY);
-    this.workFieldList = this.lookupService.getByCategory(LookupCategories.WORK_FIELD);
+    this.licensingAuthorityList = this.lookupService.listByCategory.LICENSING_AUTHORITY;
+    this.workFieldList = this.lookupService.listByCategory.WORK_FIELD;
   }
 
   loadOrgUnitFields() {

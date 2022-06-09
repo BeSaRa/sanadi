@@ -12,7 +12,6 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {ServiceData} from '@app/models/service-data';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {ToastService} from '@app/services/toast.service';
@@ -55,7 +54,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.operation = data.operation;
     this.model = data.model;
     this.attachmentTypeId = data.attachmentTypeId;
-    this.attachmentTypeUsersList = lookupService.getByCategory(LookupCategories.USER_TYPE);
+    this.attachmentTypeUsersList = lookupService.listByCategory.UserType;
   }
 
   ngOnInit(): void {

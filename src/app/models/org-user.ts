@@ -1,16 +1,14 @@
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
-import {OrganizationUserService} from '../services/organization-user.service';
-import {LangService} from '../services/lang.service';
-import {INames} from '../interfaces/i-names';
+import {FactoryService} from '@services/factory.service';
+import {OrganizationUserService} from '@services/organization-user.service';
+import {LangService} from '@services/lang.service';
+import {INames} from '@contracts/i-names';
 import {AdminResult} from './admin-result';
 import {Lookup} from './lookup';
-import {LookupCategories} from '../enums/lookup-categories';
-import {LookupService} from '../services/lookup.service';
+import {LookupService} from '@services/lookup.service';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {OrgUserStatusEnum} from '@app/enums/status.enum';
 
 export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
@@ -83,8 +81,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   }
 
   getOrgUserStatusLookup(): Lookup | null {
-    // @ts-ignore
-    return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_USER_STATUS);
+    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.OrgUserStatus, this.status);
   }
 
   showAuditLogs(_$event?: MouseEvent): Observable<DialogRef> {

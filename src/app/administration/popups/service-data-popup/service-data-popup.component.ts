@@ -13,7 +13,6 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {Lookup} from '@app/models/lookup';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {LookupService} from '@app/services/lookup.service';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {FormManager} from '@app/models/form-manager';
@@ -57,7 +56,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
-    this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
+    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   ngOnInit(): void {

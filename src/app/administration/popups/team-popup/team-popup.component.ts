@@ -15,7 +15,6 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {InternalDepartment} from '@app/models/internal-department';
 
 @Component({
@@ -45,7 +44,7 @@ export class TeamPopupComponent implements OnInit {
     this.model = data.model;
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
-    this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
+    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   ngOnInit(): void {

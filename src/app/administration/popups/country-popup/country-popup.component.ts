@@ -14,7 +14,6 @@ import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {Country} from '@app/models/country';
 import {Lookup} from '@app/models/lookup';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 
 @Component({
@@ -50,7 +49,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
     this.model = data.model;
     this.operation = data.operation;
     this.parentCountriesList = data.parentCountries;
-    this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
+    this.statusList = lookupService.listByCategory.CommonStatus;
     this.selectedTabName = data.selectedTabName;
   }
 

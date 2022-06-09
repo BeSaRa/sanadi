@@ -1,5 +1,4 @@
 import {BaseModel} from './base-model';
-import {LookupCategories} from '../enums/lookup-categories';
 import {FactoryService} from '../services/factory.service';
 import {LangService} from '../services/lang.service';
 import {INames} from '../interfaces/i-names';
@@ -8,7 +7,7 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class Lookup extends BaseModel<Lookup, any> {
   service: any;
-  category!: LookupCategories;
+  category!: number;
   lookupKey!: number;
   lookupStrKey: string | undefined;
   status: number | undefined;

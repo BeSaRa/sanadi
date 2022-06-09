@@ -8,7 +8,6 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
 import {extender} from '@app/helpers/extender';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {OrgUnit} from '@app/models/org-unit';
@@ -95,9 +94,9 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
     this.list = data.list;
-    this.userTypeList = lookupService.getByCategory(LookupCategories.ORG_USER_TYPE);
-    this.jobTitleList = lookupService.getByCategory(LookupCategories.ORG_USER_JOB_TITLE);
-    this.orgUserStatusList = lookupService.getByCategory(LookupCategories.ORG_USER_STATUS);
+    this.userTypeList = lookupService.listByCategory.OrgUserType;
+    this.jobTitleList = lookupService.listByCategory.OrgUserJobTitle;
+    this.orgUserStatusList = lookupService.listByCategory.OrgUserStatus;
     this._setDefaultPermissions();
 
   }
@@ -279,7 +278,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
 
   private buildPermissionGroups(): void {
-    combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))])
+    combineLatest([this.permissionService.load(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = OrganizationUserPopupComponent.buildPermissionsByGroupId(result[0]);

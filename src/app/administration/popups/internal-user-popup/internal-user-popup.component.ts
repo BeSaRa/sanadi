@@ -13,12 +13,9 @@ import {InternalDepartment} from "@app/models/internal-department";
 import {switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from '@app/services/lookup.service';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {CheckGroup} from "@app/models/check-group";
 import {Permission} from "@app/models/permission";
 import {PermissionService} from "@app/services/permission.service";
-import {JobTitleService} from "@app/services/job-title.service";
-import {JobTitle} from "@app/models/job-title";
 import {CheckGroupHandler} from "@app/models/check-group-handler";
 import {CustomRole} from "@app/models/custom-role";
 import {CustomRoleService} from "@app/services/custom-role.service";
@@ -47,7 +44,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   model: InternalUser;
   form!: FormGroup;
   departments: InternalDepartment[] = [];
-  jobTitles: JobTitle[] = [];
   statusList: Lookup[] = [];
   permissionGroups: CheckGroup<Permission>[] = [];
   groupHandler!: CheckGroupHandler<Permission>;
@@ -80,7 +76,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               public fb: FormBuilder,
               private sharedService: SharedService,
               private lookupService: LookupService,
-              private jobTitleService: JobTitleService,
               private customRoleService: CustomRoleService,
               private userPermissionService: UserPermissionService,
               private internalUserDepartmentService: InternalUserDepartmentService,
@@ -92,11 +87,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.model = this.data.model;
     this.operation = this.data.operation;
     this.list = this.data.list;
-    this.statusList = lookupService.getByCategory(LookupCategories.COMMON_STATUS);
-  }
-
-  private loadJobTitles() {
-    this.jobTitleService.load().subscribe((jobTitles) => this.jobTitles = jobTitles)
+    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
   private loadDepartments(): void {
@@ -144,7 +135,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.permissionService
       .load()
       .pipe(takeUntil(this.destroy$))
-      .pipe(withLatestFrom(of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))))
+      .pipe(withLatestFrom(of(this.lookupService.listByCategory.OrgUserPermissionGroup)))
       .pipe(switchMap(([permissions, groups]) => {
         this.buildPermissionGroups(groups, permissions);
         this.groupHandler = new CheckGroupHandler<Permission>(
@@ -191,7 +182,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   initPopup(): void {
     this.loadDepartments();
-    // this.loadJobTitles();
     this.loadPermissions();
     this.loadCustomRoles();
     if (this.operation === OperationTypes.UPDATE) {

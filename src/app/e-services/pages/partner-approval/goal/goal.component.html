@@ -88,7 +88,7 @@
   <ng-container cdkColumnDef="domain">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.domain}}</th>
     <td cdk-cell
-        *cdkCellDef="let row"> {{lookupService.getByLookupKeyAndCategoryId(row.domain, LookupCategories.DOMAIN_CAT_ID)?.getName()}} </td>
+        *cdkCellDef="let row"> {{lookupService.findLookupByLookupKey(lookupService.listByCategory.Domain, row.domain)?.getName()}} </td>
   </ng-container>
   <ng-container cdkColumnDef="mainDACCategory">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.main_dac_category}}</th>
