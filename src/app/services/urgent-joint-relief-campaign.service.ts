@@ -17,6 +17,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   UrgentJointReliefCampaignInitialApproveTaskPopupComponent
 } from '@app/projects/popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
+import {
+  UrgentJointReliefCampaignFinalApproveTaskPopupComponent
+} from '@app/projects/popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -74,8 +77,8 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     });
   }
 
-  validateApproveTask(model: UrgentJointReliefCampaign, action: WFResponseType): DialogRef {
-    return this.dialog.show(UrgentJointReliefCampaignInitialApproveTaskPopupComponent, {
+  finalApproveTask(model: UrgentJointReliefCampaign, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentJointReliefCampaignFinalApproveTaskPopupComponent, {
       model,
       action: action
     });

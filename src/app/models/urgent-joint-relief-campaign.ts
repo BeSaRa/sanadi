@@ -68,8 +68,8 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
       fullName: controls ? [fullName, internalUserValidation.concat([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])] : fullName,
       licenseStartDate: controls ? [licenseStartDate, internalUserValidation.concat([CustomValidators.required])] : licenseStartDate,
       licenseEndDate: controls ? [licenseEndDate, internalUserValidation] : licenseEndDate,
-      phone: controls ? [phone, internalUserValidation] : phone,
-      extraPhone: controls ? [extraPhone, []] : extraPhone,
+      phone: controls ? [phone, internalUserValidation.concat(CustomValidators.commonValidations.phone)] : phone,
+      extraPhone: controls ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
       approvalPeriod: controls ? [approvalPeriod, internalUserValidation] : approvalPeriod,
       beneficiaryCountry: controls ? [beneficiaryCountry, internalUserValidation] : beneficiaryCountry,
       targetAmount: controls ? [targetAmount, internalUserValidation] : targetAmount
@@ -100,7 +100,20 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     return this.service.initialApproveTask(this, WFResponseType.INITIAL_APPROVE);
   }
 
-  validateApprove(): DialogRef {
-    return this.service.validateApproveTask(this, WFResponseType.VALIDATE_APPROVE);
+  finalApprove(): DialogRef {
+    return this.service.finalApproveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  buildFinalApprovalForm(controls: boolean = false): any {
+    const {
+      conditionalLicenseIndicator,
+      publicTerms,
+      customTerms,
+    } = this;
+    return {
+      conditionalLicenseIndicator: controls ? [conditionalLicenseIndicator] : conditionalLicenseIndicator,
+      publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
+      customTerms: controls ? [customTerms] : customTerms
+    }
   }
 }

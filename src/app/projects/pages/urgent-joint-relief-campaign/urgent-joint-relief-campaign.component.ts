@@ -12,7 +12,7 @@ import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {LicenseService} from '@services/license.service';
 import {EmployeeService} from '@services/employee.service';
-import {DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
 import {OrganizationUnitService} from '@services/organization-unit.service';
@@ -25,6 +25,7 @@ import {OrganizationOfficer} from '@app/models/organization-officer';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ParticipantOrganization} from '@app/models/participant-organization';
 import {CaseStepName} from '@app/enums/case-step-name';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -42,8 +43,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   selectedOfficer!: OrganizationOfficer | null;
   selectedOfficerIndex!: number | null;
 
+  datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
+    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
     workStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
@@ -71,6 +73,14 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   get basicInfo(): FormGroup {
     return this.form.get('basicInfo')! as FormGroup;
+  }
+
+  get licenseStartDate(): FormControl {
+    return this.form.get('basicInfo.licenseStartDate')! as FormControl;
+  }
+
+  get licenseEndDate(): FormControl {
+    return this.form.get('basicInfo.licenseEndDate')! as FormControl;
   }
 
   get specialExplanation(): FormGroup {
@@ -128,7 +138,15 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       externalUserData: this.fb.group(model.buildExternalUserData(true)),
     });
 
+    this._buildDatepickerControlsMap();
     this.fm = new FormManager(this.form, this.lang);
+  }
+
+  private _buildDatepickerControlsMap() {
+    this.datepickerControlsMap = {
+      createdDateFrom: this.licenseStartDate,
+      createdDateTo: this.licenseEndDate
+    };
   }
 
   buildOfficerForm(): void {
@@ -325,7 +343,12 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     };
   }
 
-  testForm() {
-    console.log('form', this.form);
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    DateUtils.setRelatedMinDate({
+      fromFieldName,
+      toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: this.datepickerControlsMap
+    });
   }
 }
