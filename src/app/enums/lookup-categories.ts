@@ -1,3 +1,4 @@
+
 export enum LookupCategories {
   TRAINING_TRAINEE_STATUS = 'TRAINING_TRAINEE_STATUS',
   TRAINING_JOB_TYPE = 'TRAINING_JOB_TYPE',
@@ -86,6 +87,7 @@ export enum LookupCategories {
   BankRequestType = 'BankRequestType',
   BankOperationType = 'BankOperationType',
   InternalBankCategory = 'InternalBankCategory',
+  RequestTypeNewOnly = 'RequestTypeNewOnly',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',

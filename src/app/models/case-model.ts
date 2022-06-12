@@ -25,6 +25,8 @@ import {EncryptionService} from "@app/services/encryption.service";
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {FormGroup} from '@angular/forms';
+import {OrganizationOfficer} from '@app/models/organization-officer';
 
 export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
@@ -138,6 +140,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   manageComments(): DialogRef {
     return this.service.openCommentsDialog(this.id);
+  }
+
+  addFollowup(): DialogRef {
+    return this.service.openFollowupsDialog(this);
   }
 
   open(actions?: IMenuItem<CaseModel<any, any>>[], from: OpenFrom = OpenFrom.SEARCH): Observable<DialogRef> {
@@ -277,7 +283,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   sendToRiskAndComplianceDepartment(): Observable<any> {
     let service = this.inboxService!.getService(this.caseType),
-      taskName: string = this.getAskSingleWFResponseByCaseType(); //  WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT;
+      taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {
       taskName = taskName.split('ask:')[1];
     } else if (taskName.startsWith('askSingle:')) {
@@ -314,8 +320,20 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
   }
 
+  initialApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.INITIAL_APPROVE, false, this);
+  }
+
   finalApprove(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_APPROVE, false, this);
+  }
+
+  organizationApprove(externalUserData: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
+  }
+
+  validateApprove(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this);
   }
 
   askForConsultation(): DialogRef {
@@ -333,6 +351,14 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   reject(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.REJECT, false, this);
+  }
+
+  organizationReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_REJECT, false, this);
+  }
+
+  validateReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_REJECT, false, this);
   }
 
   close(): DialogRef {

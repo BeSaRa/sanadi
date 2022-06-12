@@ -6,7 +6,6 @@ import {INames} from '../interfaces/i-names';
 import {OrganizationUnitService} from '../services/organization-unit.service';
 import {Lookup} from './lookup';
 import {LookupService} from '../services/lookup.service';
-import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {FileStore} from './file-store';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -14,6 +13,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {OrganizationUnitServicesService} from '@app/services/organization-unit-services.service';
 import {OrgUnitService} from '@app/models/org-unit-service';
+import {AdminResult} from '@app/models/admin-result';
 
 export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
@@ -212,13 +212,11 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   }
 
   getOrgNationalityLookup(): Lookup | null {
-    // @ts-ignore
-    return this.lookupService.getByLookupKeyAndCategory(this.orgNationality, LookupCategories.NATIONALITY);
+    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.Nationality, this.orgNationality)
   }
 
   getOrgStatusLookup(): Lookup | null {
-    // @ts-ignore
-    return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
+    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.OrgStatus, this.status);
   }
 
   saveLogo(file: File): Observable<boolean> {

@@ -6,7 +6,6 @@ import {LookupService} from '../services/lookup.service';
 import {FactoryService} from '../services/factory.service';
 import {OrganizationBranchService} from '../services/organization-branch.service';
 import {Lookup} from './lookup';
-import {LookupCategories} from '../enums/lookup-categories';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -91,8 +90,7 @@ export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
   }
 
   getOrgStatusLookup(): Lookup | null {
-    // @ts-ignore
-    return this.lookupService.getByLookupKeyAndCategory(this.status, LookupCategories.ORG_STATUS);
+    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.OrgStatus, this.status);
   }
 
   showAuditLogs(): Observable<DialogRef> {

@@ -156,7 +156,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   actionManageComments(item: CaseModel<any, any>) {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
-
+  actionAddFollowup(item: CaseModel<any, any>) {
+      item.addFollowup().onAfterClose$.subscribe(() => this.search$.next(null));
+  }
   actionExportModel(item: CaseModel<any, any>) {
     item.exportModel().subscribe((blob) => {
       window.open(blob.url);
@@ -274,6 +276,21 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           this.actionExportLicense((item as unknown as HasLicenseApproval).exportedLicenseId, item.getCaseType());
         }
       },
+      // followup
+      {
+        type: 'action',
+        icon: 'mdi-format-align-left',
+        label: 'followup',
+        // show: (item: CaseModel<any, any>) => {
+        //   let caseStatus = item.getCaseStatus(),
+        //     caseStatusEnum = this._getCaseStatusEnum(item);
+        //   return (caseStatus === caseStatusEnum.FINAL_APPROVE);
+        // },
+        onClick: (item: CaseModel<any, any>) => {
+          this.actionAddFollowup(item);
+        }
+      },
+
       {type: 'divider'},
       // launch
       {

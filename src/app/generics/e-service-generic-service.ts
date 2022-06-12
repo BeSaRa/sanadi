@@ -35,6 +35,8 @@ import {MenuItemService} from "@app/services/menu-item.service";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {UrlService} from "@app/services/url.service";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import {FollowupComponent} from '@app/modules/followup/pages/followup/followup.component';
+import {CaseModel} from '@app/models/case-model';
 
 export abstract class EServiceGenericService<T extends { id: string }>
   implements Pick<BackendServiceModelInterface<T>, '_getModel' | '_getInterceptor'> {
@@ -193,6 +195,10 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   openCommentsDialog(caseId: string): DialogRef {
     return this.dialog.show(ManageCommentPopupComponent, {service: this, caseId});
+  }
+
+  openFollowupsDialog(caseModel: CaseModel<any, any>): DialogRef {
+    return this.dialog.show(FollowupComponent, caseModel);
   }
 
   openRecommendationDialog(caseId: string, onlyLogs: boolean = false): DialogRef {

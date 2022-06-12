@@ -101,6 +101,7 @@ import {
 import { BuildingPlateComponent } from './components/building-plate/building-plate.component';
 import { SelectedLicenseTableComponent } from './components/selected-license-table/selected-license-table.component';
 import { TranslatePipe } from "@app/pipes/translate.pipe";
+import { DatePipe } from "@app/pipes/date.pipe";
 
 @NgModule({
   declarations: [
@@ -184,7 +185,8 @@ import { TranslatePipe } from "@app/pipes/translate.pipe";
     ApprovalFormMonthlyComponent,
     BuildingPlateComponent,
     SelectedLicenseTableComponent,
-    TranslatePipe
+    TranslatePipe,
+    DatePipe
   ],
   imports: [
     CommonModule,
@@ -269,7 +271,8 @@ import { TranslatePipe } from "@app/pipes/translate.pipe";
     ApprovalFormMonthlyComponent,
     BuildingPlateComponent,
     SelectedLicenseTableComponent,
-    TranslatePipe
+    TranslatePipe,
+    DatePipe
   ]
 })
 export class SharedModule {

@@ -20,6 +20,7 @@ import {AuditDetailsPopupComponent} from './popups/audit-details-popup/audit-det
 import {BeneficiaryObligationComponent} from './shared/beneficiary-obligation/beneficiary-obligation.component';
 import {BeneficiaryIncomeComponent} from './shared/beneficiary-income/beneficiary-income.component';
 import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component';
+import {AidListComponent} from './shared/aid-list/aid-list.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component'
     AuditDetailsPopupComponent,
     BeneficiaryObligationComponent,
     BeneficiaryIncomeComponent,
-    InquiryLogsComponent
+    InquiryLogsComponent,
+    AidListComponent
   ],
   imports: [
     CommonModule,

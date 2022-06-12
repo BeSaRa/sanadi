@@ -65,7 +65,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];
-  userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox'];
+  userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'followUp', 'teamInbox'];
   private teams: Team[] = [];
 
 
@@ -164,7 +164,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     return this.teamSecurityMap[userSecurity.caseType]?.canView;
   }
 
-  updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
+  updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'| 'followUp'): void {
     userSecurity[property] = !userSecurity[property];
     const list = this.userSecurity.map<Partial<UserSecurityConfiguration>>(item => ({
       id: item.id,
@@ -175,7 +175,8 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       teamId: item.teamId,
       caseType: item.caseType,
       serviceId: item.serviceId,
-      approval: item.approval
+      approval: item.approval,
+      followUp:item.followUp,
     }));
     // // for testing purpose
     // // this.userSecurityService.deleteBulkExternal(list).subscribe();
@@ -190,7 +191,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       })
   }
 
-  toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'): void {
+  toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval' | 'followUp'): void {
     if (!this.isSelectedUserTeamActive) {
       return;
     }

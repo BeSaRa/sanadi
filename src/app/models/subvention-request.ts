@@ -42,7 +42,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   requestParentId?: number;
   aidLookupId!: number;
   aidLookupParentId!: number;
-  disableDataSharing: boolean = false;
+  allowDataSharing: boolean = false;
 
   // not belongs to the Model
   service: SubventionRequestService;
@@ -129,7 +129,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
       requestedAidAmount,
       requestSummary,
       allowCompletion,
-      disableDataSharing
+      allowDataSharing
     } = this;
     return {
       aidLookupParentId: control ? [aidLookupParentId, CustomValidators.required] : aidLookupParentId,
@@ -138,7 +138,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
       requestedAidAmount: control ? [requestedAidAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : requestedAidAmount,
       requestSummary: control ? [requestSummary, [CustomValidators.required, Validators.maxLength(1000)]] : requestSummary,
       allowCompletion: control ? [allowCompletion] : allowCompletion,
-      disableDataSharing: control ? [disableDataSharing] : disableDataSharing
+      allowDataSharing: control ? [allowDataSharing] : allowDataSharing
     };
   }
 

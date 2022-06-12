@@ -1,15 +1,15 @@
 import {AidLookup} from '../models/aid-lookup';
-import {FactoryService} from '../services/factory.service';
-import {LookupCategories} from '../enums/lookup-categories';
-import {LookupService} from '../services/lookup.service';
-import {DateUtils} from '../helpers/date-utils';
+import {FactoryService} from '@services/factory.service';
+import {LookupService} from '@services/lookup.service';
+import {DateUtils} from '@helpers/date-utils';
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {Lookup} from '@app/models/lookup';
 
 export class AidLookupInterceptor implements IModelInterceptor<AidLookup> {
   receive(model: AidLookup | any): (AidLookup | any) {
     const lookupService: LookupService = FactoryService.getService('LookupService');
-    model.aidTypeInfo = lookupService.getByLookupKeyAndCategory(model.aidType, LookupCategories.AID_TYPE);
-    model.statusInfo = lookupService.getByLookupKeyAndCategoryId(model.status, LookupCategories.AID_LOOKUP_STATUS_CAT_ID);
+    model.aidTypeInfo = model.aidTypeInfo ? new Lookup().clone(model.aidTypeInfo) : lookupService.findLookupByLookupKey(lookupService.listByCategory.AidType, model.aidType);
+    model.statusInfo =  model.statusInfo ? new Lookup().clone(model.statusInfo) : lookupService.findLookupByLookupKey(lookupService.listByCategory.AidLookupStatus, model.status);
     model.statusDateModifiedString = model.statusDateModified ? DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT') : '';
     return model;
   }
@@ -23,7 +23,7 @@ export class AidLookupInterceptor implements IModelInterceptor<AidLookup> {
     delete model.service;
     delete model.langService;
     delete model.statusInfo;
-    delete model.aidTypeInfo; // removed because it has private services or properties which need to removed. better to remove entire object
+    delete model.aidTypeInfo;
     delete model.parentInfo;
     delete model.searchFields;
     delete model.statusDateModifiedString;

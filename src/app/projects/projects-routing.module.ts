@@ -57,6 +57,17 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'InternalBankAccountApprovalComponent'
     }
+  },
+  {
+    path: 'urgent-joint-relief-campaign', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_JOINT_RELIEF_CAMPAIGN,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentJointReliefCampaignComponent'
+    }
   }
 ];
 

@@ -4,8 +4,11 @@ export interface IAppUrls {
   BANK: string;
   INTERNAL_BANK_ACCOUNT_APPROVAL: string;
   CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES: string;
+  FOLLOWUP_COMMENT: string;
+  FOLLOWUP:string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
+  FOLLOWUP_CONFIGURATION: string;
   COLLECTION_APPROVAL: string;
   FUNDRAISING: string;
   ORG_UNIT_FIELD: string;
@@ -84,5 +87,6 @@ export interface IAppUrls {
   URGENT_INTERVENTION_LICENSE: string;
   E_JOB_APPLICATIONS: string;
   DONOR: string;
+  URGENT_JOINT_RELIEF_CAMPAIGN: string;
   [index: string]: string;
 }

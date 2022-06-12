@@ -4,7 +4,7 @@
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div [formGroup]="form" class="dialog-content no-fixed-height" style="width: 500px">
-  <div *ngIf="data.sendToResponse === WFResponse.INTERNAL_PROJECT_SEND_TO_EXPERT" class="col-12 mb-4 position-relative">
+  <div *ngIf="isSendToUsers()" class="col-12 mb-4 position-relative">
     <label asteriskIfRequired="users" for="users" class="form-label">{{lang.map.select_user}}</label>
     <ng-select appendTo="body" [selectOnTab]="true" [items]="users" labelForId="users"
                bindValue="id" [clearable]="true"
@@ -32,11 +32,12 @@
     </ng-select>
     <app-field-error-message controlName="users"></app-field-error-message>
   </div>
-  <div *ngIf="data.sendToResponse === WFResponse.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS"
+  <div *ngIf="isSendToDepartments()"
        class="col-12 mb-4 position-relative ng-select-wrapper">
     <label asteriskIfRequired="departments" for="departments" class="form-label">{{lang.map.select_department}}</label>
     <ng-select [selectOnTab]="true" [items]="departments" labelForId="departments"
                bindValue="id" [clearable]="true"
+               [maxSelectedItems]="maxSelectionCount"
                [searchFn]="searchNgSelect" appendTo="body"
                placeholder="{{lang.map.select}}" id="departments"
                [notFoundText]="lang.map.msg_not_found"

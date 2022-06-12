@@ -110,6 +110,8 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: 'MANAGE_DAC_OUCHA_CATEGORIES', configPermissionGroup: null, checkAnyPermission: false}
   },
+
+  {path: 'sdg', component: SdGoalComponent},
   {
     path: 'bank', component: BankComponent,
     canActivate: [PermissionGuard],

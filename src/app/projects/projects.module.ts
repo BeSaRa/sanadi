@@ -13,9 +13,12 @@ import {
   UrgentInterventionApproveTaskPopupComponent
 } from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 import { InternalBankAccountApprovalComponent } from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
-import { InternalBankAccountAaprovalApproveTaskPopupComponent } from './popups/internal-bank-account-aaproval-approve-task-popup/internal-bank-account-aaproval-approve-task-popup.component';
 import { InternalBankApprovalApproveTaskPopupComponent } from './popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import {CollectionModule} from '@app/modules/collection/collection.module';
+import { UrgentJointReliefCampaignComponent } from './pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import { UrgentJointReliefCampaignInitialApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
+import { UrgentJointReliefCampaignFinalApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
+import { UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent } from '../projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 
 
 @NgModule({
@@ -26,8 +29,11 @@ import {CollectionModule} from '@app/modules/collection/collection.module';
     UrgentInterventionLicenseComponent,
     UrgentInterventionApproveTaskPopupComponent,
     InternalBankAccountApprovalComponent,
-    InternalBankAccountAaprovalApproveTaskPopupComponent,
-    InternalBankApprovalApproveTaskPopupComponent
+    InternalBankApprovalApproveTaskPopupComponent,
+    UrgentJointReliefCampaignComponent,
+    UrgentJointReliefCampaignInitialApproveTaskPopupComponent,
+    UrgentJointReliefCampaignFinalApproveTaskPopupComponent,
+    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
   ],
     imports: [
         CommonModule,

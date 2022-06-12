@@ -71,6 +71,8 @@ const routes: Routes = [
         loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule),
         data: {configPermissionGroup: PermissionGroup.REMITTANCE_PERMISSIONS_GROUP, checkAnyPermission: true}
       },
+      { path: 'collection', loadChildren: () => import('./modules/collection/collection.module').then(m => m.CollectionModule) },
+      { path: 'followup', loadChildren: () => import('./modules/followup/followup.module').then(m => m.FollowupModule) }
       //{path: '**', redirectTo: '../error'}
     ]
   },

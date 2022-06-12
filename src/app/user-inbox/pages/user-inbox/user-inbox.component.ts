@@ -365,7 +365,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-send-circle',
         label: 'send_to_multi_departments',
         show: (item: QueryResult) => {
-          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToMultiDepartments(item, viewDialogRef);

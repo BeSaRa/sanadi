@@ -12,7 +12,6 @@ import {ToastService} from '@app/services/toast.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {LookupCategories} from '@app/enums/lookup-categories';
 
 @Component({
   selector: 'job-title-popup',
@@ -40,7 +39,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   }
 
   initPopup(): void {
-    this.userTypes = this.lookupService.getByCategory(LookupCategories.USER_TYPE);
+    this.userTypes = this.lookupService.listByCategory.UserType;
   }
 
   buildForm(): void {

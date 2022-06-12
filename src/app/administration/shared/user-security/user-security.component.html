@@ -63,6 +63,15 @@
             </div>
           </td>
         </ng-container>
+        <ng-container cdkColumnDef="followUp">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.followup}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <div class="form-check form-switch">
+              <input (change)="toggleUserSecurity(row , 'followUp')" type="checkbox" [checked]="row.followUp"
+                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+            </div>
+          </td>
+        </ng-container>
         <ng-container cdkColumnDef="header">
           <th cdk-header-cell class="bg-primary text-white" [attr.colspan]="100"
               *cdkHeaderCellDef>

@@ -91,4 +91,15 @@ export class ServiceDataService extends BackendGenericService<ServiceData> {
   private _deactivate(serviceId: number): Observable<any> {
     return this.http.put<any>(this._getServiceURL() + '/' + serviceId + '/de-activate', {});
   }
+  private _followUpEnable(serviceId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + serviceId + '/follow-up/enable', {});
+  }
+
+  private _followUpDisable(serviceId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + serviceId + '/follow-up/disable', {});
+  }
+
+  toggleFollowUpStatus (serviceId: number, status:boolean){
+    return status? this._followUpEnable(serviceId): this._followUpDisable(serviceId);
+  }
 }

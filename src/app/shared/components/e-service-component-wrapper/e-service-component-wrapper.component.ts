@@ -98,6 +98,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
+    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN
   ];
 
   finalApproveByMatrixServices: number[] = [
@@ -388,7 +389,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'send_to_multi_departments',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS);
+          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
+          || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -519,6 +521,45 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.approveAction(item);
         }
       },
+      // initial approve
+      {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'initial_approve_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.INITIAL_APPROVE);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.initialApproveAction(item);
+        }
+      },
+      // organization approve
+      {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'org_approve_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_APPROVE);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationApproveAction(item);
+        }
+      },
+      // validate approve
+      {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'validate_approve_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.VALIDATE_APPROVE);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.validateApproveAction(item);
+        }
+      },
       // final approve
       {
         type: 'action',
@@ -582,6 +623,32 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalRejectAction(item);
+        }
+      },
+      // organization reject
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'organization_reject_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_REJECT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationRejectAction(item);
+        }
+      },
+      // validate reject
+      {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'validate_reject_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.VALIDATE_REJECT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.validateRejectAction(item);
         }
       },
       // return to organization
@@ -797,6 +864,24 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private initialApproveAction(item: CaseModel<any, any>) {
+    item.initialApprove().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private organizationApproveAction(item: CaseModel<any, any>) {
+    item.organizationApprove({form: this.component.form, organizationOfficers: (this.component as any).selectedOrganizationOfficers}).onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private validateApproveAction(item: CaseModel<any, any>) {
+    item.validateApprove().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
   private finalApproveAction(item: CaseModel<any, any>) {
     item.finalApprove().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -823,6 +908,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private finalRejectAction(item: CaseModel<any, any>) {
     item.finalReject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private organizationRejectAction(item: CaseModel<any, any>) {
+    item.organizationReject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private validateRejectAction(item: CaseModel<any, any>) {
+    item.validateReject().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

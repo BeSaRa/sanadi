@@ -1,0 +1,50 @@
+<script src="followup-comment-popup.component.ts"></script>
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.followup_comments}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content" #dialogContent style="width: 700px">
+  <div>
+    <div *ngFor="let comment of comments">
+      <div class="comment"
+           [ngClass]="comment.generalUseId === user?.generalUserId? 'own-comment': 'other-comment'">
+        <div>
+          <div>
+
+          <div class="comment-header row">
+            <div class="col-sm-6">
+              <p class="name">{{comment.generalUseInfo?.getName()}}</p>
+            </div>
+            <div class="col-sm-6">
+              <p class="date">{{comment.statusDateModified | date :'MMM d, y, h:mm:ss a'}}</p>
+            </div>
+          </div>
+          <div>
+            <p>{{comment.comment}}</p>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="dialog-actions">
+
+  <form [formGroup]="form" class="main">
+
+    <div class="row">
+      <div class="col-sm-9 mb-9">
+        <textarea name="enDesc" formControlName="comment" validationClasses="comment" id="comment" rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="comment"></app-field-error-message>
+      </div>
+      <div class="col-sm-3 mb-3 holder">
+        <button [disabled]="form.invalid" (click)="save$.next(null)"
+                class="btn btn-primary bottom">{{lang.map.btn_add}}</button>
+      </div>
+
+    </div>
+  </form>
+</div>

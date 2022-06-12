@@ -6,7 +6,6 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {CustomRole} from '@app/models/custom-role';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LookupService} from '@app/services/lookup.service';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {combineLatest, Observable, of} from 'rxjs';
 import {PermissionService} from '@app/services/permission.service';
 import {take} from 'rxjs/operators';
@@ -115,7 +114,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
   }
 
   private buildGroups() {
-    combineLatest([this.permissionService.load(), of(this.lookupService.getByCategory(LookupCategories.ORG_USER_PERMISSION_GROUP))])
+    combineLatest([this.permissionService.load(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = CustomRolePopupComponent.buildPermissionsByGroupId(result[0]);

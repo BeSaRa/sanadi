@@ -11,7 +11,6 @@ import {Goal} from "@app/models/goal";
 import {Lookup} from "@app/models/lookup";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {LookupService} from "@app/services/lookup.service";
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {Domains} from "@app/enums/domains.enum";
 import {DacOchaService} from "@app/services/dac-ocha.service";
 import {AdminResult} from "@app/models/admin-result";
@@ -48,7 +47,6 @@ export class GoalComponent implements OnInit, OnDestroy {
   mainDACCategoriesList: AdminResult[] = [];
   mainUNOCHACategoriesList: AdminResult[] = [];
   displayByDomain: "DAC" | "OCHA" | null = null;
-  LookupCategories = LookupCategories;
   commonStatusEnum = CommonStatusEnum;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();

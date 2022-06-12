@@ -10,7 +10,6 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {Observable} from 'rxjs';
 import {Lookup} from '@app/models/lookup';
-import {LookupCategories} from '@app/enums/lookup-categories';
 import {LookupService} from '@app/services/lookup.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -58,7 +57,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   initPopup(): void {
     this.checkIfAidTabEnabled();
     this.setGridAidType();
-    this.aidLookupStatusList = this.lookupService.getByCategory(LookupCategories.AID_LOOKUP_STATUS);
+    this.aidLookupStatusList = this.lookupService.listByCategory.AidLookupStatus;
   }
 
   ngAfterViewInit(): void {

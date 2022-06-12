@@ -41,12 +41,13 @@ import {ProjectModelService} from '@app/services/project-model.service';
 import {Memoize} from "typescript-memoize";
 import {CaseModel} from "@app/models/case-model";
 import {CollectionApprovalService} from "@app/services/collection-approval.service";
-import { FundraisingService } from './fundraising.service';
+import {FundraisingService} from './fundraising.service';
 import {CollectorApprovalService} from '@app/services/collector-approval.service';
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
-import { ShippingApprovalService } from './shipping-approval.service';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {ShippingApprovalService} from './shipping-approval.service';
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,7 @@ export class InboxService {
               private collectorApprovalService: CollectorApprovalService,
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
+              private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
               private urlService: UrlService,
               private shippingApprovalService:ShippingApprovalService,
               private jobApplicationService: JobApplicationService) {
@@ -89,6 +91,7 @@ export class InboxService {
     this.services.set(CaseTypes.COLLECTOR_LICENSING, this.collectorApprovalService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
+    this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
     this.services.set(CaseTypes.SHIPPING_APPROVAL, this.shippingApprovalService);
     this.services.set(CaseTypes.JOB_APPLICATION, this.jobApplicationService);
   }
@@ -260,9 +263,21 @@ export class InboxService {
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
 
+  getAskWFResponseByCaseType(caseType: number): WFResponseType {
+    let servicesMap = {
+      [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
+      [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS
+    };
+
+    // @ts-ignore
+    return servicesMap[caseType];
+  }
+
   sendToMultiDepartments(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
-    const service = this.getService(caseType);
-    return this.openSendToMultipleDialog(taskId, WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS, service, claimBefore, task, null);
+    let service = this.getService(caseType),
+      taskName: WFResponseType = this.getAskWFResponseByCaseType(caseType);
+
+    return this.openSendToMultipleDialog(taskId, taskName, service, claimBefore, task, null);
   }
 
   sendToManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {

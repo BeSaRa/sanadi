@@ -1,4 +1,9 @@
 export enum WFResponseType {
+  VALIDATE_REJECT = 'validateReject',
+  VALIDATE_APPROVE = 'validateApprove',
+  ORGANIZATION_REJECT = 'orgReject',
+  ORGANIZATION_APPROVE = 'orgApprove',
+  INITIAL_APPROVE = 'initialApprove',
   SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewCustomsExemptionRemittance',
   TO_USER = 'toUser',
   APPROVE = 'approve',
@@ -22,6 +27,7 @@ export enum WFResponseType {
   COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewCollectorlicensing',
   URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionLicensing',
   FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFundraisingChannelLicensing',
+  FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewFundraisingChannelLicensing',
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',
   TO_CONSTRUCTION_EXPERT = 'toConExpert',
