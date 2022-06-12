@@ -18,6 +18,7 @@ import {CollectionModule} from '@app/modules/collection/collection.module';
 import { UrgentJointReliefCampaignComponent } from './pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import { UrgentJointReliefCampaignInitialApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
 import { UrgentJointReliefCampaignFinalApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
+import { UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent } from '../projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { UrgentJointReliefCampaignFinalApproveTaskPopupComponent } from './popup
     InternalBankApprovalApproveTaskPopupComponent,
     UrgentJointReliefCampaignComponent,
     UrgentJointReliefCampaignInitialApproveTaskPopupComponent,
-    UrgentJointReliefCampaignFinalApproveTaskPopupComponent
+    UrgentJointReliefCampaignFinalApproveTaskPopupComponent,
+    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
   ],
     imports: [
         CommonModule,

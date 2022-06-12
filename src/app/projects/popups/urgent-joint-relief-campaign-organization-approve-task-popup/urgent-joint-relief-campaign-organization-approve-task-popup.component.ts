@@ -18,11 +18,11 @@ import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-ca
 import {OrganizationOfficer} from '@app/models/organization-officer';
 
 @Component({
-  selector: 'organization-approve-task-popup',
-  templateUrl: './organization-approve-task-popup.component.html',
-  styleUrls: ['./organization-approve-task-popup.component.scss']
+  selector: 'urgent-joint-relief-campaign-organization-approve-task-popup',
+  templateUrl: './urgent-joint-relief-campaign-organization-approve-task-popup.component.html',
+  styleUrls: ['./urgent-joint-relief-campaign-organization-approve-task-popup.component.scss']
 })
-export class OrganizationApproveTaskPopupComponent implements OnInit {
+export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent implements OnInit {
   comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   done$: Subject<any> = new Subject<any>();
   destroy$: Subject<any> = new Subject<any>();

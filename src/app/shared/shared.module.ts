@@ -102,7 +102,6 @@ import { BuildingPlateComponent } from './components/building-plate/building-pla
 import { SelectedLicenseTableComponent } from './components/selected-license-table/selected-license-table.component';
 import { TranslatePipe } from "@app/pipes/translate.pipe";
 import { DatePipe } from "@app/pipes/date.pipe";
-import { OrganizationApproveTaskPopupComponent } from './popups/organization-approve-task-popup/organization-approve-task-popup.component';
 
 @NgModule({
   declarations: [
@@ -187,8 +186,7 @@ import { OrganizationApproveTaskPopupComponent } from './popups/organization-app
     BuildingPlateComponent,
     SelectedLicenseTableComponent,
     TranslatePipe,
-    DatePipe,
-    OrganizationApproveTaskPopupComponent
+    DatePipe
   ],
   imports: [
     CommonModule,

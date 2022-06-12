@@ -21,8 +21,8 @@ import {
   UrgentJointReliefCampaignFinalApproveTaskPopupComponent
 } from '@app/projects/popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
 import {
-  OrganizationApproveTaskPopupComponent
-} from '@app/shared/popups/organization-approve-task-popup/organization-approve-task-popup.component';
+  UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
+} from '@app/projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import {InboxService} from '@services/inbox.service';
 import {FormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
@@ -85,7 +85,7 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
 
   organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, model?: UrgentJointReliefCampaign, externalUserData?: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
     const inboxService = FactoryService.getService('InboxService') as InboxService;
-    return this.dialog.show(OrganizationApproveTaskPopupComponent, {
+    return this.dialog.show(UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent, {
       service: this,
       inboxService: inboxService,
       taskId,
