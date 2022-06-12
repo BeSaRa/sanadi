@@ -1,4 +1,4 @@
-import { EmployeeService } from '@app/services/employee.service';
+import { DialogService } from "@app/services/dialog.service";
 import { ContractLocationTypes } from "./../../../enums/contract-location-types.enum";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
 import { JobApplicationService } from "./../../../services/job-application.service";
@@ -14,6 +14,8 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { LangService } from "@app/services/lang.service";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ContractTypes } from "@app/enums/contract-types.enum";
+import { isArray } from "lodash";
+import { ContractStatus } from "@app/enums/contract-status.enum";
 
 @Component({
   selector: "app-employee-form-popup",
@@ -83,13 +85,14 @@ export class EmployeeFormPopupComponent implements OnInit {
   constructor(
     public lang: LangService,
     private fb: FormBuilder,
+    private dialog: DialogService,
     private lookupService: LookupService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: JobApplicationService;
       parentForm: FormGroup;
-    },
-    private employeeService: EmployeeService
+      employees: IEmployeeDto[];
+    }
   ) {}
   ngOnInit() {
     this._buildForm();
@@ -118,9 +121,28 @@ export class EmployeeFormPopupComponent implements OnInit {
       workStartDate: [new Date(), Validators.required],
       workEndDate: [new Date(), Validators.required],
     });
+    this.data.employees.forEach((ei, i) => {
+      if (!this.data.employees[i].id) {
+        this.data.employees[i].id = -i - 1;
+      }
+    });
+    this.starterId = -this.data.employees.length - 1;
+    if (!this.isApproval()) {
+      this.employeesList = [...this.data.employees];
+    } else if (this.data.employees[0]) {
+      this.form.patchValue({
+        ...this.data.employees[0],
+      });
+    }
   }
   submit() {
-    this.data.service.onSubmit.emit(this.employeesList);
+    if (!this.isApproval()) {
+      this.data.service.onSubmit.emit(this.employeesList);
+    } else {
+      if (this.form.valid) {
+        this.data.service.onSubmit.emit([{ ...this.form.value }]);
+      }
+    }
   }
   setEmployee() {
     if (this.form.valid) {
@@ -138,10 +160,12 @@ export class EmployeeFormPopupComponent implements OnInit {
         );
       }
       this.form.reset();
+    } else {
+      this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
     }
   }
+  // TODO: complete it
   attachmentsAdded() {
-    // TODO: complete it
     return true;
   }
   isExternalOfficeManager() {
@@ -189,8 +213,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     return this.id > 0;
   }
   isFinishedContract() {
-    return false;
-    // return contractStatus() != ContractStatus.
+    return this.contractStatus != ContractStatus.Finished;
   }
 
   get workEndDate() {

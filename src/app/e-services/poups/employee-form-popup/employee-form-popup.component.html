@@ -424,12 +424,13 @@
           {{ lang.map.btn_reset }}
         </button>
         <button
-        class="btn btn-outline-danger ms-auto"
-        type="button"
-        (click)="clearAll()"
-      >
-        {{ lang.map.clear_all }}
-      </button>
+          class="btn btn-outline-danger ms-auto"
+          type="button"
+          [disabled]="!employeesList.length"
+          (click)="clearAll()"
+        >
+          {{ lang.map.clear_all }}
+        </button>
       </div>
     </div>
   </form>

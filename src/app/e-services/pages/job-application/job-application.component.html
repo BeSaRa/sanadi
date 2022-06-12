@@ -28,13 +28,11 @@
             >
             <ng-select
               [selectOnTab]="true"
-              [clearable]="true"
               placeholder="{{ lang.map.select }}"
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
               id="category"
               formControlName="category"
-              (change)="handleCategoryChange()"
             >
               <ng-option
                 *ngFor="let option of EmploymentCategory"
@@ -56,7 +54,6 @@
             >
             <ng-select
               [selectOnTab]="true"
-              [clearable]="true"
               placeholder="{{ lang.map.select }}"
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"

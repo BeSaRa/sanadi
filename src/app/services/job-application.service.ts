@@ -1,3 +1,4 @@
+import { CastResponseContainer } from '@decorators/cast-response';
 import { FormGroup } from "@angular/forms";
 import { EmployeeFormPopupComponent } from "./../e-services/poups/employee-form-popup/employee-form-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
@@ -10,12 +11,14 @@ import { ComponentFactoryResolver, EventEmitter, Injectable } from "@angular/cor
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
 import { IEmployeeDto } from "@app/interfaces/i-employee-dto";
 
+@CastResponseContainer({
+  $default: { model: () => JobApplication }
+})
 @Injectable({
   providedIn: "root",
 })
@@ -26,8 +29,6 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
   serviceKey: keyof ILanguageKeys = "job_application";
   onSubmit: EventEmitter<IEmployeeDto[]> = new EventEmitter()
 
-  interceptor: IModelInterceptor<JobApplication> =
-    new JobApplicationInterceptor();
   constructor(
     private urlService: UrlService,
     public http: HttpClient,
@@ -44,21 +45,19 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     return "JobApplicationComponent";
   }
 
-  openAddNewEmployee(form: FormGroup): DialogRef {
+  openAddNewEmployee(form: FormGroup, employees: IEmployeeDto[]): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {
         service: this,
         parentForm: form,
+        employees
       },
       { fullscreen: true }
     );
   }
   _getURLSegment(): string {
     return this.urlService.URLS.E_JOB_APPLICATIONS;
-  }
-  _getInterceptor(): Partial<IModelInterceptor<JobApplication>> {
-    return this.interceptor;
   }
   _getModel() {
     return JobApplication;

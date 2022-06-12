@@ -1,5 +1,5 @@
 export enum ContractStatus {
-  Interim = 1,
-  Parmanent,
-  Employment
+  InAction = 1,
+  Suspended,
+  Finished
 }

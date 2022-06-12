@@ -1001,4 +1001,5 @@ export interface ILanguageKeys {
   lbl_edit_donor: string;
   donor: string;
   menu_inquiry_logs: string;
+  please_add_employee_items_to_proceed: string;
 }

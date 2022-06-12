@@ -85,6 +85,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
+      // TODO: Change permission key
       permissionKey: EServicePermissions.FINAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
       checkAnyPermission: false,

@@ -30,6 +30,7 @@ export class EmployeesDataComponent implements OnInit {
     return this.Gender.find((g) => g.lookupKey == gender)?.getName();
   }
   cb(e: Event, btn: any, data: any) {
+    e.preventDefault();
     if (btn.callback) btn.callback(e, data);
   }
 }
