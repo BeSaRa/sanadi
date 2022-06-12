@@ -1,0 +1,118 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.org_approve_task}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" [ngStyle]="{width: displayLicenseForm ? '800px' : '400px'}">
+  <div *ngIf="displayLicenseForm">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="licenseStartDate" for="licenseStartDate"
+                 class="form-label">{{lang.map.license_start_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="licenseStartDate"
+                 id="licenseStartDate" [options]="datepickerOptionsMap.licenseStartDate"
+                 (click)="dpLicenseStartDate.toggleCalendar()"
+                 [ngClass]="{'input-disabled': licenseStartDateField.disabled}"
+                 #dpLicenseStartDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="licenseStartDate"></div>
+            <app-field-error-message controlName="licenseStartDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="licenseDuration" for="licenseDuration"
+                 class="form-label">{{lang.map.license_duration}}</label>
+          <input id="licenseDuration"
+                 validationClasses="licenseDuration"
+                 formControlName="licenseDuration" class="form-control">
+          <app-field-error-message controlName="licenseDuration"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-3 position-relative" *ngIf="canShowDeductionRatio">
+          <label for="deductionPercent" asteriskIfRequired="deductionPercent"
+                 class="form-label">{{lang.map.deduction_ratio}}</label>
+          <div class="input-group">
+            <input id="deductionPercent" validationClasses="deductionPercent"
+                   [mask]="inputMaskPatterns.PERCENT"
+                   [dropSpecialCharacters]="false"
+                   formControlName="deductionPercent" trimInput class="form-control" type="text">
+            <div class="input-group-append">
+              <span class="input-group-text">%</span>
+            </div>
+            <app-field-error-message controlName="deductionPercent"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <label asteriskIfRequired="followUpDate" for="followUpDate"
+                 class="form-label">{{lang.map.followup_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="followUpDate"
+                 id="followUpDate" [options]="datepickerOptionsMap.followUpDate"
+                 (click)="dpFollowUpDate.toggleCalendar()"
+                 #dpFollowUpDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="followUpDate"></div>
+            <app-field-error-message controlName="followUpDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3 position-relative">
+          <div class="form-check form-switch pt-4">
+            <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
+                   class="form-check-input cursor-pointer">
+            <label for="conditionalLicenseIndicator" class="cursor-pointer">{{lang.map.conditional_license}}
+              : {{conditionalLicenseField?.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-3 position-relative">
+          <label asteriskIfRequired="publicTerms" for="publicTerms"
+                 class="form-label">{{lang.map.public_terms}}</label>
+          <textarea id="publicTerms" validationClasses="publicTerms"
+                    formControlName="publicTerms" class="form-control"></textarea>
+          <app-field-error-message controlName="publicTerms"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <label for="userCustomTerms" class="col-form-label">{{lang.map.lbl_user_custom_terms}}</label>
+        <div class="col-sm-12 mb-3 input-group d-flex">
+          <ng-select class="flex-grow-1" id="userCustomTerms" [notFoundText]="lang.map.msg_not_found"
+                     (change)="onCustomTermsChange($event)">
+            <ng-option [value]="term"
+                       *ngFor="let term of customTerms">{{term.terms}}</ng-option>
+          </ng-select>
+          <button type="button" (click)="openAddCustomTermDialog()" class="input-group-text">
+            <i class="mdi mdi-plus text-primary" [tooltip]="lang.map.btn_add"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-3 position-relative">
+          <label asteriskIfRequired="customTerms" for="customTerms"
+                 class="form-label">{{lang.map.custom_terms}}</label>
+          <textarea id="customTerms"
+                    validationClasses="customTerms"
+                    formControlName="customTerms" class="form-control"></textarea>
+          <app-field-error-message controlName="customTerms"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row mb-4">
+    <div class="col-12 position-relative">
+      <label class="form-label" for="comment" asteriskIfRequired [control]="comment">{{lang.map.comment}}</label>
+      <textarea name="comment" [formControl]="comment" id="comment" rows="3" [placeholder]="lang.map.type_your_comment"
+                class="form-control" validationClasses [control]="comment"
+                [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+      <app-field-error-message [control]="comment"></app-field-error-message>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="done$.next(null)" class="btn btn-primary">{{lang.map.org_approve_task}}</button>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

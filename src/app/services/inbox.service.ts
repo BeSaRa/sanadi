@@ -47,7 +47,6 @@ import {InternalBankAccountApprovalService} from '@app/services/internal-bank-ac
 import {ShippingApprovalService} from './shipping-approval.service';
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 
 @Injectable({
   providedIn: 'root'

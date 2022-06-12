@@ -23,9 +23,9 @@ import {Country} from '@app/models/country';
 import {CountryService} from '@services/country.service';
 import {OrganizationOfficer} from '@app/models/organization-officer';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {ParticipantOrganization} from '@app/models/participant-organization';
 import {CaseStepName} from '@app/enums/case-step-name';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {ParticipantOrganization} from '@app/models/participant-organization';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',

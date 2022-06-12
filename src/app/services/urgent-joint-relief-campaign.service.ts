@@ -20,6 +20,13 @@ import {
 import {
   UrgentJointReliefCampaignFinalApproveTaskPopupComponent
 } from '@app/projects/popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
+import {
+  OrganizationApproveTaskPopupComponent
+} from '@app/shared/popups/organization-approve-task-popup/organization-approve-task-popup.component';
+import {QueryResult} from '@app/models/query-result';
+import {CaseModel} from '@app/models/case-model';
+import {LookupService} from '@services/lookup.service';
+import {InboxService} from '@services/inbox.service';
 
 @CastResponseContainer({
   $default: {
@@ -74,6 +81,18 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     return this.dialog.show(UrgentJointReliefCampaignInitialApproveTaskPopupComponent, {
       model,
       action: action
+    });
+  }
+
+  organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const inboxService = FactoryService.getService('InboxService') as InboxService;
+    return this.dialog.show(OrganizationApproveTaskPopupComponent, {
+      service: this,
+      inboxService: inboxService,
+      taskId,
+      actionType,
+      claimBefore,
+      task
     });
   }
 
