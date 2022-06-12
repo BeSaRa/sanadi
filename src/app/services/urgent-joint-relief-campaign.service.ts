@@ -83,6 +83,13 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     });
   }
 
+  validateApproveTask(model: UrgentJointReliefCampaign, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentJointReliefCampaignInitialApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
+
   organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, model?: UrgentJointReliefCampaign, externalUserData?: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
     const inboxService = FactoryService.getService('InboxService') as InboxService;
     return this.dialog.show(UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent, {

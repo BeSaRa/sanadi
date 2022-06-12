@@ -36,9 +36,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   form!: FormGroup;
   officerForm!: FormGroup;
   fm!: FormManager;
-  organizationUnits: OrgUnit[] = [];
-  selectedOrganizationUnits: OrgUnit[] = [];
-  selectedOrg!: OrgUnit;
+  organizationUnits: ParticipantOrganization[] = [];
+  selectedOrganizationUnits: ParticipantOrganization[] = [];
+  selectedOrg!: ParticipantOrganization;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
   selectedOfficer!: OrganizationOfficer | null;
   selectedOfficerIndex!: number | null;
@@ -50,7 +50,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     workStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
 
-  organizationDisplayedColumns: string[] = ['arName', 'enName', 'actions'];
+  organizationDisplayedColumns: string[] = ['arName', 'enName', 'donation', 'workStartDate', 'actions'];
   organizationOfficerDisplayedColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   countries: Country[] = [];
@@ -108,15 +108,26 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   loadOrgUnits() {
     this.orgUnitService.loadComposite().subscribe((list) => {
-      this.organizationUnits = list;
+      this.organizationUnits = this.mapOrgUnitsToParticipantOrgUnits(list);
       this.selectedOrganizationUnits = this.setSelectedOrganizations();
+    });
+  }
+
+  mapOrgUnitsToParticipantOrgUnits(orgUnits: OrgUnit[]): ParticipantOrganization[] {
+    return orgUnits.map(x => {
+      return new ParticipantOrganization()
+        .clone({organizationId: x.id,
+          arabicName: x.arName,
+          englishName: x.enName,
+          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.donation,
+          workStartDate : this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.workStartDate})
     });
   }
 
   setSelectedOrganizations() {
     return this.organizationUnits
       .filter(x => this.model?.participatingOrganizaionList
-        .map(xx => xx.organizationId).includes(x.id));
+        .map(xx => xx.organizationId).includes(x.organizationId));
   }
 
   setSelectedOfficers() {
@@ -185,6 +196,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _resetForm(): void {
+    this.form.reset();
+    this.selectedOrganizationOfficers = [];
+    this.selectedOrganizationUnits = [];
   }
 
   _prepareModel(): Observable<UrgentJointReliefCampaign> | UrgentJointReliefCampaign {
@@ -199,18 +213,13 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         ...model,
         ...this.externalUserData.getRawValue()
       });
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.model?.donation;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.model?.workStartDate;
+    } else {
+      model.participatingOrganizaionList = this.selectedOrganizationUnits;
     }
 
-    model.participatingOrganizaionList = this.selectedOrganizationUnits.map(x => {
-      const tempOrg = new ParticipantOrganization();
-      tempOrg.organizationId = x.id;
-      tempOrg.arabicName = x.arName;
-      tempOrg.englishName = x.enName;
-      return tempOrg;
-    });
-
     model.organizaionOfficerList = this.selectedOrganizationOfficers;
-
     model.requestType = this.requestTypes[0].lookupKey;
     return model;
   }
@@ -220,13 +229,13 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if(this.isExternalUser) {
-      if(this.externalUserData.invalid) {
+    if (this.isExternalUser) {
+      if (this.externalUserData.invalid) {
         this.dialog.error(this.lang.map.enter_donation_and_start_work_date);
         return false;
       }
 
-      if(this.selectedOrganizationOfficers.length < 1) {
+      if (this.selectedOrganizationOfficers.length < 1) {
         this.dialog.error(this.lang.map.add_organization_officers);
         return false;
       }
@@ -265,7 +274,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   onChangeSelectedOrganization(val: number) {
-    this.selectedOrg = this.organizationUnits.find(x => x.id == val)!;
+    this.selectedOrg = this.organizationUnits.find(x => x.organizationId == val)!;
   }
 
   addOrganization() {
@@ -276,9 +285,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     }
   }
 
-  removeOrganization(event: MouseEvent, model: OrgUnit) {
+  removeOrganization(event: MouseEvent, model: ParticipantOrganization) {
     event.preventDefault();
-    this.selectedOrganizationUnits = this.selectedOrganizationUnits.filter(x => x.id != model.id);
+    this.selectedOrganizationUnits = this.selectedOrganizationUnits.filter(x => x.organizationId != model.organizationId);
   }
 
   selectOfficer(event: MouseEvent, model: OrganizationOfficer) {

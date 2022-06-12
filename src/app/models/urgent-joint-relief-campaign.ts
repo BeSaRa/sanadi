@@ -98,7 +98,11 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   }
 
   organizationApprove(externalUserData: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
-    return this.service.organizationApproveTask(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this, externalUserData);
+    return this.service.organizationApproveTask(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this, externalUserData);
+  }
+
+  validateApprove(): DialogRef {
+    return this.service.validateApproveTask(this, WFResponseType.VALIDATE_APPROVE);
   }
 
   initialApprove(): DialogRef {

@@ -6,38 +6,24 @@ import {EmployeeService} from '@services/employee.service';
 
 export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<UrgentJointReliefCampaign> {
   send(model: Partial<UrgentJointReliefCampaign>): Partial<UrgentJointReliefCampaign> {
-    const employeeService = FactoryService.getService('EmployeeService') as EmployeeService;
     model.licenseStartDate = DateUtils.getDateStringFromDate(model.licenseStartDate);
     model.licenseEndDate = DateUtils.getDateStringFromDate(model.licenseEndDate);
     model.approvalPeriod = +model.approvalPeriod!;
     model.targetAmount = +model.targetAmount!;
     model.participatingOrganizaionList?.forEach(x => {
+      x.workStartDate = DateUtils.getDateStringFromDate(x.workStartDate);
+      x.donation = +x.donation!;
       delete x.searchFields;
+      delete x.langService;
     });
-
-    const currentOrg = model.participatingOrganizaionList?.find(x => x.organizationId == employeeService.getOrgUnit()?.id);
-    if (model.donation) {
-      currentOrg!.donation = model.donation;
-      delete model.donation;
-    }
-
-    if (model.workStartDate) {
-      currentOrg!.workStartDate = DateUtils.getDateStringFromDate(model.workStartDate);
-      delete model.workStartDate;
-    }
-
-    // to be removed
-    if (employeeService.isInternalUser()) {
-      model.participatingOrganizaionList?.forEach(x => {
-        x.donation = 0;
-      });
-    }
 
     model.organizaionOfficerList?.forEach(x => {
       delete x.langService;
       delete (x as any).searchFields;
     });
 
+    delete model.donation;
+    delete model.workStartDate;
     return model;
   }
 
