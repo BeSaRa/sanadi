@@ -1035,7 +1035,6 @@ export interface ILanguageKeys {
   contract_type: string;
   job_contract_type: string;
   contract_status: string;
-  work_start_date: string;
   work_end_date: string;
   contract_expiry_date: string;
   add_employee: string;
