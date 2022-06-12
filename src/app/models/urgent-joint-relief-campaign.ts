@@ -12,6 +12,7 @@ import {EmployeeService} from '@services/employee.service';
 import {OrganizationOfficer} from '@app/models/organization-officer';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {FormGroup} from '@angular/forms';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -96,8 +97,8 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     return this.caseType;
   }
 
-  organizationApprove(): DialogRef {
-    return this.service.organizationApproveTask(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this);
+  organizationApprove(externalUserData: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
+    return this.service.organizationApproveTask(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this, externalUserData);
   }
 
   initialApprove(): DialogRef {

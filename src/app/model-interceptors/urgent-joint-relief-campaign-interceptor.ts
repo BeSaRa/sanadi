@@ -18,10 +18,12 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
     const currentOrg = model.participatingOrganizaionList?.find(x => x.organizationId == employeeService.getOrgUnit()?.id);
     if (model.donation) {
       currentOrg!.donation = model.donation;
+      delete model.donation;
     }
 
     if (model.workStartDate) {
       currentOrg!.workStartDate = DateUtils.getDateStringFromDate(model.workStartDate);
+      delete model.workStartDate;
     }
 
     // to be removed

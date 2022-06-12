@@ -23,10 +23,9 @@ import {
 import {
   OrganizationApproveTaskPopupComponent
 } from '@app/shared/popups/organization-approve-task-popup/organization-approve-task-popup.component';
-import {QueryResult} from '@app/models/query-result';
-import {CaseModel} from '@app/models/case-model';
-import {LookupService} from '@services/lookup.service';
 import {InboxService} from '@services/inbox.service';
+import {FormGroup} from '@angular/forms';
+import {OrganizationOfficer} from '@app/models/organization-officer';
 
 @CastResponseContainer({
   $default: {
@@ -84,7 +83,7 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     });
   }
 
-  organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+  organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, model?: UrgentJointReliefCampaign, externalUserData?: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
     const inboxService = FactoryService.getService('InboxService') as InboxService;
     return this.dialog.show(OrganizationApproveTaskPopupComponent, {
       service: this,
@@ -92,7 +91,8 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
       taskId,
       actionType,
       claimBefore,
-      task
+      model,
+      externalUserData
     });
   }
 
