@@ -33,6 +33,8 @@ import { IDefaultResponse } from "@contracts/idefault-response";
 import { MenuItem } from "../models/menu-item";
 import { UrlService } from "@services/url.service";
 import { HasInterception, InterceptParam } from "@decorators/intercept-model";
+import {CaseModel} from '@app/models/case-model';
+import {FollowupComponent} from '@app/modules/followup/pages/followup/followup.component';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -201,6 +203,10 @@ export abstract class BaseGenericEService<T extends { id: string }> {
 
   openCommentsDialog(caseId: string): DialogRef {
     return this.dialog.show(ManageCommentPopupComponent, { service: this, caseId });
+  }
+
+  openFollowupsDialog(caseModel: CaseModel<any, any>): DialogRef {
+    return this.dialog.show(FollowupComponent, caseModel);
   }
 
   openRecommendationDialog(caseId: string, onlyLogs: boolean = false): DialogRef {

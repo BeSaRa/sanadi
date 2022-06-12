@@ -156,8 +156,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   actionManageComments(item: CaseModel<any, any>) {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
-  actionaddfollowup(item: CaseModel<any, any>) {
-      item.addfollowup().onAfterClose$.subscribe(() => this.search$.next(null));
+  actionAddFollowup(item: CaseModel<any, any>) {
+      item.addFollowup().onAfterClose$.subscribe(() => this.search$.next(null));
   }
   actionExportModel(item: CaseModel<any, any>) {
     item.exportModel().subscribe((blob) => {
@@ -287,7 +287,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         //   return (caseStatus === caseStatusEnum.FINAL_APPROVE);
         // },
         onClick: (item: CaseModel<any, any>) => {
-          this.actionaddfollowup(item);
+          this.actionAddFollowup(item);
         }
       },
 

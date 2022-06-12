@@ -23,7 +23,6 @@ import {Permissions} from "@app/enums/Permissions";
 import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
-import {ExternalFollowupComponent} from '@app/administration/pages/external-followup/external-followup.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -113,11 +112,6 @@ const routes: Routes = [
   },
 
   {path: 'sdg', component: SdGoalComponent},
-  {
-    path: 'external-followup', component: ExternalFollowupComponent,
-    canActivate: [PermissionGuard],
-    data: {permissionKey: 'EXTERNAL_FOLLOWUP', configPermissionGroup: null, checkAnyPermission: false},
-  },
   {
     path: 'bank', component: BankComponent,
     canActivate: [PermissionGuard],

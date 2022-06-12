@@ -196,6 +196,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   openCommentsDialog(caseId: string): DialogRef {
     return this.dialog.show(ManageCommentPopupComponent, {service: this, caseId});
   }
+
   openFollowupsDialog(caseModel: CaseModel<any, any>): DialogRef {
     return this.dialog.show(FollowupComponent, caseModel);
   }

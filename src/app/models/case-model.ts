@@ -140,7 +140,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.service.openCommentsDialog(this.id);
   }
 
-  addfollowup(): DialogRef {
+  addFollowup(): DialogRef {
     return this.service.openFollowupsDialog(this);
   }
 
