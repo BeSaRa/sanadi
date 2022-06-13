@@ -1,3 +1,4 @@
+import { Employee } from './../../../models/employee';
 import { DialogService } from "@app/services/dialog.service";
 import { ContractLocationTypes } from "./../../../enums/contract-location-types.enum";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
@@ -5,7 +6,6 @@ import { JobApplicationService } from "./../../../services/job-application.servi
 import { DIALOG_DATA_TOKEN } from "./../../../shared/tokens/tokens";
 import { IGridAction } from "./../../../interfaces/i-grid-action";
 import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
-import { IEmployeeDto } from "./../../../interfaces/i-employee-dto";
 import { DatepickerOptionsMap } from "@app/types/types";
 import { DateUtils } from "@app/helpers/date-utils";
 import { Lookup } from "./../../../models/lookup";
@@ -14,7 +14,6 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { LangService } from "@app/services/lang.service";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ContractTypes } from "@app/enums/contract-types.enum";
-import { isArray } from "lodash";
 import { ContractStatus } from "@app/enums/contract-status.enum";
 
 @Component({
@@ -26,7 +25,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   form!: FormGroup;
   starterId: number = 0;
-  employeesList: IEmployeeDto[] = [];
+  employeesList: Employee[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
@@ -91,7 +90,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     public data: {
       service: JobApplicationService;
       parentForm: FormGroup;
-      employees: IEmployeeDto[];
+      employees: Employee[];
     }
   ) {}
   ngOnInit() {
@@ -136,13 +135,13 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
   }
   submit() {
-    if (!this.isApproval()) {
-      this.data.service.onSubmit.emit(this.employeesList);
-    } else {
-      if (this.form.valid) {
-        this.data.service.onSubmit.emit([{ ...this.form.value }]);
-      }
-    }
+    // if (!this.isApproval()) {
+    //   this.data.service.onSubmit.emit(this.employeesList);
+    // } else {
+    //   if (this.form.valid) {
+    //     this.data.service.onSubmit.emit([{ ...this.form.value }]);
+    //   }
+    // }
   }
   setEmployee() {
     if (this.form.valid) {

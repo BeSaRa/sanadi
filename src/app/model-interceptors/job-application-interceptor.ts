@@ -1,31 +1,24 @@
-import { IMyDateModel } from 'angular-mydatepicker';
-import { DateUtils } from '@app/helpers/date-utils';
+import { Employee } from "./../models/employee";
+import { EmployeeInterceptor } from "./employee-interceptor";
 import { JobApplication } from "./../models/job-application";
 import { IModelInterceptor } from "@contracts/i-model-interceptor";
 
+const employeeInterceptor = new EmployeeInterceptor();
 export class JobApplicationInterceptor
   implements IModelInterceptor<JobApplication>
 {
   send(model: any) {
-    model.employeeInfoDTOs.forEach((ei: any, i: number) => {
-      if (ei.id < 0) {
-        delete ei.id
-      }
-      model.employeeInfoDTOs[i] = {
-        ...ei,
-        contractExpiryDate: !ei.contractExpiryDate ? undefined : DateUtils.changeDateFromDatepicker(ei.contractExpiryDate as unknown as IMyDateModel)?.toISOString(),
-        workStartDate: !ei.workStartDate ? undefined : DateUtils.changeDateFromDatepicker(ei.workStartDate as unknown as IMyDateModel)?.toISOString(),
-        workEndDate: !ei.workEndDate ? undefined : DateUtils.changeDateFromDatepicker(ei.workEndDate as unknown as IMyDateModel)?.toISOString()
-      };
+    model.employeeInfoDTOs = model.employeeInfoDTOs.map((ei: any) => {
+      return employeeInterceptor.send(ei) as unknown as Employee;
     });
     return model;
   }
 
   receive(model: JobApplication): JobApplication {
-    console.log(model)
-    // contractExpiryDate: ei.contractExpiryDate ? DateUtils.getDateStringFromDate(ei.contractExpiryDate, 'DEFAULT_DATE_FORMAT') : '',
-    // workStartDate: ei.workStartDate ? DateUtils.getDateStringFromDate(ei.workStartDate, 'DEFAULT_DATE_FORMAT') : '',
-    // workEndDate: ei.workEndDate ? DateUtils.getDateStringFromDate(ei.workEndDate, 'DEFAULT_DATE_FORMAT') : '',
+    // model.employeeInfoDTOs = model.employeeInfoDTOs.map(ei => {
+    //   return employeeInterceptor.receive(new Employee().clone(ei));
+    // })
+    console.log('employeeInfoDTOs ', [...model.employeeInfoDTOs])
     return model;
   }
 }

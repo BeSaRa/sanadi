@@ -1,9 +1,9 @@
+import { Employee } from "./../../../models/employee";
 import { ToastService } from "@app/services/toast.service";
 import { DialogService } from "@app/services/dialog.service";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { JobApplicationCategories } from "./../../../enums/job-application-categories.enum";
 import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { IEmployeeDto } from "@app/interfaces/i-employee-dto";
 import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
 import { LookupService } from "./../../../services/lookup.service";
@@ -17,7 +17,7 @@ import { JobApplicationService } from "./../../../services/job-application.servi
 import { JobApplication } from "./../../../models/job-application";
 import { Component, Input, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { SaveTypes } from "@app/enums/save-types";
@@ -33,7 +33,7 @@ export class JobApplicationComponent extends EServicesGenericComponent<
 > {
   form!: FormGroup;
 
-  employees: IEmployeeDto[] = [];
+  employees: Employee[] = [];
   fileIconsEnum = FileIconsEnum;
   caseType: number = CaseTypes.JOB_APPLICATION;
 
@@ -41,17 +41,6 @@ export class JobApplicationComponent extends EServicesGenericComponent<
   @Input()
   fromDialog: boolean = false;
 
-  private outModelChange$: BehaviorSubject<JobApplication> =
-    new BehaviorSubject<JobApplication>(null as unknown as JobApplication);
-
-  @Input()
-  set outModel(model: JobApplication) {
-    this.outModelChange$.next(model);
-  }
-
-  get outModel(): JobApplication {
-    return this.outModelChange$.value;
-  }
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
 
@@ -98,6 +87,7 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     this._buildForm();
     this.service.onSubmit.subscribe((data) => {
       this.employees = [...data];
+      console.log(data)
       this.model && (this.model.employeeInfoDTOs = this.employees);
     });
   }
@@ -141,7 +131,6 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    console.log(saveType, operation, model);
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
@@ -169,15 +158,15 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     if (!model) {
       return;
     }
+    console.log({ ...model });
     console.log(model);
     this.model = model;
-    this.form.patchValue(new JobApplication().formBuilder(true));
+    this.form = this.fb.group(model.formBuilder(true));
   }
   _resetForm(): void {
     this.form.reset();
     this.setDefaultValues();
   }
-
   private setDefaultValues(): void {
     this.requestType.patchValue(EmploymentRequestType.NEW);
     this.category.patchValue(JobApplicationCategories.NOTIFICATION);

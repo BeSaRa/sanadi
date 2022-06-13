@@ -1,5 +1,6 @@
+import { Employee } from './employee';
+import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';
 import { CaseTypes } from '@app/enums/case-types.enum';
-import { IEmployeeDto } from "./../interfaces/i-employee-dto";
 import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
 import { Validators } from "@angular/forms";
 import { FactoryService } from "./../services/factory.service";
@@ -19,14 +20,15 @@ const interceptor = new JobApplicationInterceptor();
 })
 export class JobApplication
   extends _RequestType<JobApplicationService, JobApplication>
-  implements HasRequestType
+  implements HasRequestType, HasLicenseDurationType
 {
   service!: JobApplicationService;
   caseType:number = CaseTypes.JOB_APPLICATION;
   requestType!: number;
   category!: number;
   description: string = "";
-  employeeInfoDTOs: IEmployeeDto[] = [];
+  employeeInfoDTOs: Employee[] = [];
+
   constructor() {
     super();
     this.service = FactoryService.getService("JobApplicationService");
