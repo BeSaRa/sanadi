@@ -1029,4 +1029,15 @@ export interface ILanguageKeys {
   donor: string;
   menu_inquiry_logs: string;
   special_needs_handicap: string;
+  menu_urgent_intervention_report: string;
+  entities: string;
+  intervention_fields: string;
+  intervention_areas: string;
+  intervention_name: string;
+  entity_type: string;
+  entity_name: string;
+  execution_country: string;
+  msg_please_select_x_to_continue: string;
+  menu_external_project_implementation: string;
+  msg_add_intervention_license_first: string;
 }

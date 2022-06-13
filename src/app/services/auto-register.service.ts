@@ -32,6 +32,9 @@ import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import {
+  UrgentInterventionReportComponent
+} from '@app/projects/pages/urgent-intervention-report/urgent-intervention-report.component';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +64,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('ShippingApprovalComponent', ShippingApprovalComponent);
       DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
 
     });// just to make sure that service constructed and register all dynamic components
 

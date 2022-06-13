@@ -87,6 +87,8 @@ export interface IAppUrls {
   URGENT_INTERVENTION_LICENSE: string;
   DONOR: string;
   URGENT_JOINT_RELIEF_CAMPAIGN: string;
+  URGENT_INTERVENTION_REPORTING: string;
+  EXTERNAL_PROJECT_IMPLEMENTATION: string;
 
   [index: string]: string;
 }

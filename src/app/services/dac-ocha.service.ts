@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {DacOcha} from '@app/models/dac-ocha';
 import {ComponentType} from '@angular/cdk/portal';
@@ -17,13 +17,15 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SubDacOchaPopupComponent} from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {DacOchaTypeEnum} from '@app/enums/dac-ocha-type-enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DacOchaService extends BackendWithDialogOperationsGenericService<DacOcha>{
+export class DacOchaService extends BackendWithDialogOperationsGenericService<DacOcha> {
   list: DacOcha[] = [];
   interceptor: DacOchaInterceptor = new DacOchaInterceptor();
+
   constructor(public http: HttpClient,
               private urlService: UrlService,
               public dialog: DialogService) {
@@ -62,6 +64,19 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
         tap(result => this.list = result),
         tap(result => this._loadDone$.next(result))
       );
+  }
+
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadByType(typeId: number): Observable<DacOcha[]> {
+    return this.http.get<DacOcha[]>(this._getServiceURL() + '/type/' + typeId);
+  }
+
+  loadOCHAs(): Observable<DacOcha[]> {
+    return this._loadByType(DacOchaTypeEnum.ocha);
+  }
+
+  loadDACs(): Observable<DacOcha[]> {
+    return this._loadByType(DacOchaTypeEnum.dac);
   }
 
   openCreateDacOchaDialog(dacOchaTypeId: number): DialogRef {

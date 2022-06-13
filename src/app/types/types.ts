@@ -1,4 +1,4 @@
-import {ILanguageKeys} from '../interfaces/i-language-keys';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Localization} from '../models/localization';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
 import {AbstractControl} from '@angular/forms';

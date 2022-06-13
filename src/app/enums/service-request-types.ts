@@ -11,3 +11,9 @@ export enum CollectionRequestType {
   UPDATE = 4,
   CANCEL = 5
 }
+
+export enum UrgentInterventionAnnouncementRequestType {
+  ANNOUNCEMENT = 1,
+  START = 2,
+  EDIT = 3
+}

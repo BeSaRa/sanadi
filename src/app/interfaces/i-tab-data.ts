@@ -1,8 +1,8 @@
-import {Observable} from 'rxjs';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 export interface ITabData {
   name: string,
-  langKey: string,
+  langKey: keyof ILanguageKeys,
   index: number,
   /**
    * @description Checks the valid status of tab
