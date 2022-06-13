@@ -1,19 +1,19 @@
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {TaskDetails} from '../models/task-details';
-import {AdminResult} from '../models/admin-result';
-import {PartnerApproval} from "../models/partner-approval";
-import {FactoryService} from "@app/services/factory.service";
-import {PartnerApprovalService} from "@app/services/partner-approval.service";
-import {DateUtils} from "@app/helpers/date-utils";
-import {IMyDateModel} from "angular-mydatepicker";
-import {BankAccount} from "@app/models/bank-account";
-import {ExecutiveManagement} from "@app/models/executive-management";
-import {Goal} from "@app/models/goal";
-import {ManagementCouncil} from "@app/models/management-council";
-import {TargetGroup} from "@app/models/target-group";
-import {ContactOfficer} from "@app/models/contact-officer";
-import {ApprovalReason} from "@app/models/approval-reason";
-import {CommonUtils} from '@app/helpers/common-utils';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { TaskDetails } from '../models/task-details';
+import { AdminResult } from '../models/admin-result';
+import { PartnerApproval } from "../models/partner-approval";
+import { FactoryService } from "@app/services/factory.service";
+import { PartnerApprovalService } from "@app/services/partner-approval.service";
+import { DateUtils } from "@app/helpers/date-utils";
+import { IMyDateModel } from "angular-mydatepicker";
+import { BankAccount } from "@app/models/bank-account";
+import { ExecutiveManagement } from "@app/models/executive-management";
+import { Goal } from "@app/models/goal";
+import { ManagementCouncil } from "@app/models/management-council";
+import { TargetGroup } from "@app/models/target-group";
+import { ContactOfficer } from "@app/models/contact-officer";
+import { ApprovalReason } from "@app/models/approval-reason";
+import { CommonUtils } from '@app/helpers/common-utils';
 
 export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerApproval> {
   receive(model: PartnerApproval): PartnerApproval {
