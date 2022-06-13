@@ -94,7 +94,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   }
 
   getCaseStatus() {
-    return this.caseType;
+    return this.caseStatus;
   }
 
   organizationApprove(externalUserData: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
