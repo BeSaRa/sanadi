@@ -116,6 +116,9 @@ export class LicenseService {
       case CaseTypes.URGENT_INTERVENTION_LICENSING:
         url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE;
         break;
+      case CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN:
+        url = this.urlService.URLS.URGENT_JOINT_RELIEF_CAMPAIGN;
+        break;
     }
     return url;
   }
