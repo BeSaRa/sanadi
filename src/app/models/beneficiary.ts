@@ -63,6 +63,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   familyCount!: number;
   benTotalDebts: number = 0;
   benTotalIncome: number = 0;
+  isHandicapped: boolean = false;
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
   beneficiaryIncomeSet: BeneficiaryIncome[] = [];
 
@@ -171,7 +172,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       familyCount,
       occuptionStatus,
       occuption,
-      employeerAddress
+      employeerAddress,
+      isHandicapped
     } = this;
 
     return {
@@ -203,7 +205,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       familyCount: controls ? [familyCount, [CustomValidators.required, CustomValidators.number, Validators.min(1)]] : familyCount,
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus, //Employment Status
       occuption: controls ? [occuption, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : occuption, //Occupation
-      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress //Work Place
+      employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress, //Work Place
+      isHandicapped: controls ? [isHandicapped] : isHandicapped
     };
   }
 

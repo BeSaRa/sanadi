@@ -484,6 +484,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }
+    this.toggleIsHandicappedReadonly();
   }
 
   private listenToOccupationStatus() {
@@ -1234,6 +1235,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fm.getFormField('personalTab.employeerAddress') as FormControl;
   }
 
+  get isHandicappedField(): FormControl {
+    return this.fm.getFormField('personalTab.isHandicapped') as FormControl;
+  }
+
   get requestedAidField(): FormControl {
     return this.fm.getFormField('requestInfoTab.aidLookupId') as FormControl;
   }
@@ -1689,6 +1694,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.allowCompletionField?.enable();
       }
+    }
+  }
+
+  private toggleIsHandicappedReadonly(): void {
+    if (this.readOnly || this.isPartialRequest) {
+      this.isHandicappedField?.disable();
+    } else {
+      this.isHandicappedField?.enable();
     }
   }
 

@@ -14,7 +14,15 @@
                             [reload$]="reload$"></table-header>
             </th>
           </ng-container>
-
+          <ng-container cdkColumnDef="icons">
+            <th cdk-header-cell *cdkHeaderCellDef></th>
+            <td cdk-cell *cdkCellDef="let row" class="row-indicator-td">
+              <div class="d-flex flex-row">
+                <i class="mdi {{actionIconsEnum.SPECIAL_NEEDS}} text-primary" *ngIf="row.isHandicapped"
+                   tooltip="{{langService.map.special_needs_handicap}}"></i>
+              </div>
+            </td>
+          </ng-container>
           <ng-container cdkColumnDef="creationDate">
             <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortingCallbacks.creationDate"> {{langService.map.request_date}}</th>
@@ -35,21 +43,21 @@
             <td cdk-cell *cdkCellDef="let row"><span>{{row.genderInfo.getName()}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="estimatedValue">
-            <th cdk-header-cell *cdkHeaderCellDef  sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortingCallbacks.estimatedValue"> {{langService.map.estimated_amount}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <span>{{row.aidTotalSuggestedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="totalAidAmount">
-            <th cdk-header-cell *cdkHeaderCellDef  sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortingCallbacks.totalAidAmount"> {{langService.map.total_aid_amount}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <span>{{row.aidTotalPayedAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="remainingAmount">
-            <th cdk-header-cell *cdkHeaderCellDef  sortable-header [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortingCallbacks.remainingAmount"> {{langService.map.remaining_amount}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <span>{{row.aidRemainingAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>

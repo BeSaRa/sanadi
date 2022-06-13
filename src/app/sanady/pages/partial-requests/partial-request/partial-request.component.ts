@@ -44,8 +44,9 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(true);
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   filterCriteria: Partial<IPartialRequestCriteria> = {};
-  displayedColumns: string[] = ['creationDate', 'creationYear', 'organization', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];//'benCategory', 'requestType',
+  displayedColumns: string[] = ['icons', 'creationDate', 'creationYear', 'organization', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];//'benCategory', 'requestType',
   headerColumn: string[] = ['extra-header'];
+  actionIconsEnum = ActionIconsEnum;
   filterControl: FormControl = new FormControl('');
   actions: IMenuItem<SubventionRequestPartial>[] = [
     // show details

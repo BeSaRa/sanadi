@@ -423,6 +423,22 @@
         </div>
       </div>
       <div class="row d-flex flex-row">
+        <div class="col-sm-12 col-md-6">
+          <div class="row d-flex flex-column flex-md-row">
+            <label asteriskIfRequired="isHandicapped" for="isHandicapped"
+                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.special_needs_handicap}}</label>
+            <div class="col-md-8 col-sm-12 mb-4">
+              <div class="form-check form-switch form-switch-container">
+                <input class="form-check-input" type="checkbox" id="isHandicapped"
+                       formControlName="isHandicapped">
+                <label
+                  class="form-check-label">{{isHandicappedField?.value ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex flex-row">
         <div class="col-sm-12">
           <div class="row d-flex flex-column flex-md-row">
             <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
