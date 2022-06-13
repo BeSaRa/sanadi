@@ -140,9 +140,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    item.open(this.actions, OpenFrom.SEARCH)
+    /*item.open(this.actions, OpenFrom.SEARCH)
       .pipe(switchMap(ref => ref.onAfterClose$))
-      .subscribe(() => this.search$.next(null));
+      .subscribe(() => this.search$.next(null));*/
+    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.itemDetails}}).then();
   }
 
   actionManageAttachments(item: CaseModel<any, any>) {
