@@ -17,7 +17,6 @@ import {Lookup} from '@app/models/lookup';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {Beneficiary} from '@app/models/beneficiary';
-import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'beneficiary-obligation',
@@ -54,7 +53,6 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   form!: FormGroup;
-  @ViewChild('table') table!: TableComponent;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;

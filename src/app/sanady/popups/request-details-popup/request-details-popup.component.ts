@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -23,16 +23,21 @@ import {DateUtils} from '@app/helpers/date-utils';
   templateUrl: './request-details-popup.component.html',
   styleUrls: ['./request-details-popup.component.scss']
 })
-export class RequestDetailsPopupComponent {
+export class RequestDetailsPopupComponent implements AfterViewInit {
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: IDialogData<SubventionResponse>,
               public langService: LangService,
               private dialogService: DialogService,
               private dialogRef: DialogRef,
+              private cd: ChangeDetectorRef,
               private subventionRequestService: SubventionRequestService,
               private router: Router) {
     this.requestDetails = this.data.subventionResponse.request.clone();
     this.beneficiary = this.data.subventionResponse.beneficiary.clone();
     this.aidList = this.data.subventionResponse.aidList.slice();
+  }
+
+  ngAfterViewInit() {
+    this.cd.detectChanges();
   }
 
   requestDetails!: SubventionRequest;
@@ -47,7 +52,6 @@ export class RequestDetailsPopupComponent {
     beneficiary: {name: 'beneficiary'},
     aids: {name: 'aids'}
   };
-  filterControl: FormControl = new FormControl('');
   headerColumn: string[] = ['extra-header'];
   aidColumns = [
     'approvalDate',
@@ -62,54 +66,6 @@ export class RequestDetailsPopupComponent {
     'remainingAmount'
   ];
 
-  aidsSortingCallbacks = {
-    approvalDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.approvalDate),
-        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    requestedAidCategory: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    requestedAid: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    estimatedAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidSuggestedAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidSuggestedAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    periodicity: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.periodicTypeInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    donor: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.donorInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.donorInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.aidStartPayDate),
-        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.aidStartPayDate);
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    givenAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    remainingAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidRemainingAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidRemainingAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
-
   addPartialRequest(): void {
     this.dialogService.confirm(this.langService.map.msg_confirm_create_partial_request)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -117,7 +73,7 @@ export class RequestDetailsPopupComponent {
         this.dialogRef.close(true);
         this.router.navigate(['/home/sanady/request/partial', this.requestDetails.id],).then();
       }
-    })
+    });
   }
 
 }
