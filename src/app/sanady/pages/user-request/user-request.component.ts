@@ -3,7 +3,6 @@ import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '@app/models/form-manager';
 import {BehaviorSubject, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
@@ -57,7 +56,6 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -156,7 +154,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   subventionAidList: SubventionAid[] = [];
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
   attachmentList: SanadiAttachment[] = [];
-  fm!: FormManager;
   form!: FormGroup;
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
@@ -167,8 +164,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   periodicityLookups: Record<number, Lookup> = {};
   editAidItem?: SubventionAid;
   editMode = false;
-  headerColumn: string[] = ['extra-header'];
-  aidFilterControl: FormControl = new FormControl('');
+
   aidsActions: IMenuItem<SubventionAid>[] = [
     // edit
     {
@@ -265,7 +261,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       isTouchedOrDirty: () => {
         return (this.beneficiaryObligationComponentRef && this.beneficiaryObligationComponentRef.isTouchedOrDirty())
-          || (this.beneficiaryIncomeComponentRef && this.beneficiaryIncomeComponentRef.isTouchedOrDirty())
+          || (this.beneficiaryIncomeComponentRef && this.beneficiaryIncomeComponentRef.isTouchedOrDirty());
       }
     },
     address: {
@@ -333,54 +329,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('aidsTable') aidsTable!: TableComponent;
 
-  aidsSortingCallbacks = {
-    approvalDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.approvalDate),
-        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.approvalDate);
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    requestedAidCategory: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupParentInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupParentInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    requestedAid: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidLookupInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidLookupInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    estimatedAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidSuggestedAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidSuggestedAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    periodicity: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.periodicTypeInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.periodicTypeInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    donor: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.donorInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.donorInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    paymentDate: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.aidStartPayDate),
-        value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.aidStartPayDate);
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    givenAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    remainingAmount: (a: SubventionAid, b: SubventionAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.aidRemainingAmount,
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.aidRemainingAmount;
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
-
   private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
     beneficiary = beneficiary ? beneficiary : new Beneficiary();
     request = request ? request : new SubventionRequest();
@@ -391,7 +339,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       requestStatusTab: this.editMode ? this.buildRequestStatusTab(request) : null,
       aidTab: this.fb.array([])
     });
-    this.fm = new FormManager(this.form, this.langService);
     this._buildDatepickerControlsMap();
   }
 
@@ -413,7 +360,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         aidApprovalDate: this.aidApprovalDate,
         aidPaymentDate: this.aidPaymentDate
       };
-    })
+    });
   }
 
   private listenToBeneficiaryChange() {
@@ -430,34 +377,29 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateBeneficiaryFrom(selectedBeneficiary: undefined | Beneficiary) {
-    const personal = this.fm.getFormField('personalTab');
-    const address = this.fm.getFormField('addressTab');
-
     if (!selectedBeneficiary) {
-      personal?.reset();
-      personal?.markAsPristine();
+      this.personalInfoTab?.reset();
+      this.personalInfoTab?.markAsPristine();
       this.beneficiaryIncomeComponentRef.forceClearComponent();
       this.beneficiaryObligationComponentRef.forceClearComponent();
-      address?.reset();
-      address?.markAsPristine();
+      this.addressTab?.reset();
+      this.addressTab?.markAsPristine();
     } else {
-      personal?.patchValue(selectedBeneficiary.getPersonalFields());
-      address?.patchValue(selectedBeneficiary.getAddressFields());
+      this.personalInfoTab?.patchValue(selectedBeneficiary.getPersonalFields());
+      this.addressTab?.patchValue(selectedBeneficiary.getAddressFields());
     }
 
   }
 
   private updateRequestForm(request: undefined | SubventionRequest) {
-    const requestInfo = this.fm.getFormField('requestInfoTab');
-    const requestStatus = this.fm.getFormField('requestStatusTab');
     if (!request) {
-      requestInfo?.reset();
-      requestStatus?.reset();
+      this.requestInfoTab?.reset();
+      this.requestStatusTab?.reset();
       this.readOnly = false;
       this.subAidLookupsList = [];
     } else {
-      requestStatus?.patchValue(request.getStatusFields());
-      requestInfo?.patchValue(request.getInfoFields());
+      this.requestStatusTab?.patchValue(request.getStatusFields());
+      this.requestInfoTab?.patchValue(request.getInfoFields());
 
       this.loadSubAidLookups(request.aidLookupParentId);
       this.allowDataSharingField?.disable();
@@ -503,19 +445,18 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private listenToNationalityChange() {
-    this.fm.getFormField('personalTab.benNationality')?.valueChanges.pipe(
+    this.benNationalityField?.valueChanges.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       map(value => Number(value))
     ).subscribe((value) => {
-      const control = this.fm.getFormField('personalTab.employeer');
       // 1 is Qatari
       if (value !== 1) {
-        control?.setValidators([CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY')]);
+        this.employerField?.setValidators([CustomValidators.required, CustomValidators.pattern('ENG_AR_ONLY')]);
       } else {
-        control?.setValidators([CustomValidators.pattern('ENG_AR_ONLY')]);
+        this.employerField?.setValidators([CustomValidators.pattern('ENG_AR_ONLY')]);
       }
-      control?.updateValueAndValidity();
+      this.employerField?.updateValueAndValidity();
     });
 
 
@@ -547,7 +488,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       // tap(val => console.log(val)),
       delay(100),
       map(() => {
-        return this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+        return this.form?.valid && this.buildingPlate.isValidForm();
       })
     );
 
@@ -615,7 +556,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     // map formStatus
     const formStatus$ = formAidValid$.pipe(
       map(() => {
-        let isValid = this.fm.getForm()?.valid && this.buildingPlate.isValidForm();
+        let isValid = this.form?.valid && this.buildingPlate.isValidForm();
         if (!!this.currentRequest && this.currentRequest.id) {
           return isValid;
         }
@@ -654,7 +595,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           .pipe(
             filter(response => response),
             map(() => requestAndBen)
-          )
+          );
       }),
       share()
     );
@@ -784,12 +725,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private prepareBeneficiary(): Beneficiary {
-    const personal = this.fm.getFormField('personalTab')?.value;
-    const address = this.fm.getFormField('addressTab')?.value;
-    const buildingPlate = this.buildingPlate.getValue();
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
-        ...this.currentBeneficiary, ...personal, ...address, ...buildingPlate,
+        ...this.currentBeneficiary,
+        ...this.personalInfoTab?.value,
+        ...this.addressTab?.value,
+        ...this.buildingPlate.getValue(),
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
@@ -798,8 +739,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private prepareRequest(): SubventionRequest {
     const request = {
       ...this.currentRequest,
-      ...this.fm.getFormField('requestInfoTab')?.value,
-      ...this.fm.getFormField('requestStatusTab')?.value,
+      ...this.requestInfoTab?.value,
+      ...this.requestStatusTab?.value,
       requestChannel: 1 // SANADI PORTAL
     };
     return this.currentRequest = (new SubventionRequest()).clone(request);
@@ -876,7 +817,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.currentParamType === this.routeParamTypes.partial) {
           setTimeout(() => {
             this.savePartial$.next(this.saveActions.partialSave);
-          }, 200)
+          }, 200);
         }
       });
   }
@@ -919,7 +860,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               let ben = this.deleteBeneficiaryIds(beneficiary);
               this.beneficiaryChanged$.next(ben);
             }
-          })
+          });
         } else {
           let ben = this.deleteBeneficiaryIds(list[0]);
           this.beneficiaryChanged$.next(ben);
@@ -986,7 +927,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private listenToSaveAid() {
     const aidForm$ = this.saveAid$.pipe(map(() => {
-      return this.fm.getFormField('aidTab.0') as AbstractControl;
+      return this.aidFormArray.get('0') as AbstractControl;
     }));
 
     const validForm$ = aidForm$.pipe(
@@ -1021,10 +962,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return this.fm.getFormField('aidTab.0') as FormArray;
+        return this.aidFormArray.get('0') as FormGroup;
       }),
       map((form) => {
-
         return (new SubventionAid()).clone({
           ...this.currentAid, ...form.getRawValue(),
           subventionRequestId: this.currentRequest?.id
@@ -1120,27 +1060,27 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get aidFormArray(): FormArray {
-    return this.fm.getFormField('aidTab') as FormArray;
+    return this.form.get('aidTab') as FormArray;
   }
 
   get personalInfoTab(): FormGroup {
-    return this.fm.getFormField('personalTab') as FormGroup;
+    return this.form.get('personalTab') as FormGroup;
   }
 
   get addressTab(): FormGroup {
-    return this.fm.getFormField('addressTab') as FormGroup;
+    return this.form.get('addressTab') as FormGroup;
   }
 
   get requestInfoTab(): FormGroup {
-    return this.fm.getFormField('requestInfoTab') as FormGroup;
+    return this.form.get('requestInfoTab') as FormGroup;
   }
 
   get requestStatusTab(): FormGroup {
-    return this.fm.getFormField('requestStatusTab') as FormGroup;
+    return this.form.get('requestStatusTab') as FormGroup;
   }
 
   get attachmentsTab(): FormGroup {
-    return this.fm.getFormField('attachmentsTab') as FormGroup;
+    return this.form.get('attachmentsTab') as FormGroup;
   }
 
   get dateOfBirthField(): FormControl {
@@ -1155,12 +1095,12 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.requestInfoTab.get('creationDate') as FormControl;
   }
 
-  get statusDateModifiedField(): FormControl {
-    return this.requestStatusTab.get('statusDateModified') as FormControl;
+  get requestStatusField(): FormControl {
+    return this.requestStatusTab.get('status') as FormControl;
   }
 
-  get aidTypeField(): FormControl {
-    return this.aidFormArray.get('0.aidLookupId') as FormControl;
+  get statusDateModifiedField(): FormControl {
+    return this.requestStatusTab.get('statusDateModified') as FormControl;
   }
 
   get aidGivenAmountField(): FormControl {
@@ -1187,64 +1127,68 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.aidFormArray.get('0.aidStartPayDate') as FormControl;
   }
 
+  get aidsRequestedAidField(): FormControl {
+    return this.aidFormArray.get('0.aidLookupId') as FormControl;
+  }
+
   get benNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benNationality') as FormControl;
+    return this.personalInfoTab.get('benNationality') as FormControl;
   }
 
   get primaryIdTypeField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdType') as FormControl;
+    return this.personalInfoTab.get('benPrimaryIdType') as FormControl;
   }
 
   get primaryIdNumberField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdNumber') as FormControl;
+    return this.personalInfoTab.get('benPrimaryIdNumber') as FormControl;
   }
 
   get primaryNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benPrimaryIdNationality') as FormControl;
+    return this.personalInfoTab.get('benPrimaryIdNationality') as FormControl;
   }
 
   get secondaryIdTypeField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdType') as FormControl;
+    return this.personalInfoTab.get('benSecIdType') as FormControl;
   }
 
   get secondaryIdNumberField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdNumber') as FormControl;
+    return this.personalInfoTab.get('benSecIdNumber') as FormControl;
   }
 
   get secondaryNationalityField(): FormControl {
-    return this.fm.getFormField('personalTab.benSecIdNationality') as FormControl;
+    return this.personalInfoTab.get('benSecIdNationality') as FormControl;
   }
 
   get employmentStatusField(): FormControl {
-    return this.fm.getFormField('personalTab.occuptionStatus') as FormControl;
+    return this.personalInfoTab.get('occuptionStatus') as FormControl;
   }
 
   get occupationField(): FormControl {
-    return this.fm.getFormField('personalTab.occuption') as FormControl;
+    return this.personalInfoTab.get('occuption') as FormControl;
+  }
+
+  get employerField(): FormControl {
+    return this.personalInfoTab.get('employeer') as FormControl;
   }
 
   get workPlaceField(): FormControl {
-    return this.fm.getFormField('personalTab.employeerAddress') as FormControl;
+    return this.personalInfoTab.get('employeerAddress') as FormControl;
   }
 
   get isHandicappedField(): FormControl {
-    return this.fm.getFormField('personalTab.isHandicapped') as FormControl;
+    return this.personalInfoTab.get('isHandicapped') as FormControl;
   }
 
   get requestedAidField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.aidLookupId') as FormControl;
-  }
-
-  get aidsRequestedAidField(): FormControl {
-    return this.fm.getFormField('aidTab.0.aidLookupId') as FormControl;
+    return this.requestInfoTab.get('aidLookupId') as FormControl;
   }
 
   get allowCompletionField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.allowCompletion') as FormControl;
+    return this.requestInfoTab.get('allowCompletion') as FormControl;
   }
 
   get allowDataSharingField(): FormControl {
-    return this.fm.getFormField('requestInfoTab.allowDataSharing') as FormControl;
+    return this.requestInfoTab.get('allowDataSharing') as FormControl;
   }
 
   get isCurrentRequestPartial(): boolean {
@@ -1357,7 +1301,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       parent: mainAidId
     }).pipe(
       catchError(err => of([]))
-    )
+    );
   }
 
   aidsPeriodicTypeChange(value: number, userInteraction: boolean = false) {
@@ -1381,7 +1325,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(value => {
       if (this.currentRequest) {
-        this.fm.getFormField('requestStatusTab')?.get('status')?.updateValueAndValidity();
+        this.requestStatusField?.updateValueAndValidity();
         const requestDate = DateUtils.changeDateFromDatepicker(value);
         if (requestDate) {
           requestDate.setHours(0, 0, 0, 0);
@@ -1423,15 +1367,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isProvidedAidDisabled(): boolean {
-    return this.requestStatusArray.indexOf(this.fm.getFormField('requestStatusTab')?.value?.status) !== -1;
+    return this.requestStatusArray.indexOf(this.requestStatusField.value) !== -1;
   }
 
   private validRequestStatus(): boolean {
-    const status = this.requestStatusTab.get('status');
-    if (!status) {
+    if (!this.requestStatusField) {
       return true;
     }
-    return !(status.value === SubventionRequestStatus.APPROVED && !this.subventionAidList.length);
+    return !(this.requestStatusField.value === SubventionRequestStatus.APPROVED && !this.subventionAidList.length);
   }
 
   private displayRequestStatusMessage(): void {
@@ -1469,13 +1412,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           thirdBtn: 'btn_save_and_inquire',
           cancelBtn: 'btn_clear',
           showCloseIcon: true
-        })
+        });
       } else {
         confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
           actionBtn: 'btn_continue',
           cancelBtn: 'btn_clear',
           showCloseIcon: true
-        })
+        });
       }
       confirmMsg.onAfterClose$
         .pipe(take(1))
@@ -1516,11 +1459,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isPrimaryIdTypeDisabled(optionValue: number): boolean {
-    return this.fm.getFormField('personalTab.benSecIdType')?.value === optionValue;
+    return this.secondaryIdTypeField?.value === optionValue;
   }
 
   isSecondaryIdTypeDisabled(optionValue: number): boolean {
-    return this.fm.getFormField('personalTab.benPrimaryIdType')?.value === optionValue;
+    return this.primaryIdTypeField?.value === optionValue;
   }
 
   private setNationalityVisibility(identification: string, idType: number): boolean {
@@ -1708,17 +1651,21 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return 'CONFIRM_UNSAVED_CHANGES';
   }
 
-  displayFormValidity(contentId: string = ''): void {
-    this.fm.displayFormValidity(contentId);
+  displayFormValidity(contentId: string = 'main-content'): void {
+    CommonUtils.displayFormValidity(this.form, contentId);
     this.buildingPlate.displayFormValidity();
   }
 
   getTabInvalidStatus(tabName: string): boolean {
-    let validStatus = this.tabsData[tabName].validStatus();
-    if (!this.tabsData[tabName].checkTouchedDirty) {
-      return !validStatus;
+    let tab = this.tabsData[tabName];
+    if (!tab) {
+      console.info('tab not found: %s', tabName);
+      return true; // if tab not found, consider it invalid
     }
-    return !validStatus && this.tabsData[tabName].isTouchedOrDirty();
+    if (!tab.checkTouchedDirty) {
+      return !tab.validStatus();
+    }
+    return !tab.validStatus() && tab.isTouchedOrDirty();
   }
 
   private _getInvalidTabs(): any {

@@ -2,7 +2,6 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, V
 import {LangService} from '@app/services/lang.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {SubventionRequest} from '@app/models/subvention-request';
-import {FormManager} from '@app/models/form-manager';
 import {SanadiAttachment} from '@app/models/sanadi-attachment';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
@@ -52,8 +51,9 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
 
   @Input()
   set request(val: SubventionRequest | undefined) {
-    if (val)
+    if (val) {
       this._request = val;
+    }
   }
 
   get request(): SubventionRequest | undefined {
@@ -88,7 +88,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   filterControl: FormControl = new FormControl('');
 
   editItem?: SanadiAttachment;
-  fm!: FormManager;
   form!: FormGroup;
 
   @ViewChild('fileUploader') fileUploader!: ElementRef;
@@ -134,7 +133,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.attachmentTypeInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   isFormShown(): boolean {
     return this.showForm;
@@ -226,11 +225,6 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       requestId: [attachment.requestId],
       requestFullSerial: [attachment.requestFullSerial]
     });
-    this.fm = new FormManager(this.form, this.langService);
-  }
-
-  get buttonText(): string {
-    return this.langService.map[this.buttonKey] || this.langService.map.select;
   }
 
   get isNewAttachment(): boolean {
@@ -250,58 +244,9 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.fileUploader?.nativeElement.click();
   }
 
-  getUploadedFileName(): string {
-    if (!this.attachedFiles || this.attachedFiles.length === 0) {
-      return '';
-    }
-    if (!this.multiUpload) {
-      return this.attachedFiles[0].name;
-    } else {
-      if (this.attachedFiles.length > 5) {
-        return this.langService.map.x_files_chosen.change({count: '5+'}) || ''
-      }
-      return this.attachedFiles.map(file => file.name).join(', ');
-    }
-  }
-
-  private setAttachedFiles(files: File[] | null | undefined): void {
-    this.attachedFiles = [];
-    if (files && files.length > 0) {
-      this.attachedFiles = Array.from(files);
-    }
-    this.fileUploader.nativeElement.value = "";
-  }
-
-  private filterValidFiles(files: File[], showInvalidMessage: boolean = false): File[] {
-    let validFiles = files.filter((file) => {
-      return this.allowedExtensions.indexOf(file.name.getExtension().toLowerCase()) > -1;
-    });
-    if (showInvalidMessage) {
-      if (validFiles.length === 0) {
-
-      } else if (validFiles.length < files.length) {
-
-      }
-    }
-    return validFiles;
-  }
-
-  onFileSelected($event: Event): void {
-    let files = ($event.target as HTMLInputElement).files,
-      validFiles: File[] = [];
-    if (files && files.length > 0) {
-      validFiles = this.filterValidFiles(Array.from(files), true);
-    }
-    this.setAttachedFiles(validFiles);
-  }
-
-  removeAttachedFile($event: MouseEvent): void {
-    $event.preventDefault();
-    this.setAttachedFiles(null);
-  }
-
   addAttachment($event?: MouseEvent): void {
     $event?.preventDefault();
+    this.editItem = undefined;
     this.setDisplayForm();
   }
 
@@ -323,10 +268,12 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
             this.attachmentList.splice(index, 1);
             this.attachmentList$.next(this.attachmentList);
             this.updateList.emit(this.attachmentList);
+            this.editItem = undefined;
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: attachment.getName()}));
             return;
           }
           attachment.deleteByVsId().subscribe(() => {
+            this.editItem = undefined;
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: attachment.getName()}));
             this.reload$.next(null);
           });
@@ -345,7 +292,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.showForm = false;
     this.onFormToggle.emit(false);
-    this.setAttachedFiles(null);
+    this.setUploadedFiles(undefined);
     this.currentAttachment = null;
     this.editItem = undefined;
   }
@@ -388,5 +335,12 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       });
   }
 
+  setUploadedFiles(file: File | File[] | undefined) {
+    this.attachedFiles = [];
+    if (!file) {
+      return;
+    }
+    this.attachedFiles = (file instanceof File) ? [file] : file;
+  }
 
 }
