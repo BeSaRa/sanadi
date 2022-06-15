@@ -24,7 +24,7 @@ export class ShippingApprovalService extends EServiceGenericService<ShippingAppr
   serviceKey: keyof ILanguageKeys = "menu_shipping_services_approval";
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];
-  selectDocumentDisplayColumns: string[] = ['shipmentSource','shipmentCarrier','receiverName','documentNumber','actions'];
+  selectDocumentDisplayColumns: string[] = ['shipmentSource','shipmentCarrier','receiverName', 'orderNumber', 'documentNumber','actions'];
 
   constructor(
     public http: HttpClient,

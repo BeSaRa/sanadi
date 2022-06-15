@@ -20,6 +20,7 @@ export class SelectDocumentPopUpComponent {
     "shipmentSource",
     "shipmentCarrier",
     "receiverName",
+    "orderNumber",
     "documentNumber"
   ];
   label: keyof ILanguageKeys = "document";
@@ -51,14 +52,8 @@ export class SelectDocumentPopUpComponent {
     if (this.data.displayedColumns.length > 0) {
       this.displayedColumns = [...this.data.displayedColumns];
     } else {
-      if (
-        this.caseService &&
-        !!this.caseService.selectLicenseDisplayColumns &&
-        this.caseService.selectLicenseDisplayColumns.length > 0
-      ) {
-        this.displayedColumns = [
-          ...this.caseService.selectLicenseDisplayColumns,
-        ];
+      if (this.caseService && !!this.caseService.selectLicenseDisplayColumns && this.caseService.selectLicenseDisplayColumns.length > 0) {
+        this.displayedColumns = [...this.caseService.selectLicenseDisplayColumns,];
       } else {
         this.displayedColumns = [...this.displayedColumns];
       }

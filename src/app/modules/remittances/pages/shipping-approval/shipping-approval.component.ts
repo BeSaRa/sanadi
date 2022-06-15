@@ -1,42 +1,39 @@
-import { Component } from "@angular/core";
-import { FormGroup, FormBuilder, AbstractControl } from "@angular/forms";
-import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { ShippingApproval } from "@app/models/shipping-approval";
-import { ShippingApprovalService } from "@app/services/shipping-approval.service";
-import { OperationTypes } from "@app/enums/operation-types.enum";
-import { SaveTypes } from "@app/enums/save-types";
-import { LangService } from "@app/services/lang.service";
-import { Observable, of, Subject } from "rxjs";
-import { LookupService } from "@app/services/lookup.service";
-import { Lookup } from "@app/models/lookup";
-import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
-import { ReceiverTypes } from "@app/enums/receiver-type.enum";
-import {LinkedProjectTypes} from "@app/enums/linked-project-type.enum"
-import { CustomValidators } from "@app/validators/custom-validators";
-import { DialogService } from "@app/services/dialog.service";
-import { ToastService } from "@app/services/toast.service";
-import { Country } from "@app/models/country";
-import { CountryService } from "@app/services/country.service";
-import { AgencyService } from "@app/services/agency-service";
-import { Agency } from "@app/models/agency";
-import { OpenFrom } from "@app/enums/open-from.enum";
-import { EmployeeService } from "@app/services/employee.service";
-import { ShippingApprovalSearchCriteria } from "@app/models/shipping-approval-search-criteria";
-import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { CustomsExemptionRemittanceService } from "@app/services/customs-exemption-remittance.service";
-import { CommonUtils } from "@app/helpers/common-utils";
+import {Component} from '@angular/core';
+import {FormGroup, FormBuilder, AbstractControl} from '@angular/forms';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {ShippingApproval} from '@app/models/shipping-approval';
+import {ShippingApprovalService} from '@app/services/shipping-approval.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {ReceiverTypes} from '@app/enums/receiver-type.enum';
+import {LinkedProjectTypes} from '@app/enums/linked-project-type.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {Country} from '@app/models/country';
+import {CountryService} from '@app/services/country.service';
+import {AgencyService} from '@app/services/agency-service';
+import {Agency} from '@app/models/agency';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {ShippingApprovalSearchCriteria} from '@app/models/shipping-approval-search-criteria';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {CustomsExemptionRemittanceService} from '@app/services/customs-exemption-remittance.service';
+import {CommonUtils} from '@app/helpers/common-utils';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
-  selector: "shipping-approval",
-  templateUrl: "./shipping-approval.component.html",
-  styleUrls: ["./shipping-approval.component.scss"],
+  selector: 'shipping-approval',
+  templateUrl: './shipping-approval.component.html',
+  styleUrls: ['./shipping-approval.component.scss'],
 })
-export class ShippingApprovalComponent extends EServicesGenericComponent<
-  ShippingApproval,
-  ShippingApprovalService
-> {
+export class ShippingApprovalComponent extends EServicesGenericComponent<ShippingApproval, ShippingApprovalService> {
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
@@ -44,28 +41,20 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   selectedDocument?: ShippingApproval;
   displayProjectLicenseSearchButton = false;
 
-
-  constructor(
-    public lang: LangService,
-    public fb: FormBuilder,
-    public service: ShippingApprovalService,
-    private lookupService: LookupService,
-    private dialog: DialogService,
-    private toast: ToastService,
-    private countryService: CountryService,
-    private agencyService: AgencyService,
-    public employeeService: EmployeeService,
-    private customsExemptionRemittanceService: CustomsExemptionRemittanceService
-  ) {
+  constructor(public lang: LangService,
+              public fb: FormBuilder,
+              public service: ShippingApprovalService,
+              private lookupService: LookupService,
+              private dialog: DialogService,
+              private toast: ToastService,
+              private countryService: CountryService,
+              private agencyService: AgencyService,
+              public employeeService: EmployeeService,
+              private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
     super();
   }
 
-  requestTypes: Lookup[] =
-    this.lookupService.listByCategory.ServiceRequestTypeNoRenew.filter(
-      (l) =>
-        l.lookupKey !== ServiceRequestTypes.EXTEND &&
-        l.lookupKey !== ServiceRequestTypes.UPDATE
-    ).sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.CustomsExemptionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
 
   countriesList: Country[] = [];
   receiverTypes: Lookup[] = this.lookupService.listByCategory.ReceiverType;
@@ -73,45 +62,41 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
   receiverNames: Agency[] = [];
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   get requestType(): AbstractControl {
-    return this.form.get("requestType")!;
+    return this.form.get('requestType')!;
   }
 
   get linkedProject(): AbstractControl {
-    return this.form.get("linkedProject")!;
+    return this.form.get('linkedProject')!;
   }
 
   get receiverType(): AbstractControl {
-    return this.form.get("receiverType")!;
+    return this.form.get('receiverType')!;
   }
 
   get otherReceiverName(): AbstractControl {
-    return this.form.get("otherReceiverName")!;
+    return this.form.get('otherReceiverName')!;
   }
 
   get projectLicense(): AbstractControl {
-    return this.form.get("projectLicense")!;
+    return this.form.get('projectLicense')!;
   }
 
   get country(): AbstractControl {
-    return this.form.get("country")!;
+    return this.form.get('country')!;
   }
 
   get fullSerial(): AbstractControl {
-    return this.form.get("fullSerial")!;
+    return this.form.get('fullSerial')!;
   }
 
   get exportedBookFullSerial(): AbstractControl {
-    return this.form.get("exportedBookFullSerial")!;
+    return this.form.get('exportedBookFullSerial')!;
   }
 
   isCancelRequestType(): boolean {
-    return (
-      this.requestType.value &&
-      this.requestType.value === ServiceRequestTypes.CANCEL
-    );
+    return (this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL);
   }
 
   isEditRequestTypeAllowed(): boolean {
@@ -121,14 +106,10 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   isEditOrderNoAndDocNoAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
-    let isAllowed =
-      !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return (
-      isAllowed &&
-      CommonUtils.isValidValue(this.requestType.value) &&
-      this.requestType.value !== ServiceRequestTypes.NEW
-    );
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return (isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW);
   }
+
   _getNewInstance(): ShippingApproval {
     return new ShippingApproval();
   }
@@ -140,8 +121,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
   }
 
   private loadCountries(): void {
-    this.countryService
-      .loadCountries()
+    this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => (this.countriesList = countries));
   }
@@ -166,39 +146,21 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(() => {
         if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
-          this.fullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.fullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
-          this.exportedBookFullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.exportedBookFullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
+          this.fullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+          }]);
+          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+          }]);
 
           this.fullSerial.updateValueAndValidity();
           this.exportedBookFullSerial.updateValueAndValidity();
         } else if (this.fullSerial.value) {
           this.exportedBookFullSerial.clearValidators();
           this.exportedBookFullSerial.updateValueAndValidity();
-          this.fullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.fullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
+          this.fullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+          }]);
           this.fullSerial.updateValueAndValidity();
         }
       });
@@ -209,39 +171,21 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(() => {
         if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
-          this.fullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.fullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
-          this.exportedBookFullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.exportedBookFullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
+          this.fullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+          }]);
+          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+          }]);
 
           this.fullSerial.updateValueAndValidity();
           this.exportedBookFullSerial.updateValueAndValidity();
         } else if (this.exportedBookFullSerial.value) {
           this.fullSerial.clearValidators();
           this.fullSerial.updateValueAndValidity();
-          this.exportedBookFullSerial.setValidators([
-            CustomValidators.required,
-            (control) => {
-              return this.selectedDocument &&
-                this.selectedDocument?.exportedBookFullSerial === control.value
-                ? null
-                : { select_document: true };
-            },
-          ]);
+          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
+            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+          }]);
           this.exportedBookFullSerial.updateValueAndValidity();
         }
       });
@@ -325,10 +269,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     if (!this.country.value) {
       return;
     }
-    if (
-      !this.receiverType.value ||
-      this.receiverType.value === ReceiverTypes.OTHER
-    ) {
+    if (!this.receiverType.value || this.receiverType.value === ReceiverTypes.OTHER) {
       return;
     }
     this.agencyService
@@ -351,50 +292,51 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
         .pipe(filter((valid) => valid));
     }
   }
+
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _prepareModel(): ShippingApproval | Observable<ShippingApproval> {
     return new ShippingApproval().clone({
       ...this.model,
       ...this.form.getRawValue(),
     });
   }
-  _afterSave(
-    model: ShippingApproval,
-    saveType: SaveTypes,
-    operation: OperationTypes
-  ): void {
+
+  _afterSave(model: ShippingApproval, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(
-        this.lang.map.msg_request_has_been_added_successfully.change({
-          serial: model.fullSerial,
-        })
-      );
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
-    throw new Error("Method not implemented.");
+    console.log('problem in save');
   }
+
   _launchFail(error: any): void {
-    throw new Error("Method not implemented.");
+    console.log(error);
   }
+
   _destroyComponent(): void {
     // throw new Error('Method not implemented.');
   }
+
   _updateForm(model: ShippingApproval | undefined): void {
     if (!model) {
       return;
@@ -404,6 +346,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     this.handleRequestTypeChange(model.requestType, false);
     this.handleReceiverTypeandCountryChange();
   }
+
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
@@ -422,15 +365,11 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
 
   documentSearchByDocNo($event: Event): void {
     $event?.preventDefault();
-    const value =
-      this.exportedBookFullSerial.value &&
-      this.exportedBookFullSerial.value.trim();
+    const value = this.exportedBookFullSerial.value && this.exportedBookFullSerial.value.trim();
     this.documentSearchByDocNo$.next(value);
   }
 
-  loadDocumentsByCriteria(
-    criteria: Partial<ShippingApprovalSearchCriteria>
-  ): Observable<ShippingApproval[]> {
+  loadDocumentsByCriteria(criteria: Partial<ShippingApprovalSearchCriteria>): Observable<ShippingApproval[]> {
     return this.service.documentSearch(criteria);
   }
 
@@ -439,26 +378,19 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((fullSerial) => {
-          return this.loadDocumentsByCriteria({ fullSerial: fullSerial }).pipe(
-            catchError(() => of([]))
-          );
+          return this.loadDocumentsByCriteria({fullSerial: fullSerial})
+            .pipe(catchError(() => of([])));
         })
       )
       .pipe(
         // display message in case there is no returned document
-        tap((list) =>
-          !list.length
-            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-            : null
-        ),
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
         // allow only the collection if it has value
         filter((result) => !!result.length)
       )
       .pipe(
         exhaustMap((documents) => {
-          return documents.length === 1
-            ? this.validateSingleDocument(documents[0])
-            : this.openSelectDocument(documents);
+          return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
         })
       )
       .pipe(filter((info): info is ShippingApproval => !!info))
@@ -472,26 +404,19 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((exportedBookFullSerial) => {
-          return this.loadDocumentsByCriteria({
-            exportedBookFullSerial: exportedBookFullSerial,
-          }).pipe(catchError(() => of([])));
+          return this.loadDocumentsByCriteria({exportedBookFullSerial: exportedBookFullSerial})
+            .pipe(catchError(() => of([])));
         })
       )
       .pipe(
         // display message in case there is no returned document
-        tap((list) =>
-          !list.length
-            ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
-            : null
-        ),
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
         // allow only the collection if it has value
         filter((result) => !!result.length)
       )
       .pipe(
         exhaustMap((documents) => {
-          return documents.length === 1
-            ? this.validateSingleDocument(documents[0])
-            : this.openSelectDocument(documents);
+          return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
         })
       )
       .pipe(filter((info): info is ShippingApproval => !!info))
@@ -500,41 +425,20 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
       });
   }
 
-  private validateSingleDocument(
-    document: ShippingApproval
-  ): Observable<undefined | ShippingApproval> {
-    return this.customsExemptionRemittanceService.validateDocumentByRequestType<ShippingApproval>(
-      this.model!.caseType,
-      this.requestType.value,
-      document.exportedBookId
-    ) as Observable<undefined | ShippingApproval>;
+  private validateSingleDocument(document: ShippingApproval): Observable<undefined | ShippingApproval> {
+    return this.customsExemptionRemittanceService
+      .validateDocumentByRequestType<ShippingApproval>(this.model!.caseType, this.requestType.value, document.exportedBookId) as Observable<undefined | ShippingApproval>;
   }
 
-  private openSelectDocument(
-    documents: ShippingApproval[]
-  ): Observable<undefined | ShippingApproval> {
+  private openSelectDocument(documents: ShippingApproval[]): Observable<undefined | ShippingApproval> {
     return this.customsExemptionRemittanceService
-      .openSelectDocumentDialog(
-        documents,
-        this.model?.clone({ requestType: this.requestType.value || null }),
-        true,
-        this.service.selectDocumentDisplayColumns
-      )
+      .openSelectDocumentDialog(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
       .onAfterClose$.pipe(
-        map(
-          (
-            result:
-              | { selected: ShippingApproval; details: ShippingApproval }
-              | undefined
-          ) => (result ? result.details : result)
-        )
+        map((result: ({ selected: ShippingApproval; details: ShippingApproval } | undefined)) => (result ? result.details : result))
       );
   }
 
-  setSelectedDocument(
-    documentDetails: ShippingApproval | undefined,
-    ignoreUpdateForm: boolean
-  ) {
+  setSelectedDocument(documentDetails: ShippingApproval | undefined, ignoreUpdateForm: boolean) {
     this.selectedDocument = documentDetails;
     if (documentDetails && !ignoreUpdateForm) {
       // update form fields if i have document
@@ -548,10 +452,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
     }
   }
 
-  handleRequestTypeChange(
-    requestTypeValue: number,
-    userInteraction: boolean = false
-  ): void {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
       this._resetForm();
       this.requestType.setValue(requestTypeValue);
@@ -571,24 +472,12 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<
         this.setSelectedDocument(undefined, true);
       }
     } else {
-      this.fullSerial.setValidators([
-        CustomValidators.required,
-        (control) => {
-          return this.selectedDocument &&
-            this.selectedDocument?.fullSerial === control.value
-            ? null
-            : { select_document: true };
-        },
-      ]);
-      this.exportedBookFullSerial.setValidators([
-        CustomValidators.required,
-        (control) => {
-          return this.selectedDocument &&
-            this.selectedDocument?.exportedBookFullSerial === control.value
-            ? null
-            : { select_document: true };
-        },
-      ]);
+      this.fullSerial.setValidators([CustomValidators.required, (control) => {
+        return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+      }]);
+      this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
+        return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+      }]);
     }
     this.fullSerial.updateValueAndValidity();
     this.exportedBookFullSerial.updateValueAndValidity();

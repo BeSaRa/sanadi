@@ -2,9 +2,7 @@ import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { AdminResult } from "@app/models/admin-result";
 import { ShippingApproval } from "@app/models/shipping-approval";
 
-export class ShippingApprovalInterceptor
-  implements IModelInterceptor<ShippingApproval>
-{
+export class ShippingApprovalInterceptor implements IModelInterceptor<ShippingApproval> {
   send(model: Partial<ShippingApproval>): Partial<ShippingApproval> {
     delete model.requestTypeInfo;
     delete model.shipmentSourceInfo;

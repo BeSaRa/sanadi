@@ -17,9 +17,13 @@
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.shipping_method}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.shipmentCarrierInfo.getName()}} </td>
             </ng-container>
+            <ng-container cdkColumnDef="orderNumber">
+                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.order_number}}</th>
+                <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
+            </ng-container>
             <ng-container cdkColumnDef="documentNumber">
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.document_number}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
+                <td cdk-cell *cdkCellDef="let row"> {{row.exportedBookFullSerial}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
