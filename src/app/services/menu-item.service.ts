@@ -7,7 +7,7 @@ import {tap} from 'rxjs/operators';
 import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FactoryService} from './factory.service';
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +58,7 @@ export class MenuItemService {
 
   private getParentChildren(items: MenuItem[]): void {
     items.forEach(item => {
-      item.children = this.getChildren(item);
+      item.children = this.getChildren(item).sort((a, b) => a.itemOrder - b.itemOrder);
     });
   }
 
