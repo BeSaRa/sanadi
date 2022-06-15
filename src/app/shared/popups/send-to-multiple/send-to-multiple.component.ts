@@ -19,7 +19,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
 import {ExpertsEnum} from '@app/enums/experts-enum';
-import {CaseModel} from "@app/models/case-model";
+import {CaseModel} from '@app/models/case-model';
 
 @Component({
   selector: 'send-to-multiple',
@@ -27,14 +27,6 @@ import {CaseModel} from "@app/models/case-model";
   styleUrls: ['./send-to-multiple.component.scss']
 })
 export class SendToMultipleComponent implements OnInit, OnDestroy {
-  users: InternalUser[] = [];
-  departments: InternalDepartment[] = [];
-  form!: FormGroup;
-  done$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
-  title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-  maxSelectionCount!: number;
-
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -55,18 +47,36 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private dialog: DialogService,
     public lang: LangService
   ) {
-    if (this.isSendToDepartments() && WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
+    if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
       this.maxSelectionCount = 2; // as per business doc
     }
   }
 
+  users: InternalUser[] = [];
+  departments: InternalDepartment[] = [];
+  form!: FormGroup;
+  done$: Subject<any> = new Subject<any>();
+  private destroy$: Subject<any> = new Subject<any>();
+  title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
+  maxSelectionCount!: number;
+
+  multiSendToDepartmentWFResponseList = [
+    WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
+    WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
+    WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS
+  ];
+  multiSendToUserWFResponseList = [
+    WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT
+  ];
+  twoDepartmentsWFResponses = [WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS, WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS];
+
+
   isSendToDepartments(): boolean {
-    return this.data.sendToResponse === WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS
-       || this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS;
+    return this.multiSendToDepartmentWFResponseList.includes( this.data.sendToResponse);
   }
 
   isSendToUsers(): boolean {
-    return this.data.sendToResponse === WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT;
+    return this.multiSendToUserWFResponseList.includes(this.data.sendToResponse);
   }
 
   private _loadInitData(): void {
@@ -153,7 +163,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     send$.pipe(filter(_ => !this.isValidForm()))
       .subscribe(() => {
         this.form.markAllAsTouched();
-        this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)
+        this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
       });
     // if form success
     send$
