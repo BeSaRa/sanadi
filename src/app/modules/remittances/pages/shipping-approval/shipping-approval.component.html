@@ -142,7 +142,7 @@
                     <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
                         [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}" id="country"
                         [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="country"
-                        validationClasses="country">
+                        validationClasses="country" (change)="handleCountryChange($event, true)">
                         <ng-option [value]="option.id" *ngFor="let option of countriesList">{{option.getName()}}
                         </ng-option>
                     </ng-select>
@@ -165,7 +165,8 @@
                     <ng-select [selectOnTab]="true" labelForId="receiverType" [clearable]="true"
                         [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
                         id="receiverType" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-                        formControlName="receiverType" validationClasses="receiverType">
+                        formControlName="receiverType" validationClasses="receiverType"
+                               (change)="handleReceiverTypeChange($event, true)">
                         <ng-option [value]="type.lookupKey" *ngFor="let type of receiverTypes">{{type.getName()}}
                         </ng-option>
                     </ng-select>
@@ -179,7 +180,7 @@
                         [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
                         id="receiverName" [notFoundText]="lang.map.msg_not_found" appendTo="body"
                         formControlName="receiverName" validationClasses="receiverName">
-                        <ng-option [value]="option.fnId" *ngFor="let option of receiverNames">
+                        <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
                             {{option.receiverNameInfo.getName()}}
                         </ng-option>
                     </ng-select>
@@ -205,19 +206,19 @@
                         class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
                     <app-field-error-message controlName="shipmentApproximateValue"></app-field-error-message>
                 </div>
-            </div>
-            <!-- Shipping Method -->
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <!-- Shipping Method -->
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="shipmentCarrier"
-                    for="shipmentCarrier">{{lang.map.shipping_method}}</label>
+                       for="shipmentCarrier">{{lang.map.shipping_method}}</label>
                 <ng-select [selectOnTab]="true" labelForId="shipmentCarrier" [clearable]="true"
-                    [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
-                    id="shipmentCarrier" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-                    formControlName="shipmentCarrier" validationClasses="shipmentCarrier">
-                    <ng-option [value]="type.lookupKey" *ngFor="let type of shippingMethods">{{type.getName()}}
-                    </ng-option>
+                           [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
+                           id="shipmentCarrier" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                           formControlName="shipmentCarrier" validationClasses="shipmentCarrier">
+                  <ng-option [value]="type.lookupKey" *ngFor="let type of shippingMethods">{{type.getName()}}
+                  </ng-option>
                 </ng-select>
                 <app-field-error-message controlName="shipmentCarrier"></app-field-error-message>
+              </div>
             </div>
             <div class="row">
                 <!-- description -->

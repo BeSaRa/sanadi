@@ -61,7 +61,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
-  receiverNames: Agency[] = [];
+  receiverNamesList: Agency[] = [];
 
   get requestType(): AbstractControl {
     return this.form.get('requestType')!;
@@ -71,8 +71,12 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     return this.form.get('linkedProject')!;
   }
 
-  get receiverType(): AbstractControl {
+  get receiverTypeField(): AbstractControl {
     return this.form.get('receiverType')!;
+  }
+
+  get receiverNameField(): AbstractControl {
+    return this.form.get('receiverName')!;
   }
 
   get otherReceiverName(): AbstractControl {
@@ -134,8 +138,6 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
 
   _afterBuildForm(): void {
     this.listenToLinkedProjectChanges();
-    this.listenToReceiverTypeChanges();
-    this.listenToCountryChange();
     this.listenToOrderNoChange();
     this.listenToDocNoChange();
     this.handleReadonly();
@@ -245,40 +247,6 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
       });
   }
 
-  private listenToReceiverTypeChanges() {
-    this.receiverType.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((receiverType: ReceiverTypes) => {
-        if (receiverType === ReceiverTypes.OTHER) {
-          this.otherReceiverName.setValidators(CustomValidators.required);
-        } else {
-          this.otherReceiverName.clearValidators();
-        }
-        this.otherReceiverName.updateValueAndValidity();
-        this.handleReceiverTypeandCountryChange();
-      });
-  }
-
-  private listenToCountryChange() {
-    this.country.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.handleReceiverTypeandCountryChange());
-  }
-
-  handleReceiverTypeandCountryChange() {
-    if (!this.country.value) {
-      return;
-    }
-    if (!this.receiverType.value || this.receiverType.value === ReceiverTypes.OTHER) {
-      return;
-    }
-    this.agencyService
-      .loadReceiverNames(this.receiverType.value, this.country.value)
-      .subscribe((receiverNames) => {
-        this.receiverNames = receiverNames;
-      });
-  }
-
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedDocument) {
       this.dialog.error(this.lang.map.please_select_document_to_complete_save);
@@ -344,7 +312,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     this.model = model;
     this.form.patchValue(model?.buildBasicInfo());
     this.handleRequestTypeChange(model.requestType, false);
-    this.handleReceiverTypeandCountryChange();
+    this.handleReceiverTypeChange(model.receiverType, false);
   }
 
   _resetForm(): void {
@@ -355,6 +323,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     this.exportedBookFullSerial.updateValueAndValidity();
     this.fullSerial.clearValidators();
     this.fullSerial.updateValueAndValidity();
+    this.receiverNamesList = [];
   }
 
   documentSearchByOrderNo($event: Event): void {
@@ -481,5 +450,41 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     }
     this.fullSerial.updateValueAndValidity();
     this.exportedBookFullSerial.updateValueAndValidity();
+  }
+
+  handleCountryChange(value: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this.receiverNameField.reset();
+    }
+    this.loadReceiversByCountryAndReceiverType(value, this.receiverTypeField.value);
+  }
+
+  handleReceiverTypeChange(value: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this.receiverNameField.reset();
+    }
+    if (value === ReceiverTypes.OTHER) {
+      this.receiverNameField.removeValidators(CustomValidators.required);
+      this.otherReceiverName.addValidators(CustomValidators.required);
+    } else {
+      this.receiverNameField.addValidators(CustomValidators.required);
+      this.otherReceiverName.removeValidators(CustomValidators.required);
+    }
+    this.receiverNameField.updateValueAndValidity();
+    this.otherReceiverName.updateValueAndValidity();
+
+    this.loadReceiversByCountryAndReceiverType(this.country.value, value);
+  }
+
+  private loadReceiversByCountryAndReceiverType(country: number, receiverType: number) {
+    if (!country || !receiverType || receiverType === ReceiverTypes.OTHER) {
+      this.receiverNamesList = [];
+      return;
+    }
+    this.agencyService
+      .loadReceiverNames(receiverType, country)
+      .subscribe((receiverNames) => {
+        this.receiverNamesList = receiverNames;
+      });
   }
 }
