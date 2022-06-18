@@ -51,6 +51,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
   isUpdateMerge = false;
+  isUpdateNewAccount = false;
   isExternalUser!: boolean;
 
   constructor(public lang: LangService,
@@ -316,6 +317,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.hideUpdateAccountFields();
     this.hideUpdateMergeFields();
     this.isUpdateMerge = false;
+    this.isUpdateNewAccount = false;
     if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       this.disableNewMergeAccountsFields();
       this.enableNewMergeAccountsFields();
@@ -334,6 +336,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.enableUpdateNewAccountFields();
       this.disableUpdateNewAccountFields();
       this.isUpdateMerge = false;
+      this.isUpdateNewAccount = true;
       this.isNewMerge = false;
     } else if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       this.showUpdateBankAccountFields();
@@ -341,6 +344,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.enableUpdateMergeAccountsFields();
       this.disableUpdateMergeAccountsFields();
       this.isUpdateMerge = true;
+      this.isUpdateNewAccount = false;
       this.isNewMerge = false;
     }
   }
