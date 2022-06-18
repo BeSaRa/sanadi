@@ -589,15 +589,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   searchForLicense() {
-    if (!this.oldLicenseFullSerialField.value) {
-      this.dialog.error(this.lang.map.need_license_number_to_search);
-      return;
-    }
-
     this.licenseService
       .internalBankAccountSearch<InternalBankAccountApproval>({
         fullSerial: this.oldLicenseFullSerialField.value
       })
+      .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
