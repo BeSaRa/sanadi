@@ -23,6 +23,8 @@ import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
 import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 import {EmployeeService} from '@app/services/employee.service';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -148,6 +150,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.loadBanks();
     this.loadBankAccounts();
     this.loadNPOEmployees();
+    this.handleReadonly();
     // this.selectedBankAccounts = this.model?.internalBankAccountDTO!;
     // this.listenToRequestTypeAndOperationTypeChanges();
     // this.toggleRequestType(this.requestType.value);
@@ -632,5 +635,40 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   removeResponsiblePersons(npoEmployee: NpoEmployee, event: MouseEvent) {
     event.preventDefault();
     this.selectedNPOEmployees = this.selectedNPOEmployees.filter(x => x.id != npoEmployee.id);
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
 }
