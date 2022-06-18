@@ -60,7 +60,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       operationType: controls ? [operationType, [CustomValidators.required]] : operationType,
-      purpose: controls ? [purpose, [CustomValidators.required]] : purpose,
+      purpose: controls ? [purpose, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : purpose,
       bankId: controls ? [bankId, [CustomValidators.required]] : bankId,
       category: controls ? [category, [CustomValidators.required]] : category,
       currency: controls ? [currency, [CustomValidators.required]] : currency,

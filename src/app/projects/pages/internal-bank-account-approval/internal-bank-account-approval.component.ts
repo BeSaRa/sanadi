@@ -514,7 +514,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   enablePurpose() {
     this.purpose.enable();
-    this.purpose.setValidators([CustomValidators.required]);
+    this.purpose.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]);
     this.purpose.updateValueAndValidity();
   }
 

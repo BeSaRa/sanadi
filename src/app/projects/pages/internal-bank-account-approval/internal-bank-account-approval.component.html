@@ -57,13 +57,6 @@
             </ng-select>
             <app-field-error-message controlName="category"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="purpose"
-                   for="purpose">{{lang.map.bank_account_purpose}}</label>
-            <input id="purpose" validationClasses="purpose" formControlName="purpose"
-                   class="form-control">
-            <app-field-error-message controlName="purpose"></app-field-error-message>
-          </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -96,6 +89,16 @@
                          *ngFor="let option of currentBankAccounts">{{option.accountNumber}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="mainAccount"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="purpose"
+                   for="purpose">{{lang.map.bank_account_purpose}}</label>
+            <textarea rows="3" id="purpose" validationClasses="purpose" formControlName="purpose"
+                   class="form-control">
+            </textarea>
+            <app-field-error-message controlName="purpose"></app-field-error-message>
           </div>
         </div>
         <div class="row" *ngIf="updateNewAccountFieldsVisible">
