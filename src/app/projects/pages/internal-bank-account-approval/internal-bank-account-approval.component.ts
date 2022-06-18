@@ -163,8 +163,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       }
     }
 
-    if (this.requestType.value == BankAccountRequestTypes.UPDATE &&
-      this.operationType.value == BankAccountOperationTypes.MERGE) {
+    if (this.requestType.value == BankAccountRequestTypes.UPDATE) {
       if (this.selectedNPOEmployees.length < 1) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_one_responsible_person);
         return false;
