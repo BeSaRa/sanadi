@@ -49,5 +49,17 @@
         }
       }
     ]
+  },
+  {
+    "fields": [
+      {
+        "key": "subject",
+        "type": "input",
+        "label": "subject",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
   }
 ]
