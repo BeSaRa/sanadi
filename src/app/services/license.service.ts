@@ -132,6 +132,9 @@ export class LicenseService {
       case CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE:
         url = this.urlService.URLS.CUSTOMS_EXEMPTION_REMITTANCE;
         break;
+      case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
+        url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
+        break;
     }
     return url;
   }

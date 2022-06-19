@@ -36,7 +36,8 @@ export class CaseInfoComponent {
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FUNDRAISING_LICENSING,
     CaseTypes.URGENT_INTERVENTION_LICENSING,
-    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN
+    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL
   ];
 
   // this should be updated when ever you will add a new document service
