@@ -276,7 +276,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   private isCommentRequired(): boolean {
-    return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN;
+    return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN || this.action == WFResponseType.CLOSE;
   }
 
   private loadUserCustomTerms(): Observable<CustomTerm[]> {
