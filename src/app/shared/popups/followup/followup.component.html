@@ -3,14 +3,16 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content"  [ngClass]="showForm? 'hide' : 'show'" #dialogContent style="min-width: 800px">
+<div class="dialog-content" [ngClass]="showForm? 'hide' : 'show'" style="min-width: 800px">
   <div>
     <div class="row pb-3">
       <app-page-header
-        [pageTitle]="'followup'"
-        [clickOnReload$]="reload$"
-        [useReloadValue]="true"
-        [clickOnNew$]="addFollowup$" >
+              [pageTitle]="'followup'"
+              [disableAdd]="!hasConfiguration"
+              [disableReload]="!hasConfiguration"
+              [clickOnReload$]="reload$"
+              [useReloadValue]="true"
+              [clickOnNew$]="addFollowup$">
       </app-page-header>
       <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
     </div>
@@ -49,7 +51,7 @@
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_organization}}</th>
                 <td cdk-cell *cdkCellDef="let row">{{row.orgInfo.getName()}}</td>
               </ng-container>
-
+              
               <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
               <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
               <tr *cdkNoDataRow>
@@ -61,8 +63,16 @@
         </div>
       </div>
     </div>
+    <div *ngIf="!hasConfiguration" class="row">
+      <div class="col-12">
+        <div class="alert alert-info">
+          {{lang.map.there_is_no_followup_configurations_for_this_service}}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<followup-popup *ngIf="showForm" (hideForm)="hideForm()" ></followup-popup>
+<followup-popup *ngIf="showForm" [case]="case" [followupConfigurations]="followupConfigurations"
+                (hideForm)="hideForm()"></followup-popup>
 
 

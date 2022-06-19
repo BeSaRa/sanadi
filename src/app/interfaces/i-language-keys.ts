@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  there_is_no_followup_configurations_for_this_service: string;
   add_organization_officers: string;
   enter_donation_and_start_work_date: string;
   validate_approve_task: string;
