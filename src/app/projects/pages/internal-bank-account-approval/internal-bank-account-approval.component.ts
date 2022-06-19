@@ -366,18 +366,22 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   showUpdateBankAccountFields() {
-    this.accountNumber.setValidators([CustomValidators.required]);
-    this.iban.setValidators([CustomValidators.required]);
-    this.swiftCode.setValidators([CustomValidators.required]);
+    this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
 
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    this.setOldLicenseFullSerialRequired();
 
     if (!this.updateNewAccountFieldsVisible) {
       this.updateNewAccountFieldsVisible = true;
     }
+  }
+
+  setOldLicenseFullSerialRequired() {
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
+    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldLicenseFullSerialControl.updateValueAndValidity();
   }
 
   hideUpdateAccountFields() {
@@ -488,10 +492,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   enableSearchField() {
     this.oldLicenseFullSerialField.enable();
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    this.setOldLicenseFullSerialRequired();
   }
 
   disableSearchField() {
