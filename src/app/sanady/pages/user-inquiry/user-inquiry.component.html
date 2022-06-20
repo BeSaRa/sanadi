@@ -211,6 +211,8 @@
               <button disabled class="btn btn-sm btn-primary shadow-sm">{{langService.map.show_details}}</button>
             </div>
           </td>
+          <th>{{langService.map.date_of_death}}</th>
+          <td>{{!mophMortality ? '' : mophMortality.deathDate|date}}</td>
         </tr>
         </tbody>
       </table><!-- table -->
@@ -261,9 +263,12 @@
     </div><!-- table container-->
   </div>
 </div>
-<div *ngIf="requests.length" class="row mt-3">
+<div *ngIf="requests.length" class="row my-3">
   <tabs-list>
-    <tab [template]="personalAidsTemplate" [title]="langService.map.personal_aid"></tab>
+    <tab [name]="resultTabs.providedAids.name" [template]="personalAidsTemplate"
+         [title]="langService.map.personal_aid"></tab>
+    <tab [name]="resultTabs.integrationInquiries.name" [template]="integrationInquiriesTemplate"
+         [title]="langService.map.integration_inquiries" *ngIf="beneficiary && getBeneficiaryQID(beneficiary!)"></tab>
   </tabs-list>
   <ng-template #personalAidsTemplate>
     <div class="row">
@@ -351,5 +356,8 @@
         </div>
       </div>
     </div>
+  </ng-template>
+  <ng-template #integrationInquiriesTemplate>
+    <gdx-beneficiary-integration [beneficiary]="beneficiary!"></gdx-beneficiary-integration>
   </ng-template>
 </div>

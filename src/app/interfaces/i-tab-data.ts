@@ -19,5 +19,7 @@ export interface ITabData {
   /**
    * @description Checks if the tab is touched or dirty
    */
-  isTouchedOrDirty: () => boolean
+  isTouchedOrDirty: () => boolean,
+
+  [index: string]: any;
 }

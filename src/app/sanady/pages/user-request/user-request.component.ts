@@ -41,13 +41,7 @@ import {Pair} from '@app/interfaces/pair';
 import {BeneficiarySaveStatus} from '@app/enums/beneficiary-save-status.enum';
 import {formatDate} from '@angular/common';
 import {ReadModeService} from '@app/services/read-mode.service';
-import {
-  CanNavigateOptions,
-  DatepickerControlsMap,
-  DatepickerOptionsMap,
-  ReadinessStatus,
-  TabMap
-} from '@app/types/types';
+import {CanNavigateOptions, DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus, TabMap} from '@app/types/types';
 import {NavigationService} from '@app/services/navigation.service';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {SubventionResponseService} from '@app/services/subvention-response.service';
@@ -59,7 +53,7 @@ import {AidTypes} from '@app/enums/aid-types.enum';
 import {ECookieService} from '@app/services/e-cookie.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {EmployeeService} from '@app/services/employee.service';
-import {DialogRef} from "@app/shared/models/dialog-ref";
+import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
@@ -67,9 +61,7 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {
-  BeneficiaryObligationComponent
-} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
+import {BeneficiaryObligationComponent} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
 import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AttachmentListComponent} from '@app/shared/components/attachment-list/attachment-list.component';
@@ -1453,7 +1445,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     let stopRequestStatus = [
       BeneficiarySaveStatus.NDA_ACTIVE_REQUESTS_EXISTING,
       BeneficiarySaveStatus.NDA_RECENT_AID_EXISTING,
-      BeneficiarySaveStatus.NDA_RECENT_PERIODIC_AIDS_EXISTING
+      BeneficiarySaveStatus.NDA_RECENT_PERIODIC_AIDS_EXISTING,
+      BeneficiarySaveStatus.BENEFICIARY_IS_DEAD
     ]
     if (stopRequestStatus.includes(value.first)) {
       this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);

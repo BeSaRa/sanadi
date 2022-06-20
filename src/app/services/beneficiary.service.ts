@@ -10,13 +10,11 @@ import {Generator} from '@decorators/generator';
 import {IBeneficiaryCriteria} from '@contracts/i-beneficiary-criteria';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {DialogService} from './dialog.service';
-import {
-  SelectBeneficiaryPopupComponent
-} from '../sanady/popups/select-beneficiary-popup/select-beneficiary-popup.component';
+import {SelectBeneficiaryPopupComponent} from '../sanady/popups/select-beneficiary-popup/select-beneficiary-popup.component';
 import {Pair} from '@contracts/pair';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
 import {map} from 'rxjs/operators';
-import {SendInterceptor, InterceptParam as interceptBeforeSend} from '@decorators/model-interceptor';
+import {InterceptParam as interceptBeforeSend, SendInterceptor} from '@decorators/model-interceptor';
 import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
@@ -28,9 +26,12 @@ import {ConfigurationService} from '@services/configuration.service';
 import {CastResponse} from '@decorators/cast-response';
 import {BeneficiarySearchLog} from '@app/models/beneficiary-search-log';
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
-import {
-  BeneficiarySearchLogCriteriaInterceptor
-} from '@app/model-interceptors/beneficiary-search-log-criteria-interceptor';
+import {BeneficiarySearchLogCriteriaInterceptor} from '@app/model-interceptors/beneficiary-search-log-criteria-interceptor';
+import {GdxServiceLog} from '@app/models/gdx-service-log';
+import {IGdxCriteria} from '@contracts/i-gdx-criteria';
+import {GdxMophResponse} from '@app/models/gdx-moph-response';
+import {GdxMojResponse} from '@app/models/gdx-moj-response';
+import {GdxMociResponse} from '@app/models/gdx-moci-response';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -133,5 +134,37 @@ export class BeneficiaryService extends BackendGenericService<Beneficiary> {
 
   loadBeneficiaryLogByCriteria(criteria: Partial<IBeneficiarySearchLogCriteria>): Observable<BeneficiarySearchLog[]> {
     return this._loadBeneficiaryLogByCriteria(criteria);
+  }
+
+  @CastResponse(() => GdxMophResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadGDXMOPHMortality(criteria: IGdxCriteria) {
+    return this.http.post<GdxMophResponse[]>(this._getServiceURL() + '/gdx/moph/mortality', criteria);
+  }
+
+  @CastResponse(() => GdxServiceLog, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadGDXIntegrationData(criteria: IGdxCriteria) {
+    return this.http.post<GdxServiceLog[]>(this._getServiceURL() + '/gdx/audit', criteria);
+  }
+
+  @CastResponse(() => GdxMojResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMOJInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMojResponse[]>(this._getServiceURL() + '/gdx/moj/real-estate', criteria);
+  }
+
+  @CastResponse(() => GdxMociResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMOCIInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMociResponse[]>(this._getServiceURL() + '/gdx/moci/commercial-record', criteria);
   }
 }

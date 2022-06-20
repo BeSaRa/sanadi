@@ -5,7 +5,7 @@ import {LangService} from '@app/services/lang.service';
 import {BeneficiaryService} from '@app/services/beneficiary.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {forkJoin, of, Subject} from 'rxjs';
+import {forkJoin, Observable, of, Subject} from 'rxjs';
 import {catchError, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
@@ -27,8 +27,11 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {SubventionRequestPartial} from '@app/models/subvention-request-partial';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
+import {TabMap} from '@app/types/types';
+import {IGdxCriteria} from '@contracts/i-gdx-criteria';
+import {GdxMophResponse} from '@app/models/gdx-moph-response';
 
 @Component({
   selector: 'app-user-inquiry',
@@ -69,6 +72,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   displayIdCriteria: boolean = false; // true = search by id, false = search by name
   beneficiary?: Beneficiary;
   requests: SubventionRequestAid[] = [];
+  mophMortality?: GdxMophResponse;
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
     [BeneficiaryIdTypes.VISA]: CustomValidators.commonValidations.visa,
@@ -79,7 +83,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   identificationMap = {
     primary: 1,
     secondary: 2
-  }
+  };
   identifications: AdminResult[] = [
     AdminResult.createInstance({
       id: 1,
@@ -107,6 +111,23 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'totalApprovedAmount', 'actions'];
   headerColumn: string[] = ['extra-header'];
   fileIconsEnum = FileIconsEnum;
+
+  resultTabs: TabMap = {
+    providedAids: {
+      name: 'providedAids',
+      index: 0,
+      langKey: 'provided_aid',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+    integrationInquiries: {
+      name: 'integrationInquiries',
+      index: 1,
+      langKey: 'integration_inquiries',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+  };
 
   ngOnInit(): void {
     this.buildPageForm();
@@ -143,7 +164,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.aidTotalPayedAmount;
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   actions: IMenuItem<SubventionRequestAid>[] = [
     // show aids
@@ -186,7 +207,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   }
 
   get currentForm(): FormGroup | null {
-    return <FormGroup>this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
@@ -350,37 +371,64 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.beneficiary = undefined;
   }
 
+  private loadSubventionRequestAidByBeneficiaryId(id: number) {
+    return this.subventionRequestAidService.loadByBeneficiaryId(id);
+  }
+
+  private _getGDXCriteria(beneficiary: Beneficiary, gdxServiceId: string): IGdxCriteria {
+    return {
+      qId: this.getBeneficiaryQID(beneficiary),
+      gdxServiceId: gdxServiceId,
+      benId: beneficiary.id
+    };
+  }
+
+  private _loadDataForBeneficiary(beneficiary: Beneficiary | undefined, mortalityGdxCriteria: IGdxCriteria) {
+    if (!beneficiary) {
+      return of({
+        beneficiary: of(undefined),
+        requests: of([]),
+        mophMortality: of(undefined)
+      });
+    }
+    return forkJoin({
+      beneficiary: of(beneficiary),
+      requests: this.loadSubventionRequestAidByBeneficiaryId(beneficiary.id),
+      mophMortality: this.beneficiaryService.loadGDXMOPHMortality(mortalityGdxCriteria)
+    });
+  }
 
   private displaySelectBeneficiary(beneficiaries: Beneficiary[]): any {
     if (!beneficiaries.length) {
-      return this.dialogService.info(this.langService.map.no_result_for_your_search_criteria).onAfterClose$.subscribe(() => {
+      this.dialogService.info(this.langService.map.no_result_for_your_search_criteria).onAfterClose$.subscribe(() => {
         this.beneficiary = undefined;
         this.requests = [];
       });
-    } else if (beneficiaries.length === 1) {
-      return this.subventionRequestAidService.loadByBeneficiaryId(beneficiaries[0].id)
-        .subscribe((requestsResult) => {
-          this.beneficiary = beneficiaries[0];
-          this.requests = requestsResult;
-        });
-    }
+    } else {
+      let response: Observable<any>;
+      if (beneficiaries.length === 1) {
+        const gdxCriteria: IGdxCriteria = this._getGDXCriteria(beneficiaries[0], GdxServicesEnum.MOPH);
+        response = this._loadDataForBeneficiary(beneficiaries[0], gdxCriteria);
+      } else {
+        response = this.beneficiaryService.openSelectBeneficiaryDialog(beneficiaries).onAfterClose$
+          .pipe(
+            takeUntil(this.destroy$),
+            mergeMap((value: Beneficiary & UserClickOn) => {
+              if (value === UserClickOn.CLOSE) {
+                return this._loadDataForBeneficiary(beneficiaries[0], {} as IGdxCriteria);
+              }
+              const gdxCriteria: IGdxCriteria = this._getGDXCriteria(value, GdxServicesEnum.MOPH);
+              return this._loadDataForBeneficiary(value, gdxCriteria);
+            })
+          );
+      }
 
-    this.beneficiaryService
-      .openSelectBeneficiaryDialog(beneficiaries)
-      .onAfterClose$
-      .pipe(
-        takeUntil(this.destroy$),
-        mergeMap((value: Beneficiary & UserClickOn) => {
-          return forkJoin({
-            beneficiary: of(value === UserClickOn.CLOSE ? undefined : value),
-            requests: value === UserClickOn.CLOSE ? of([]) : this.subventionRequestAidService.loadByBeneficiaryId(value.id)
-          });
-        })
-      )
-      .subscribe((result) => {
+      response.subscribe((result) => {
         this.beneficiary = result.beneficiary;
         this.requests = result.requests;
+        this.mophMortality = result.mophMortality;
       });
+    }
   }
 
   printResult(): void {
@@ -403,4 +451,18 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     }
     return routeName;
   }
+
+  getBeneficiaryQID(beneficiary: Beneficiary): string {
+    if (!beneficiary) {
+      return '';
+    }
+    if (beneficiary.benPrimaryIdType === BeneficiaryIdTypes.QID) {
+      return beneficiary.benPrimaryIdNumber;
+    } else if (beneficiary.benSecIdNumber && Number(beneficiary.benSecIdType) === BeneficiaryIdTypes.QID) {
+      return beneficiary.benSecIdNumber;
+    } else {
+      return '';
+    }
+  }
+
 }
