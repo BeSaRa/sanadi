@@ -17,6 +17,7 @@ import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
 import {BeneficiaryIncome} from '@app/models/beneficiary-income';
+import {BenOccupationStatusEnum} from '@app/enums/status.enum';
 
 export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benNationality!: number;
@@ -117,6 +118,10 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
       enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
     });
+  }
+
+  isBeneficiaryWorking(): boolean {
+    return !!this.occuptionStatus && (this.occuptionStatus === BenOccupationStatusEnum.WORKING);
   }
 
   create(): Observable<Beneficiary> {
