@@ -100,9 +100,10 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
 
   buildBasicInfo(controls: boolean = false): any {
     const {
+      arName,
+      enName,
       requestType,
       description,
-      subject,
       shipmentSource,
       shipmentWeight,
       waybill,
@@ -122,9 +123,16 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
     } = this;
 
     return {
+      arName: controls ? [arName, [CustomValidators.required,
+        CustomValidators.maxLength(100),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required,
+        CustomValidators.maxLength(100),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM')]] : enName,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(2000)]] : description,
-      subject: controls ? [subject, [CustomValidators.required, CustomValidators.maxLength(200)]] : subject,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
       shipmentSource: controls ? [shipmentSource, [CustomValidators.required]] : shipmentSource,
       shipmentWeight: controls ? [shipmentWeight, [CustomValidators.required, CustomValidators.maxLength(50)]] : shipmentWeight,
       waybill: controls ? [waybill, [CustomValidators.required, CustomValidators.maxLength(200)]] : waybill,
@@ -161,9 +169,7 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
   buildApprovalForm(controls: boolean = false): any {
     const {followUpDate} = this;
     return {
-      followUpDate: controls
-        ? [DateUtils.changeDateToDatepicker(followUpDate)]
-        : DateUtils.changeDateToDatepicker(followUpDate),
+      followUpDate: controls ? [DateUtils.changeDateToDatepicker(followUpDate)] : DateUtils.changeDateToDatepicker(followUpDate),
     };
   }
 }
