@@ -471,24 +471,34 @@
       <div class="row">
         <div class="col-sm-12 mb-4">
           <div class="border rounded-1 p-2">
-            <div class="col-md-6 col-sm-12 mb-4 position-relative">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="allowDataSharing"
-                       formControlName="allowDataSharing"
-                       (change)="$event ? handleAllowDataSharingFieldChange($event) : null">
-                <label class="form-check-label"
-                       for="allowDataSharing">{{langService.map.disclosure}}</label>
-              </div>
-            </div>
-            <ng-container *ngIf="!currentRequest?.id && !!allowDataSharingField?.value">
+            <div class="row">
               <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="allowDataSharing"></label>
+                <div class="form-check form-switch form-switch-container">
+                  <input class="form-check-input" type="checkbox" id="allowDataSharing"
+                         formControlName="allowDataSharing"
+                         (change)="$event ? handleAllowDataSharingFieldChange($event) : null">
+                  <label class="form-check-label" for="allowDataSharing">{{langService.map.disclosure}}</label>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative" *ngIf="this.allowDataSharingField.value">
+                <div class="row">
+                  <label class="form-label">{{langService.map.download_disclosure_form}}</label>
+                  <span>
+                    <button class="btn btn-primary mb-3" [disabled]="!isDownloadDisclosureFormAllowed()"
+                            (click)="downloadDisclosureForm()">{{langService.map.btn_download}}</button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative"
+                   *ngIf="!currentRequest?.id && !!allowDataSharingField?.value">
                 <file-uploader [showFileName]="true" [showFilePreview]="false"
                                labelKey="disclosure_document"
                                [allowedExtensions]="[fileExtensionsEnum.PDF]"
                                (fileUploadEvent)="setDisclosureFile($event)"
                                [isRequired]="true"></file-uploader>
               </div>
-            </ng-container>
+            </div>
           </div>
         </div>
       </div>

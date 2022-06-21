@@ -1,5 +1,6 @@
 import {IBlobModel} from '../interfaces/iblob-model';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 export class BlobModel implements IBlobModel {
   readonly url: string;
@@ -15,7 +16,7 @@ export class BlobModel implements IBlobModel {
   }
 
   isPDF(): boolean {
-    return this.blob.type === 'application/pdf';
+    return this.blob.type === FileMimeTypesEnum.PDF;
   }
 
   dispose(): void {

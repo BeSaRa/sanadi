@@ -66,6 +66,7 @@ import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
+import {SharedService} from '@services/shared.service';
 
 @Component({
   selector: 'app-user-request',
@@ -87,6 +88,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               private activeRoute: ActivatedRoute,
               private router: Router,
               private cd: ChangeDetectorRef,
+              private sharedService: SharedService,
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
@@ -673,6 +675,48 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  isPrivateIdFieldGroupValid(): boolean {
+    if (!this.primaryIdTypeField || !this.primaryIdNumberField) {
+      return false;
+    }
+
+    const valid = this.primaryIdTypeField.valid && this.primaryIdNumberField.valid;
+    if (!this._canShowNationalityField(this.primaryIdTypeField.value)) {
+      return valid;
+    }
+    return valid && !!this.primaryNationalityField && this.primaryNationalityField.valid;
+  }
+
+  isSecondaryIdFieldGroupValid(): boolean {
+    if (!this.secondaryIdTypeField || !this.secondaryIdNumberField) {
+      return false;
+    }
+
+    const valid = this.secondaryIdTypeField.valid && this.secondaryIdNumberField.valid;
+    if (!this._canShowNationalityField(this.secondaryIdTypeField.value)) {
+      return valid;
+    }
+    return valid && !!this.secondaryNationalityField && this.secondaryNationalityField.valid;
+  }
+
+  isDownloadDisclosureFormAllowed(): boolean {
+    if (!this.isPrivateIdFieldGroupValid()) {
+      return false;
+    }
+    return this.arabicNameField.valid && this.englishNameField.valid;
+  }
+
+  downloadDisclosureForm(): void {
+    if (!this.isDownloadDisclosureFormAllowed()) {
+      return;
+    }
+    this.subventionRequestService.loadDisclosureFormAsBlob(this.prepareBeneficiary())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.sharedService.downloadFileToSystem(data.blob, 'Disclosure_Form');
+      });
+  }
+
   private uploadDisclosureDocument(request: SubventionRequest): Observable<any> {
     // if Disclosure not enabled or existing request is updated, then proceed. otherwise, upload nda document
     if ((this.currentRequest && this.currentRequest.id) || !request.allowDataSharing) {
@@ -1151,6 +1195,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.personalInfoTab.get('benSecIdNationality') as FormControl;
   }
 
+  get arabicNameField(): FormControl {
+    return this.personalInfoTab.get('arName') as FormControl;
+  }
+
+  get englishNameField(): FormControl {
+    return this.personalInfoTab.get('enName') as FormControl;
+  }
+
   get employmentStatusField(): FormControl {
     return this.personalInfoTab.get('occuptionStatus') as FormControl;
   }
@@ -1458,11 +1510,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.primaryIdTypeField?.value === optionValue;
   }
 
+  private _canShowNationalityField(idType: number) {
+    return (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID);
+  }
+
   private setNationalityVisibility(identification: string, idType: number): boolean {
     if (!CommonUtils.isValidValue(idType)) {
       return false;
     }
-    let visibility: boolean = (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID),
+    let visibility: boolean = this._canShowNationalityField(idType),
       nationalityListType: ('normal' | 'gulf') = 'normal';
     if (idType === BeneficiaryIdTypes.GCC_ID) {
       nationalityListType = 'gulf';
@@ -1498,7 +1554,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = idValidators.concat(this.idTypesValidationsMap[value]);
 
-        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
+        if (this._canShowNationalityField(value)) {
           nationalityValidators = [CustomValidators.required];
         }
       }
@@ -1524,7 +1580,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (CommonUtils.isValidValue(value)) {
         idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
 
-        if (value === BeneficiaryIdTypes.PASSPORT || value === BeneficiaryIdTypes.GCC_ID) {
+        if (this._canShowNationalityField(value)) {
           nationalityValidators = [CustomValidators.required];
         }
       }

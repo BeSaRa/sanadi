@@ -1059,4 +1059,6 @@ export interface ILanguageKeys {
   transaction_number: string;
   transaction_type: string;
   contract_date: string;
+  download_disclosure_form: string;
+  msg_corrupt_invalid_file: string;
 }
