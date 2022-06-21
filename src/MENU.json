@@ -720,7 +720,7 @@
     "path": "/home/projects/urgent-joint-relief-campaign",
     "icon": "mdi-bank-plus",
     "isSvg": false,
-    "permission": "",
+    "permission": "URGENT_JOINT_RELIEF_CAMPAIGN",
     "permissionGroup": null,
     "parent": 32,
     "group": "projects",
