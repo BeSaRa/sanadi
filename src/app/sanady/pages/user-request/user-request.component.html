@@ -236,6 +236,16 @@
       </div>
       <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label"
+                 for="isHandicapped">{{langService.map.special_needs_handicap}}</label>
+          <div class="form-check form-switch form-switch-container">
+            <input class="form-check-input" type="checkbox" id="isHandicapped"
+                   formControlName="isHandicapped">
+            <label
+              class="form-check-label">{{isHandicappedField.value ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label for="benDependentsCount" class="form-label"
                  asteriskIfRequired="benDependentsCount">{{langService.map.sponsors_count}}</label>
           <input id="benDependentsCount" validationClasses="benDependentsCount" formControlName="benDependentsCount"
@@ -251,6 +261,8 @@
                  trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
           <app-field-error-message controlName="familyCount"></app-field-error-message>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label for="maritalStatus" class="form-label"
                  asteriskIfRequired="maritalStatus">{{langService.map.marital_status}}</label>
@@ -265,8 +277,6 @@
           </ng-select>
           <app-field-error-message controlName="maritalStatus"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label for="educationLevel" class="form-label"
                  asteriskIfRequired="educationLevel">{{langService.map.educational_level}}</label>
@@ -288,6 +298,8 @@
                  maxlength="100" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
           <app-field-error-message controlName="employeer"></app-field-error-message>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label for="occuptionStatus" class="form-label"
                  asteriskIfRequired="occuptionStatus">{{langService.map.employment_status}}</label>
@@ -295,6 +307,7 @@
                      placeholder="{{langService.map.select}}" id="occuptionStatus"
                      [notFoundText]="langService.map.msg_not_found"
                      [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     (change)="handleEmploymentStatusChange($event, true)"
                      formControlName="occuptionStatus" validationClasses="occuptionStatus">
             <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
               {{option.getName()}}
@@ -302,31 +315,19 @@
           </ng-select>
           <app-field-error-message controlName="occuptionStatus"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
           <label for="occuption" class="form-label"
                  asteriskIfRequired="occuption">{{langService.map.occupation}}</label>
           <input id="occuption" validationClasses="occuption" formControlName="occuption"
                  maxlength="100" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
           <app-field-error-message controlName="occuption"></app-field-error-message>
         </div>
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
           <label for="employeerAddress" class="form-label"
                  asteriskIfRequired="employeerAddress">{{langService.map.workplace}}</label>
           <input id="employeerAddress" validationClasses="employeerAddress" formControlName="employeerAddress"
                  maxlength="512" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
           <app-field-error-message controlName="employeerAddress"></app-field-error-message>
-        </div>
-        <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label class="form-label"
-                 for="isHandicapped">{{langService.map.special_needs_handicap}}</label>
-          <div class="form-check form-switch form-switch-container">
-            <input class="form-check-input" type="checkbox" id="isHandicapped"
-                   formControlName="isHandicapped">
-            <label
-              class="form-check-label">{{isHandicappedField.value ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
-          </div>
         </div>
       </div>
       <div class="row">

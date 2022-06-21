@@ -33,7 +33,7 @@ import {AidLookup} from '@app/models/aid-lookup';
 import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SubventionAidService} from '@app/services/subvention-aid.service';
-import {AidLookupStatusEnum, SubventionRequestStatus} from '@app/enums/status.enum';
+import {AidLookupStatusEnum, BenOccupationStatusEnum, SubventionRequestStatus} from '@app/enums/status.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
 import {Pair} from '@app/interfaces/pair';
@@ -57,7 +57,6 @@ import {AdminResult} from '@app/models/admin-result';
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {TableComponent} from '@app/shared/components/table/table.component';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {BeneficiaryObligationComponent} from '@app/sanady/shared/beneficiary-obligation/beneficiary-obligation.component';
 import {BeneficiaryIncomeComponent} from '@app/sanady/shared/beneficiary-income/beneficiary-income.component';
@@ -109,7 +108,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToRequestDateChange();
     this.listenToBeneficiaryChange();
     this.listenToRequestChange();
-    this.listenToOccupationStatus();
     this.listenToAidChange();
     this.listenToSaveModel();
     this.listenToSavePartialRequest();
@@ -327,8 +325,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   disclosureFile: any;
   disclosureAttachment: any;
 
-  @ViewChild('aidsTable') aidsTable!: TableComponent;
-
   private buildForm(beneficiary ?: Beneficiary, request?: SubventionRequest) {
     beneficiary = beneficiary ? beneficiary : new Beneficiary();
     request = request ? request : new SubventionRequest();
@@ -388,7 +384,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.personalInfoTab?.patchValue(selectedBeneficiary.getPersonalFields());
       this.addressTab?.patchValue(selectedBeneficiary.getAddressFields());
     }
-
+    this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
   }
 
   private updateRequestForm(request: undefined | SubventionRequest) {
@@ -421,27 +417,23 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toggleIsHandicappedReadonly();
   }
 
-  private listenToOccupationStatus() {
-    this.employmentStatusField?.valueChanges
-      .pipe(
-        takeUntil(this.destroy$),
-        map(value => {
-          return value !== this.configurationService.CONFIG.UNEMPLOYED_LOOKUP_KEY;
-        }),
-        distinctUntilChanged()
-      )
-      .subscribe((required) => {
-        const dependentFields = [this.occupationField, this.workPlaceField];
-        for (let i = 0; i < dependentFields.length; i++) {
-          const control = dependentFields[i];
-          if (required) {
-            control?.addValidators(CustomValidators.required);
-          } else {
-            control?.removeValidators(CustomValidators.required);
-          }
-          control?.updateValueAndValidity();
-        }
-      });
+  isBeneficiaryWorking() {
+    return this.employmentStatusField && (this.employmentStatusField.value === BenOccupationStatusEnum.WORKING);
+  }
+
+  handleEmploymentStatusChange(value?: number, userInteraction: boolean = false) {
+    if (userInteraction) {
+      this.occupationField.setValue('');
+      this.workPlaceField.setValue('');
+    }
+    const required = (value && value !== BenOccupationStatusEnum.NOT_WORKING);
+    if (required) {
+      this.occupationField?.addValidators(CustomValidators.required);
+      this.workPlaceField?.addValidators(CustomValidators.required);
+    } else {
+      this.occupationField?.removeValidators(CustomValidators.required);
+      this.workPlaceField?.removeValidators(CustomValidators.required);
+    }
   }
 
   private listenToNationalityChange() {
@@ -1390,7 +1382,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       BeneficiarySaveStatus.NDA_RECENT_AID_EXISTING,
       BeneficiarySaveStatus.NDA_RECENT_PERIODIC_AIDS_EXISTING,
       BeneficiarySaveStatus.BENEFICIARY_IS_DEAD
-    ]
+    ];
     if (stopRequestStatus.includes(value.first)) {
       this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);
       return 'STOP';
