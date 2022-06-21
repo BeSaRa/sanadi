@@ -9,7 +9,7 @@ export enum Permissions {
   TRAINING_CERTIFICATE_TEMPLATE = 'TRAINING_CERTIFICATE_TEMPLATE', // used in menu item do not remove
   TRAINING_CHARITY_MANAGEMENT = 'TRAINING_CHARITY_MANAGEMENT', // used in menu item do not remove
   DONOR_MANAGEMENT = 'DONOR_MANAGEMENT',
-  INQUIRY_LOGS = ''
+  INQUIRY_LOGS = 'BEN_SEARCH_LOG'
 }
 
 /*

@@ -681,7 +681,7 @@
     "path": "/home/sanady/inquiry-logs",
     "icon": "mdi-history",
     "isSvg": false,
-    "permission": "",
+    "permission": "BEN_SEARCH_LOG",
     "permissionGroup": null,
     "parent": 23,
     "group": "sanady",
