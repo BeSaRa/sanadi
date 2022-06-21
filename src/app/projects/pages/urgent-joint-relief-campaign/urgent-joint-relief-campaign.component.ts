@@ -280,7 +280,12 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   addOrganization() {
-    if (this.selectedOrg && !this.selectedOrganizationUnits.includes(this.selectedOrg)) {
+    if(!this.selectedOrg) {
+      this.dialog.error(this.lang.map.please_select_organization_first);
+      return;
+    }
+
+    if (!this.selectedOrganizationUnits.includes(this.selectedOrg)) {
       this.selectedOrganizationUnits = this.selectedOrganizationUnits.concat(this.selectedOrg);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
