@@ -18,7 +18,9 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DateUtils} from '@app/helpers/date-utils';
+import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-attachment-list',
   templateUrl: './attachment-list.component.html',
@@ -86,6 +88,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
   headerColumn: string[] = ['extra-header'];
   filterControl: FormControl = new FormControl('');
+  attachmentTypeEnum = AttachmentTypeEnum;
 
   editItem?: SanadiAttachment;
   form!: FormGroup;
@@ -164,6 +167,9 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     if (!attachment.vsId) {
       return true;
     } else {
+      if (attachment.attachmentType === AttachmentTypeEnum.DISCLOSURE_FORM) {
+        return false;
+      }
       if (this._request.isNewPartialRequest()) {
         return !attachment.vsId;
       } else {
@@ -176,6 +182,9 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     if (!attachment.vsId) {
       return true;
     } else {
+      if (attachment.attachmentType === AttachmentTypeEnum.DISCLOSURE_FORM) {
+        return false;
+      }
       if (this._request.isNewPartialRequest()) {
         return !attachment.vsId;
       } else {
