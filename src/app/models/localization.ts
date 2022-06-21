@@ -1,21 +1,16 @@
 import {BaseModel} from './base-model';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
 import {Observable} from 'rxjs';
-import {INames} from '../interfaces/i-names';
+import {INames} from '@contracts/i-names';
 import {searchFunctionType} from '../types/types';
-import {AdminResult} from './admin-result';
 
 export class Localization extends BaseModel<Localization, LangService> {
   localizationKey: string | undefined;
   module: number = 0;
   service: LangService;
-  adminResult!: AdminResult;
   searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: text => {
-      console.log(this, text);
-      return this.arName.indexOf(text) !== -1;
-    },
+    arName: 'arName',
     enName: 'enName',
     localizationKey: 'localizationKey'
   };
