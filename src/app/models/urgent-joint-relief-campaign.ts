@@ -62,6 +62,11 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     this.employeeService = FactoryService.getService('EmployeeService');
   }
 
+  buildMainInfo(controls: boolean = false): any {
+    const {totalCost} = this;
+    return controls ? [totalCost] : totalCost
+  }
+
   buildBasicInfo(controls: boolean = false): any {
     const internalUserValidation = !this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
     const {fullName, licenseStartDate, licenseEndDate, phone, extraPhone, approvalPeriod, beneficiaryCountry, targetAmount} = this;
@@ -80,7 +85,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls ? [description, [CustomValidators.required]] : description,
+      description: controls ? [description] : description,
     }
   }
 

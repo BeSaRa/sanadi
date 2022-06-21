@@ -104,28 +104,33 @@
     </ng-container>
     <ng-container>
       <ng-template #participant_organizations>
-        <div class="row" *ngIf="!isExternalUser">
+        <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="totalCost"
+                   for="totalCost">{{lang.map.joint_relief_campaign_total_donations}}</label>
+            <input id="totalCost" validationClasses="totalCost" formControlName="totalCost" [readonly]="true"
+                   class="form-control">
+          </div>
+        </div>
+        <div class="row" *ngIf="!isExternalUser">
+          <div class="col-md-12 mb-4 position-relative">
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 <label class="form-label"
                        for="selectedOrg">{{lang.map.menu_organizations}}</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-11">
-                <ng-select appendTo="body" [clearable]="true"
-                           id="selectedOrg"
-                           ng-model="selectedOrg"
-                           (change)="onChangeSelectedOrganization($event)">
-                  <ng-option [value]="option.organizationId"
-                             *ngFor="let option of organizationUnits">{{option.getName()}}</ng-option>
-                </ng-select>
-              </div>
-              <div class="col-md-1">
-                <button class="btn btn-link outline-none"
-                        tooltip="{{lang.map.btn_add}}" (click)="addOrganization()">
-                  <i class="mdi mdi-plus-box"></i></button>
+                <div style="display: flex">
+                  <ng-select appendTo="body" [clearable]="true"
+                             id="selectedOrg"
+                             ng-model="selectedOrg"
+                             style="flex: 1"
+                             (change)="onChangeSelectedOrganization($event)">
+                    <ng-option [value]="option.organizationId"
+                               *ngFor="let option of organizationUnits">{{option.getName()}}</ng-option>
+                  </ng-select>
+                  <button class="btn btn-link outline-none" style="padding: 0"
+                          tooltip="{{lang.map.btn_add}}" (click)="addOrganization()">
+                    <i class="mdi mdi-plus-box"></i></button>
+                </div>
               </div>
             </div>
           </div>

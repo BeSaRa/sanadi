@@ -147,6 +147,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
       explanation: this.fb.group(model.buildExplanation(true)),
       externalUserData: this.fb.group(model.buildExternalUserData(true)),
+      totalCost: model.buildMainInfo()
     });
 
     this._buildDatepickerControlsMap();
@@ -191,7 +192,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation(),
-      externalUserData: this.model?.buildExternalUserData()
+      externalUserData: this.model?.buildExternalUserData(),
+      totalCost: this.model?.buildMainInfo()
     });
   }
 
