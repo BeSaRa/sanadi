@@ -68,16 +68,13 @@ export class ServiceDataService extends BackendGenericService<ServiceData> {
     );
   }
 
-  @Generator(undefined, true)
-  private _loadByCaseType(caseType: number): Observable<ServiceData[]> {
-    return this.http.get<ServiceData[]>(this._getServiceURL() + '/caseType/' + caseType);
+  @Generator(undefined, false)
+  private _loadByCaseType(caseType: number): Observable<ServiceData> {
+    return this.http.get<ServiceData>(this._getServiceURL() + '/caseType/' + caseType);
   }
 
   loadByCaseType(caseType: number): Observable<ServiceData> {
-    return this._loadByCaseType(caseType)
-      .pipe(
-        map(item => item[0])
-      );
+    return this._loadByCaseType(caseType);
   }
 
   updateStatus(serviceId: number, currentStatus: CommonStatusEnum) {
