@@ -18,7 +18,7 @@
             <label class="form-label" asteriskIfRequired="fullName"
                    for="fullName">{{lang.map.campaign_name}}</label>
             <input id="fullName" validationClasses="fullName" formControlName="fullName"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || isExternalUser)">
             <app-field-error-message controlName="fullName"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -28,10 +28,10 @@
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <div class="form-control"
-                     [ngClass]="{'input-disabled': (readonly)}"
+                     [ngClass]="{'input-disabled': (readonly || isExternalUser)}"
                      formControlName="licenseStartDate"
                      id="licenseStartDate"
-                     (click)="!readonly && dpLicenseStartDate.toggleCalendar()"
+                     (click)="!readonly && !isExternalUser && dpLicenseStartDate.toggleCalendar()"
                      #dpLicenseStartDate="angular-mydatepicker"
                      [options]="datepickerOptionsMap.licenseStartDate"
                      angular-mydatepicker validationClasses="licenseStartDate"
@@ -47,10 +47,10 @@
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <div class="form-control"
-                     [ngClass]="{'input-disabled': (readonly)}"
+                     [ngClass]="{'input-disabled': (readonly || isExternalUser)}"
                      formControlName="licenseEndDate"
                      id="licenseEndDate"
-                     (click)="!readonly && dpLicenseEndDate.toggleCalendar()"
+                     (click)="!readonly && !isExternalUser && dpLicenseEndDate.toggleCalendar()"
                      #dpLicenseEndDate="angular-mydatepicker"
                      [options]="datepickerOptionsMap.licenseEndDate"
                      angular-mydatepicker validationClasses="licenseEndDate"
@@ -66,7 +66,7 @@
                    for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
             <ng-select validationClasses="beneficiaryCountry" appendTo="body" [clearable]="false"
                        id="beneficiaryCountry"
-                       formControlName="beneficiaryCountry" [readonly]="(readonly)">
+                       formControlName="beneficiaryCountry" [readonly]="(readonly || isExternalUser)">
               <ng-option [value]="option.id" *ngFor="let option of countries">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
@@ -75,14 +75,14 @@
             <label class="form-label" asteriskIfRequired="targetAmount"
                    for="targetAmount">{{lang.map.target_amount}}</label>
             <input id="targetAmount" validationClasses="targetAmount" formControlName="targetAmount"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || isExternalUser)">
             <app-field-error-message controlName="targetAmount"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="approvalPeriod"
                    for="approvalPeriod">{{lang.map.approval_period}}</label>
             <input id="approvalPeriod" validationClasses="approvalPeriod" formControlName="approvalPeriod"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || isExternalUser)">
             <app-field-error-message controlName="approvalPeriod"></app-field-error-message>
           </div>
         </div>
@@ -91,14 +91,14 @@
             <label class="form-label" asteriskIfRequired="phone"
                    for="phone">{{lang.map.lbl_phone}}</label>
             <input id="phone" validationClasses="phone" formControlName="phone"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || isExternalUser)">
             <app-field-error-message controlName="phone"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="extraPhone"
                    for="extraPhone">{{lang.map.lbl_extra_phone_number}}</label>
             <input id="extraPhone" validationClasses="extraPhone" formControlName="extraPhone"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || isExternalUser)">
             <app-field-error-message controlName="extraPhone"></app-field-error-message>
           </div>
         </div>
@@ -334,7 +334,7 @@
             <label class="form-label" asteriskIfRequired="description"
                    for="description">{{lang.map.special_explanations}}</label>
             <textarea name="description" formControlName="description" validationClasses="description" id="description"
-                      rows="4" class="form-control" [readonly]="(readonly)"></textarea>
+                      rows="4" class="form-control" [readonly]="(readonly || isExternalUser)"></textarea>
             <app-field-error-message controlName="description"></app-field-error-message>
           </div>
         </div>
