@@ -218,7 +218,7 @@
       </table><!-- table -->
     </div><!-- table container-->
   </div>
-</div><!-- -->
+</div>
 <!--  we hide this part cause there is no integration with MOI yet -->
 <div *ngIf="false" class="row">
   <div class="col-12">
@@ -263,7 +263,7 @@
     </div><!-- table container-->
   </div>
 </div>
-<div *ngIf="requests.length" class="row my-3">
+<div *ngIf="!!beneficiary" class="row my-3">
   <tabs-list>
     <tab [name]="resultTabs.providedAids.name" [template]="personalAidsTemplate"
          [title]="langService.map.personal_aid"></tab>
