@@ -5,7 +5,7 @@ import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
-import {PeriodicPayment} from '@app/enums/periodic-payment.enum';
+import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -128,7 +128,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
         value2 = !CommonUtils.isValidValue(b) ? '' : b.benObligationTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   buildForm(): void {
     let model = new BeneficiaryObligation().clone(this.currentRecord);
@@ -189,7 +189,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
-    })
+    });
   }
 
   private updateForm(record: BeneficiaryObligation | undefined) {
@@ -296,6 +296,25 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
 
   get installmentsCountField(): AbstractControl {
     return this.form.get('installmentsCount')!;
+  }
+
+  calculateTotalDebts(): number {
+    if (!this.list || this.list.length === 0) {
+      return 0;
+    } else {
+      let totalDebts: number = 0;
+      if (this.list.some(x => !x.id)) {
+        totalDebts = this.list.map(x => {
+          if (!x.amount || (x.periodicType === SubAidPeriodicTypeEnum.MONTHLY && x.installmentsCount === 0)) {
+            return 0;
+          }
+          return x.periodicType === SubAidPeriodicTypeEnum.ONE_TIME ? Number(Number(x.amount).toFixed(2)) : (Number(Number(x.amount).toFixed(2)) * Number(x.installmentsCount));
+        }).reduce((resultSum, a) => resultSum + a, 0);
+      } else {
+        totalDebts = !this.beneficiary ? 0 : this.beneficiary.benTotalDebts;
+      }
+      return totalDebts;
+    }
   }
 
 }

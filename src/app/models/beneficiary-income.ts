@@ -16,6 +16,7 @@ export class BeneficiaryIncome extends SearchableCloneable<BeneficiaryIncome> {
   //extra properties
   periodicTypeInfo!: Lookup;
   benIncomeTypeInfo!: Lookup;
+  monthlyInstallments: number = 12; // It is for UI calculations only
 
   updatedBy?: number;
   clientData?: string;
@@ -31,7 +32,7 @@ export class BeneficiaryIncome extends SearchableCloneable<BeneficiaryIncome> {
     return {
       periodicType: controls ? [periodicType, [CustomValidators.required]] : periodicType,
       benIncomeType: controls ? [benIncomeType, [CustomValidators.required]] : benIncomeType,
-      amount: controls ? [amount, [CustomValidators.required, Validators.min(0)]] : amount,
+      amount: controls ? [amount, [CustomValidators.required, Validators.min(0), CustomValidators.decimal(2)]] : amount,
       notes: controls ? [notes, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : notes
     }
   }

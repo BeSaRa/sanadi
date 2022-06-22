@@ -17,6 +17,7 @@ import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {Beneficiary} from '@app/models/beneficiary';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {BeneficiaryIncomePeriodicEnum} from '@app/enums/periodic-payment.enum';
 
 @Component({
   selector: 'beneficiary-income',
@@ -281,6 +282,25 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
+  }
+
+  calculateTotalIncome(): number {
+    if (!this.list || this.list.length === 0) {
+      return 0;
+    } else {
+      let totalIncome: number = 0;
+      if (this.list.some(x => !x.id)) {
+        totalIncome = this.list.map(x => {
+          if (!x.amount) {
+            return 0;
+          }
+          return x.periodicType === BeneficiaryIncomePeriodicEnum.YEARLY ? Number(Number(x.amount).toFixed(2)) : (Number(Number(x.amount).toFixed(2)) * x.monthlyInstallments);
+        }).reduce((resultSum, a) => resultSum + a, 0);
+      } else {
+        totalIncome = !this.beneficiary ? 0 : this.beneficiary.benTotalIncome;
+      }
+      return totalIncome;
+    }
   }
 
 }
