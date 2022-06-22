@@ -284,7 +284,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-format-align-left',
         label: 'followup',
         disabled: (item) => {
-          return this.employeeService.userCanFollowUp(item.getCaseType());
+          return !this.employeeService.userCanFollowUp(item.getCaseType());
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionAddFollowup(item);
