@@ -1,5 +1,6 @@
 export interface ILanguageKeys {
   menu_reports: string
+  org_reject_task: string;
   please_select_organization_first: string;
   joint_relief_campaign_total_donations: string;
   there_is_no_followup_configurations_for_this_service: string;
