@@ -308,11 +308,10 @@
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="totalTrainingCost" for="totalTrainingCost"
                  class="form-label">{{lang.map.total_training_cost}}</label>
-          <input id="totalTrainingCost"
-                 validationClasses="totalTrainingCost"
-                 formControlName="totalTrainingCost" class="form-control"
-                 maxlength="10"
-                 [mask]="inputMaskPatterns.DECIMAL(2)">
+          <input id="totalTrainingCost" validationClasses="totalTrainingCost"
+                 formControlName="totalTrainingCost" class="form-control" maxlength="10"
+                 [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
           <app-field-error-message controlName="totalTrainingCost"></app-field-error-message>
         </div>
       </div>
