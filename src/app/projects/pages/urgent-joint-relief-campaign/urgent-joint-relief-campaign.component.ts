@@ -169,7 +169,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       officerFullName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       email: [null, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]],
       officerPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-      officerExtraPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)]
+      officerExtraPhone: [null, CustomValidators.commonValidations.phone]
     });
   }
 
