@@ -26,6 +26,8 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseStepName} from '@app/enums/case-step-name';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {ParticipantOrganization} from '@app/models/participant-organization';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -173,8 +175,11 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   _afterBuildForm(): void {
     this.setSelectedOfficers();
-
     this.enableSaveButtonToExternalUsers();
+    // this.handleReadonly();
+
+    // to be removed
+    this.readonly = false;
   }
 
   enableSaveButtonToExternalUsers() {
@@ -366,5 +371,40 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       controlOptionsMap: this.datepickerOptionsMap,
       controlsMap: this.datepickerControlsMap
     });
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
 }
