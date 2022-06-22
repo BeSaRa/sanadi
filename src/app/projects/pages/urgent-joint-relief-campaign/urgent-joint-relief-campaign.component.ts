@@ -184,7 +184,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   enableSaveButtonToExternalUsers() {
     const stepName = this.model?.taskDetails?.name!;
-    if (this.organizationStepNames.includes(stepName)) {
+    if (this.organizationStepNames.includes(stepName) && this.model?.taskDetails.isClaimed()) {
       this.readonly = false;
     }
   }

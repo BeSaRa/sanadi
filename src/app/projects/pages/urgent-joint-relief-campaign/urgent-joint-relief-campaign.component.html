@@ -172,7 +172,7 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_remove}}"
-                         class="icon-btn" [disabled]="(readonly)">
+                         class="btn btn-link outline-none" [disabled]="(readonly)">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                     </div>
@@ -305,11 +305,11 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeOfficer($event, row)" tooltip="{{lang.map.btn_remove}}"
-                         class="icon-btn" [disabled]="(readonly)">
+                         class="btn btn-link outline-none" [disabled]="(readonly)">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectOfficer($event, row)" tooltip="{{lang.map.btn_edit}}"
-                              class="icon-btn" [disabled]="(readonly)">
+                              class="btn btn-link outline-none" [disabled]="(readonly)">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
