@@ -93,7 +93,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     const externalUserValidation = this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
     const {donation, workStartDate} = this;
     return {
-      donation: controls ? [donation, externalUserValidation] : donation,
+      donation: controls ? [donation, externalUserValidation.concat([CustomValidators.maxLength(20), CustomValidators.decimal(2)])] : donation,
       workStartDate: controls ? [workStartDate, externalUserValidation] : workStartDate
     }
   }
