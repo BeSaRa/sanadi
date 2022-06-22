@@ -215,7 +215,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       type: 'action',
       icon: ActionIconsEnum.SEARCH_USER,
       label: 'inquire_beneficiary',
-      onClick: (item: SubventionRequestAid) => this.getRelatedBeneficiaryData(item),
+      onClick: (item: SubventionRequestAid) => this.inquireBeneficiary(item),
       show: (item: SubventionRequestAid) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
     },
   ];
@@ -614,7 +614,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       });
   }
 
-  getRelatedBeneficiaryData(request: SubventionRequestAid) {
+  inquireBeneficiary(request: SubventionRequestAid) {
     this.eCookieService.putEObject('b_i_d', {
       idType: request.benPrimaryIdType,
       idNumber: request.benPrimaryIdNumber,
