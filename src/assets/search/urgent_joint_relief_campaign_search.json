@@ -43,7 +43,7 @@
         "label": "lbl_status",
         "selectOptions": {
           "options": [],
-          "loader": "lookup.InternalBankStatus",
+          "loader": "lookup.CommonCaseStatus",
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
