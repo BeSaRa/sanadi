@@ -481,7 +481,7 @@
                   <label class="form-check-label" for="allowDataSharing">{{langService.map.disclosure}}</label>
                 </div>
               </div>
-              <div class="col-md-3 col-sm-12 mb-4 position-relative" *ngIf="this.allowDataSharingField.value">
+              <div class="col-md-3 col-sm-12 mb-4 position-relative" *ngIf="!currentRequest?.id && !!allowDataSharingField.value">
                 <div class="row">
                   <label class="form-label">{{langService.map.download_disclosure_form}}</label>
                   <span>
