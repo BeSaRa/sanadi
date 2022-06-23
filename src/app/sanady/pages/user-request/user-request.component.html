@@ -527,7 +527,6 @@
                    placeholder="{{langService.map.select}}" id="status"
                    [notFoundText]="langService.map.msg_not_found"
                    [readonly]="readOnly" appendTo="body"
-                   (change)="handleMainAidChange($event)"
                    formControlName="status" validationClasses="status">
           <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
                      [disabled]="(option.lookupKey === subventionRequestStatusEnum.REMOVED || option.lookupKey === subventionRequestStatusEnum.CANCELED)"
