@@ -425,8 +425,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleEmploymentStatusChange(value?: number, userInteraction: boolean = false) {
     if (userInteraction) {
-      this.occupationField.setValue('');
-      this.workPlaceField.setValue('');
+      this.occupationField?.setValue('');
+      this.workPlaceField?.setValue('');
     }
     const required = (value && value !== BenOccupationStatusEnum.NOT_WORKING);
     if (required) {
@@ -436,6 +436,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.occupationField?.removeValidators(CustomValidators.required);
       this.workPlaceField?.removeValidators(CustomValidators.required);
     }
+    this.occupationField?.updateValueAndValidity();
+    this.workPlaceField?.updateValueAndValidity();
   }
 
   private listenToNationalityChange() {
