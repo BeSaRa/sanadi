@@ -129,7 +129,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
         value2 = !CommonUtils.isValidValue(b) ? '' : b.benIncomeTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   buildForm(): void {
     let model = new BeneficiaryIncome().clone(this.currentRecord);
@@ -190,7 +190,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
-    })
+    });
   }
 
   private updateForm(record: BeneficiaryIncome | undefined) {
@@ -288,18 +288,16 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
     if (!this.list || this.list.length === 0) {
       return 0;
     } else {
-      let totalIncome: number = 0;
-      if (this.list.some(x => !x.id)) {
-        totalIncome = this.list.map(x => {
-          if (!x.amount) {
-            return 0;
-          }
-          return x.periodicType === BeneficiaryIncomePeriodicEnum.YEARLY ? Number(Number(x.amount).toFixed(2)) : (Number(Number(x.amount).toFixed(2)) * x.monthlyInstallments);
-        }).reduce((resultSum, a) => resultSum + a, 0);
-      } else {
-        totalIncome = !this.beneficiary ? 0 : this.beneficiary.benTotalIncome;
-      }
-      return totalIncome;
+      return this.list.map(x => {
+        if (!x.amount) {
+          return 0;
+        }
+        if (x.periodicType === BeneficiaryIncomePeriodicEnum.MONTHLY) {
+          return (Number(Number(x.amount).toFixed(2)) * x.yearlyInstallmentsCount);
+        } else {
+          return Number(Number(x.amount).toFixed(2));
+        }
+      }).reduce((resultSum, a) => resultSum + a, 0);
     }
   }
 

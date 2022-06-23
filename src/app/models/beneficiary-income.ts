@@ -16,7 +16,7 @@ export class BeneficiaryIncome extends SearchableCloneable<BeneficiaryIncome> {
   //extra properties
   periodicTypeInfo!: Lookup;
   benIncomeTypeInfo!: Lookup;
-  monthlyInstallments: number = 12; // It is for UI calculations only
+  yearlyInstallmentsCount: number = 12; // It is for UI calculations only
 
   updatedBy?: number;
   clientData?: string;

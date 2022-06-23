@@ -302,18 +302,16 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
     if (!this.list || this.list.length === 0) {
       return 0;
     } else {
-      let totalDebts: number = 0;
-      if (this.list.some(x => !x.id)) {
-        totalDebts = this.list.map(x => {
-          if (!x.amount || (x.periodicType === SubAidPeriodicTypeEnum.MONTHLY && x.installmentsCount === 0)) {
-            return 0;
-          }
-          return x.periodicType === SubAidPeriodicTypeEnum.ONE_TIME ? Number(Number(x.amount).toFixed(2)) : (Number(Number(x.amount).toFixed(2)) * Number(x.installmentsCount));
-        }).reduce((resultSum, a) => resultSum + a, 0);
-      } else {
-        totalDebts = !this.beneficiary ? 0 : this.beneficiary.benTotalDebts;
-      }
-      return totalDebts;
+      return this.list.map(x => {
+        if (!x.amount || (x.periodicType === SubAidPeriodicTypeEnum.MONTHLY && x.installmentsCount === 0)) {
+          return 0;
+        }
+        if (x.periodicType === SubAidPeriodicTypeEnum.ONE_TIME) {
+          return Number(Number(x.amount).toFixed(2));
+        } else {
+          return (Number(Number(x.amount).toFixed(2)) * Number(x.installmentsCount));
+        }
+      }).reduce((resultSum, a) => resultSum + a, 0);
     }
   }
 

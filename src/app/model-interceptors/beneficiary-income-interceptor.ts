@@ -24,7 +24,7 @@ export class BeneficiaryIncomeInterceptor implements IModelInterceptor<Beneficia
     delete model.beneficiaryService;
     delete model.periodicTypeInfo;
     delete model.benIncomeTypeInfo;
-    delete model.monthlyInstallments;
+    delete model.yearlyInstallmentsCount;
 
   }
 }
