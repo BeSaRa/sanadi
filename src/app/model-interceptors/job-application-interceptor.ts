@@ -15,10 +15,9 @@ export class JobApplicationInterceptor
   }
 
   receive(model: JobApplication): JobApplication {
-    // model.employeeInfoDTOs = model.employeeInfoDTOs.map(ei => {
-    //   return employeeInterceptor.receive(new Employee().clone(ei));
-    // })
-    console.log('employeeInfoDTOs ', [...model.employeeInfoDTOs])
+    model.employeeInfoDTOs = model.employeeInfoDTOs.map(ei => {
+      return employeeInterceptor.receive(new Employee().clone(ei));
+    })
     return model;
   }
 }

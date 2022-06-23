@@ -15,8 +15,8 @@ export class EmployeesDataComponent implements OnInit {
     (a, b) => a.lookupKey - b.lookupKey
   );
   displayedColumns: string[] = [
-    "arName",
-    "enName",
+    "arabicName",
+    "englishName",
     "jobTitle",
     "gender",
     "actions",

@@ -9,23 +9,24 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.contractExpiryDate = !model.contractExpiryDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
-          model.contractExpiryDate as unknown as IMyDateModel
-        )?.toISOString();
+        model.contractExpiryDate as unknown as IMyDateModel
+      )?.toISOString();
     model.workStartDate = !model.workStartDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
-          model.workStartDate as unknown as IMyDateModel
-        )?.toISOString();
+        model.workStartDate as unknown as IMyDateModel
+      )?.toISOString();
     model.workEndDate = !model.workEndDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
-          model.workEndDate as unknown as IMyDateModel
-        )?.toISOString();
+        model.workEndDate as unknown as IMyDateModel
+      )?.toISOString();
     return model;
   }
   receive(model: Employee): Employee {
     model.workStartDate = DateUtils.changeDateToDatepicker(model.workStartDate);
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
+    model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );

@@ -31,5 +31,6 @@ export enum WFResponseType {
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',
   TO_CONSTRUCTION_EXPERT = 'toConExpert',
-  TO_GM = 'toGM'
+  TO_GM = 'toGM',
+  FINAL_NOTIFICATION = 'finalNotification'
 }

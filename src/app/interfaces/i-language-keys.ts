@@ -6,6 +6,7 @@ export interface ILanguageKeys {
   organization_reject_task: string;
   org_approve_task: string;
   initial_approve_task: string;
+  final_notification_task: string;
   add_officer: string;
   organization_officers: string;
   work_start_date: string;
@@ -1046,4 +1047,6 @@ export interface ILanguageKeys {
   donor: string;
   menu_inquiry_logs: string;
   please_add_employee_items_to_proceed: string;
+  employees_details: string;
+  final_Notification: string;
 }

@@ -681,7 +681,7 @@
     "path": "/home/e-services/job-application",
     "icon": "mdi-account-tie-outline",
     "isSvg": false,
-    "permission": "PARTNER_APPROVAL",
+    "permission": "JOB_APPLICATION",
     "permissionGroup": null,
     "parent": 13,
     "group": "e-services",

@@ -1,4 +1,8 @@
 import { JobApplication } from "./job-application";
 
 export class JobApplicationSearchCriteria
-  extends JobApplication {}
+  extends JobApplication {
+  identificationNumber: string = '';
+  passportNumber: string = '';
+  isManager: boolean = false;
+}

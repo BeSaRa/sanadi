@@ -2,6 +2,32 @@
   {
     "fields": [
       {
+        "key": "fullSerial",
+        "type": "input",
+        "label": "serial_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
+      },
+      {
+        "key": "subject",
+        "type": "input",
+        "label": "subject",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
         "key": "createdOnFrom",
         "type": "dateField",
         "label": "creation_date_from",
@@ -26,17 +52,6 @@
   },
   {
     "fields": [
-      {
-        "key": "fullSerial",
-        "type": "input",
-        "label": "request_number",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 50
-        }
-      },
       {
         "key": "caseStatus",
         "type": "selectField",

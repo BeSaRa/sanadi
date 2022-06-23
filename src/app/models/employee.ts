@@ -3,9 +3,9 @@ import { IMyDateModel } from "angular-mydatepicker";
 import { IEmployeeDto } from "./../interfaces/i-employee-dto";
 export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   id!: number;
-  arName!: string;
-  enName!: string;
-  jobTitle!: string;
+  arabicName!: string;
+  englishName!: string;
+  jobTitle!: number;
   identificationType!: number;
   identificationNumber!: string;
   passportNumber!: string;
@@ -19,9 +19,12 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   contractType!: number;
   jobContractType!: number;
   contractStatus!: number;
+  qId!: string;
+  updatedBy!: number;
   contractExpiryDate!: string | IMyDateModel;
   workStartDate!: string | IMyDateModel;
   workEndDate!: string | IMyDateModel;
+  updatedOn!: string | IMyDateModel;
   constructor() {
     super();
   }

@@ -1,9 +1,9 @@
 import { IMyDateModel } from 'angular-mydatepicker';
 export interface IEmployeeDto {
   id: number;
-  arName: string;
-  enName: string;
-  jobTitle: string;
+  arabicName: string;
+  englishName: string;
+  jobTitle: number;
   identificationType: number;
   identificationNumber: string;
   passportNumber: string;
@@ -20,4 +20,7 @@ export interface IEmployeeDto {
   contractExpiryDate: string | IMyDateModel;
   workStartDate: string | IMyDateModel;
   workEndDate: string | IMyDateModel;
+  updatedOn: string | IMyDateModel;
+  qId: string;
+  updatedBy: number;
 }

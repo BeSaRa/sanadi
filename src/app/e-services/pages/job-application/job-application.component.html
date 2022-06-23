@@ -7,7 +7,6 @@
       [title]="lang.map.lbl_basic_info"
     ></tab>
     <tab
-      *ngIf="!accordionView"
       [name]="tabsData.employeeInfo.name"
       [hasError]="getTabInvalidStatus('employeeInfo')"
       [template]="employeeInfoTabTemplate"
@@ -29,6 +28,7 @@
             <ng-select
               [selectOnTab]="true"
               placeholder="{{ lang.map.select }}"
+              [readonly]="!isEditRequestTypeAllowed()"
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
               id="category"
@@ -55,6 +55,7 @@
             <ng-select
               [selectOnTab]="true"
               placeholder="{{ lang.map.select }}"
+              [readonly]="!isEditRequestTypeAllowed()"
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
               id="requestType"
@@ -89,7 +90,6 @@
               controlName="description"
             ></app-field-error-message>
           </div>
-
         </div>
       </form>
     </fieldset>
@@ -97,10 +97,69 @@
 
   <ng-template #employeeInfoTabTemplate>
     <div class="row">
-      <div class="col-12 mb-2" *ngIf="category.value">
-        <button class="btn btn-primary px-3" (click)="openForm()">
-          {{ lang.map.adding_employees }}
+      <div
+        class="col-12 mb-2 d-flex justify-content-between align-items-end"
+        *ngIf="category.value && requestType.value"
+      >
+        <button
+          class="btn btn-primary px-3"
+          [disabled]="!isNewRequestType() && !employees.length"
+          (click)="openForm()"
+        >
+          {{
+            isEditRequestTypeAllowed() && isNewRequestType()
+              ? lang.map.adding_employees
+              : lang.map.employees_details
+          }}
         </button>
+        <form class="d-flex" [formGroup]="searchCriteriaForm" *ngIf="isCreateOperation()">
+          <div>
+            <label for="passportNumber" class="form-label">{{
+              lang.map.passport_number
+            }}</label>
+            <div class="input-group">
+              <input
+                formControlName="passportNumber"
+                [readonly]="isNewRequestType()"
+                trimInput
+                type="text"
+                class="form-control"
+                id="passportNumber"
+              />
+              <button
+                type="button"
+                class="input-group-text"
+                [disabled]="isNewRequestType() || !passportNumber.value"
+                (click)="CriteriaSearch()"
+              >
+                <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
+              </button>
+            </div>
+          </div>
+          <div class="ms-3">
+            <label for="identificationNumber" class="form-label">{{
+              lang.map.identification_number
+            }}</label>
+            <div class="input-group">
+              <input
+                formControlName="identificationNumber"
+                [readonly]="isNewRequestType()"
+                trimInput
+                type="text"
+                class="form-control"
+                id="identificationNumber"
+              />
+              <button
+                type="button"
+                class="input-group-text"
+                [disabled]="isNewRequestType() || !identificationNumber.value"
+                (click)="CriteriaSearch()"
+              >
+                <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="col-12">
         <app-employees-data

@@ -9,17 +9,17 @@
     [dataSource]="table.dataSource"
     class="table table-striped table-bordered caption-top"
   >
-    <ng-container cdkColumnDef="arName">
+    <ng-container cdkColumnDef="arabicName">
       <th cdk-header-cell *cdkHeaderCellDef>
         {{ lang.map.arabic_name }}
       </th>
-      <td cdk-cell *cdkCellDef="let row">{{ row.arName }}</td>
+      <td cdk-cell *cdkCellDef="let row">{{ row.arabicName }}</td>
     </ng-container>
-    <ng-container cdkColumnDef="enName">
+    <ng-container cdkColumnDef="englishName">
       <th cdk-header-cell *cdkHeaderCellDef>
         {{ lang.map.english_name }}
       </th>
-      <td cdk-cell *cdkCellDef="let row">{{ row.enName }}</td>
+      <td cdk-cell *cdkCellDef="let row">{{ row.englishName }}</td>
     </ng-container>
     <ng-container cdkColumnDef="jobTitle">
       <th cdk-header-cell *cdkHeaderCellDef>
@@ -39,15 +39,17 @@
         {{ lang.map.lbl_actions }}
       </th>
       <td cdk-cell *cdkCellDef="let row">
-        <a
-          href="#"
-          *ngFor="let btn of actions;"
-          (click)="cb($event, btn, row)"
-          tooltip="{{ lang.map[btn.langKey] }}"
-          class="icon-btn"
-        >
-          <i [class]="'mdi mdi-' + btn.icon"></i>
-        </a>
+        <ng-container *ngFor="let btn of actions">
+          <a
+            *ngIf="btn.show && btn.show()"
+            href="#"
+            (click)="cb($event, btn, row)"
+            tooltip="{{ lang.map[btn.langKey] }}"
+            class="icon-btn"
+          >
+            <i [class]="'mdi mdi-' + btn.icon"></i>
+          </a>
+        </ng-container>
       </td>
     </ng-container>
 

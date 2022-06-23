@@ -573,6 +573,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.finalApproveAction(item);
         }
       },
+      // final notification
+      {
+        type: 'action',
+        icon: 'mdi-book-check',
+        label: 'final_Notification',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.FINAL_NOTIFICATION);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.finalNotification(item);
+        }
+      },
       // ask for consultation
       {
         type: 'action',
@@ -848,6 +861,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToGeneralManagerAction(item: CaseModel<any, any>) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private finalNotification(item: CaseModel<any, any>) {
+    item.finalNotification().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

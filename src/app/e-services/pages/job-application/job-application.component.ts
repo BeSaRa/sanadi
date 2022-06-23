@@ -1,3 +1,4 @@
+import { JobApplicationSearchCriteria } from './../../../models/job-application-search-criteria';
 import { Employee } from "./../../../models/employee";
 import { ToastService } from "@app/services/toast.service";
 import { DialogService } from "@app/services/dialog.service";
@@ -16,22 +17,23 @@ import { LangService } from "./../../../services/lang.service";
 import { JobApplicationService } from "./../../../services/job-application.service";
 import { JobApplication } from "./../../../models/job-application";
 import { Component, Input, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
-import { Observable, of } from "rxjs";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { Observable, of, Subject } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { SaveTypes } from "@app/enums/save-types";
-import { filter, map, takeUntil, tap } from "rxjs/operators";
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from "rxjs/operators";
 @Component({
   selector: "app-job-application",
   templateUrl: "./job-application.component.html",
   styleUrls: ["./job-application.component.scss"],
 })
 export class JobApplicationComponent extends EServicesGenericComponent<
-  JobApplication,
-  JobApplicationService
+JobApplication,
+JobApplicationService
 > {
   form!: FormGroup;
+  identificationNumberSearch$: Subject<Partial<JobApplicationSearchCriteria>> = new Subject<Partial<JobApplicationSearchCriteria>>();
 
   employees: Employee[] = [];
   fileIconsEnum = FileIconsEnum;
@@ -43,7 +45,10 @@ export class JobApplicationComponent extends EServicesGenericComponent<
 
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
-
+  searchCriteriaForm: FormGroup = new FormGroup({
+    identificationNumber: new FormControl(''),
+    passportNumber: new FormControl(''),
+  })
   EmploymentCategory: Lookup[] =
     this.lookupService.listByCategory.EmploymentCategory.slice().sort(
       (a, b) => a.lookupKey - b.lookupKey
@@ -87,9 +92,9 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     this._buildForm();
     this.service.onSubmit.subscribe((data) => {
       this.employees = [...data];
-      console.log(data)
       this.model && (this.model.employeeInfoDTOs = this.employees);
     });
+    this.listenToSearchCriteria()
   }
   _buildForm(): void {
     this.form = this.fb.group(new JobApplication().formBuilder(true));
@@ -98,7 +103,7 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     this.handleCategoryChange();
     this.handleRequestTypeChange();
     this.handleDescriptionChange();
-    this.setDefaultValues();
+    if (this.operation == OperationTypes.CREATE) this.setDefaultValues();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     return of(this.form.valid)
@@ -132,6 +137,7 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     operation: OperationTypes
   ): void {
     this.model = model;
+    this.employees = [...model.employeeInfoDTOs];
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -152,15 +158,14 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     console.log("_launchFail", error);
   }
   _destroyComponent(): void {
-    console.log("_destroyComponent");
+    this.identificationNumberSearch$.unsubscribe();
   }
   _updateForm(model: JobApplication | undefined): void {
     if (!model) {
       return;
     }
-    console.log({ ...model });
-    console.log(model);
     this.model = model;
+    this.employees = [...model.employeeInfoDTOs];
     this.form = this.fb.group(model.formBuilder(true));
   }
   _resetForm(): void {
@@ -171,8 +176,12 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     this.requestType.patchValue(EmploymentRequestType.NEW);
     this.category.patchValue(JobApplicationCategories.NOTIFICATION);
   }
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
   openForm() {
-    this.service.openAddNewEmployee(this.form, this.employees);
+    this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation);
   }
   handleCategoryChange(): void {
     this.category.valueChanges
@@ -214,16 +223,64 @@ export class JobApplicationComponent extends EServicesGenericComponent<
     );
   }
   isNewRequestType(): boolean {
-    return (
-      this.requestType.value &&
-      this.requestType.value === EmploymentRequestType.NEW
-    );
+    return this.requestType.value === EmploymentRequestType.NEW
+  }
+  isCreateOperation() {
+    return this.operation === OperationTypes.CREATE
+  }
+  loadSearchByCriteria(criteria: Partial<JobApplicationSearchCriteria>): Observable<Employee[]> {
+    return this.service.findEmployee(criteria);
+  }
+  private listenToSearchCriteria() {
+    this.identificationNumberSearch$
+      .pipe(exhaustMap(dto => {
+        return this.loadSearchByCriteria({
+          identificationNumber: dto.identificationNumber,
+          passportNumber: dto.passportNumber,
+          isManager: this.category.value == LookupEmploymentCategory.APPROVAL,
+        })
+          .pipe(catchError(() => of([])))
+      }))
+      .pipe(
+        // display message in case there is no returned license
+        tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+        // allow only the collection if it has value
+        filter(result => !!result.length),
+        map((res: any) => {
+          console.log({ ...res })
+          return [{
+            ...res[0],
+            identificationNumber: res[0].qId
+          }]
+        }),
+        // switch to the dialog ref to use it later and catch the user response
+        takeUntil(this.destroy$)
+      )
+      .subscribe((e: Employee[]) => {
+        console.log({ ...e[0] });
+        this.employees = [...e];
+        this.model && (this.model.employeeInfoDTOs = this.employees);
+      })
+  }
+  CriteriaSearch(): void {
+    const identificationNumber = this.identificationNumber.value && this.identificationNumber.value.trim();
+    const passportNumber = this.passportNumber.value && this.passportNumber.value.trim();
+    this.identificationNumberSearch$.next({
+      identificationNumber: identificationNumber,
+      passportNumber: passportNumber,
+    });
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   private invalidItemMessage() {
     this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
+  }
+  get identificationNumber(): FormControl {
+    return this.searchCriteriaForm.get("identificationNumber") as FormControl;
+  }
+  get passportNumber(): FormControl {
+    return this.searchCriteriaForm.get("passportNumber") as FormControl;
   }
   get requestType(): FormControl {
     return this.form.get("requestType") as FormControl;
