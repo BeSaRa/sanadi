@@ -204,7 +204,7 @@
                  [dataSource]="integrationLogTable.dataSource">
             <ng-container cdkColumnDef="extra-header">
               <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-                <table-header tableTitle="logs" [add$]="add$" [reload$]="reload$"
+                <table-header tableTitle="inquiries" [add$]="add$" [reload$]="reload$"
                               [sort]="integrationLogTable.dataSource.sort"
                               (textChange)="filterControl.setValue($event)">
                 </table-header>

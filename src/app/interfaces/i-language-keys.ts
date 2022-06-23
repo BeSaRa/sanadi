@@ -1061,4 +1061,5 @@ export interface ILanguageKeys {
   contract_date: string;
   download_disclosure_form: string;
   msg_corrupt_invalid_file: string;
+  inquiries: string;
 }
