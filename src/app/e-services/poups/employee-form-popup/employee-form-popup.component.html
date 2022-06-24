@@ -100,9 +100,9 @@
       </div>
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label
-          asteriskIfRequired="jobTitle"
-          for="jobTitle"
-          labelForId="jobTitle"
+          asteriskIfRequired="jobTitleId"
+          for="jobTitleId"
+          labelForId="jobTitleId"
           class="form-label"
           >{{ lang.map.job_title }}</label
         >
@@ -113,15 +113,15 @@
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
-          id="jobTitle"
-          formControlName="jobTitle"
+          id="jobTitleId"
+          formControlName="jobTitleId"
         >
           <ng-option *ngFor="let option of JobTitleList" [value]="option.id">{{
             option.getName()
           }}</ng-option>
         </ng-select>
         <app-field-error-message
-          controlName="jobTitle"
+          controlName="jobTitleId"
         ></app-field-error-message>
       </div>
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -454,10 +454,7 @@
           ></app-field-error-message>
         </div>
       </div>
-      <div
-        class="col-12 mb-2 d-flex"
-        *ngIf="isEditRequestTypeAllowed"
-      >
+      <div class="col-12 mb-2 d-flex" *ngIf="!isSingleEmployee() && isEditRequestTypeAllowed">
         <button class="btn btn-primary" type="button" (click)="setEmployee()">
           {{ !id ? lang.map.btn_add : lang.map.btn_edit }}
         </button>

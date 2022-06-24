@@ -1,3 +1,4 @@
+import { DateUtils } from '@app/helpers/date-utils';
 import { JobApplicationSearchCriteria } from './../../../models/job-application-search-criteria';
 import { Employee } from "./../../../models/employee";
 import { ToastService } from "@app/services/toast.service";
@@ -170,6 +171,7 @@ JobApplicationService
   }
   _resetForm(): void {
     this.form.reset();
+    this.operation = OperationTypes.CREATE;
     this.setDefaultValues();
   }
   private setDefaultValues(): void {
@@ -247,9 +249,15 @@ JobApplicationService
         // allow only the collection if it has value
         filter(result => !!result.length),
         map((res: any) => {
-          console.log({ ...res })
           return [{
             ...res[0],
+            workStartDate: DateUtils.changeDateToDatepicker(res[0].workStartDate),
+            workEndDate: DateUtils.changeDateToDatepicker(res[0].workEndDate),
+            updatedOn: DateUtils.changeDateToDatepicker(res[0].updatedOn),
+            jobTitle: 'need it with the response',
+            contractExpiryDate: DateUtils.changeDateToDatepicker(
+              res[0].contractExpiryDate
+            ),
             identificationNumber: res[0].qId
           }]
         }),
@@ -257,8 +265,12 @@ JobApplicationService
         takeUntil(this.destroy$)
       )
       .subscribe((e: Employee[]) => {
-        console.log({ ...e[0] });
-        this.employees = [...e];
+        console.log({...e[0]})
+        if (this.isApprova()) {
+          this.employees = [...e];
+        } else {
+          this.employees = [...e, ...this.employees];
+        }
         this.model && (this.model.employeeInfoDTOs = this.employees);
       })
   }
@@ -269,6 +281,9 @@ JobApplicationService
       identificationNumber: identificationNumber,
       passportNumber: passportNumber,
     });
+  }
+  isApprova() {
+    return this.category.value == LookupEmploymentCategory.APPROVAL
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);

@@ -133,7 +133,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       id: [0],
       arabicName: ["", Validators.required],
       englishName: ["", Validators.required],
-      jobTitle: [null, Validators.required],
+      jobTitleId: [null, Validators.required],
       identificationType: [1, Validators.required],
       identificationNumber: ["", Validators.required],
       passportNumber: [""],
@@ -174,7 +174,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
     }
   }
-
+  get selectedJobTitle() {
+    return this.JobTitleList.find(jt => jt.id == this.form.value.jobTitleId)?.getName()
+  }
   isCreateOperation() {
     return this.data.operation === OperationTypes.CREATE;
   }
@@ -182,7 +184,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     if (this.form.valid) {
       if (!this.form.value.id) {
         this.employeesList = [
-          { ...this.form.value, id: --this.starterId },
+          { ...this.form.value, jobTitle: this.selectedJobTitle, id: --this.starterId },
           ...this.employeesList,
         ];
       } else {
@@ -190,6 +192,7 @@ export class EmployeeFormPopupComponent implements OnInit {
           this.employeesList.find((e) => e.id == this.form.value.id),
           {
             ...this.form.value,
+            jobTitle: this.selectedJobTitle,
           }
         );
       }
@@ -246,8 +249,10 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.passportNumber?.setValidators([]);
     if (this.identificationType.value == IdentificationType.Identification) {
       this.identificationNumber.setValidators([Validators.required]);
+      this.passportNumber.setValue('');
     } else {
       this.passportNumber.setValidators([Validators.required]);
+      this.identificationNumber.setValue('');
     }
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
@@ -267,7 +272,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     return this.contractLocationType.value == ContractLocationTypes.External;
   }
   isSingleEmployee() {
-    return this.category.value == LookupEmploymentCategory.APPROVAL || this.requestType.value != EmploymentRequestType.NEW;
+    return this.category.value == LookupEmploymentCategory.APPROVAL;
   }
   isFinishedContract() {
     return this.contractStatus.value != ContractStatus.Finished;

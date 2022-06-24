@@ -5,7 +5,8 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   id!: number;
   arabicName!: string;
   englishName!: string;
-  jobTitle!: number;
+  jobTitle!: string;
+  jobTitleId!: number;
   identificationType!: number;
   identificationNumber!: string;
   passportNumber!: string;

@@ -112,7 +112,11 @@
               : lang.map.employees_details
           }}
         </button>
-        <form class="d-flex" [formGroup]="searchCriteriaForm" *ngIf="isCreateOperation()">
+        <form
+          class="d-flex align-items-end"
+          [formGroup]="searchCriteriaForm"
+          *ngIf="isCreateOperation()"
+        >
           <div>
             <label for="passportNumber" class="form-label">{{
               lang.map.passport_number
@@ -126,14 +130,6 @@
                 class="form-control"
                 id="passportNumber"
               />
-              <button
-                type="button"
-                class="input-group-text"
-                [disabled]="isNewRequestType() || !passportNumber.value"
-                (click)="CriteriaSearch()"
-              >
-                <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
-              </button>
             </div>
           </div>
           <div class="ms-3">
@@ -149,15 +145,17 @@
                 class="form-control"
                 id="identificationNumber"
               />
-              <button
-                type="button"
-                class="input-group-text"
-                [disabled]="isNewRequestType() || !identificationNumber.value"
-                (click)="CriteriaSearch()"
-              >
-                <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
-              </button>
             </div>
+          </div>
+          <div class="ms-3">
+            <button
+              type="button"
+              class="input-group-text"
+              [disabled]="isNewRequestType() || !identificationNumber.value"
+              (click)="CriteriaSearch()"
+            >
+              <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
+            </button>
           </div>
         </form>
       </div>

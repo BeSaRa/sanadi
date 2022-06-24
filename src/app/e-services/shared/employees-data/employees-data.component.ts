@@ -14,18 +14,21 @@ export class EmployeesDataComponent implements OnInit {
   Gender: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
   );
-  displayedColumns: string[] = [
+  _displayedColumns: string[] = [
     "arabicName",
     "englishName",
     "jobTitle",
-    "gender",
-    "actions",
+    "gender"
   ];
+  get displayedColumns() {
+    return !this.actions.length ? this._displayedColumns : [...this._displayedColumns
+      , "actions"]
+  }
   @Input() employees: IEmployeeDto[] = [];
   @Input() actions: IGridAction[] = [];
-  constructor(public lang: LangService, private lookupService: LookupService) {}
+  constructor(public lang: LangService, private lookupService: LookupService) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
   getGenderName(gender: number) {
     return this.Gender.find((g) => g.lookupKey == gender)?.getName();
   }

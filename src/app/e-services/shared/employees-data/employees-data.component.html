@@ -34,7 +34,7 @@
       <td cdk-cell *cdkCellDef="let row">{{ getGenderName(row.gender) }}</td>
     </ng-container>
 
-    <ng-container cdkColumnDef="actions">
+    <ng-container cdkColumnDef="actions" *ngIf="actions.length">
       <th cdk-header-cell *cdkHeaderCellDef>
         {{ lang.map.lbl_actions }}
       </th>

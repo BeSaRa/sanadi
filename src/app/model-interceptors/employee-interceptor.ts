@@ -21,12 +21,14 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       : DateUtils.changeDateFromDatepicker(
         model.workEndDate as unknown as IMyDateModel
       )?.toISOString();
+    delete model.jobTitle
     return model;
   }
   receive(model: Employee): Employee {
     model.workStartDate = DateUtils.changeDateToDatepicker(model.workStartDate);
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
     model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
+    model.jobTitle = 'need it with the response';
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );
