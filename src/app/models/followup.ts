@@ -7,7 +7,15 @@ import { INames } from '@app/interfaces/i-names';
 import { Lookup } from '@app/models/lookup';
 import { IDescriptions } from '@app/interfaces/I-descriptions';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { FollowupInterceptor } from "@app/model-interceptors/followup.interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new FollowupInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class Followup extends BaseModel<Followup, FollowupService> {
   service: FollowupService;
   langService: LangService;
