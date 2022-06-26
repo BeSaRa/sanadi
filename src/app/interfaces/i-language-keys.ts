@@ -1062,4 +1062,5 @@ export interface ILanguageKeys {
   download_disclosure_form: string;
   msg_corrupt_invalid_file: string;
   inquiries: string;
+  description_disbursement_decision: string;
 }
