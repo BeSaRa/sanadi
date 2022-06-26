@@ -27,7 +27,7 @@
                    placeholder="{{lang.map.select}}" id="implementingAgency"
                    [notFoundText]="lang.map.msg_not_found"
                    formControlName="implementingAgency" validationClasses="implementingAgency">
-          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id">
+          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.fnId">
             {{option.getName()}}
           </ng-option>
         </ng-select>

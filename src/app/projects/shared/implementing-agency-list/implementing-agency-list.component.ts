@@ -49,7 +49,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
 
   columns = ['implementingAgencyType', 'implementingAgency', 'actions'];
   implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyList: any[] = [];
+  implementingAgencyList: AdminResult[] = [];
 
   editItem?: ImplementingAgency;
   viewOnly: boolean = false;
