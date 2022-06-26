@@ -223,7 +223,9 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    console.log('close');
+    this.debugInfo(() => {
+      console.log('close');
+    });
     this.menuRef?.detach();
     this.overlayRef.detach();
     this.menuRef = undefined;

@@ -49,7 +49,7 @@ export function SendInterceptor(interceptorCallback?: any): any {
         interceptorCallback = interceptor ? interceptor.send : identity;
       }
 
-      console.log({ interceptorCallback });
+      // console.log({ interceptorCallback });
 
       if (target.hasOwnProperty(metadataProperty)) {
         const params = target[metadataProperty] as any[];
