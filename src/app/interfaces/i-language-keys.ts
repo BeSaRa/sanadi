@@ -1063,4 +1063,5 @@ export interface ILanguageKeys {
   msg_corrupt_invalid_file: string;
   inquiries: string;
   description_disbursement_decision: string;
+  menu_customs_exemption_service: string;
 }

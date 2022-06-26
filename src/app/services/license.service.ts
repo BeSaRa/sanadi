@@ -129,8 +129,8 @@ export class LicenseService {
       case CaseTypes.URGENT_INTERVENTION_REPORTING:
         url = this.urlService.URLS.URGENT_INTERVENTION_REPORTING;
         break;
-      case CaseTypes.SHIPPING_APPROVAL:
-        url = this.urlService.URLS.CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES;
+      case CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE:
+        url = this.urlService.URLS.CUSTOMS_EXEMPTION_REMITTANCE;
         break;
     }
     return url;

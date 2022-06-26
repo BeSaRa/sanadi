@@ -7,7 +7,7 @@ import { DateUtils } from "@app/helpers/date-utils";
 import { IKeyValue } from "@app/interfaces/i-key-value";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { IWFResponse } from "@app/interfaces/i-w-f-response";
-import { ShippingApproval } from "@app/models/shipping-approval";
+import { CustomsExemptionRemittance } from "@app/models/customs-exemption-remittance";
 import { DialogService } from "@app/services/dialog.service";
 import { InboxService } from "@app/services/inbox.service";
 import { LangService } from "@app/services/lang.service";
@@ -19,18 +19,18 @@ import { Subject } from "rxjs";
 import { exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 
 @Component({
-  selector: "shipping-approve-task-pop-up",
-  templateUrl: "./shipping-approve-task-pop-up.component.html",
-  styleUrls: ["./shipping-approve-task-pop-up.component.scss"],
+  selector: "customs-exemption-approve-task-popup",
+  templateUrl: "./customs-exemption-approve-task-popup.component.html",
+  styleUrls: ["./customs-exemption-approve-task-popup.component.scss"],
 })
-export class ShippingApproveTaskPopUpComponent implements OnInit {
+export class CustomsExemptionApproveTaskPopupComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
 
   response: WFResponseType = WFResponseType.APPROVE;
 
-  model: ShippingApproval;
+  model: CustomsExemptionRemittance;
   comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   form!: FormGroup;
 
@@ -46,7 +46,7 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
     private inboxService: InboxService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
-      model: ShippingApproval;
+      model: CustomsExemptionRemittance;
       action: WFResponseType;
     },
     public lang: LangService
@@ -78,7 +78,7 @@ export class ShippingApproveTaskPopUpComponent implements OnInit {
   }
 
   private buildForm(): void {
-    this.form = this.fb.group(new ShippingApproval().buildApprovalForm(true));
+    this.form = this.fb.group(new CustomsExemptionRemittance().buildApprovalForm(true));
   }
 
   ngOnDestroy(): void {

@@ -29,7 +29,7 @@ import {
 import {
   UrgentJointReliefCampaignSearchCriteriaInterceptor
 } from '@app/search-criteria-interceptors/urgent-joint-relief-campaign-search-criteria-interceptor';
-import { ShippingApprovalInterceptor } from "@app/model-interceptors/shipping-approval-interceptor";
+import { CustomsExemptionRemittanceInterceptor } from "@app/model-interceptors/customs-exemption-remittance-interceptor";
 import { FundraisingInterceptor } from "@app/model-interceptors/fundraising-interceptor";
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
@@ -42,7 +42,7 @@ interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaIn
 interceptors.set(CaseTypes.COLLECTION_APPROVAL, new CollectionApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.COLLECTOR_LICENSING, new CollectorApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, new UrgentJointReliefCampaignSearchCriteriaInterceptor());
-interceptors.set(CaseTypes.SHIPPING_APPROVAL, new ShippingApprovalInterceptor());
+interceptors.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, new CustomsExemptionRemittanceInterceptor());
 interceptors.set(CaseTypes.FUNDRAISING_LICENSING, new FundraisingInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {

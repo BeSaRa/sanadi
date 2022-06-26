@@ -4,7 +4,7 @@ import {dateSearchFields} from '@app/helpers/date-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {FactoryService} from '@app/services/factory.service';
-import {ShippingApprovalService} from '@app/services/shipping-approval.service';
+import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -13,16 +13,16 @@ import {CaseModel} from './case-model';
 import {TaskDetails} from './task-details';
 import {DialogService} from '@app/services/dialog.service';
 import {
-  ShippingApproveTaskPopUpComponent
-} from '@app/modules/remittances/popups/shipping-approve-task-pop-up/shipping-approve-task-pop-up.component';
+  CustomsExemptionApproveTaskPopupComponent
+} from '@app/modules/remittances/popups/customs-exemption-approve-task-popup/customs-exemption-approve-task-popup.component';
 import {DateUtils} from '@app/helpers/date-utils';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@app/interfaces/has-request-type';
 
 const _ApprovalDocument = mixinRequestType(CaseModel);
 
-export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService, ShippingApproval> implements HasRequestType {
-  service: ShippingApprovalService;
+export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExemptionRemittanceService, CustomsExemptionRemittance> implements HasRequestType {
+  service: CustomsExemptionRemittanceService;
   id!: string;
   createdOn!: string;
   lastModified!: string;
@@ -32,7 +32,7 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
   serial!: number;
   fullSerial!: string;
   caseStatus!: number;
-  caseType: number = CaseTypes.SHIPPING_APPROVAL;
+  caseType: number = CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
   organizationId!: number;
   taskDetails!: TaskDetails;
   caseStatusInfo!: AdminResult;
@@ -86,7 +86,7 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
 
   dialog!: DialogService;
 
-  searchFields: ISearchFieldsMap<ShippingApproval> = {
+  searchFields: ISearchFieldsMap<CustomsExemptionRemittance> = {
     ...normalSearchFields(['fullSerial']),
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo']),
@@ -94,7 +94,7 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
 
   constructor() {
     super();
-    this.service = FactoryService.getService('ShippingApprovalService');
+    this.service = FactoryService.getService('CustomsExemptionRemittanceService');
     this.dialog = FactoryService.getService('DialogService');
   }
 
@@ -153,14 +153,14 @@ export class ShippingApproval extends _ApprovalDocument<ShippingApprovalService,
   }
 
   approve(): DialogRef {
-    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+    return this.dialog.show(CustomsExemptionApproveTaskPopupComponent, {
       model: this,
       action: WFResponseType.APPROVE,
     });
   }
 
   finalApprove(): DialogRef {
-    return this.dialog.show(ShippingApproveTaskPopUpComponent, {
+    return this.dialog.show(CustomsExemptionApproveTaskPopupComponent, {
       model: this,
       action: WFResponseType.FINAL_APPROVE,
     });

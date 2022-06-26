@@ -44,7 +44,7 @@ import {FundraisingService} from './fundraising.service';
 import {CollectorApprovalService} from '@app/services/collector-approval.service';
 import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
-import {ShippingApprovalService} from './shipping-approval.service';
+import {CustomsExemptionRemittanceService} from './customs-exemption-remittance.service';
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
@@ -75,7 +75,7 @@ export class InboxService {
               private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
               private urgentInterventionReportingService: UrgentInterventionReportingService,
               private urlService: UrlService,
-              private shippingApprovalService: ShippingApprovalService) {
+              private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -92,7 +92,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
     this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
-    this.services.set(CaseTypes.SHIPPING_APPROVAL, this.shippingApprovalService);
+    this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
   }
 

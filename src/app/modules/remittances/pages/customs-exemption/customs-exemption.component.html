@@ -50,8 +50,8 @@
         </div>
       </div>
       <div *ngIf="selectedDocument">
-        <selected-license-table [caseType]="caseTypes.SHIPPING_APPROVAL"
-                                [caseTypeViewLicense]="caseTypes.SHIPPING_APPROVAL"
+        <selected-license-table [caseType]="caseTypes.CUSTOMS_EXEMPTION_REMITTANCE"
+                                [caseTypeViewLicense]="caseTypes.CUSTOMS_EXEMPTION_REMITTANCE"
                                 [licenseList]="[selectedDocument]"
                                 [columns]="service.selectDocumentDisplayColumns"></selected-license-table>
       </div>
@@ -204,8 +204,8 @@
                      [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
                      id="receiverName" [notFoundText]="lang.map.msg_not_found" appendTo="body"
                      formControlName="receiverName" validationClasses="receiverName">
-            <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
-              {{option.receiverNameInfo.getName()}}
+              <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
+              {{option.getName()}}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="receiverName"></app-field-error-message>

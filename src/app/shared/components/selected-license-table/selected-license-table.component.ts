@@ -5,11 +5,12 @@ import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {CustomsExemptionRemittanceService} from '@app/services/customs-exemption-remittance.service';
 import {DialogService} from '@services/dialog.service';
 import {filter, take} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'selected-license-table',
   templateUrl: './selected-license-table.component.html',
@@ -66,7 +67,7 @@ export class SelectedLicenseTableComponent {
       console.error('caseTypeViewLicense is missing');
       return;
     }
-    if (this.caseType === CaseTypes.SHIPPING_APPROVAL) {
+    if (this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       let doc = {...license, documentTitle: license.fullSerial};
       this.customsExemptionRemittanceService
         .showDocumentContent(doc, this.caseType)

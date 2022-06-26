@@ -424,7 +424,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'send_to_risk_and_compliance_department',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+          return item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
 
         },
         onClick: (item: CaseModel<any, any>) => {

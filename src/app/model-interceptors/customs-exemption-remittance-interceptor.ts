@@ -1,16 +1,16 @@
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { AdminResult } from "@app/models/admin-result";
-import { ShippingApproval } from "@app/models/shipping-approval";
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {AdminResult} from '@app/models/admin-result';
+import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
 
-export class ShippingApprovalInterceptor implements IModelInterceptor<ShippingApproval> {
-  send(model: Partial<ShippingApproval>): Partial<ShippingApproval> {
+export class CustomsExemptionRemittanceInterceptor implements IModelInterceptor<CustomsExemptionRemittance> {
+  send(model: Partial<CustomsExemptionRemittance>): Partial<CustomsExemptionRemittance> {
     delete model.requestTypeInfo;
     delete model.shipmentSourceInfo;
     delete model.shipmentCarrierInfo;
     delete model.receiverNameInfo;
     return model;
   }
-  receive(model: ShippingApproval): ShippingApproval {
+  receive(model: CustomsExemptionRemittance): CustomsExemptionRemittance {
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.shipmentSourceInfo = AdminResult.createInstance(model.shipmentSourceInfo);
     model.shipmentCarrierInfo = AdminResult.createInstance(model.shipmentCarrierInfo);

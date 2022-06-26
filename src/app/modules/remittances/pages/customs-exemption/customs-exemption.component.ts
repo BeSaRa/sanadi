@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {FormGroup, FormBuilder, AbstractControl} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ShippingApproval} from '@app/models/shipping-approval';
-import {ShippingApprovalService} from '@app/services/shipping-approval.service';
+import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
+import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {LangService} from '@app/services/lang.service';
@@ -10,7 +10,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {catchError, distinctUntilChanged, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ReceiverTypes} from '@app/enums/receiver-type.enum';
 import {LinkedProjectTypes} from '@app/enums/linked-project-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -18,39 +18,35 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {Country} from '@app/models/country';
 import {CountryService} from '@app/services/country.service';
-import {AgencyService} from '@app/services/agency-service';
-import {Agency} from '@app/models/agency';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
-import {ShippingApprovalSearchCriteria} from '@app/models/shipping-approval-search-criteria';
+import {CustomsExemptionSearchCriteria} from '@app/models/customs-exemption-search-criteria';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {CustomsExemptionRemittanceService} from '@app/services/customs-exemption-remittance.service';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {AdminResult} from '@app/models/admin-result';
 
 @Component({
-  selector: 'shipping-approval',
-  templateUrl: './shipping-approval.component.html',
-  styleUrls: ['./shipping-approval.component.scss'],
+  selector: 'customs-exemption',
+  templateUrl: './customs-exemption.component.html',
+  styleUrls: ['./customs-exemption.component.scss'],
 })
-export class ShippingApprovalComponent extends EServicesGenericComponent<ShippingApproval, ShippingApprovalService> {
+export class CustomsExemptionComponent extends EServicesGenericComponent<CustomsExemptionRemittance, CustomsExemptionRemittanceService> {
   form!: FormGroup;
   fileIconsEnum = FileIconsEnum;
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
   documentSearchByDocNo$: Subject<string> = new Subject<string>();
-  selectedDocument?: ShippingApproval;
+  selectedDocument?: CustomsExemptionRemittance;
   displayProjectLicenseSearchButton = false;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
-              public service: ShippingApprovalService,
+              public service: CustomsExemptionRemittanceService,
               private lookupService: LookupService,
               private dialog: DialogService,
               private toast: ToastService,
               private countryService: CountryService,
-              private agencyService: AgencyService,
-              public employeeService: EmployeeService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
+              public employeeService: EmployeeService) {
     super();
   }
 
@@ -61,7 +57,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
-  receiverNamesList: Agency[] = [];
+  receiverNamesList: AdminResult[] = [];
 
   get requestType(): AbstractControl {
     return this.form.get('requestType')!;
@@ -114,8 +110,8 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     return (isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW);
   }
 
-  _getNewInstance(): ShippingApproval {
-    return new ShippingApproval();
+  _getNewInstance(): CustomsExemptionRemittance {
+    return new CustomsExemptionRemittance();
   }
 
   _initComponent(): void {
@@ -131,7 +127,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
   }
 
   _buildForm(): void {
-    const model = new ShippingApproval();
+    const model = new CustomsExemptionRemittance();
     this.form = this.fb.group(model.buildBasicInfo(true));
     this.projectLicense.disable();
   }
@@ -274,14 +270,14 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
-  _prepareModel(): ShippingApproval | Observable<ShippingApproval> {
-    return new ShippingApproval().clone({
+  _prepareModel(): CustomsExemptionRemittance | Observable<CustomsExemptionRemittance> {
+    return new CustomsExemptionRemittance().clone({
       ...this.model,
       ...this.form.getRawValue(),
     });
   }
 
-  _afterSave(model: ShippingApproval, saveType: SaveTypes, operation: OperationTypes): void {
+  _afterSave(model: CustomsExemptionRemittance, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
@@ -305,7 +301,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     // throw new Error('Method not implemented.');
   }
 
-  _updateForm(model: ShippingApproval | undefined): void {
+  _updateForm(model: CustomsExemptionRemittance | undefined): void {
     if (!model) {
       return;
     }
@@ -338,7 +334,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
     this.documentSearchByDocNo$.next(value);
   }
 
-  loadDocumentsByCriteria(criteria: Partial<ShippingApprovalSearchCriteria>): Observable<ShippingApproval[]> {
+  loadDocumentsByCriteria(criteria: Partial<CustomsExemptionSearchCriteria>): Observable<CustomsExemptionRemittance[]> {
     return this.service.documentSearch(criteria);
   }
 
@@ -362,7 +358,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
           return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
         })
       )
-      .pipe(filter((info): info is ShippingApproval => !!info))
+      .pipe(filter((info): info is CustomsExemptionRemittance => !!info))
       .subscribe((document) => {
         this.setSelectedDocument(document, false);
       });
@@ -388,30 +384,30 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
           return documents.length === 1 ? this.validateSingleDocument(documents[0]) : this.openSelectDocument(documents);
         })
       )
-      .pipe(filter((info): info is ShippingApproval => !!info))
+      .pipe(filter((info): info is CustomsExemptionRemittance => !!info))
       .subscribe((document) => {
         this.setSelectedDocument(document, false);
       });
   }
 
-  private validateSingleDocument(document: ShippingApproval): Observable<undefined | ShippingApproval> {
-    return this.customsExemptionRemittanceService
-      .validateDocumentByRequestType<ShippingApproval>(this.model!.caseType, this.requestType.value, document.exportedBookId) as Observable<undefined | ShippingApproval>;
+  private validateSingleDocument(document: CustomsExemptionRemittance): Observable<undefined | CustomsExemptionRemittance> {
+    return this.service
+      .validateDocumentByRequestType<CustomsExemptionRemittance>(this.model!.caseType, this.requestType.value, document.exportedBookId) as Observable<undefined | CustomsExemptionRemittance>;
   }
 
-  private openSelectDocument(documents: ShippingApproval[]): Observable<undefined | ShippingApproval> {
-    return this.customsExemptionRemittanceService
-      .openSelectDocumentDialog(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
+  private openSelectDocument(documents: CustomsExemptionRemittance[]): Observable<undefined | CustomsExemptionRemittance> {
+    return this.service
+      .openSelectDocumentDialog<CustomsExemptionRemittance>(documents, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectDocumentDisplayColumns)
       .onAfterClose$.pipe(
-        map((result: ({ selected: ShippingApproval; details: ShippingApproval } | undefined)) => (result ? result.details : result))
+        map((result: ({ selected: CustomsExemptionRemittance; details: CustomsExemptionRemittance } | undefined)) => (result ? result.details : result))
       );
   }
 
-  setSelectedDocument(documentDetails: ShippingApproval | undefined, ignoreUpdateForm: boolean) {
+  setSelectedDocument(documentDetails: CustomsExemptionRemittance | undefined, ignoreUpdateForm: boolean) {
     this.selectedDocument = documentDetails;
     if (documentDetails && !ignoreUpdateForm) {
       // update form fields if i have document
-      let value: any = new ShippingApproval().clone(documentDetails);
+      let value: any = new CustomsExemptionRemittance().clone(documentDetails);
       value.requestType = this.requestType.value;
       value.documentTitle = '';
 
@@ -481,8 +477,7 @@ export class ShippingApprovalComponent extends EServicesGenericComponent<Shippin
       this.receiverNamesList = [];
       return;
     }
-    this.agencyService
-      .loadReceiverNames(receiverType, country)
+    this.service.loadReceiverNames(receiverType, country)
       .subscribe((receiverNames) => {
         this.receiverNamesList = receiverNames;
       });
