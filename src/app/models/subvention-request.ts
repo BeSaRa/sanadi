@@ -42,7 +42,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   requestParentId?: number;
   aidLookupId!: number;
   aidLookupParentId!: number;
-  allowDataSharing: boolean = false;
+  allowDataSharing: boolean = true;
 
   // not belongs to the Model
   service: SubventionRequestService;

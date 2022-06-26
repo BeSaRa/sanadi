@@ -395,12 +395,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.requestStatusTab?.reset();
       this.readOnly = false;
       this.subAidLookupsList = [];
+      this.handleAllowDataSharingFieldChange();
     } else {
       this.requestStatusTab?.patchValue(request.getStatusFields());
       this.requestInfoTab?.patchValue(request.getInfoFields());
 
       this.loadSubAidLookups(request.aidLookupParentId);
       this.allowDataSharingField?.disable();
+      this.handleAllowDataSharingFieldChange();
 
       if (request.isPartial) {
         this.readOnly = !request.isUnderProcessing();
@@ -1654,12 +1656,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return !this.readOnly && !this.isPartialRequest;
   }
 
-  handleAllowDataSharingFieldChange($event: any): void {
+  handleAllowDataSharingFieldChange($event?: any): void {
     if (!this.allowDataSharingField.value) {
       this.disclosureFile = undefined;
-    } else {
-      this.allowCompletionField.setValue(false);
     }
+    this.allowCompletionField.setValue(false);
     this.toggleAllowCompletionReadonly();
   }
 
@@ -1672,7 +1673,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private toggleAllowCompletionReadonly(): void {
-    if (this.readOnly || this.allowDataSharingField.value) {
+    if (this.readOnly || !this.allowDataSharingField.value) {
       this.allowCompletionField?.disable();
     } else {
       if (this.currentRequest && !this.currentRequest.isUnderProcessing()) {
