@@ -25,6 +25,7 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {Lookup} from "@app/models/lookup";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-inbox',
@@ -88,6 +89,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private router: Router,
               private employeeService: EmployeeService,
               private inboxService: InboxService) {
     if (this.employeeService.isExternalUser()) {
@@ -244,9 +246,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.USER_INBOX)
+    /*item.open(this.actions, OpenFrom.USER_INBOX)
       .pipe(switchMap(ref => ref.onAfterClose$))
-      .subscribe(() => this.reloadInbox$.next(null));
+      .subscribe(() => this.reloadInbox$.next(null));*/
+    this.router.navigate([item.itemRoute], {queryParams: {item: item.itemDetails}}).then();
   }
 
   actionRelease(item: QueryResult, viewDialogRef?: DialogRef) {

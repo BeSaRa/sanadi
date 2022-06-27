@@ -3,7 +3,7 @@ import {LangService} from '@app/services/lang.service';
 import {SubventionRequestService} from '@app/services/subvention-request.service';
 import {Router} from '@angular/router';
 import {BehaviorSubject, of, Subject} from 'rxjs';
-import {catchError, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {catchError, switchMap, take, takeUntil} from 'rxjs/operators';
 import {SubventionRequest} from '@app/models/subvention-request';
 import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
@@ -14,6 +14,8 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {FormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {ECookieService} from '@services/e-cookie.service';
+import {BeneficiaryService} from '@services/beneficiary.service';
 
 @Component({
   selector: 'app-requests-under-process',
@@ -27,6 +29,8 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
               private router: Router,
               private toastService: ToastService,
               public langService: LangService,
+              private eCookieService: ECookieService,
+              private beneficiaryService: BeneficiaryService,
               public empService: EmployeeService) {
   }
 
@@ -85,6 +89,14 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       label: 'btn_delete',
       onClick: (item: SubventionRequest) => this.deleteRequest(item),
       show: (item) => item.isUnderProcessing()
+    },
+    // inquire beneficiary
+    {
+      type: 'action',
+      icon: ActionIconsEnum.SEARCH_USER,
+      label: 'inquire_beneficiary',
+      onClick: (item: SubventionRequest) => this.inquireBeneficiary(item),
+      show: (item: SubventionRequest) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
     }
   ];
 
@@ -109,6 +121,25 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.requestedAidAmount;
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
+  };
+
+  inquireBeneficiary(request: SubventionRequest) {
+    this.beneficiaryService.getById(request.benId)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError((err) => of(null))
+      )
+      .subscribe((beneficiary) => {
+        if (!beneficiary) {
+          return;
+        }
+        this.eCookieService.putEObject('b_i_d', {
+          idType: beneficiary.benPrimaryIdType,
+          idNumber: beneficiary.benPrimaryIdNumber,
+          nationality: beneficiary.benPrimaryIdNationality
+        });
+        this.router.navigate(['/home/sanady/inquiry']).then();
+      });
   }
 
   printRequest(request: SubventionRequest, $event?: MouseEvent): void {
@@ -145,7 +176,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
         return this.subventionRequestService.loadUnderProcess()
           .pipe(
             catchError((err) => of([]))
-          )
+          );
       })
     ).subscribe((requests) => {
       this.requests = requests;

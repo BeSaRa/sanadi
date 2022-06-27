@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {SubventionLog} from '@app/models/subvention-log';
@@ -17,7 +17,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
   templateUrl: './audit-details-popup.component.html',
   styleUrls: ['./audit-details-popup.component.scss']
 })
-export class AuditDetailsPopupComponent {
+export class AuditDetailsPopupComponent implements AfterViewInit {
 
   auditRecord: SanadiAuditResult;
   auditBeneficiary?: Beneficiary;
@@ -29,6 +29,7 @@ export class AuditDetailsPopupComponent {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SubventionRequest | SubventionAid | Beneficiary>,
               public lang: LangService,
+              private cd: ChangeDetectorRef,
               private dialogService: DialogService) {
     this.auditRecord = data.record;
 
@@ -41,10 +42,14 @@ export class AuditDetailsPopupComponent {
     }
   }
 
+  ngAfterViewInit() {
+    this.cd.detectChanges();
+  }
+
   tabsData: IKeyValue = {
     requestInfo: {name: 'requestInfoTab'},
     requestStatus: {name: 'requestStatusTab'}
-  }
+  };
 
   preventClick($event: Event): void {
     $event?.preventDefault();

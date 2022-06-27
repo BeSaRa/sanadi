@@ -16,6 +16,7 @@ export enum AidLookupStatusEnum {
   ACTIVE = 1,
   INACTIVE = 2
 }
+
 export enum FollowupStatusEnum {
   INACTIVE = 0,
   ACTIVE = 1,
@@ -30,5 +31,10 @@ export enum SubventionRequestStatus {
   REJECTED = 3,
   CANCELED = 4,
   REMOVED = 0
+}
+
+export enum BenOccupationStatusEnum {
+  WORKING = 1,
+  NOT_WORKING = 2
 }
 

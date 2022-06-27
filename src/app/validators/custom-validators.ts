@@ -47,7 +47,7 @@ const commonValidations = {
   fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
     let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);
-    return [decimal(numberOfPlaces), Validators.min(minValueToSet!)]
+    return [decimal(numberOfPlaces), Validators.min(minValueToSet!)];
   }
 };
 
@@ -60,10 +60,21 @@ const inputMaskPatterns = {
     }
     return '0*.' + ('0'.padEnd(numberOfPlaces, '0'));
   },
+  /**
+   * @description Used to mask for decimal with separator. ThousandSeparator should be used along with it
+   * @param numberOfDecimalPlaces
+   */
+  DECIMAL_WITH_SEPARATOR: (numberOfDecimalPlaces: number = 2): string => {
+    // if numberOfDecimalPlaces < 1, use number mask instead of decimal
+    if (numberOfDecimalPlaces < 1) {
+      return 'separator';
+    }
+    return 'separator.' + numberOfDecimalPlaces;
+  },
   PERCENT: 'percent',
   SEPARATOR: 'separator',
   THOUSAND_SEPARATOR: ','
-}
+};
 
 const errorKeys: IKeyValue = {
   required: {key: 'err_required_field', replaceValues: null},

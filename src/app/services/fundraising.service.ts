@@ -1,28 +1,28 @@
-import { HttpClient } from "@angular/common/http";
-import { ComponentFactoryResolver, Injectable } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
-import { EServiceGenericService } from "@app/generics/e-service-generic-service";
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { FundraisingInterceptor } from "@app/model-interceptors/fundraising-interceptor";
-import { Fundraising } from "@app/models/fundraising";
-import { FundraisingSearchCriteria } from "@app/models/FundRaisingSearchCriteria";
-import { Observable } from "rxjs";
-import { DialogService } from "./dialog.service";
-import { DynamicOptionsService } from "./dynamic-options.service";
-import { FactoryService } from "./factory.service";
-import { LicenseService } from "./license.service";
-import { UrlService } from "./url.service";
+import {HttpClient} from '@angular/common/http';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {FundraisingInterceptor} from '@app/model-interceptors/fundraising-interceptor';
+import {Fundraising} from '@app/models/fundraising';
+import {FundraisingSearchCriteria} from '@app/models/FundRaisingSearchCriteria';
+import {Observable} from 'rxjs';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {LicenseService} from './license.service';
+import {UrlService} from './url.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class FundraisingService extends EServiceGenericService<Fundraising> {
-  jsonSearchFile: string = "fundraising_search.json";  // will understand later
+  jsonSearchFile: string = 'fundraising_search.json';
   interceptor: IModelInterceptor<Fundraising> = new FundraisingInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_fundraising';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = ['fullSerial','requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'requestTypeInfo', 'creatorInfo', 'caseStatus', 'createdOn'];
   selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 
   constructor(
@@ -35,7 +35,7 @@ export class FundraisingService extends EServiceGenericService<Fundraising> {
     private licenseService: LicenseService
   ) {
     super();
-    FactoryService.registerService("FundraisingService", this);
+    FactoryService.registerService('FundraisingService', this);
   }
 
   _getModel() {

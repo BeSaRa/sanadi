@@ -625,11 +625,11 @@
   },
   {
     "id": 49,
-    "langKey": "menu_shipping_services_approval",
-    "path": "/home/remittance/shipping-approval",
+    "langKey": "menu_customs_exemption_service",
+    "path": "/home/remittance/customs-exemption",
     "icon": "mdi-human-male",
     "isSvg": false,
-    "permission": "SHIPPING_APPROVAL",
+    "permission": "CUSTOMS_EXEMPTION_REMITTANCE",
     "permissionGroup": null,
     "parent": 48,
     "group": "remittance",
@@ -694,7 +694,7 @@
     "path": "/home/sanady/inquiry-logs",
     "icon": "mdi-history",
     "isSvg": false,
-    "permission": "",
+    "permission": "BEN_SEARCH_LOG",
     "permissionGroup": null,
     "parent": 23,
     "group": "sanady",
@@ -738,6 +738,32 @@
     "parent": 32,
     "group": "projects",
     "itemOrder": 7,
+    "svg": null
+  },
+  {
+    "id": 57,
+    "langKey": "menu_urgent_intervention_report",
+    "path": "/home/projects/urgent-intervention-report",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_REPORTING",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 5,
+    "svg": null
+  },
+  {
+    "id": 58,
+    "langKey": "menu_reports",
+    "path": "/home/reports",
+    "icon": "mdi-file-chart-outline",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 10,
     "svg": null
   }
 ]

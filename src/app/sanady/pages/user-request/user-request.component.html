@@ -13,33 +13,33 @@
 <form autocomplete="off" [formGroup]="form" id="form" (keydown.enter)="$event.preventDefault()">
 
   <tabs-list class="py-4">
-    <tab [name]="tabsData.personal.name" [hasError]="fm.getFieldInvalidStatus('personalTab')"
+    <tab [name]="tabsData.personal.name" [hasError]="getTabInvalidStatus('personal')"
          [template]="personalInfo" [title]="langService.map.personal_info"></tab>
     <tab [name]="tabsData.address.name" [hasError]="getTabInvalidStatus('address')"
          [template]="address" [title]="langService.map.lbl_address"></tab>
     <tab [name]="tabsData.income.name" [hasError]="getTabInvalidStatus('income')"
          [template]="income" [title]="langService.map.income_obligation"></tab>
-    <tab [name]="tabsData.requestInfo.name" [hasError]="fm.getFieldInvalidStatus('requestInfoTab')"
+    <tab [name]="tabsData.requestInfo.name" [hasError]="getTabInvalidStatus('requestInfo')"
          [template]="requestInfo" [title]="langService.map.request_info"></tab>
     <tab [name]="tabsData.aids.name" [disabled]="isProvidedAidDisabled()"
          *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
-         [hasError]="fm.getFieldInvalidStatus('aidTab')"
+         [hasError]="getTabInvalidStatus('aids')"
          [template]="providedAid" [title]="langService.map.provided_aid"></tab>
     <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
-         [hasError]="fm.getFieldInvalidStatus('requestStatusTab')"
+         [hasError]="getTabInvalidStatus('requestStatus')"
          [template]="requestStatus" [title]="langService.map.request_status"></tab>
     <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
-         [hasError]="fm.getFieldInvalidStatus('attachmentsTab')"
+         [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTabTemplate" [title]="langService.map.attachments"></tab>
   </tabs-list>
   <!--  personal info Tab -->
   <ng-template #personalInfo>
     <div formGroupName="personalTab">
       <!--Primary Id-->
-      <div class="row d-flex flex-row">
+      <div class="row">
         <div class="col-sm-12">
           <h6 class="text-primary">{{langService.map.beneficiary_primary_id}}</h6>
-          <div class="row d-flex flex-column flex-md-row">
+          <div class="row">
             <div class="col-md-4 col-sm-12 mb-4">
               <label for="benPrimaryIdType" class="form-label"
                      asteriskIfRequired="benPrimaryIdType">{{langService.map.id_type}}</label>
@@ -47,21 +47,20 @@
                          [readonly]="beneficiaryPrimaryIdDisabled()"
                          placeholder="{{langService.map.select}}" id="benPrimaryIdType"
                          [notFoundText]="langService.map.msg_not_found" appendTo="body"
-                         formControlName="benPrimaryIdType">
+                         formControlName="benPrimaryIdType" validationClasses="benPrimaryIdType">
                 <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
                            [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
                   {{option.getName()}}
                 </ng-option>
               </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benPrimaryIdType')"></app-field-error-message>
+              <app-field-error-message controlName="benPrimaryIdType"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4">
               <label for="benPrimaryIdNumber" class="form-label"
                      asteriskIfRequired="benPrimaryIdNumber">{{langService.map.id_number}}</label>
               <div class="input-group has-validation">
                 <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
-                       type="text" [ngClass]="fm.getInvalidClass('personalTab.benPrimaryIdNumber')"
+                       type="text" validationClasses="benPrimaryIdNumber"
                        (keyup)="disableEnter($event)" maxlength="20" trimInput
                        [readOnly]="beneficiaryPrimaryIdDisabled()">
                 <button tabindex="-1" type="button"
@@ -69,8 +68,7 @@
                         (click)="getBeneficiaryData($event)" class="input-group-text">
                   <i class="mdi mdi-account-search text-primary"></i>
                 </button>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.benPrimaryIdNumber')"></app-field-error-message>
+                <app-field-error-message controlName="benPrimaryIdNumber"></app-field-error-message>
               </div>
             </div>
             <div class="col-md-4 col-sm-12 mb-4" *ngIf="displayPrimaryNationality">
@@ -81,7 +79,7 @@
                            [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
-                           [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
+                           validationClasses="benPrimaryIdNationality">
                   <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
                     {{option.getName()}}
                   </ng-option>
@@ -94,29 +92,29 @@
                            [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
                            placeholder="{{langService.map.select}}" id="benPrimaryIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
-                           [ngClass]="fm.getStatusClass('personalTab.benPrimaryIdNationality')">
+                           validationClasses="benPrimaryIdNationality">
                   <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
               </ng-container>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benPrimaryIdNationality')"></app-field-error-message>
+              <app-field-error-message controlName="benPrimaryIdNationality"></app-field-error-message>
             </div>
           </div>
         </div>
       </div>
       <!--Secondary Id-->
-      <div class="row d-flex flex-row">
+      <div class="row">
         <div class="col-sm-12">
           <h6 class="text-primary">{{langService.map.beneficiary_secondary_id}}</h6>
-          <div class="row d-flex flex-column flex-md-row">
+          <div class="row">
             <div class="col-md-4 col-sm-12 mb-4">
               <label for="benSecIdType" class="form-label"
                      asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
                          [readonly]="beneficiarySecondaryIdDisabled()" appendTo="body"
                          placeholder="{{langService.map.select}}" id="benSecIdType"
+                         validationClasses="benSecIdType"
                          [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
                 <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                 <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
@@ -124,15 +122,15 @@
                   {{option.getName()}}
                 </ng-option>
               </ng-select>
+              <app-field-error-message controlName="benSecIdType"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4">
               <label for="benSecIdNumber" class="form-label"
                      asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
               <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
                      [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20" trimInput
-                     [ngClass]="fm.getInvalidClass('personalTab.benSecIdNumber')" (keyup)="disableEnter($event)">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benSecIdNumber')"></app-field-error-message>
+                     validationClasses="benSecIdNumber" (keyup)="disableEnter($event)">
+              <app-field-error-message controlName="benSecIdNumber"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4" *ngIf="displaySecondaryNationality">
               <ng-container *ngIf="secondaryNationalityListType === 'normal'">
@@ -143,7 +141,7 @@
                            placeholder="{{langService.map.select}}" id="benSecIdNationality"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="benSecIdNationality" appendTo="body"
-                           [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
+                           validationClasses="benSecIdNationality">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
                     {{option.getName()}}
@@ -158,287 +156,193 @@
                            placeholder="{{langService.map.select}}" id="benSecIdNationalityGulf"
                            [notFoundText]="langService.map.msg_not_found"
                            formControlName="benSecIdNationality" appendTo="body"
-                           [ngClass]="fm.getStatusClass('personalTab.benSecIdNationality')">
+                           validationClasses="benSecIdNationality">
                   <ng-option value="">{{langService.map.lbl_none}}</ng-option>
                   <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
                     {{option.getName()}}
                   </ng-option>
                 </ng-select>
               </ng-container>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benSecIdNationality')"></app-field-error-message>
+              <app-field-error-message controlName="benSecIdNationality"></app-field-error-message>
             </div>
           </div>
         </div>
       </div>
       <hr class="mt-0"/>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="arName" for="arName"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.arabic_name}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input id="arName" [ngClass]="fm.getStatusClass('personalTab.arName')" formControlName="arName"
-                     trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.arName')"></app-field-error-message>
-            </div>
-          </div>
+
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="arName" class="form-label" asteriskIfRequired="arName">{{langService.map.arabic_name}}</label>
+          <input id="arName" validationClasses="arName" formControlName="arName"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="enName" for="enName"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.english_name}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input id="enName" [ngClass]="fm.getStatusClass('personalTab.enName')" formControlName="enName"
-                     trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.enName')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="enName" class="form-label" asteriskIfRequired="enName">{{langService.map.english_name}}</label>
+          <input id="enName" validationClasses="enName" formControlName="enName"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly || isPartialRequest">
-            <label for="dateOfBirthReadOnly" asteriskIfRequired="dateOfBirth"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <i class="input-group-text mdi mdi-calendar"></i>
-                <div class="form-control input-disabled" formControlName="dateOfBirth"
-                     id="dateOfBirthReadOnly" [options]="datepickerOptionsMap.dateOfBirth"
-                     angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')">
-                </div>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="row d-flex flex-column flex-md-row" *ngIf="!(readOnly || isPartialRequest)">
-            <label for="dateOfBirth" asteriskIfRequired="dateOfBirth"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.date_of_birth}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <i class="input-group-text mdi mdi-calendar"></i>
-                <div class="form-control" formControlName="dateOfBirth"
-                     id="dateOfBirth" [options]="datepickerOptionsMap.dateOfBirth"
-                     (click)="dpDateOfBirth.toggleCalendar()" #dpDateOfBirth="angular-mydatepicker"
-                     angular-mydatepicker [ngClass]="fm.getStatusClass('personalTab.dateOfBirth')"></div>
-                <app-field-error-message
-                  [control]="fm.getFormField('personalTab.dateOfBirth')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="gender" asteriskIfRequired="gender"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.gender}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="gender"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="gender" appendTo="body"
-                         [ngClass]="fm.getStatusClass('personalTab.gender')">
-                <ng-option *ngFor="let option of lookup.listByCategory.Gender" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.gender')"></app-field-error-message>
-            </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="dateOfBirth" class="form-label"
+                 asteriskIfRequired="dateOfBirth">{{langService.map.date_of_birth}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="dateOfBirth"
+                 [ngClass]="{'input-disabled': (readOnly || isPartialRequest)}"
+                 id="dateOfBirth" [options]="datepickerOptionsMap.dateOfBirth"
+                 (click)="!isPartialRequest && !readOnly && dpDateOfBirth.toggleCalendar()"
+                 #dpDateOfBirth="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="dateOfBirth"></div>
+            <app-field-error-message controlName="dateOfBirth"></app-field-error-message>
           </div>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="mobile" asteriskIfRequired="phoneNumber1"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.mobile_number}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input [ngClass]="fm.getStatusClass('personalTab.phoneNumber1')" id="mobile"
-                     formControlName="phoneNumber1" class="form-control" type="text"
-                     trimInput [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.phoneNumber1')"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="gender" class="form-label" asteriskIfRequired="gender">{{langService.map.gender}}</label>
+          <ng-select [selectOnTab]="true" labelForId="gender" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="gender"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     formControlName="gender" validationClasses="gender">
+            <ng-option *ngFor="let option of lookup.listByCategory.Gender" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="gender"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="nationality" asteriskIfRequired="benNationality"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_nationality}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="nationality"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benNationality" appendTo="body"
-                         [ngClass]="fm.getStatusClass('personalTab.benNationality')">
-                <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benNationality')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="phoneNumber1" class="form-label"
+                 asteriskIfRequired="phoneNumber1">{{langService.map.mobile_number}}</label>
+          <input id="phoneNumber1" validationClasses="phoneNumber1" formControlName="phoneNumber1"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="phoneNumber1"></app-field-error-message>
         </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="sponsorsCount" asteriskIfRequired="benDependentsCount"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.sponsors_count}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="2" id="sponsorsCount"
-                     [ngClass]="fm.getStatusClass('personalTab.benDependentsCount')"
-                     formControlName="benDependentsCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benDependentsCount')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="mobile" asteriskIfRequired="familyCount"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.family_member_count}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="2" id="familyCount"
-                     [ngClass]="fm.getStatusClass('personalTab.familyCount')"
-                     formControlName="familyCount" class="form-control"
-                     [mask]="inputMaskPatterns.NUMBER_ONLY" [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.familyCount')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="benNationality" class="form-label"
+                 asteriskIfRequired="benNationality">{{langService.map.lbl_nationality}}</label>
+          <ng-select [selectOnTab]="true" labelForId="benNationality" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="benNationality"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     formControlName="benNationality" validationClasses="benNationality">
+            <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="benNationality"></app-field-error-message>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="maritalStatus" asteriskIfRequired="maritalStatus"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.marital_status}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="maritalStatus"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="maritalStatus" appendTo="body"
-                         [ngClass]="fm.getStatusClass('personalTab.maritalStatus')">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenMaritialStatus" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.maritalStatus')"></app-field-error-message>
-            </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label"
+                 for="isHandicapped">{{langService.map.special_needs_handicap}}</label>
+          <div class="form-check form-switch form-switch-container">
+            <input class="form-check-input" type="checkbox" id="isHandicapped"
+                   formControlName="isHandicapped">
+            <label
+              class="form-check-label">{{isHandicappedField.value ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="educationLevel" asteriskIfRequired="educationLevel"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.educational_level}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="educationLevel"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="educationLevel" appendTo="body"
-                         [ngClass]="fm.getStatusClass('personalTab.educationLevel')">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.educationLevel')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="benDependentsCount" class="form-label"
+                 asteriskIfRequired="benDependentsCount">{{langService.map.sponsors_count}}</label>
+          <input id="benDependentsCount" validationClasses="benDependentsCount" formControlName="benDependentsCount"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" maxlength="2"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="benDependentsCount"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="familyCount" class="form-label"
+                 asteriskIfRequired="familyCount">{{langService.map.family_member_count}}</label>
+          <input id="familyCount" validationClasses="familyCount" formControlName="familyCount"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="familyCount"></app-field-error-message>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="employer" asteriskIfRequired="employeer"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employer}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="100" id="employer" [ngClass]="fm.getStatusClass('personalTab.employeer')"
-                     formControlName="employeer" class="form-control" type="text"
-                     [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.employeer')"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="maritalStatus" class="form-label"
+                 asteriskIfRequired="maritalStatus">{{langService.map.marital_status}}</label>
+          <ng-select [selectOnTab]="true" labelForId="maritalStatus" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="maritalStatus"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     formControlName="maritalStatus" validationClasses="maritalStatus">
+            <ng-option *ngFor="let option of lookup.listByCategory.BenMaritialStatus" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="maritalStatus"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="employmentStatus" asteriskIfRequired="occuptionStatus"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.employment_status}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="employmentStatus" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="employmentStatus"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="occuptionStatus" appendTo="body"
-                         [ngClass]="fm.getStatusClass('personalTab.occuptionStatus')">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.occuptionStatus')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="educationLevel" class="form-label"
+                 asteriskIfRequired="educationLevel">{{langService.map.educational_level}}</label>
+          <ng-select [selectOnTab]="true" labelForId="educationLevel" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="educationLevel"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     formControlName="educationLevel" validationClasses="educationLevel">
+            <ng-option *ngFor="let option of lookup.listByCategory.BenEducationLevel" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="educationLevel"></app-field-error-message>
         </div>
-      </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="occuption" for="occupation"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.occupation}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input id="occupation" maxlength="100" [ngClass]="fm.getStatusClass('personalTab.occuption')"
-                     formControlName="occuption" class="form-control" type="text"
-                     [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.occuption')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="workplace" asteriskIfRequired="employeerAddress"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.workplace}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="512" [ngClass]="fm.getStatusClass('personalTab.employeerAddress')"
-                     formControlName="employeerAddress" id="workplace" class="form-control" type="text"
-                     [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.employeerAddress')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="employeer" class="form-label"
+                 asteriskIfRequired="employeer">{{langService.map.employer}}</label>
+          <input id="employeer" validationClasses="employeer" formControlName="employeer"
+                 maxlength="100" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="employeer"></app-field-error-message>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="benNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
-            <div class="col-md-10 col-sm-12">
-                    <textarea id="benNotes" formControlName="benNotes" rows="5" class="form-control"
-                              [ngClass]="fm.getStatusClass('personalTab.benNotes')"
-                              [readOnly]="readOnly || isPartialRequest"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('personalTab.benNotes')"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="occuptionStatus" class="form-label"
+                 asteriskIfRequired="occuptionStatus">{{langService.map.employment_status}}</label>
+          <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="occuptionStatus"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     (change)="handleEmploymentStatusChange($event, true)"
+                     formControlName="occuptionStatus" validationClasses="occuptionStatus">
+            <ng-option *ngFor="let option of lookup.listByCategory.BenOccuptionStatus" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="occuptionStatus"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
+          <label for="occuption" class="form-label"
+                 asteriskIfRequired="occuption">{{langService.map.occupation}}</label>
+          <input id="occuption" validationClasses="occuption" formControlName="occuption"
+                 maxlength="100" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="occuption"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
+          <label for="employeerAddress" class="form-label"
+                 asteriskIfRequired="employeerAddress">{{langService.map.workplace}}</label>
+          <input id="employeerAddress" validationClasses="employeerAddress" formControlName="employeerAddress"
+                 maxlength="512" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="employeerAddress"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label for="benNotes" class="form-label"
+                 asteriskIfRequired="benNotes">{{langService.map.notes}}</label>
+          <textarea id="benNotes" validationClasses="benNotes" formControlName="benNotes"
+                    maxlength="3000" trimInput class="form-control" rows="5"
+                    [readOnly]="readOnly || isPartialRequest"></textarea>
+          <app-field-error-message controlName="benNotes"></app-field-error-message>
         </div>
       </div>
     </div>
   </ng-template>
-  <!-- income Tab  -->
+  <!-- income Tab -->
   <ng-template #income>
     <h6 class="text-primary">{{langService.map.beneficiary_obligations}}</h6>
     <hr class="mt-0">
@@ -461,45 +365,36 @@
       </beneficiary-income>
     </div>
   </ng-template>
-  <!-- address Tab  -->
+  <!-- address Tab -->
   <ng-template formGroupName="addressTab" #address>
-    <div class="row d-flex flex-row">
+    <div class="row">
       <div class="col-sm-12 col-md-6">
-        <div class="col-sm-12 ">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="city" asteriskIfRequired="residenceCountry"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.city}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="city" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="city"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="residenceCountry" appendTo="body"
-                         [ngClass]="fm.getStatusClass('addressTab.residenceCountry')">
-                <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.residenceCountry')"></app-field-error-message>
-            </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 ng-select-wrapper">
+            <label for="residenceCountry" class="form-label"
+                   asteriskIfRequired="residenceCountry">{{langService.map.city}}</label>
+            <ng-select [selectOnTab]="true" labelForId="residenceCountry" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="residenceCountry"
+                       [notFoundText]="langService.map.msg_not_found"
+                       [readonly]="readOnly || isPartialRequest" appendTo="body"
+                       formControlName="residenceCountry" validationClasses="residenceCountry">
+              <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="residenceCountry"></app-field-error-message>
           </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="addressDescription"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.lbl_address}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 position-relative">
-              <textarea [ngClass]="fm.getStatusClass('addressTab.addressDescription')" id="addressDescription"
-                        formControlName="addressDescription" rows="5" class="form-control"
-                        [readOnly]="readOnly || isPartialRequest"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('addressTab.addressDescription')"></app-field-error-message>
-            </div>
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="addressDescription" class="form-label"
+                   asteriskIfRequired="addressDescription">{{langService.map.lbl_address}}</label>
+            <textarea id="addressDescription" validationClasses="addressDescription"
+                      formControlName="addressDescription"
+                      maxlength="3000" trimInput class="form-control" rows="5"
+                      [readOnly]="readOnly || isPartialRequest"></textarea>
+            <app-field-error-message controlName="addressDescription"></app-field-error-message>
           </div>
         </div>
       </div>
-
       <div class="col-sm-12 col-md-6 mb-4">
         <building-plate #buildingPlate [record]="currentBeneficiary" [readOnly]="readOnly || isPartialRequest"
                         [propertyMap]="{buildingNo: 'buildingName', street:'streetName', zone: 'zone', unit: 'unit'}"
@@ -510,105 +405,99 @@
   <!-- request Info Tab -->
   <ng-template #requestInfo>
     <div formGroupName="requestInfoTab">
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="aidLookupParentId" asteriskIfRequired="aidLookupParentId"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid_category}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="true"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="aidLookupParentId"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="aidLookupParentId" appendTo="body"
-                         (change)="handleMainAidChange($event)"
-                         [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupParentId')">
-                <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.aidLookupParentId')"></app-field-error-message>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="aidLookupParentId" class="form-label"
+                 asteriskIfRequired="aidLookupParentId">{{langService.map.requested_aid_category}}</label>
+          <ng-select [selectOnTab]="true" labelForId="aidLookupParentId" [clearable]="true"
+                     placeholder="{{langService.map.select}}" id="aidLookupParentId"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     (change)="handleMainAidChange($event)"
+                     formControlName="aidLookupParentId" validationClasses="aidLookupParentId">
+            <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="aidLookupParentId"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="aidLookupId" asteriskIfRequired="aidLookupId"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid}}</label>
-            <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-              <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
-                         [readonly]="readOnly || isPartialRequest"
-                         placeholder="{{langService.map.select}}" id="aidLookupId"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="aidLookupId" appendTo="body"
-                         [ngClass]="fm.getStatusClass('requestInfoTab.aidLookupId')">
-                <ng-option *ngFor="let option of subAidLookupsList" [value]="option.id">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.aidLookupId')"></app-field-error-message>
-            </div>
-          </div>
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="aidLookupId" class="form-label"
+                 asteriskIfRequired="aidLookupId">{{langService.map.requested_aid}}</label>
+          <ng-select [selectOnTab]="true" labelForId="aidLookupId" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="aidLookupId"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     formControlName="aidLookupId" validationClasses="aidLookupId">
+            <ng-option *ngFor="let option of subAidLookupsList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="aidLookupId"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="requestedAidAmount" class="form-label"
+                 asteriskIfRequired="requestedAidAmount">{{langService.map.request_aid_amount}}</label>
+          <input id="requestedAidAmount" validationClasses="requestedAidAmount" formControlName="requestedAidAmount"
+                 [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                 trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest" maxlength="15">
+          <app-field-error-message controlName="requestedAidAmount"></app-field-error-message>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row">
-            <label for="requestedAidAmount" asteriskIfRequired="requestedAidAmount"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_aid_amount}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <input maxlength="15" [ngClass]="fm.getStatusClass('requestInfoTab.requestedAidAmount')"
-                     formControlName="requestedAidAmount" id="requestedAidAmount" class="form-control"
-                     [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                     [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.requestedAidAmount')"></app-field-error-message>
-            </div>
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="creationDate" class="form-label"
+                 asteriskIfRequired="creationDate">{{langService.map.request_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="creationDate"
+                 [ngClass]="{'input-disabled': (readOnly)}"
+                 id="creationDate" [options]="datepickerOptionsMap.creationDate"
+                 (click)="!readOnly && dpCreationDate.toggleCalendar()"
+                 #dpCreationDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="creationDate"></div>
+            <app-field-error-message controlName="creationDate"></app-field-error-message>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
-            <label for="creationDateReadOnly" asteriskIfRequired="creationDate"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="form-control input-disabled" formControlName="creationDate"
-                   id="creationDateReadOnly" [options]="datepickerOptionsMap.creationDate"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')">
-              </div>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
-            </div>
-          </div>
-          <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
-            <label for="creationDate" asteriskIfRequired="creationDate"
-                   class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_date}}</label>
-            <div class="col-md-8 col-sm-12 mb-4">
-              <div class="input-group">
-                <i class="input-group-text mdi mdi-calendar"></i>
-                <div class="form-control" formControlName="creationDate"
-                     id="creationDate" [options]="datepickerOptionsMap.creationDate"
-                     (click)="dpCreationDate.toggleCalendar()" #dpCreationDate="angular-mydatepicker"
-                     angular-mydatepicker [ngClass]="fm.getStatusClass('requestInfoTab.creationDate')"></div>
-                <app-field-error-message
-                  [control]="fm.getFormField('requestInfoTab.creationDate')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
+        <div class="col-md-8 col-sm-12 mb-4 position-relative">
+          <label for="requestSummary" class="form-label"
+                 asteriskIfRequired="requestSummary">{{langService.map.request_summary}}</label>
+          <textarea id="requestSummary" validationClasses="requestSummary" formControlName="requestSummary"
+                    maxlength="1000" trimInput class="form-control" rows="5"
+                    [readOnly]="readOnly || isPartialRequest"></textarea>
+          <app-field-error-message controlName="requestSummary"></app-field-error-message>
         </div>
       </div>
-      <div class="row d-flex flex-row">
-        <div class="col-sm-12">
-          <div class="row d-flex flex-column flex-md-row">
-            <label asteriskIfRequired="requestSummary" for="requestSummary"
-                   class="col-sm-12 col-md-2 col-form-label">{{langService.map.request_summary}}</label>
-            <div class="col-md-10 col-sm-12 mb-4">
-                  <textarea [ngClass]="fm.getStatusClass('requestInfoTab.requestSummary')" id="requestSummary"
-                            formControlName="requestSummary" rows="5" class="form-control"
-                            [readOnly]="readOnly || isPartialRequest"></textarea>
-              <app-field-error-message
-                [control]="fm.getFormField('requestInfoTab.requestSummary')"></app-field-error-message>
+      <div class="row">
+        <div class="col-sm-12 mb-4">
+          <div class="border rounded-1 p-2">
+            <div class="row">
+              <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <label class="form-label" for="allowDataSharing"></label>
+                <div class="form-check form-switch form-switch-container">
+                  <input class="form-check-input" type="checkbox" id="allowDataSharing"
+                         formControlName="allowDataSharing"
+                         (change)="$event ? handleAllowDataSharingFieldChange($event) : null">
+                  <label class="form-check-label" for="allowDataSharing">{{langService.map.disclosure}}</label>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative" *ngIf="!currentRequest?.id && !!allowDataSharingField.value">
+                <div class="row">
+                  <label class="form-label">{{langService.map.download_disclosure_form}}</label>
+                  <span>
+                    <button class="btn btn-primary mb-3" [disabled]="!isDownloadDisclosureFormAllowed()"
+                            (click)="downloadDisclosureForm()">{{langService.map.btn_download}}</button>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-12 mb-4 position-relative"
+                   *ngIf="!currentRequest?.id && !!allowDataSharingField?.value">
+                <file-uploader [showFileName]="true" [showFilePreview]="false"
+                               labelKey="disclosure_document"
+                               [allowedExtensions]="[fileExtensionsEnum.PDF]"
+                               (fileUploadEvent)="setDisclosureFile($event)"
+                               [isRequired]="true"></file-uploader>
+              </div>
             </div>
           </div>
         </div>
@@ -626,102 +515,50 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-12 mb-4">
-          <div class="border rounded-1 p-2">
-            <div class="col-md-6 col-sm-12 mb-4 position-relative">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="allowDataSharing"
-                       formControlName="allowDataSharing"
-                       (change)="$event ? handleAllowDataSharingFieldChange($event) : null">
-                <label class="form-check-label"
-                       for="allowDataSharing">{{langService.map.disclosure}}</label>
-              </div>
-            </div>
-            <ng-container *ngIf="!currentRequest?.id && !!allowDataSharingField?.value">
-              <div class="col-md-6 col-sm-12 mb-4 position-relative">
-                <file-uploader [showFileName]="true" [showFilePreview]="false"
-                               labelKey="disclosure_document"
-                               [allowedExtensions]="[fileExtensionsEnum.PDF]"
-                               (fileUploadEvent)="setDisclosureFile($event)"
-                               [isRequired]="true"></file-uploader>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-      </div>
     </div>
   </ng-template>
   <!-- Request Status -->
   <ng-template formGroupName="requestStatusTab" #requestStatus>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="requestStatus"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.request_status}}</label>
-          <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-            <ng-select [selectOnTab]="true" labelForId="requestStatus" [clearable]="false"
-                       [readonly]="readOnly"
-                       placeholder="{{langService.map.select}}" id="requestStatus"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status" appendTo="body"
-                       [ngClass]="fm.getStatusClass('requestStatusTab.status')">
-              <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
-                         [disabled]="(option.lookupKey === subventionRequestStatusEnum.REMOVED || option.lookupKey === subventionRequestStatusEnum.CANCELED)"
-                         [value]="option.lookupKey">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message
-              [control]="fm.getFormField('requestStatusTab.status')"></app-field-error-message>
-          </div>
-        </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+        <label for="status" class="form-label"
+               asteriskIfRequired="status">{{langService.map.request_status}}</label>
+        <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+                   placeholder="{{langService.map.select}}" id="status"
+                   [notFoundText]="langService.map.msg_not_found"
+                   [readonly]="readOnly" appendTo="body"
+                   formControlName="status" validationClasses="status">
+          <ng-option *ngFor="let option of lookup.listByCategory.SubRequestStatus"
+                     [disabled]="(option.lookupKey === subventionRequestStatusEnum.REMOVED || option.lookupKey === subventionRequestStatusEnum.CANCELED)"
+                     [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName="status"></app-field-error-message>
       </div>
-      <div class="col-sm-12 col-md-6">
-        <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
-          <label for="statusDateModifiedReadOnly" asteriskIfRequired="statusDateModified"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control input-disabled" formControlName="statusDateModified"
-                   id="statusDateModifiedReadOnly" [options]="datepickerOptionsMap.statusDateModified"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')">
-              </div>
-              <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-        <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
-          <label for="statusDateModified" asteriskIfRequired="statusDateModified"
-                 class="col-sm-12 col-md-4 col-form-label">{{langService.map.status_date}}</label>
-          <div class="col-md-8 col-sm-12 mb-4">
-            <div class="input-group">
-              <i class="input-group-text mdi mdi-calendar"></i>
-              <div class="form-control" formControlName="statusDateModified"
-                   id="statusDateModified" [options]="datepickerOptionsMap.statusDateModified"
-                   (click)="dpStatusDateModified.toggleCalendar()" #dpStatusDateModified="angular-mydatepicker"
-                   angular-mydatepicker [ngClass]="fm.getStatusClass('requestStatusTab.statusDateModified')"></div>
-              <app-field-error-message
-                [control]="fm.getFormField('requestStatusTab.statusDateModified')"></app-field-error-message>
-            </div>
-          </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label for="statusDateModified" class="form-label"
+               asteriskIfRequired="statusDateModified">{{langService.map.status_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="statusDateModified"
+               [ngClass]="{'input-disabled': (readOnly)}"
+               id="statusDateModified" [options]="datepickerOptionsMap.statusDateModified"
+               (click)="!readOnly && dpStatusDateModified.toggleCalendar()"
+               #dpStatusDateModified="angular-mydatepicker"
+               angular-mydatepicker validationClasses="statusDateModified"></div>
+          <app-field-error-message controlName="statusDateModified"></app-field-error-message>
         </div>
       </div>
     </div>
-    <div class="row d-flex flex-row">
-      <div class="col-sm-12">
-        <div class="row d-flex flex-column flex-md-row">
-          <label for="requestNotes" class="col-sm-12 col-md-2 col-form-label">{{langService.map.notes}}</label>
-          <div class="col-md-10 col-sm-12">
-            <textarea [ngClass]="fm.getStatusClass('requestStatusTab.requestNotes')" id="requestNotes"
-                      formControlName="requestNotes" rows="5" class="form-control"
-                      [readOnly]="readOnly"></textarea>
-            <app-field-error-message
-              [control]="fm.getFormField('requestStatusTab.requestNotes')"></app-field-error-message>
-          </div>
-        </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label for="requestNotes" class="form-label"
+               asteriskIfRequired="requestNotes">{{langService.map.notes}}</label>
+        <textarea id="requestNotes" validationClasses="requestNotes" formControlName="requestNotes"
+                  maxlength="1000" trimInput class="form-control" rows="5"
+                  [readOnly]="readOnly"></textarea>
+        <app-field-error-message controlName="requestSummary"></app-field-error-message>
       </div>
     </div>
   </ng-template>
@@ -729,215 +566,135 @@
   <ng-template formArrayName="aidTab" #providedAid>
     <ng-container *ngFor="let _ of aidFormArray.controls; let i = index">
       <div [formGroupName]="i">
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="requestedAidCategory" asteriskIfRequired="aidLookupParentId"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid_category}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="requestedAidCategory" [clearable]="true"
-                           [readonly]="readOnly || isPartialRequest"
-                           placeholder="{{langService.map.select}}" id="requestedAidCategory"
-                           [notFoundText]="langService.map.msg_not_found"
-                           formControlName="aidLookupParentId" appendTo="body"
-                           (change)="handleAidsMainAidChange($event)"
-                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupParentId')">
-                  <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidLookupParentId')"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label for="requestedAidCategory" class="form-label"
+                   asteriskIfRequired="aidLookupParentId">{{langService.map.requested_aid_category}}</label>
+            <ng-select [selectOnTab]="true" labelForId="requestedAidCategory" [clearable]="true"
+                       placeholder="{{langService.map.select}}" id="requestedAidCategory"
+                       [notFoundText]="langService.map.msg_not_found"
+                       [readonly]="readOnly || isPartialRequest" appendTo="body"
+                       (change)="handleAidsMainAidChange($event)"
+                       formControlName="aidLookupParentId" validationClasses="aidLookupParentId">
+              <ng-option *ngFor="let option of mainAidLookupsList" [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="aidLookupParentId"></app-field-error-message>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="requestedAid" asteriskIfRequired="aidLookupId"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.requested_aid}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="requestedAid" [clearable]="true"
-                           [readonly]="readOnly || isPartialRequest"
-                           placeholder="{{langService.map.select}}" id="requestedAid"
-                           [notFoundText]="langService.map.msg_not_found"
-                           formControlName="aidLookupId" appendTo="body"
-                           [ngClass]="fm.getStatusClass('aidTab.0.aidLookupId')">
-                  <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidLookupId')"></app-field-error-message>
-              </div>
-            </div>
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label for="requestedAid" class="form-label"
+                   asteriskIfRequired="aidLookupId">{{langService.map.requested_aid}}</label>
+            <ng-select [selectOnTab]="true" labelForId="requestedAid" [clearable]="true"
+                       placeholder="{{langService.map.select}}" id="requestedAid"
+                       [notFoundText]="langService.map.msg_not_found"
+                       [readonly]="readOnly || isPartialRequest" appendTo="body"
+                       formControlName="aidLookupId" validationClasses="aidLookupId">
+              <ng-option *ngFor="let option of aidsSubAidLookupsList" [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="aidLookupId"></app-field-error-message>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
-              <label asteriskIfRequired="approvalDate" for="approvalDateReadOnly"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <div class="form-control input-disabled" formControlName="approvalDate"
-                     id="approvalDateReadOnly" [options]="datepickerOptionsMap.aidApprovalDate"
-                     angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
-              <label asteriskIfRequired="approvalDate" for="approvalDate"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.approval_date}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <div class="input-group">
-                  <i class="input-group-text mdi mdi-calendar"></i>
-                  <div class="form-control" formControlName="approvalDate"
-                       id="approvalDate" [options]="datepickerOptionsMap.aidApprovalDate"
-                       (click)="dpAidApprovalDate.toggleCalendar()" #dpAidApprovalDate="angular-mydatepicker"
-                       angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.approvalDate')"></div>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.approvalDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row" *ngIf="readOnly">
-              <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDateReadOnly"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <div class="form-control input-disabled" formControlName="aidStartPayDate"
-                     id="aidStartPayDateReadOnly" [options]="datepickerOptionsMap.aidPaymentDate"
-                     angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')">
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
-            <div class="row d-flex flex-column flex-md-row" *ngIf="!readOnly">
-              <label asteriskIfRequired="aidStartPayDate" for="aidStartPayDate"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_date}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <div class="input-group">
-                  <i class="input-group-text mdi mdi-calendar"></i>
-                  <div class="form-control" formControlName="aidStartPayDate"
-                       id="aidStartPayDate" [options]="datepickerOptionsMap.aidPaymentDate"
-                       (click)="dpAidStartPayDate.toggleCalendar()" #dpAidStartPayDate="angular-mydatepicker"
-                       angular-mydatepicker [ngClass]="fm.getStatusClass('aidTab.0.aidStartPayDate')"></div>
-                  <app-field-error-message
-                    [control]="fm.getFormField('aidTab.0.aidStartPayDate')"></app-field-error-message>
-                </div>
-              </div>
-            </div>
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label for="donorId" class="form-label"
+                   asteriskIfRequired="donorId">{{langService.map.donor}}</label>
+            <ng-select [selectOnTab]="true" labelForId="donorId" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="donorId"
+                       [notFoundText]="langService.map.msg_not_found"
+                       [readonly]="readOnly" appendTo="body"
+                       formControlName="donorId" validationClasses="donorId">
+              <ng-option *ngFor="let option of donorList" [disabled]="!option.isActive()"
+                         [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="donorId"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="periodicType" for="periodicType"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.payment_periodicity}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
-                           [readonly]="readOnly"
-                           placeholder="{{langService.map.select}}" id="periodicType"
-                           [notFoundText]="langService.map.msg_not_found"
-                           formControlName="periodicType" appendTo="body"
-                           (change)="aidsPeriodicTypeChange($event, true)"
-                           [ngClass]="fm.getStatusClass('aidTab.0.periodicType')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType"
-                             [value]="option.lookupKey">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
-              </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="approvalDate" class="form-label"
+                   asteriskIfRequired="approvalDate">{{langService.map.approval_date}}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="approvalDate"
+                   [ngClass]="{'input-disabled': (readOnly)}"
+                   id="approvalDate" [options]="datepickerOptionsMap.aidApprovalDate"
+                   (click)="!readOnly && dpAidApprovalDate.toggleCalendar()"
+                   #dpAidApprovalDate="angular-mydatepicker"
+                   angular-mydatepicker validationClasses="approvalDate"></div>
+              <app-field-error-message controlName="approvalDate"></app-field-error-message>
             </div>
           </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="donorId" for="donorId"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.donor}}</label>
-              <div class="col-md-8 col-sm-12 mb-4 ng-select-wrapper">
-                <ng-select [selectOnTab]="true" labelForId="donorId" [clearable]="false"
-                           [readonly]="readOnly"
-                           placeholder="{{langService.map.select}}" id="donorId"
-                           [notFoundText]="langService.map.msg_not_found"
-                           formControlName="donorId" appendTo="body"
-                           [ngClass]="fm.getStatusClass('aidTab.0.donorId')">
-                  <ng-option *ngFor="let option of donorList" [disabled]="!option.isActive()"
-                             [value]="option.id">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-select>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.periodicType')"></app-field-error-message>
-              </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="aidStartPayDate" class="form-label"
+                   asteriskIfRequired="aidStartPayDate">{{langService.map.payment_date}}</label>
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div class="form-control" formControlName="aidStartPayDate"
+                   [ngClass]="{'input-disabled': (readOnly)}"
+                   id="aidStartPayDate" [options]="datepickerOptionsMap.aidPaymentDate"
+                   (click)="!readOnly && dpAidStartPayDate.toggleCalendar()"
+                   #dpAidStartPayDate="angular-mydatepicker"
+                   angular-mydatepicker validationClasses="aidStartPayDate"></div>
+              <app-field-error-message controlName="aidStartPayDate"></app-field-error-message>
             </div>
           </div>
-        </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="aidSuggestedAmount" asteriskIfRequired="aidSuggestedAmount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.estimated_amount}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input id="aidSuggestedAmount" maxlength="15"
-                       [ngClass]="fm.getStatusClass('aidTab.0.aidSuggestedAmount')"
-                       formControlName="aidSuggestedAmount" class="form-control" mask="separator" thousandSeparator=","
-                       [readOnly]="readOnly || isPartialRequest">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidSuggestedAmount')"></app-field-error-message>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label for="aidAmount" asteriskIfRequired="aidAmount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.given_amount}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input id="aidAmount" maxlength="15" [ngClass]="fm.getStatusClass('aidTab.0.aidAmount')"
-                       formControlName="aidAmount" class="form-control" [mask]="inputMaskPatterns.SEPARATOR"
-                       [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                       [readOnly]="readOnly">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidAmount')"></app-field-error-message>
-              </div>
-            </div>
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+            <label for="periodicType" class="form-label"
+                   asteriskIfRequired="periodicType">{{langService.map.payment_periodicity}}</label>
+            <ng-select [selectOnTab]="true" labelForId="periodicType" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="periodicType"
+                       [notFoundText]="langService.map.msg_not_found"
+                       [readonly]="readOnly" appendTo="body"
+                       (change)="aidsPeriodicTypeChange($event, true)"
+                       formControlName="periodicType" validationClasses="periodicType">
+              <ng-option *ngFor="let option of lookup.listByCategory.SubAidPeriodicType"
+                         [value]="option.lookupKey">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="periodicType"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12 col-md-6">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="installmentsCount" for="installmentsCount"
-                     class="col-sm-12 col-md-4 col-form-label">{{langService.map.number_of_installments}}</label>
-              <div class="col-md-8 col-sm-12 mb-4">
-                <input maxlength="20" [ngClass]="fm.getStatusClass('aidTab.0.installmentsCount')"
-                       id="installmentsCount" [mask]="inputMaskPatterns.NUMBER_ONLY"
-                       formControlName="installmentsCount" class="form-control"
-                       [readOnly]="readOnly">
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.installmentsCount')"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="aidSuggestedAmount" class="form-label"
+                   asteriskIfRequired="aidSuggestedAmount">{{langService.map.estimated_amount}}</label>
+            <input id="aidSuggestedAmount" validationClasses="aidSuggestedAmount" formControlName="aidSuggestedAmount"
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest" maxlength="15">
+            <app-field-error-message controlName="aidSuggestedAmount"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="aidAmount" class="form-label"
+                   asteriskIfRequired="aidAmount">{{langService.map.given_amount}}</label>
+            <input id="aidAmount" validationClasses="aidAmount" formControlName="aidAmount"
+                   [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   trimInput class="form-control" type="text" [readOnly]="readOnly" maxlength="15">
+            <app-field-error-message controlName="aidAmount"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="installmentsCount" class="form-label"
+                   asteriskIfRequired="installmentsCount">{{langService.map.number_of_installments}}</label>
+            <input id="installmentsCount" validationClasses="installmentsCount" formControlName="installmentsCount"
+                   [mask]="inputMaskPatterns.NUMBER_ONLY"
+                   trimInput class="form-control" type="text" [readOnly]="readOnly" maxlength="20">
+            <app-field-error-message controlName="aidAmount"></app-field-error-message>
           </div>
         </div>
-        <div class="row d-flex flex-row">
-          <div class="col-sm-12">
-            <div class="row d-flex flex-column flex-md-row">
-              <label asteriskIfRequired="aidDescription" for="aidDescription"
-                     class="col-sm-12 col-md-2 col-form-label">{{langService.map.lbl_description}}</label>
-              <div class="col-md-10 col-sm-12">
-                    <textarea [ngClass]="fm.getStatusClass('aidTab.0.aidDescription')" id="aidDescription"
-                              formControlName="aidDescription" rows="3" class="form-control"
-                              [readOnly]="readOnly"></textarea>
-                <app-field-error-message
-                  [control]="fm.getFormField('aidTab.0.aidDescription')"></app-field-error-message>
-              </div>
-            </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label for="aidDescription" class="form-label"
+                   asteriskIfRequired="aidDescription">{{langService.map.description_disbursement_decision}}</label>
+            <textarea id="aidDescription" validationClasses="aidDescription" formControlName="aidDescription"
+                      maxlength="1000" trimInput class="form-control" rows="5"
+                      [readOnly]="readOnly"></textarea>
+            <app-field-error-message controlName="aidDescription"></app-field-error-message>
           </div>
         </div>
+
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="saveAid()"
                   class="btn btn-primary m-2">{{editAidItem ? langService.map.btn_save : langService.map.btn_add}}</button>
@@ -969,7 +726,7 @@
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"
             class="btn btn-secondary m-2">{{langService.map.btn_cancel}}</button>
-    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(fm.mainContentId)"
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity()"
             tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
       <i class="mdi mdi-information-outline text-info"></i>
     </button>

@@ -1,21 +1,21 @@
-import {Injectable} from '@angular/core';
-import {FactoryService} from './factory.service';
-import {OrgUser} from '../models/org-user';
-import {OrgBranch} from '../models/org-branch';
-import {OrgUnit} from '../models/org-unit';
-import {Permission} from '../models/permission';
-import {isValidValue} from '../helpers/utils';
-import {ILoginData} from '../interfaces/i-login-data';
-import {UserTypes} from '../enums/user-types.enum';
-import {InternalUser} from '../models/internal-user';
-import {InternalDepartment} from '../models/internal-department';
-import {Team} from '../models/team';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IUserSecurity} from "@app/interfaces/iuser-security";
-import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {EServicePermissions} from "@app/enums/e-service-permissions";
-import {ConfigurationService} from "@app/services/configuration.service";
+import { Injectable } from '@angular/core';
+import { FactoryService } from './factory.service';
+import { OrgUser } from '../models/org-user';
+import { OrgBranch } from '../models/org-branch';
+import { OrgUnit } from '../models/org-unit';
+import { Permission } from '../models/permission';
+import { isValidValue } from '@helpers/utils';
+import { ILoginData } from '@contracts/i-login-data';
+import { UserTypes } from '../enums/user-types.enum';
+import { InternalUser } from '../models/internal-user';
+import { InternalDepartment } from '../models/internal-department';
+import { Team } from '../models/team';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IUserSecurity } from "@app/interfaces/iuser-security";
+import { UserSecurityConfiguration } from "@app/models/user-security-configuration";
+import { CaseTypes } from "@app/enums/case-types.enum";
+import { EServicePermissions } from "@app/enums/e-service-permissions";
+import { ConfigurationService } from "@app/services/configuration.service";
 
 @Injectable({
   providedIn: 'root'
@@ -350,16 +350,16 @@ export class EmployeeService {
 
     securityArray.forEach((item) => {
 
-      if(this.type == UserTypes.INTERNAL && item.followUp && !hasFollowupPermission){
-        this.permissionMap?.set('internal_followup',new Permission().clone({
-          permissionKey:"INTERNAL_FOLLOWUP"
+      if (this.type == UserTypes.INTERNAL && item.followUp && !hasFollowupPermission) {
+        this.permissionMap?.set('internal_followup', new Permission().clone({
+          permissionKey: "INTERNAL_FOLLOWUP"
         }))
         hasFollowupPermission = true;
       }
 
-      if(this.type == UserTypes.INTERNAL || (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission)){
-        this.permissionMap?.set('external_followup',new Permission().clone({
-          permissionKey:"EXTERNAL_FOLLOWUP"
+      if (this.type == UserTypes.INTERNAL || (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission)) {
+        this.permissionMap?.set('external_followup', new Permission().clone({
+          permissionKey: "EXTERNAL_FOLLOWUP"
         }))
         hasFollowupPermission = true;
       }
@@ -368,7 +368,7 @@ export class EmployeeService {
     this.generateEServicesPermissions();
   }
 
-  private userCan(caseType: number, key: keyof (Pick<UserSecurityConfiguration, 'canAdd' | 'canView' | 'canManage'>)): boolean {
+  private userCan(caseType: number, key: keyof (Pick<UserSecurityConfiguration, 'canAdd' | 'canView' | 'canManage' | 'followUp'>)): boolean {
     return !!(this.userSecurityMap.has(caseType) && this.userSecurityMap.get(caseType)!.override[key])
   }
 
@@ -382,6 +382,10 @@ export class EmployeeService {
 
   userCanView(caseType: number): boolean {
     return this.userCan(caseType, 'canView');
+  }
+
+  userCanFollowUp(caseType: number): boolean {
+    return this.userCan(caseType, 'followUp')
   }
 
 

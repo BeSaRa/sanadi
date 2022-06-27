@@ -81,7 +81,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
 
   dialog!: DialogService;
   searchFields: ISearchFieldsMap<Fundraising> = {
-    ...normalSearchFields(['fullSerial']),
+    ...normalSearchFields(['fullSerial', 'subject']),
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo'])
   };

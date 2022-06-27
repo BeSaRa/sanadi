@@ -1,7 +1,6 @@
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {INames} from '@contracts/i-names';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
 
 export class AdminResult {
   id?: number;
@@ -9,7 +8,8 @@ export class AdminResult {
   enName = '';
   parent?: number;
   lookupKey?: number;
-  status?: number;
+  status?: number; // used when changing lookup/database record to admin-result
+  fnId?: string;
 
   private langService: LangService;
 

@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {MenuItem} from '../models/menu-item';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {tap} from 'rxjs/operators';
-import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
-import {DomSanitizer} from '@angular/platform-browser';
-import {FactoryService} from './factory.service';
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import { Injectable } from '@angular/core';
+import { MenuItem } from '../models/menu-item';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Generator } from '@decorators/generator';
+import { tap } from 'rxjs/operators';
+import { MenuItemInterceptor } from '../model-interceptors/menu-item-interceptor';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FactoryService } from './factory.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -22,19 +22,19 @@ export class MenuItemService {
     FactoryService.registerService('DomSanitizer', domSanitizer);
   }
 
-  @Generator(MenuItem, true, {property: '', interceptReceive: MenuItemInterceptor.receive})
+  @Generator(MenuItem, true, { property: '', interceptReceive: MenuItemInterceptor.receive })
   private _load(): Observable<MenuItem[]> {
     return this.http.get<MenuItem[]>('MENU.json');
   }
 
-  load(): Observable<MenuItem[]> {
+  load(prepare: boolean = true): Observable<MenuItem[]> {
     return this._load().pipe(
       tap((menuItems) => this.menuItems = menuItems),
-      tap(_ => this.prepareMenuItems())
+      tap(_ => prepare ? this.prepareMenuItems() : null)
     );
   }
 
-  private prepareMenuItems() {
+  prepareMenuItems() {
     this.children = new Map<number, MenuItem[]>();
     this.parents = [];
     this.menuItems.forEach(item => {
@@ -58,7 +58,7 @@ export class MenuItemService {
 
   private getParentChildren(items: MenuItem[]): void {
     items.forEach(item => {
-      item.children = this.getChildren(item);
+      item.children = this.getChildren(item).sort((a, b) => a.itemOrder - b.itemOrder);
     });
   }
 

@@ -1,10 +1,11 @@
 <div class="row">
-  <label class="form-label">{{lang.map[labelKey ?? 'file']}}<span class="text-danger"
+  <label class="form-label">{{lang.map[labelKey]}}<span class="text-danger"
                                                                   *ngIf="isRequired"> * </span></label>
   <input type="file" class="input-file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
          [accept]="allowedExtensions" [multiple]="allowMultiple">
   <div class="col-sm-12">
-    <button class="btn btn-primary mb-3" (click)="openFileBrowser($event)">{{lang.map.upload_file}}</button>
+    <button class="btn btn-primary mb-3"
+            (click)="openFileBrowser($event)">{{lang.map[fileInputKey]}}</button>
     <div *ngIf="showFileName">
       <span *ngIf="uploadedFileName">{{uploadedFileName ? uploadedFileName.getName() : ''}}</span>
       <button *ngIf="uploadedFile || uploadedFiles.length > 0" class="btn icon-btn text-primary m-0 align-top"

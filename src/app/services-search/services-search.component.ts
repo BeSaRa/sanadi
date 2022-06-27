@@ -1,29 +1,28 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
-import {LangService} from '@services/lang.service';
-import {InboxService} from '@services/inbox.service';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, skip, startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {CaseModel} from '../models/case-model';
-import {DialogService} from '@services/dialog.service';
-import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {ToastService} from '@services/toast.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {OpenFrom} from '../enums/open-from.enum';
-import {TabComponent} from '../shared/components/tab/tab.component';
-import {EmployeeService} from '@services/employee.service';
-import {CaseTypes} from '../enums/case-types.enum';
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {ActivatedRoute, Router} from "@angular/router";
-import {ConfigurationService} from '@app/services/configuration.service';
-import {GeneralSearchCriteriaInterceptor} from "@app/model-interceptors/general-search-criteria-interceptor";
-import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
-import {IServiceConstructor} from "@app/interfaces/iservice-constructor";
-import {LicenseService} from '@app/services/license.service';
-import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { LangService } from '@services/lang.service';
+import { InboxService } from '@services/inbox.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
+import { EServiceGenericService } from '../generics/e-service-generic-service';
+import { CaseModel } from '../models/case-model';
+import { DialogService } from '@services/dialog.service';
+import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { TabComponent } from '../shared/components/tab/tab.component';
+import { EmployeeService } from '@services/employee.service';
+import { CaseTypes } from '../enums/case-types.enum';
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ConfigurationService } from '@app/services/configuration.service';
+import { GeneralSearchCriteriaInterceptor } from "@app/model-interceptors/general-search-criteria-interceptor";
+import { GeneralInterceptor } from "@app/model-interceptors/general-interceptor";
+import { IServiceConstructor } from "@app/interfaces/iservice-constructor";
+import { LicenseService } from '@app/services/license.service';
+import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
@@ -140,9 +139,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    item.open(this.actions, OpenFrom.SEARCH)
-      .pipe(switchMap(ref => ref.onAfterClose$))
-      .subscribe(() => this.search$.next(null));
+    /*item.open(this.actions, OpenFrom.SEARCH)
+     .pipe(switchMap(ref => ref.onAfterClose$))
+     .subscribe(() => this.search$.next(null));*/
+    this.router.navigate([item.itemRoute, this.searchState], { queryParams: { item: item.itemDetails } }).then();
   }
 
   actionManageAttachments(item: CaseModel<any, any>) {
@@ -156,9 +156,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   actionManageComments(item: CaseModel<any, any>) {
     item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
   }
+
   actionAddFollowup(item: CaseModel<any, any>) {
-      item.addFollowup().onAfterClose$.subscribe(() => this.search$.next(null));
+    item.addFollowup().onAfterClose$.subscribe(() => this.search$.next(null));
   }
+
   actionExportModel(item: CaseModel<any, any>) {
     item.exportModel().subscribe((blob) => {
       window.open(blob.url);
@@ -167,7 +169,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   actionExportLicense(exportedLicenseId: string, caseType: number) {
-    this.licenseService.showLicenseContent({id: exportedLicenseId}, caseType)
+    this.licenseService.showLicenseContent({ id: exportedLicenseId }, caseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -196,7 +198,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         onClick: (item: CaseModel<any, any>) => this.actionOpen(item)
       },
       // view logs
@@ -211,7 +213,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
@@ -225,7 +227,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() &&
             ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
@@ -244,7 +246,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
@@ -281,17 +283,15 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-format-align-left',
         label: 'followup',
-        // show: (item: CaseModel<any, any>) => {
-        //   let caseStatus = item.getCaseStatus(),
-        //     caseStatusEnum = this._getCaseStatusEnum(item);
-        //   return (caseStatus === caseStatusEnum.FINAL_APPROVE);
-        // },
+        disabled: (item) => {
+          return !this.employeeService.userCanFollowUp(item.getCaseType());
+        },
         onClick: (item: CaseModel<any, any>) => {
           this.actionAddFollowup(item);
         }
       },
 
-      {type: 'divider'},
+      { type: 'divider' },
       // launch
       {
         type: 'action',
@@ -310,7 +310,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private fillFormMessage() {
-    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: ''}));
+    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({ fields: '' }));
   }
 
   private prepareCriteriaModel() {
@@ -357,7 +357,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   selectedTabChanged($event: TabComponent) {
-    $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
+    $event.name === 'result_tab' ? this.serviceControl.disable({ emitEvent: false }) : this.serviceControl.enable({ emitEvent: false });
   }
 
   isConsultationSelected(): boolean {
@@ -366,7 +366,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   stringifyDefaultDates(field: FormlyFieldConfig): void {
     this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
-      return {...prev, [(item.key as string)]: item.defaultValue};
+      return { ...prev, [(item.key as string)]: item.defaultValue };
     }, {} as any));
   }
 
@@ -410,7 +410,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           (key === 'createdOnTo' || key === 'createdOnFrom') ? (control.patchValue({
             dateRange: undefined,
             isRange: false,
-            singleDate: {jsDate: new Date(oldValues[key])}
+            singleDate: { jsDate: new Date(oldValues[key]) }
           })) : control.patchValue(isNaN(Number(oldValues[key])) ? oldValues[key] : Number(oldValues[key]));
         }
       })

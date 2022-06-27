@@ -1,0 +1,251 @@
+<tabs-list (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+  <tab [name]="tabData.moj.name" [template]="MOJTemplate"
+       [title]="langService.map[tabData.moj.langKey]"></tab>
+  <tab [name]="tabData.moci.name" [template]="MOCITemplate"
+       [title]="langService.map[tabData.moci.langKey]"></tab>
+</tabs-list>
+<ng-template #MOJTemplate>
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addMOJ$, reload$: reloadMOJ$, data: mojLogs, displayColumns: displayColumnsMap.gdxServiceLog,
+                                            filterControl: filterControlsMap.moj, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.moj}">
+  </ng-container>
+  <div id="mojFlatsContainer">
+    <h6 class="text-primary">{{langService.map.flats_info}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #mojFlatsTable sortableTable [paginator]="mojFlatsPaginator"
+                     [data]="mojRelatedData.flatInfoList"
+                     [columns]="displayColumnsMap.mojRelatedFlats"
+                     [filter]="filterControlsMap.mojRelatedFlats.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="mojFlatsTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="flats_info"
+                                [sort]="mojFlatsTable.dataSource.sort"
+                                (textChange)="filterControlsMap.mojRelatedFlats.setValue($event)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="transactionNo">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.transaction_number}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.transactionNo}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="transactionType">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.transaction_type}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.transactionType}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="ownerName">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.owner_name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerName}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="contractDate">
+                <th cdk-header-cell class="date-column" *cdkHeaderCellDef
+                    sortable-header> {{langService.map.contract_date}}</th>
+                <td cdk-cell class="date-column" *cdkCellDef="let row"><span>{{row.contractDate | date}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="ownerShares">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.shares_count}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerShares}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="mojFlatsTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: mojFlatsTable.columns;"
+                  (contextmenu)="mojFlatsMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #mojFlatsPaginator [length]="(mojRelatedData.flatInfoList.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #mojFlatsMenu [actions]="actionsMap.mojRelatedFlats"></context-menu-item>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h6 class="text-primary">{{langService.map.parcels_info}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #mojParcelsTable sortableTable [paginator]="mojParcelsPaginator"
+                     [data]="mojRelatedData.parcelInfoList"
+                     [columns]="displayColumnsMap.mojRelatedParcels"
+                     [filter]="filterControlsMap.mojRelatedParcels.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="mojParcelsTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="parcels_info"
+                                [sort]="mojParcelsTable.dataSource.sort"
+                                (textChange)="filterControlsMap.mojRelatedParcels.setValue($event)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="parcelNo">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.parcel_number}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.parcelNo}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="parcelType">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.parcel_type}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.parcelType}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="ownerName">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.owner_name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerName}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="city">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.city}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.city}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="zone">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.lbl_zone}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.zone}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="sharesCount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.shares_count}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.sharesCount}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="mojParcelsTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: mojParcelsTable.columns;"
+                  (contextmenu)="mojParcelsMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #mojParcelsPaginator
+                           [length]="(mojRelatedData.parcelInfoList.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #mojParcelsMenu [actions]="actionsMap.mojRelatedParcels"></context-menu-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #MOCITemplate>
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addMOCI$, reload$: reloadMOCI$, data: mociLogs, displayColumns: displayColumnsMap.gdxServiceLog,
+                                            filterControl: filterControlsMap.moci, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.moci }">
+  </ng-container>
+  <div id="mociCompaniesContainer">
+    <h6 class="text-primary">{{langService.map.company_info}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #mociCompanyTable sortableTable [paginator]="mociCompanyPaginator" [data]="mociRelatedDataList"
+                     [columns]="displayColumnsMap.mociRelatedCompanies"
+                     [filter]="filterControlsMap.mociRelatedCompanies.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="mociCompanyTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="company_info"
+                                [sort]="mociCompanyTable.dataSource.sort"
+                                (textChange)="filterControlsMap.mociRelatedCompanies.setValue($event)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="companyName">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacksMap.mociRelatedCompanies.companyName"> {{langService.map.name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.primaryEstablishmentName}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="licenceNumber">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacksMap.mociRelatedCompanies.licenceNumber"> {{langService.map.license_number}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.commerciallicenseNumber}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="companyStatus">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacksMap.mociRelatedCompanies.companyStatus"> {{langService.map.status}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.crnStatus}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="relation">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacksMap.mociRelatedCompanies.relation"> {{langService.map.relationship}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerType}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="relationStatus">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                    [sortCallback]="sortingCallbacksMap.mociRelatedCompanies.relationStatus"> {{langService.map.relation_status}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerStatus}}</span></td>
+              </ng-container>
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="mociCompanyTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: mociCompanyTable.columns;"
+                  (contextmenu)="mociCompanyMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #mociCompanyPaginator [length]="(mociRelatedDataList.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #mociCompanyMenu [actions]="actionsMap.mociRelatedCompanies"></context-menu-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #gdxServicesLogTableTemplate let-add$="add$" let-data="data"
+             let-tableColumns="displayColumns" let-actions="actionsList"
+             let-filterControl="filterControl" let-reload$="reload$" let-selectedRecord="selectedRecord">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #integrationLogTable sortableTable [paginator]="paginator" [data]="data"
+                   [columns]="tableColumns" [filter]="filterControl.value" [useSearchToFilter]="true">
+          <table class="table table-striped table-bordered caption-top" cdk-table
+                 [dataSource]="integrationLogTable.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="inquiries" [add$]="add$" [reload$]="reload$"
+                              [sort]="integrationLogTable.dataSource.sort"
+                              (textChange)="filterControl.setValue($event)">
+                </table-header>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="organization">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacksMap.gdxServiceLog.organizationAndBranch"> {{langService.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="user">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacksMap.gdxServiceLog.user"> {{langService.map.user}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUserInfo.getName()}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="actionTime">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                  [sortCallback]="sortingCallbacksMap.gdxServiceLog.actionTime"> {{langService.map.action_time}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.actionTimeString}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+                <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+                  <button (click)="selectLog(row)" class="btn btn-primary">{{langService.map.select}}</button>
+                </grid-actions>
+              </td>
+            </ng-container>
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="integrationLogTable.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: integrationLogTable.columns;"
+                (contextmenu)="menu.open($event , row)"
+                [ngClass]="{'selected-row': selectedRecord && selectedRecord.id === row.id}"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+          <app-paginator #paginator [length]="(data.length || 0)"></app-paginator>
+        </app-table>
+        <context-menu-item #menu [actions]="actions"></context-menu-item>
+      </div>
+    </div>
+  </div>
+</ng-template>

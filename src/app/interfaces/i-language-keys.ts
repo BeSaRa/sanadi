@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  menu_reports: string
+  there_is_no_followup_configurations_for_this_service: string;
   add_organization_officers: string;
   enter_donation_and_start_work_date: string;
   validate_approve_task: string;
@@ -117,7 +119,7 @@ export interface ILanguageKeys {
   approval_information_filled_out: string;
   missing_approval_info: string;
   edit_approval_info: string;
-  please_add_collection_items_to_proceed: string
+  please_add_collection_items_to_proceed: string;
   identification_number: string;
   show_location_on_map: string;
   unit_number: string;
@@ -632,6 +634,7 @@ export interface ILanguageKeys {
   request_date: string;
   request_number: string;
   personal_aid: string;
+  integration_inquiries: string;
   family_info: string;
   date_of_birth: string;
   personal_info: string;
@@ -1021,6 +1024,7 @@ export interface ILanguageKeys {
   BENEIFICARY_NDA_ACTIVE_REQUESTS_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_AID_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_PERIODIC_AIDS_EXISTING: string; // don't change this as it is mapped to BE response
+  BENEIFICARY_IS_DEAD: string; // don't change this as it is mapped to BE response
   msg_license_duration_diff_between_x_and_y_months: string;
   total_income: string;
   msg_missing_incomes_or_obligations: string;
@@ -1049,4 +1053,37 @@ export interface ILanguageKeys {
   please_add_employee_items_to_proceed: string;
   employees_details: string;
   final_Notification: string;
+  special_needs_handicap: string;
+  menu_urgent_intervention_report: string;
+  entities: string;
+  intervention_fields: string;
+  intervention_areas: string;
+  intervention_name: string;
+  entity_type: string;
+  entity_name: string;
+  execution_country: string;
+  msg_please_select_x_to_continue: string;
+  menu_external_project_implementation: string;
+  msg_add_intervention_license_first: string;
+  integration_moj: string;
+  integration_moci: string;
+  integration_moph: string;
+  date_of_death: string;
+  company_info: string;
+  relation_status: string;
+  parcel_number: string;
+  parcel_type: string;
+  owner_name: string;
+  shares_count: string;
+  flats_info: string;
+  parcels_info: string;
+  flat_number: string;
+  transaction_number: string;
+  transaction_type: string;
+  contract_date: string;
+  download_disclosure_form: string;
+  msg_corrupt_invalid_file: string;
+  inquiries: string;
+  description_disbursement_decision: string;
+  menu_customs_exemption_service: string;
 }

@@ -48,14 +48,25 @@ export class LookupService extends BackendGenericService<Lookup> {
     return lookupList.find(x => x.lookupKey === lookupKey) || null;
   }
 
+  getLookupArrayAsObject(lookupCategory: keyof ILookupMap, keyProperty: string = 'lookupKey'): {[key: string]: Lookup } {
+    if (!lookupCategory || !CommonUtils.isValidValue(keyProperty)) {
+      return {};
+    }
+    return this.listByCategory[lookupCategory].reduce((acc, cur) => {
+      // @ts-ignore
+      acc[cur[keyProperty]] = cur;
+      return acc;
+    }, {});
+  }
+
   _getReceiveInterceptor(): any {
   }
 
   getStringOperators(): Lookup[] {
     return ['equal', 'contains', 'start_with', 'end_with'].map((item, index) => {
       return (new Lookup().setValues(
-        this.langService.getArabicLocalByKey(<keyof ILanguageKeys>item),
-        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys>item),
+        this.langService.getArabicLocalByKey(<keyof ILanguageKeys> item),
+        this.langService.getEnglishLocalByKey(<keyof ILanguageKeys> item),
         index,
         index + 1
       ));

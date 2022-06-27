@@ -102,6 +102,8 @@ import { BuildingPlateComponent } from './components/building-plate/building-pla
 import { SelectedLicenseTableComponent } from './components/selected-license-table/selected-license-table.component';
 import { TranslatePipe } from "@app/pipes/translate.pipe";
 import { DatePipe } from "@app/pipes/date.pipe";
+import { FollowupComponent } from "@app/shared/popups/followup/followup.component";
+import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-popup/followup-popup.component";
 
 @NgModule({
   declarations: [
@@ -186,7 +188,9 @@ import { DatePipe } from "@app/pipes/date.pipe";
     BuildingPlateComponent,
     SelectedLicenseTableComponent,
     TranslatePipe,
-    DatePipe
+    DatePipe,
+    FollowupComponent,
+    FollowupPopupComponent,
   ],
   imports: [
     CommonModule,
@@ -203,8 +207,8 @@ import { DatePipe } from "@app/pipes/date.pipe";
     AngularMyDatePickerModule,
   ],
   exports: [
-    ContextMenuModule,
     CommonModule,
+    ContextMenuModule,
     OverlayModule,
     NgxMaskModule,
     PortalModule,
@@ -272,7 +276,9 @@ import { DatePipe } from "@app/pipes/date.pipe";
     BuildingPlateComponent,
     SelectedLicenseTableComponent,
     TranslatePipe,
-    DatePipe
+    DatePipe,
+    FollowupComponent,
+    FollowupPopupComponent
   ]
 })
 export class SharedModule {

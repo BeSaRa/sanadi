@@ -1,5 +1,5 @@
 {
-  "CUSTOMS_EXEMPTION_SHIPPING_APPROVAL_SERVICES": "/customs-exemption-remittance",
+  "CUSTOMS_EXEMPTION_REMITTANCE": "/customs-exemption-remittance",
   "FUNDRAISING": "/fundraising-channel-licensing",
   "NPO_EMPLOYEE": "admin/npo-employee",
   "BANK_ACCOUNT": "admin/bank-account",
@@ -88,5 +88,7 @@
   "URGENT_INTERVENTION_LICENSE": "/urgent-intervention-licensing",
   "E_JOB_APPLICATIONS": "/employment",
   "DONOR": "admin/donor",
-  "URGENT_JOINT_RELIEF_CAMPAIGN": "/urgent-joint-relief-campaign"
+  "URGENT_JOINT_RELIEF_CAMPAIGN": "/urgent-joint-relief-campaign",
+  "URGENT_INTERVENTION_REPORTING": "/urgent-intervention-announcement",
+  "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation"
 }

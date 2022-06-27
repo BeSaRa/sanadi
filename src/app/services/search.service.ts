@@ -16,7 +16,7 @@ export class SearchService {
   }) {
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, {property: 'rs' , interceptReceive: new GeneralSearchCriteriaInterceptor().receive})
   @SendInterceptor((new GeneralSearchCriteriaInterceptor().send))
   private _search(@InterceptParam() criteria: Partial<any>): Observable<any> {
     return this.service.http.post<any>(this.service._getURLSegment() + '/search', criteria);

@@ -5,7 +5,7 @@ import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
-import {PeriodicPayment} from '@app/enums/periodic-payment.enum';
+import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -17,7 +17,6 @@ import {Lookup} from '@app/models/lookup';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {Beneficiary} from '@app/models/beneficiary';
-import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'beneficiary-obligation',
@@ -54,7 +53,6 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   }
 
   form!: FormGroup;
-  @ViewChild('table') table!: TableComponent;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
@@ -130,7 +128,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
         value2 = !CommonUtils.isValidValue(b) ? '' : b.benObligationTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   buildForm(): void {
     let model = new BeneficiaryObligation().clone(this.currentRecord);
@@ -191,7 +189,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
-    })
+    });
   }
 
   private updateForm(record: BeneficiaryObligation | undefined) {
@@ -298,6 +296,23 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
 
   get installmentsCountField(): AbstractControl {
     return this.form.get('installmentsCount')!;
+  }
+
+  calculateTotalDebts(): number {
+    if (!this.list || this.list.length === 0) {
+      return 0;
+    } else {
+      return this.list.map(x => {
+        if (!x.amount || (x.periodicType === SubAidPeriodicTypeEnum.MONTHLY && x.installmentsCount === 0)) {
+          return 0;
+        }
+        if (x.periodicType === SubAidPeriodicTypeEnum.ONE_TIME) {
+          return Number(Number(x.amount).toFixed(2));
+        } else {
+          return (Number(Number(x.amount).toFixed(2)) * Number(x.installmentsCount));
+        }
+      }).reduce((resultSum, a) => resultSum + a, 0);
+    }
   }
 
 }

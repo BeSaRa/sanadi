@@ -25,6 +25,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M> | BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -48,6 +49,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   caseTypes = CaseTypes;
+  fileIconsEnum = FileIconsEnum;
 
   formValidity$: Subject<any> = new Subject<any>();
 

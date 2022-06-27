@@ -35,7 +35,7 @@
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="amount" for="amount" class="form-label">{{lang.map.amount}}</label>
         <input id="amount" validationClasses="amount"
-               [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+               [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                formControlName="amount" trimInput class="form-control">
         <app-field-error-message controlName="amount"></app-field-error-message>
       </div>
@@ -78,12 +78,12 @@
             <ng-container cdkColumnDef="periodicType">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.periodicType"> {{lang.map.payment_periodicity}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo.getName()}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.periodicTypeInfo?.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="incomeType">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.incomeType"> {{lang.map.income_type}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.benIncomeTypeInfo.getName()}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.benIncomeTypeInfo?.getName()}} </td>
             </ng-container>
             <ng-container cdkColumnDef="amount">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.amount}}</th>
@@ -93,7 +93,7 @@
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <grid-actions [record]="row" [actions]="actions"></grid-actions>
+                <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
               </td>
             </ng-container>
 
@@ -104,7 +104,7 @@
             </ng-container>
             <ng-container cdkColumnDef="totalIncome">
               <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
-                <span><b>{{(!beneficiary ? 0 : (beneficiary.benTotalIncome || 0)) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
+                <span><b>{{calculateTotalIncome() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
               </td>
             </ng-container>
 
@@ -112,7 +112,7 @@
             <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
                 (contextmenu)="menu.open($event , row)"></tr>
-            <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!beneficiary || !beneficiary.id"></tr>
+            <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
             <tr *cdkNoDataRow>
               <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>
             </tr>

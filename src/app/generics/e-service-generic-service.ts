@@ -35,7 +35,7 @@ import {MenuItemService} from "@app/services/menu-item.service";
 import {IBulkResult} from "@app/interfaces/ibulk-result";
 import {UrlService} from "@app/services/url.service";
 import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {FollowupComponent} from '@app/modules/followup/pages/followup/followup.component';
+import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {CaseModel} from '@app/models/case-model';
 
 export abstract class EServiceGenericService<T extends { id: string }>

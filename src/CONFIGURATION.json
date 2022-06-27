@@ -1,12 +1,12 @@
 {
-  "VERSION": "v1.4.10-rc#2",
+  "VERSION": "v1.4.11-rc#9",
   "ENVIRONMENTS_URLS": {
     "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
     "STAGING_QA": "http://eblaepm.no-ip.org:9080/sanadi-services/api/",
     "BAW_UI": "http://eblaepm.no-ip.org:9026/eservices/api/",
     "BAW_UI_IP": "http://100.100.15.216:9026/eservices/api/",
-    "BAW_DEV": "http://100.100.15.216:9026/eservicesdev/api/v1",
+    "BAW_DEV": "http://100.100.15.216:9026/eservicesdev/api/",
     "BAW_QA": "http://eblaepm.no-ip.org:9096/eservices/api"
   },
   "BASE_ENVIRONMENT": "BAW_UI",
@@ -79,7 +79,8 @@
     "EXTERNAL_PROJECT_MODELS",
     "URGENT_INTERVENTION_LICENSING",
     "INTERNAL_BANK_ACCOUNT_APPROVAL",
-    "URGENT_JOINT_RELIEF_CAMPAIGN"
+    "URGENT_JOINT_RELIEF_CAMPAIGN",
+    "URGENT_INTERVENTION_REPORTING"
   ],
   "SEARCH_PERMISSION_GROUP": [
     "INQUIRY",
@@ -94,7 +95,8 @@
     "SUBVENTION_ADD",
     "PARTIAL_SUBVENTION_REQUESTS_MAIL",
     "SUBVENTION_SEARCH",
-    "PARTIAL_SUBVENTION_REQUESTS_REPORT"
+    "PARTIAL_SUBVENTION_REQUESTS_REPORT",
+    "BEN_SEARCH_LOG"
   ],
   "TRAINING_PROGRAMS_PAGE_GROUP": [
     "TRAINING_BUNDLE",
@@ -113,10 +115,11 @@
   ],
   "COLLECTION_SERVICES_GROUP": [
     "COLLECTOR_LICENSING",
-    "COLLECTION_APPROVAL"
+    "COLLECTION_APPROVAL",
+    "FUNDRAISING_LICENSING"
   ],
   "REMITTANCE_PERMISSIONS_GROUP": [
-    "SHIPPING_APPROVAL"
+    "CUSTOMS_EXEMPTION_REMITTANCE"
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": [
     "PDF"
@@ -126,5 +129,7 @@
     "NO_PERMISSION"
   ],
   "MAP_API_KEY": "AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4",
-  "BENEFICIARY_AUDIT_LIMIT": 50
+  "BENEFICIARY_AUDIT_LIMIT": 50,
+  "E_SERVICE_ITEM_KEY": "item",
+  "REPORTS_URL": "http://racabi/Reports/report/ar/SANADI-Reports/"
 }

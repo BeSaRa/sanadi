@@ -17,6 +17,7 @@ import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {Beneficiary} from '@app/models/beneficiary';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {BeneficiaryIncomePeriodicEnum} from '@app/enums/periodic-payment.enum';
 
 @Component({
   selector: 'beneficiary-income',
@@ -128,7 +129,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
         value2 = !CommonUtils.isValidValue(b) ? '' : b.benIncomeTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   buildForm(): void {
     let model = new BeneficiaryIncome().clone(this.currentRecord);
@@ -189,7 +190,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
-    })
+    });
   }
 
   private updateForm(record: BeneficiaryIncome | undefined) {
@@ -281,6 +282,23 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
+  }
+
+  calculateTotalIncome(): number {
+    if (!this.list || this.list.length === 0) {
+      return 0;
+    } else {
+      return this.list.map(x => {
+        if (!x.amount) {
+          return 0;
+        }
+        if (x.periodicType === BeneficiaryIncomePeriodicEnum.MONTHLY) {
+          return (Number(Number(x.amount).toFixed(2)) * x.yearlyInstallmentsCount);
+        } else {
+          return Number(Number(x.amount).toFixed(2));
+        }
+      }).reduce((resultSum, a) => resultSum + a, 0);
+    }
   }
 
 }

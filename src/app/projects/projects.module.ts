@@ -15,6 +15,10 @@ import {
 import { InternalBankAccountApprovalComponent } from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import { InternalBankApprovalApproveTaskPopupComponent } from './popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import {CollectionModule} from '@app/modules/collection/collection.module';
+import { UrgentInterventionReportComponent } from './pages/urgent-intervention-report/urgent-intervention-report.component';
+import { ImplementingAgencyListComponent } from './shared/implementing-agency-list/implementing-agency-list.component';
+import { InterventionRegionListComponent } from './shared/intervention-region-list/intervention-region-list.component';
+import { InterventionFieldListComponent } from './shared/intervention-field-list/intervention-field-list.component';
 import { UrgentJointReliefCampaignComponent } from './pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import { UrgentJointReliefCampaignInitialApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
 import { UrgentJointReliefCampaignFinalApproveTaskPopupComponent } from './popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
@@ -33,7 +37,12 @@ import { UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent } from '
     UrgentJointReliefCampaignComponent,
     UrgentJointReliefCampaignInitialApproveTaskPopupComponent,
     UrgentJointReliefCampaignFinalApproveTaskPopupComponent,
-    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
+    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent,
+    InternalBankApprovalApproveTaskPopupComponent,
+    UrgentInterventionReportComponent,
+    ImplementingAgencyListComponent,
+    InterventionRegionListComponent,
+    InterventionFieldListComponent
   ],
     imports: [
         CommonModule,

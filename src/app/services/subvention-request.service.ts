@@ -13,7 +13,7 @@ import {SubventionRequestInterceptor} from '../model-interceptors/subvention-req
 import {SubventionAid} from '../models/subvention-aid';
 import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
 import {SubventionLogService} from './subvention-log.service';
-import {map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {SubventionLog} from '../models/subvention-log';
 import {SubventionLogPopupComponent} from '../sanady/popups/subvention-log-popup/subvention-log-popup.component';
 import {DialogRef} from '../shared/models/dialog-ref';
@@ -25,6 +25,10 @@ import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
 import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
+import {Beneficiary} from '@app/models/beneficiary';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
+import {BlobModel} from '@app/models/blob-model';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +38,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   constructor(private urlService: UrlService,
               public http: HttpClient,
+              private domSanitizer: DomSanitizer,
               private langService: LangService,
               private subventionAidService: SubventionAidService,
               private subventionRequestAidService: SubventionRequestAidService,
@@ -175,5 +180,15 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
     return this._loadSubventionRequestAuditDetails(auditId);
+  }
+
+  @HasInterception
+  loadDisclosureFormAsBlob(@InterceptParam() beneficiary: Beneficiary): Observable<BlobModel> {
+    return this.http.post(this._getServiceURL() + '/beneficiary/nda-form/export', beneficiary, {responseType: 'blob'})
+      .pipe(
+        map(blob => new BlobModel(blob, this.domSanitizer),
+          catchError(_ => {
+            return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+          })))
   }
 }

@@ -23,6 +23,9 @@ export class SubventionRequestInterceptor {
     model.creationDate = !model.creationDate ? model.creationDate : DateUtils.changeDateFromDatepicker(model.creationDate)?.toISOString();
     model.statusDateModified = !model.statusDateModified ? model.statusDateModified : DateUtils.changeDateFromDatepicker(model.statusDateModified)?.toISOString();
     model.allowDataSharing = model.allowDataSharing ?? false;
+    if (!model.allowDataSharing) {
+      model.allowCompletion = false;
+    }
     SubventionRequestInterceptor._deleteBeforeSend(model);
 
     return model;

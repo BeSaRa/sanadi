@@ -6,12 +6,12 @@ export class CustomEmployeePermission {
   static customPermissions: Map<keyof ILanguageKeys, (employee: EmployeeService, item: MenuItem,) => boolean> = new Map<keyof ILanguageKeys, (employee: EmployeeService, item: MenuItem) => boolean>();
 
 
-  static registerCustomPermission(langKey: keyof ILanguageKeys, callback: (employee: EmployeeService, item: MenuItem) => boolean): CustomEmployeePermission {
+  registerCustomPermission(langKey: keyof ILanguageKeys, callback: (employee: EmployeeService, item: MenuItem) => boolean): CustomEmployeePermission {
     // if (CustomEmployeePermission.customPermissions.has(langKey)) {
     //   throw Error('you have same menu permission before:' + langKey)
     // }
     CustomEmployeePermission.customPermissions.set(langKey, callback);
-    return CustomEmployeePermission;
+    return this;
   }
 
   static getCustomPermission(langKey: keyof ILanguageKeys): (employee: EmployeeService, item: MenuItem) => boolean {

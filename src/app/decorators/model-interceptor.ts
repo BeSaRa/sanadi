@@ -2,7 +2,7 @@ import {cloneDeep as deepClone, findIndex as _findIndex} from 'lodash';
 import {identity} from 'rxjs';
 import {SendInterceptorInterface} from './send-interceptor-interface';
 import {GeneralInterceptor} from '../model-interceptors/general-interceptor';
-import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
+import {BackendServiceModelInterface} from '@contracts/backend-service-model-interface';
 
 // tslint:disable-next-line:typedef
 export function InitClassInterceptor(callback?: any) {
@@ -49,6 +49,7 @@ export function SendInterceptor(interceptorCallback?: any): any {
         interceptorCallback = interceptor ? interceptor.send : identity;
       }
 
+      // console.log({ interceptorCallback });
 
       if (target.hasOwnProperty(metadataProperty)) {
         const params = target[metadataProperty] as any[];

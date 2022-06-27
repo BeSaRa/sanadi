@@ -11,6 +11,9 @@ import {ServiceItemResolver} from "@app/resolvers/service-item.resolver";
 import {
   EServiceComponentWrapperComponent
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {PreValidateDataGuard} from '@app/guards/pre-validate-data.guard';
+import {ICustomRouteData} from '@contracts/i-custom-route-data';
 
 const routes: Routes = [
   {path: '', component: ProjectsComponent},
@@ -68,7 +71,20 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentJointReliefCampaignComponent'
     }
-  }
+  },
+  {
+    path: 'urgent-intervention-report', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard, PreValidateDataGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_REPORTING,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionReportComponent',
+      caseType: CaseTypes.URGENT_INTERVENTION_REPORTING,
+      preValidateFailMsgKey: 'msg_add_intervention_license_first'
+    } as ICustomRouteData
+  },
 ];
 
 @NgModule({

@@ -28,6 +28,7 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'urgent-intervention-license',
   templateUrl: './urgent-intervention-license.component.html',

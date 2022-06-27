@@ -43,7 +43,9 @@ export interface ILookupMap {
   ExternalServiceRequestType: Lookup[];
   FieldAssessment: Lookup[];
   FollowUpStatus: Lookup[];
+  FollowUpType: Lookup[];
   FundingSourcesCategory: Lookup[];
+  GDX_SERVICES: Lookup[];
   Gender: Lookup[];
   GovOccuptionStatus: Lookup[];
   GovOccuptionType: Lookup[];
@@ -117,5 +119,4 @@ export interface ILookupMap {
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-  FollowUpType: Lookup[];
 }

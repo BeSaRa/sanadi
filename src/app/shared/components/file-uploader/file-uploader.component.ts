@@ -23,7 +23,8 @@ export class FileUploaderComponent implements OnInit {
   uploadedFiles: File[] = [];
   uploadedFilesCount: number = 0;
 
-  @Input() labelKey: keyof ILanguageKeys = {} as keyof ILanguageKeys;
+  @Input() labelKey: keyof ILanguageKeys = 'file';
+  @Input() fileInputKey: keyof ILanguageKeys = 'upload_file';
   @Input() isRequired: boolean = false;
   @Input() allowedExtensions: string[] = [];
   @Input() allowMultiple: boolean = false;
@@ -85,7 +86,7 @@ export class FileUploaderComponent implements OnInit {
 
   private _verifyFile(file: File) {
     const extension = file.name.getExtension().toLowerCase(),
-      invalidMessage = ''//this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
+      invalidMessage = this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
 
     if (!this.allowedExtensions.includes(extension)) {
       this.dialogService.error(invalidMessage);

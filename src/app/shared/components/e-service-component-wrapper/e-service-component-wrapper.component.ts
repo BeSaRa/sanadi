@@ -390,7 +390,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
-          || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
+          || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
+          || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -423,7 +424,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'send_to_risk_and_compliance_department',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.SHIPPING_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+          return item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
 
         },
         onClick: (item: CaseModel<any, any>) => {

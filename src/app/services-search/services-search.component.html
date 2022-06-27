@@ -55,23 +55,25 @@
           <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <a *ngIf="row.fullSerial" href="#"
+              <!--<a *ngIf="row.fullSerial" href="#"
                  class="dir-ltr" [routerLink]="[row.itemRoute,searchState]"
                  [queryParams]="{item:row.itemDetails}">{{row.fullSerial}}</a>
               <a *ngIf="!row.fullSerial" href="#" [routerLink]="[row.itemRoute,searchState]"
-                 [queryParams]="{item:row.itemDetails}">{{lang.map.open_task}}</a>
+                 [queryParams]="{item:row.itemDetails}">{{lang.map.open_task}}</a>-->
+              <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
+                    class="text-primary cursor-pointer text-decoration-underline">{{row.fullSerial ?? lang.map.open_task}}</span>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="category">
             <th cdk-header-cell
                 *cdkHeaderCellDef> {{isConsultationSelected() ? lang.map.consulting_type : lang.map.subject}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="caseStatus">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
             <td cdk-cell *cdkCellDef="let row">
               <!--              <i [tooltip]="" class="text-primary" [class]="row.getStatusIcon()"></i>-->
-              <span>{{row.caseStatusInfo.getName()}}</span>
+              <span>{{row.caseStatusInfo?.getName()}}</span>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="fullName">
@@ -92,7 +94,7 @@
           </ng-container>
           <ng-container cdkColumnDef="organizationId">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="createdOn">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
@@ -100,19 +102,19 @@
           </ng-container>
           <ng-container cdkColumnDef="creatorInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="countryInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.country}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="ouInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="requestClassificationInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_classification}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.requestClassificationInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestClassificationInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="subject">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.subject}}</th>

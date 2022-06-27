@@ -373,6 +373,10 @@ td.td-checkbox, th.td-checkbox {
   width: 35px;
 }
 
+.row-indicator-td {
+  width: 35px;
+}
+
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
   span.custom-option {
     font-weight: 500;
@@ -427,5 +431,10 @@ tr.risk {
 
 .text-yellow {
   color: yellow !important;
+}
+
+.form-switch-container {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
 }
 

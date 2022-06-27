@@ -28,6 +28,7 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {Lookup} from "@app/models/lookup";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'team-inbox',
@@ -53,6 +54,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private router: Router,
               private inboxService: InboxService,
               public employeeService: EmployeeService) {
     if (this.employeeService.isExternalUser()) {
@@ -320,17 +322,21 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   actionOpen(item: QueryResult) {
-    item.open(this.actions, OpenFrom.TEAM_INBOX)
+    /*item.open(this.actions, OpenFrom.TEAM_INBOX)
       .pipe(switchMap(ref => ref.onAfterClose$))
-      .subscribe(() => this.reloadSelectedInbox());
+      .subscribe(() => this.reloadSelectedInbox());*/
+    this.router.navigate([item.itemRoute], {queryParams: {item: item.itemDetails}}).then();
   }
 
   actionClaimBeforeOpen(item: QueryResult) {
-    item.claim()
+    /*item.claim()
       .pipe(switchMap(_ => {
         return item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$));
       }))
-      .subscribe(() => this.reloadSelectedInbox());
+      .subscribe(() => this.reloadSelectedInbox());*/
+    item.claim().subscribe((result) => {
+      this.actionOpen(item);
+    })
   }
 
   openTask(item: QueryResult): void {

@@ -9,6 +9,7 @@ import {map} from 'rxjs/operators';
 import {BlobModel} from '@app/models/blob-model';
 import {ViewDocumentPopupComponent} from '@app/shared/popups/view-document-popup/view-document-popup.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {FileExtensionsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class SharedService {
     UPDATE: this.langService.map.msg_update_success,
     UPDATE_PARTIAL: this.langService.map.msg_update_success_except,
     UPDATE_FAIL: this.langService.map.msg_update_fail
-  }
+  };
 
   mapBulkResponseMessages<T = any>(selectedRecords: T[], key: string, resultMap: { [p: number]: boolean } | { [p: string]: boolean }, operation: BulkOperationTypes = 'DELETE'): Observable<DeleteBulkResult<T>> {
     const failedRecords: any[] = [];
@@ -79,4 +80,27 @@ export class SharedService {
     });
   }
 
+  downloadFileToSystem(data: Blob, fileNameWithoutExtension: string = '', extension: string = ''): void {
+    if (data.type === 'error' || data.size === 0) {
+      this.toast.info(this.langService.map.msg_corrupt_invalid_file);
+    }
+    fileNameWithoutExtension = fileNameWithoutExtension || ('download-' + new Date().valueOf());
+    extension = extension || SharedService._getDownloadExtensionByMimeType(data.type);
+
+    const url = URL.createObjectURL(data);
+    const a: HTMLAnchorElement = document.createElement('a');
+    a.href = URL.createObjectURL(data);
+    a.download = fileNameWithoutExtension + extension;
+    a.click();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 0);
+  }
+
+  private static _getDownloadExtensionByMimeType(mimeType: string) {
+    // @ts-ignore
+    const extensionName: string = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType)];
+    return FileExtensionsEnum[extensionName as keyof typeof FileExtensionsEnum] || undefined;
+  }
 }

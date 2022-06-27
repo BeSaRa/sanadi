@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs';
 import {EmployeeService} from '@app/services/employee.service';
 import {MenuItem} from '@app/models/menu-item';
 import {Router} from '@angular/router';
+import { CustomEmployeePermission } from "@helpers/custom-employee-permission";
 
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -40,7 +41,10 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   }
 
   navigateToPath(item: MenuItem): void {
-    console.log(item.path);
     this.router.navigate([item.path]).then();
+  }
+
+  hasCustomPermissions(item: MenuItem): boolean {
+    return CustomEmployeePermission.hasCustomPermission(item.langKey) ? CustomEmployeePermission.getCustomPermission(item.langKey)(this.empService, item) : true;
   }
 }
