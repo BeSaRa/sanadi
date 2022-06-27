@@ -65,9 +65,14 @@
 }
 
 :host-context(html[dir="rtl"]) {
+  .badge-translate-middle-x {
+    left: 25px;
+  }
+
   .sidebar-menu-list {
     font-weight: 500;
   }
+
   .sidebar-menu-list:not(.level-1) {
     .sidebar-menu-item-text {
       font-weight: normal;
@@ -76,6 +81,10 @@
 }
 
 :host-context(html[dir="ltr"]) {
+  .badge-translate-middle-x {
+    right: 25px;
+  }
+
   .sidebar-menu-list {
     font-weight: 500;
   }
@@ -175,14 +184,14 @@ li.has-children {
 
 :host-context(html[dir="rtl"]) {
   li.has-children:after {
-    left: 23px;
+    left: 9px;
     transform: rotate(135deg);
   }
 }
 
 :host-context(html[dir="ltr"]) {
   li.has-children:after {
-    right: 23px;
+    right: 9px;
     transform: rotate(-45deg);
   }
 }

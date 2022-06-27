@@ -1,12 +1,13 @@
-import {LangService} from '@services/lang.service';
-import {FactoryService} from '@services/factory.service';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {ConfigurationService} from '@services/configuration.service';
-import {IAppConfig} from '@contracts/i-app-config';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { ConfigurationService } from '@services/configuration.service';
+import { IAppConfig } from '@contracts/i-app-config';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Cloneable } from "@app/models/cloneable";
+import { Common } from "@app/models/common";
 
-export class MenuItem extends Cloneable<MenuItem>{
+export class MenuItem extends Cloneable<MenuItem> {
   id!: number;
   langKey!: keyof ILanguageKeys;
   path!: string;
@@ -29,6 +30,7 @@ export class MenuItem extends Cloneable<MenuItem>{
   safeSVG?: SafeHtml;
   itemOrder: number = 1;
   caseType?: number;
+  counter?: keyof Common['counters']
   private domSanitizer: DomSanitizer;
 
   constructor() {

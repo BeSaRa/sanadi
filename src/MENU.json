@@ -192,7 +192,8 @@
     "parent": null,
     "group": "main",
     "itemOrder": 1,
-    "svg": null
+    "svg": null,
+    "counter": "personalInbox"
   },
   {
     "id": 16,
@@ -205,7 +206,8 @@
     "parent": null,
     "group": "main",
     "itemOrder": 2,
-    "svg": null
+    "svg": null,
+    "counter": "teamInbox"
   },
   {
     "id": 17,

@@ -1,11 +1,12 @@
 export interface IAppUrls {
+  COMMON: string;
   NPO_EMPLOYEE: string;
   BANK_ACCOUNT: string;
   BANK: string;
   INTERNAL_BANK_ACCOUNT_APPROVAL: string;
   CUSTOMS_EXEMPTION_REMITTANCE: string;
   FOLLOWUP_COMMENT: string;
-  FOLLOWUP:string;
+  FOLLOWUP: string;
   COLLECTOR_APPROVAL: string;
   MAP_API_URL: string;
   FOLLOWUP_CONFIGURATION: string;
