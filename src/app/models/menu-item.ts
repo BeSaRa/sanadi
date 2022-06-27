@@ -1,11 +1,12 @@
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {ConfigurationService} from '../services/configuration.service';
-import {IAppConfig} from '../interfaces/i-app-config';
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {ConfigurationService} from '@services/configuration.service';
+import {IAppConfig} from '@contracts/i-app-config';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import { Cloneable } from "@app/models/cloneable";
 
-export class MenuItem {
+export class MenuItem extends Cloneable<MenuItem>{
   id!: number;
   langKey!: keyof ILanguageKeys;
   path!: string;
@@ -31,6 +32,7 @@ export class MenuItem {
   private domSanitizer: DomSanitizer;
 
   constructor() {
+    super()
     this.langService = FactoryService.getService('LangService');
     this.configService = FactoryService.getService('ConfigurationService');
     this.domSanitizer = FactoryService.getService('DomSanitizer');
@@ -46,7 +48,6 @@ export class MenuItem {
 
   isFontIcon(): boolean {
     return !this.isSvg;
-
   }
 
   preparePermissionList(): void {

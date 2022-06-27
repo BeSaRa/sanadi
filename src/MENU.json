@@ -739,5 +739,18 @@
     "group": "projects",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 58,
+    "langKey": "menu_reports",
+    "path": "/home/reports",
+    "icon": "mdi-file-chart-outline",
+    "isSvg": false,
+    "permission": null,
+    "permissionGroup": null,
+    "parent": null,
+    "group": "main",
+    "itemOrder": 10,
+    "svg": null
   }
 ]

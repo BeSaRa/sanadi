@@ -32,4 +32,5 @@ export interface IAppConfig {
   GIVE_USERS_PERMISSIONS: string[];
   BENEFICIARY_AUDIT_LIMIT: number;
   E_SERVICE_ITEM_KEY: string;
+  REPORTS_URL: string
 }
