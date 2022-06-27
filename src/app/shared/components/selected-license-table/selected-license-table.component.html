@@ -50,7 +50,7 @@
           </ng-container>
           <ng-container cdkColumnDef="receiverName">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.recipient_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.receiverNameInfo.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{(row.receiverNameInfo?.getName() || row.otherReceiverName) ?? ''}} </td>
           </ng-container>
           <ng-container cdkColumnDef="shipmentCarrier">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.shipping_method}}</th>

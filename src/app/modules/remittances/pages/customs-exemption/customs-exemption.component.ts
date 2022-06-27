@@ -137,6 +137,32 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.listenToOrderNoChange();
     this.listenToDocNoChange();
     this.handleReadonly();
+
+    if (this.fromDialog) {
+      this.loadSelectedDocumentByOrderNumber(this.model!.fullSerial, () => {
+        this.fullSerial.updateValueAndValidity();
+        this.exportedBookFullSerial.updateValueAndValidity();
+      });
+    }
+  }
+
+  private loadSelectedDocumentByOrderNumber(orderNumber: string, callback?: any): void {
+    if (!orderNumber) {
+      return;
+    }
+    this.loadDocumentsByCriteria({fullSerial: this.model!.fullSerial})
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(document => !!document),
+        catchError(() => of(null))
+      ).subscribe((document) => {
+      if (!document) {
+        return;
+      }
+      this.setSelectedDocument(document[0], true);
+
+      callback && callback();
+    });
   }
 
   listenToOrderNoChange() {
