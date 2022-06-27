@@ -1660,7 +1660,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.allowDataSharingField.value) {
       this.disclosureFile = undefined;
     }
-    this.allowCompletionField.setValue(false);
+    // $event = user interaction
+    if ($event) {
+      this.allowCompletionField.setValue(false);
+    }
+
     this.toggleAllowCompletionReadonly();
   }
 
