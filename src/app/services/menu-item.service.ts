@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {MenuItem} from '../models/menu-item';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
+import {Generator} from '@decorators/generator';
 import {tap} from 'rxjs/operators';
 import {MenuItemInterceptor} from '../model-interceptors/menu-item-interceptor';
 import {DomSanitizer} from '@angular/platform-browser';
