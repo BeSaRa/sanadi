@@ -1,13 +1,14 @@
 <ul [@homeRouterAnimation]="list.length" class="services-list d-flex flex-row flex-wrap justify-content-center">
   <ng-container *ngFor="let item of list">
-    <li *ngIf="empService.checkPermissions(item.getPermissions(), true)"
+    <li *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
         class="service-item p-2 m-2 flex-shrink-0 d-flex flex-column align-items-center">
       <div (click)="navigateToPath(item)" mouseEnterLeave="shadow-lg"
            [style.background-image]="iconBackground"
            class="service-item-icon shadow-sm border border-1
             flex-grow-1 d-flex align-self-stretch justify-content-center align-items-center d-flex">
         <div [style.background-image]="starsImage" class="service-list-pattern flex-grow-1 align-self-stretch">
-          <div *ngIf="item.isSVGIcon()" [innerHTML]="item.safeSVG" class="service-svg-icon text-primary flex-grow-1"></div>
+          <div *ngIf="item.isSVGIcon()" [innerHTML]="item.safeSVG"
+               class="service-svg-icon text-primary flex-grow-1"></div>
           <div *ngIf="item.isFontIcon()" class="service-font-icon flex-grow-1">
             <i class="text-primary mdi {{item.icon}}"></i>
           </div>
