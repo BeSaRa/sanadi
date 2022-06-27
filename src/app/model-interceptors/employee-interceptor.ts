@@ -1,3 +1,5 @@
+import { AdminResult } from './../models/admin-result';
+import { JobTitle } from './../models/job-title';
 import { IMyDateModel } from "angular-mydatepicker";
 import { DateUtils } from "./../helpers/date-utils";
 import { Employee } from "./../models/employee";
@@ -21,14 +23,18 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       : DateUtils.changeDateFromDatepicker(
         model.workEndDate as unknown as IMyDateModel
       )?.toISOString();
-    delete model.jobTitle
+    delete model.jobTitleInfo
     return model;
   }
   receive(model: Employee): Employee {
     model.workStartDate = DateUtils.changeDateToDatepicker(model.workStartDate);
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
     model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
-    model.jobTitle = 'need it with the response';
+    model.jobTitleInfo = AdminResult.createInstance({
+      id: model.jobTitleInfo.id,
+      arName: model.jobTitleInfo.arName,
+      enName: model.jobTitleInfo.enName,
+    });
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );

@@ -1,3 +1,4 @@
+import { AdminResult } from './../../../models/admin-result';
 import { DateUtils } from '@app/helpers/date-utils';
 import { JobApplicationSearchCriteria } from './../../../models/job-application-search-criteria';
 import { Employee } from "./../../../models/employee";
@@ -254,59 +255,63 @@ JobApplicationService
             workStartDate: DateUtils.changeDateToDatepicker(res[0].workStartDate),
             workEndDate: DateUtils.changeDateToDatepicker(res[0].workEndDate),
             updatedOn: DateUtils.changeDateToDatepicker(res[0].updatedOn),
-            jobTitle: 'need it with the response',
+            jobTitleInfo: AdminResult.createInstance({
+              id: res[0].jobTitleInfo.id,
+              arName: res[0].jobTitleInfo.arName,
+              enName: res[0].jobTitleInfo.enName,
+            }),
             contractExpiryDate: DateUtils.changeDateToDatepicker(
               res[0].contractExpiryDate
             ),
             identificationNumber: res[0].qId
           }]
         }),
-        // switch to the dialog ref to use it later and catch the user response
-        takeUntil(this.destroy$)
+  // switch to the dialog ref to use it later and catch the user response
+  takeUntil(this.destroy$)
       )
       .subscribe((e: Employee[]) => {
-        console.log({...e[0]})
-        if (this.isApprova()) {
-          this.employees = [...e];
-        } else {
-          this.employees = [...e, ...this.employees];
-        }
-        this.model && (this.model.employeeInfoDTOs = this.employees);
-      })
+  console.log({ ...e[0] })
+  if (this.isApprova()) {
+    this.employees = [...e];
+  } else {
+    this.employees = [...e, ...this.employees];
   }
-  CriteriaSearch(): void {
-    const identificationNumber = this.identificationNumber.value && this.identificationNumber.value.trim();
-    const passportNumber = this.passportNumber.value && this.passportNumber.value.trim();
-    this.identificationNumberSearch$.next({
-      identificationNumber: identificationNumber,
-      passportNumber: passportNumber,
-    });
+  this.model && (this.model.employeeInfoDTOs = this.employees);
+})
   }
-  isApprova() {
-    return this.category.value == LookupEmploymentCategory.APPROVAL
-  }
+CriteriaSearch(): void {
+  const identificationNumber = this.identificationNumber.value && this.identificationNumber.value.trim();
+  const passportNumber = this.passportNumber.value && this.passportNumber.value.trim();
+  this.identificationNumberSearch$.next({
+    identificationNumber: identificationNumber,
+    passportNumber: passportNumber,
+  });
+}
+isApprova() {
+  return this.category.value == LookupEmploymentCategory.APPROVAL
+}
   private invalidFormMessage() {
-    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-  }
+  this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+}
   private invalidItemMessage() {
-    this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
-  }
+  this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
+}
   get identificationNumber(): FormControl {
-    return this.searchCriteriaForm.get("identificationNumber") as FormControl;
-  }
+  return this.searchCriteriaForm.get("identificationNumber") as FormControl;
+}
   get passportNumber(): FormControl {
-    return this.searchCriteriaForm.get("passportNumber") as FormControl;
-  }
+  return this.searchCriteriaForm.get("passportNumber") as FormControl;
+}
   get requestType(): FormControl {
-    return this.form.get("requestType") as FormControl;
-  }
+  return this.form.get("requestType") as FormControl;
+}
   get category(): FormControl {
-    return this.form.get("category") as FormControl;
-  }
+  return this.form.get("category") as FormControl;
+}
   get description(): FormControl {
-    return this.form.get("description") as FormControl;
-  }
-  navigateBack(): void {
-    this.navigationService.goToBack();
-  }
+  return this.form.get("description") as FormControl;
+}
+navigateBack(): void {
+  this.navigationService.goToBack();
+}
 }

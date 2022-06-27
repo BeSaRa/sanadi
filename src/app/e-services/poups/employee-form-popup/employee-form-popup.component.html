@@ -124,7 +124,10 @@
           controlName="jobTitleId"
         ></app-field-error-message>
       </div>
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div
+        class="col-sm-6 col-md-4 mb-4 position-relative"
+        *ngIf="!isApproval()"
+      >
         <label
           asteriskIfRequired="identificationType"
           for="identificationType"
@@ -154,8 +157,9 @@
         ></app-field-error-message>
       </div>
       <div
-        class="col-sm-6 col-md-4 mb-4 position-relative"
-        *ngIf="isIdentificationNumberType()"
+        class="col-sm-6 mb-4 position-relative"
+        [ngClass]="{ 'col-md-4': !isApproval() }"
+        *ngIf="isIdentificationNumberType() || isApproval()"
       >
         <label
           asteriskIfRequired="identificationNumber"
@@ -175,8 +179,8 @@
         ></app-field-error-message>
       </div>
       <div
-        class="col-sm-6 col-md-4 mb-4 position-relative"
-        *ngIf="isPassportNumberNumberType()"
+        class="col-sm-6 mb-4 position-relative"
+        *ngIf="isPassportNumberNumberType() && !isApproval()"
       >
         <label
           asteriskIfRequired="passportNumber"
@@ -195,7 +199,10 @@
           controlName="passportNumber"
         ></app-field-error-message>
       </div>
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div
+        class="col-sm-6 mb-4 position-relative"
+        [ngClass]="{ 'col-md-4': !isApproval() }"
+      >
         <label
           asteriskIfRequired="gender"
           for="gender"
@@ -454,7 +461,10 @@
           ></app-field-error-message>
         </div>
       </div>
-      <div class="col-12 mb-2 d-flex" *ngIf="!isSingleEmployee() && isEditRequestTypeAllowed">
+      <div
+        class="col-12 mb-2 d-flex"
+        *ngIf="!isApproval() && isEditRequestTypeAllowed"
+      >
         <button class="btn btn-primary" type="button" (click)="setEmployee()">
           {{ !id ? lang.map.btn_add : lang.map.btn_edit }}
         </button>
@@ -476,7 +486,7 @@
       </div>
     </div>
   </form>
-  <div *ngIf="!isSingleEmployee()">
+  <div *ngIf="!isApproval()">
     <app-employees-data
       [employees]="employeesList"
       [actions]="actions"
@@ -489,8 +499,8 @@
     class="btn btn-primary"
     dialogClose
     [disabled]="
-      (isSingleEmployee() && !form.valid) ||
-      (!isSingleEmployee() && !this.employeesList.length)
+      (isApproval() && !form.valid) ||
+      (!isApproval() && !this.employeesList.length)
     "
     (click)="submit()"
   >

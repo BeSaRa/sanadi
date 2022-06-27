@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import { Cloneable } from "@app/models/cloneable";
 import { IMyDateModel } from "angular-mydatepicker";
 import { IEmployeeDto } from "./../interfaces/i-employee-dto";
@@ -5,7 +6,6 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   id!: number;
   arabicName!: string;
   englishName!: string;
-  jobTitle!: string;
   jobTitleId!: number;
   identificationType!: number;
   identificationNumber!: string;
@@ -26,6 +26,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   workStartDate!: string | IMyDateModel;
   workEndDate!: string | IMyDateModel;
   updatedOn!: string | IMyDateModel;
+  jobTitleInfo!: AdminResult;
   constructor() {
     super();
   }

@@ -157,7 +157,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
     });
     this.starterId = -this.data.employees.length - 1;
-    if (!this.isSingleEmployee()) {
+    if (!this.isApproval()) {
       this.employeesList = [...this.data.employees];
     } else if (this.data.employees[0]) {
       this.form.patchValue({
@@ -166,7 +166,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
   }
   submit() {
-    if (!this.isSingleEmployee()) {
+    if (!this.isApproval()) {
       this.data.service.onSubmit.emit(this.employeesList);
     } else {
       if (this.form.valid) {
@@ -175,7 +175,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
   }
   get selectedJobTitle() {
-    return this.JobTitleList.find(jt => jt.id == this.form.value.jobTitleId)?.getName()
+    return this.JobTitleList.find(jt => jt.id == this.form.value.jobTitleId)
   }
   isCreateOperation() {
     return this.data.operation === OperationTypes.CREATE;
@@ -184,7 +184,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     if (this.form.valid) {
       if (!this.form.value.id) {
         this.employeesList = [
-          { ...this.form.value, jobTitle: this.selectedJobTitle, id: --this.starterId },
+          { ...this.form.value, jobTitleInfo: this.selectedJobTitle, id: --this.starterId },
           ...this.employeesList,
         ];
       } else {
@@ -192,7 +192,7 @@ export class EmployeeFormPopupComponent implements OnInit {
           this.employeesList.find((e) => e.id == this.form.value.id),
           {
             ...this.form.value,
-            jobTitle: this.selectedJobTitle,
+            jobTitleInfo: this.selectedJobTitle,
           }
         );
       }
@@ -217,7 +217,6 @@ export class EmployeeFormPopupComponent implements OnInit {
     });
     this.handleIdentityNumberValidationsByIdentificationType();
   }
-
 
   handleOfficeNameValidationsByContractLocationType(): void {
     // set validators as empty
@@ -271,7 +270,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   isExternal() {
     return this.contractLocationType.value == ContractLocationTypes.External;
   }
-  isSingleEmployee() {
+  isApproval() {
     return this.category.value == LookupEmploymentCategory.APPROVAL;
   }
   isFinishedContract() {

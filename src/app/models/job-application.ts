@@ -20,15 +20,16 @@ const interceptor = new JobApplicationInterceptor();
 })
 export class JobApplication
   extends _RequestType<JobApplicationService, JobApplication>
-  implements HasRequestType, HasLicenseDurationType
-{
+  implements HasRequestType, HasLicenseDurationType {
   service!: JobApplicationService;
-  caseType:number = CaseTypes.JOB_APPLICATION;
+  caseType: number = CaseTypes.JOB_APPLICATION;
   requestType!: number;
   category!: number;
   description: string = "";
   employeeInfoDTOs: Employee[] = [];
-
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
+  oldLicenseFullSerial!: string;
   constructor() {
     super();
     this.service = FactoryService.getService("JobApplicationService");
@@ -41,5 +42,18 @@ export class JobApplication
       category: controls ? [category, Validators.required] : category,
       description: controls ? [description] : description
     };
+  }
+  setLicense({
+    oldLicenseId,
+    oldLicenseSerial,
+    oldLicenseFullSerial
+  }: {
+    oldLicenseId: string,
+    oldLicenseSerial: number,
+    oldLicenseFullSerial: string
+  }) {
+    this.oldLicenseId = oldLicenseId
+    this.oldLicenseSerial = oldLicenseSerial
+    this.oldLicenseFullSerial = oldLicenseFullSerial
   }
 }

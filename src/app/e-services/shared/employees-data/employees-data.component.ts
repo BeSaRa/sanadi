@@ -17,7 +17,7 @@ export class EmployeesDataComponent implements OnInit {
   _displayedColumns: string[] = [
     "arabicName",
     "englishName",
-    "jobTitle",
+    "jobTitleInfo",
     "gender"
   ];
   get displayedColumns() {

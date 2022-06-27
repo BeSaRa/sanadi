@@ -1,9 +1,9 @@
+import { AdminResult } from './../models/admin-result';
 import { IMyDateModel } from 'angular-mydatepicker';
 export interface IEmployeeDto {
   id: number;
   arabicName: string;
   englishName: string;
-  jobTitle: string;
   jobTitleId: number;
   identificationType: number;
   identificationNumber: string;
@@ -24,4 +24,5 @@ export interface IEmployeeDto {
   updatedOn: string | IMyDateModel;
   qId: string;
   updatedBy: number;
+  jobTitleInfo: AdminResult;
 }
