@@ -22,30 +22,30 @@
         </div>
         <!-- Order Number -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="fullSerial"
-                 for="fullSerial">{{lang.map.order_number}}</label>
+          <label class="form-label" asteriskIfRequired="oldFullSerial"
+                 for="oldFullSerial">{{lang.map.order_number}}</label>
           <div class="input-group">
             <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByOrderNo($event)"
-                   formControlName="fullSerial"
-                   trimInput type="text" [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="fullSerial"
-                   [onlyInvalid]="false" class="form-control" id="fullSerial">
+                   formControlName="oldFullSerial"
+                   trimInput type="text" [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="oldFullSerial"
+                   [onlyInvalid]="false" class="form-control" id="oldFullSerial">
             <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByOrderNo($event)"
                     class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-            <app-field-error-message controlName="fullSerial"></app-field-error-message>
+            <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
           </div>
         </div>
         <!-- Document Number -->
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="exportedBookFullSerial"
-                 for="exportedBookFullSerial">{{lang.map.document_number}}</label>
+          <label class="form-label" asteriskIfRequired="oldBookFullSerial"
+                 for="oldBookFullSerial">{{lang.map.document_number}}</label>
           <div class="input-group">
             <input (keydown.enter)="isEditOrderNoAndDocNoAllowed() && documentSearchByDocNo($event)"
-                   formControlName="exportedBookFullSerial" trimInput type="text"
-                   [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="exportedBookFullSerial"
-                   [onlyInvalid]="false" class="form-control" id="exportedBookFullSerial">
+                   formControlName="oldBookFullSerial" trimInput type="text"
+                   [readonly]="!isEditOrderNoAndDocNoAllowed()" validationClasses="oldBookFullSerial"
+                   [onlyInvalid]="false" class="form-control" id="oldBookFullSerial">
             <button *ngIf="isEditOrderNoAndDocNoAllowed()" type="button" (click)="documentSearchByDocNo($event)"
                     class="input-group-text"><i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
-            <app-field-error-message controlName="exportedBookFullSerial"></app-field-error-message>
+            <app-field-error-message controlName="oldBookFullSerial"></app-field-error-message>
           </div>
         </div>
       </div>

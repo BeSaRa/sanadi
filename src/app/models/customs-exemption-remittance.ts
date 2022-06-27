@@ -53,6 +53,8 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
   managerDecision!: number;
   managerJustification!: string;
   otherReceiverName!: string;
+  oldFullSerial!: string;   // old order number
+  oldBookFullSerial!: string; // old book document number
   projectLicense!: string;
   projectName!: string;
   publicTerms!: string;
@@ -83,6 +85,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
   receiverNameInfo!: AdminResult;
   shipmentCarrierInfo!: AdminResult;
   className!: string;
+  licenseClassName!: string;
 
   dialog!: DialogService;
 
@@ -118,8 +121,8 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       otherReceiverName,
       shipmentApproximateValue,
       shipmentCarrier,
-      fullSerial,
-      exportedBookFullSerial
+      oldFullSerial, // order number
+      oldBookFullSerial // document number
     } = this;
 
     return {
@@ -147,8 +150,8 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       otherReceiverName: controls ? [otherReceiverName, [CustomValidators.maxLength(200)]] : otherReceiverName,
       shipmentApproximateValue: controls ? [shipmentApproximateValue, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.decimal(2)]] : shipmentApproximateValue,
       shipmentCarrier: controls ? [shipmentCarrier, [CustomValidators.required]] : shipmentCarrier,
-      fullSerial: controls ? [fullSerial] : fullSerial,
-      exportedBookFullSerial: controls ? [exportedBookFullSerial] : exportedBookFullSerial,
+      oldFullSerial: controls ? [oldFullSerial, [CustomValidators.maxLength(250)]] : oldFullSerial,
+      oldBookFullSerial: controls ? [oldBookFullSerial, [CustomValidators.maxLength(250)]] : oldBookFullSerial,
     };
   }
 

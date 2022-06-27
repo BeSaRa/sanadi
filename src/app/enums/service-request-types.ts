@@ -17,3 +17,8 @@ export enum UrgentInterventionAnnouncementRequestType {
   START = 2,
   EDIT = 3
 }
+
+export enum CustomsExemptionRequestTypes {
+  NEW = 1,
+  CANCEL = 5
+}

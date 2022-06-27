@@ -9,7 +9,7 @@ import {LangService} from '@app/services/lang.service';
 import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
 import {catchError, distinctUntilChanged, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ReceiverTypes} from '@app/enums/receiver-type.enum';
 import {LinkedProjectTypes} from '@app/enums/linked-project-type.enum';
@@ -87,16 +87,16 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     return this.form.get('country')!;
   }
 
-  get fullSerial(): AbstractControl {
-    return this.form.get('fullSerial')!;
+  get orderNumberField(): AbstractControl {
+    return this.form.get('oldFullSerial')!;
   }
 
-  get exportedBookFullSerial(): AbstractControl {
-    return this.form.get('exportedBookFullSerial')!;
+  get documentNumberField(): AbstractControl {
+    return this.form.get('oldBookFullSerial')!;
   }
 
   isCancelRequestType(): boolean {
-    return (this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL);
+    return (this.requestType.value && this.requestType.value === CustomsExemptionRequestTypes.CANCEL);
   }
 
   isEditRequestTypeAllowed(): boolean {
@@ -107,7 +107,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   isEditOrderNoAndDocNoAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return (isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW);
+    return (isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CustomsExemptionRequestTypes.NEW);
   }
 
   _getNewInstance(): CustomsExemptionRemittance {
@@ -139,9 +139,9 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.handleReadonly();
 
     if (this.fromDialog) {
-      this.loadSelectedDocumentByOrderNumber(this.model!.fullSerial, () => {
-        this.fullSerial.updateValueAndValidity();
-        this.exportedBookFullSerial.updateValueAndValidity();
+      this.loadSelectedDocumentByOrderNumber(this.model!.oldFullSerial, () => {
+        this.orderNumberField.updateValueAndValidity();
+        this.documentNumberField.updateValueAndValidity();
       });
     }
   }
@@ -150,7 +150,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     if (!orderNumber) {
       return;
     }
-    this.loadDocumentsByCriteria({fullSerial: this.model!.fullSerial})
+    this.loadDocumentsByCriteria({fullSerial: orderNumber})
       .pipe(
         takeUntil(this.destroy$),
         filter(document => !!document),
@@ -165,52 +165,52 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     });
   }
 
+  private _handleOrderNumberValidators(isRequired: boolean): void {
+    if (isRequired) {
+      this.orderNumberField.addValidators([CustomValidators.required, (control) => {
+        return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
+      }]);
+    } else {
+      this.orderNumberField.removeValidators([CustomValidators.required]);
+    }
+    this.orderNumberField.updateValueAndValidity();
+  }
+
+  private _handleDocumentNumberValidators(isRequired: boolean): void {
+    if (isRequired) {
+      this.documentNumberField.addValidators([CustomValidators.required, (control) => {
+        return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
+      }]);
+    } else {
+      this.documentNumberField.removeValidators([CustomValidators.required]);
+    }
+    this.documentNumberField.updateValueAndValidity();
+  }
+
   listenToOrderNoChange() {
-    this.fullSerial.valueChanges
+    this.orderNumberField.valueChanges
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(() => {
-        if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
-          this.fullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
-          }]);
-          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
-          }]);
-
-          this.fullSerial.updateValueAndValidity();
-          this.exportedBookFullSerial.updateValueAndValidity();
-        } else if (this.fullSerial.value) {
-          this.exportedBookFullSerial.clearValidators();
-          this.exportedBookFullSerial.updateValueAndValidity();
-          this.fullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
-          }]);
-          this.fullSerial.updateValueAndValidity();
+        if (!this.orderNumberField.value && !this.documentNumberField.value) {
+          this._handleOrderNumberValidators(true);
+          this._handleDocumentNumberValidators(true);
+        } else if (this.orderNumberField.value) {
+          this._handleOrderNumberValidators(true);
+          this._handleDocumentNumberValidators(false);
         }
       });
   }
 
   listenToDocNoChange() {
-    this.exportedBookFullSerial.valueChanges
+    this.documentNumberField.valueChanges
       .pipe(takeUntil(this.destroy$), distinctUntilChanged())
       .subscribe(() => {
-        if (!this.fullSerial.value && !this.exportedBookFullSerial.value) {
-          this.fullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
-          }]);
-          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
-          }]);
-
-          this.fullSerial.updateValueAndValidity();
-          this.exportedBookFullSerial.updateValueAndValidity();
-        } else if (this.exportedBookFullSerial.value) {
-          this.fullSerial.clearValidators();
-          this.fullSerial.updateValueAndValidity();
-          this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
-            return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
-          }]);
-          this.exportedBookFullSerial.updateValueAndValidity();
+        if (!this.orderNumberField.value && !this.documentNumberField.value) {
+          this._handleOrderNumberValidators(true);
+          this._handleDocumentNumberValidators(true);
+        } else if (this.documentNumberField.value) {
+          this._handleOrderNumberValidators(false);
+          this._handleDocumentNumberValidators(true);
         }
       });
   }
@@ -270,7 +270,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.requestType.value !== ServiceRequestTypes.NEW && !this.selectedDocument) {
+    if (this.requestType.value !== CustomsExemptionRequestTypes.NEW && !this.selectedDocument) {
       this.dialog.error(this.lang.map.please_select_document_to_complete_save);
       return false;
     } else {
@@ -341,22 +341,20 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.form.reset();
     this.model = this._getNewInstance();
     this.setSelectedDocument(undefined, true);
-    this.exportedBookFullSerial.clearValidators();
-    this.exportedBookFullSerial.updateValueAndValidity();
-    this.fullSerial.clearValidators();
-    this.fullSerial.updateValueAndValidity();
+    this._handleOrderNumberValidators(false);
+    this._handleDocumentNumberValidators(false);
     this.receiverNamesList = [];
   }
 
   documentSearchByOrderNo($event: Event): void {
     $event?.preventDefault();
-    const value = this.fullSerial.value && this.fullSerial.value.trim();
+    const value = this.orderNumberField.value && this.orderNumberField.value.trim();
     this.documentSearchByOrderNo$.next(value);
   }
 
   documentSearchByDocNo($event: Event): void {
     $event?.preventDefault();
-    const value = this.exportedBookFullSerial.value && this.exportedBookFullSerial.value.trim();
+    const value = this.documentNumberField.value && this.documentNumberField.value.trim();
     this.documentSearchByDocNo$.next(value);
   }
 
@@ -368,8 +366,8 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.documentSearchByOrderNo$
       .pipe(takeUntil(this.destroy$))
       .pipe(
-        exhaustMap((fullSerial) => {
-          return this.loadDocumentsByCriteria({fullSerial: fullSerial})
+        exhaustMap((oldBookSerial) => {
+          return this.loadDocumentsByCriteria({fullSerial: oldBookSerial})
             .pipe(catchError(() => of([])));
         })
       )
@@ -394,8 +392,8 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     this.documentSearchByDocNo$
       .pipe(takeUntil(this.destroy$))
       .pipe(
-        exhaustMap((exportedBookFullSerial) => {
-          return this.loadDocumentsByCriteria({exportedBookFullSerial: exportedBookFullSerial})
+        exhaustMap((oldBookFullSerial) => {
+          return this.loadDocumentsByCriteria({exportedBookFullSerial: oldBookFullSerial})
             .pipe(catchError(() => of([])));
         })
       )
@@ -435,9 +433,13 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       // update form fields if i have document
       let value: any = new CustomsExemptionRemittance().clone(documentDetails);
       value.requestType = this.requestType.value;
+      value.oldFullSerial = documentDetails.fullSerial; // order number
+      value.oldBookFullSerial = documentDetails.exportedBookFullSerial; // document number
       value.documentTitle = '';
 
       delete value.id;
+      delete value.fullSerial;
+      delete value.exportedBookFullSerial;
 
       this._updateForm(value);
     }
@@ -454,24 +456,20 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
     // if no requestType or (requestType = new)
     // if new record or draft, reset order no and document no and its validations
-    if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+    if (!requestTypeValue || requestTypeValue === CustomsExemptionRequestTypes.NEW) {
       if (!this.model?.id || this.model.canCommit()) {
-        this.fullSerial.reset();
-        this.fullSerial.setValidators([]);
-        this.exportedBookFullSerial.reset();
-        this.exportedBookFullSerial.setValidators([]);
+        this.orderNumberField.reset();
+        this.documentNumberField.reset();
+
+        this._handleOrderNumberValidators(false);
+        this._handleDocumentNumberValidators(false);
+
         this.setSelectedDocument(undefined, true);
       }
     } else {
-      this.fullSerial.setValidators([CustomValidators.required, (control) => {
-        return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
-      }]);
-      this.exportedBookFullSerial.setValidators([CustomValidators.required, (control) => {
-        return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
-      }]);
+      this._handleOrderNumberValidators(true);
+      this._handleDocumentNumberValidators(true);
     }
-    this.fullSerial.updateValueAndValidity();
-    this.exportedBookFullSerial.updateValueAndValidity();
   }
 
   handleCountryChange(value: number, userInteraction: boolean = false): void {
