@@ -30,7 +30,6 @@ export class MenuItemService {
   load(prepare: boolean = true): Observable<MenuItem[]> {
     return this._load().pipe(
       tap((menuItems) => this.menuItems = menuItems),
-      tap(items => console.log(items)),
       tap(_ => prepare ? this.prepareMenuItems() : null)
     );
   }
