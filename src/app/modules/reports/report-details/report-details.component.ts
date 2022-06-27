@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { ConfigurationService } from "@services/configuration.service";
-import { pluck, takeUntil } from "rxjs/operators";
+import { takeUntil, tap } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { LangService } from "@services/lang.service";
 
@@ -33,9 +33,9 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
   private prepareSafeUrl(): void {
     this.activeRoute.paramMap
       .pipe(takeUntil(this.destroy$))
-      .pipe(pluck<any, string>('url'))
-      .subscribe((url: string) => {
-        this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.config.CONFIG.REPORTS_URL + url + '?rs:embed=true')
+      .pipe(tap(v => console.log(v)))
+      .subscribe((params) => {
+        this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.config.CONFIG.REPORTS_URL + params.get('url') + '?rs:embed=true')
       })
   }
 }
