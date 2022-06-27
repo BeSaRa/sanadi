@@ -152,7 +152,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
     };
   }
 
-  approve(): DialogRef {
+  /*approve(): DialogRef {
     return this.dialog.show(CustomsExemptionApproveTaskPopupComponent, {
       model: this,
       action: WFResponseType.APPROVE,
@@ -164,7 +164,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       model: this,
       action: WFResponseType.FINAL_APPROVE,
     });
-  }
+  }*/
 
   buildApprovalForm(controls: boolean = false): any {
     const {followUpDate} = this;
