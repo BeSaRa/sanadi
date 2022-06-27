@@ -204,7 +204,7 @@
                      [readonly]="(isCancelRequestType() || readonly)" placeholder="{{lang.map.select}}"
                      id="receiverName" [notFoundText]="lang.map.msg_not_found" appendTo="body"
                      formControlName="receiverName" validationClasses="receiverName">
-              <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
+            <ng-option [value]="option.fnId" *ngFor="let option of receiverNamesList">
               {{option.getName()}}
             </ng-option>
           </ng-select>
@@ -227,7 +227,8 @@
                  class="form-label">{{lang.map.shipment_approximate_value}}</label>
           <input id="shipmentApproximateValue" validationClasses="shipmentApproximateValue"
                  [readonly]="(isCancelRequestType() || readonly)" formControlName="shipmentApproximateValue"
-                 class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" trimInput>
+                 class="form-control" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                 [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR" trimInput>
           <app-field-error-message controlName="shipmentApproximateValue"></app-field-error-message>
         </div>
       </div>
@@ -237,7 +238,8 @@
           <label asteriskIfRequired="description" for="description"
                  class="form-label">{{lang.map.lbl_description}}</label>
           <textarea name="description" formControlName="description" validationClasses="description"
-                    id="description" rows="4" class="form-control" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    id="description" rows="4" class="form-control"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
                     [readonly]="(isCancelRequestType() || readonly)" trimInput></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>

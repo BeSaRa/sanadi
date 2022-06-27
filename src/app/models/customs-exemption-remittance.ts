@@ -145,7 +145,7 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
       receiverType: controls ? [receiverType, [CustomValidators.required]] : receiverType,
       receiverName: controls ? [receiverName, [CustomValidators.required]] : receiverName,
       otherReceiverName: controls ? [otherReceiverName, [CustomValidators.maxLength(200)]] : otherReceiverName,
-      shipmentApproximateValue: controls ? [shipmentApproximateValue, [CustomValidators.required, CustomValidators.maxLength(50)]] : shipmentApproximateValue,
+      shipmentApproximateValue: controls ? [shipmentApproximateValue, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.decimal(2)]] : shipmentApproximateValue,
       shipmentCarrier: controls ? [shipmentCarrier, [CustomValidators.required]] : shipmentCarrier,
       fullSerial: controls ? [fullSerial] : fullSerial,
       exportedBookFullSerial: controls ? [exportedBookFullSerial] : exportedBookFullSerial,
