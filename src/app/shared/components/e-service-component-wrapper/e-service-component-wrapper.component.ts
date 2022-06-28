@@ -36,6 +36,7 @@ import {InternalUser} from '@app/models/internal-user';
 import {ChecklistItem} from '@app/models/checklist-item';
 import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -86,6 +87,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   loadAttachments: boolean = false;
 
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  actionIconsEnum = ActionIconsEnum;
 
   checklist: ChecklistItem[] = [];
   saveTypes: typeof SaveTypes = SaveTypes;
@@ -216,6 +218,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildSearchActions(): void {
     this.searchActions = [
+      // save
       {
         type: 'action',
         label: 'btn_save',
@@ -228,6 +231,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         }
       },
+      // launch
       {
         type: 'action',
         label: 'launch',
@@ -236,6 +240,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.launchAction(item);
         }
       },
+      // view logs
       {
         type: 'action',
         icon: 'mdi-view-list-outline',
@@ -245,6 +250,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           item.viewLogs();
         }
       },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => true,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
+      },
+      // back
       {
         type: 'action',
         class: 'btn-secondary',
@@ -257,6 +272,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildAddAction(): void {
     this.addActions = [
+      // save
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
@@ -272,6 +288,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         }
       },
+      // launch
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
@@ -281,6 +298,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.launch();
         }
       },
+      // save as draft
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
@@ -293,6 +311,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT);
         }
       },
+      // reset
       {
         class: 'btn-secondary',
         type: 'action',
@@ -333,6 +352,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'logs',
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+      },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => true,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
       },
       // back
       {
@@ -693,6 +721,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'logs',
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+      },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => true,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
       },
       // back
       {
