@@ -754,5 +754,18 @@
     "group": "main",
     "itemOrder": 10,
     "svg": null
+  },
+  {
+    "id": 59,
+    "langKey": "menu_external_org_affiliation_request",
+    "path": "/home/e-services/external-org-affiliation-request",
+    "icon": "mdi-file-chart-outline",
+    "isSvg": false,
+    "permission": "EXTERNAL_ORG_AFFILIATION_REQUEST",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "main",
+    "itemOrder": 10,
+    "svg": null
   }
 ]

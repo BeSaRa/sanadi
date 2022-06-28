@@ -26,6 +26,7 @@ import {
   FilterInboxRequestPopupComponent
 } from './poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {SelectTemplatePopupComponent} from './poups/select-template-popup/select-template-popup.component';
+import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {SelectTemplatePopupComponent} from './poups/select-template-popup/select
     InternationalCooperationComponent,
     InitialExternalOfficeApprovalComponent,
     FinalExternalOfficeApprovalComponent,
+    ExternalOrgAffiliationComponent,
     SelectLicensePopupComponent,
     BankBranchComponent,
     BankAccountComponent,

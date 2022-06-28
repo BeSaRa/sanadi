@@ -510,6 +510,7 @@ export interface ILanguageKeys {
   subject: string;
   menu_inquiries_and_complaints: string;
   menu_consultations: string;
+  menu_external_org_affiliation_request: string;
   recommendation_has_been_saved_successfully: string;
   comment_has_been_saved_successfully: string;
   type_your_recommendation: string;

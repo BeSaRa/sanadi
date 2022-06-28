@@ -90,5 +90,6 @@
   "DONOR": "admin/donor",
   "URGENT_JOINT_RELIEF_CAMPAIGN": "/urgent-joint-relief-campaign",
   "URGENT_INTERVENTION_REPORTING": "/urgent-intervention-announcement",
-  "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation"
+  "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation",
+  "EXTERNAL_ORG_AFFILIATION_REQUEST": "/ExternalOrgAffiliationRequest"
 }

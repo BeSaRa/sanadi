@@ -78,7 +78,21 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'FinalExternalOfficeApprovalComponent'
     }
+  },
+  {
+    path: 'external-org-affiliation-request',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.EXTERNAL_ORG_AFFILIATION_REQUEST,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'ExternalOrgAffiliationComponent'
+    }
   }
+
+
 ];
 
 @NgModule({
