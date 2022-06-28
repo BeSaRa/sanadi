@@ -270,18 +270,8 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return servicesMap[caseType];
   }
 
-  sendToSupervisionAndControlDepartment(): Observable<any> {
-    let service = this.inboxService!.getService(this.caseType),
-      taskName: string = this.getAskSingleWFResponseByCaseType();
-    if (taskName.startsWith('ask:')) {
-      taskName = taskName.split('ask:')[1];
-    } else if (taskName.startsWith('askSingle:')) {
-      taskName = taskName.split('askSingle:')[1];
-    }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), { taskName: taskName }, service);
-  }
 
-  sendToRiskAndComplianceDepartment(): Observable<any> {
+  sendToSingleDepartment(): Observable<any> {
     let service = this.inboxService!.getService(this.caseType),
       taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {

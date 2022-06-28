@@ -181,8 +181,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     });
   }
 
-  actionSendToSupervisionAndControlDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
-    item.sendToSupervisionAndControlDepartment().subscribe((_) => {
+  actionSendToSingleDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
+    item.sendToSingleDepartment().subscribe((_) => {
       viewDialogRef?.close();
       this.reloadInbox$.next(null);
     });
@@ -375,11 +375,18 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionSendToMultiDepartments(item, viewDialogRef);
         }
       },
-      // send to Supervision and control department
+      // send to single department (Supervision and control, risk and compliance)
       {
         type: 'action',
         icon: 'mdi-send-circle',
-        label: 'send_to_supervision_and_control_department',
+        label: (item: QueryResult) => {
+          let isSendToRiskAndCompliance: boolean = (item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT));
+
+          return isSendToRiskAndCompliance ? this.lang.map.send_to_risk_and_compliance_department : this.lang.map.send_to_supervision_and_control_department;
+        },
         show: (item: QueryResult) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
@@ -388,10 +395,11 @@ export class UserInboxComponent implements OnInit, OnDestroy {
             || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
-          this.actionSendToSupervisionAndControlDepartment(item, viewDialogRef);
+          this.actionSendToSingleDepartment(item, viewDialogRef);
         }
       },
       // send to user

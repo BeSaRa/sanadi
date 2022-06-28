@@ -198,7 +198,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return servicesMap[caseType];
   }
 
-  sendToSupervisionAndControlDepartment(_claimBefore: boolean = false): Observable<boolean> {
+  sendToSingleDepartment(_claimBefore: boolean = false): Observable<boolean> {
     let service = this.service.getService(this.BD_CASE_TYPE),
       taskName: string = this.getAskSingleWFResponseByCaseType();
     if (taskName.startsWith('ask:')) {

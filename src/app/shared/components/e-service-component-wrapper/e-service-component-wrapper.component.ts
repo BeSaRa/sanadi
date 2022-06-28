@@ -398,37 +398,32 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToMultiDepartmentsAction(item);
         }
       },
-      // send to Supervision and control department
+      // send to single department (Supervision and control, risk and compliance)
       {
         type: 'action',
         icon: 'mdi-send-circle',
-        label: 'send_to_supervision_and_control_department',
-        askChecklist: true,
-        show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT);
+        label: (item: CaseModel<any, any>) => {
+          let isSendToRiskAndCompliance: boolean = (item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT));
+
+          return isSendToRiskAndCompliance ? this.lang.map.send_to_risk_and_compliance_department : this.lang.map.send_to_supervision_and_control_department;
         },
-        onClick: (item: CaseModel<any, any>) => {
-          this.sendToSupervisionAndControlDepartmentAction(item);
-        }
-      },
-      // send to risk and compliance department
-      {
-        type: 'action',
-        icon: 'mdi-send-circle',
-        label: 'send_to_risk_and_compliance_department',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.sendToRiskAndComplianceDepartmentAction(item);
+          this.sendToSingleDepartmentAction(item);
         }
       },
       // send to user
@@ -810,15 +805,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
-  private sendToSupervisionAndControlDepartmentAction(item: CaseModel<any, any>) {
-    item.sendToSupervisionAndControlDepartment().subscribe(() => {
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      this.navigateToSamePageThatUserCameFrom();
-    });
-  }
-
-  private sendToRiskAndComplianceDepartmentAction(item: CaseModel<any, any>) {
-    item.sendToRiskAndComplianceDepartment().subscribe(() => {
+  private sendToSingleDepartmentAction(item: CaseModel<any, any>) {
+    item.sendToSingleDepartment().subscribe(() => {
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.navigateToSamePageThatUserCameFrom();
     });
