@@ -107,7 +107,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
         const sub = this.service.activate(model.id).subscribe(_ => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_success_activate_followup_configuration);
-          this.reload$.next(1);
+          this.reload$.next(this.serviceData.caseType);
           sub.unsubscribe();
         });
       }
@@ -123,7 +123,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
         const sub = this.service.deactivate(model.id).subscribe(_ => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_success_deactivate_followup_configuration);
-          this.reload$.next(1);
+          this.reload$.next(this.serviceData.caseType);
           sub.unsubscribe();
         });
       }
