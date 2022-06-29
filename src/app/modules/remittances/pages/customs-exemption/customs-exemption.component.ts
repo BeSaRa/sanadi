@@ -258,10 +258,11 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
           if (this.projectLicense.disabled) {
             this.projectLicense.enable();
           }
-          this.projectLicense.setValidators(CustomValidators.required);
+          this.projectLicense.addValidators(CustomValidators.required);
           this.displayProjectLicenseSearchButton = true;
         } else {
-          this.projectLicense.clearValidators();
+          this.projectLicense.removeValidators(CustomValidators.required);
+          this.projectLicense.reset();
           this.projectLicense.disable();
           this.displayProjectLicenseSearchButton = false;
         }
