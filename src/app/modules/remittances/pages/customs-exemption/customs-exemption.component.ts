@@ -10,7 +10,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
-import {catchError, distinctUntilChanged, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ReceiverTypes} from '@app/enums/receiver-type.enum';
 import {LinkedProjectTypes} from '@app/enums/linked-project-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -51,12 +51,11 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   }
 
   requestTypes: Lookup[] = this.lookupService.listByCategory.CustomsExemptionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
-
-  countriesList: Country[] = [];
   receiverTypes: Lookup[] = this.lookupService.listByCategory.ReceiverType;
   shipmentSources: Lookup[] = this.lookupService.listByCategory.ShipmentSource;
   linkedProjects: Lookup[] = this.lookupService.listByCategory.LinkedProject;
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
+  countriesList: Country[] = [];
   receiverNamesList: AdminResult[] = [];
 
   get requestType(): AbstractControl {
@@ -134,8 +133,6 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
   _afterBuildForm(): void {
     this.listenToLinkedProjectChanges();
-    this.listenToOrderNoChange();
-    this.listenToDocNoChange();
     this.handleReadonly();
 
     if (this.fromDialog) {
@@ -167,52 +164,24 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
   private _handleOrderNumberValidators(isRequired: boolean): void {
     if (isRequired) {
-      this.orderNumberField.addValidators([CustomValidators.required, (control) => {
+      this.orderNumberField.setValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
         return this.selectedDocument && this.selectedDocument?.fullSerial === control.value ? null : {select_document: true};
       }]);
     } else {
-      this.orderNumberField.removeValidators([CustomValidators.required]);
+      this.orderNumberField.clearValidators();
     }
     this.orderNumberField.updateValueAndValidity();
   }
 
   private _handleDocumentNumberValidators(isRequired: boolean): void {
     if (isRequired) {
-      this.documentNumberField.addValidators([CustomValidators.required, (control) => {
+      this.documentNumberField.addValidators([CustomValidators.required, CustomValidators.maxLength(250), (control) => {
         return this.selectedDocument && this.selectedDocument?.exportedBookFullSerial === control.value ? null : {select_document: true};
       }]);
     } else {
-      this.documentNumberField.removeValidators([CustomValidators.required]);
+      this.documentNumberField.clearValidators();
     }
     this.documentNumberField.updateValueAndValidity();
-  }
-
-  listenToOrderNoChange() {
-    this.orderNumberField.valueChanges
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-      .subscribe(() => {
-        if (!this.orderNumberField.value && !this.documentNumberField.value) {
-          this._handleOrderNumberValidators(true);
-          this._handleDocumentNumberValidators(true);
-        } else if (this.orderNumberField.value) {
-          this._handleOrderNumberValidators(true);
-          this._handleDocumentNumberValidators(false);
-        }
-      });
-  }
-
-  listenToDocNoChange() {
-    this.documentNumberField.valueChanges
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
-      .subscribe(() => {
-        if (!this.orderNumberField.value && !this.documentNumberField.value) {
-          this._handleOrderNumberValidators(true);
-          this._handleDocumentNumberValidators(true);
-        } else if (this.documentNumberField.value) {
-          this._handleOrderNumberValidators(false);
-          this._handleDocumentNumberValidators(true);
-        }
-      });
   }
 
   handleReadonly(): void {
