@@ -1,7 +1,8 @@
+import { JobTitle } from './../models/job-title';
 import { AdminResult } from './../models/admin-result';
 import { IMyDateModel } from 'angular-mydatepicker';
 export interface IEmployeeDto {
-  id: number;
+  id: number | null;
   arabicName: string;
   englishName: string;
   jobTitleId: number;
@@ -24,5 +25,16 @@ export interface IEmployeeDto {
   updatedOn: string | IMyDateModel;
   qId: string;
   updatedBy: number;
-  jobTitleInfo: AdminResult;
+  jobTitleInfo: AdminResult | JobTitle | undefined;
+  contractStatusInfo: AdminResult;
+  contractTypeInfo: AdminResult;
+  genderInfo: AdminResult;
+  identificationTypeInfo: AdminResult;
+  jobContractTypeInfo: AdminResult;
+  nationalityInfo: AdminResult;
+  orgUnitInfo: AdminResult;
+  statusInfo: AdminResult;
+  countryInfo: AdminResult;
+  contractLocationTypeInfo: AdminResult;
+  qInfo: AdminResult;
 }

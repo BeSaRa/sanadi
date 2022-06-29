@@ -1,6 +1,7 @@
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { CustomValidators } from './../../../validators/custom-validators';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { IdentificationType } from './../../../enums/identification-type.enum';
-import { JobTitleService } from '@app/services/job-title.service';
 import { JobTitle } from '@app/models/job-title';
 import { EmploymentRequestType } from '@app/enums/employment-request-type';
 import { JobApplication } from "./../../../models/job-application";
@@ -31,7 +32,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   form!: FormGroup;
   starterId: number = 0;
-  employeesList: Employee[] = [];
+  employeesList: Partial<Employee>[] = [];
   JobTitleList: JobTitle[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
@@ -76,6 +77,10 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.form.patchValue({
           ...r,
         });
+        this.handleOfficeNameValidationsByContractLocationType();
+        this.handleContractExpireDateValidationsByContractType();
+        this.handleEndDateValidationsByContractStatus();
+        this.handleIdentityNumberValidationsByIdentificationType();
       },
     },
     {
@@ -104,52 +109,53 @@ export class EmployeeFormPopupComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: DialogService,
     private lookupService: LookupService,
-    private jobTitleService: JobTitleService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: JobApplicationService;
       parentForm: FormGroup;
       employees: Employee[];
       model: JobApplication | undefined;
-      operation: number
+      operation: number,
+      jobTitleList: JobTitle[]
     }
   ) { }
 
   ngOnInit() {
     this._buildForm();
-    if (this.category.value == LookupEmploymentCategory.APPROVAL) {
-      this.jobTitleService.getSystemJobTitle().subscribe((data: JobTitle[]) => {
-        this.JobTitleList = [...data]
-      })
-    } else {
-      this.jobTitleService.getExternalJobTitle().subscribe((data: JobTitle[]) => {
-        this.JobTitleList = [...data]
-      })
-    }
+    this.JobTitleList = this.data.jobTitleList
   }
 
   _buildForm() {
     this.form = this.fb.group({
       id: [0],
-      arabicName: ["", Validators.required],
-      englishName: ["", Validators.required],
-      jobTitleId: [null, Validators.required],
-      identificationType: [1, Validators.required],
-      identificationNumber: ["", Validators.required],
+      arabicName: ["", [
+        CustomValidators.required,
+        CustomValidators.pattern('AR_ONLY'),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
+      englishName: ["", [
+        CustomValidators.required,
+        CustomValidators.pattern('ENG_ONLY'),
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+      ]],
+      jobTitleId: [null, CustomValidators.required],
+      identificationType: [1, CustomValidators.required],
+      identificationNumber: ["", [CustomValidators.required, CustomValidators.maxLength(50)]],
       passportNumber: [""],
-      gender: [null, Validators.required],
-      nationality: [null, Validators.required],
-      phone: ["", Validators.required],
-      department: ["", Validators.required],
-      contractLocation: ["", Validators.required],
-      contractLocationType: [null, Validators.required],
+      gender: [null, CustomValidators.required],
+      nationality: [null, CustomValidators.required],
+      phone: ["", [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
+      department: ["", CustomValidators.required],
+      contractLocation: ["", CustomValidators.required],
+      contractLocationType: [null, CustomValidators.required],
       officeName: [""],
-      contractStatus: [null, Validators.required],
-      contractType: [null, Validators.required],
-      jobContractType: [null, Validators.required],
+      contractStatus: [null, CustomValidators.required],
+      contractType: [null, CustomValidators.required],
+      jobContractType: [null, CustomValidators.required],
       contractExpiryDate: [new Date()],
-      workStartDate: [new Date(), Validators.required],
-      workEndDate: [new Date(), Validators.required],
+      workStartDate: [new Date(), CustomValidators.required],
+      workEndDate: [new Date(), CustomValidators.required],
     });
     this.data.employees.forEach((ei, i) => {
       if (!this.data.employees[i].id) {
@@ -167,10 +173,20 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   submit() {
     if (!this.isApproval()) {
+      this.employeesList = this.employeesList.map((e: Partial<Employee>) => {
+        return {
+          ...e,
+          id: (e.id && e.id > 0) ? e.id : null
+        }
+      })
       this.data.service.onSubmit.emit(this.employeesList);
     } else {
       if (this.form.valid) {
-        this.data.service.onSubmit.emit([{ ...this.form.value }]);
+        this.data.service.onSubmit.emit([{
+          ...this.form.value,
+          jobTitleInfo: this.selectedJobTitle,
+          id: this.form.value.id > 0 ? this.form.value.id : null
+        }]);
       }
     }
   }
@@ -238,7 +254,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     // set validators as empty
     this.workEndDate?.setValidators([]);
     if (!this.isFinishedContract()) {
-      this.workEndDate.setValidators([Validators.required]);
+      this.workEndDate.setValidators([CustomValidators.required]);
     }
     this.workEndDate.updateValueAndValidity();
   }
@@ -256,8 +272,17 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
   }
-
-
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName,
+      toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        workStartDate: this.workStartDate,
+        workEndDate: this.workEndDate
+      }
+    });
+  }
   isIdentificationNumberType() {
     return this.identificationType.value == IdentificationType.Identification
   }
@@ -282,7 +307,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   cancelRequestType() {
     return this.requestType.value != EmploymentRequestType.CANCEL;
   }
-
   // TODO: complete it
   get isAttachmentsAdded() {
     return true;
@@ -294,6 +318,9 @@ export class EmployeeFormPopupComponent implements OnInit {
     ) && this.cancelRequestType()
   }
 
+  get workStartDate() {
+    return this.form.controls.workStartDate as FormControl
+  }
   get workEndDate() {
     return this.form.controls.workEndDate as FormControl;
   }

@@ -1,3 +1,4 @@
+import { JobTitle } from './../models/job-title';
 import { Observable } from 'rxjs';
 import { EmployeeInterceptor } from './../model-interceptors/employee-interceptor';
 import { Generator } from '@app/decorators/generator';
@@ -44,7 +45,7 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
   jsonSearchFile: string = "job_application_search-form.json";
   serviceKey: keyof ILanguageKeys = "menu_job_application";
-  onSubmit: EventEmitter<Employee[]> = new EventEmitter();
+  onSubmit: EventEmitter<Partial<Employee>[]> = new EventEmitter();
 
   constructor(
     private urlService: UrlService,
@@ -62,7 +63,7 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     return "JobApplicationComponent";
   }
 
-  openAddNewEmployee(form: FormGroup, employees: Employee[], model: JobApplication | undefined, operation: number): DialogRef {
+  openAddNewEmployee(form: FormGroup, employees: Partial<Employee>[], model: JobApplication | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {
@@ -70,7 +71,8 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
         parentForm: form,
         employees,
         model,
-        operation
+        operation,
+        jobTitleList
       },
       { fullscreen: true }
     );

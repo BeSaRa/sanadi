@@ -1,8 +1,8 @@
+import { Employee } from './../../../models/employee';
 import { LookupService } from "./../../../services/lookup.service";
 import { Lookup } from "./../../../models/lookup";
 import { IGridAction } from "./../../../interfaces/i-grid-action";
 import { Component, Input, OnInit } from "@angular/core";
-import { IEmployeeDto } from "../../../interfaces/i-employee-dto";
 import { LangService } from "@app/services/lang.service";
 
 @Component({
@@ -24,7 +24,7 @@ export class EmployeesDataComponent implements OnInit {
     return !this.actions.length ? this._displayedColumns : [...this._displayedColumns
       , "actions"]
   }
-  @Input() employees: IEmployeeDto[] = [];
+  @Input() employees: Partial<Employee>[] = [];
   @Input() actions: IGridAction[] = [];
   constructor(public lang: LangService, private lookupService: LookupService) { }
 

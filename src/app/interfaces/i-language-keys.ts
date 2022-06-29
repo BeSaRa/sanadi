@@ -1086,4 +1086,5 @@ export interface ILanguageKeys {
   inquiries: string;
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
+  menu_test_page: string;
 }

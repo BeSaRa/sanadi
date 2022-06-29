@@ -98,7 +98,7 @@
           controlName="department"
         ></app-field-error-message>
       </div>
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
         <label
           asteriskIfRequired="jobTitleId"
           for="jobTitleId"
@@ -114,6 +114,7 @@
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
           id="jobTitleId"
+          validationClasses="jobTitleId"
           formControlName="jobTitleId"
         >
           <ng-option *ngFor="let option of JobTitleList" [value]="option.id">{{
@@ -144,6 +145,7 @@
           [readonly]="!isEditRequestTypeAllowed"
           id="identificationType"
           formControlName="identificationType"
+          validationClasses="identificationType"
           (change)="handleIdentityNumberValidationsByIdentificationType()"
         >
           <ng-option
@@ -219,6 +221,7 @@
           [readonly]="!isEditRequestTypeAllowed"
           id="gender"
           formControlName="gender"
+          validationClasses="gender"
         >
           <ng-option
             *ngFor="let option of GenderList"
@@ -244,6 +247,7 @@
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
           id="nationality"
+          validationClasses="nationality"
           formControlName="nationality"
         >
           <ng-option
@@ -273,6 +277,7 @@
           [readonly]="!isEditRequestTypeAllowed"
           (change)="handleOfficeNameValidationsByContractLocationType()"
           id="contractLocationType"
+          validationClasses="contractLocationType"
           formControlName="contractLocationType"
         >
           <ng-option
@@ -319,6 +324,7 @@
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
           id="contractType"
+          validationClasses="contractType"
           formControlName="contractType"
           (change)="handleContractExpireDateValidationsByContractType()"
         >
@@ -348,6 +354,7 @@
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
           id="jobContractType"
+          validationClasses="jobContractType"
           formControlName="jobContractType"
         >
           <ng-option
@@ -375,6 +382,7 @@
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
           [readonly]="!isEditRequestTypeAllowed"
+          validationClasses="contractStatus"
           id="contractStatus"
           (change)="handleEndDateValidationsByContractStatus()"
           formControlName="contractStatus"
@@ -407,6 +415,7 @@
             #dpworkStartDate="angular-mydatepicker"
             angular-mydatepicker
             validationClasses="workStartDate"
+            (inputFieldChanged)="onDateChange($event, 'workStartDate', 'workEndDate')"
           ></div>
           <app-field-error-message
             controlName="workStartDate"
@@ -431,6 +440,7 @@
             #dpworkEndDate="angular-mydatepicker"
             angular-mydatepicker
             validationClasses="workEndDate"
+            (inputFieldChanged)="onDateChange($event, 'workStartDate', 'workEndDate')"
           ></div>
           <app-field-error-message
             controlName="workEndDate"

@@ -62,6 +62,17 @@
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
+      },
+      {
+        "key": "oldLicenseId",
+        "type": "input",
+        "label": "approval_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
       }
     ]
   }

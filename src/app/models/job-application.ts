@@ -26,7 +26,7 @@ export class JobApplication
   requestType!: number;
   category!: number;
   description: string = "";
-  employeeInfoDTOs: Employee[] = [];
+  employeeInfoDTOs: Partial<Employee>[] = [];
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;

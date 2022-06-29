@@ -1,5 +1,4 @@
 import { AdminResult } from './../models/admin-result';
-import { JobTitle } from './../models/job-title';
 import { IMyDateModel } from "angular-mydatepicker";
 import { DateUtils } from "./../helpers/date-utils";
 import { Employee } from "./../models/employee";
@@ -7,7 +6,6 @@ import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 
 export class EmployeeInterceptor implements IModelInterceptor<Employee> {
   send(model: Partial<Employee>): Partial<Employee> {
-    delete model.id;
     model.contractExpiryDate = !model.contractExpiryDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
@@ -24,17 +22,29 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
         model.workEndDate as unknown as IMyDateModel
       )?.toISOString();
     delete model.jobTitleInfo
+    delete model.contractStatusInfo
+    delete model.contractTypeInfo
+    delete model.genderInfo
+    delete model.identificationTypeInfo
+    delete model.jobContractTypeInfo
+    delete model.nationalityInfo
+    delete model.orgUnitInfo
+    delete model.statusInfo
+    delete model.countryInfo
+    delete model.contractLocationTypeInfo
+    delete model.qId
+    delete model.qInfo
     return model;
   }
   receive(model: Employee): Employee {
     model.workStartDate = DateUtils.changeDateToDatepicker(model.workStartDate);
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
     model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
-    model.jobTitleInfo = AdminResult.createInstance({
+    model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance({
       id: model.jobTitleInfo.id,
       arName: model.jobTitleInfo.arName,
       enName: model.jobTitleInfo.enName,
-    });
+    }));
     model.contractExpiryDate = DateUtils.changeDateToDatepicker(
       model.contractExpiryDate
     );

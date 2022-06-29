@@ -32,6 +32,7 @@
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
               id="category"
+              validationClasses="category"
               formControlName="category"
             >
               <ng-option
@@ -59,6 +60,7 @@
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
               id="requestType"
+              validationClasses="requestType"
               formControlName="requestType"
             >
               <ng-option
@@ -117,7 +119,7 @@
           [formGroup]="searchCriteriaForm"
           *ngIf="isCreateOperation()"
         >
-          <div>
+          <div *ngIf="!isApprova()">
             <label for="passportNumber" class="form-label">{{
               lang.map.passport_number
             }}</label>
@@ -151,7 +153,10 @@
             <button
               type="button"
               class="input-group-text"
-              [disabled]="isNewRequestType() || !identificationNumber.value"
+              [disabled]="
+                isNewRequestType() ||
+                !(identificationNumber.value || passportNumber.value)
+              "
               (click)="CriteriaSearch()"
             >
               <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>

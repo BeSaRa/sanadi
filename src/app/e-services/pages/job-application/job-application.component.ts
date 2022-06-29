@@ -1,3 +1,5 @@
+import { JobTitleService } from '@app/services/job-title.service';
+import { JobTitle } from './../../../models/job-title';
 import { AdminResult } from './../../../models/admin-result';
 import { DateUtils } from '@app/helpers/date-utils';
 import { JobApplicationSearchCriteria } from './../../../models/job-application-search-criteria';
@@ -37,14 +39,15 @@ JobApplicationService
   form!: FormGroup;
   identificationNumberSearch$: Subject<Partial<JobApplicationSearchCriteria>> = new Subject<Partial<JobApplicationSearchCriteria>>();
 
-  employees: Employee[] = [];
+  employees: Partial<Employee>[] = [];
   fileIconsEnum = FileIconsEnum;
   caseType: number = CaseTypes.JOB_APPLICATION;
 
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   @Input()
   fromDialog: boolean = false;
-
+  externalJobTitleList: JobTitle[] = [];
+  systemJobTitleList: JobTitle[] = [];
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
   searchCriteriaForm: FormGroup = new FormGroup({
@@ -80,6 +83,7 @@ JobApplicationService
     private navigationService: NavigationService,
     private dialog: DialogService,
     public fb: FormBuilder,
+    private jobTitleService: JobTitleService,
     private lookupService: LookupService,
     public lang: LangService,
     private toast: ToastService
@@ -97,6 +101,12 @@ JobApplicationService
       this.model && (this.model.employeeInfoDTOs = this.employees);
     });
     this.listenToSearchCriteria()
+    this.jobTitleService.getSystemJobTitle().subscribe((data: JobTitle[]) => {
+      this.systemJobTitleList = [...data]
+    })
+    this.jobTitleService.getExternalJobTitle().subscribe((data: JobTitle[]) => {
+      this.externalJobTitleList = [...data]
+    })
   }
   _buildForm(): void {
     this.form = this.fb.group(new JobApplication().formBuilder(true));
@@ -154,7 +164,19 @@ JobApplicationService
     }
   }
   _saveFail(error: any): void {
-    console.log("_saveFail", error);
+    this.employees = [...this.employees.map(e => {
+      return {
+        ...e,
+        workStartDate: DateUtils.changeDateToDatepicker(e.workStartDate),
+        workEndDate: DateUtils.changeDateToDatepicker(e.workEndDate),
+        updatedOn: DateUtils.changeDateToDatepicker(e.updatedOn),
+        jobTitleInfo: [...this.systemJobTitleList, ...this.externalJobTitleList].find(jt => jt.id == e.jobTitleId),
+        contractExpiryDate: DateUtils.changeDateToDatepicker(
+          e.contractExpiryDate
+        )
+      }
+    })]
+    this.model && (this.model.employeeInfoDTOs = this.employees)
   }
   _launchFail(error: any): void {
     console.log("_launchFail", error);
@@ -184,7 +206,9 @@ JobApplicationService
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
   openForm() {
-    this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation);
+    this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation,
+      this.category.value == LookupEmploymentCategory.APPROVAL ? this.systemJobTitleList : this.externalJobTitleList
+    );
   }
   handleCategoryChange(): void {
     this.category.valueChanges
@@ -266,52 +290,51 @@ JobApplicationService
             identificationNumber: res[0].qId
           }]
         }),
-  // switch to the dialog ref to use it later and catch the user response
-  takeUntil(this.destroy$)
+        // switch to the dialog ref to use it later and catch the user response
+        takeUntil(this.destroy$)
       )
       .subscribe((e: Employee[]) => {
-  console.log({ ...e[0] })
-  if (this.isApprova()) {
-    this.employees = [...e];
-  } else {
-    this.employees = [...e, ...this.employees];
+        if (this.isApprova()) {
+          this.employees = [...e];
+        } else {
+          this.employees = [...e, ...this.employees];
+        }
+        this.model && (this.model.employeeInfoDTOs = this.employees);
+      })
   }
-  this.model && (this.model.employeeInfoDTOs = this.employees);
-})
+  CriteriaSearch(): void {
+    const identificationNumber = this.identificationNumber.value && this.identificationNumber.value.trim();
+    const passportNumber = this.passportNumber.value && this.passportNumber.value.trim();
+    this.identificationNumberSearch$.next({
+      identificationNumber: identificationNumber,
+      passportNumber: passportNumber,
+    });
   }
-CriteriaSearch(): void {
-  const identificationNumber = this.identificationNumber.value && this.identificationNumber.value.trim();
-  const passportNumber = this.passportNumber.value && this.passportNumber.value.trim();
-  this.identificationNumberSearch$.next({
-    identificationNumber: identificationNumber,
-    passportNumber: passportNumber,
-  });
-}
-isApprova() {
-  return this.category.value == LookupEmploymentCategory.APPROVAL
-}
+  isApprova() {
+    return this.category.value == LookupEmploymentCategory.APPROVAL
+  }
   private invalidFormMessage() {
-  this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-}
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+  }
   private invalidItemMessage() {
-  this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
-}
+    this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
+  }
   get identificationNumber(): FormControl {
-  return this.searchCriteriaForm.get("identificationNumber") as FormControl;
-}
+    return this.searchCriteriaForm.get("identificationNumber") as FormControl;
+  }
   get passportNumber(): FormControl {
-  return this.searchCriteriaForm.get("passportNumber") as FormControl;
-}
+    return this.searchCriteriaForm.get("passportNumber") as FormControl;
+  }
   get requestType(): FormControl {
-  return this.form.get("requestType") as FormControl;
-}
+    return this.form.get("requestType") as FormControl;
+  }
   get category(): FormControl {
-  return this.form.get("category") as FormControl;
-}
+    return this.form.get("category") as FormControl;
+  }
   get description(): FormControl {
-  return this.form.get("description") as FormControl;
-}
-navigateBack(): void {
-  this.navigationService.goToBack();
-}
+    return this.form.get("description") as FormControl;
+  }
+  navigateBack(): void {
+    this.navigationService.goToBack();
+  }
 }
