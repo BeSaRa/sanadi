@@ -76,6 +76,7 @@ const routes: Routes = [
     path: 'urgent-intervention-report', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard, PreValidateDataGuard],
     resolve: {info: ServiceItemResolver},
+    runGuardsAndResolvers: 'always',
     data: {
       permissionKey: EServicePermissions.URGENT_INTERVENTION_REPORTING,
       configPermissionGroup: null,

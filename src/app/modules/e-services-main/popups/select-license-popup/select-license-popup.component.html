@@ -28,41 +28,41 @@
       <ng-container cdkColumnDef="bankCategoryInfo">
         <!-- category will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="mainAccountInfo">
         <!-- main account will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.main_account}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.mainAccountInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.mainAccountInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="currencyInfo">
         <!-- currency will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.currency}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.currencyInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.currencyInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="creatorInfo">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.created_by}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="licenseDurationTypeInfo">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_duration}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.licenseDurationTypeInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.licenseDurationTypeInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="ouInfo">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="requestTypeInfo">
         <!-- full serial will be shown as License number, so label is license number -->
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="status">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_status}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo?.getName() || ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="endDate">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>

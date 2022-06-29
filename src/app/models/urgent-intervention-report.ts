@@ -23,6 +23,7 @@ export class UrgentInterventionReport extends CaseModel<UrgentInterventionReport
   requestType!: number;
   interventionName!: string;
   projectDescription!: string;
+  interventionLicenseId!: string;
   beneficiaryCountry!: number;
   beneficiaryRegion!: string;
   executionCountry!: number;
@@ -32,6 +33,9 @@ export class UrgentInterventionReport extends CaseModel<UrgentInterventionReport
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
+  exportedLicenseFullSerial!:	string;
+  exportedLicenseId!:string;
+  exportedLicenseSerial!: number;
   implementingAgencyList: ImplementingAgency[] = [];
   interventionRegionList: InterventionRegion[] = [];
   interventionFieldList: InterventionField[] = [];
