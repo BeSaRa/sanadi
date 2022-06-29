@@ -17,7 +17,7 @@ import {Generator} from "@app/decorators/generator";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {
   SelectTemplatePopupComponent
-} from "@app/e-services/poups/select-template-popup/select-template-popup.component";
+} from "@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component";
 import {BlobModel} from '@app/models/blob-model';
 
 @Injectable({

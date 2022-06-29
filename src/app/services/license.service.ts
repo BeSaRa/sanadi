@@ -12,7 +12,7 @@ import {EmployeeService} from "@app/services/employee.service";
 import {InitialApprovalDocumentInterceptor} from "@app/model-interceptors/initial-approval-document-interceptor";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DialogService} from "@app/services/dialog.service";
-import {SelectLicensePopupComponent} from "@app/e-services/poups/select-license-popup/select-license-popup.component";
+import {SelectLicensePopupComponent} from "@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component";
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 import {catchError, map} from "rxjs/operators";
 import {BlobModel} from "@app/models/blob-model";

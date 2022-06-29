@@ -99,7 +99,6 @@ import {
   ApprovalFormMonthlyComponent
 } from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
 import { BuildingPlateComponent } from './components/building-plate/building-plate.component';
-import { SelectedLicenseTableComponent } from './components/selected-license-table/selected-license-table.component';
 import { TranslatePipe } from "@app/pipes/translate.pipe";
 import { DatePipe } from "@app/pipes/date.pipe";
 import { FollowupComponent } from "@app/shared/popups/followup/followup.component";
@@ -186,7 +185,6 @@ import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-po
     LangLoaderComponent,
     ApprovalFormMonthlyComponent,
     BuildingPlateComponent,
-    SelectedLicenseTableComponent,
     TranslatePipe,
     DatePipe,
     FollowupComponent,
@@ -274,7 +272,6 @@ import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-po
     LangLoaderComponent,
     ApprovalFormMonthlyComponent,
     BuildingPlateComponent,
-    SelectedLicenseTableComponent,
     TranslatePipe,
     DatePipe,
     FollowupComponent,

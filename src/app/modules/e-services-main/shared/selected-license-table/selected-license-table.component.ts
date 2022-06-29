@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {LicenseService} from '@app/services/license.service';
-import {SharedService} from '@app/services/shared.service';
+import {LangService} from '@services/lang.service';
+import {LicenseService} from '@services/license.service';
+import {SharedService} from '@services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {CaseTypes} from '@app/enums/case-types.enum';

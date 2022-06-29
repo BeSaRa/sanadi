@@ -17,19 +17,19 @@ import {DialogService} from "@app/services/dialog.service";
 import {DatepickerOptionsMap, ReadinessStatus} from "@app/types/types";
 import {SaveTypes} from "@app/enums/save-types";
 import {OperationTypes} from "@app/enums/operation-types.enum";
-import {BankAccountComponent} from "@app/e-services/shared/bank-account/bank-account.component";
-import {ExecutiveManagementComponent} from "@app/e-services/shared/executive-management/executive-management.component";
-import {GoalComponent} from "@app/e-services/pages/partner-approval/goal/goal.component";
+import {BankAccountComponent} from "@app/modules/office-services/shared/bank-account/bank-account.component";
+import {ExecutiveManagementComponent} from "@app/modules/office-services/shared/executive-management/executive-management.component";
+import {GoalComponent} from "@app/modules/office-services/pages/partner-approval/goal/goal.component";
 import {
   ManagementCouncilComponent
-} from "@app/e-services/pages/partner-approval/management-council/management-council.component";
-import {TargetGroupComponent} from "@app/e-services/pages/partner-approval/target-group/target-group.component";
+} from "@app/modules/office-services/pages/partner-approval/management-council/management-council.component";
+import {TargetGroupComponent} from "@app/modules/office-services/pages/partner-approval/target-group/target-group.component";
 import {
   ContactOfficerComponent
-} from "@app/e-services/pages/partner-approval/contact-officer/contact-officer.component";
+} from "@app/modules/office-services/pages/partner-approval/contact-officer/contact-officer.component";
 import {
   ApprovalReasonComponent
-} from "@app/e-services/pages/partner-approval/approval-reason/approval-reason.component";
+} from "@app/modules/office-services/pages/partner-approval/approval-reason/approval-reason.component";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {LicenseService} from "@app/services/license.service";
