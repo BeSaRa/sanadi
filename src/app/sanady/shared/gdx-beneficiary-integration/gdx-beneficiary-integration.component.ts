@@ -174,7 +174,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     if (!this.getBeneficiaryQID(this.beneficiary!)) {
       return;
     }
-    const criteria = {benId: this.beneficiary!.id, gdxServiceId: serviceId, qId: this.getBeneficiaryQID(this.beneficiary!)};
+    const criteria = this._getGDXCriteria(this.beneficiary, serviceId);
     this.beneficiaryService.loadGDXIntegrationData(criteria)
       .pipe(
         takeUntil(this.destroy$),
