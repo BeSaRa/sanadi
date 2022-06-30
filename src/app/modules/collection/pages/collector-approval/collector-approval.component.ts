@@ -238,9 +238,9 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     return this.requestType.value && (this.requestType.value === CollectionRequestType.NEW);
   }
 
-  isEditLicenseAllowed(): boolean {
+  /*isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
     return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW;
-  }
+  }*/
 }

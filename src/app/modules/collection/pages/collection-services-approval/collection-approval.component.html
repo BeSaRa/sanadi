@@ -56,8 +56,8 @@
                            [disableAdd]="basicInfo.invalid || readonly"
                            [readOnly]="(readonly)"
                            (eventHappened)="checkDisableFields()"
-                           [disableSearch]="!isEditLicenseAllowed()"
                            [model]="model!"></collection-item>
+          <!--[disableSearch]="!isEditLicenseAllowed()"-->
         </div>
       </ng-template>
     </ng-container>
