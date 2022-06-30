@@ -18,6 +18,7 @@ import {ToastService} from '@services/toast.service';
 import {Beneficiary} from '@app/models/beneficiary';
 import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {IGdxCriteria} from '@contracts/i-gdx-criteria';
+import {EmployeeService} from '@services/employee.service';
 
 @Component({
   selector: 'gdx-beneficiary-integration',
@@ -30,6 +31,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
 
   constructor(public langService: LangService,
               private beneficiaryService: BeneficiaryService,
+              private employeeService: EmployeeService,
               private toast: ToastService) {
   }
 
@@ -175,6 +177,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       return;
     }
     const criteria = this._getGDXCriteria(this.beneficiary, serviceId);
+    criteria.orgUserId = this.employeeService.getUser()?.id;
     this.beneficiaryService.loadGDXIntegrationData(criteria)
       .pipe(
         takeUntil(this.destroy$),
