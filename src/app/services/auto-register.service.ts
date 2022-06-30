@@ -34,7 +34,8 @@ import {UrgentInterventionReportComponent} from '@app/modules/urgent-interventio
 })
 export class AutoRegisterService {
 
-  constructor(private teamService: TeamService, private mapService: MapService) { // teamService is injected because it is used in info request
+  constructor(private teamService: TeamService,
+              private mapService: MapService) { // teamService is injected because it is used in info request
     this.ngOnInit();
     this.mapService.ping();
   }
@@ -70,6 +71,13 @@ export class AutoRegisterService {
       .registerCustomPermission('menu_available_programs', (employee, _item) => {
         return employee.isExternalUser();
       })
+      .registerCustomPermission('menu_internal_followup', (employee, _item) => {
+        return employee.isInternalUser();
+      })
+      .registerCustomPermission('menu_external_followup', (employee, _item) => {
+        return employee.isExternalUser() || (employee.isInternalUser() && employee.hasPermissionTo('EXTERNAL_FOLLOWUP'));
+      })
+
   }
 
   ping(): void {

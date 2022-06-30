@@ -1,38 +1,38 @@
-import {Component, Inject, ViewChild} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {AdminGenericDialog} from "@app/generics/admin-generic-dialog";
-import {InternalUser} from "@app/models/internal-user";
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
-import {IDialogData} from "@app/interfaces/i-dialog-data";
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {Observable, of, Subject} from 'rxjs';
-import {InternalDepartmentService} from "@app/services/internal-department.service";
-import {InternalDepartment} from "@app/models/internal-department";
-import {switchMap, takeUntil, withLatestFrom} from "rxjs/operators";
-import {Lookup} from "@app/models/lookup";
-import {LookupService} from '@app/services/lookup.service';
-import {CheckGroup} from "@app/models/check-group";
-import {Permission} from "@app/models/permission";
-import {PermissionService} from "@app/services/permission.service";
-import {CheckGroupHandler} from "@app/models/check-group-handler";
-import {CustomRole} from "@app/models/custom-role";
-import {CustomRoleService} from "@app/services/custom-role.service";
-import {UserPermissionService} from "@app/services/user-permission.service";
-import {ToastService} from "@app/services/toast.service";
-import {SharedService} from "@app/services/shared.service";
-import {TabComponent} from "@app/shared/components/tab/tab.component";
-import {UserTeamComponent} from "@app/administration/shared/user-team/user-team.component";
-import {InternalUserDepartmentService} from "@app/services/internal-user-department.service";
-import {InternalUserDepartment} from "@app/models/internal-user-department";
-import {AdminResult} from "@app/models/admin-result";
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {InternalUserService} from '@app/services/internal-user.service';
-import {BlobModel} from '@app/models/blob-model';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { Component, Inject, ViewChild } from '@angular/core';
+import { LangService } from "@app/services/lang.service";
+import { AdminGenericDialog } from "@app/generics/admin-generic-dialog";
+import { InternalUser } from "@app/models/internal-user";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
+import { IDialogData } from "@app/interfaces/i-dialog-data";
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { Observable, of, Subject } from 'rxjs';
+import { InternalDepartmentService } from "@app/services/internal-department.service";
+import { InternalDepartment } from "@app/models/internal-department";
+import { switchMap, takeUntil, withLatestFrom } from "rxjs/operators";
+import { Lookup } from "@app/models/lookup";
+import { LookupService } from '@app/services/lookup.service';
+import { CheckGroup } from "@app/models/check-group";
+import { Permission } from "@app/models/permission";
+import { PermissionService } from "@app/services/permission.service";
+import { CheckGroupHandler } from "@app/models/check-group-handler";
+import { CustomRole } from "@app/models/custom-role";
+import { CustomRoleService } from "@app/services/custom-role.service";
+import { UserPermissionService } from "@app/services/user-permission.service";
+import { ToastService } from "@app/services/toast.service";
+import { SharedService } from "@app/services/shared.service";
+import { TabComponent } from "@app/shared/components/tab/tab.component";
+import { UserTeamComponent } from "@app/administration/shared/user-team/user-team.component";
+import { InternalUserDepartmentService } from "@app/services/internal-user-department.service";
+import { InternalUserDepartment } from "@app/models/internal-user-department";
+import { AdminResult } from "@app/models/admin-result";
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { InternalUserService } from '@app/services/internal-user.service';
+import { BlobModel } from '@app/models/blob-model';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-user-popup',
@@ -63,11 +63,12 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   list: InternalUser[] = [];
 
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    permissions: {name: 'permissions'},
-    departments: {name: 'departments'},
-    teams: {name: 'teams'},
-    services: {name: 'services'}
+    basic: { name: 'basic' },
+    permissions: { name: 'permissions' },
+    departments: { name: 'departments' },
+    teams: { name: 'teams' },
+    services: { name: 'services' },
+    followup: { name: 'followup' }
   };
 
   constructor(public dialogRef: DialogRef,
@@ -100,7 +101,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   private loadUserDepartments(): void {
     this.internalUserDepartmentService
-      .criteria({internalUserId: this.model.id})
+      .criteria({ internalUserId: this.model.id })
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.userDepartmentsChanged$.next(list);
@@ -172,7 +173,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   private loadSignature() {
     this.internalUserService.loadSignatureByGeneralUserId(this.model.generalUserId)
       .subscribe((result) => {
-        if (result.blob.size === 0){
+        if (result.blob.size === 0) {
           this.loadedSignature = undefined;
           return;
         }
@@ -247,7 +248,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         .subscribe(() => {
           const message = (this.operation === OperationTypes.CREATE)
             ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-          this.toast.success(message.change({x: model.getName()}));
+          this.toast.success(message.change({ x: model.getName() }));
           // here i closing the popup after click on save and the operation is update
           this.operation === OperationTypes.UPDATE && dialogRef.close(model);
           // here i change operation to UPDATE after first save
@@ -263,7 +264,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       return false;
     }
 
-    let user = (new InternalUser()).clone({...model, ...form.get('user')?.value});
+    let user = (new InternalUser()).clone({ ...model, ...form.get('user')?.value });
     if (!this.isDuplicatedUser(user)) {
       return form.valid;
     }
@@ -271,7 +272,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   prepareModel(model: InternalUser, form: FormGroup): InternalUser | Observable<InternalUser> {
-    return (new InternalUser()).clone({...model, ...form.get('user')?.value});
+    return (new InternalUser()).clone({ ...model, ...form.get('user')?.value });
   }
 
   isDuplicatedUser(internalUser: InternalUser) {
@@ -370,7 +371,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       })
       .save()
       .subscribe((model) => {
-        this.toast.success(this.lang.map.msg_create_x_success.change({x: dep.getName()}))
+        this.toast.success(this.lang.map.msg_create_x_success.change({ x: dep.getName() }))
         this.userDepartments = this.userDepartments.concat([model.clone({
           id: model.id,
           departmentInfo: AdminResult.createInstance({
@@ -393,7 +394,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     }
     userDep.delete()
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_delete_x_success.change({x: userDep.departmentInfo.getName()}))
+        this.toast.success(this.lang.map.msg_delete_x_success.change({ x: userDep.departmentInfo.getName() }))
         this.userDepartments = this.userDepartments.filter(item => item.id !== userDep.id);
       })
   }

@@ -349,15 +349,7 @@ export class EmployeeService {
     }, [] as UserSecurityConfiguration[]);
 
     securityArray.forEach((item) => {
-
-      if (this.type == UserTypes.INTERNAL && item.followUp && !hasFollowupPermission) {
-        this.permissionMap?.set('internal_followup', new Permission().clone({
-          permissionKey: "INTERNAL_FOLLOWUP"
-        }))
-        hasFollowupPermission = true;
-      }
-
-      if (this.type == UserTypes.INTERNAL || (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission)) {
+      if (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission) {
         this.permissionMap?.set('external_followup', new Permission().clone({
           permissionKey: "EXTERNAL_FOLLOWUP"
         }))
@@ -407,5 +399,11 @@ export class EmployeeService {
     canSearch && this.permissionMap.set(EServicePermissions.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
       permissionKey: EServicePermissions.E_SERVICES_SEARCH
     }))
+  }
+
+  addFollowupPermission(permission: string): void {
+    this.permissionMap.set(permission.toLowerCase(), new Permission().clone({
+      permissionKey: permission
+    }));
   }
 }

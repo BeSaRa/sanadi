@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  FOLLOWUP_PERMISSION: string;
   COMMON: string;
   NPO_EMPLOYEE: string;
   BANK_ACCOUNT: string;

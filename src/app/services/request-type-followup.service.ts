@@ -31,7 +31,6 @@ export class RequestTypeFollowupService {
 
   constructor(private lookupService: LookupService) {
     this.getNewRequestType()
-    console.log('IN_SERVICE',this.serviceRequestTypes);
   }
 
   @Memoize()

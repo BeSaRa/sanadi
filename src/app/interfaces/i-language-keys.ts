@@ -1,6 +1,8 @@
 export interface ILanguageKeys {
   send_to_department: string;
   can_be_11_digits: string;
+  external_followup: string;
+  internal_followup: string;
   menu_reports: string
   org_reject_task: string;
   please_select_organization_first: string;

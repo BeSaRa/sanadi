@@ -1,4 +1,5 @@
 {
+  "FOLLOWUP_PERMISSION": "/admin/follow-up-permission",
   "COMMON": "/common",
   "CUSTOMS_EXEMPTION_REMITTANCE": "/customs-exemption-remittance",
   "FUNDRAISING": "/fundraising-channel-licensing",
@@ -10,7 +11,7 @@
   "FOLLOWUP": "admin/follow-up",
   "COLLECTOR_APPROVAL": "collector-licensing",
   "MAP_API_URL": "https://maps.googleapis.com/maps/api/js?libraries=places&key=",
-  "FOLLOWUP_CONFIGURATION":"admin/follow-up-configuration",
+  "FOLLOWUP_CONFIGURATION": "admin/follow-up-configuration",
   "COLLECTION_APPROVAL": "/collection-licensing",
   "ORG_UNIT_FIELD": "admin/org-unit-field",
   "CHECKLIST": "admin/checklist",

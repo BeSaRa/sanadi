@@ -66,6 +66,7 @@ import { DonorComponent } from './pages/donor/donor.component';
 import { DonorPopupComponent } from './popups/donor-popup/donor-popup.component';
 import { FollowupConfigurationComponent } from './pages/followup-configuration/followup-configuration.component';
 import { FollowupConfigurationPopupComponent } from './popups/followup-configuration-popup/followup-configuration-popup.component';
+import { UserFollowupPermissionComponent } from './shared/user-followup-permission/user-followup-permission.component';
 
 @NgModule({
   declarations: [
@@ -124,6 +125,7 @@ import { FollowupConfigurationPopupComponent } from './popups/followup-configura
     DonorPopupComponent,
     FollowupConfigurationComponent,
     FollowupConfigurationPopupComponent,
+    UserFollowupPermissionComponent,
   ],
   imports: [
     SharedModule,
