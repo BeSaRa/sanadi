@@ -1,22 +1,15 @@
 import {Component, Inject} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
-import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {LicenseService} from "@app/services/license.service";
-import {PartnerApproval} from "@app/models/partner-approval";
-import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {LangService} from '@app/services/lang.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {LicenseService} from '@app/services/license.service';
 import {SharedService} from '@app/services/shared.service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {InboxService} from '@app/services/inbox.service';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
-import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
-import {CollectorApproval} from '@app/models/collector-approval';
-import { Fundraising } from '@app/models/fundraising';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
 
 @Component({
   selector: 'select-license-popup',
@@ -25,8 +18,9 @@ import { Fundraising } from '@app/models/fundraising';
 })
 export class SelectLicensePopupComponent {
   displayedColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate'];
-  label: keyof ILanguageKeys = "license";
+  label: keyof ILanguageKeys = 'license';
   caseType: number;
+  caseTypeViewLicense!: number;
   caseStatus: number;
   requestType: number;
   fileIconsEnum = FileIconsEnum;
@@ -37,7 +31,7 @@ export class SelectLicensePopupComponent {
               private inboxService: InboxService,
               private sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | Fundraising[]),
+                licenses: any[],
                 caseRecord: any | undefined,
                 select: boolean,
                 displayedColumns: string[]
@@ -46,6 +40,7 @@ export class SelectLicensePopupComponent {
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.requestType = this.data.caseRecord?.getRequestType();
     this.caseService = this.inboxService.getService(this.caseType);
+    this.caseTypeViewLicense = SelectLicensePopupComponent._getCaseTypeForViewLicense(this.caseType, this.requestType);
 
     if (this.data.displayedColumns.length > 0) {
       this.displayedColumns = [...this.data.displayedColumns];
@@ -62,11 +57,15 @@ export class SelectLicensePopupComponent {
     }
 
     if (this.data.select) {
-      this.label = "select_license";
+      this.label = 'select_license';
     }
   }
 
-  selectLicense(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult | Fundraising)): void {
+  private static _getCaseTypeForViewLicense(caseType: number, requestType: number) {
+    return (caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : caseType;
+  }
+
+  selectLicense(license: any): void {
     this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
       .subscribe((licenseDetails) => {
         if (!licenseDetails) {
@@ -76,12 +75,12 @@ export class SelectLicensePopupComponent {
       });
   }
 
-  viewLicenseAsPDF(license: (InitialExternalOfficeApprovalResult | CollectorApproval | PartnerApproval | FinalExternalOfficeApprovalResult | InternalProjectLicenseResult | UrgentInterventionLicenseResult | Fundraising)) {
+  /*viewLicenseAsPDF(license: any) {
     let caseType = (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType;
 
     return this.licenseService.showLicenseContent(license, caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, license);
       });
-  }
+  }*/
 }
