@@ -25,19 +25,16 @@ import {LicenseService} from '@app/services/license.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {SaveTypes} from '@app/enums/save-types';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {BankAccountComponent} from '@app/e-services/shared/bank-account/bank-account.component';
-import {ExecutiveManagementComponent} from '@app/e-services/shared/executive-management/executive-management.component';
-import {BankBranchComponent} from '@app/e-services/shared/bank-branch/bank-branch.component';
+import {BankAccountComponent} from '@app/modules/office-services/shared/bank-account/bank-account.component';
+import {ExecutiveManagementComponent} from '@app/modules/office-services/shared/executive-management/executive-management.component';
+import {BankBranchComponent} from '@app/modules/office-services/shared/bank-branch/bank-branch.component';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
-import {TabComponent} from "@app/shared/components/tab/tab.component";
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {
-  InitialExternalOfficeApprovalSearchCriteria
-} from '@app/models/initial-external-office-approval-search-criteria';
+import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
-import {CaseTypes} from '@app/enums/case-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 

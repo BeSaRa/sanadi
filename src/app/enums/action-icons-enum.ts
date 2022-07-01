@@ -9,7 +9,7 @@ export enum ActionIconsEnum {
   CANCEL_BOOK = 'mdi-book-cancel',
   VIEW = 'mdi-eye',
   DELETE = 'mdi-close-box',
-  DELETE_TRASH = 'mdi-trash-can',
+  DELETE_TRASH = 'mdi-delete',
   LOGS = 'mdi-history',
   CHILD_ITEMS = 'mdi-circle-multiple',
   STATUS = 'mdi-list-status',

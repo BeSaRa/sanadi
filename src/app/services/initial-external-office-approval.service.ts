@@ -1,30 +1,21 @@
 import {HttpClient} from '@angular/common/http';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
+import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
-import {
-  InitialExternalOfficeApprovalInterceptor
-} from "@app/model-interceptors/initial-external-office-approval-interceptor";
-import {FactoryService} from "@app/services/factory.service";
-import {UrlService} from "@app/services/url.service";
-import {LicenseService} from "@app/services/license.service";
-import {
-  InitialExternalOfficeApprovalSearchCriteria
-} from "@app/models/initial-external-office-approval-search-criteria";
-import {Observable} from "rxjs";
-import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
-import {
-  InitialExternalOfficeApprovalComponent
-} from "@app/e-services/pages/initial-external-office-approval/initial-external-office-approval.component";
-import {
-  SearchInitialExternalOfficeApprovalCriteria
-} from "@app/models/search-initial-external-office-approval-criteria";
-import {SearchService} from "@app/services/search.service";
+import {InitialExternalOfficeApprovalInterceptor} from '@app/model-interceptors/initial-external-office-approval-interceptor';
+import {FactoryService} from '@app/services/factory.service';
+import {UrlService} from '@app/services/url.service';
+import {LicenseService} from '@app/services/license.service';
+import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
+import {Observable} from 'rxjs';
+import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
+import {SearchInitialExternalOfficeApprovalCriteria} from '@app/models/search-initial-external-office-approval-criteria';
+import {SearchService} from '@app/services/search.service';
 
 @Injectable({
   providedIn: 'root'

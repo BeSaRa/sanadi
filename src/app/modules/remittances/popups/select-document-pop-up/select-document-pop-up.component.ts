@@ -70,11 +70,11 @@ export class SelectDocumentPopUpComponent {
       });
   }
 
-  viewDocumentAsPDF(document: CustomsExemptionRemittance) {
+  /*viewDocumentAsPDF(document: CustomsExemptionRemittance) {
     let doc = {...document, documentTitle: document.fullSerial};
     return this.customsExemptionRemittanceService.showDocumentContent(doc, this.caseType)
       .subscribe((file) => {
         return this.sharedService.openViewContentDialog(file, doc);
       });
-  }
+  }*/
 }

@@ -9,33 +9,34 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {DynamicComponentService} from "@app/services/dynamic-component.service";
-import {EmployeeService} from "@app/services/employee.service";
-import {LangService} from "@app/services/lang.service";
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {CaseModel} from "@app/models/case-model";
-import {OpenFrom} from "@app/enums/open-from.enum";
-import {IOpenedInfo} from "@app/interfaces/i-opened-info";
-import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {WFActions} from "@app/enums/wfactions.enum";
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {ToastService} from "@app/services/toast.service";
-import {InboxService} from "@app/services/inbox.service";
-import {merge, Subject} from "rxjs";
-import {skip, startWith, takeUntil} from "rxjs/operators";
-import {TabComponent} from "@app/shared/components/tab/tab.component";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {SaveTypes} from "@app/enums/save-types";
-import {IESComponent} from "@app/interfaces/iescomponent";
-import {OrgUser} from "@app/models/org-user";
-import {InternalUser} from "@app/models/internal-user";
-import {ChecklistItem} from "@app/models/checklist-item";
-import {StepCheckListComponent} from "@app/shared/components/step-check-list/step-check-list.component";
+import {ActivatedRoute, Router} from '@angular/router';
+import {DynamicComponentService} from '@app/services/dynamic-component.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IOpenedInfo} from '@app/interfaces/i-opened-info';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ToastService} from '@app/services/toast.service';
+import {InboxService} from '@app/services/inbox.service';
+import {merge, Subject} from 'rxjs';
+import {skip, startWith, takeUntil} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -56,7 +57,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
               private cfr: ComponentFactoryResolver) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
-      throw Error(`Please Provide render property in this route ${route.snapshot.url}`)
+      throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
     }
   }
 
@@ -66,7 +67,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private addActions: IMenuItem<CaseModel<any, any>>[] = [];
 
   private readonly render: string;
-  private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>
+  private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>;
   @ViewChild('internalContainer', {read: ViewContainerRef})
   internalContainer!: ViewContainerRef;
 
@@ -77,15 +78,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
-  service!: EServiceGenericService<CaseModel<any, any>>
-  model?: CaseModel<any, any>
-  component!: EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>
+  service!: EServiceGenericService<CaseModel<any, any>>;
+  model?: CaseModel<any, any>;
+  component!: EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
   internal: boolean = this.employeeService.isInternalUser();
   info: IOpenedInfo | null = null;
   destroy$: Subject<any> = new Subject<any>();
   loadAttachments: boolean = false;
 
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  actionIconsEnum = ActionIconsEnum;
 
   checklist: ChecklistItem[] = [];
   saveTypes: typeof SaveTypes = SaveTypes;
@@ -216,6 +218,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildSearchActions(): void {
     this.searchActions = [
+      // save
       {
         type: 'action',
         label: 'btn_save',
@@ -228,6 +231,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         }
       },
+      // launch
       {
         type: 'action',
         label: 'launch',
@@ -236,6 +240,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.launchAction(item);
         }
       },
+      // view logs
       {
         type: 'action',
         icon: 'mdi-view-list-outline',
@@ -245,6 +250,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           item.viewLogs();
         }
       },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => !this.internal,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
+      },
+      // back
       {
         type: 'action',
         class: 'btn-secondary',
@@ -257,12 +272,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private buildAddAction(): void {
     this.addActions = [
+      // save
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
         disabled: (item) => {
-          return this.component.form.invalid || item?.alreadyStarted()
+          return this.component.form.invalid || item?.alreadyStarted();
         },
         show: (item) => {
           // show if external user or service which are only for internal user
@@ -272,6 +288,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         }
       },
+      // launch
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
@@ -281,18 +298,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.launch();
         }
       },
+      // save as draft
       {
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
         show: () => {
-          return (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType()))
+          return (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType()));
         },
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
         }
       },
+      // reset
       {
         class: 'btn-secondary',
         type: 'action',
@@ -334,6 +353,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
       },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => !this.internal,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
+      },
+      // back
       {
         type: 'action',
         class: 'btn-secondary',
@@ -390,18 +419,25 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
-          || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
-          || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
+            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
         }
       },
-      // send to Supervision and control department
+      // send to single department (Supervision and control, risk and compliance)
       {
         type: 'action',
         icon: 'mdi-send-circle',
-        label: 'send_to_supervision_and_control_department',
+        label: (item: CaseModel<any, any>) => {
+          let isSendToRiskAndCompliance: boolean = (item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT));
+
+          return isSendToRiskAndCompliance ? this.lang.map.send_to_risk_and_compliance_department : this.lang.map.send_to_supervision_and_control_department;
+        },
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
@@ -411,24 +447,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.COLLECTION_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.sendToSupervisionAndControlDepartmentAction(item);
-        }
-      },
-      // send to risk and compliance department
-      {
-        type: 'action',
-        icon: 'mdi-send-circle',
-        label: 'send_to_risk_and_compliance_department',
-        askChecklist: true,
-        show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
-
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.sendToRiskAndComplianceDepartmentAction(item);
+          this.sendToSingleDepartmentAction(item);
         }
       },
       // send to user
@@ -699,6 +722,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
       },
+      // print
+      {
+        type: 'action',
+        icon: ActionIconsEnum.PRINT,
+        label: 'print',
+        show: () => !this.internal,
+        disabled: () => !this.model || !this.model.id,
+        onClick: () => this.print()
+      },
       // back
       {
         type: 'action',
@@ -707,7 +739,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom()
       }
-    ]
+    ];
   }
 
   private navigateToSamePageThatUserCameFrom(): void {
@@ -723,7 +755,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         break;
       case OpenFrom.SEARCH: {
         this.router.navigate(['/home/services-search', this.route.snapshot.params]).then();
-        break
+        break;
       }
     }
 
@@ -749,7 +781,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         break;
       default:
         this.buildAddAction();
-        this.actions = this.actionShowFilter(this.addActions)
+        this.actions = this.actionShowFilter(this.addActions);
     }
   }
 
@@ -762,20 +794,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       case OpenFrom.SEARCH:
         return !!this.info && this.model!.openedFromSearch();
       case OpenFrom.ADD_SCREEN:
-        return true
+        return true;
       default:
         return false;
     }
   }
 
   private actionShowFilter(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
-    return actions.filter((action) => action.show && this.model ? action.show(this.model) : true)
+    return actions.filter((action) => action.show && this.model ? action.show(this.model) : true);
   }
 
   private releaseAction(item: CaseModel<any, any>) {
     item.release().subscribe(() => {
       this.toast.success(this.lang.map.task_have_been_released_successfully);
-      item.addReleaseAction()
+      item.addReleaseAction();
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
       this.actions = this.translateActions(this.actions);
       this.component.readonly = true;
@@ -786,39 +818,33 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private claimAction(item: CaseModel<any, any>) {
     item.claim().subscribe(() => {
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
-      item.addClaimAction((this.employeeService.getCurrentUser() as (OrgUser | InternalUser)).getUniqueName())
+      item.addClaimAction((this.employeeService.getCurrentUser() as (OrgUser | InternalUser)).getUniqueName());
       this.displayRightActions(OpenFrom.USER_INBOX);
       this.actions = this.translateActions(this.actions);
       this.component.allowEditRecommendations = this.internal;
-      const component = (this.component as IESComponent<any>)
+      const component = (this.component as IESComponent<any>);
       if (component.handleReadonly && typeof component.handleReadonly === 'function') {
         component.handleReadonly();
       }
       this.checkForFinalApproveByMatrixNotification();
-    })
+    });
   }
 
   private sendToDepartmentAction(item: CaseModel<any, any>) {
     item.sendToDepartment().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
-    })
+    });
   }
 
   private sendToMultiDepartmentsAction(item: CaseModel<any, any>) {
     item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
-    })
-  }
-
-  private sendToSupervisionAndControlDepartmentAction(item: CaseModel<any, any>) {
-    item.sendToSupervisionAndControlDepartment().subscribe(() => {
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      this.navigateToSamePageThatUserCameFrom();
     });
   }
 
-  private sendToRiskAndComplianceDepartmentAction(item: CaseModel<any, any>) {
-    item.sendToRiskAndComplianceDepartment().subscribe(() => {
+  private sendToSingleDepartmentAction(item: CaseModel<any, any>) {
+    item.sendToSingleDepartment().subscribe(() => {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.navigateToSamePageThatUserCameFrom();
     });
   }
@@ -832,7 +858,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private sendToStructureExpertAction(item: CaseModel<any, any>) {
     item.sendToStructureExpert().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
-    })
+    });
   }
 
   private sendToDevelopmentExpertAction(item: CaseModel<any, any>): void {
@@ -872,7 +898,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private organizationApproveAction(item: CaseModel<any, any>) {
-    item.organizationApprove({form: this.component.form, organizationOfficers: (this.component as any).selectedOrganizationOfficers}).onAfterClose$.subscribe(actionTaken => {
+    item.organizationApprove({
+      form: this.component.form,
+      organizationOfficers: (this.component as any).selectedOrganizationOfficers
+    }).onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
@@ -953,7 +982,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.actions = this.translateActions(this.actions);
-      })
+      });
   }
 
   private updateActions(model: CaseModel<any, any>): void {
@@ -969,7 +998,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       .pipe(takeUntil(this.destroy$))
       .subscribe((model) => {
         this.updateActions(model!);
-      })
+      });
   }
 
 
@@ -983,19 +1012,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           });
         }
         this.updateActions(model);
-      })
+      });
   }
 
   private translateActions(actions: IMenuItem<CaseModel<any, any>>[]): IMenuItem<CaseModel<any, any>>[] {
     return actions.map((action) => {
-      action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys]
-      return action
+      action.translatedLabel = (typeof action.label === 'function' && this.model) ? action.label(this.model) : this.lang.map[action.label as keyof ILanguageKeys];
+      return action;
     });
   }
 
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
-    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1));
   }
 
   isAttachmentReadonly(): boolean {
@@ -1015,7 +1044,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   print() {
-    this.model?.exportModel().subscribe((blob) => window.open(blob.url))
+    this.model?.exportModel().subscribe((blob) => window.open(blob.url));
   }
 
   onTabChange($event: TabComponent) {

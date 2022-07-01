@@ -10,8 +10,6 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {ExecutiveManagement} from '@app/models/executive-management';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {JobTitleService} from '@app/services/job-title.service';
-import {JobTitle} from '@app/models/job-title';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
@@ -25,7 +23,6 @@ export class ExecutiveManagementComponent implements OnInit {
               private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private jobTitleService: JobTitleService,
               private fb: FormBuilder) {
   }
 

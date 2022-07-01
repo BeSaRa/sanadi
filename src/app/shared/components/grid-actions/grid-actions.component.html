@@ -3,17 +3,17 @@
   <ng-container *ngFor="let action of filteredActions; first as isFirst; last as isLast">
     <ng-container *ngIf="isAction(action)">
       <ng-container *ngIf="!hasChildren(action)">
-        <button *ngIf="action.icon" class="btn icon-btn text-primary grid-action-btn"
+        <button *ngIf="action.icon" class="btn icon-btn text-primary p-0 grid-action bg-transparent"
                 [disabled]="isActionDisabled(action)"
                 [tooltip]="displayLabel(action)" (click)="onClick($event, action)">
           <i class="mdi {{action.icon}} {{action.class || ''}}"></i>
         </button>
-        <button *ngIf="!action.icon" class="btn btn-primary {{action.class || ''}}"
+        <button *ngIf="!action.icon" class="btn btn-primary grid-action {{action.class || ''}}"
                 [disabled]="isActionDisabled(action)" type="button"
                 (click)="onClick($event, action)">{{displayLabel(action)}}</button>
       </ng-container>
       <div class="dropdown" *ngIf="hasChildren(action)">
-        <button type="button" class="btn btn-link outline-none dropdown-toggle grid-action-btn"
+        <button type="button" class="btn btn-link outline-none dropdown-toggle p-0 grid-action bg-transparent"
                 id="dropdownMenuButton1" [disabled]="isActionDisabled(action)"
                 data-bs-toggle="dropdown" aria-expanded="false">
           <i class="mdi {{action.icon}}"></i>
