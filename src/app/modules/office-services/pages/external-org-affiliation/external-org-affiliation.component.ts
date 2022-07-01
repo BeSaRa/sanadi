@@ -1,9 +1,9 @@
-import { Lookup } from './../../../models/lookup';
-import { ToastService } from './../../../services/toast.service';
-import { DialogService } from './../../../services/dialog.service';
-import { LookupService } from './../../../services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogService } from './../../../../services/dialog.service';
+import { LookupService } from './../../../../services/lookup.service';
+import { Lookup } from './../../../../models/lookup';
+import { ExternalOrgAffiliationService } from './../../../../services/external-org-affiliation.service';
 import { tap } from 'rxjs/operators';
-import { ExternalOrgAffiliationService } from './../../../services/external-org-affiliation.service';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { Component } from '@angular/core';
