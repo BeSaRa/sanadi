@@ -1,6 +1,7 @@
 import {FactoryService} from '@app/services/factory.service';
 import {LangService} from '@app/services/lang.service';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {Lookup} from '@app/models/lookup';
 
 export class NpoEmployee extends SearchableCloneable<NpoEmployee>{
   orgId!: number;
@@ -14,6 +15,10 @@ export class NpoEmployee extends SearchableCloneable<NpoEmployee>{
   status!: number;
   statusDateModified!: string;
   id!: number;
+  jobTitleId!: number;
+  jobTitleInfo!: Lookup;
+  qId!: number;
+  identificationNumber!: number;
   langService: LangService;
 
   constructor() {

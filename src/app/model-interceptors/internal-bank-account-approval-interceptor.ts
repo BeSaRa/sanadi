@@ -5,11 +5,13 @@ import {AdminResult} from '@app/models/admin-result';
 import {BankAccount} from '@app/models/bank-account';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {Lookup} from '@app/models/lookup';
 
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
     model.internalBankAccountDTOs = model.internalBankAccountDTOs?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber}) as unknown as BankAccount);
-    model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs?.map(npo => ({id: npo.id, arabicName: npo.arabicName, englishName: npo.englishName}) as unknown as NpoEmployee);
+    model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs
+      ?.map(npo => ({id: npo.id, arabicName: npo.arabicName, englishName: npo.englishName, jobTitleId: npo.jobTitleId, identificationNumber: npo.qId}) as unknown as NpoEmployee);
 
     delete model.taskDetails;
     delete model.requestTypeInfo;
@@ -39,6 +41,10 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo): AdminResult.createInstance({});
     model.internalBankAccountDTOs = model.internalBankAccountDTOs || [];
+    model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs.map(x => {
+      x.jobTitleInfo = (new Lookup()).clone(x.jobTitleInfo);
+      return x;
+    }) : model.bankAccountExecutiveManagementDTOs = [];
 
     return model;
   }

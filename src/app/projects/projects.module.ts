@@ -21,6 +21,7 @@ import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
 } from '../projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { SelectEmployeePopupComponent } from './popups/select-employee-popup/select-employee-popup.component';
 
 
 @NgModule({
@@ -33,7 +34,9 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     UrgentJointReliefCampaignComponent,
     UrgentJointReliefCampaignInitialApproveTaskPopupComponent,
     UrgentJointReliefCampaignFinalApproveTaskPopupComponent,
-    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
+    UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent,
+    InternalBankApprovalApproveTaskPopupComponent,
+    SelectEmployeePopupComponent
   ],
   imports: [
     CommonModule,

@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
 import {LangService} from '@app/services/lang.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
@@ -47,9 +47,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   npoEmployees: NpoEmployee[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
   oldLicenseFullSerialControl: FormControl = new FormControl();
+  selectedResponsiblePersonControl: FormControl = new FormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'actions'];
-  selectedPersonsDisplayedColumns: string[] = ['arName', 'enName', 'actions'];
+  selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
   isUpdateMerge = false;
@@ -610,6 +611,29 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       });
   }
 
+  private openSelectEmployee(employees: NpoEmployee[]) {
+    return this.service.openSelectEmployee(employees).onAfterClose$ as Observable<NpoEmployee>;
+  }
+
+  searchForNPOEmployee() {
+    const qId = this.selectedResponsiblePerson.value;
+    if (!qId || qId.length == 0 || qId.length === 11) {
+      this.service.searchNPOEmployees(qId)
+        .pipe(takeUntil(this.destroy$))
+        .pipe(tap(employees => !employees.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+        .pipe(filter(employees => !!employees.length))
+        .pipe(exhaustMap((employees) => {
+          return employees.length === 1 ? of(employees[0]) : this.openSelectEmployee(employees)
+        }))
+        .pipe(filter(emp => emp != null))
+        .subscribe((employee) => {
+          this.addToSelectedResponsiblePersons(employee);
+        });
+    } else {
+      this.dialog.error(this.lang.map.can_be_11_digits);
+    }
+  }
+
   addToSelectedBankAccounts() {
     const selectedAccount = this.currentBankAccounts.find(b => b.id == this.selectedBankAccountToMerge.value)!;
     if (!this.selectedBankAccounts.includes(selectedAccount)) {
@@ -624,8 +648,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.selectedBankAccounts = this.selectedBankAccounts.filter(x => x.id != bankAccount.id);
   }
 
-  addToSelectedResponsiblePersons() {
-    const selectedPerson = this.npoEmployees.find(b => b.id == this.selectedResponsiblePerson.value)!;
+  addToSelectedResponsiblePersons(employee: NpoEmployee) {
+    const selectedPerson = this.npoEmployees.find(b => b.id == employee.id)!;
     if (!this.selectedNPOEmployees.includes(selectedPerson)) {
       this.selectedNPOEmployees = this.selectedNPOEmployees.concat(selectedPerson);
     } else {
