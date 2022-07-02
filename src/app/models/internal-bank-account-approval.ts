@@ -76,7 +76,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls ? [description, [CustomValidators.required]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     }
   }
 
