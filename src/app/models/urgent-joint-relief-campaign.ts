@@ -76,7 +76,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
       licenseEndDate: controls ? [licenseEndDate, internalUserValidation] : licenseEndDate,
       phone: controls ? [phone, internalUserValidation.concat(CustomValidators.commonValidations.phone)] : phone,
       extraPhone: controls ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
-      approvalPeriod: controls ? [approvalPeriod, internalUserValidation.concat(CustomValidators.maxLength(2))] : approvalPeriod,
+      approvalPeriod: controls ? [approvalPeriod, internalUserValidation.concat(CustomValidators.maxLength(2), CustomValidators.number)] : approvalPeriod,
       beneficiaryCountry: controls ? [beneficiaryCountry, internalUserValidation] : beneficiaryCountry,
       targetAmount: controls ? [targetAmount, internalUserValidation.concat([CustomValidators.maxLength(20), CustomValidators.decimal(2)])] : targetAmount
     }
