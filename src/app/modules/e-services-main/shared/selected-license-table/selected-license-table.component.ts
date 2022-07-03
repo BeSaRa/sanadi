@@ -51,7 +51,11 @@ export class SelectedLicenseTableComponent {
         return (this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ? this.lang.map.view_document : this.lang.map.view_license;
       },
       icon: FileIconsEnum.PDF,
-      onClick: (item: any) => this.viewLicenseAsPDF(item)
+      onClick: (item: any) => this.viewLicenseAsPDF(item),
+      show: (item: any) => {
+        // urgent intervention reporting(announcement) does not have content to view
+        return (this.caseType !== CaseTypes.URGENT_INTERVENTION_REPORTING);
+      }
     },
     // remove license/document
     {

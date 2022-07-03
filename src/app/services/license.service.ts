@@ -414,9 +414,9 @@ export class LicenseService {
     });
   }
 
-  @Generator(UrgentInterventionReport, false, {
+  @Generator(UrgentInterventionReportResult, false, {
     property: 'rs',
-    interceptReceive: (new UrgentInterventionReportInterceptor()).receive
+    interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
   _validateUrgentInterventionReportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/draft/validate', {
