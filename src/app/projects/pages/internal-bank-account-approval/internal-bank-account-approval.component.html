@@ -33,16 +33,16 @@
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired=""
-                   [control]="oldLicenseFullSerialControl"
+            <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                    for="oldLicenseFullSerial">{{lang.map.serial_number}}
             </label>
             <div class="input-group">
-              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial" validationClasses=""
-                     [control]="oldLicenseFullSerialControl"
+              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial"
                      formControlName="oldLicenseFullSerial"
-                     class="form-control">
-              <button (click)="searchForLicense()" class="input-group-text">
+                     class="form-control"
+              [readonly]="(readonly)">
+              <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+              <button (click)="searchForLicense()" class="input-group-text" [disabled]="(readonly)">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>

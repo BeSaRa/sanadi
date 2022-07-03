@@ -46,7 +46,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   selectedBankAccounts: BankAccount[] = [];
   npoEmployees: NpoEmployee[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
-  oldLicenseFullSerialControl: FormControl = new FormControl();
+  // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: FormControl = new FormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'actions'];
@@ -379,10 +379,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   setOldLicenseFullSerialRequired() {
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
-    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
+    // this.oldLicenseFullSerialControl.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
     this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    // this.oldLicenseFullSerialControl.updateValueAndValidity();
   }
 
   hideUpdateAccountFields() {
@@ -394,9 +394,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.swiftCode.patchValue(null);
 
     this.oldLicenseFullSerialField.setValidators([]);
-    this.oldLicenseFullSerialControl.setValidators([]);
+    // this.oldLicenseFullSerialControl.setValidators([]);
     this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    // this.oldLicenseFullSerialControl.updateValueAndValidity();
 
     if (this.updateNewAccountFieldsVisible) {
       this.updateNewAccountFieldsVisible = false;
