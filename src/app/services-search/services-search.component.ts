@@ -284,10 +284,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         icon: 'mdi-format-align-left',
         label: 'followup',
         disabled: (item) => {
-          return (!item.isFinalApproved() || !item.isInitialApproved())
+          return (!item.isFinalApproved() && !item.isInitialApproved())
         },
         show: () => {
-          return this.employeeService.isInternalUser() && this.employeeService.hasAnyPermissions(['EXTERNAL_FOLLOWUP', 'INTERNAL_FOLLOWUP'])
+          return this.employeeService.isInternalUser() && this.employeeService.hasPermissionTo('ADD_FOLLOWUP')
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionAddFollowup(item);

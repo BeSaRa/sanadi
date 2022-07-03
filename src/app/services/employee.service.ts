@@ -16,6 +16,7 @@ import { UserSecurityConfiguration } from "@app/models/user-security-configurati
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { EServicePermissions } from "@app/enums/e-service-permissions";
 import { ConfigurationService } from "@app/services/configuration.service";
+import { Permissions } from "@app/enums/Permissions";
 
 @Injectable({
   providedIn: 'root'
@@ -130,7 +131,7 @@ export class EmployeeService {
    * to check for one permission
    * @param permissionKey
    */
-  hasPermissionTo(permissionKey: string): boolean {
+  hasPermissionTo(permissionKey: Permissions | string): boolean {
     return this.permissionMap.has(permissionKey.toLowerCase());
   }
 
