@@ -1,11 +1,3 @@
-<!--<div class="row pb-3">-->
-<!--  <app-page-header-->
-<!--    [pageTitle]="'menu_internal_followup'"-->
-<!--    [clickOnReload$]="reload$"-->
-<!--    [useReloadValue]="true">-->
-<!--  </app-page-header>-->
-<!--  <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>-->
-<!--</div>-->
 <div class="row">
   <div class="col-12">
     <div class="table-responsive">
@@ -57,10 +49,6 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
-                <button class="btn icon-btn text-primary grid-action-btn"
-                        [tooltip]="row.getDesc()">
-                  <i class="mdi mdi-information"></i>
-                </button>
                 <button class="btn icon-btn text-primary grid-action-btn"
                         [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
                   <i class="mdi mdi-comment"></i>
