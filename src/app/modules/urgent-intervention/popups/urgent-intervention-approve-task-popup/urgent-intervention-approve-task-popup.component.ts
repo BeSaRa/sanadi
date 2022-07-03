@@ -1,17 +1,17 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {DialogService} from "@app/services/dialog.service";
-import {ToastService} from "@app/services/toast.service";
+import {DialogService} from "@services/dialog.service";
+import {ToastService} from "@services/toast.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {InboxService} from "@app/services/inbox.service";
+import {InboxService} from "@services/inbox.service";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {LangService} from "@app/services/lang.service";
-import {CommonUtils} from "@app/helpers/common-utils";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import {LangService} from "@services/lang.service";
+import {CommonUtils} from "@helpers/common-utils";
+import {ILanguageKeys} from "@contracts/i-language-keys";
 import {Subject} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {IWFResponse} from "@app/interfaces/i-w-f-response";
+import {IWFResponse} from "@contracts/i-w-f-response";
 import {UrgentInterventionLicense} from "@app/models/urgent-intervention-license";
 import {
   ApprovalFormMonthlyComponent

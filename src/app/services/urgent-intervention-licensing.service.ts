@@ -19,7 +19,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {
   UrgentInterventionApproveTaskPopupComponent
-} from "@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
+} from "@app/modules/urgent-intervention/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 
 @Injectable({
   providedIn: 'root'

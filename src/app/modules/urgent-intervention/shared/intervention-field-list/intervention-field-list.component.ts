@@ -1,114 +1,111 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {of, Subject} from 'rxjs';
 import {ReadinessStatus} from '@app/types/types';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
+import {InterventionField} from '@app/models/intervention-field';
+import {Observable, of, Subject} from 'rxjs';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {LookupService} from '@app/services/lookup.service';
-import {Lookup} from '@app/models/lookup';
-import {AdminResult} from '@app/models/admin-result'
-import { ExternalProjectImplementationService } from '@app/services/external-project-implementation.service';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ImplementingAgency} from '@app/models/implementing-agency';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {LookupService} from '@services/lookup.service';
+import {DacOcha} from '@app/models/dac-ocha';
+import {DacOchaService} from '@services/dac-ocha.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
-  selector: 'implementing-agency-list',
-  templateUrl: './implementing-agency-list.component.html',
-  styleUrls: ['./implementing-agency-list.component.scss']
+  selector: 'intervention-field-list',
+  templateUrl: './intervention-field-list.component.html',
+  styleUrls: ['./intervention-field-list.component.scss']
 })
-export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
+export class InterventionFieldListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private externalProjectImplementationService: ExternalProjectImplementationService,
+              private dacOchaService: DacOchaService,
               private fb: FormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-
   @Input() readonly: boolean = false;
-  @Input() executionCountry!: number;
 
-  private _list: ImplementingAgency[] = [];
-  @Input() set list(list: ImplementingAgency[]) {
+  private _list: InterventionField[] = [];
+  @Input() set list(list: InterventionField[]) {
     this._list = list;
   }
 
-  get list(): ImplementingAgency[] {
+  get list(): InterventionField[] {
     return this._list;
   }
 
-  columns = ['implementingAgencyType', 'implementingAgency', 'actions'];
-  implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyList: AdminResult[] = [];
-
-  editItem?: ImplementingAgency;
+  columns = ['mainOcha', 'subOcha', 'actions'];
+  editItem?: InterventionField;
   viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<ImplementingAgency | null> = new Subject<ImplementingAgency | null>();
-  private currentRecord?: ImplementingAgency;
+  private recordChanged$: Subject<InterventionField | null> = new Subject<InterventionField | null>();
+  private currentRecord?: InterventionField;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: FormControl = new FormControl('');
 
   form!: FormGroup;
-
-  actions: IMenuItem<ImplementingAgency>[] = [
+  actions: IMenuItem<InterventionField>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: ImplementingAgency) => this.edit(item),
-      show: (item: ImplementingAgency) => !this.readonly
+      onClick: (item: InterventionField) => this.edit(item),
+      show: (item: InterventionField) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: ImplementingAgency) => this.delete(item),
-      show: (item: ImplementingAgency) => !this.readonly
+      onClick: (item: InterventionField) => this.delete(item),
+      show: (item: InterventionField) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: ImplementingAgency) => this.view(item),
-      show: (item: ImplementingAgency) => this.readonly
+      onClick: (item: InterventionField) => this.view(item),
+      show: (item: InterventionField) => this.readonly
     }
   ];
-
   sortingCallbacks = {
-    implementingAgency: (a: ImplementingAgency, b: ImplementingAgency, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.implementingAgencyInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.implementingAgencyInfo.getName().toLowerCase();
+    mainOCha: (a: InterventionField, b: InterventionField, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.mainUNOCHACategoryInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.mainUNOCHACategoryInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    implementingAgencyType: (a: ImplementingAgency, b: ImplementingAgency, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.agencyTypeInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.agencyTypeInfo.getName().toLowerCase();
+    subOcha: (a: InterventionField, b: InterventionField, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.subUNOCHACategoryInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.subUNOCHACategoryInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
+
+  mainOchaCategories: DacOcha[] = [];
+  subOchaCategories: DacOcha[] = [];
 
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
+    this.loadMainOchaList();
     this._setComponentReadiness('READY');
   }
 
@@ -122,19 +119,48 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
+  private loadMainOchaList(): void {
+    this.dacOchaService.loadOCHAs()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((result: DacOcha[]) => {
+          return result.filter(x => !x.parentId);
+        })
+      ).subscribe((list) => {
+      this.mainOchaCategories = list
+    });
+  }
+
+  handleChangeMainOcha(value: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this.loadSubOchaList(value);
+    }
+  }
+
+  private loadSubOchaList(mainOchaId: number): void {
+    if (!mainOchaId) {
+      this.subOchaCategories = [];
+      return;
+    }
+    this.dacOchaService
+      .loadSubDacOchas(mainOchaId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((list) => {
+        this.subOchaCategories = list;
+      });
+  }
+
+
   buildForm(): void {
-    this.form = this.fb.group(new ImplementingAgency().getAgencyFields(true));
+    this.form = this.fb.group(new InterventionField().getInterventionFieldForm(true));
   }
 
   private listenToAdd() {
-    this.add$.pipe(
-      takeUntil(this.destroy$),
-      tap(() => !!this.executionCountry ? true : this.displayMissingCountryMessage()),
-      filter(() => !!this.executionCountry)
-    ).subscribe(() => {
-      this.viewOnly = false;
-      this.recordChanged$.next(new ImplementingAgency());
-    });
+    this.add$.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.viewOnly = false;
+        this.recordChanged$.next(new InterventionField());
+      });
   }
 
   private listenToRecordChange() {
@@ -145,8 +171,9 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateForm(record: ImplementingAgency | undefined) {
+  private updateForm(record: InterventionField | undefined) {
     if (record) {
+      this.loadSubOchaList(record.mainUNOCHACategory);
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
@@ -176,12 +203,6 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private displayMissingCountryMessage(): void {
-    this.dialogService.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.execution_country})).onAfterClose$
-      .pipe(take(1))
-      .subscribe();
-  }
-
   private listenToSave() {
     this.save$.pipe(
       takeUntil(this.destroy$),
@@ -189,16 +210,11 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       filter(() => this.form.valid),
       map(() => {
         let formValue = this.form.getRawValue();
-        let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
-        let agencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.id === formValue.implementingAgency)) ?? new AdminResult();
-
-        return (new ImplementingAgency()).clone({
-          ...this.currentRecord, ...formValue,
-          agencyTypeInfo: agencyTypeInfo,
-          implementingAgencyInfo: agencyInfo
+        return (new InterventionField()).clone({
+          ...this.currentRecord, ...formValue
         });
       })
-    ).subscribe((agency: ImplementingAgency) => {
+    ).subscribe((agency: InterventionField) => {
       if (!agency) {
         return;
       }
@@ -209,7 +225,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _updateList(record: (ImplementingAgency | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (InterventionField | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -246,7 +262,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     this._setComponentReadiness('READY');
   }
 
-  edit(record: ImplementingAgency, $event?: MouseEvent) {
+  edit(record: InterventionField, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -256,14 +272,14 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     this.recordChanged$.next(record);
   }
 
-  view(record: ImplementingAgency, $event?: MouseEvent) {
+  view(record: InterventionField, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: ImplementingAgency, $event?: MouseEvent): any {
+  delete(record: InterventionField, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -281,27 +297,4 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  handleImplementingAgencyTypeChange(agencyType: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this.implementingAgencyList = [];
-      this.implementingAgencyField.setValue(null);
-    }
-
-    if (!agencyType) {
-      return;
-    }
-    this.externalProjectImplementationService.loadAgenciesByAgencyType(agencyType, this.executionCountry).pipe(
-      catchError(() => of([]))
-    ).subscribe((result) => {
-      this.implementingAgencyList = result;
-    })
-  }
-
-  get implementingAgencyTypeField(): FormControl {
-    return this.form.get('implementingAgencyType') as FormControl;
-  }
-
-  get implementingAgencyField(): FormControl {
-    return this.form.get('implementingAgency') as FormControl;
-  }
 }

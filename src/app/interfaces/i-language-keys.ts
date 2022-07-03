@@ -1011,6 +1011,7 @@ export interface ILanguageKeys {
   file_powerpoint: string;
   signature: string;
   msg_please_select_service_to_add: string;
+  menu_urgent_intervention_services: string;
   menu_urgent_intervention_license: string;
   msg_completion_offer_to_other_ou_if_not_fully_paid: string;
   disclosure_non_disclosure: string;

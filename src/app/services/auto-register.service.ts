@@ -20,13 +20,13 @@ import {CollectionApprovalComponent} from '@app/modules/collection/pages/collect
 import {MapService} from '@app/services/map.service';
 import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
 import {CollectorApprovalComponent} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
-import {UrgentInterventionLicenseComponent} from '@app/projects/pages/urgent-intervention-license/urgent-intervention-license.component';
+import {UrgentInterventionLicenseComponent} from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {CustomsExemptionComponent} from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
-import {UrgentInterventionReportComponent} from '@app/projects/pages/urgent-intervention-report/urgent-intervention-report.component';
+import {UrgentInterventionReportComponent} from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
 
 @Injectable({
   providedIn: 'root'
