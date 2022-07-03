@@ -108,8 +108,8 @@ export class AuthService {
       .pipe(filter<boolean | ILoginData, ILoginData>((loggedIn): loggedIn is ILoginData => !!loggedIn))
       .pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
         if (loggedIn.type === UserTypes.INTERNAL) {
-          counters.counters.externalFollowup !== '0' ? this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP') : null
-          counters.counters.internalFollowup !== '0' ? this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP') : null
+          counters.flags && counters.flags.externalFollowupPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
+          counters.flags && counters.flags.internalFollowuppPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
         }
       }))))
       .subscribe();
