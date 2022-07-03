@@ -1,16 +1,10 @@
+import { Lookup } from '@app/models/lookup';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { ReadinessStatus } from '@app/types/types';
-import { ExternalOrgAffiliationRequestTypes } from './../../../../enums/ExternalOrgAffiliationRequestTypes.enum';
 import { ContactOfficer } from '@app/models/contact-officer';
-import { ExecutiveManagementComponent } from '@app/modules/office-services/shared/executive-management/executive-management.component';
-import { BankAccountComponent } from '@app/modules/office-services/shared/bank-account/bank-account.component';
 import { CountryService } from '@app/services/country.service';
 import { Country } from '@app/models/country';
 import { ToastService } from '@app/services/toast.service';
-import { DialogService } from './../../../../services/dialog.service';
-import { LookupService } from './../../../../services/lookup.service';
-import { Lookup } from './../../../../models/lookup';
-import { ExternalOrgAffiliationService } from './../../../../services/external-org-affiliation.service';
 import { tap, takeUntil } from 'rxjs/operators';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -20,6 +14,12 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of } from 'rxjs';
+import { ExternalOrgAffiliationService } from '@app/services/external-org-affiliation.service';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ExternalOrgAffiliationRequestTypes } from '@app/enums/ExternalOrgAffiliationRequestTypes.enum';
+import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
 @Component({
   selector: 'app-external-org-affiliation',
   templateUrl: './external-org-affiliation.component.html',
@@ -27,8 +27,8 @@ import { Observable, of } from 'rxjs';
 })
 export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<ExternalOrgAffiliation, ExternalOrgAffiliationService> {
   form!: FormGroup;
-  RequestTypeDropDown: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
-  OrgClassificationDropDown: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
+  AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType;
+  AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
   countriesList: Country[] = [];
 

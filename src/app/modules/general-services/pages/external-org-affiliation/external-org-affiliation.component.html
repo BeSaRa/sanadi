@@ -11,21 +11,21 @@
       <tab
         [name]="tabsData.bankAccounts.name"
         [template]="bank_accounts"
-        [title]="lang.map.lbl_bank_accounts"
+        [title]="lang.map.bank_accounts"
         [hasError]="getTabInvalidStatus('bankAccounts')"
       >
       </tab>
       <tab
         [name]="tabsData.managers.name"
         [template]="executive_management"
-        [title]="lang.map.lbl_executive_management"
+        [title]="lang.map.executive_management"
         [hasError]="getTabInvalidStatus('managers')"
       >
       </tab>
       <tab
         [name]="tabsData.contactOfficer.name"
         [template]="contact_officer"
-        [title]="lang.map.lbl_contact_officer"
+        [title]="lang.map.contact_officers"
         [hasError]="getTabInvalidStatus('contactOfficer')"
       >
       </tab>
@@ -59,7 +59,7 @@
             formControlName="requestType"
           >
             <ng-option
-              *ngFor="let type of RequestTypeDropDown"
+              *ngFor="let type of AffiliationRequestType"
               [value]="type.lookupKey"
               >{{ type.getName() }}</ng-option
             >
@@ -88,7 +88,7 @@
             formControlName="category"
           >
             <ng-option
-              *ngFor="let type of RequestTypeDropDown"
+              *ngFor="let type of AffiliationCategory"
               [value]="type.lookupKey"
               >{{ type.getName() }}</ng-option
             >

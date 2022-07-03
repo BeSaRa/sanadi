@@ -116,4 +116,6 @@ export interface ILookupMap {
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
+  AffiliationCategory: Lookup[];
+  AffiliationRequestType: Lookup[];
 }
