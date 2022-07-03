@@ -31,17 +31,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'external-org-affiliation', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
-    resolve: {info: ServiceItemResolver},
-    data: {
-      permissionKey: EServicePermissions.EXTERNAL_ORG_AFFILIATION_REQUEST,
-      configPermissionGroup: null,
-      checkAnyPermission: false,
-      render: 'ExternalOrgAffiliationComponent'
-    }
-  },
-  {
     path: 'international-coop', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},

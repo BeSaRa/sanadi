@@ -21,6 +21,7 @@ import {
 } from '@app/modules/office-services/pages/partner-approval/management-council/management-council.component';
 import {TargetGroupComponent} from '@app/modules/office-services/pages/partner-approval/target-group/target-group.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     ContactOfficerComponent,
     GoalComponent,
     ManagementCouncilComponent,
-    TargetGroupComponent
+    TargetGroupComponent,
+    ExternalOrgAffiliationComponent
   ],
   imports: [
     CommonModule,

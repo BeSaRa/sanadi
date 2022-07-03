@@ -1,4 +1,3 @@
-import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -19,7 +18,6 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     InquiryComponent,
     ConsultationComponent,
     InternationalCooperationComponent,
-    ExternalOrgAffiliationComponent
   ],
   imports: [
     CommonModule,

@@ -3,11 +3,12 @@ import { IModelInterceptor } from './../interfaces/i-model-interceptor';
 
 
 export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<ExternalOrgAffiliation> {
-  caseInterceptor?: IModelInterceptor<ExternalOrgAffiliation> | undefined;
   send(model: Partial<ExternalOrgAffiliation>): Partial<ExternalOrgAffiliation> {
+    console.log(model)
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
+    console.log(model)
     return model;
   }
 

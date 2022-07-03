@@ -7,7 +7,6 @@ import { ConsultationComponent } from '@app/modules/general-services/pages/consu
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
-import { ExternalOrgAffiliationComponent } from '@app/modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import {
   InitialExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/initial-external-office-approval/initial-external-office-approval.component';
@@ -28,6 +27,7 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import { UrgentInterventionReportComponent } from '@app/projects/pages/urgent-intervention-report/urgent-intervention-report.component';
+import { ExternalOrgAffiliationComponent } from './../modules/office-services/pages/external-org-affiliation/external-org-affiliation.component';
 
 @Injectable({
   providedIn: 'root'
