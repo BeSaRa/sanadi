@@ -17,7 +17,8 @@ import { Observable, of } from 'rxjs';
 import { ExternalOrgAffiliationService } from '@app/services/external-org-affiliation.service';
 import { LookupService } from '@app/services/lookup.service';
 import { DialogService } from '@app/services/dialog.service';
-import { ExternalOrgAffiliationRequestTypes } from '@app/enums/ExternalOrgAffiliationRequestTypes.enum';
+import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
+import { AffiliationCategory } from '@app/enums/AffiliationCategory.enum';
 import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
 import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
 @Component({
@@ -31,7 +32,6 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
   countriesList: Country[] = [];
-
   managersTabStatus: ReadinessStatus = 'READY';
   bankDetailsTabStatus: ReadinessStatus = 'READY';
 
@@ -159,7 +159,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       .subscribe((countries) => this.countriesList = countries)
   }
   isCancelRequestType(): boolean {
-    return this.requestTypeField.value && (this.requestTypeField.value === ExternalOrgAffiliationRequestTypes.CANCEL)
+    return this.requestTypeField.value && (this.requestTypeField.value === AffiliationRequestType.CANCEL)
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
