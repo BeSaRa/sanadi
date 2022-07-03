@@ -1,10 +1,10 @@
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
-import {DialogService} from '../services/dialog.service';
+import {DialogService} from '@services/dialog.service';
 import {Injectable} from '@angular/core';
-import {EmployeeService} from '../services/employee.service';
-import {LangService} from '../services/lang.service';
-import {ConfigurationService} from '../services/configuration.service';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {ConfigurationService} from '@services/configuration.service';
 import {CommonUtils} from '@app/helpers/common-utils';
 
 @Injectable({

@@ -714,7 +714,8 @@
     "parent": null,
     "group": "main",
     "itemOrder": 6,
-    "svg": null
+    "svg": null,
+    "counter": "externalFollowup"
   },
   {
     "id": 55,
@@ -727,7 +728,8 @@
     "parent": null,
     "group": "main",
     "itemOrder": 6,
-    "svg": null
+    "svg": null,
+    "counter": "internalFollowup"
   },
   {
     "id": 56,

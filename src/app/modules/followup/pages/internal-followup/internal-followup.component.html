@@ -1,11 +1,11 @@
-<div class="row pb-3">
-  <app-page-header
-    [pageTitle]="'menu_internal_followup'"
-    [clickOnReload$]="reload$"
-    [useReloadValue]="true">
-  </app-page-header>
-  <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>
-</div>
+<!--<div class="row pb-3">-->
+<!--  <app-page-header-->
+<!--    [pageTitle]="'menu_internal_followup'"-->
+<!--    [clickOnReload$]="reload$"-->
+<!--    [useReloadValue]="true">-->
+<!--  </app-page-header>-->
+<!--  <app-grid-search (searchTextEvent)="searchText = $event"></app-grid-search>-->
+<!--</div>-->
 <div class="row">
   <div class="col-12">
     <div class="table-responsive">
@@ -15,22 +15,33 @@
                  [filter]="searchText"
                  [filterCallback]="filterCallback">
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
-          <ng-container cdkColumnDef="requestNumber">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_internal_followup" [useReloadValue]="true" [reload$]="reload$"
+                            [sort]="table.dataSource.sort"
+                            (textChange)="searchText = $event">
+              </table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="caseId">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.request_number}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.caseId}}</td>
           </ng-container>
           <ng-container cdkColumnDef="name">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.name}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header
+                [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.name">{{lang.map.name}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.getName()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="serviceType">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.service_type}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.service">{{lang.map.service_type}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo.getName()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="dueDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.dueDate}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <b [class]="getDateColor(row.dueDate)" >{{row.dueDate | date}}</b>
+              <b [class]="getDateColor(row.dueDate)">{{row.dueDate | date}}</b>
             </td>
           </ng-container>
           <ng-container cdkColumnDef="status">
@@ -38,7 +49,8 @@
             <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="orgInfo">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_organization}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.organization">{{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.orgInfo.getName()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
@@ -46,7 +58,7 @@
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
                 <button class="btn icon-btn text-primary grid-action-btn"
-                        [tooltip]="row.getDesc()" >
+                        [tooltip]="row.getDesc()">
                   <i class="mdi mdi-information"></i>
                 </button>
                 <button class="btn icon-btn text-primary grid-action-btn"
@@ -54,16 +66,15 @@
                   <i class="mdi mdi-comment"></i>
                 </button>
                 <button class="btn icon-btn text-primary grid-action-btn"
-                        [disabled]="row.status === statusEnum.TERMINATED"
+                        [disabled]="row.status === statusEnum.TERMINATED || row.status === statusEnum.PARTIAL_TERMINATION"
                         [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
                   <i class="mdi mdi-close-box"></i>
                 </button>
-
               </div>
             </td>
           </ng-container>
-
-          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="10" class="text-center">{{lang.map.no_records_to_display}}</td>
