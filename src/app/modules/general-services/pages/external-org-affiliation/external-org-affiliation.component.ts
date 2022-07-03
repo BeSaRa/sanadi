@@ -45,6 +45,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   _initComponent(): void {
   }
   _buildForm(): void {
+    this.form = new FormGroup({})
   }
   _afterBuildForm(): void {
   }

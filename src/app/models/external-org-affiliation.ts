@@ -1,3 +1,6 @@
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { ContactOfficer } from '@app/models/contact-officer';
+import { BankAccount } from '@app/models/bank-account';
 import { FactoryService } from './../services/factory.service';
 import { ExternalOrgAffiliationInterceptor } from './../model-interceptors/external-org-affiliation-interceptor';
 import { CaseTypes } from './../enums/case-types.enum';
@@ -15,9 +18,26 @@ const interceptor = new ExternalOrgAffiliationInterceptor();
   send: interceptor.send,
   receive: interceptor.receive
 })
-export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationService, ExternalOrgAffiliation> implements HasRequestType {
+export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationService, ExternalOrgAffiliation> implements  HasRequestType {
   service: ExternalOrgAffiliationService;
   caseType: number = CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST;
+
+  requestType!: number;
+  category!: number;
+  arName!: string;
+  enName!: string
+  country!: number;
+  city!: string;
+  phone!: string;
+  fax!: string;
+  website!: string;
+  email!: string;
+  mailBox!: string;
+  description!: string;
+
+  bankAccountDTOs: BankAccount[] = [];
+  executiveManagementDTOs: ExecutiveManagement[] = [];
+  contactOfficerDTOs: ContactOfficer[] = [];
 
   constructor() {
     super();
