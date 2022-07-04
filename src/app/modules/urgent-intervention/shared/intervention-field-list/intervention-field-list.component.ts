@@ -16,6 +16,7 @@ import {DialogService} from '@services/dialog.service';
 import {LookupService} from '@services/lookup.service';
 import {DacOcha} from '@app/models/dac-ocha';
 import {DacOchaService} from '@services/dac-ocha.service';
+import {AdminResult} from '@app/models/admin-result';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -45,7 +46,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
     return this._list;
   }
 
-  columns = ['mainOcha', 'subOcha', 'actions'];
+  displayedColumns = ['mainOcha', 'subOcha', 'actions'];
   editItem?: InterventionField;
   viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
@@ -56,6 +57,9 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: FormControl = new FormControl('');
+
+  mainOchaCategories: DacOcha[] = [];
+  subOchaCategories: DacOcha[] = [];
 
   form!: FormGroup;
   actions: IMenuItem<InterventionField>[] = [
@@ -97,9 +101,6 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
     }
   }
 
-  mainOchaCategories: DacOcha[] = [];
-  subOchaCategories: DacOcha[] = [];
-
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
@@ -133,6 +134,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
 
   handleChangeMainOcha(value: number, userInteraction: boolean = false): void {
     if (userInteraction) {
+      this.subUNOCHACategoryField.setValue(null);
       this.loadSubOchaList(value);
     }
   }
@@ -210,8 +212,13 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       filter(() => this.form.valid),
       map(() => {
         let formValue = this.form.getRawValue();
+        let mainUNOCHACategoryInfo: AdminResult = (this.mainOchaCategories.find(x => x.id === formValue.mainUNOCHACategory))?.convertToAdminResult() ?? new AdminResult();
+        let subUNOCHACategoryInfo: AdminResult = (this.subOchaCategories.find(x => x.id === formValue.subUNOCHACategory))?.convertToAdminResult() ?? new AdminResult();
+
         return (new InterventionField()).clone({
-          ...this.currentRecord, ...formValue
+          ...this.currentRecord, ...formValue,
+          mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
+          subUNOCHACategoryInfo: subUNOCHACategoryInfo
         });
       })
     ).subscribe((agency: InterventionField) => {
@@ -297,4 +304,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       });
   }
 
+  get subUNOCHACategoryField(): FormControl {
+    return this.form.get('subUNOCHACategory') as FormControl;
+  }
 }
