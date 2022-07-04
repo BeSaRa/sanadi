@@ -9,7 +9,6 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {LicenseService} from '@app/services/license.service';
-import {ServiceDataService} from '@app/services/service-data.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Observable, of, Subject} from 'rxjs';
 import {ReadinessStatus, TabMap} from '@app/types/types';
@@ -482,7 +481,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReport> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: UrgentInterventionReport, details: UrgentInterventionReport } | undefined)) => result ? result.details : result));
   }

@@ -57,6 +57,12 @@
                  validationClasses="interventionName" id="interventionName" trimInput>
         </div>
       </div>
+      <div *ngIf="selectedLicense">
+        <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_REPORTING"
+                                [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_REPORTING"
+                                [licenseList]="[selectedLicense]"
+                                [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+      </div>
       <div class="row">
         <div class="col-sm-12">
           <h2 class="h6 text-primary">{{lang.map.beneficiary_country_info}}</h2>

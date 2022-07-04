@@ -41,7 +41,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
   }
 
   searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
-  selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
+  selectLicenseDisplayColumns: string[] = ['beneficiaryCountry', 'executionCountry', 'subject', 'fullSerial', 'actions'];
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_report';
   jsonSearchFile: string = 'urgent_intervention_report_search_form.json';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
