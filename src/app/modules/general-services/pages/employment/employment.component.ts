@@ -120,17 +120,17 @@ EmploymentService
       .pipe(tap((valid) => !valid && this.invalidFormMessage()))
       .pipe(filter((valid) => valid))
       .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
-      // .pipe(
-      //   tap(
-      //     (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
-      //   ),
-      //   switchMap(() => {
-      //     return this.service.bulkValidate(this.employees, this.isApprova())
-      //   }),
-      //   tap(
-      //     (data) => { console.log(data); }
-      //   ),
-      // )
+      .pipe(
+        tap(
+          (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
+        ),
+        switchMap(() => {
+          return this.service.bulkValidate(this.employees, this.isApprova())
+        }),
+        tap(
+          (data) => { console.log(data); }
+        ),
+      )
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.employeeInfoDTOs.length) {

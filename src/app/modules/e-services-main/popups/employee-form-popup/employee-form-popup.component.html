@@ -174,7 +174,9 @@
           validationClasses="identificationNumber"
           formControlName="identificationNumber"
           class="form-control"
-          [readonly]="!isEditRequestTypeAllowed || !isNewRequestType()"
+          [readonly]="
+            !isEditRequestTypeAllowed || !isNewRequestType() || !canDraftModel()
+          "
         />
         <app-field-error-message
           controlName="identificationNumber"
@@ -415,7 +417,9 @@
             #dpworkStartDate="angular-mydatepicker"
             angular-mydatepicker
             validationClasses="workStartDate"
-            (inputFieldChanged)="onDateChange($event, 'workStartDate', 'workEndDate')"
+            (inputFieldChanged)="
+              onDateChange($event, 'workStartDate', 'workEndDate')
+            "
           ></div>
           <app-field-error-message
             controlName="workStartDate"
@@ -440,7 +444,9 @@
             #dpworkEndDate="angular-mydatepicker"
             angular-mydatepicker
             validationClasses="workEndDate"
-            (inputFieldChanged)="onDateChange($event, 'workStartDate', 'workEndDate')"
+            (inputFieldChanged)="
+              onDateChange($event, 'workStartDate', 'workEndDate')
+            "
           ></div>
           <app-field-error-message
             controlName="workEndDate"

@@ -217,7 +217,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
     }
   }
-
+  canDraftModel() {
+    return this.data.model?.canDraft();
+  }
   openDateMenu(ref: any) {
     if (this.isEditRequestTypeAllowed) ref.toggleCalendar();
   }
