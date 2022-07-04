@@ -67,6 +67,6 @@ export class FollowupService extends CrudWithDialogGenericService<Followup> {
   }
 
   terminate(followUpId: number): Observable<Followup> {
-    return this.http.put<Followup>(this._getServiceURL() + '/' + followUpId + '/activate', null)
+    return this.http.put<Followup>(this._getServiceURL() + '/' + followUpId + '/terminate', null)
   }
 }

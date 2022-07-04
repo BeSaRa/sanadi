@@ -51,7 +51,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   itemRoute: string = '';
   itemDetails: string = '';
   encrypt!: EncryptionService;
-
+  organizationId!: number;
   constructor() {
     super();
     this.employeeService = FactoryService.getService('EmployeeService');

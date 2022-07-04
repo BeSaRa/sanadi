@@ -16,13 +16,13 @@
     </div>
     <div class="row">
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="followUpConfigrationId"
-               for="followUpConfigrationId">{{lang.map.followup}}</label>
-        <ng-select validationClasses="followUpConfigrationId" appendTo="body" [clearable]="true" id="followUpConfigrationId"
-                   formControlName="followUpConfigrationId">
-          <ng-option [value]="option.id" *ngFor="let option of followupConfigurations">{{option.getName()}}</ng-option>
+        <label class="form-label" asteriskIfRequired="followUpType"
+               for="followUpType">{{lang.map.followup_type}}</label>
+        <ng-select validationClasses="followUpType" appendTo="body" [clearable]="true" id="followUpType"
+                   formControlName="followUpType">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of followUpTypes">{{option.getName()}}</ng-option>
         </ng-select>
-        <app-field-error-message controlName="followUpConfigrationId"></app-field-error-message>
+        <app-field-error-message controlName="followUpType"></app-field-error-message>
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="dueDate"
@@ -34,6 +34,26 @@
                angular-mydatepicker [options]="dateOptions" validationClasses="dueDate"></div>
           <app-field-error-message controlName="dueDate"></app-field-error-message>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="responsibleTeamId"
+               for="responsibleTeamId">{{lang.map.responsible_team}}</label>
+        <ng-select validationClasses="responsibleTeamId" appendTo="body" [clearable]="true" id="responsibleTeamId"
+                   formControlName="responsibleTeamId">
+          <ng-option [value]="option.id" *ngFor="let option of teams">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="responsibleTeamId"></app-field-error-message>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="concernedTeamId"
+               for="concernedTeamId">{{lang.map.concerned_team}}</label>
+        <ng-select validationClasses="concernedTeamId" appendTo="body" [clearable]="true" id="concernedTeamId"
+                   formControlName="concernedTeamId">
+          <ng-option [value]="option.id" *ngFor="let option of teams">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="concernedTeamId"></app-field-error-message>
       </div>
     </div>
     <div class="row">

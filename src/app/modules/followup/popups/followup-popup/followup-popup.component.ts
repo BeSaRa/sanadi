@@ -11,9 +11,12 @@ import { FollowupService } from '@app/services/followup.service';
 import { LangService } from '@app/services/lang.service';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { DateUtils } from '@app/helpers/date-utils';
-import { FollowupConfiguration } from "@app/models/followup-configuration";
 import { CaseModel } from "@app/models/case-model";
 import { EmployeeService } from "@services/employee.service";
+import { Lookup } from "@app/models/lookup";
+import { TeamService } from "@services/team.service";
+import { takeUntil } from "rxjs/operators";
+import { FollowUpType } from "@app/enums/followUp-type.enum";
 
 @Component({
   selector: 'followup-popup',
@@ -21,11 +24,6 @@ import { EmployeeService } from "@services/employee.service";
   styleUrls: ['./followup-popup.component.scss']
 })
 export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
-  @Input()
-  followupConfigurations: FollowupConfiguration[] = []
-
-  selectedConfig?: FollowupConfiguration
-
   @Input()
   case?: CaseModel<any, any>;
 
@@ -40,11 +38,14 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
     disablePeriod: 'past'
   });
 
+  followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
+
   constructor(public fb: FormBuilder,
               private lookupService: LookupService,
               private employeeService: EmployeeService,
               public dialogRef: DialogRef,
               public service: FollowupService,
+              private teamService: TeamService,
               public lang: LangService,) {
     super();
   }
@@ -65,20 +66,22 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   }
 
   initPopup(): void {
-    this.listenToSelectedConfiguration()
+    this.listenToFollowupTypeChange()
+    this.teamService
+      .load()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((teams) => {
+        this.teams = teams
+      })
   }
 
   prepareModel(model: Followup, form: FormGroup): Observable<Followup> | Followup {
     const newModel = new Followup().clone({
       ...this.form.getRawValue(),
       custom: true,
-      concernedTeamId: this.selectedConfig?.concernedTeamId,
-      responsibleTeamId: this.selectedConfig?.responsibleTeamId,
-      followUpType: this.selectedConfig?.followUpType,
-      followUpConfigrationId: this.selectedConfig?.id,
-      serviceId: this.selectedConfig?.serviceId,
-      orgId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : -1,
-      fullSerial: this.case?.fullSerial
+      caseType: this.case?.caseType,
+      fullSerial: this.case?.fullSerial,
+      orgId: this.case?.organizationId
     });
     newModel.caseId = this.case!.id;
     return newModel;
@@ -91,15 +94,35 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
     this.hideForm.emit();
   }
 
-  get followUpConfigId(): AbstractControl {
-    return this.form.get('followUpConfigrationId')!
+  get followupTypeField(): AbstractControl {
+    return this.form.get('followUpType')!
   }
 
-  listenToSelectedConfiguration(): void {
-    this.followUpConfigId
-      .valueChanges
-      .subscribe((value: number) => {
-        this.selectedConfig = this.followupConfigurations.find(item => item.id === value)
+  get responsibleTeamIdField(): AbstractControl {
+    return this.form.get('responsibleTeamId')!
+  }
+
+  get concernedTeamIdField(): AbstractControl {
+    return this.form.get('concernedTeamId')!
+  }
+
+  disableRightTeams(type: FollowUpType): void {
+    if (type === FollowUpType.EXTERNAL) {
+      this.responsibleTeamIdField.enable()
+      this.concernedTeamIdField.disable()
+      this.concernedTeamIdField.patchValue(null)
+    } else {
+      this.concernedTeamIdField.enable()
+      this.responsibleTeamIdField.disable()
+      this.responsibleTeamIdField.patchValue(null)
+    }
+  }
+
+  listenToFollowupTypeChange(): void {
+    this.followupTypeField.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: FollowUpType) => {
+        this.disableRightTeams(value)
       })
   }
 }

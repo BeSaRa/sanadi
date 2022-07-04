@@ -9,6 +9,7 @@ import { IDescriptions } from '@app/interfaces/I-descriptions';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { FollowupInterceptor } from "@app/model-interceptors/followup.interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import { FollowUpType } from "@app/enums/followUp-type.enum";
 
 const interceptor = new FollowupInterceptor()
 
@@ -28,7 +29,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
 
   orgId!: number;
   followUpConfigrationId!: number;
-  serviceId!: number;
+  caseType!: number;
   caseId!: string;
   arDesc!: string;
   enDesc!: string;
@@ -71,7 +72,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enDesc,
       followUpType,
       responsibleTeamId,
-      followUpConfigrationId,
+      // followUpConfigrationId,
       concernedTeamId,
       dueDate
     } = this;
@@ -80,10 +81,10 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enName: controls ? [enName, [CustomValidators.required]] : enName,
       arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
       enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
-      followUpConfigrationId: controls ? [followUpConfigrationId, [CustomValidators.required]] : followUpConfigrationId,
-      // followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
-      // responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
-      // concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
+      // followUpConfigrationId: controls ? [followUpConfigrationId, [CustomValidators.required]] : followUpConfigrationId,
+      followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
+      responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
+      concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
       dueDate: controls ? [dueDate, [CustomValidators.required]] : dueDate
     }
   }
