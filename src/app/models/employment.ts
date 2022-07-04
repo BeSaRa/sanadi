@@ -5,24 +5,24 @@ import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
 import { Validators } from "@angular/forms";
 import { FactoryService } from "./../services/factory.service";
 import { InterceptModel } from "@decorators/intercept-model";
-import { JobApplicationInterceptor } from "./../model-interceptors/job-application-interceptor";
-import { JobApplicationService } from "./../services/job-application.service";
+import { EmploymentInterceptor } from "./../model-interceptors/employment-interceptor";
+import { EmploymentService } from "./../services/employment.service";
 import { CaseModel } from "@app/models/case-model";
 import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
-const interceptor = new JobApplicationInterceptor();
+const interceptor = new EmploymentInterceptor();
 
 @InterceptModel({
   send: interceptor.send,
   receive: interceptor.receive,
 })
-export class JobApplication
-  extends _RequestType<JobApplicationService, JobApplication>
+export class Employment
+  extends _RequestType<EmploymentService, Employment>
   implements HasRequestType, HasLicenseDurationType {
-  service!: JobApplicationService;
-  caseType: number = CaseTypes.JOB_APPLICATION;
+  service!: EmploymentService;
+  caseType: number = CaseTypes.EMPLOYMENT;
   requestType!: number;
   category!: number;
   description: string = "";
@@ -32,7 +32,7 @@ export class JobApplication
   oldLicenseFullSerial!: string;
   constructor() {
     super();
-    this.service = FactoryService.getService("JobApplicationService");
+    this.service = FactoryService.getService("EmploymentService");
   }
 
   formBuilder(controls?: boolean) {

@@ -1033,7 +1033,7 @@ export interface ILanguageKeys {
   total_income: string;
   msg_missing_incomes_or_obligations: string;
   msg_confirm_continue: string;
-  menu_job_application: string;
+  menu_employment: string;
   employee_data: string;
   order_type: string;
   add_new_Employee_data: string;

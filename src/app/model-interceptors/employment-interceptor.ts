@@ -1,11 +1,11 @@
-import { Employee } from "./../models/employee";
+import { Employment } from '@app/models/employment';
 import { EmployeeInterceptor } from "./employee-interceptor";
-import { JobApplication } from "./../models/job-application";
 import { IModelInterceptor } from "@contracts/i-model-interceptor";
+import { Employee } from '@app/models/employee';
 
 const employeeInterceptor = new EmployeeInterceptor();
-export class JobApplicationInterceptor
-  implements IModelInterceptor<JobApplication>
+export class EmploymentInterceptor
+  implements IModelInterceptor<Employment>
 {
   send(model: any) {
     model.employeeInfoDTOs = model.employeeInfoDTOs.map((ei: any) => {
@@ -14,7 +14,7 @@ export class JobApplicationInterceptor
     return model;
   }
 
-  receive(model: JobApplication): JobApplication {
+  receive(model: Employment): Employment {
     model.employeeInfoDTOs = model.employeeInfoDTOs.map(ei => {
       return employeeInterceptor.receive(new Employee().clone(ei));
     })

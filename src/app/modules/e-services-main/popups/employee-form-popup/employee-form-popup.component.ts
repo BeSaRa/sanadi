@@ -1,3 +1,5 @@
+import { Employment } from '@app/models/employment';
+import { EmploymentService } from '@app/services/employment.service';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { JobTitle } from '@app/models/job-title';
@@ -15,12 +17,10 @@ import { Employee } from '@app/models/employee';
 import { Lookup } from '@app/models/lookup';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { JobApplicationService } from '@app/services/job-application.service';
-import { JobApplication } from '@app/models/job-application';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IdentificationType } from '@app/enums/identification-type.enum';
 import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
-import { LookupEmploymentCategory } from '@app/enums/lookup-employment-category';
+import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 
 @Component({
@@ -111,10 +111,10 @@ export class EmployeeFormPopupComponent implements OnInit {
     private lookupService: LookupService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
-      service: JobApplicationService;
+      service: EmploymentService;
       parentForm: FormGroup;
       employees: Employee[];
-      model: JobApplication | undefined;
+      model: Employment | undefined;
       operation: number,
       jobTitleList: JobTitle[]
     }
@@ -296,7 +296,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     return this.contractLocationType.value == ContractLocationTypes.External;
   }
   isApproval() {
-    return this.category.value == LookupEmploymentCategory.APPROVAL;
+    return this.category.value == EmploymentCategory.APPROVAL;
   }
   isFinishedContract() {
     return this.contractStatus.value != ContractStatus.Finished;

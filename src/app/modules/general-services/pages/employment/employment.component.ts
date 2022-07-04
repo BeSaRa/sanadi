@@ -1,3 +1,4 @@
+import { EmploymentSearchCriteria } from './../../../../models/employment-search-criteria';
 import { JobTitleService } from '@app/services/job-title.service';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ToastService } from "@app/services/toast.service";
@@ -13,35 +14,32 @@ import { Observable, of, Subject } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { SaveTypes } from "@app/enums/save-types";
-import { catchError, exhaustMap, filter, map, takeUntil, tap } from "rxjs/operators";
-import { JobApplication } from '@app/models/job-application';
-import { JobApplicationService } from '@app/services/job-application.service';
 import { Employee } from '@app/models/employee';
-import { JobApplicationSearchCriteria } from '@app/models/job-application-search-criteria';
 import { JobTitle } from '@app/models/job-title';
 import { Lookup } from '@app/models/lookup';
 import { NavigationService } from '@app/services/navigation.service';
 import { LookupService } from '@app/services/lookup.service';
 import { LangService } from '@app/services/lang.service';
-import { JobApplicationCategories } from '@app/enums/job-application-categories.enum';
-import { LookupEmploymentCategory } from '@app/enums/lookup-employment-category';
+import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { AdminResult } from '@app/models/admin-result';
 import { EmployeesDataComponent } from '@app/modules/e-services-main/shared/employees-data/employees-data.component';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
+import { Employment } from '@app/models/employment';
+import { EmploymentService } from '@app/services/employment.service';
 @Component({
-  selector: "app-job-application",
-  templateUrl: "./job-application.component.html",
-  styleUrls: ["./job-application.component.scss"],
+  templateUrl: "./employment.component.html",
+  styleUrls: ["./employment.component.scss"],
 })
-export class JobApplicationComponent extends EServicesGenericComponent<
-JobApplication,
-JobApplicationService
+export class EmploymentComponent extends EServicesGenericComponent<
+Employment,
+EmploymentService
 > {
   form!: FormGroup;
-  identificationNumberSearch$: Subject<Partial<JobApplicationSearchCriteria>> = new Subject<Partial<JobApplicationSearchCriteria>>();
+  identificationNumberSearch$: Subject<Partial<EmploymentSearchCriteria>> = new Subject<Partial<EmploymentSearchCriteria>>();
 
   employees: Partial<Employee>[] = [];
   fileIconsEnum = FileIconsEnum;
-  caseType: number = CaseTypes.JOB_APPLICATION;
+  caseType: number = CaseTypes.EMPLOYMENT;
 
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   @Input()
@@ -79,7 +77,7 @@ JobApplicationService
     },
   };
   constructor(
-    public service: JobApplicationService,
+    public service: EmploymentService,
     private navigationService: NavigationService,
     private dialog: DialogService,
     public fb: FormBuilder,
@@ -91,8 +89,8 @@ JobApplicationService
     super();
   }
 
-  _getNewInstance(): JobApplication {
-    return new JobApplication();
+  _getNewInstance(): Employment {
+    return new Employment();
   }
   _initComponent(): void {
     this._buildForm();
@@ -109,7 +107,7 @@ JobApplicationService
     })
   }
   _buildForm(): void {
-    this.form = this.fb.group(new JobApplication().formBuilder(true));
+    this.form = this.fb.group(new Employment().formBuilder(true));
   }
   _afterBuildForm(): void {
     this.handleCategoryChange();
@@ -122,11 +120,17 @@ JobApplicationService
       .pipe(tap((valid) => !valid && this.invalidFormMessage()))
       .pipe(filter((valid) => valid))
       .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
-      .pipe(
-        tap(
-          (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
-        )
-      );
+      // .pipe(
+      //   tap(
+      //     (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
+      //   ),
+      //   switchMap(() => {
+      //     return this.service.bulkValidate(this.employees, this.isApprova())
+      //   }),
+      //   tap(
+      //     (data) => { console.log(data); }
+      //   ),
+      // )
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.employeeInfoDTOs.length) {
@@ -138,13 +142,13 @@ JobApplicationService
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
-  _prepareModel(): JobApplication | Observable<JobApplication> {
-    return new JobApplication().clone({
+  _prepareModel(): Employment | Observable<Employment> {
+    return new Employment().clone({
       ...this.model,
     });
   }
   _afterSave(
-    model: JobApplication,
+    model: Employment,
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
@@ -184,7 +188,7 @@ JobApplicationService
   _destroyComponent(): void {
     this.identificationNumberSearch$.unsubscribe();
   }
-  _updateForm(model: JobApplication | undefined): void {
+  _updateForm(model: Employment | undefined): void {
     if (!model) {
       return;
     }
@@ -199,7 +203,7 @@ JobApplicationService
   }
   private setDefaultValues(): void {
     this.requestType.patchValue(EmploymentRequestType.NEW);
-    this.category.patchValue(JobApplicationCategories.NOTIFICATION);
+    this.category.patchValue(EmploymentCategory.NOTIFICATION);
   }
   isEditRequestTypeAllowed(): boolean {
     // allow edit if new record or saved as draft
@@ -207,13 +211,13 @@ JobApplicationService
   }
   openForm() {
     this.service.openAddNewEmployee(this.form, this.employees, this.model, this.operation,
-      this.category.value == LookupEmploymentCategory.APPROVAL ? this.systemJobTitleList : this.externalJobTitleList
+      this.category.value == EmploymentCategory.APPROVAL ? this.systemJobTitleList : this.externalJobTitleList
     );
   }
   handleCategoryChange(): void {
     this.category.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((val: JobApplicationCategories) => {
+      .subscribe((val: EmploymentCategory) => {
         this.model!.category = val;
         this.requestType.setValue(null);
         this.model!.requestType = EmploymentRequestType.NEW;
@@ -245,7 +249,7 @@ JobApplicationService
       (eqt) =>
         !(
           eqt.lookupKey == EmploymentRequestType.CANCEL &&
-          this.category.value == LookupEmploymentCategory.NOTIFICATION
+          this.category.value == EmploymentCategory.NOTIFICATION
         )
     );
   }
@@ -255,7 +259,7 @@ JobApplicationService
   isCreateOperation() {
     return this.operation === OperationTypes.CREATE
   }
-  loadSearchByCriteria(criteria: Partial<JobApplicationSearchCriteria>): Observable<Employee[]> {
+  loadSearchByCriteria(criteria: Partial<EmploymentSearchCriteria>): Observable<Employee[]> {
     return this.service.findEmployee(criteria);
   }
   private listenToSearchCriteria() {
@@ -264,7 +268,7 @@ JobApplicationService
         return this.loadSearchByCriteria({
           identificationNumber: dto.identificationNumber,
           passportNumber: dto.passportNumber,
-          isManager: this.category.value == LookupEmploymentCategory.APPROVAL,
+          isManager: this.category.value == EmploymentCategory.APPROVAL,
         })
           .pipe(catchError(() => of([])))
       }))
@@ -311,7 +315,7 @@ JobApplicationService
     });
   }
   isApprova() {
-    return this.category.value == LookupEmploymentCategory.APPROVAL
+    return this.category.value == EmploymentCategory.APPROVAL
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);

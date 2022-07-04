@@ -1,4 +1,5 @@
-import { JobApplicationService } from './job-application.service';
+import { EmploymentService } from '@app/services/employment.service';
+
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
@@ -77,7 +78,7 @@ export class InboxService {
     private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
     private urgentInterventionReportingService: UrgentInterventionReportingService,
     private urlService: UrlService,
-    private jobApplicationService: JobApplicationService,
+    private employmentService: EmploymentService,
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -95,7 +96,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
     this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
-    this.services.set(CaseTypes.JOB_APPLICATION, this.jobApplicationService);
+    this.services.set(CaseTypes.EMPLOYMENT, this.employmentService);
     this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
   }

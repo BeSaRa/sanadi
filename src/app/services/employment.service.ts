@@ -1,14 +1,13 @@
 import { JobTitle } from './../models/job-title';
 import { Observable } from 'rxjs';
 import { EmployeeInterceptor } from './../model-interceptors/employee-interceptor';
-import { Generator } from '@app/decorators/generator';
 import { Employee } from './../models/employee';
 import { CastResponseContainer } from "@decorators/cast-response";
 import { FormGroup } from "@angular/forms";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { JobApplicationSearchCriteria } from "./../models/job-application-search-criteria";
+import { EmploymentSearchCriteria } from "./../models/employment-search-criteria";
 import { FactoryService } from "./factory.service";
-import { JobApplication } from "./../models/job-application";
+import { Employment } from "./../models/employment";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { CastResponse } from "@decorators/cast-response";
 import { HasInterception } from "@decorators/intercept-model";
@@ -25,16 +24,17 @@ import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
 import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 
+const interceptor = new EmployeeInterceptor();
 @CastResponseContainer({
   $employee: { model: () => Employee },
   $default: {
-    model: () => JobApplication
+    model: () => Employment
   },
 })
 @Injectable({
   providedIn: "root",
 })
-export class JobApplicationService extends BaseGenericEService<JobApplication> {
+export class EmploymentService extends BaseGenericEService<Employment> {
   searchColumns: string[] = [
     "fullSerial",
     "caseStatus",
@@ -43,8 +43,8 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     "subject"
   ];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
-  jsonSearchFile: string = "job_application_search-form.json";
-  serviceKey: keyof ILanguageKeys = "menu_job_application";
+  jsonSearchFile: string = "employment_search-form.json";
+  serviceKey: keyof ILanguageKeys = "menu_employment";
   onSubmit: EventEmitter<Partial<Employee>[]> = new EventEmitter();
 
   constructor(
@@ -56,14 +56,14 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     public dynamicService: DynamicOptionsService
   ) {
     super();
-    FactoryService.registerService("JobApplicationService", this);
+    FactoryService.registerService("EmploymentService", this);
   }
 
   getCaseComponentName(): string {
-    return "JobApplicationComponent";
+    return "EmploymentComponent";
   }
 
-  openAddNewEmployee(form: FormGroup, employees: Partial<Employee>[], model: JobApplication | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
+  openAddNewEmployee(form: FormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {
@@ -78,28 +78,37 @@ export class JobApplicationService extends BaseGenericEService<JobApplication> {
     );
   }
 
-  // TODO: ask to to applay sup interceptor
+  // TODO: ask to to apply sup interceptor
   @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',
     fallback: '$employee'
   })
-  findEmployee(criteria: Partial<JobApplicationSearchCriteria>): Observable<Employee[]> {
-    // =1&passport-number=1&is-manger=true
+  findEmployee(criteria: Partial<EmploymentSearchCriteria>): Observable<Employee[]> {
     return this.http.get<Employee[]>(this.urlService.URLS.NPO_EMPLOYEE + '/criteria?' +
       'q-id=' + criteria.identificationNumber +
       '&passport-number=' + criteria.passportNumber +
       '&is-manger=' + criteria.isManager
     )
   }
+
+  bulkValidate(employees: Partial<Employee>[], isManager: boolean): Observable<any> {
+    const employeesList = employees.map((e: any) => {
+      return {
+        ...interceptor.send(e),
+        isManager
+      }
+    })
+    return this.http.post<any>(this.urlService.URLS.NPO_EMPLOYEE + '/bulk/validate', employeesList)
+  }
   _getURLSegment(): string {
-    return this.urlService.URLS.E_JOB_APPLICATIONS;
+    return this.urlService.URLS.EMPLOYMENT;
   }
   _getModel() {
-    return JobApplication;
+    return Employment;
   }
-  getSearchCriteriaModel<S extends JobApplication>(): JobApplication {
-    return new JobApplicationSearchCriteria();
+  getSearchCriteriaModel<S extends Employment>(): Employment {
+    return new EmploymentSearchCriteria();
   }
   _getUrlService(): UrlService {
     return this.urlService;

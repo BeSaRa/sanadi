@@ -679,14 +679,14 @@
   },
   {
     "id": 54,
-    "langKey": "menu_job_application",
-    "path": "/home/e-services/job-application",
+    "langKey": "menu_employment",
+    "path": "/home/general-services/employment",
     "icon": "mdi-account-tie-outline",
     "isSvg": false,
-    "permission": "JOB_APPLICATION",
+    "permission": "EMPLOYMENT",
     "permissionGroup": null,
     "parent": 13,
-    "group": "e-services",
+    "group": "general-services",
     "itemOrder": 5,
     "svg": ""
   },
