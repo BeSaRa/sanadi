@@ -780,18 +780,5 @@
     "group": "main",
     "itemOrder": 13,
     "svg": null
-  },
-  {
-    "id": 61,
-    "langKey": "menu_urgent_intervention_closure",
-    "path": "/home/urgent-intervention/urgent-intervention-closure",
-    "icon": "mdi-license",
-    "isSvg": false,
-    "permission": "",
-    "permissionGroup": null,
-    "parent": 60,
-    "group": "urgent-intervention",
-    "itemOrder": 3,
-    "svg": null
   }
 ]
