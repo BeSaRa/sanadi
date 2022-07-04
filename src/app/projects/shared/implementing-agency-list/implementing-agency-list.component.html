@@ -58,12 +58,12 @@
             <ng-container cdkColumnDef="implementingAgencyType">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.implementingAgencyType"> {{lang.map.entity_type}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.agencyTypeInfo.getName()}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.agencyTypeInfo?.getName() || ''}} </td>
             </ng-container>
             <ng-container cdkColumnDef="implementingAgency">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.implementingAgency"> {{lang.map.entity_name}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.implementingAgencyInfo.getName()}} </td>
+              <td cdk-cell *cdkCellDef="let row"> {{row.implementingAgencyInfo?.getName() || ''}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

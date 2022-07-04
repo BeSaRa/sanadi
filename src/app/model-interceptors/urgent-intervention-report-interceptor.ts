@@ -11,6 +11,10 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class UrgentInterventionReportInterceptor implements IModelInterceptor<UrgentInterventionReport> {
   receive(model: UrgentInterventionReport): UrgentInterventionReport {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
+    model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
+    model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
+
     let service: UrgentInterventionReportingService = FactoryService.getService('UrgentInterventionReportingService');
     if (model.implementingAgencyList && model.implementingAgencyList.length > 0) {
       model.implementingAgencyList = model.implementingAgencyList.map(x => service.implementingAgencyInterceptor.receive(new ImplementingAgency().clone(x)));
