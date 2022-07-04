@@ -20,7 +20,6 @@ import { CommonUtils } from "@helpers/common-utils";
   styleUrls: ['./internal-followup.component.scss']
 })
 export class InternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
-
   actions: IMenuItem<Followup>[] = [];
   displayedColumns: string[] = ['caseId', 'name', 'serviceType', 'dueDate', 'status', 'actions'];
   headerColumn: string[] = ['extra-header'];
@@ -63,14 +62,13 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
 
   terminate(model: Followup, $event: MouseEvent) {
     $event.preventDefault();
-
     const message = this.lang.map.msg_confirm_terminate_followup;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = this.service.terminate(model.id).subscribe(() => {
           this.toast.success(this.lang.map.msg_success_terminate_followup);
-          this.reload$.next(1);
+          this.reload$.next(null);
           sub.unsubscribe();
         });
       }
@@ -86,19 +84,19 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
     return record.search(searchText);
   };
 
-  get statusEnum(){
-    return FollowupStatusEnum;
-  }
+  getDateColor(dueDate: any): 'red' | 'blue' | 'green' {
+    dueDate = (new Date(dueDate.split('T')[0]).setHours(0, 0, 0, 0));
+    let currentDate = (new Date().setHours(0, 0, 0, 0));
 
-  getDateColor(dueDate: any): 'red' |'blue' | 'green'{
-    dueDate = (new Date(dueDate.split('T')[0]).setHours(0,0,0,0));
-    let currentDate = (new Date().setHours(0,0,0,0));
-
-    if(dueDate < currentDate)
+    if (dueDate < currentDate)
       return 'red';
-    else if(dueDate > currentDate)
+    else if (dueDate > currentDate)
       return 'green';
     else
       return 'blue'
+  }
+
+  isDisabled(row: Followup): boolean {
+    return [FollowupStatusEnum.PARTIAL_TERMINATION, FollowupStatusEnum.TERMINATED].includes(row.status) && !this.employeeService.isInternalUser()
   }
 }

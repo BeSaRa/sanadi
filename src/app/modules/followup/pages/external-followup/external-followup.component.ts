@@ -74,7 +74,7 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
       if (click === UserClickOn.YES) {
         const sub = this.service.terminate(model.id).subscribe(() => {
           this.toast.success(this.lang.map.msg_success_terminate_followup);
-          this.reload$.next(1);
+          this.reload$.next(null);
           sub.unsubscribe();
         });
       }
@@ -104,5 +104,9 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
       return 'green';
     else
       return 'blue'
+  }
+
+  isDisabled(row: Followup): boolean {
+    return [FollowupStatusEnum.PARTIAL_TERMINATION, FollowupStatusEnum.TERMINATED].includes(row.status) && !this.employeeService.isInternalUser()
   }
 }

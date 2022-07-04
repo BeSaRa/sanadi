@@ -54,7 +54,7 @@
                   <i class="mdi mdi-comment"></i>
                 </button>
                 <button class="btn icon-btn text-primary grid-action-btn"
-                        [disabled]="row.status === statusEnum.TERMINATED || row.status === statusEnum.PARTIAL_TERMINATION"
+                        [disabled]="isDisabled(row)"
                         [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
                   <i class="mdi mdi-close-box"></i>
                 </button>
