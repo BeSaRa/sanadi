@@ -9,7 +9,6 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {LicenseService} from '@app/services/license.service';
-import {ServiceDataService} from '@app/services/service-data.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Observable, of, Subject} from 'rxjs';
 import {ReadinessStatus, TabMap} from '@app/types/types';
@@ -139,9 +138,9 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   };
   tabIndex$: Subject<number> = new Subject<number>();
 
-  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent
-  @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent
-  @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent
+  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
+  @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
+  @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
 
   entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
@@ -203,7 +202,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
-        })
+        });
     } else {
       this.model = model;
     }
@@ -247,14 +246,17 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   _prepareModel(): Observable<UrgentInterventionReport> | UrgentInterventionReport {
-    return (new UrgentInterventionReport()).clone({
+    let value = (new UrgentInterventionReport()).clone({
       ...this.model,
       ...this.form.getRawValue(),
       interventionFieldList: this.interventionFieldListComponentRef.list,
       interventionRegionList: this.interventionRegionListComponentRef.list,
-      implementingAgencyList: this.implementingAgencyListComponentRef.list,
-      subject: 'test subject'
+      implementingAgencyList: this.implementingAgencyListComponentRef.list
     });
+    if (this.operation === this.operationTypes.CREATE){
+      value.interventionLicenseId = this.service.preValidatedLicenseIdForAddOperation;
+    }
+    return value;
   }
 
   _resetForm(): void {
@@ -386,7 +388,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
       }
     } else {
       this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
       }]);
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -405,7 +407,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
         this.setSelectedLicense(license, true);
 
         callback && callback();
-      })
+      });
   }
 
   addCountry($event?: MouseEvent): void {
@@ -475,13 +477,13 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   private validateSingleLicense(license: UrgentInterventionReportResult): Observable<undefined | UrgentInterventionReport> {
-    return this.licenseService.validateLicenseByRequestType<UrgentInterventionReport>(this.model!.caseType, this.requestTypeField.value, license.id) as Observable<undefined | UrgentInterventionReport>
+    return this.licenseService.validateLicenseByRequestType<UrgentInterventionReport>(this.model!.caseType, this.requestTypeField.value, license.id) as Observable<undefined | UrgentInterventionReport>;
   }
 
   private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReport> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
-      .pipe(map((result: ({ selected: UrgentInterventionReport, details: UrgentInterventionReport } | undefined)) => result ? result.details : result))
+      .pipe(map((result: ({ selected: UrgentInterventionReport, details: UrgentInterventionReport } | undefined)) => result ? result.details : result));
   }
 
   private listenToLicenseSearch() {
@@ -490,7 +492,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
         takeUntil(this.destroy$),
         exhaustMap(oldLicenseFullSerial => {
           return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
-            .pipe(catchError(() => of([])))
+            .pipe(catchError(() => of([])));
         }))
       .pipe(
         // display message in case there is no returned license
@@ -504,7 +506,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
-      })
+      });
   }
 
   private setSelectedLicense(licenseDetails: UrgentInterventionReport | undefined, ignoreUpdateForm: boolean) {

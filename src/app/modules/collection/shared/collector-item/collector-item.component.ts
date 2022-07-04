@@ -178,7 +178,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
     this.listenToView();
     this.listenToRemove();
     this.listenToSave();
-    this.listenToDisableSearchField();
+    // this.listenToDisableSearchField();
     this.listenToLicenseDurationTypeChanges();
     this.loadCustomSettings();
     this.listenToLicenseSearch();
@@ -451,5 +451,20 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   isEditLicenseEndDateDisabled(): boolean {
     return (this.isPermanent || !this.isNewRequestType() || this.readOnly || this.viewOnly);
+  }
+
+  isSearchAllowed(): boolean {
+    // if readonly or no request type or request type = new, edit is not allowed
+    // if new or draft record, edit is allowed
+    // if collection item is new, edit is allowed
+    let isAllowed = false;
+    if (this.readOnly || this.viewOnly || !this.model.requestType || this.model.requestType === CollectionRequestType.NEW) {
+      isAllowed = false;
+    } else if (!this.model?.id || (!!this.model?.id && this.model.canCommit()) || !this.item!.itemId) {
+      isAllowed=  true;
+    }
+    !isAllowed ? this.oldLicenseFullSerialField.disable() : this.oldLicenseFullSerialField.enable()
+    /*this.oldLicenseFullSerialField.updateValueAndValidity();*/
+    return isAllowed;
   }
 }

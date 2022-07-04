@@ -18,7 +18,7 @@ import {InterventionField} from '@app/models/intervention-field';
 import {InterventionFieldInterceptor} from '@app/model-interceptors/intervention-field-interceptor';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {ImplementingAgencyInterceptor} from '@app/model-interceptors/implementing-agency-interceptor';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
 import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
 import {IDefaultResponse} from '@contracts/idefault-response';
@@ -41,7 +41,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
   }
 
   searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
-  selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
+  selectLicenseDisplayColumns: string[] = ['beneficiaryCountry', 'executionCountry', 'subject', 'fullSerial', 'actions'];
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_report';
   jsonSearchFile: string = 'urgent_intervention_report_search_form.json';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -49,6 +49,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
   implementingAgencyInterceptor: IModelInterceptor<ImplementingAgency> = new ImplementingAgencyInterceptor();
   interventionRegionInterceptor: IModelInterceptor<InterventionRegion> = new InterventionRegionInterceptor();
   interventionFieldInterceptor: IModelInterceptor<InterventionField> = new InterventionFieldInterceptor();
+  preValidatedLicenseIdForAddOperation: string = '';
 
   _getInterceptor(): Partial<IModelInterceptor<UrgentInterventionReport>> {
     return this.interceptor;
@@ -79,11 +80,20 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
   }
 
   /**
-   * @description Check if intervention license exists
-   * If exists, serial/license number will be returned, otherwise empty string
+   * @description Check if urgent intervention report can be added
    */
-  validateAddLicense(): Observable<boolean> {
+  preValidateAddLicense(isAddOperation: boolean): Observable<boolean> {
+    this.preValidatedLicenseIdForAddOperation = '';
+
+    // if not add operation, allow to access, otherwise pre-validate the data
+    // if intervention license exists, allow access, otherwise don't proceed to add
+    if (!isAddOperation) {
+      return of(true);
+    }
     return this.http.get<IDefaultResponse<string | boolean>>(this._getURLSegment() + '/validateAdd')
-      .pipe(map((response) => !!response.rs));
+      .pipe(map((response) => {
+        this.preValidatedLicenseIdForAddOperation = !!response.rs ? response.rs as string : '';
+        return !!response.rs;
+      }));
   }
 }

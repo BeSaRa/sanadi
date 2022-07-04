@@ -212,7 +212,7 @@
             </div>
           </td>
           <th>{{langService.map.date_of_death}}</th>
-          <td>{{!mophMortality ? '' : mophMortality.deathDate|date}}</td>
+          <td>{{!mophMortality ? '' : (!mophMortality.serviceStatus ? this.langService.map.msg_service_unavailable : mophMortality.deathDate|date)}}</td>
         </tr>
         </tbody>
       </table><!-- table -->

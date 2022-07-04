@@ -3,11 +3,13 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" style="width: 400px">
+<div class="dialog-content" style="width: 800px">
   <div class="row">
-    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+    <div class="col-md-4 col-sm-12 mb-4 position-relative">
       <label for="followUpDate"
-             class="form-label">{{lang.map.followup_date}}</label>
+             class="form-label">{{lang.map.followup_date}}
+        <span class="text-danger"> * </span>
+      </label>
       <div class="input-group">
         <i class="input-group-text mdi mdi-calendar"></i>
         <div class="form-control" [formControl]="followUpDate"
@@ -31,6 +33,6 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button [disabled]="!comment.value || !followUpDate.value" (click)="action$.next(null)" class="btn btn-primary">{{lang.map[label]}}</button>
+  <button [disabled]="!followUpDate.value" (click)="action$.next(null)" class="btn btn-primary">{{lang.map[label]}}</button>
   <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

@@ -14,4 +14,5 @@ export class GdxMophResponse {
   arFullName!: string;
   enFullName!: string;
   isDead!: boolean;
+  serviceStatus!: boolean; // status of moph service availability
 }

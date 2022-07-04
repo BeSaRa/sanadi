@@ -13,6 +13,7 @@ import {FactoryService} from './factory.service';
 export class ToastService {
   private overlayRefStack: ToastRef[] = [];
   private langService: LangService = {} as LangService;
+  private maxStackLength: number = 5;
 
   constructor(private overlay: Overlay, private injector: Injector) {
     FactoryService.registerService('ToastService', this);
@@ -26,12 +27,14 @@ export class ToastService {
   /**
    * @description create toast function.
    * @param message content of the toast
-   * @param alertClass which class to append to the content div
+   * @param alertClass which class to append to the content div.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
+   * Default = 3 seconds
    * @private
    */
-  private createToast(message: string, alertClass: string): ToastRef {
+  private createToast(message: string, alertClass: string, closeAfterTime: number = 3): ToastRef {
 
-    if (this.overlayRefStack.length && this.overlayRefStack.length === 5) {
+    if (this.overlayRefStack.length && this.overlayRefStack.length === this.maxStackLength) {
       this.overlayRefStack.shift()?.close();
     }
     const toastOverlay = this.overlay.create({
@@ -46,7 +49,7 @@ export class ToastService {
     const timer = setTimeout(() => {
       toastRef.close();
       clearTimeout(timer);
-    }, 3000);
+    }, closeAfterTime * 1000);
 
     const componentPortal = new ComponentPortal(ToastComponent, null, injector);
     const componentRef = toastOverlay.attach(componentPortal);
@@ -74,41 +77,46 @@ export class ToastService {
 
   /**
    * @description display Toast message with red color [Error].
-   * @param message:string content of the message that you want to display it inside the toast.
+   * @param message content of the message that you want to display it inside the toast.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
    */
-  error(message: string): ToastRef {
-    return this.createToast(message, 'alert-danger');
+  error(message: string, closeAfterTime?: number): ToastRef {
+    return this.createToast(message, 'alert-danger', closeAfterTime);
   }
 
   /**
    * @description display Toast message with green color [Success].
-   * @param message:string content of the message that you want to display it inside the toast.
+   * @param message content of the message that you want to display it inside the toast.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
    */
-  success(message: string): ToastRef {
-    return this.createToast(message, 'alert-success');
+  success(message: string, closeAfterTime?: number): ToastRef {
+    return this.createToast(message, 'alert-success', closeAfterTime);
   }
 
   /**
    * @description display Toast message with blue color [Info].
-   * @param message:string content of the message that you want to display it inside the toast.
+   * @param message content of the message that you want to display it inside the toast.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
    */
-  info(message: string): ToastRef {
-    return this.createToast(message, 'alert-info');
+  info(message: string, closeAfterTime?: number): ToastRef {
+    return this.createToast(message, 'alert-info', closeAfterTime);
   }
 
   /**
    * @description display Toast message with yellow color [Alert-Warning].
-   * @param message:string content of the message that you want to display it inside the toast.
+   * @param message content of the message that you want to display it inside the toast.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
    */
-  alert(message: string): ToastRef {
-    return this.createToast(message, 'alert-warning');
+  alert(message: string, closeAfterTime?: number): ToastRef {
+    return this.createToast(message, 'alert-warning', closeAfterTime);
   }
 
   /**
    * @description display Toast message with gray color [dimmed].
-   * @param message:string content of the message that you want to display it inside the toast.
+   * @param message content of the message that you want to display it inside the toast.
+   * @param closeAfterTime specify the time(in seconds) after which toast will close.
    */
-  gray(message: string): ToastRef {
-    return this.createToast(message, 'alert-secondary');
+  gray(message: string, closeAfterTime?: number): ToastRef {
+    return this.createToast(message, 'alert-secondary', closeAfterTime);
   }
 }

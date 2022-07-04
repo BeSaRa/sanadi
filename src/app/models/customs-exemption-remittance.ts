@@ -1,20 +1,15 @@
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {dateSearchFields} from '@app/helpers/date-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {FactoryService} from '@app/services/factory.service';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {AdminResult} from './admin-result';
 import {CaseModel} from './case-model';
 import {TaskDetails} from './task-details';
 import {DialogService} from '@app/services/dialog.service';
-import {
-  CustomsExemptionApproveTaskPopupComponent
-} from '@app/modules/remittances/popups/customs-exemption-approve-task-popup/customs-exemption-approve-task-popup.component';
 import {DateUtils} from '@app/helpers/date-utils';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@app/interfaces/has-request-type';
@@ -127,15 +122,15 @@ export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExempti
 
     return {
       arName: controls ? [arName, [CustomValidators.required,
-        CustomValidators.maxLength(100),
+        CustomValidators.maxLength(200),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM')]] : arName,
       enName: controls ? [enName, [CustomValidators.required,
-        CustomValidators.maxLength(100),
+        CustomValidators.maxLength(200),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM')]] : enName,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(2000)]] : description,
       shipmentSource: controls ? [shipmentSource, [CustomValidators.required]] : shipmentSource,
       shipmentWeight: controls ? [shipmentWeight, [CustomValidators.required, CustomValidators.maxLength(50)]] : shipmentWeight,
       waybill: controls ? [waybill, [CustomValidators.required, CustomValidators.maxLength(200)]] : waybill,

@@ -238,8 +238,7 @@
           <label asteriskIfRequired="description" for="description"
                  class="form-label">{{lang.map.lbl_description}}</label>
           <textarea name="description" formControlName="description" validationClasses="description"
-                    id="description" rows="4" class="form-control"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    id="description" rows="4" class="form-control" maxlength="2000"
                     [readonly]="(isCancelRequestType() || readonly)" trimInput></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>

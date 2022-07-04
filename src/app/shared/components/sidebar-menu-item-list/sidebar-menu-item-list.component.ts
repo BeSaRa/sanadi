@@ -1,10 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MenuItem} from '@app/models/menu-item';
-import {EmployeeService} from '@app/services/employee.service';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Router} from '@angular/router';
-import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
+import { Component, Input, OnInit } from '@angular/core';
+import { MenuItem } from '@app/models/menu-item';
+import { EmployeeService } from '@app/services/employee.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router';
+import { CustomEmployeePermission } from "@app/helpers/custom-employee-permission";
 import { LangService } from "@services/lang.service";
+import { CommonService } from "@services/common.service";
+import { Common } from "@app/models/common";
 
 @Component({
   selector: 'app-sidebar-menu-item-list',
@@ -35,7 +37,10 @@ export class SidebarMenuItemListComponent implements OnInit {
     this._searchText = value ? value : '';
   }
 
-  constructor(public empService: EmployeeService , public lang: LangService, private router: Router) {
+  constructor(public empService: EmployeeService,
+              public lang: LangService,
+              private commonService: CommonService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -53,5 +58,13 @@ export class SidebarMenuItemListComponent implements OnInit {
 
   hasCustomPermissions(item: MenuItem): boolean {
     return CustomEmployeePermission.hasCustomPermission(item.langKey) ? CustomEmployeePermission.getCustomPermission(item.langKey)(this.empService, item) : true;
+  }
+
+  hasCounter(s: keyof Common['counters'] | undefined): boolean {
+    return s ? this.commonService.hasCounter(s) : false
+  }
+
+  getCounter(s: keyof Common['counters'] | undefined): string {
+    return s ? this.commonService.getCounter(s) : '';
   }
 }

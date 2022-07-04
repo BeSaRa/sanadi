@@ -1,19 +1,19 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {CollectionApproval} from "@app/models/collection-approval";
-import {BehaviorSubject, Observable, of, Subject} from "rxjs";
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {CollectionItem} from "@app/models/collection-item";
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {LangService} from "@app/services/lang.service";
-import {AppEvents} from "@app/enums/app-events";
+import {CollectionApproval} from '@app/models/collection-approval';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {CollectionItem} from '@app/models/collection-item';
+import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {LangService} from '@app/services/lang.service';
+import {AppEvents} from '@app/enums/app-events';
 import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ICoordinates} from "@app/interfaces/ICoordinates";
-import {LicenseService} from "@app/services/license.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {CollectionLicense} from "@app/license-models/collection-license";
-import {HasCollectionItemBuildForm} from "@app/interfaces/has-collection-item-build-form";
-import {CollectionRequestType} from "@app/enums/service-request-types";
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ICoordinates} from '@app/interfaces/ICoordinates';
+import {LicenseService} from '@app/services/license.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CollectionLicense} from '@app/license-models/collection-license';
+import {HasCollectionItemBuildForm} from '@app/interfaces/has-collection-item-build-form';
+import {CollectionRequestType} from '@app/enums/service-request-types';
 import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -39,7 +39,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   @Input()
-  model!: CollectionApproval
+  model!: CollectionApproval;
   destroy$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
@@ -56,7 +56,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   searchControl: FormControl = new FormControl();
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
   };
   viewOnly: boolean = false;
 
@@ -66,7 +66,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: CollectionItem, index: number) => this.view$.next({ item: item, index: index }),
+      onClick: (item: CollectionItem, index: number) => this.view$.next({item: item, index: index}),
       show: (_item: CollectionItem) => !this.approvalMode && this.readOnly
     },
     // edit
@@ -74,7 +74,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectionItem, index: number) => this.edit$.next({ item: item, index: index }),
+      onClick: (item: CollectionItem, index: number) => this.edit$.next({item: item, index: index}),
       show: (_item: CollectionItem) => !this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
@@ -83,7 +83,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE_TRASH,
-      onClick: (item: CollectionItem, index: number) => this.remove$.next({ item: item, index: index }),
+      onClick: (item: CollectionItem, index: number) => this.remove$.next({item: item, index: index}),
       show: (_item: CollectionItem) => !this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
@@ -92,11 +92,11 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'edit_approval_info',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectionItem, index: number) => this.approval.emit({ item: item, index: index }),
+      onClick: (item: CollectionItem, index: number) => this.approval.emit({item: item, index: index}),
       show: (_item: CollectionItem) => this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
-  ]
+  ];
 
   @Output()
   approval: EventEmitter<{ item: CollectionItem, index: number }> = new EventEmitter<{ item: CollectionItem; index: number }>();
@@ -115,7 +115,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   @Input() readOnly: boolean = false;
 
-  private currentDurationType: BehaviorSubject<LicenseDurationType | undefined> = new BehaviorSubject<LicenseDurationType | undefined>(undefined)
+  private currentDurationType: BehaviorSubject<LicenseDurationType | undefined> = new BehaviorSubject<LicenseDurationType | undefined>(undefined);
 
   @Input()
   set licenseDurationType(value: LicenseDurationType | undefined) {
@@ -123,7 +123,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   get licenseDurationType(): LicenseDurationType | undefined {
-    return this.currentDurationType.value
+    return this.currentDurationType.value;
   }
 
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -143,11 +143,11 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
 
   get longitude(): AbstractControl {
-    return this.form.get('longitude')!
+    return this.form.get('longitude')!;
   }
 
   get latitude(): AbstractControl {
-    return this.form.get('latitude')!
+    return this.form.get('latitude')!;
   }
 
   get oldLicenseFullSerial(): AbstractControl {
@@ -156,11 +156,11 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     if (!this.model) {
-      throw Error('Please Provide Model to get the Collection Items from it')
+      throw Error('Please Provide Model to get the Collection Items from it');
     }
 
     if (this.approvalMode) {
-      const newColumns = this.columns.slice()
+      const newColumns = this.columns.slice();
       newColumns.splice(this.columns.length - 1, 0, 'approval_info_status');
       this.columns = newColumns;
     }
@@ -170,7 +170,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.listenToView();
     this.listenToRemove();
     this.listenToSave();
-    this.listenToDisableSearchField();
+    // this.listenToDisableSearchField();
     this.listenToLicenseSearch();
     this.listenToDurationTypeChange();
   }
@@ -197,7 +197,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         });
         this.viewOnly = false;
       }))
-      .subscribe(() => this.formOpenedStatus.emit(true))
+      .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
   private listenToEdit() {
@@ -210,7 +210,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         this.viewOnly = false;
         this.updateForm(this.item);
       }))
-      .subscribe(() => this.formOpenedStatus.emit(true))
+      .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
   private listenToView() {
@@ -221,7 +221,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         this.viewOnly = true;
         this.updateForm(this.item);
       }))
-      .subscribe(() => this.formOpenedStatus.emit(true))
+      .subscribe(() => this.formOpenedStatus.emit(true));
   }
 
   private listenToRemove() {
@@ -229,25 +229,26 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(info => {
         return this.dialog
-          .confirm(this.lang.map.msg_confirm_delete_x.change({ x: info.item.identificationNumber }))
+          .confirm(this.lang.map.msg_confirm_delete_x.change({x: info.item.identificationNumber}))
           .onAfterClose$.pipe(map((click: UserClickOn) => {
             return {
               index: info.index,
               click
-            }
-          }))
+            };
+          }));
       }))
       .subscribe((info) => {
         info.click === UserClickOn.YES ? this.processDelete(info.index) : null;
-      })
+      });
   }
 
   private buildForm(): void {
     this.form = this.fb.group((new CollectionItem().buildForm(true)));
+    this.oldLicenseFullSerial.disable();
   }
 
   get licenseEndDate(): AbstractControl {
-    return this.form.get('licenseEndDate')!
+    return this.form.get('licenseEndDate')!;
   }
 
 
@@ -268,7 +269,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         value ? this.searchControl.disable() : this.searchControl.enable();
         this.searchControl.setValidators(value ? [] : CustomValidators.required);
         value ? this.oldLicenseFullSerial.setValidators([]) : this.oldLicenseFullSerial.setValidators(CustomValidators.required);
-      })
+      });
   }
 
   private listenToSave(): void {
@@ -281,8 +282,8 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
           ...this.item,
           ...this.form.value,
           ...this.buildingPlate.getValue()
-        }))
-      })
+        }));
+      });
   }
 
   private processSave(item: CollectionItem): void {
@@ -292,17 +293,17 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   private processAdd(item: CollectionItem): void {
     this.model.collectionItemList = this.model.collectionItemList.concat([item]);
-    this.eventHappened.emit(AppEvents.ADD)
+    this.eventHappened.emit(AppEvents.ADD);
   }
 
   private processEdit(item: CollectionItem): void {
     this.model.collectionItemList.splice((this.editIndex!) - 1, 1, item);
     this.model.collectionItemList = [...this.model.collectionItemList];
-    this.eventHappened.emit(AppEvents.EDIT)
+    this.eventHappened.emit(AppEvents.EDIT);
   }
 
   private processDelete(index: number): void {
-    this.model.collectionItemList.splice(index, 1)
+    this.model.collectionItemList.splice(index, 1);
     this.model.collectionItemList = [...this.model.collectionItemList];
     this.eventHappened.emit(AppEvents.DELETE);
   }
@@ -318,13 +319,13 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   private validateSingleLicense(license: CollectionLicense): Observable<undefined | CollectionLicense> {
-    return this.licenseService.validateLicenseByRequestType<CollectionLicense>(this.model.caseType, this.model.requestType, license.id) as Observable<undefined | CollectionLicense>
+    return this.licenseService.validateLicenseByRequestType<CollectionLicense>(this.model.caseType, this.model.requestType, license.id) as Observable<undefined | CollectionLicense>;
   }
 
   private openSelectLicense(licenses: CollectionLicense[]): Observable<undefined | CollectionLicense> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns)
       .onAfterClose$
-      .pipe(map((result: ({ selected: CollectionLicense, details: CollectionLicense } | undefined)) => result ? result.details : result))
+      .pipe(map((result: ({ selected: CollectionLicense, details: CollectionLicense } | undefined)) => result ? result.details : result));
   }
 
   searchForLicense() {
@@ -346,7 +347,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
             fullSerial: serial,
             requestClassification: this.model.requestClassification,
             licenseDurationType: this.model.licenseDurationType
-          })
+          });
       }))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
@@ -357,7 +358,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(filter((license) => {
         let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
         if (isAlreadyAdded) {
-          this.dialog.info(this.lang.map.x_already_exists.change({ x: this.lang.map.license }));
+          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
         }
         return !isAlreadyAdded;
       }))
@@ -365,7 +366,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
         this.searchControl.patchValue(license.fullSerial);
         this.item = license.convertToCollectionItem();
         this.updateForm(this.item);
-      })
+      });
   }
 
   cancel(): void {
@@ -379,14 +380,14 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   openMapMarker() {
     (this.item!).openMap(this.isCancelRequestType() || this.readOnly || this.viewOnly)
       .onAfterClose$
-      .subscribe(({ click, value }: { click: UserClickOn, value: ICoordinates }) => {
+      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.item!.latitude = value.latitude;
           this.item!.longitude = value.longitude;
           this.latitude.patchValue(value.latitude);
           this.longitude.patchValue(value.longitude);
         }
-      })
+      });
   }
 
   private validateForm(): Observable<boolean> {
@@ -399,15 +400,15 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(tap(_ => console.log(this.model.requestType, CollectionRequestType.NEW)))
       .pipe(map(_ => ((this.model.requestType !== CollectionRequestType.NEW) ? this.oldLicenseFullSerial.value : true)))
       .pipe(tap(validSelected => (!validSelected && this.selectedLicenseInvalidMessage())))
-      .pipe(filter((val) => val)) // allow only the valid form
+      .pipe(filter((val) => val)); // allow only the valid form
   }
 
   private longitudeLatitudeInvalidMessage() {
-    this.dialog.error(this.lang.map.longitude_latitude_required)
+    this.dialog.error(this.lang.map.longitude_latitude_required);
   }
 
   private selectedLicenseInvalidMessage() {
-    this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license)
+    this.dialog.error(this.lang.map.edit_cancel_request_need_exists_license);
   }
 
   isNewRequestType(): boolean {
@@ -464,7 +465,25 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.currentDurationType
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: LicenseDurationType | undefined) => {
-        this.licenseEndDate.setValidators(value === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null)
-      })
+        this.licenseEndDate.setValidators(value === LicenseDurationType.TEMPORARY ? [CustomValidators.required] : null);
+      });
+  }
+
+  isSearchAllowed(): boolean {
+    // if readonly or no request type or request type = new, edit is not allowed
+    // if new or draft record, edit is allowed
+    // if collection item is new, edit is allowed
+    let isAllowed = false;
+    if (this.readOnly || this.viewOnly || !this.model.requestType || this.model.requestType === CollectionRequestType.NEW) {
+      isAllowed = false;
+    } else if (!this.model?.id || (!!this.model?.id && this.model.canCommit()) || !this.item!.itemId) {
+      isAllowed=  true;
+    }
+    !isAllowed ? this.searchControl.disable() : this.searchControl.enable();
+    this.searchControl.setValidators(!isAllowed ? [] : CustomValidators.required);
+    this.oldLicenseFullSerial.setValidators(!isAllowed ?  [] : CustomValidators.required);
+    this.searchControl.updateValueAndValidity();
+    this.oldLicenseFullSerial.updateValueAndValidity();
+    return isAllowed;
   }
 }

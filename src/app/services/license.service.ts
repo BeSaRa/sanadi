@@ -12,7 +12,7 @@ import {EmployeeService} from "@app/services/employee.service";
 import {InitialApprovalDocumentInterceptor} from "@app/model-interceptors/initial-approval-document-interceptor";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DialogService} from "@app/services/dialog.service";
-import {SelectLicensePopupComponent} from "@app/e-services/poups/select-license-popup/select-license-popup.component";
+import {SelectLicensePopupComponent} from "@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component";
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 import {catchError, map} from "rxjs/operators";
 import {BlobModel} from "@app/models/blob-model";
@@ -131,6 +131,9 @@ export class LicenseService {
         break;
       case CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE:
         url = this.urlService.URLS.CUSTOMS_EXEMPTION_REMITTANCE;
+        break;
+      case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
+        url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
         break;
     }
     return url;
@@ -411,9 +414,9 @@ export class LicenseService {
     });
   }
 
-  @Generator(UrgentInterventionReport, false, {
+  @Generator(UrgentInterventionReportResult, false, {
     property: 'rs',
-    interceptReceive: (new UrgentInterventionReportInterceptor()).receive
+    interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
   _validateUrgentInterventionReportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/draft/validate', {

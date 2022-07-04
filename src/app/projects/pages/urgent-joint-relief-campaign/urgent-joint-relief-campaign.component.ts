@@ -26,6 +26,8 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseStepName} from '@app/enums/case-step-name';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {ParticipantOrganization} from '@app/models/participant-organization';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -147,6 +149,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
       explanation: this.fb.group(model.buildExplanation(true)),
       externalUserData: this.fb.group(model.buildExternalUserData(true)),
+      totalCost: model.buildMainInfo()
     });
 
     this._buildDatepickerControlsMap();
@@ -166,19 +169,22 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       officerFullName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       email: [null, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]],
       officerPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-      officerExtraPhone: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)]
+      officerExtraPhone: [null, CustomValidators.commonValidations.phone]
     });
   }
 
   _afterBuildForm(): void {
     this.setSelectedOfficers();
-
     this.enableSaveButtonToExternalUsers();
+    // this.handleReadonly();
+
+    // to be removed
+    this.readonly = false;
   }
 
   enableSaveButtonToExternalUsers() {
     const stepName = this.model?.taskDetails?.name!;
-    if (this.organizationStepNames.includes(stepName)) {
+    if (this.organizationStepNames.includes(stepName) && this.model?.taskDetails.isClaimed()) {
       this.readonly = false;
     }
   }
@@ -191,7 +197,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation(),
-      externalUserData: this.model?.buildExternalUserData()
+      externalUserData: this.model?.buildExternalUserData(),
+      totalCost: this.model?.buildMainInfo()
     });
   }
 
@@ -278,7 +285,12 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   addOrganization() {
-    if (this.selectedOrg && !this.selectedOrganizationUnits.includes(this.selectedOrg)) {
+    if(!this.selectedOrg) {
+      this.dialog.error(this.lang.map.please_select_organization_first);
+      return;
+    }
+
+    if (!this.selectedOrganizationUnits.includes(this.selectedOrg)) {
       this.selectedOrganizationUnits = this.selectedOrganizationUnits.concat(this.selectedOrg);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
@@ -359,5 +371,40 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       controlOptionsMap: this.datepickerOptionsMap,
       controlsMap: this.datepickerControlsMap
     });
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
 }

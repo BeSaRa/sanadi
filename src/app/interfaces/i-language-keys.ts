@@ -1,5 +1,8 @@
 export interface ILanguageKeys {
   menu_reports: string
+  org_reject_task: string;
+  please_select_organization_first: string;
+  joint_relief_campaign_total_donations: string;
   there_is_no_followup_configurations_for_this_service: string;
   add_organization_officers: string;
   enter_donation_and_start_work_date: string;
@@ -1025,6 +1028,7 @@ export interface ILanguageKeys {
   BENEIFICARY_NDA_RECENT_AID_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_NDA_RECENT_PERIODIC_AIDS_EXISTING: string; // don't change this as it is mapped to BE response
   BENEIFICARY_IS_DEAD: string; // don't change this as it is mapped to BE response
+  BENEIFICARY_IS_DEAD_SERVICE_NOT_AVAILABLE: string; // don't change this as it is mapped to BE response
   msg_license_duration_diff_between_x_and_y_months: string;
   total_income: string;
   msg_missing_incomes_or_obligations: string;
@@ -1086,5 +1090,5 @@ export interface ILanguageKeys {
   inquiries: string;
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
-  menu_test_page: string;
+  msg_service_unavailable: string;
 }

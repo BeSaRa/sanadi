@@ -32,7 +32,7 @@ import { FinalExternalOfficeApprovalService } from './final-external-office-appr
 import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
 import {
   FilterInboxRequestPopupComponent
-} from '@app/e-services/poups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+} from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
@@ -49,6 +49,7 @@ import { CustomsExemptionRemittanceService } from './customs-exemption-remittanc
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
 import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+
 
 @Injectable({
   providedIn: 'root'

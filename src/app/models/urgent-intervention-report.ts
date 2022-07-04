@@ -1,11 +1,9 @@
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
 import {LangService} from '@app/services/lang.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
 import {FactoryService} from '@app/services/factory.service';
 import {AdminResult} from '@app/models/admin-result';
-import {TaskDetails} from '@app/models/task-details';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {InterventionRegion} from '@app/models/intervention-region';
 import {InterventionField} from '@app/models/intervention-field';
@@ -15,14 +13,19 @@ import {infoSearchFields} from '@app/helpers/info-search-fields';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {CaseModel} from '@app/models/case-model';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {HasRequestType} from '@contracts/has-request-type';
 
-export class UrgentInterventionReport extends CaseModel<UrgentInterventionReportingService, UrgentInterventionReport> {
+const _RequestType = mixinRequestType(CaseModel);
+
+export class UrgentInterventionReport extends _RequestType<UrgentInterventionReportingService, UrgentInterventionReport> implements HasRequestType {
   caseType: number = CaseTypes.URGENT_INTERVENTION_REPORTING;
   serviceSteps: string[] = [];
   organizationId!: number;
-  requestType!: number;
+  // requestType!: number;
   interventionName!: string;
   projectDescription!: string;
+  interventionLicenseId!: string;
   beneficiaryCountry!: number;
   beneficiaryRegion!: string;
   executionCountry!: number;
@@ -32,11 +35,14 @@ export class UrgentInterventionReport extends CaseModel<UrgentInterventionReport
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
+  exportedLicenseFullSerial!:	string;
+  exportedLicenseId!:string;
+  exportedLicenseSerial!: number;
   implementingAgencyList: ImplementingAgency[] = [];
   interventionRegionList: InterventionRegion[] = [];
   interventionFieldList: InterventionField[] = [];
   subject!: string;
-  requestTypeInfo!: AdminResult;
+  // requestTypeInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
 

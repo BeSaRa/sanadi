@@ -1443,6 +1443,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);
       return 'STOP';
     } else {
+      if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
+        this.toastService.alert(this.langService.map[BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE as keyof ILanguageKeys], 5);
+      }
       return 'CONTINUE';
     }
   }

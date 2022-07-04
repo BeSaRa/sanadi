@@ -59,9 +59,7 @@ export class PreValidateDataGuard implements CanActivate {
   preValidateData(): Observable<boolean> {
     if (this.caseType === CaseTypes.URGENT_INTERVENTION_REPORTING) {
       let isAddOperation = !this.hasItemParam() || !this.validItem();
-      // if not add operation, allow to access, otherwise pre-validate the data
-      // if intervention license exists, allow access, otherwise show msg
-      return !isAddOperation ? of(true) : this.urgentInterventionReportService.validateAddLicense();
+      return this.urgentInterventionReportService.preValidateAddLicense(isAddOperation);
     }
     return of(true);
   }

@@ -13,6 +13,8 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
   // 15 min in milliseconds
+
+
   protected _timeRange: number = 15 * 60 * 1000;
   protected _lastLoadTime!: number;
 

@@ -1,4 +1,5 @@
 {
+  "COMMON": "/common",
   "CUSTOMS_EXEMPTION_REMITTANCE": "/customs-exemption-remittance",
   "FUNDRAISING": "/fundraising-channel-licensing",
   "NPO_EMPLOYEE": "admin/npo-employee",

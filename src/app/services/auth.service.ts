@@ -1,15 +1,16 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, map, tap, withLatestFrom} from 'rxjs/operators';
-import {ICredentials} from '../interfaces/i-credentials';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {Generator} from '../decorators/generator';
-import {FactoryService} from './factory.service';
-import {EmployeeService} from './employee.service';
-import {ILoginData} from '../interfaces/i-login-data';
-import {TokenService} from './token.service';
-import {InternalUserService} from "@app/services/internal-user.service";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { ICredentials } from '@contracts/i-credentials';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { Generator } from '@decorators/generator';
+import { FactoryService } from './factory.service';
+import { EmployeeService } from './employee.service';
+import { ILoginData } from '@contracts/i-login-data';
+import { TokenService } from './token.service';
+import { InternalUserService } from "@app/services/internal-user.service";
+import { CommonService } from "@services/common.service";
 
 @Injectable({
   providedIn: 'root'
@@ -23,24 +24,25 @@ export class AuthService {
   constructor(private http: HttpClient,
               private urlService: UrlService,
               private tokenService: TokenService,
+              private commonService: CommonService,
               private internalUserService: InternalUserService,
               private employeeService: EmployeeService) {
     FactoryService.registerService('AuthService', this);
     this.init();
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   private _externalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE, credentials);
   }
 
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   private _internalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.INTERNAL_AUTHENTICATE, credentials);
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   private _validateToken(): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.VALIDATE_TOKEN, {});
   }
@@ -67,8 +69,13 @@ export class AuthService {
     );
   }
 
-  login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
+  private _login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
     return external ? this.externalLogin(credential) : this.internalLogin(credential);
+  }
+
+  login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
+    return this._login(credential, external)
+      .pipe(switchMap((data) => this.commonService.loadCounters().pipe(map(_ => data))));
   }
 
   logout(): Observable<boolean> {
@@ -104,6 +111,7 @@ export class AuthService {
         this.isAuthenticatedTrigger$.next(null);
         return throwError(error);
       }),
+      switchMap((data) => this.commonService.loadCounters().pipe(map(_ => data)))
     );
   }
 

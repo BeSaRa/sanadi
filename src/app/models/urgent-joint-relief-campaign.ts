@@ -62,25 +62,30 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     this.employeeService = FactoryService.getService('EmployeeService');
   }
 
+  buildMainInfo(controls: boolean = false): any {
+    const {totalCost} = this;
+    return controls ? [totalCost] : totalCost
+  }
+
   buildBasicInfo(controls: boolean = false): any {
     const internalUserValidation = !this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
     const {fullName, licenseStartDate, licenseEndDate, phone, extraPhone, approvalPeriod, beneficiaryCountry, targetAmount} = this;
     return {
       fullName: controls ? [fullName, internalUserValidation.concat([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)])] : fullName,
-      licenseStartDate: controls ? [licenseStartDate, internalUserValidation.concat([CustomValidators.required])] : licenseStartDate,
+      licenseStartDate: controls ? [licenseStartDate, internalUserValidation] : licenseStartDate,
       licenseEndDate: controls ? [licenseEndDate, internalUserValidation] : licenseEndDate,
       phone: controls ? [phone, internalUserValidation.concat(CustomValidators.commonValidations.phone)] : phone,
       extraPhone: controls ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
-      approvalPeriod: controls ? [approvalPeriod, internalUserValidation] : approvalPeriod,
+      approvalPeriod: controls ? [approvalPeriod, internalUserValidation.concat(CustomValidators.maxLength(2))] : approvalPeriod,
       beneficiaryCountry: controls ? [beneficiaryCountry, internalUserValidation] : beneficiaryCountry,
-      targetAmount: controls ? [targetAmount, internalUserValidation] : targetAmount
+      targetAmount: controls ? [targetAmount, internalUserValidation.concat([CustomValidators.maxLength(20), CustomValidators.decimal(2)])] : targetAmount
     }
   }
 
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls ? [description, [CustomValidators.required]] : description,
+      description: controls ? [description, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)] : description,
     }
   }
 
@@ -88,7 +93,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
     const externalUserValidation = this.employeeService.isExternalUser() ? [CustomValidators.required] : [];
     const {donation, workStartDate} = this;
     return {
-      donation: controls ? [donation, externalUserValidation] : donation,
+      donation: controls ? [donation, externalUserValidation.concat([CustomValidators.maxLength(20), CustomValidators.decimal(2)])] : donation,
       workStartDate: controls ? [workStartDate, externalUserValidation] : workStartDate
     }
   }

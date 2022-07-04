@@ -23,6 +23,8 @@ import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
 import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 import {EmployeeService} from '@app/services/employee.service';
 import {NpoEmployee} from '@app/models/npo-employee';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -51,6 +53,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
   isUpdateMerge = false;
+  isUpdateNewAccount = false;
   isExternalUser!: boolean;
 
   constructor(public lang: LangService,
@@ -147,6 +150,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.loadBanks();
     this.loadBankAccounts();
     this.loadNPOEmployees();
+    this.handleReadonly();
     // this.selectedBankAccounts = this.model?.internalBankAccountDTO!;
     // this.listenToRequestTypeAndOperationTypeChanges();
     // this.toggleRequestType(this.requestType.value);
@@ -162,8 +166,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       }
     }
 
-    if (this.requestType.value == BankAccountRequestTypes.UPDATE &&
-      this.operationType.value == BankAccountOperationTypes.MERGE) {
+    if (this.requestType.value == BankAccountRequestTypes.UPDATE) {
       if (this.selectedNPOEmployees.length < 1) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_one_responsible_person);
         return false;
@@ -316,6 +319,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.hideUpdateAccountFields();
     this.hideUpdateMergeFields();
     this.isUpdateMerge = false;
+    this.isUpdateNewAccount = false;
     if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       this.disableNewMergeAccountsFields();
       this.enableNewMergeAccountsFields();
@@ -334,6 +338,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.enableUpdateNewAccountFields();
       this.disableUpdateNewAccountFields();
       this.isUpdateMerge = false;
+      this.isUpdateNewAccount = true;
       this.isNewMerge = false;
     } else if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       this.showUpdateBankAccountFields();
@@ -341,6 +346,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.enableUpdateMergeAccountsFields();
       this.disableUpdateMergeAccountsFields();
       this.isUpdateMerge = true;
+      this.isUpdateNewAccount = false;
       this.isNewMerge = false;
     }
   }
@@ -360,18 +366,22 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   showUpdateBankAccountFields() {
-    this.accountNumber.setValidators([CustomValidators.required]);
-    this.iban.setValidators([CustomValidators.required]);
-    this.swiftCode.setValidators([CustomValidators.required]);
+    this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
 
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    this.setOldLicenseFullSerialRequired();
 
     if (!this.updateNewAccountFieldsVisible) {
       this.updateNewAccountFieldsVisible = true;
     }
+  }
+
+  setOldLicenseFullSerialRequired() {
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
+    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required, CustomValidators.maxLength(250)]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldLicenseFullSerialControl.updateValueAndValidity();
   }
 
   hideUpdateAccountFields() {
@@ -482,10 +492,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   enableSearchField() {
     this.oldLicenseFullSerialField.enable();
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialControl.setValidators([CustomValidators.required]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-    this.oldLicenseFullSerialControl.updateValueAndValidity();
+    this.setOldLicenseFullSerialRequired();
   }
 
   disableSearchField() {
@@ -510,7 +517,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   enablePurpose() {
     this.purpose.enable();
-    this.purpose.setValidators([CustomValidators.required]);
+    this.purpose.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]);
     this.purpose.updateValueAndValidity();
   }
 
@@ -585,15 +592,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   searchForLicense() {
-    if (!this.oldLicenseFullSerialField.value) {
-      this.dialog.error(this.lang.map.need_license_number_to_search);
-      return;
-    }
-
     this.licenseService
       .internalBankAccountSearch<InternalBankAccountApproval>({
         fullSerial: this.oldLicenseFullSerialField.value
       })
+      .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
@@ -633,5 +636,40 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   removeResponsiblePersons(npoEmployee: NpoEmployee, event: MouseEvent) {
     event.preventDefault();
     this.selectedNPOEmployees = this.selectedNPOEmployees.filter(x => x.id != npoEmployee.id);
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
 }
