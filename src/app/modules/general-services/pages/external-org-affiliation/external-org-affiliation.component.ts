@@ -28,7 +28,7 @@ import { ExecutiveManagementComponent } from '@app/modules/e-services-main/share
 })
 export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<ExternalOrgAffiliation, ExternalOrgAffiliationService> {
   form!: FormGroup;
-  AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType;
+  AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
   countriesList: Country[] = [];
@@ -93,6 +93,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
 
     value.bankAccountDTOs = this.bankAccountComponentRef.list;
     value.executiveManagementDTOs = this.executiveManagementComponentRef.list;
+    value.contactOfficerDTOs = [this.contactOfficerTab.value];
     return value;
   }
   _initComponent(): void {

@@ -772,7 +772,7 @@
     "id": 60,
     "langKey": "menu_external_org_affiliation_request",
     "path": "/home/general-services/external-org-affiliation",
-    "icon": "mdi-file-chart-outline",
+    "icon": "mdi-wallet-membership",
     "isSvg": false,
     "permission": "EXTERNAL_ORG_AFFILIATION_REQUEST",
     "permissionGroup": null,

@@ -98,7 +98,7 @@
           ></app-field-error-message>
         </div>
         <!-- ar name -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="arName" for="arName" class="form-label">{{
             lang.map.lbl_arabic_name
           }}</label>
@@ -113,7 +113,7 @@
           ></app-field-error-message>
         </div>
         <!-- en name -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="enName" for="enName" class="form-label">{{
             lang.map.lbl_english_name
           }}</label>
@@ -125,6 +125,21 @@
           />
           <app-field-error-message
             controlName="enName"
+          ></app-field-error-message>
+        </div>
+        <!-- E-mail -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="email" for="email" class="form-label">{{
+            lang.map.lbl_email
+          }}</label>
+          <input
+            id="email"
+            formControlName="email"
+            validationClasses="email"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="email"
           ></app-field-error-message>
         </div>
         <!-- Country -->
@@ -159,7 +174,7 @@
         <!-- City -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="city" for="city" class="form-label">{{
-            lang.map.fax_number
+            lang.map.city
           }}</label>
           <input
             type="text"
@@ -170,6 +185,21 @@
             formControlName="city"
           />
           <app-field-error-message controlName="city"></app-field-error-message>
+        </div>
+        <!-- Phone -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="phone" for="phone" class="form-label">{{
+            lang.map.lbl_phone
+          }}</label>
+          <input
+            type="text"
+            validationClasses="phone"
+            trimInput
+            class="form-control"
+            id="phone"
+            formControlName="phone"
+          />
+          <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
         <!-- Fax Number -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -207,7 +237,6 @@
           ></app-field-error-message>
         </div>
         <!-- P.O.box -->
-        <!-- var pattern = new RegExp('\\b[P|p]*(OST|ost)*\\.*\\s*[O|o|0]*(ffice|FFICE)*\\.*\\s*[B|b][O|o|0][X|x]\\b'); -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label
             asteriskIfRequired="mailBox"
@@ -225,21 +254,6 @@
           />
           <app-field-error-message
             controlName="mailBox"
-          ></app-field-error-message>
-        </div>
-        <!-- E-mail -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="email" for="email" class="form-label">{{
-            lang.map.lbl_email
-          }}</label>
-          <input
-            id="email"
-            formControlName="email"
-            validationClasses="email"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="email"
           ></app-field-error-message>
         </div>
         <!-- Description -->

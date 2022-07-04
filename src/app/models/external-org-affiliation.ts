@@ -43,7 +43,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
 
   constructor() {
     super();
-    this.service = FactoryService.getService('CollectionApprovalService');
+    this.service = FactoryService.getService('ExternalOrgAffiliationService');
   }
 
 
