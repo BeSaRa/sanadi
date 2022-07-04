@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  send_to_department: string;
   can_be_11_digits: string;
   menu_reports: string
   org_reject_task: string;

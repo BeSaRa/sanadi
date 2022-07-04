@@ -87,4 +87,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
+
+  // sendToMultiDepartments(): DialogRef {
+  //   return this.inboxService!.sendInternalBankAccountApprovalToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
+  // }
 }
