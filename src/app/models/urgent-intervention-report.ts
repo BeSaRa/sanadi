@@ -71,6 +71,7 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
     this.service = FactoryService.getService('UrgentInterventionReportingService');
     this.langService = FactoryService.getService('LangService');
     this.employeeService = FactoryService.getService('EmployeeService');
+    this.finalizeSearchFields();
   }
 
   getBasicFormFields(controls: boolean = false): any {
