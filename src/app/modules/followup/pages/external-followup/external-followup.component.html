@@ -40,6 +40,10 @@
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.status}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
           </ng-container>
+          <ng-container cdkColumnDef="createdBy">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.created_by}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.getCreatedBy()}}</td>
+          </ng-container>
           <ng-container cdkColumnDef="orgInfo" *ngIf="isInternalUser">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortCallbacks.organization">{{lang.map.lbl_organization}}</th>

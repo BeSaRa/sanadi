@@ -1,6 +1,8 @@
 export interface ILanguageKeys {
   send_to_department: string;
   can_be_11_digits: string;
+  system: string;
+  manually: string;
   external_followup: string;
   internal_followup: string;
   menu_reports: string

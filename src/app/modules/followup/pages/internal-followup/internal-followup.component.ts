@@ -21,7 +21,7 @@ import { CommonUtils } from "@helpers/common-utils";
 })
 export class InternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
   actions: IMenuItem<Followup>[] = [];
-  displayedColumns: string[] = ['caseId', 'name', 'serviceType', 'dueDate', 'status', 'actions'];
+  displayedColumns: string[] = ['caseId', 'name', 'serviceType', 'dueDate', 'createdBy', 'status', 'actions'];
   headerColumn: string[] = ['extra-header'];
   searchText = '';
   add$: Subject<any> = new Subject<any>();

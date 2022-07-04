@@ -64,6 +64,10 @@ export class Followup extends BaseModel<Followup, FollowupService> {
     return this[(this.langService.map.lang + 'Desc') as keyof IDescriptions];
   }
 
+  getCreatedBy(): string {
+    return this.custom ? this.langService.map.manually :  this.langService.map.system;
+  }
+
   buildForm(controls: boolean = false): any {
     const {
       arName,

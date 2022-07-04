@@ -36,6 +36,10 @@
               <b [class]="getDateColor(row.dueDate)">{{row.dueDate | date}}</b>
             </td>
           </ng-container>
+          <ng-container cdkColumnDef="createdBy">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.created_by}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.getCreatedBy()}}</td>
+          </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.status}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
