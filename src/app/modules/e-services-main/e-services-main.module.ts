@@ -7,13 +7,18 @@ import {
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {SelectTemplatePopupComponent} from '@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component';
 import {SelectedLicenseTableComponent} from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
+import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
+import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 
 @NgModule({
   declarations: [
     SelectLicensePopupComponent,
     FilterInboxRequestPopupComponent,
+    SelectedLicenseTableComponent,
+    SelectedLicenseTableComponent,
     SelectTemplatePopupComponent,
-    SelectedLicenseTableComponent
+    EmployeesDataComponent,
+    EmployeeFormPopupComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +26,9 @@ import {SelectedLicenseTableComponent} from '@app/modules/e-services-main/shared
   ],
   exports: [
     SharedModule,
-    SelectedLicenseTableComponent
+    SelectedLicenseTableComponent,
+    EmployeeFormPopupComponent,
+    EmployeesDataComponent
   ]
 })
 export class EServicesMainModule {

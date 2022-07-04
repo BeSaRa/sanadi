@@ -1,9 +1,9 @@
-import { Employee } from './../../../models/employee';
-import { LookupService } from "./../../../services/lookup.service";
-import { Lookup } from "./../../../models/lookup";
-import { IGridAction } from "./../../../interfaces/i-grid-action";
 import { Component, Input, OnInit } from "@angular/core";
+import { IGridAction } from "@app/interfaces/i-grid-action";
+import { Employee } from "@app/models/employee";
+import { Lookup } from "@app/models/lookup";
 import { LangService } from "@app/services/lang.service";
+import { LookupService } from "@app/services/lookup.service";
 
 @Component({
   selector: "app-employees-data",

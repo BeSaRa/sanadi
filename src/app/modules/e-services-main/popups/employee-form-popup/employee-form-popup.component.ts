@@ -1,27 +1,27 @@
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { CustomValidators } from './../../../validators/custom-validators';
 import { OperationTypes } from '@app/enums/operation-types.enum';
-import { IdentificationType } from './../../../enums/identification-type.enum';
 import { JobTitle } from '@app/models/job-title';
 import { EmploymentRequestType } from '@app/enums/employment-request-type';
-import { JobApplication } from "./../../../models/job-application";
-import { Employee } from "./../../../models/employee";
 import { DialogService } from "@app/services/dialog.service";
-import { ContractLocationTypes } from "./../../../enums/contract-location-types.enum";
-import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
-import { JobApplicationService } from "./../../../services/job-application.service";
-import { DIALOG_DATA_TOKEN } from "./../../../shared/tokens/tokens";
-import { IGridAction } from "./../../../interfaces/i-grid-action";
-import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
 import { DatepickerOptionsMap } from "@app/types/types";
 import { DateUtils } from "@app/helpers/date-utils";
-import { Lookup } from "./../../../models/lookup";
 import { LookupService } from "@app/services/lookup.service";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 import { LangService } from "@app/services/lang.service";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ContractTypes } from "@app/enums/contract-types.enum";
 import { ContractStatus } from "@app/enums/contract-status.enum";
+import { Employee } from '@app/models/employee';
+import { Lookup } from '@app/models/lookup';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { JobApplicationService } from '@app/services/job-application.service';
+import { JobApplication } from '@app/models/job-application';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IdentificationType } from '@app/enums/identification-type.enum';
+import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
+import { LookupEmploymentCategory } from '@app/enums/lookup-employment-category';
+import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 
 @Component({
   selector: "app-employee-form-popup",

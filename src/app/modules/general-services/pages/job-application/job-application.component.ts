@@ -1,25 +1,12 @@
 import { JobTitleService } from '@app/services/job-title.service';
-import { JobTitle } from './../../../models/job-title';
-import { AdminResult } from './../../../models/admin-result';
 import { DateUtils } from '@app/helpers/date-utils';
-import { JobApplicationSearchCriteria } from './../../../models/job-application-search-criteria';
-import { Employee } from "./../../../models/employee";
 import { ToastService } from "@app/services/toast.service";
 import { DialogService } from "@app/services/dialog.service";
 import { OperationTypes } from "@app/enums/operation-types.enum";
-import { JobApplicationCategories } from "./../../../enums/job-application-categories.enum";
 import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { EmployeesDataComponent } from "../../shared/employees-data/employees-data.component";
-import { LookupEmploymentCategory } from "./../../../enums/lookup-employment-category";
-import { LookupService } from "./../../../services/lookup.service";
-import { Lookup } from "./../../../models/lookup";
 import { IKeyValue } from "@app/interfaces/i-key-value";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { CaseTypes } from "@app/enums/case-types.enum";
-import { NavigationService } from "./../../../services/navigation.service";
-import { LangService } from "./../../../services/lang.service";
-import { JobApplicationService } from "./../../../services/job-application.service";
-import { JobApplication } from "./../../../models/job-application";
 import { Component, Input, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, of, Subject } from "rxjs";
@@ -27,6 +14,19 @@ import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { catchError, exhaustMap, filter, map, takeUntil, tap } from "rxjs/operators";
+import { JobApplication } from '@app/models/job-application';
+import { JobApplicationService } from '@app/services/job-application.service';
+import { Employee } from '@app/models/employee';
+import { JobApplicationSearchCriteria } from '@app/models/job-application-search-criteria';
+import { JobTitle } from '@app/models/job-title';
+import { Lookup } from '@app/models/lookup';
+import { NavigationService } from '@app/services/navigation.service';
+import { LookupService } from '@app/services/lookup.service';
+import { LangService } from '@app/services/lang.service';
+import { JobApplicationCategories } from '@app/enums/job-application-categories.enum';
+import { LookupEmploymentCategory } from '@app/enums/lookup-employment-category';
+import { AdminResult } from '@app/models/admin-result';
+import { EmployeesDataComponent } from '@app/modules/e-services-main/shared/employees-data/employees-data.component';
 @Component({
   selector: "app-job-application",
   templateUrl: "./job-application.component.html",

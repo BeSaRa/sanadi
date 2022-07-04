@@ -10,6 +10,7 @@ import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { JobApplicationComponent } from '@app/modules/general-services/pages/job-application/job-application.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     GeneralServicesComponent,
     InquiryComponent,
     ConsultationComponent,
-    InternationalCooperationComponent
+    InternationalCooperationComponent,
+    JobApplicationComponent
   ],
   imports: [
     CommonModule,
