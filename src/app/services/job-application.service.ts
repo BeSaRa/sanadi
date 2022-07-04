@@ -5,7 +5,6 @@ import { Generator } from '@app/decorators/generator';
 import { Employee } from './../models/employee';
 import { CastResponseContainer } from "@decorators/cast-response";
 import { FormGroup } from "@angular/forms";
-import { EmployeeFormPopupComponent } from "./../e-services/poups/employee-form-popup/employee-form-popup.component";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { JobApplicationSearchCriteria } from "./../models/job-application-search-criteria";
 import { FactoryService } from "./factory.service";
@@ -24,6 +23,7 @@ import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
+import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 
 @CastResponseContainer({
   $employee: { model: () => Employee },

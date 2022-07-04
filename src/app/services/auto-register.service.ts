@@ -27,7 +27,7 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {UrgentInterventionReportComponent} from '@app/projects/pages/urgent-intervention-report/urgent-intervention-report.component';
-import { JobApplicationComponent } from '@app/modules/office-services/pages/job-application/job-application.component';
+import { JobApplicationComponent } from '@app/modules/general-services/pages/job-application/job-application.component';
 
 @Injectable({
   providedIn: 'root'
