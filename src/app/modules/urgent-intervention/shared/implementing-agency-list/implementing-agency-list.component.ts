@@ -1,21 +1,21 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {of, Subject} from 'rxjs';
 import {ReadinessStatus} from '@app/types/types';
 import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
+import {DialogService} from '@services/dialog.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {LookupService} from '@app/services/lookup.service';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {LookupService} from '@services/lookup.service';
 import {Lookup} from '@app/models/lookup';
-import {AdminResult} from '@app/models/admin-result'
-import { ExternalProjectImplementationService } from '@app/services/external-project-implementation.service';
+import {AdminResult} from '@app/models/admin-result';
+import {ExternalProjectImplementationService} from '@services/external-project-implementation.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -47,7 +47,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
     return this._list;
   }
 
-  columns = ['implementingAgencyType', 'implementingAgency', 'actions'];
+  displayedColumns = ['implementingAgencyType', 'implementingAgency', 'actions'];
   implementingAgencyTypeList: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyList: AdminResult[] = [];
 
@@ -102,7 +102,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.agencyTypeInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   ngOnInit(): void {
     this.buildForm();
@@ -147,6 +147,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
 
   private updateForm(record: ImplementingAgency | undefined) {
     if (record) {
+      this.loadImplementingAgenciesByAgencyType(record.implementingAgencyType);
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
@@ -190,7 +191,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       map(() => {
         let formValue = this.form.getRawValue();
         let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
-        let agencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.id === formValue.implementingAgency)) ?? new AdminResult();
+        let agencyInfo: AdminResult = (this.implementingAgencyList.find(x => x.fnId === formValue.implementingAgency)) ?? new AdminResult();
 
         return (new ImplementingAgency()).clone({
           ...this.currentRecord, ...formValue,
@@ -283,18 +284,21 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
 
   handleImplementingAgencyTypeChange(agencyType: number, userInteraction: boolean = false): void {
     if (userInteraction) {
-      this.implementingAgencyList = [];
       this.implementingAgencyField.setValue(null);
+      this.loadImplementingAgenciesByAgencyType(agencyType);
     }
+  }
 
+  private loadImplementingAgenciesByAgencyType(agencyType: number) {
     if (!agencyType) {
+      this.implementingAgencyList = [];
       return;
     }
     this.externalProjectImplementationService.loadAgenciesByAgencyType(agencyType, this.executionCountry).pipe(
       catchError(() => of([]))
     ).subscribe((result) => {
       this.implementingAgencyList = result;
-    })
+    });
   }
 
   get implementingAgencyTypeField(): FormControl {

@@ -426,6 +426,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToMultiDepartmentsAction(item);
         }
       },
+      // send to specific department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_department',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToMultiDepartmentsAction(item);
+        }
+      },
       // send to single department (Supervision and control, risk and compliance)
       {
         type: 'action',

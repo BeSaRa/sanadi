@@ -5,19 +5,11 @@ import {ProjectsRoutingModule} from './projects-routing.module';
 import {ProjectsComponent} from './projects.component';
 import {ProjectModelComponent} from './pages/project-model/project-model.component';
 import {InternalProjectLicenseComponent} from './pages/internal-project-license/internal-project-license.component';
-import {UrgentInterventionLicenseComponent} from './pages/urgent-intervention-license/urgent-intervention-license.component';
-import {
-  UrgentInterventionApproveTaskPopupComponent
-} from '@app/projects/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component';
 import {InternalBankAccountApprovalComponent} from './pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import {
   InternalBankApprovalApproveTaskPopupComponent
 } from './popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import {CollectionModule} from '@app/modules/collection/collection.module';
-import {UrgentInterventionReportComponent} from './pages/urgent-intervention-report/urgent-intervention-report.component';
-import {ImplementingAgencyListComponent} from './shared/implementing-agency-list/implementing-agency-list.component';
-import {InterventionRegionListComponent} from './shared/intervention-region-list/intervention-region-list.component';
-import {InterventionFieldListComponent} from './shared/intervention-field-list/intervention-field-list.component';
 import {UrgentJointReliefCampaignComponent} from './pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {
   UrgentJointReliefCampaignInitialApproveTaskPopupComponent
@@ -29,6 +21,7 @@ import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
 } from '../projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { SelectEmployeePopupComponent } from './popups/select-employee-popup/select-employee-popup.component';
 
 
 @NgModule({
@@ -36,8 +29,6 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     ProjectsComponent,
     ProjectModelComponent,
     InternalProjectLicenseComponent,
-    UrgentInterventionLicenseComponent,
-    UrgentInterventionApproveTaskPopupComponent,
     InternalBankAccountApprovalComponent,
     InternalBankApprovalApproveTaskPopupComponent,
     UrgentJointReliefCampaignComponent,
@@ -45,10 +36,7 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     UrgentJointReliefCampaignFinalApproveTaskPopupComponent,
     UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent,
     InternalBankApprovalApproveTaskPopupComponent,
-    UrgentInterventionReportComponent,
-    ImplementingAgencyListComponent,
-    InterventionRegionListComponent,
-    InterventionFieldListComponent
+    SelectEmployeePopupComponent
   ],
   imports: [
     CommonModule,

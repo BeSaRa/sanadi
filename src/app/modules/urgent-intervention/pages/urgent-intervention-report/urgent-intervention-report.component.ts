@@ -1,15 +1,15 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
-import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
+import {UrgentInterventionReportingService} from '@services/urgent-intervention-reporting.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {LookupService} from '@app/services/lookup.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LicenseService} from '@app/services/license.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {LookupService} from '@services/lookup.service';
+import {EmployeeService} from '@services/employee.service';
+import {LicenseService} from '@services/license.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Observable, of, Subject} from 'rxjs';
 import {ReadinessStatus, TabMap} from '@app/types/types';
 import {SaveTypes} from '@app/enums/save-types';
@@ -20,18 +20,18 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {Country} from '@app/models/country';
 import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CountryService} from '@app/services/country.service';
+import {CountryService} from '@services/country.service';
 import {
   ImplementingAgencyListComponent
-} from '@app/projects/shared/implementing-agency-list/implementing-agency-list.component';
+} from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
 import {
   InterventionRegionListComponent
-} from '@app/projects/shared/intervention-region-list/intervention-region-list.component';
+} from '@app/modules/urgent-intervention/shared/intervention-region-list/intervention-region-list.component';
 import {
   InterventionFieldListComponent
-} from '@app/projects/shared/intervention-field-list/intervention-field-list.component';
+} from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
 import {ServiceRequestTypes, UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
-import {CommonUtils} from '@app/helpers/common-utils';
+import {CommonUtils} from '@helpers/common-utils';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
 import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';

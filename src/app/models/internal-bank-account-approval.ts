@@ -76,7 +76,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls ? [description, [CustomValidators.required]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     }
   }
 
@@ -87,4 +87,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
+
+  // sendToMultiDepartments(): DialogRef {
+  //   return this.inboxService!.sendInternalBankAccountApprovalToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
+  // }
 }

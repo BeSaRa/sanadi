@@ -82,6 +82,11 @@ const routes: Routes = [
         loadChildren: () => import('./modules/followup/followup.module').then(m => m.FollowupModule)
       },
       {path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)},
+      {
+        path: 'urgent-intervention',
+        loadChildren: () => import('./modules/urgent-intervention/urgent-intervention.module').then(m => m.UrgentInterventionModule),
+        data: {configPermissionGroup: PermissionGroup.URGENT_INTERVENTION_PERMISSIONS_GROUP, checkAnyPermission: true}
+      },
       //{path: '**', redirectTo: '../error'}
     ]
   },

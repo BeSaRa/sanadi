@@ -9,9 +9,9 @@ import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule

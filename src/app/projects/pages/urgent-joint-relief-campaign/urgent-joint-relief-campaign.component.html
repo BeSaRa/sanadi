@@ -197,6 +197,7 @@
                          for="donation">{{lang.map.donation_amount}}</label>
                   <input id="donation" validationClasses="donation" formControlName="donation"
                          class="form-control" [readonly]="(readonly)">
+                  <app-field-error-message controlName="donation"></app-field-error-message>
                 </div>
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
                   <label for="workStartDate" asteriskIfRequired="workStartDate"

@@ -8,6 +8,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Lookup} from '@app/models/lookup';
 import {Observable} from 'rxjs';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {AdminResult} from '@app/models/admin-result';
 
 export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
   status!: number;
@@ -75,5 +76,9 @@ export class DacOcha extends BaseModel<DacOcha, DacOchaService> {
 
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
+  }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id});
   }
 }
