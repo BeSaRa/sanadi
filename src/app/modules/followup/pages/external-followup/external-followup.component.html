@@ -71,6 +71,10 @@
                       [tooltip]="lang.map.accept_terminate" (click)="terminate(row, $event)">
                 <i class="mdi mdi-check"></i>
               </button>
+              <button *ngIf="isInternalUser" class="btn icon-btn text-primary"
+                      [tooltip]="lang.map.edit_due_date" (click)="editDueDate(row)">
+                <i class="mdi mdi-calendar-edit"></i>
+              </button>
               <button *ngIf="row.hasReason()" class="btn icon-btn text-primary"
                       [tooltip]="row.getReason()">
                 <i class="mdi mdi-alert-circle"></i>

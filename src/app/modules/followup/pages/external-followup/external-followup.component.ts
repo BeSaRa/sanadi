@@ -117,4 +117,12 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
   hasTerminatedRequest(row: Followup): boolean {
     return this.employeeService.isInternalUser() && row.status === FollowupStatusEnum.PARTIAL_TERMINATION
   }
+
+  editDueDate(row: Followup): void {
+    row.updateDueDate()
+      .onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        click === UserClickOn.YES && this.reload$.next(null)
+      })
+  }
 }

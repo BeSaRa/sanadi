@@ -19,6 +19,10 @@ import { ReasonContract } from "@contracts/reason-contract";
 import { LangService } from "@services/lang.service";
 import { map, switchMap } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import {
+  DueDateUpdatePopupComponent
+} from "@app/modules/followup/popups/due-date-update-popup/due-date-update-popup.component";
 
 @CastResponseContainer({
   $default: {
@@ -94,5 +98,9 @@ export class FollowupService extends CrudWithDialogGenericService<Followup> {
       .pipe(switchMap((result: { click: UserClickOn, comment: string }) => {
         return result.click === UserClickOn.YES ? this.reject(followup.id, result.comment).pipe(map(_ => result.comment)) : of('')
       }))
+  }
+
+  openUpdateDueDate(model: Followup): DialogRef {
+    return this.dialog.show(DueDateUpdatePopupComponent, model);
   }
 }

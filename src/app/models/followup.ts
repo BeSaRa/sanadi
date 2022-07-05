@@ -12,6 +12,7 @@ import { InterceptModel } from "@decorators/intercept-model";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
 import { Observable } from "rxjs";
 import { FollowupStatusEnum } from "@app/enums/status.enum";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 
 const interceptor = new FollowupInterceptor()
 
@@ -110,6 +111,10 @@ export class Followup extends BaseModel<Followup, FollowupService> {
 
   getReason(): string {
     return this.langService.map.terminate_reject_reason + ' : ' + this.reason
+  }
+
+  updateDueDate(): DialogRef {
+    return this.service.openUpdateDueDate(this)
   }
 
 }
