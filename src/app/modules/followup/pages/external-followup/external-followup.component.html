@@ -53,15 +53,35 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
-                <button class="btn icon-btn text-primary grid-action-btn"
-                        [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
-                  <i class="mdi mdi-comment"></i>
-                </button>
-                <button class="btn icon-btn text-primary grid-action-btn"
-                        [disabled]="isDisabled(row)"
-                        [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
-                  <i class="mdi mdi-close-box"></i>
-                </button>
+                <div *ngIf="!hasTerminatedRequest(row)" class="d-flex flex-row">
+                  <button class="btn icon-btn text-primary grid-action-btn"
+                          [tooltip]="lang.map.comments" (click)="showComments(row, $event)">
+                    <i class="mdi mdi-comment"></i>
+                  </button>
+                  <button class="btn icon-btn text-primary grid-action-btn"
+                          [disabled]="isDisabled(row)"
+                          [tooltip]="lang.map.btn_terminate" (click)="terminate(row, $event)">
+                    <i class="mdi mdi-delete"></i>
+                  </button>
+                </div>
+                <div *ngIf="hasTerminatedRequest(row)" class="d-flex flex-row">
+                  <button class="btn icon-btn text-primary grid-action-btn"
+                          [disabled]="isDisabled(row)"
+                          [tooltip]="lang.map.reject_terminate" (click)="rejectTerminate(row)">
+                    <i class="mdi mdi-close"></i>
+                  </button>
+                  <button class="btn icon-btn text-primary grid-action-btn"
+                          [disabled]="isDisabled(row)"
+                          [tooltip]="lang.map.accept_terminate" (click)="terminate(row, $event)">
+                    <i class="mdi mdi-check"></i>
+                  </button>
+                </div>
+                <div class="d-flex flex-row">
+                  <button *ngIf="row.hasReason()" class="btn icon-btn text-primary grid-action-btn"
+                          [tooltip]="row.getReason()">
+                    <i class="mdi mdi-alert-circle"></i>
+                  </button>
+                </div>
               </div>
             </td>
           </ng-container>

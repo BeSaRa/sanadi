@@ -10,6 +10,8 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { FollowupInterceptor } from "@app/model-interceptors/followup.interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { Observable } from "rxjs";
 
 const interceptor = new FollowupInterceptor()
 
@@ -39,6 +41,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   status!: number;
   statusDateModified!: string;
   dueDate!: string;
+  reason?: string;
   custom: boolean = true;
   fullSerial!: string;
   followUpConfigrationInfo!: Lookup;
@@ -98,4 +101,17 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       dueDate: controls ? [dueDate, [CustomValidators.required]] : dueDate
     }
   }
+
+  rejectTerminate(): Observable<string> {
+    return this.service.rejectTerminate(this)
+  }
+
+  hasReason(): boolean {
+    return !!(this.reason && this.reason.length)
+  }
+
+  getReason(): string {
+    return this.langService.map.reason + ' : ' + this.reason
+  }
+
 }

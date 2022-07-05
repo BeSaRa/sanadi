@@ -67,7 +67,6 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
 
   terminate(model: Followup, $event: MouseEvent) {
     $event.preventDefault();
-
     const message = this.lang.map.msg_confirm_terminate_followup;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
@@ -79,7 +78,16 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
         });
       }
     });
+  }
 
+  rejectTerminate(model: Followup): void {
+    model.rejectTerminate()
+      .subscribe((comment) => {
+        if (comment.length) {
+          this.reload$.next(null)
+          this.toast.success(this.lang.map.msg_reject_terminate_successfully)
+        }
+      })
   }
 
   showComments(model: Followup, _$event: MouseEvent) {
@@ -89,10 +97,6 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
   };
-
-  get statusEnum() {
-    return FollowupStatusEnum;
-  }
 
   getDateColor(dueDate: any): 'red' | 'blue' | 'green' {
     dueDate = (new Date(dueDate.split('T')[0]).setHours(0, 0, 0, 0));
@@ -108,5 +112,9 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
 
   isDisabled(row: Followup): boolean {
     return [FollowupStatusEnum.PARTIAL_TERMINATION, FollowupStatusEnum.TERMINATED].includes(row.status) && !this.employeeService.isInternalUser()
+  }
+
+  hasTerminatedRequest(row: Followup): boolean {
+    return this.employeeService.isInternalUser() && row.status === FollowupStatusEnum.PARTIAL_TERMINATION
   }
 }

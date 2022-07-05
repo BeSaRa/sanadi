@@ -1,6 +1,9 @@
 export interface ILanguageKeys {
   send_to_department: string;
   can_be_11_digits: string;
+  msg_reject_terminate_successfully: string;
+  reject_terminate: string;
+  accept_terminate: string;
   system: string;
   manually: string;
   external_followup: string;
