@@ -125,11 +125,17 @@ EmploymentService
           (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
         ),
         switchMap(() => {
-          return this.service.bulkValidate(this.employees, this.isApprova())
+          return this.service.bulkValidate(this.employees)
         }),
         tap(
-          (data) => { console.log(data); }
+          (data) => {
+            this.dublicateIdintifierMessage(data)
+          }
         ),
+        map(_map => {
+          delete _map.size
+          return Object.keys(_map).filter(k => _map[k]).length == 0
+        }),
       )
   }
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -322,6 +328,14 @@ EmploymentService
   }
   private invalidItemMessage() {
     this.dialog.error(this.lang.map.please_add_employee_items_to_proceed);
+  }
+  dublicateIdintifierMessage(data: any) {
+    delete data.size;
+    let message = '';
+    Object.keys(data).filter(k => data[k]).forEach((k) => {
+      message += this.lang.map.employee_with_identification + ' ' + k + ' ' + this.lang.map.is_exist_before +'\n';
+    })
+    this.dialog.error(message);
   }
   get identificationNumber(): FormControl {
     return this.searchCriteriaForm.get("identificationNumber") as FormControl;

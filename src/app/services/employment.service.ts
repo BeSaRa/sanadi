@@ -24,12 +24,15 @@ import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
 import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 
-const interceptor = new EmployeeInterceptor();
+const Empinterceptor = new EmployeeInterceptor();
 @CastResponseContainer({
   $employee: { model: () => Employee },
   $default: {
     model: () => Employment
   },
+  $validateEmployee: {
+    model: () => Map
+  }
 })
 @Injectable({
   providedIn: "root",
@@ -91,13 +94,21 @@ export class EmploymentService extends BaseGenericEService<Employment> {
       '&is-manger=' + criteria.isManager
     )
   }
-
-  bulkValidate(employees: Partial<Employee>[], isManager: boolean): Observable<any> {
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$validateEmployee'
+  })
+  bulkValidate(employees: Partial<Employee>[]): Observable<any> {
     const employeesList = employees.map((e: any) => {
-      return {
-        ...interceptor.send(e),
-        isManager
+      const fakeObj = { ...e };
+      const emp = {
+        ...Empinterceptor.send(fakeObj),
+        qId: fakeObj.identificationType == 1 ? e.identificationNumber : '-1',
+        passportNumber: fakeObj.identificationType == 2 ? fakeObj.passportNumber : null
       }
+      delete emp.identificationNumber
+      return emp
     })
     return this.http.post<any>(this.urlService.URLS.NPO_EMPLOYEE + '/bulk/validate', employeesList)
   }

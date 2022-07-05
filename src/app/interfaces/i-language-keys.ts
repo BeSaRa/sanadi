@@ -1091,4 +1091,6 @@ export interface ILanguageKeys {
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
   msg_service_unavailable: string;
+  employee_with_identification: string;
+  is_exist_before: string;
 }
