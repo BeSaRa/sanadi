@@ -6,7 +6,7 @@
 </div>
 <div class="dialog-content" #dialogContent style="width: 600px">
   <div class="d-flex flex-column">
-    <ng-container *ngFor="let comment of comments">
+    <ng-container *ngFor="let comment of comments; trackBy: trackCommentBy">
       <div class="d-flex flex-row" [ngClass]="isCurrentUser(comment) ? 'justify-content-end': 'justify-content-start'">
         <div class="mb-2 border border-1 rounded rounded-2 shadow shadow-sm p-2 align-content-end"
              [ngClass]="isCurrentUser(comment) ? 'own-comment align-content-start': 'other-comment align-content-end'">
@@ -28,7 +28,7 @@
 </div>
 <div [formGroup]="form" class="dialog-actions">
   <div class="d-flex flex-grow-1">
-        <textarea name="enDesc" formControlName="comment" validationClasses="comment" id="comment" rows="2"
+        <textarea name="comment" formControlName="comment" validationClasses="comment" id="comment" rows="2"
                   class="form-control"></textarea>
     <app-field-error-message controlName="comment"></app-field-error-message>
   </div>

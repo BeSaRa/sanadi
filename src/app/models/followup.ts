@@ -11,6 +11,7 @@ import { FollowupInterceptor } from "@app/model-interceptors/followup.intercepto
 import { InterceptModel } from "@decorators/intercept-model";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
 import { Observable } from "rxjs";
+import { FollowupStatusEnum } from "@app/enums/status.enum";
 
 const interceptor = new FollowupInterceptor()
 
@@ -104,7 +105,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   }
 
   hasReason(): boolean {
-    return !!(this.reason && this.reason.length)
+    return !!(this.reason && this.reason.length) && this.status !== FollowupStatusEnum.PARTIAL_TERMINATION
   }
 
   getReason(): string {

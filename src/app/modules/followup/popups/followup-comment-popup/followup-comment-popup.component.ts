@@ -29,6 +29,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
   @ViewChild('dialogContent', { read: ElementRef })
   dialogContent!: ElementRef<HTMLDivElement>
 
+
   constructor(public service: FollowupCommentService,
               public dialogRef: DialogRef,
               public fb: FormBuilder,
@@ -98,5 +99,9 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
         behavior: 'smooth'
       })
     })
+  }
+
+  trackCommentBy(_: number, model: FollowupComment): any {
+    return model.id
   }
 }
