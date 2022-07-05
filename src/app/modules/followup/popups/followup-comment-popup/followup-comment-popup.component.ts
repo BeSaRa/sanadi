@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -18,7 +18,7 @@ import { InternalUser } from '@app/models/internal-user';
   templateUrl: './followup-comment-popup.component.html',
   styleUrls: ['./followup-comment-popup.component.scss']
 })
-export class FollowupCommentPopupComponent extends AdminGenericDialog<any> implements AfterViewInit {
+export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
 
   model: FollowupComment = new FollowupComment()
   operation!: OperationTypes;
@@ -39,10 +39,6 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> imple
     super();
     this.followUpId = followUp.id;
     this.user = this.employeeService.getCurrentUser()
-  }
-
-  ngAfterViewInit(): void {
-
   }
 
   afterSave(model: any, dialogRef: DialogRef): void {
