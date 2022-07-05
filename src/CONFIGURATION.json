@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.4.11-rc#13",
+  "VERSION": "v1.4.12-rc",
   "ENVIRONMENTS_URLS": {
     "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
