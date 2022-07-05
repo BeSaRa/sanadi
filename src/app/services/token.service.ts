@@ -1,9 +1,13 @@
-import {Injectable} from '@angular/core';
-import {ConfigurationService} from './configuration.service';
-import {FactoryService} from './factory.service';
-import {ECookieService} from './e-cookie.service';
-import {AuthService} from './auth.service';
-import {Observable, Subscription} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { ConfigurationService } from './configuration.service';
+import { FactoryService } from './factory.service';
+import { ECookieService } from './e-cookie.service';
+import { AuthService } from './auth.service';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, tap } from "rxjs/operators";
+import { CommonService } from "@services/common.service";
+import { UserTypes } from "@app/enums/user-types.enum";
+import { EmployeeService } from "@services/employee.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +17,10 @@ export class TokenService {
   private _excludedTokenUrls: string[] = [];
   private authService!: AuthService;
 
-  constructor(private configurationService: ConfigurationService, private eCookieService: ECookieService) {
+  constructor(private configurationService: ConfigurationService,
+              private commonService: CommonService,
+              private employeeService: EmployeeService,
+              private eCookieService: ECookieService) {
     FactoryService.registerService('TokenService', this);
   }
 
@@ -61,6 +68,12 @@ export class TokenService {
       } else {
         this.setToken(this.getTokenFromStore());
         innerSub = this.authService.validateToken()
+          .pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
+            if (loggedIn.type === UserTypes.INTERNAL) {
+              counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
+              counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+            }
+          }))))
           .subscribe(() => {
             subscriber.next(true);
             subscriber.complete();
