@@ -1,3 +1,4 @@
+import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
@@ -55,9 +56,9 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionLicenseComponent', UrgentInterventionLicenseComponent);
       DynamicComponentService.registerComponent('CustomsExemptionComponent', CustomsExemptionComponent);
       DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
+      DynamicComponentService.registerComponent('EmploymentComponent', EmploymentComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
       DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
-
     });// just to make sure that service constructed and register all dynamic components
 
 

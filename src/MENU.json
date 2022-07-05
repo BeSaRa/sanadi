@@ -678,6 +678,19 @@
     "svg": null
   },
   {
+    "id": 54,
+    "langKey": "menu_employment",
+    "path": "/home/general-services/employment",
+    "icon": "mdi-account-tie-outline",
+    "isSvg": false,
+    "permission": "EMPLOYMENT",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "general-services",
+    "itemOrder": 5,
+    "svg": ""
+  },
+  {
     "id": 53,
     "langKey": "menu_inquiry_logs",
     "path": "/home/sanady/inquiry-logs",

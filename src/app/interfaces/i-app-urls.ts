@@ -86,10 +86,10 @@ export interface IAppUrls {
   INTERNAL_PROJECT_LICENSE: string;
   TRAINING_PROGRAM_BUNDLE: string;
   URGENT_INTERVENTION_LICENSE: string;
+  EMPLOYMENT: string;
   DONOR: string;
   URGENT_JOINT_RELIEF_CAMPAIGN: string;
   URGENT_INTERVENTION_REPORTING: string;
   EXTERNAL_PROJECT_IMPLEMENTATION: string;
-
   [index: string]: string;
 }

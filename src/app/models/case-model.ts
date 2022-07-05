@@ -362,7 +362,9 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   returnToOrganization(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this);
   }
-
+  finalNotification(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_NOTIFICATION, false, this);
+  }
   isClaimed(): boolean {
     return this.taskDetails && this.taskDetails.isClaimed();
   }

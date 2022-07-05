@@ -87,6 +87,7 @@
   "INTERNAL_USER_PERMISSIONS": "/admin/internal-user-permission",
   "INTERNAL_PROJECT_LICENSE": "/internal-project-licensing",
   "URGENT_INTERVENTION_LICENSE": "/urgent-intervention-licensing",
+  "EMPLOYMENT": "/employment",
   "DONOR": "admin/donor",
   "URGENT_JOINT_RELIEF_CAMPAIGN": "/urgent-joint-relief-campaign",
   "URGENT_INTERVENTION_REPORTING": "/urgent-intervention-announcement",

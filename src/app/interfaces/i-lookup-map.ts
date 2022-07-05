@@ -109,6 +109,9 @@ export interface ILookupMap {
   TRAINING_LANG: Lookup[];
   TRAINING_STATUS: Lookup[];
   TRAINING_SURVEY_ANSWER: Lookup[];
+  CollectionStatus: Lookup[];
+  CollectorStatus: Lookup[];
+  UrgentInterventionStatus: Lookup[];
   TRAINING_TRAINEE_STATUS: Lookup[];
   TRAINING_TYPE: Lookup[];
   UrgentInterventionAnnouncementRequestType: Lookup[];

@@ -1,3 +1,4 @@
+import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,7 +18,8 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     GeneralServicesComponent,
     InquiryComponent,
     ConsultationComponent,
-    InternationalCooperationComponent
+    InternationalCooperationComponent,
+    EmploymentComponent
   ],
   imports: [
     CommonModule,

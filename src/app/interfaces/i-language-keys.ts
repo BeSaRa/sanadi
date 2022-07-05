@@ -13,6 +13,7 @@ export interface ILanguageKeys {
   organization_reject_task: string;
   org_approve_task: string;
   initial_approve_task: string;
+  final_notification_task: string;
   add_officer: string;
   organization_officers: string;
   work_start_date: string;
@@ -252,6 +253,7 @@ export interface ILanguageKeys {
   lbl_accept: string;
   training_program_accept_or_reject: string;
   departments: string;
+  department: string;
   ldap_user_not_exists: string;
   approve_inbox: string;
   btn_save_and_close: string;
@@ -1034,11 +1036,30 @@ export interface ILanguageKeys {
   total_income: string;
   msg_missing_incomes_or_obligations: string;
   msg_confirm_continue: string;
+  menu_employment: string;
+  employee_data: string;
+  order_type: string;
+  add_new_Employee_data: string;
+  identification_type: string;
+  office_name: string;
+  contract_location_type: string;
+  contract_location: string;
+  contract_type: string;
+  job_contract_type: string;
+  contract_status: string;
+  work_end_date: string;
+  contract_expiry_date: string;
+  add_employee: string;
+  adding_employees: string;
+  clear_all: string;
   menu_donors: string;
   lbl_add_donor: string;
   lbl_edit_donor: string;
   donor: string;
   menu_inquiry_logs: string;
+  please_add_employee_items_to_proceed: string;
+  employees_details: string;
+  final_Notification: string;
   special_needs_handicap: string;
   menu_urgent_intervention_report: string;
   entities: string;
@@ -1073,4 +1094,6 @@ export interface ILanguageKeys {
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
   msg_service_unavailable: string;
+  employee_with_identification: string;
+  is_exist_before: string;
 }
