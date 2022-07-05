@@ -1,46 +1,54 @@
-import {Component, Inject} from '@angular/core';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FollowupComment} from '@app/models/followup-comment';
-import {Followup} from '@app/models/followup';
-import {LangService} from '@app/services/lang.service';
-import {FollowupCommentService} from '@app/services/followup-comment.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {OrgUser} from '@app/models/org-user';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {InternalUser} from '@app/models/internal-user';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { FollowupComment } from '@app/models/followup-comment';
+import { Followup } from '@app/models/followup';
+import { LangService } from '@app/services/lang.service';
+import { FollowupCommentService } from '@app/services/followup-comment.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { OrgUser } from '@app/models/org-user';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { InternalUser } from '@app/models/internal-user';
 
 @Component({
   selector: 'followup-comment-popup',
   templateUrl: './followup-comment-popup.component.html',
   styleUrls: ['./followup-comment-popup.component.scss']
 })
-export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
+export class FollowupCommentPopupComponent extends AdminGenericDialog<any> implements AfterViewInit {
 
   model: FollowupComment = new FollowupComment()
   operation!: OperationTypes;
-  comments: FollowupComment[] =[];
+  comments: FollowupComment[] = [];
   form: FormGroup = new FormGroup({});
-  user!: OrgUser | InternalUser | undefined;
+  user!: OrgUser | InternalUser;
   followUpId!: number;
+  @ViewChild('dialogContent', { read: ElementRef })
+  dialogContent!: ElementRef<HTMLDivElement>
 
   constructor(public service: FollowupCommentService,
               public dialogRef: DialogRef,
               public fb: FormBuilder,
               public lang: LangService,
               public employeeService: EmployeeService,
-              @Inject(DIALOG_DATA_TOKEN) private  followUp: Followup) {
+              @Inject(DIALOG_DATA_TOKEN) private followUp: Followup) {
 
     super();
     this.followUpId = followUp.id;
+    this.user = this.employeeService.getCurrentUser()
   }
+
+  ngAfterViewInit(): void {
+
+  }
+
   afterSave(model: any, dialogRef: DialogRef): void {
-    this.initPopup();
     this.form.controls.comment.setValue('');
     this.form.controls.comment.markAsUntouched();
+    this.reloadComments()
   }
 
   beforeSave(model: any, form: FormGroup): Observable<boolean> | boolean {
@@ -55,27 +63,44 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
   }
 
   initPopup(): void {
-    this.service.getCommentsByFollowupId(this.followUpId).subscribe( res => {
-      this.comments = res.sort((a: FollowupComment, b: FollowupComment) =>
-        (new Date(b.statusDateModified)).getTime() - (new Date(a.statusDateModified)).getTime()
-      );
-    })
-
-    this.user = this.employeeService.isExternalUser()? this.employeeService.getUser(): this.employeeService.getInternalUser();
-
+    this.reloadComments()
   }
 
   prepareModel(model: any, form: FormGroup): any {
     this.model.followUpId = this.followUpId;
-    const newModel = new FollowupComment().clone({
+    return new FollowupComment().clone({
       ...this.model,
       ...this.form.getRawValue()
     });
-    return newModel;
   }
 
   saveFail(error: Error): void {
   }
 
+  isInternal(): boolean {
+    return this.employeeService.isInternalUser()
+  }
 
+  isCurrentUser(comment: FollowupComment): boolean {
+    return comment.generalUseId === this.user?.generalUserId
+  }
+
+  reloadComments(): void {
+    this.service.getCommentsByFollowupId(this.followUpId)
+      .subscribe(res => {
+        this.comments = res.sort((a: FollowupComment, b: FollowupComment) =>
+          (new Date(a.statusDateModified)).getTime() - (new Date(b.statusDateModified)).getTime()
+        );
+        this.scrollToEnd()
+      })
+  }
+
+  scrollToEnd(): void {
+    setTimeout(() => {
+      this.dialogContent.nativeElement.scrollTo({
+        top: this.dialogContent.nativeElement.scrollHeight,
+        behavior: 'smooth'
+      })
+    })
+  }
 }
