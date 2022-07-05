@@ -50,7 +50,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    caseId: 'caseId',
+    requestNumber: 'fullSerial',
     status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
     serviceType: text => !this.serviceInfo ? false : this.serviceInfo.getName().toLowerCase().indexOf(text) !== -1,
     org: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
@@ -65,7 +65,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   }
 
   getCreatedBy(): string {
-    return this.custom ? this.langService.map.manually :  this.langService.map.system;
+    return this.custom ? this.langService.map.manually : this.langService.map.system;
   }
 
   buildForm(controls: boolean = false): any {
@@ -86,9 +86,15 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
       enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
       // followUpConfigrationId: controls ? [followUpConfigrationId, [CustomValidators.required]] : followUpConfigrationId,
-      followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
-      responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
-      concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
+      followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
+      responsibleTeamId: controls ? [{
+        value: responsibleTeamId,
+        disabled: followUpType === FollowUpType.INTERNAL
+      }] : responsibleTeamId,
+      concernedTeamId: controls ? [{
+        value: concernedTeamId,
+        disabled: followUpType === FollowUpType.EXTERNAL
+      }] : concernedTeamId,
       dueDate: controls ? [dueDate, [CustomValidators.required]] : dueDate
     }
   }
