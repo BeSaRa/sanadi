@@ -10,7 +10,6 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { FollowupInterceptor } from "@app/model-interceptors/followup.interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
-import { DialogRef } from "@app/shared/models/dialog-ref";
 import { Observable } from "rxjs";
 
 const interceptor = new FollowupInterceptor()
@@ -79,7 +78,6 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enDesc,
       followUpType,
       responsibleTeamId,
-      // followUpConfigrationId,
       concernedTeamId,
       dueDate
     } = this;
@@ -88,7 +86,6 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enName: controls ? [enName, [CustomValidators.required]] : enName,
       arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
       enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
-      // followUpConfigrationId: controls ? [followUpConfigrationId, [CustomValidators.required]] : followUpConfigrationId,
       followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
       responsibleTeamId: controls ? [{
         value: responsibleTeamId,
@@ -111,7 +108,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   }
 
   getReason(): string {
-    return this.langService.map.reason + ' : ' + this.reason
+    return this.langService.map.terminate_reject_reason + ' : ' + this.reason
   }
 
 }
