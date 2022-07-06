@@ -256,6 +256,22 @@
             controlName="mailBox"
           ></app-field-error-message>
         </div>
+        <!-- Introduction -->
+        <div class="mb-4 position-relative">
+          <label for="introduction" class="form-label">{{
+            lang.map.lbl_introduction
+          }}</label>
+          <textarea
+            id="introduction"
+            validationClasses="introduction"
+            trimInput
+            formControlName="introduction"
+            class="form-control"
+          ></textarea>
+          <app-field-error-message
+            controlName="introduction"
+          ></app-field-error-message>
+        </div>
         <!-- Description -->
         <div class="mb-4 position-relative">
           <label for="description" class="form-label">{{

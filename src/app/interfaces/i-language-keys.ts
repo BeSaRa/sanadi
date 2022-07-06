@@ -1071,4 +1071,5 @@ export interface ILanguageKeys {
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
   msg_service_unavailable: string;
+  lbl_introduction: string;
 }

@@ -36,7 +36,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   email!: string;
   mailBox!: string;
   description!: string;
-
+  introduction!: string;
   bankAccountDTOs: BankAccount[] = [];
   executiveManagementDTOs: ExecutiveManagement[] = [];
   contactOfficerDTOs: ContactOfficer[] = [];
@@ -60,7 +60,8 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       website,
       email,
       mailBox,
-      description
+      description,
+      introduction
     } = this;
 
     return {
@@ -78,6 +79,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       mailBox: control ? [mailBox, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : mailBox,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
+      introduction: control ? [introduction, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : introduction,
       description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
   }
