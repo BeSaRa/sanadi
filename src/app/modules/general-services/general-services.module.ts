@@ -1,3 +1,4 @@
+import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -20,6 +21,7 @@ import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliatio
     ConsultationComponent,
     InternationalCooperationComponent,
     ExternalOrgAffiliationComponent,
+    EmploymentComponent
   ],
   imports: [
     CommonModule,

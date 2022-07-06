@@ -1,0 +1,26 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.edit_due_date}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" (click)="closeDialog()" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 400px">
+  <div class="row">
+    <div class="col-sm-12 mb-4 position-relative">
+      <label class="form-label" asteriskIfRequired="" [control]="control"
+             for="dueDate">{{lang.map.due_date}}</label>
+      <div class="input-group">
+        <i class="input-group-text mdi mdi-calendar"></i>
+        <div class="form-control" id="dueDate" (click)="dateCtrl.toggleCalendar()" #dateCtrl="angular-mydatepicker"
+             angular-mydatepicker [options]="dateOptions" validationClasses=""
+             [formControl]="control"
+             [control]="control"></div>
+        <app-field-error-message [control]="control"></app-field-error-message>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="closeDialog()" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button (click)="updateDate()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+</div>

@@ -4,47 +4,34 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" #dialogContent style="width: 700px">
-  <div>
-    <div *ngFor="let comment of comments">
-      <div class="comment"
-           [ngClass]="comment.generalUseId === user?.generalUserId? 'own-comment': 'other-comment'">
-        <div>
+<div class="dialog-content" #dialogContent style="width: 600px">
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let comment of comments; trackBy: trackCommentBy">
+      <div class="d-flex flex-row" [ngClass]="isCurrentUser(comment) ? 'justify-content-end': 'justify-content-start'">
+        <div class="mb-2 border border-1 rounded rounded-2 shadow shadow-sm p-2 align-content-end"
+             [ngClass]="isCurrentUser(comment) ? 'own-comment align-content-start': 'other-comment align-content-end'">
           <div>
-
-          <div class="comment-header row">
-            <div class="col-sm-6">
+            <div *ngIf="isInternal()">
               <p class="name">{{comment.generalUseInfo?.getName()}}</p>
+              <hr>
             </div>
-            <div class="col-sm-6">
-              <p class="date">{{comment.statusDateModified | date :'MMM d, y, h:mm:ss a'}}</p>
+            <p class="fw-normal text-wrap">{{comment.comment}}</p>
+            <hr>
+            <div class="d-flex flex-row justify-content-end">
+              <span class="date fst-italic">{{comment.statusDateModified | date :'medium'}}</span>
             </div>
           </div>
-          <div>
-            <p>{{comment.comment}}</p>
-          </div>
-        </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
-
 </div>
-<div class="dialog-actions">
-
-  <form [formGroup]="form" class="main">
-
-    <div class="row">
-      <div class="col-sm-9 mb-9">
-        <textarea name="enDesc" formControlName="comment" validationClasses="comment" id="comment" rows="4"
+<div [formGroup]="form" class="dialog-actions">
+  <div class="d-flex flex-grow-1">
+        <textarea name="comment" formControlName="comment" validationClasses="comment" id="comment" rows="2"
                   class="form-control"></textarea>
-        <app-field-error-message controlName="comment"></app-field-error-message>
-      </div>
-      <div class="col-sm-3 mb-3 holder">
-        <button [disabled]="form.invalid" (click)="save$.next(null)"
-                class="btn btn-primary bottom">{{lang.map.btn_add}}</button>
-      </div>
-
-    </div>
-  </form>
+    <app-field-error-message controlName="comment"></app-field-error-message>
+  </div>
+  <button [disabled]="form.invalid"
+          (click)="save$.next(null)" class="btn btn-primary bottom">{{lang.map.send}}</button>
 </div>

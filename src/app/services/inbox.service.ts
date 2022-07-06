@@ -1,4 +1,3 @@
-import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
@@ -49,6 +48,8 @@ import { CustomsExemptionRemittanceService } from './customs-exemption-remittanc
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
 import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
+import { EmploymentService } from '@app/services/employment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +77,7 @@ export class InboxService {
     private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
     private urgentInterventionReportingService: UrgentInterventionReportingService,
     private urlService: UrlService,
+    private employmentService: EmploymentService,
     private externalOrgAffiliationService: ExternalOrgAffiliationService,
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
     FactoryService.registerService('InboxService', this);
@@ -94,6 +96,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSING, this.urgentInterventionLicensingService);
     this.services.set(CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL, this.internalBankAccountApprovalService);
     this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
+    this.services.set(CaseTypes.EMPLOYMENT, this.employmentService);
     this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
@@ -270,7 +273,8 @@ export class InboxService {
     let servicesMap = {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
-      [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS
+      [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
+      [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT
     };
 
     // @ts-ignore

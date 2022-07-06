@@ -1,16 +1,16 @@
-import {Component, Input} from '@angular/core';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {FollowupConfigurationService} from '@app/services/followup-configuration.service';
-import {LangService} from '@app/services/lang.service';
-import {ServiceData} from '@app/models/service-data';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {of, Subject} from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { FollowupConfiguration } from '@app/models/followup-configuration';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { FollowupConfigurationService } from '@app/services/followup-configuration.service';
+import { LangService } from '@app/services/lang.service';
+import { ServiceData } from '@app/models/service-data';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { of, Subject } from 'rxjs';
 
 @Component({
   selector: 'followup-configuration',
@@ -82,47 +82,48 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       .subscribe(() => this.reload$.next(this.serviceData.caseType));
   }
 
-  delete( model: FollowupConfiguration, $event: MouseEvent) {
+  delete(model: FollowupConfiguration, $event: MouseEvent) {
     $event.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
           this.reload$.next(this.serviceData.caseType);
           sub.unsubscribe();
         });
       }
     });
   }
-  activate( model: FollowupConfiguration, $event: MouseEvent) {
+
+  activate(model: FollowupConfiguration, $event: MouseEvent) {
     $event.preventDefault();
     const message = this.lang.map.msg_confirm_activate_followup_configuration;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = this.service.activate(model.id).subscribe(result => {
+        const sub = this.service.activate(model.id).subscribe(_ => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_success_activate_followup_configuration);
-          this.reload$.next(1);
+          this.reload$.next(this.serviceData.caseType);
           sub.unsubscribe();
         });
       }
     });
   }
 
-  deactivate( model: FollowupConfiguration, $event: MouseEvent) {
+  deactivate(model: FollowupConfiguration, $event: MouseEvent) {
     $event.preventDefault();
     const message = this.lang.map.msg_confirm_deactivate_followup_configuration;
     this.dialog.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = this.service.deactivate(model.id).subscribe(result => {
+        const sub = this.service.deactivate(model.id).subscribe(_ => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_success_deactivate_followup_configuration);
-          this.reload$.next(1);
+          this.reload$.next(this.serviceData.caseType);
           sub.unsubscribe();
         });
       }

@@ -51,7 +51,19 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'InternationalCooperationComponent'
     }
-  }
+  },
+  {
+    path: 'employment', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.EMPLOYMENT,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'EmploymentComponent'
+    }
+  },
+
 ];
 
 @NgModule({

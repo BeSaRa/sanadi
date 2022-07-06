@@ -1,3 +1,4 @@
+import { HasInterception } from '@decorators/intercept-model';
 import { Injectable } from '@angular/core';
 import { JobTitle } from '@app/models/job-title';
 import { ComponentType } from '@angular/cdk/portal';
@@ -13,7 +14,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
 @CastResponseContainer({
   $default: {
@@ -31,8 +32,8 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
   list: JobTitle[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('JobTitleService', this);
   }
@@ -44,6 +45,23 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
 
   _getServiceURL(): string {
     return this.urlService.URLS.JOB_TITLE;
+  }
+
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getExternalJobTitle(): Observable<JobTitle[]> {
+    return this.http.get<JobTitle[]>(this._getServiceURL() + '/external');
+  }
+  @HasInterception
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getSystemJobTitle(): Observable<JobTitle[]> {
+    return this.http.get<JobTitle[]>(this._getServiceURL() + '/system');
   }
 
   updateStatus(jobTitleId: number, newStatus: CommonStatusEnum) {

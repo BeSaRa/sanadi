@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { DynamicComponentService } from './dynamic-component.service';
-import { TeamService } from './team.service';
-import { CustomEmployeePermission } from '@app/helpers/custom-employee-permission';
-import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import { ConsultationComponent } from '@app/modules/general-services/pages/consultation/consultation.component';
+import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
+import {Injectable} from '@angular/core';
+import {DynamicComponentService} from './dynamic-component.service';
+import {TeamService} from './team.service';
+import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
+import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -34,7 +35,8 @@ import { ExternalOrgAffiliationComponent } from './../modules/general-services/p
 })
 export class AutoRegisterService {
 
-  constructor(private teamService: TeamService, private mapService: MapService) { // teamService is injected because it is used in info request
+  constructor(private teamService: TeamService,
+              private mapService: MapService) { // teamService is injected because it is used in info request
     this.ngOnInit();
     this.mapService.ping();
   }
@@ -56,6 +58,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionLicenseComponent', UrgentInterventionLicenseComponent);
       DynamicComponentService.registerComponent('CustomsExemptionComponent', CustomsExemptionComponent);
       DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
+      DynamicComponentService.registerComponent('EmploymentComponent', EmploymentComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
       DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
@@ -70,6 +73,13 @@ export class AutoRegisterService {
       .registerCustomPermission('menu_available_programs', (employee, _item) => {
         return employee.isExternalUser();
       })
+      .registerCustomPermission('menu_internal_followup', (employee, _item) => {
+        return employee.isInternalUser();
+      })
+      .registerCustomPermission('menu_external_followup', (employee, _item) => {
+        return employee.isExternalUser() || (employee.isInternalUser() && employee.hasPermissionTo('EXTERNAL_FOLLOWUP'));
+      })
+
   }
 
   ping(): void {

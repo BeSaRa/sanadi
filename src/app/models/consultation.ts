@@ -23,11 +23,10 @@ export class Consultation extends CaseModel<ConsultationService, Consultation> {
   email!: string;
   fullName!: string;
   mobileNo!: string;
-  organizationId!: number;
   requestBody!: string;
+  organizationInfo!: AdminResult;
   categoryInfo!: AdminResult;
   service: ConsultationService;
-  organizationInfo!: AdminResult;
   searchFields: ISearchFieldsMap<Consultation> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'organizationInfo', 'categoryInfo']),

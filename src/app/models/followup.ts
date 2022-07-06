@@ -9,6 +9,10 @@ import { IDescriptions } from '@app/interfaces/I-descriptions';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { FollowupInterceptor } from "@app/model-interceptors/followup.interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import { FollowUpType } from "@app/enums/followUp-type.enum";
+import { Observable } from "rxjs";
+import { FollowupStatusEnum } from "@app/enums/status.enum";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 
 const interceptor = new FollowupInterceptor()
 
@@ -28,7 +32,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
 
   orgId!: number;
   followUpConfigrationId!: number;
-  serviceId!: number;
+  caseType!: number;
   caseId!: string;
   arDesc!: string;
   enDesc!: string;
@@ -38,6 +42,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   status!: number;
   statusDateModified!: string;
   dueDate!: string;
+  reason?: string;
   custom: boolean = true;
   fullSerial!: string;
   followUpConfigrationInfo!: Lookup;
@@ -49,7 +54,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    caseId: 'caseId',
+    requestNumber: 'fullSerial',
     status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
     serviceType: text => !this.serviceInfo ? false : this.serviceInfo.getName().toLowerCase().indexOf(text) !== -1,
     org: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
@@ -63,6 +68,10 @@ export class Followup extends BaseModel<Followup, FollowupService> {
     return this[(this.langService.map.lang + 'Desc') as keyof IDescriptions];
   }
 
+  getCreatedBy(): string {
+    return this.custom ? this.langService.map.manually : this.langService.map.system;
+  }
+
   buildForm(controls: boolean = false): any {
     const {
       arName,
@@ -71,7 +80,6 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enDesc,
       followUpType,
       responsibleTeamId,
-      followUpConfigrationId,
       concernedTeamId,
       dueDate
     } = this;
@@ -80,11 +88,33 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enName: controls ? [enName, [CustomValidators.required]] : enName,
       arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
       enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
-      followUpConfigrationId: controls ? [followUpConfigrationId, [CustomValidators.required]] : followUpConfigrationId,
-      // followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
-      // responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
-      // concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
+      followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
+      responsibleTeamId: controls ? [{
+        value: responsibleTeamId,
+        disabled: followUpType === FollowUpType.INTERNAL
+      }] : responsibleTeamId,
+      concernedTeamId: controls ? [{
+        value: concernedTeamId,
+        disabled: followUpType === FollowUpType.EXTERNAL
+      }] : concernedTeamId,
       dueDate: controls ? [dueDate, [CustomValidators.required]] : dueDate
     }
   }
+
+  rejectTerminate(): Observable<string> {
+    return this.service.rejectTerminate(this)
+  }
+
+  hasReason(): boolean {
+    return !!(this.reason && this.reason.length) && this.status !== FollowupStatusEnum.PARTIAL_TERMINATION
+  }
+
+  getReason(): string {
+    return this.langService.map.terminate_reject_reason + ' : ' + this.reason
+  }
+
+  updateDueDate(): DialogRef {
+    return this.service.openUpdateDueDate(this)
+  }
+
 }

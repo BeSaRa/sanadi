@@ -147,7 +147,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
     if (!orderNumber) {
       return;
     }
-    this.loadDocumentsByCriteria({fullSerial: orderNumber})
+    this.loadDocumentsByCriteria({fullSerial: orderNumber, requestType: this.requestType.value})
       .pipe(
         takeUntil(this.destroy$),
         filter(document => !!document),
@@ -337,7 +337,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldBookSerial) => {
-          return this.loadDocumentsByCriteria({fullSerial: oldBookSerial})
+          return this.loadDocumentsByCriteria({fullSerial: oldBookSerial, requestType: this.requestType.value})
             .pipe(catchError(() => of([])));
         })
       )
@@ -363,7 +363,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         exhaustMap((oldBookFullSerial) => {
-          return this.loadDocumentsByCriteria({exportedBookFullSerial: oldBookFullSerial})
+          return this.loadDocumentsByCriteria({exportedBookFullSerial: oldBookFullSerial, requestType: this.requestType.value})
             .pipe(catchError(() => of([])));
         })
       )

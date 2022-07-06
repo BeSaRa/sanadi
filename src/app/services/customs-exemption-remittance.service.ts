@@ -20,6 +20,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {SelectDocumentPopUpComponent} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {AdminResult} from '@app/models/admin-result';
+import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +70,12 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
   @Generator(undefined, true, {property: 'rs'})
   private _customExemptionDocumentSearch(criteria: Partial<CustomsExemptionSearchCriteria>): Observable<CustomsExemptionRemittance[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined};
-    return this.http.post<CustomsExemptionRemittance[]>(this._getURLSegment() + '/search', {...criteria, ...orgId});
+    let url = this._getURLSegment() + '/search';
+    if (criteria.requestType === CustomsExemptionRequestTypes.CANCEL) {
+      url += '/approved';
+    }
+    delete criteria.requestType; // it was added to check the request type to distinguish between requests
+    return this.http.post<CustomsExemptionRemittance[]>(url, {...criteria, ...orgId});
   }
 
   documentSearch(criteria: Partial<CustomsExemptionSearchCriteria> = {}): Observable<CustomsExemptionRemittance[]> {

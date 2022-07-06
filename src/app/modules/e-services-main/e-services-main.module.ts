@@ -9,16 +9,21 @@ import {SelectTemplatePopupComponent} from '@app/modules/e-services-main/popups/
 import {SelectedLicenseTableComponent} from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
 import { BankAccountComponent } from './shared/bank-account/bank-account.component';
 import { ExecutiveManagementComponent } from './shared/executive-management/executive-management.component';
-
+import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
+import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 
 @NgModule({
   declarations: [
     SelectLicensePopupComponent,
     FilterInboxRequestPopupComponent,
+    SelectedLicenseTableComponent,
+    SelectedLicenseTableComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
     BankAccountComponent,
     ExecutiveManagementComponent,
+    EmployeesDataComponent,
+    EmployeeFormPopupComponent
   ],
   imports: [
     CommonModule,
@@ -29,6 +34,8 @@ import { ExecutiveManagementComponent } from './shared/executive-management/exec
     SelectedLicenseTableComponent,
     BankAccountComponent,
     ExecutiveManagementComponent,
+    EmployeeFormPopupComponent,
+    EmployeesDataComponent
   ]
 })
 export class EServicesMainModule {

@@ -11,6 +11,8 @@ import { ILoginData } from '@contracts/i-login-data';
 import { TokenService } from './token.service';
 import { InternalUserService } from "@app/services/internal-user.service";
 import { CommonService } from "@services/common.service";
+import { FollowupPermissionService } from "@services/followup-permission.service";
+import { UserTypes } from "@app/enums/user-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,7 @@ export class AuthService {
               private urlService: UrlService,
               private tokenService: TokenService,
               private commonService: CommonService,
+              private followupPermissionService: FollowupPermissionService,
               private internalUserService: InternalUserService,
               private employeeService: EmployeeService) {
     FactoryService.registerService('AuthService', this);
@@ -74,8 +77,12 @@ export class AuthService {
   }
 
   login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
-    return this._login(credential, external)
-      .pipe(switchMap((data) => this.commonService.loadCounters().pipe(map(_ => data))));
+    return this._login(credential, external).pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
+      if (loggedIn.type === UserTypes.INTERNAL) {
+        counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
+        counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+      }
+    })).pipe(map(_ => loggedIn))))
   }
 
   logout(): Observable<boolean> {
@@ -94,9 +101,11 @@ export class AuthService {
           if (isAuthenticated && loginData) {
             this.employeeService.fillCurrentEmployeeData(loginData);
             this.tokenService.setToken(loginData.token);
+            return loginData
           } else {
             this.employeeService.clear();
             this.tokenService.clearToken();
+            return false
           }
         })
       )
@@ -110,8 +119,7 @@ export class AuthService {
       catchError((error) => {
         this.isAuthenticatedTrigger$.next(null);
         return throwError(error);
-      }),
-      switchMap((data) => this.commonService.loadCounters().pipe(map(_ => data)))
+      })
     );
   }
 

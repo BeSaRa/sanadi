@@ -124,6 +124,19 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
     fallback: '$default',
     unwrap: 'rs'
   })
+  @HasInterception
+  _createBulk(@InterceptParam() models: T[]): Observable<T[]> {
+    return this.http.post<T[]>(this._getServiceURL() + '/bulk/full', models)
+  }
+
+  createBulk(models: T[]): Observable<T[]> {
+    return this._createBulk(models)
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _getByIdComposite(modelId: number): Observable<T> {
     return this.http.get<T>(this._getServiceURL() + '/' + modelId + '/composite');
   }

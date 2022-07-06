@@ -17,6 +17,7 @@
     <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments"
          [template]="departmentsTab"></tab>
     <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
+    <tab [name]="tabsData.followup.name" [title]="lang.map.followup" [template]="followupTab"></tab>
     <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)"
          [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
@@ -136,7 +137,7 @@
                      class="cursor-pointer">{{permission.getName()}}</label>
             </div>
           </div>
-
+        
         </div>
       </div>
     </div>
@@ -195,7 +196,7 @@
               <td cdk-cell *cdkCellDef="let row; index as itemIndex">
                 <button [disabled]="canNotDeleteDepartment(row)" (click)="deleteDepartment(row)"
                         class="btn p-0 icon-btn"><i
-                  class="mdi text-primary mdi-delete"></i>
+                        class="mdi text-primary mdi-delete"></i>
                 </button>
               </td>
             </ng-container>
@@ -209,6 +210,10 @@
         <app-paginator #paginator></app-paginator>
       </div>
     </div>
+  </ng-template>
+  <ng-template #followupTab>
+    <user-followup-permission [user]="model"
+                              [userTeams]="(userTeamComponent?.userTeams||[])"></user-followup-permission>
   </ng-template>
 </div>
 <div class="dialog-actions">

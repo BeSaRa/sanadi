@@ -16,6 +16,7 @@ import { UserSecurityConfiguration } from "@app/models/user-security-configurati
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { EServicePermissions } from "@app/enums/e-service-permissions";
 import { ConfigurationService } from "@app/services/configuration.service";
+import { Permissions } from "@app/enums/Permissions";
 
 @Injectable({
   providedIn: 'root'
@@ -130,7 +131,7 @@ export class EmployeeService {
    * to check for one permission
    * @param permissionKey
    */
-  hasPermissionTo(permissionKey: string): boolean {
+  hasPermissionTo(permissionKey: Permissions | string): boolean {
     return this.permissionMap.has(permissionKey.toLowerCase());
   }
 
@@ -349,15 +350,7 @@ export class EmployeeService {
     }, [] as UserSecurityConfiguration[]);
 
     securityArray.forEach((item) => {
-
-      if (this.type == UserTypes.INTERNAL && item.followUp && !hasFollowupPermission) {
-        this.permissionMap?.set('internal_followup', new Permission().clone({
-          permissionKey: "INTERNAL_FOLLOWUP"
-        }))
-        hasFollowupPermission = true;
-      }
-
-      if (this.type == UserTypes.INTERNAL || (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission)) {
+      if (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission) {
         this.permissionMap?.set('external_followup', new Permission().clone({
           permissionKey: "EXTERNAL_FOLLOWUP"
         }))
@@ -407,5 +400,11 @@ export class EmployeeService {
     canSearch && this.permissionMap.set(EServicePermissions.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
       permissionKey: EServicePermissions.E_SERVICES_SEARCH
     }))
+  }
+
+  addFollowupPermission(permission: string): void {
+    this.permissionMap.set(permission.toLowerCase(), new Permission().clone({
+      permissionKey: permission
+    }));
   }
 }

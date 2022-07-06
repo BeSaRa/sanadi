@@ -103,6 +103,7 @@ import { TranslatePipe } from "@app/pipes/translate.pipe";
 import { DatePipe } from "@app/pipes/date.pipe";
 import { FollowupComponent } from "@app/shared/popups/followup/followup.component";
 import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-popup/followup-popup.component";
+import { ReasonPopupComponent } from './popups/reason-popup/reason-popup.component';
 
 @NgModule({
   declarations: [
@@ -189,6 +190,7 @@ import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-po
     DatePipe,
     FollowupComponent,
     FollowupPopupComponent,
+    ReasonPopupComponent,
   ],
   imports: [
     CommonModule,

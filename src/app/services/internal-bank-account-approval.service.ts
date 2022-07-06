@@ -23,6 +23,8 @@ import {
   InternalBankApprovalApproveTaskPopupComponent
 } from '@app/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import {BankService} from '@services/bank.service';
+import {SelectEmployeePopupComponent} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
+import {Lookup} from '@app/models/lookup';
 
 @Injectable({
   providedIn: 'root'
@@ -124,11 +126,36 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     pipe(map(response => {
       let result: NpoEmployee[] = [];
       response.forEach((r: any) => {
+        r.jobTitleInfo = (new Lookup()).clone(r.jobTitleInfo);
         result.push((new NpoEmployee()).clone(r));
       });
       console.log('NPOs', result);
       return result;
     }));
+  }
+
+  @Generator(NpoEmployee, true, {property: 'rs'})
+  private _searchNPOEmployees(qId: string): Observable<NpoEmployee[]> {
+    return qId ? this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria?q-id=' + qId) : this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria');
+  }
+
+  searchNPOEmployees(qId: string) {
+    return this._searchNPOEmployees(qId).
+    pipe(map(response => {
+      let result: NpoEmployee[] = [];
+      response.forEach((r: any) => {
+        r.jobTitleInfo = (new Lookup()).clone(r.jobTitleInfo);
+        result.push((new NpoEmployee()).clone(r));
+      });
+      console.log('NPOs', result);
+      return result;
+    }));
+  }
+
+  openSelectEmployee(employees: NpoEmployee[]): DialogRef {
+    return this.dialog.show(SelectEmployeePopupComponent, {
+      employees
+    });
   }
 
   approveTask(model: InternalBankAccountApproval, action: WFResponseType): DialogRef {

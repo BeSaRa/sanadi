@@ -1,0 +1,17 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{data.title}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" (click)="close()" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <div class="row">
+    <div class="col-sm-12">
+      <textarea rows="5" class="form-control" [formControl]="control"></textarea>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="close()" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button (click)="sendReason()" [disabled]="control.invalid" class="btn btn-primary">{{data.saveBtn}}</button>
+</div>

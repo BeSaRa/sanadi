@@ -426,6 +426,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToMultiDepartmentsAction(item);
         }
       },
+      // send to specific department
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_department',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToMultiDepartmentsAction(item);
+        }
+      },
       // send to single department (Supervision and control, risk and compliance)
       {
         type: 'action',
@@ -595,6 +608,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalApproveAction(item);
+        }
+      },
+      // final notification
+      {
+        type: 'action',
+        icon: 'mdi-book-check',
+        label: 'final_Notification',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.FINAL_NOTIFICATION);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.finalNotification(item);
         }
       },
       // ask for consultation
@@ -875,6 +901,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToGeneralManagerAction(item: CaseModel<any, any>) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private finalNotification(item: CaseModel<any, any>) {
+    item.finalNotification().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
