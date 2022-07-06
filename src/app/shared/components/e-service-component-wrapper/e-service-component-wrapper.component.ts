@@ -411,6 +411,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToDepartmentAction(item);
         }
       },
+      // send to specific organization
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'return_to_org_task',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.returnToSpecificOrganizationAction(item);
+        }
+      },
       // send to multi department
       {
         type: 'action',
@@ -981,13 +994,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private validateRejectAction(item: CaseModel<any, any>) {
-    item.validateReject().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    item.validateReject().onAfterClose$.subscribe(hasNoMoreOrganizations => {
+      hasNoMoreOrganizations && this.navigateToSamePageThatUserCameFrom();
     });
   }
 
   private returnToOrganizationAction(item: CaseModel<any, any>) {
     item.returnToOrganization().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private returnToSpecificOrganizationAction(item: CaseModel<any, any>) {
+    item.returnToSpecificOrganization().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

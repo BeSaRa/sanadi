@@ -34,5 +34,6 @@ export enum WFResponseType {
   TO_CONSTRUCTION_EXPERT = 'toConExpert',
   TO_GM = 'toGM',
   FINAL_NOTIFICATION = 'finalNotification',
-  INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalBankAccountApproval'
+  INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalBankAccountApproval',
+  RETURN_TO_SPECIFIC_ORGANIZATION = 'returnSpecificOrg'
 }

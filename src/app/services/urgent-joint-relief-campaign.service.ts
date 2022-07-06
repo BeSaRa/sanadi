@@ -26,6 +26,11 @@ import {
 import {InboxService} from '@services/inbox.service';
 import {FormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
+import {Observable} from 'rxjs';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {map} from 'rxjs/operators';
+import {OrgUnit} from '@app/models/org-unit';
+import {ValidOrgUnit} from '@app/models/valid-org-unit';
 
 @CastResponseContainer({
   $default: {
@@ -108,5 +113,18 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
       model,
       action: action
     });
+  }
+
+  returnToOrganization(caseId: number, orgId: number): Observable<OrgUnit[]> {
+    return this.http.get<IDefaultResponse<OrgUnit[]>>(this._getURLSegment() + '/task/' + caseId + '/' + orgId)
+      .pipe(map(response => response.rs));
+  }
+
+  getToReturnValidOrganizations(caseId: number): Observable<ValidOrgUnit[]> {
+    return this.http.get<IDefaultResponse<ValidOrgUnit[]>>(this._getURLSegment() + '/valid/org/' + caseId)
+      .pipe(map(response => {
+        let organizations = response.rs.map(x => (new ValidOrgUnit()).clone(x));
+        return organizations;
+      }));
   }
 }
