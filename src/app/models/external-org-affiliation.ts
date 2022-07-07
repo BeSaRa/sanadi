@@ -12,6 +12,7 @@ import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
 import { CaseModel } from '@app/models/case-model';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { InterceptModel } from '@decorators/intercept-model';
+import { AdminResult } from './admin-result';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new ExternalOrgAffiliationInterceptor();
@@ -40,6 +41,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   bankAccountDTOs: BankAccount[] = [];
   executiveManagementDTOs: ExecutiveManagement[] = [];
   contactOfficerDTOs: ContactOfficer[] = [];
+  countryInfo!: AdminResult;
 
   constructor() {
     super();

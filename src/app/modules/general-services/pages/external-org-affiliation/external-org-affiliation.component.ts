@@ -55,14 +55,15 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       name: 'managersTab',
       langKey: 'managers',
       validStatus: () => {
-        return !this.executiveManagementComponentRef || (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
+        return !this.executiveManagementComponentRef ||
+          (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
       }
     },
     contactOfficer: {
       name: 'contactOfficer',
       langKey: 'managers',
       validStatus: () => {
-        return this.form && this.form.get('contactOfficer')?.valid
+        return this.form && this.form.get('contactOfficer')?.valid;
       }
     },
     attachments: {
@@ -89,7 +90,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     return new ExternalOrgAffiliation();
   }
   _prepareModel(): ExternalOrgAffiliation | Observable<ExternalOrgAffiliation> {
-    let value = (new ExternalOrgAffiliation()).clone({ ...this.model, ...this.form.value.basicInfo });
+    const value = (new ExternalOrgAffiliation()).clone({ ...this.model, ...this.form.value.basicInfo });
 
     value.bankAccountDTOs = this.bankAccountComponentRef.list;
     value.executiveManagementDTOs = this.executiveManagementComponentRef.list;
@@ -103,13 +104,13 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.form = new FormGroup({
       basicInfo: this.fb.group((new ExternalOrgAffiliation()).getFormFields(true)),
       contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true))
-    })
+    });
   }
   _afterBuildForm(): void {
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     return of(this.form.valid)
-      .pipe(tap(valid => !valid && this.invalidFormMessage()))
+      .pipe(tap(valid => !valid && this.invalidFormMessage()));
   }
   _afterSave(model: ExternalOrgAffiliation, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
@@ -137,30 +138,35 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
   _destroyComponent(): void { }
   _updateForm(model: ExternalOrgAffiliation | undefined): void {
-    console.log(model)
     this.model = model;
+    this.contactOfficerTab.setValue(
+      (new ContactOfficer().clone(model?.contactOfficerDTOs[0])).getContactOfficerFields(false)
+    )
     this.basicTab.patchValue(model?.getFormFields());
     this.handleRequestTypeChange(model?.requestType || 0, false);
     this.cd.detectChanges();
   }
   _resetForm(): void {
     this.form.reset();
+    this.model!.bankAccountDTOs = [];
+    this.model!.executiveManagementDTOs = [];
+    this.model!.contactOfficerDTOs = [];
     this.operation = OperationTypes.CREATE;
   }
 
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
-  private invalidFormMessage() {
+  private invalidFormMessage(): void {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   private loadCountries(): void {
     this.countryService.loadCountries()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countriesList = countries)
+      .subscribe((countries) => this.countriesList = countries);
   }
   isCancelRequestType(): boolean {
-    return this.requestTypeField.value && (this.requestTypeField.value === AffiliationRequestType.CANCEL)
+    return this.requestTypeField.value && (this.requestTypeField.value === AffiliationRequestType.CANCEL);
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
@@ -173,8 +179,8 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   // Get Fields
-  get requestTypeField() {
-    return this.form.get('basicInfo.requestType') as FormControl
+  get requestTypeField(): FormControl {
+    return this.form.get('basicInfo.requestType') as FormControl;
   }
   get basicTab(): FormGroup {
     return (this.form.get('basicInfo')) as FormGroup;

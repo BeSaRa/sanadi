@@ -20,14 +20,18 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.send(em) as ExecutiveManagement)
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.send(co) as ContactOfficer)
 
-    console.log(model)
+    delete model.caseStatusInfo
+    delete model.categoryInfo
+    delete model.countryInfo
+    delete model.creatorInfo
+    delete model.ouInfo
+    delete model.requestTypeInfo
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => bankAccountInterceptor.receive(new BankAccount().clone(ba)))
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.receive(new ExecutiveManagement().clone(em)))
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.receive(new ContactOfficer().clone(co)))
-    console.log(model)
     return model;
   }
 

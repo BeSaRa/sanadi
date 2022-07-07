@@ -9,16 +9,26 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { UrlService } from './url.service';
-
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+@CastResponseContainer({
+  $default: {
+    model: () => ExternalOrgAffiliation,
+    shape: {}
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
 export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalOrgAffiliation>  {
 
-  jsonSearchFile: string = 'external_org_affiliation_search';
+  jsonSearchFile: string = 'external_org_affiliation_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_external_org_affiliation_request';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ["fullSerial",
+    "caseStatus",
+    "creatorInfo",
+    "createdOn",
+    "subject"];
 
   constructor(
     public domSanitizer: DomSanitizer,
@@ -42,7 +52,7 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     return ExternalOrgAffiliation
   }
   getSearchCriteriaModel<S extends ExternalOrgAffiliation>(): ExternalOrgAffiliation {
-    throw new Error('Method not implemented.');
+    return new ExternalOrgAffiliation();
   }
   getCaseComponentName(): string {
     return "ExternalOrgAffiliationComponent"
