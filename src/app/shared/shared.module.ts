@@ -104,6 +104,7 @@ import { DatePipe } from "@app/pipes/date.pipe";
 import { FollowupComponent } from "@app/shared/popups/followup/followup.component";
 import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-popup/followup-popup.component";
 import { ReasonPopupComponent } from './popups/reason-popup/reason-popup.component';
+import { ReturnToOrganizationPopupComponent } from './popups/return-to-organization-popup/return-to-organization-popup.component';
 
 @NgModule({
   declarations: [
@@ -191,6 +192,7 @@ import { ReasonPopupComponent } from './popups/reason-popup/reason-popup.compone
     FollowupComponent,
     FollowupPopupComponent,
     ReasonPopupComponent,
+    ReturnToOrganizationPopupComponent,
   ],
   imports: [
     CommonModule,

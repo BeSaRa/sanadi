@@ -50,6 +50,7 @@ import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-
 import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
 import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
 import { EmploymentService } from '@app/services/employment.service';
+import { ReturnToOrganizationPopupComponent } from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -314,6 +315,14 @@ export class InboxService {
       claimBefore,
       task
     });
+  }
+
+  openReturnToSpecificOrganization(caseId: string, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    return this.dialog.show(ReturnToOrganizationPopupComponent,
+      {
+        caseId,
+        task
+      });
   }
 
   openFilterTeamInboxDialog(filterCriteria: Partial<IInboxCriteria>): Observable<DialogRef> {
