@@ -78,7 +78,7 @@ export class DateUtils {
         year: disableDate.getFullYear(),
         month: disableDate.getMonth() + 1,
         day: disableDate.getDate()
-      }
+      };
     } else if (customOptions.disablePeriod === 'future') {
       options.disableSince = {
         year: disableDate.getFullYear(),
@@ -91,6 +91,19 @@ export class DateUtils {
 
   static getDatePickerOptionsClone(datepickerOptions: IAngularMyDpOptions): IAngularMyDpOptions {
     return JSON.parse(JSON.stringify(datepickerOptions));
+  }
+
+  static removeDisablePeriod(datepickerOptions: IAngularMyDpOptions, period: 'past' | 'future' | 'all'): IAngularMyDpOptions {
+    let optionsClone = DateUtils.getDatePickerOptionsClone(datepickerOptions);
+    if (period === 'past') {
+      delete optionsClone.disableUntil;
+    } else if (period === 'future') {
+      delete optionsClone.disableSince;
+    } else if (period === 'all') {
+      delete optionsClone.disableUntil;
+      delete optionsClone.disableSince;
+    }
+    return optionsClone;
   }
 
   /**
@@ -138,7 +151,7 @@ export class DateUtils {
           year: disableDate.getFullYear(),
           month: disableDate.getMonth() + 1,
           day: disableDate.getDate()
-        }
+        };
       }
       options.controlOptionsMap[options.toFieldName] = toFieldDateOptions;
     }, 100);
@@ -163,7 +176,7 @@ export class DateUtils {
           year: disableDate.getFullYear(),
           month: disableDate.getMonth() + 1,
           day: disableDate.getDate()
-        }
+        };
       }
       options.controlOptionsMap[options.fromFieldName] = fromFieldDateOptions;
     }, 100);
