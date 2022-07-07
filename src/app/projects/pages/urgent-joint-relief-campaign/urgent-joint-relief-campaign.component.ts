@@ -107,6 +107,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _initComponent(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.datepickerOptionsMap.licenseStartDate = DateUtils.removeDisablePeriod(this.datepickerOptionsMap.licenseStartDate, 'past');
+    }
     this.isExternalUser = this.employeeService.isExternalUser();
     this.loadOrgUnits();
     this.loadCountries();
