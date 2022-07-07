@@ -1,3 +1,4 @@
+import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { ExecutiveManagement } from '@app/models/executive-management';
@@ -43,6 +44,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   contactOfficerDTOs: ContactOfficer[] = [];
   countryInfo!: AdminResult;
 
+  oldLicenseFullSerial!: string;
   constructor() {
     super();
     this.service = FactoryService.getService('ExternalOrgAffiliationService');
@@ -63,10 +65,12 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       email,
       mailBox,
       description,
-      introduction
+      introduction,
+      oldLicenseFullSerial
     } = this;
 
     return {
+      oldLicenseFullSerial: control ? [requestType, [CustomValidators.required]] : oldLicenseFullSerial,
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       country: control ? [country, [CustomValidators.required]] : country,
       category: control ? [country, [CustomValidators.required]] : category,

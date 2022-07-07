@@ -1,3 +1,7 @@
+import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
+import { LicenseService } from './license.service';
+import { Observable } from 'rxjs';
+import { ExternalOrgAffiliationSearchCriteria } from './../models/external-org-affiliation-search-criteria';
 import { LangService } from './lang.service';
 import { FactoryService } from './factory.service';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
@@ -29,6 +33,7 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     "creatorInfo",
     "createdOn",
     "subject"];
+    selectLicenseDisplayColumns = ['arName', 'enName', 'licenseNumber', 'status', 'actions'];
 
   constructor(
     public domSanitizer: DomSanitizer,
@@ -37,7 +42,8 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     public dynamicService: DynamicOptionsService,
     public cfr: ComponentFactoryResolver,
     private urlService: UrlService,
-    public dialog: DialogService
+    public dialog: DialogService,
+    private licenseService: LicenseService,
   ) {
     super();
     FactoryService.registerService('ExternalOrgAffiliationService', this);
@@ -52,10 +58,13 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     return ExternalOrgAffiliation
   }
   getSearchCriteriaModel<S extends ExternalOrgAffiliation>(): ExternalOrgAffiliation {
-    return new ExternalOrgAffiliation();
+    return new ExternalOrgAffiliationSearchCriteria();
   }
   getCaseComponentName(): string {
     return "ExternalOrgAffiliationComponent"
+  }
+  licenseSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria> = {}): Observable<ExternalOrgAffiliationResult[]> {
+    return this.licenseService.externalOrgAffiliationSearch(criteria);
   }
 
 }

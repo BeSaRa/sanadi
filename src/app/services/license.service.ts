@@ -1,3 +1,5 @@
+import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
+import { ExternalOrgAffiliationSearchCriteria } from './../models/external-org-affiliation-search-criteria';
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {FactoryService} from "@app/services/factory.service";
@@ -135,6 +137,9 @@ export class LicenseService {
       case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
         url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
         break;
+      case CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST:
+        url = this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST;
+        break;
     }
     return url;
   }
@@ -178,11 +183,20 @@ export class LicenseService {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
     return this.http.post<FinalExternalOfficeApprovalResult[]>(this.getServiceUrlByCaseType(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) + '/license/search', {...criteria, ...orgId})
   }
-
   finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
     return this._finalApprovalLicenseSearch(criteria);
   }
-
+  @Generator(FinalExternalOfficeApprovalResult, true, {
+    property: 'rs',
+    interceptReceive: (new FinalExternalOfficeApprovalResultInterceptor()).receive
+  })
+  private _externalOrgAffiliationSearchCriteria(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
+    return this.http.post<ExternalOrgAffiliationResult[]>(this.getServiceUrlByCaseType(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST) + '/license/search', {...criteria, ...orgId})
+  }
+  externalOrgAffiliationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
+    return this._externalOrgAffiliationSearchCriteria(criteria);
+  }
   @Generator(InternalProjectLicenseResult, true, {
     property: 'rs',
     interceptReceive: (new InternalProjectLicenseResultInterceptor()).receive
@@ -463,7 +477,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

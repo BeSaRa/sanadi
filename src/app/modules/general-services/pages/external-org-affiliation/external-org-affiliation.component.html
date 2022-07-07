@@ -40,7 +40,7 @@
     <ng-template #basic_info>
       <div formGroupName="basicInfo" class="row">
         <!-- Request Type -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-4 mb-4 position-relative">
           <label
             asteriskIfRequired="requestType"
             for="requestType"
@@ -69,12 +69,12 @@
           ></app-field-error-message>
         </div>
         <!-- category -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-4 mb-4 position-relative">
           <label
             asteriskIfRequired="category"
             for="category"
             class="form-label"
-            >{{ lang.map.request_type }}</label
+            >{{ lang.map.lbl_entity_classification }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -83,6 +83,7 @@
             placeholder="{{ lang.map.select }}"
             id="category"
             [notFoundText]="lang.map.msg_not_found"
+            [readonly]="isCancelRequestType()"
             appendTo="body"
             validationClasses="category"
             formControlName="category"
@@ -97,6 +98,21 @@
             controlName="category"
           ></app-field-error-message>
         </div>
+        <!-- License Number -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+                  class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditOrCancel()"
+                    formControlName="oldLicenseFullSerial"
+                    type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                    id="oldLicenseFullSerial" trimInput [readOnly]="!isEditOrCancel()">
+            <button *ngIf="isEditOrCancel()" type="button" (click)="licenseSearch($event)"
+                    class="input-group-text">
+              <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
         <!-- ar name -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="arName" for="arName" class="form-label">{{
@@ -105,6 +121,7 @@
           <input
             id="arName"
             formControlName="arName"
+            [readonly]="isCancelRequestType()"
             validationClasses="arName"
             class="form-control"
           />
@@ -120,6 +137,7 @@
           <input
             id="enName"
             formControlName="enName"
+            [readonly]="isCancelRequestType()"
             validationClasses="enName"
             class="form-control"
           />
@@ -136,6 +154,7 @@
             id="email"
             formControlName="email"
             validationClasses="email"
+            [readonly]="isCancelRequestType()"
             class="form-control"
           />
           <app-field-error-message
@@ -155,6 +174,7 @@
             labelForId="country"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
+            [readonly]="isCancelRequestType()"
             id="country"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
@@ -179,6 +199,7 @@
           <input
             type="text"
             validationClasses="city"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="city"
@@ -194,6 +215,7 @@
           <input
             type="text"
             validationClasses="phone"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="phone"
@@ -209,6 +231,7 @@
           <input
             type="text"
             validationClasses="fax"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="fax"
@@ -228,6 +251,7 @@
             type="text"
             validationClasses="website"
             class="form-control"
+            [readonly]="isCancelRequestType()"
             trimInput
             id="website"
             formControlName="website"
@@ -248,6 +272,7 @@
             type="text"
             validationClasses="mailBox"
             class="form-control"
+            [readonly]="isCancelRequestType()"
             trimInput
             id="mailBox"
             formControlName="mailBox"
@@ -264,6 +289,7 @@
           <textarea
             id="introduction"
             validationClasses="introduction"
+            [readonly]="isCancelRequestType()"
             trimInput
             formControlName="introduction"
             class="form-control"
@@ -324,6 +350,7 @@
             validationClasses="arabicName"
             formControlName="arabicName"
             trimInput
+            [readonly]="isCancelRequestType()"
             class="form-control"
             id="arabicName"
           />
@@ -343,6 +370,7 @@
             type="text"
             validationClasses="englishName"
             formControlName="englishName"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="englishName"
@@ -360,6 +388,7 @@
             type="text"
             validationClasses="phone"
             formControlName="phone"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="phone"
@@ -380,6 +409,7 @@
             type="text"
             validationClasses="mobileNo"
             formControlName="mobileNo"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="mobileNo"
@@ -397,6 +427,7 @@
             type="text"
             formControlName="email"
             validationClasses="email"
+            [readonly]="isCancelRequestType()"
             trimInput
             class="form-control"
             id="email"

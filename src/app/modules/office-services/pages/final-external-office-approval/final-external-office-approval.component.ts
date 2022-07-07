@@ -405,7 +405,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       return this.service.licenseSearch(criteria as Partial<FinalExternalOfficeApprovalSearchCriteria>);
     }
   }
-
+// TODO: ask how to get select event or selected license
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
