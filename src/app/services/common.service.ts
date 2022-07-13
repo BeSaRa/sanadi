@@ -43,6 +43,9 @@ export class CommonService {
   }
 
   loadAgenciesByAgencyTypeAndCountry(agencyType: number, executionCountry: number): Observable<AdminResult[]> {
+    if (!agencyType || !executionCountry) {
+      return of([]);
+    }
     let queryParams = new HttpParams();
     queryParams = queryParams.append('type', agencyType);
     queryParams = queryParams.append('country', executionCountry);
