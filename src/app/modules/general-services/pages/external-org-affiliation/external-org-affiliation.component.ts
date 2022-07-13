@@ -1,3 +1,4 @@
+import { CommonUtils } from '@app/helpers/common-utils';
 import { ExternalOrgAffiliationResult } from './../../../../models/external-org-affiliation-result';
 import { map } from 'rxjs/operators';
 import { switchMap } from 'rxjs/operators';
@@ -45,6 +46,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   licenseSearch$: Subject<string> = new Subject<string>();
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('managersTab') executiveManagementComponentRef!: ExecutiveManagementComponent;
+  selectedLicense?: ExternalOrgAffiliation;
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -118,9 +120,34 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
   _afterBuildForm(): void {
   }
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      // if (!(this.tabsData[key].formStatus() && this.tabsData[key].listStatus())) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
+  }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return of(this.form.valid)
-      .pipe(tap(valid => !valid && this.invalidFormMessage()));
+    if (!this.selectedLicense) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+      return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return true;
+      }
+      const invalidTabs = this._getInvalidTabs();
+      if (invalidTabs.length > 0) {
+        const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+        this.dialog.error(listHtml.outerHTML);
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
   _afterSave(model: ExternalOrgAffiliation, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
@@ -137,7 +164,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     throw new Error('Method not implemented.');
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-    return true;
+    return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
     this._resetForm();
@@ -163,7 +190,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.model!.contactOfficerDTOs = [];
     this.operation = OperationTypes.CREATE;
   }
-  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria> | Partial<ExternalOrgAffiliationSearchCriteria>)): (Observable<ExternalOrgAffiliationResult[] | ExternalOrgAffiliationResult[]>) {
+  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria> | Partial<ExternalOrgAffiliationSearchCriteria>)): (Observable<ExternalOrgAffiliationResult[]>) {
     return this.service.licenseSearch(criteria as Partial<ExternalOrgAffiliationSearchCriteria>);
   }
 
@@ -204,13 +231,13 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
         // allow only if the user select license
         filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
           ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
+            console.log(selection)
             return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation)
           }),
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
-        console.log(selection)
-        // this.setSelectedLicense(selection.details, false);
+        this.setSelectedLicense(selection.details);
       })
   }
   licenseSearch($event?: Event): void {
@@ -220,6 +247,41 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       value = this.oldLicenseFullSerialField.value;
     }
     this.licenseSearch$.next(value);
+  }
+
+  isEditAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  private setSelectedLicense(licenseDetails: ExternalOrgAffiliation) {
+    this.selectedLicense = licenseDetails;
+    let requestType = this.requestTypeField?.value,
+      result: Partial<ExternalOrgAffiliation> = {
+        requestType
+      };
+
+    result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldLicenseId = licenseDetails.id;
+    result.oldLicenseSerial = licenseDetails.serial;
+
+    result.category = licenseDetails.category;
+    result.arName = licenseDetails.arName;
+    result.enName = licenseDetails.enName;
+    result.country = licenseDetails.country;
+    result.city = licenseDetails.city;
+    result.phone = licenseDetails.phone;
+    result.fax = licenseDetails.fax;
+    result.website = licenseDetails.website;
+    result.email = licenseDetails.email;
+    result.mailBox = licenseDetails.mailBox;
+    result.description = licenseDetails.description;
+    result.introduction = licenseDetails.introduction;
+    result.bankAccountDTOs = licenseDetails.bankAccountDTOs;;
+    result.executiveManagementDTOs = licenseDetails.executiveManagementDTOs;
+    result.contactOfficerDTOs = licenseDetails.contactOfficerDTOs;
+
+    this._updateForm((new ExternalOrgAffiliation()).clone(result));
   }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();

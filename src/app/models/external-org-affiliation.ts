@@ -45,6 +45,8 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   countryInfo!: AdminResult;
 
   oldLicenseFullSerial!: string;
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
   constructor() {
     super();
     this.service = FactoryService.getService('ExternalOrgAffiliationService');
@@ -70,13 +72,13 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
     } = this;
 
     return {
-      oldLicenseFullSerial: control ? [requestType, [CustomValidators.required]] : oldLicenseFullSerial,
+      oldLicenseFullSerial: control ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       country: control ? [country, [CustomValidators.required]] : country,
-      category: control ? [country, [CustomValidators.required]] : category,
-      arName: control ? [country, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+      category: control ? [category, [CustomValidators.required]] : category,
+      arName: control ? [arName, [CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
       Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
-      enName: control ? [country, [
+      enName: control ? [enName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
       city: control ? [city, [CustomValidators.required]] : city,
