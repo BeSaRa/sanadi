@@ -11,7 +11,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
     model.internalBankAccountDTOs = model.internalBankAccountDTOs?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber}) as unknown as BankAccount);
     model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs
-      ?.map(npo => ({id: npo.id, arabicName: npo.arabicName, englishName: npo.englishName, jobTitleId: npo.jobTitleId, identificationNumber: npo.qId}) as unknown as NpoEmployee);
+      ?.map(npo => ({id: npo.id, arabicName: npo.arabicName, englishName: npo.englishName, jobTitleId: npo.jobTitleId, identificationNumber: npo.qId || npo.identificationNumber}) as unknown as NpoEmployee);
 
     delete model.taskDetails;
     delete model.requestTypeInfo;
