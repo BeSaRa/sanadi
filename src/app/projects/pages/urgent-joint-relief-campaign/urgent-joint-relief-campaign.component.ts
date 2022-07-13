@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
@@ -34,7 +34,7 @@ import {OpenFrom} from '@app/enums/open-from.enum';
   templateUrl: './urgent-joint-relief-campaign.component.html',
   styleUrls: ['./urgent-joint-relief-campaign.component.scss']
 })
-export class UrgentJointReliefCampaignComponent extends EServicesGenericComponent<UrgentJointReliefCampaign, UrgentJointReliefCampaignService> {
+export class UrgentJointReliefCampaignComponent extends EServicesGenericComponent<UrgentJointReliefCampaign, UrgentJointReliefCampaignService> implements AfterViewInit {
   form!: FormGroup;
   officerForm!: FormGroup;
   fm!: FormManager;
@@ -62,6 +62,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
+              private cd: ChangeDetectorRef,
               public service: UrgentJointReliefCampaignService,
               private lookupService: LookupService,
               private dialog: DialogService,
@@ -71,6 +72,10 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
               private orgUnitService: OrganizationUnitService,
               private countryService: CountryService) {
     super();
+  }
+
+  ngAfterViewInit() {
+    this.cd.detectChanges();
   }
 
   get basicInfo(): FormGroup {
@@ -102,6 +107,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _initComponent(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.datepickerOptionsMap.licenseStartDate = DateUtils.removeDisablePeriod(this.datepickerOptionsMap.licenseStartDate, 'past');
+    }
     this.isExternalUser = this.employeeService.isExternalUser();
     this.loadOrgUnits();
     this.loadCountries();
@@ -118,11 +126,13 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   mapOrgUnitsToParticipantOrgUnits(orgUnits: OrgUnit[]): ParticipantOrganization[] {
     return orgUnits.map(x => {
       return new ParticipantOrganization()
-        .clone({organizationId: x.id,
+        .clone({
+          organizationId: x.id,
           arabicName: x.arName,
           englishName: x.enName,
           donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.donation,
-          workStartDate : this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.workStartDate})
+          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.workStartDate
+        });
     });
   }
 
@@ -282,7 +292,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   addOrganization() {
-    if(!this.selectedOrg) {
+    if (!this.selectedOrg) {
       this.dialog.error(this.lang.map.please_select_organization_first);
       return;
     }
@@ -371,7 +381,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   handleReadonly(): void {
-    if(this.isExternalUser) {
+    if (this.isExternalUser) {
       this.handleReadonlyForExternalUsers();
     } else {
       this.handleReadonlyForInternalUsers();

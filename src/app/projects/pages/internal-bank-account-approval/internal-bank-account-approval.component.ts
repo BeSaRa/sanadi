@@ -245,6 +245,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   _resetForm(): void {
     this.form.reset();
     this.operation = OperationTypes.CREATE;
+    this.selectedNPOEmployees = [];
+
   }
 
   loadBanks() {
@@ -651,6 +653,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   addToSelectedResponsiblePersons(employee: NpoEmployee) {
     const selectedPerson = this.npoEmployees.find(b => b.id == employee.id)!;
     if (!this.selectedNPOEmployees.includes(selectedPerson)) {
+      selectedPerson.identificationNumber = selectedPerson.qId;
       this.selectedNPOEmployees = this.selectedNPOEmployees.concat(selectedPerson);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);

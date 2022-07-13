@@ -53,7 +53,10 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
       return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
     });
-    internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs;
+    internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
+      x.jobTitleInfo = (new Lookup()).clone(x);
+      return x;
+    });
 
     return internalBankAccountApproval;
   }
