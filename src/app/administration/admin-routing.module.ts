@@ -23,6 +23,7 @@ import {Permissions} from "@app/enums/Permissions";
 import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
+import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -121,6 +122,11 @@ const routes: Routes = [
     path: 'donors', component: DonorComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: Permissions.DONOR_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'field-assessment', component: FieldAssessmentComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: Permissions.FIELD_ASSESSMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
 ];
 

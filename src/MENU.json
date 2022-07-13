@@ -687,7 +687,7 @@
     "permissionGroup": null,
     "parent": 13,
     "group": "general-services",
-    "itemOrder": 5,
+    "itemOrder": 4,
     "svg": ""
   },
   {
@@ -798,6 +798,19 @@
   },
   {
     "id": 61,
+    "langKey": "menu_field_assessment",
+    "path": "/home/administration/field-assessment",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 19,
+    "svg": null
+  },
+  {
+    "id": 62,
     "langKey": "menu_external_org_affiliation_request",
     "path": "/home/general-services/external-org-affiliation",
     "icon": "mdi-wallet-membership",
@@ -806,7 +819,7 @@
     "permissionGroup": null,
     "parent": 13,
     "group": "general-services",
-    "itemOrder": 10,
+    "itemOrder": 5,
     "svg": null
   }
 ]

@@ -1109,4 +1109,8 @@ export interface ILanguageKeys {
   employee_with_identification: string;
   is_exist_before: string;
   lbl_entity_classification: string;
+  menu_field_assessment: string;
+  lbl_add_field_assessment: string;
+  lbl_edit_field_assessment: string;
+  type: string;
 }
