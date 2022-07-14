@@ -323,12 +323,16 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.hideUpdateMergeFields();
     this.isUpdateMerge = false;
     this.isUpdateNewAccount = false;
+    this.requirePurposeField();
     if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       this.disableNewMergeAccountsFields();
       this.enableNewMergeAccountsFields();
       this.isNewMerge = true;
-    } else {
+    } else if (this.operationType.value == BankAccountOperationTypes.INACTIVE) {
       // this.enableMainAccountAndAccountType();
+      this.dontRequirePurposeField();
+      this.isNewMerge = false;
+    } else {
       this.isNewMerge = false;
     }
   }
@@ -352,9 +356,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.isUpdateNewAccount = false;
       this.isNewMerge = false;
     }
+    this.dontRequirePurposeField();
   }
 
   onSelectCancelRequestType() {
+    this.dontRequirePurposeField();
     this.enableCancelAccountFields();
     this.disableCancelAccountFields();
     this.hideUpdateAccountFields();
@@ -362,6 +368,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectNoneRequestType() {
+    this.dontRequirePurposeField();
     this.oldLicenseFullSerialField.patchValue(null);
     this.oldLicenseFullSerialField.disable();
     this.hideUpdateAccountFields();
@@ -486,6 +493,14 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.operationType.enable({emitEvent: false});
     this.operationType.setValidators([CustomValidators.required]);
     // this.operationType.updateValueAndValidity();
+  }
+
+  requirePurposeField() {
+    this.purpose.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]);
+  }
+
+  dontRequirePurposeField() {
+    this.purpose.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]);
   }
 
   disableOperationType() {
