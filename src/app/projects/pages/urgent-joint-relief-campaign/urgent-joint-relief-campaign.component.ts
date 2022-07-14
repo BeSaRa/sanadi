@@ -227,8 +227,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         ...model,
         ...this.externalUserData.getRawValue()
       });
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.model?.donation;
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.model?.workStartDate;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.externalUserData?.get('donation')?.value!;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.externalUserData?.get('workStartDate')?.value!;
     } else {
       model.participatingOrganizaionList = this.selectedOrganizationUnits;
     }
