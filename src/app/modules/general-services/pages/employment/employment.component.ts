@@ -125,7 +125,9 @@ EmploymentService
           (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
         ),
         switchMap(() => {
-          return this.service.bulkValidate(this.employees)
+          if (this.isNewRequestType())
+            return this.service.bulkValidate(this.employees)
+          return of({})
         }),
         tap(
           (data) => {
