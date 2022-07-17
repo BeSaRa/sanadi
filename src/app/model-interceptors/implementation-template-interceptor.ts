@@ -15,6 +15,7 @@ export class ImplementationTemplateInterceptor implements IModelInterceptor<Impl
   }
 
   private static _deleteBeforeSend(model: Partial<ImplementationTemplate>): void {
+    delete model.searchFields;
     delete model.implementingAgencyInfo;
     delete model.typeInfo;
   }

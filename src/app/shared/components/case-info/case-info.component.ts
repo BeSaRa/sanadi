@@ -37,7 +37,8 @@ export class CaseInfoComponent {
     CaseTypes.FUNDRAISING_LICENSING,
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
-    CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL
+    CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    CaseTypes.URGENT_INTERVENTION_CLOSURE
   ];
 
   // this should be updated when ever you will add a new document service
@@ -58,10 +59,22 @@ export class CaseInfoComponent {
   }
 
   get generatedLicenseNumber(): string {
+    if (!this.model) {
+      return '';
+    }
+    if (this.model.getCaseType() === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
+      return (this.model as LicenseApprovalModel<any, any>).oldLicenseFullSerial || '';
+    }
     return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullSerial || '';
   }
 
   get generatedLicenseId(): string {
+    if (!this.model) {
+      return '';
+    }
+    if (this.model.getCaseType() === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
+      return (this.model as any).licenseVSID || '';
+    }
     return (this.model as LicenseApprovalModel<any, any>).exportedLicenseId || '';
   }
 

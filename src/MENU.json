@@ -811,6 +811,19 @@
   },
   {
     "id": 62,
+    "langKey": "menu_urgent_intervention_closure",
+    "path": "/home/urgent-intervention/urgent-intervention-closure",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_CLOSURE",
+    "permissionGroup": null,
+    "parent": 60,
+    "group": "urgent-intervention",
+    "itemOrder": 3,
+    "svg": null
+  },
+  {
+    "id": 63,
     "langKey": "menu_external_org_affiliation_request",
     "path": "/home/general-services/external-org-affiliation",
     "icon": "mdi-wallet-membership",

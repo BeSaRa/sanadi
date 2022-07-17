@@ -12,6 +12,6 @@ export class InterventionRegionInterceptor implements IModelInterceptor<Interven
   }
 
   private static _deleteBeforeSend(model: Partial<InterventionRegion>): void {
-
+    delete model.searchFields;
   }
 }

@@ -76,6 +76,8 @@ import {
 } from '@app/model-interceptors/urgent-intervention-report-result-interceptor';
 import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
 import {UrgentInterventionReportInterceptor} from '@app/model-interceptors/urgent-intervention-report-interceptor';
+import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
+import {UrgentInterventionClosureInterceptor} from '@app/model-interceptors/urgent-intervention-closure-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -139,6 +141,9 @@ export class LicenseService {
         break;
       case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
         url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
+        break;
+      case CaseTypes.URGENT_INTERVENTION_CLOSURE:
+        url = this.urlService.URLS.URGENT_INTERVENTION_CLOSURE;
         break;
       case CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST:
         url = this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST;
@@ -237,6 +242,19 @@ export class LicenseService {
 
   urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
     return this._urgentInterventionReportSearch(criteria);
+  }
+
+  @Generator(UrgentInterventionClosure, true, {
+    property: 'rs',
+    interceptReceive: (new UrgentInterventionClosureInterceptor()).receive
+  })
+  private _urgentInterventionClosureSearch(criteria: Partial<UrgentInterventionClosure>): Observable<UrgentInterventionClosure[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
+    return this.http.post<UrgentInterventionClosure[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_CLOSURE) + '/license/search', {...criteria, ...orgId})
+  }
+
+  urgentInterventionClosureSearch(criteria: Partial<UrgentInterventionClosure>): Observable<UrgentInterventionClosure[]> {
+    return this._urgentInterventionClosureSearch(criteria);
   }
 
   @Generator(InitialExternalOfficeApproval, false, {
@@ -452,6 +470,17 @@ export class LicenseService {
     });
   }
 
+  @Generator(UrgentInterventionClosure, false, {
+    property: 'rs',
+    interceptReceive: (new UrgentInterventionClosureInterceptor()).receive
+  })
+  _validateUrgentInterventionClosureByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_CLOSURE) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @Generator(CollectionLicense, false, {
     property: 'rs',
     interceptReceive: (new CollectionLicenseInterceptor()).receive
@@ -488,6 +517,8 @@ export class LicenseService {
       return this._validateInternalBankAccountLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST) {
       return this._validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
+      return this._validateUrgentInterventionClosureByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
@@ -506,8 +537,13 @@ export class LicenseService {
     if (!url) {
       return of();
     }
+    if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE){
+      url += '/license/latest/' + license.id + '/content';
+    } else {
+      url += '/license/' + license.id + '/content';
+    }
 
-    return this.http.get(url + '/license/' + license.id + '/content', {
+    return this.http.get(url, {
       responseType: 'blob'
     }).pipe(
       map(blob => new BlobModel(blob, this.domSanitizer),

@@ -54,7 +54,7 @@ export class SelectedLicenseTableComponent {
       onClick: (item: any) => this.viewLicenseAsPDF(item),
       show: (item: any) => {
         // urgent intervention reporting(announcement) does not have content to view
-        return (this.caseType !== CaseTypes.URGENT_INTERVENTION_REPORTING);
+        return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_REPORTING);
       }
     },
     // remove license/document

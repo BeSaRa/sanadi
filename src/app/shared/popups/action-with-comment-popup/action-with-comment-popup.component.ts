@@ -49,7 +49,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.PARTNER_APPROVAL,
     CaseTypes.INTERNAL_PROJECT_LICENSE,
-    CaseTypes.URGENT_INTERVENTION_LICENSING
+    //CaseTypes.URGENT_INTERVENTION_LICENSING
   ]
   form!: FormGroup;
 

@@ -7,10 +7,11 @@ export class ResultInterceptor implements IModelInterceptor<Result> {
   }
 
   send(model: Partial<Result>): Partial<Result> {
+    ResultInterceptor._deleteBeforeSend(model);
     return model;
   }
 
   private static _deleteBeforeSend(model: Partial<Result>): void {
-
+    delete model.searchFields;
   }
 }

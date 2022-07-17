@@ -15,6 +15,13 @@ import {CaseModel} from '@app/models/case-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@contracts/has-request-type';
+import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {BestPractices} from '@app/models/best-practices';
+import {LessonsLearned} from '@app/models/lessons-learned';
+import {OfficeEvaluation} from '@app/models/office-evaluation';
+import {Result} from '@app/models/result';
+import {Stage} from '@app/models/stage';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -35,8 +42,8 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
-  exportedLicenseFullSerial!:	string;
-  exportedLicenseId!:string;
+  exportedLicenseFullSerial!: string;
+  exportedLicenseId!: string;
   exportedLicenseSerial!: number;
   implementingAgencyList: ImplementingAgency[] = [];
   interventionRegionList: InterventionRegion[] = [];
@@ -56,7 +63,7 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
-  }
+  };
 
   finalizeSearchFields(): void {
     if (this.employeeService.isExternalUser()) {
@@ -97,7 +104,28 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
       executionCountry: controls ? [executionCountry, [CustomValidators.required]] : executionCountry,
       executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(50)]] : executionRegion,
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
-    }
+    };
+  }
+
+  convertToUrgentInterventionClosure() {
+    return (new UrgentInterventionClosure()).clone({
+      caseType: CaseTypes.URGENT_INTERVENTION_CLOSURE,
+      organizationId: this.organizationId,
+      requestType: this.requestType,
+      subject: this.subject,
+      projectDescription: this.projectDescription,
+      beneficiaryCountry: this.beneficiaryCountry,
+      beneficiaryCountryInfo: this.beneficiaryCountryInfo,
+      beneficiaryRegion: this.beneficiaryRegion,
+      executionCountry: this.executionCountry,
+      executionCountryInfo: this.executionCountryInfo,
+      executionRegion: this.executionRegion,
+      description: this.description,
+      implementingAgencyList: this.implementingAgencyList,
+      interventionRegionList: this.interventionRegionList,
+      interventionFieldList: this.interventionFieldList,
+      fullSerial: this.fullSerial
+    });
   }
 
 }

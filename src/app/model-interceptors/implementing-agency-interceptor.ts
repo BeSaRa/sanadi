@@ -15,6 +15,7 @@ export class ImplementingAgencyInterceptor implements IModelInterceptor<Implemen
   }
 
   private static _deleteBeforeSend(model: Partial<ImplementingAgency>): void {
+    delete model.searchFields;
     delete model.implementingAgencyInfo;
     delete model.agencyTypeInfo;
   }

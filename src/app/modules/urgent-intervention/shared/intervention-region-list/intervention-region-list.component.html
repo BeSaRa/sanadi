@@ -51,7 +51,7 @@
                 <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
               </td>
             </ng-container>
-            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
             <tr *cdkNoDataRow>
               <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>

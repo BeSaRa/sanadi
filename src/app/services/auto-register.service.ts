@@ -25,10 +25,13 @@ import { CustomsExemptionComponent } from '@app/modules/remittances/pages/custom
 import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
-import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import {UrgentInterventionReportComponent} from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
+import {
+  UrgentInterventionClosureComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import { ExternalOrgAffiliationComponent } from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
-import { UrgentInterventionReportComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +64,8 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('EmploymentComponent', EmploymentComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
       DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
+
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
     });// just to make sure that service constructed and register all dynamic components
 

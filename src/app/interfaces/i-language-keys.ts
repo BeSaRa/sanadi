@@ -2,6 +2,7 @@ export interface ILanguageKeys {
   select_organization: string;
   send_to_department: string;
   can_be_11_digits: string;
+  duration: string;
   edit_due_date: string;
   terminate_reject_reason: string;
   msg_reject_terminate_successfully: string;
@@ -1002,6 +1003,7 @@ export interface ILanguageKeys {
   project_components: string;
   project_budget: string;
   err_invalid_project_component_total_x: string;
+  err_invalid_total_intervention_cost_x: string;
   send_to_multi_departments: string;
   send_to_structure_expert: string;
   send_to_development_expert: string;
@@ -1109,8 +1111,20 @@ export interface ILanguageKeys {
   employee_with_identification: string;
   is_exist_before: string;
   lbl_entity_classification: string;
+  menu_urgent_intervention_closure: string;
+  phases_and_outcomes: string;
+  stage: string;
+  intervention_cost: string;
+  output_and_impact_analysis: string;
+  implementation_evaluation: string;
+  evaluation_hub: string;
+  evaluation_result: string;
+  best_practices: string;
+  lessons_learnt: string;
+  statement: string;
   menu_field_assessment: string;
   lbl_add_field_assessment: string;
   lbl_edit_field_assessment: string;
   type: string;
+  currency_usd: string;
 }

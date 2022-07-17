@@ -22,6 +22,12 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
+import { UrgentInterventionClosureComponent } from './pages/urgent-intervention-closure/urgent-intervention-closure.component';
+import { StageListComponent } from './shared/stage-list/stage-list.component';
+import { ResultListComponent } from './shared/result-list/result-list.component';
+import { ImplementationEvaluationListComponent } from './shared/implementation-evaluation-list/implementation-evaluation-list.component';
+import { BestPracticesListComponent } from './shared/best-practices-list/best-practices-list.component';
+import { LessonsLearntListComponent } from './shared/lessons-learnt-list/lessons-learnt-list.component';
 
 
 @NgModule({
@@ -32,7 +38,13 @@ import {
     UrgentInterventionReportComponent,
     ImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent
+    InterventionFieldListComponent,
+    UrgentInterventionClosureComponent,
+    StageListComponent,
+    ResultListComponent,
+    ImplementationEvaluationListComponent,
+    BestPracticesListComponent,
+    LessonsLearntListComponent
   ],
   imports: [
     CommonModule,

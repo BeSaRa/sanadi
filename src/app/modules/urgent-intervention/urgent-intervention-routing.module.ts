@@ -35,6 +35,17 @@ const routes: Routes = [
       caseType: CaseTypes.URGENT_INTERVENTION_REPORTING,
       preValidateFailMsgKey: 'msg_add_intervention_license_first'
     } as ICustomRouteData
+  },
+  {
+    path: 'urgent-intervention-closure', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_CLOSURE,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionClosureComponent'
+    } as ICustomRouteData
   }
 ];
 
