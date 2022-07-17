@@ -333,9 +333,10 @@ EmploymentService
     delete data.size;
     let message = '';
     Object.keys(data).filter(k => data[k]).forEach((k) => {
-      message += this.lang.map.employee_with_identification + ' ' + k + ' ' + this.lang.map.is_exist_before +'\n';
+      message += this.lang.map.employee_with_identification + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
     })
-    this.dialog.error(message);
+    if (message)
+      this.dialog.error(message);
   }
   get identificationNumber(): FormControl {
     return this.searchCriteriaForm.get("identificationNumber") as FormControl;
