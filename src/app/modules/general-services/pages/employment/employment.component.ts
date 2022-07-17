@@ -1,3 +1,5 @@
+import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
+import { OpenFrom } from './../../../../enums/open-from.enum';
 import { EmploymentSearchCriteria } from './../../../../models/employment-search-criteria';
 import { JobTitleService } from '@app/services/job-title.service';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -47,6 +49,7 @@ EmploymentService
   externalJobTitleList: JobTitle[] = [];
   systemJobTitleList: JobTitle[] = [];
   readonly: boolean = false;
+  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   allowEditRecommendations: boolean = true;
   searchCriteriaForm: FormGroup = new FormGroup({
     identificationNumber: new FormControl(''),
@@ -74,6 +77,11 @@ EmploymentService
       name: "employeeInfoTab",
       langKey: "employee_data",
       validStatus: () => this.employees.length,
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      validStatus: () => true
     },
   };
   constructor(
@@ -261,6 +269,21 @@ EmploymentService
         )
     );
   }
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus();
+        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    }
+    return !isAllowed;
+  }
+
   isNewRequestType(): boolean {
     return this.requestType.value === EmploymentRequestType.NEW
   }

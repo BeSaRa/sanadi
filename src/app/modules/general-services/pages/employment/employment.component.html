@@ -12,6 +12,8 @@
       [template]="employeeInfoTabTemplate"
       [title]="lang.map.employee_data"
     ></tab>
+    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+         [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>
@@ -172,5 +174,15 @@
         ></app-employees-data>
       </div>
     </div>
+  </ng-template>
+
+  <ng-template #attachmentsTabTemplate>
+    <div class="d-flex flex-row align-items-center justify-content-start">
+      <button [disabled]="isAttachmentReadonly()" (click)="attachmentsCtrl.openUploadDialog()"
+              class="d-inline-block btn p-0 m-0 icon-btn"><i
+        class="mdi mdi-plus-box text-primary"></i></button>
+    </div>
+    <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
+                   [readonly]="isAttachmentReadonly()"></app-documents>
   </ng-template>
 </div>
