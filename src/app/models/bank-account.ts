@@ -11,7 +11,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   iBan!: string;
   swiftCode!: string;
   country!: number;
-  category!: number;
+  category?: number;
   bankInfo!: Bank;
 
   constructor() {

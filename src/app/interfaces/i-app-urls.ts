@@ -92,5 +92,6 @@ export interface IAppUrls {
   URGENT_JOINT_RELIEF_CAMPAIGN: string;
   URGENT_INTERVENTION_REPORTING: string;
   EXTERNAL_PROJECT_IMPLEMENTATION: string;
+  EXTERNAL_ORG_AFFILIATION_REQUEST: string;
   [index: string]: string;
 }

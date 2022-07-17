@@ -524,6 +524,7 @@ export interface ILanguageKeys {
   subject: string;
   menu_inquiries_and_complaints: string;
   menu_consultations: string;
+  menu_external_org_affiliation_request: string;
   recommendation_has_been_saved_successfully: string;
   comment_has_been_saved_successfully: string;
   type_your_recommendation: string;
@@ -1104,6 +1105,8 @@ export interface ILanguageKeys {
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
   msg_service_unavailable: string;
+  lbl_introduction: string;
   employee_with_identification: string;
   is_exist_before: string;
+  lbl_entity_classification: string;
 }

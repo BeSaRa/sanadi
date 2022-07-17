@@ -11,6 +11,7 @@ import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     InquiryComponent,
     ConsultationComponent,
     InternationalCooperationComponent,
+    ExternalOrgAffiliationComponent,
     EmploymentComponent
   ],
   imports: [

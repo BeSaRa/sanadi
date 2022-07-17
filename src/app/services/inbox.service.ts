@@ -1,5 +1,3 @@
-import { EmploymentService } from '@app/services/employment.service';
-
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
@@ -50,8 +48,9 @@ import { CustomsExemptionRemittanceService } from './customs-exemption-remittanc
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
 import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
-import {ReturnToOrganizationPopupComponent} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
-
+import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
+import { EmploymentService } from '@app/services/employment.service';
+import { ReturnToOrganizationPopupComponent } from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +79,7 @@ export class InboxService {
     private urgentInterventionReportingService: UrgentInterventionReportingService,
     private urlService: UrlService,
     private employmentService: EmploymentService,
+    private externalOrgAffiliationService: ExternalOrgAffiliationService,
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -100,6 +100,7 @@ export class InboxService {
     this.services.set(CaseTypes.EMPLOYMENT, this.employmentService);
     this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
+    this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
   }
 
   @Generator(QueryResultSet, false, { property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive) })
