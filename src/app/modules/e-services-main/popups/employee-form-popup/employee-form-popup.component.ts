@@ -204,8 +204,9 @@ export class EmployeeFormPopupComponent implements OnInit {
           ...this.employeesList,
         ];
       } else {
-        Object.assign(
-          this.employeesList.find((e) => e.id == this.form.value.id),
+        const employee = this.employeesList.find((e) => e.id == this.form.value.id);
+        employee && Object.assign(
+          employee,
           {
             ...this.form.value,
             jobTitleInfo: this.selectedJobTitle,
