@@ -2,6 +2,7 @@ import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
+import {Lookup} from '@app/models/lookup';
 
 export class ParticipantOrganization extends SearchableCloneable<ParticipantOrganization>{
   organizationId!: number;
@@ -10,6 +11,7 @@ export class ParticipantOrganization extends SearchableCloneable<ParticipantOrga
   donation?: number;
   workStartDate?: string | IMyDateModel;
   langService: LangService;
+  managerDecisionInfo!: Lookup;
 
   constructor() {
     super();

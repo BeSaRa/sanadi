@@ -16,7 +16,6 @@ import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
 import {OrganizationUnitService} from '@services/organization-unit.service';
-import {OrgUnit} from '@app/models/org-unit';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {Lookup} from '@app/models/lookup';
 import {Country} from '@app/models/country';
@@ -52,7 +51,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     workStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
 
-  organizationDisplayedColumns: string[] = ['arName', 'enName', 'donation', 'workStartDate', 'actions'];
+  organizationDisplayedColumns: string[] = ['arName', 'enName', 'donation', 'workStartDate', 'decision', 'actions'];
   organizationOfficerDisplayedColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   countries: Country[] = [];
@@ -119,11 +118,11 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   loadOrgUnits() {
     this.orgUnitService.loadComposite().subscribe((list) => {
       this.organizationUnits = this.mapOrgUnitsToParticipantOrgUnits(list);
-      this.selectedOrganizationUnits = this.setSelectedOrganizations();
+      this.selectedOrganizationUnits = this.setSelectedOrganizations() as ParticipantOrganization[];
     });
   }
 
-  mapOrgUnitsToParticipantOrgUnits(orgUnits: OrgUnit[]): ParticipantOrganization[] {
+  mapOrgUnitsToParticipantOrgUnits(orgUnits: any[]): ParticipantOrganization[] {
     return orgUnits.map(x => {
       return new ParticipantOrganization()
         .clone({
@@ -137,9 +136,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   setSelectedOrganizations() {
-    return this.organizationUnits
-      .filter(x => this.model?.participatingOrganizaionList
-        .map(xx => xx.organizationId).includes(x.organizationId));
+    this.model?.participatingOrganizaionList!.forEach(x => x.managerDecisionInfo = (new Lookup()).clone(x.managerDecisionInfo));
+    return this.model?.participatingOrganizaionList;
   }
 
   setSelectedOfficers() {

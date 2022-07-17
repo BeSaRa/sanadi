@@ -13,6 +13,7 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
     model.participatingOrganizaionList?.forEach(x => {
       x.workStartDate = DateUtils.getDateStringFromDate(x.workStartDate);
       x.donation = +x.donation!;
+      delete x.managerDecisionInfo;
       delete x.searchFields;
       delete x.langService;
     });
