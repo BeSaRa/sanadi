@@ -74,18 +74,16 @@
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label for="year" class="form-label">{{lang.map.year}}</label>
+          <label for="year" asteriskIfRequired="year" class="form-label">{{lang.map.year}}</label>
           <input formControlName="year" class="form-control" type="text"
-                 [readonly]="readonly"
-                 validationClasses="year" id="year" trimInput>
+                 [readonly]="readonly" validationClasses="year" id="year" trimInput>
           <app-field-error-message controlName="year"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="duration" asteriskIfRequired="duration"
                  class="form-label">{{lang.map.duration}} ({{lang.map.days}})</label>
           <input formControlName="duration" class="form-control" type="text"
-                 [readonly]="readonly"
-                 validationClasses="duration" id="duration" trimInput>
+                 [readonly]="readonly" validationClasses="duration" id="duration" trimInput>
           <app-field-error-message controlName="duration"></app-field-error-message>
         </div>
       </div>

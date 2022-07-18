@@ -9,15 +9,12 @@ import {LicenseService} from '@services/license.service';
 import {HttpClient} from '@angular/common/http';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {SearchUrgentInterventionReportCriteria} from '@app/models/search-urgent-intervention-report-criteria';
 import {SearchUrgentInterventionClosureCriteria} from '@app/models/search-urgent-intervention-closure-criteria';
 import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
 import {Observable} from 'rxjs';
 import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
 import {UrgentInterventionClosureInterceptor} from '@app/model-interceptors/urgent-intervention-closure-interceptor';
 import {FactoryService} from '@services/factory.service';
-import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {ImplementingAgencyInterceptor} from '@app/model-interceptors/implementing-agency-interceptor';
 import {InterventionRegion} from '@app/models/intervention-region';
@@ -34,7 +31,11 @@ import {BestPractices} from '@app/models/best-practices';
 import {BestPracticesInterceptor} from '@app/model-interceptors/best-practices-interceptor';
 import {LessonsLearned} from '@app/models/lessons-learned';
 import {LessonsLearnedInterceptor} from '@app/model-interceptors/lessons-learned-interceptor';
-import {UrgentInterventionLicenseSearchCriteria} from '@app/models/urgent-intervention-license-search-criteria';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  UrgentInterventionClosureApproveTaskPopupComponent
+} from '@app/modules/urgent-intervention/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -99,5 +100,12 @@ export class UrgentInterventionClosureService extends EServiceGenericService<Urg
 
   licenseSearchUrgentInterventionReport(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
     return this.licenseService.urgentInterventionReportSearch(criteria);
+  }
+
+  approveTask(model: UrgentInterventionClosure, action: WFResponseType): DialogRef {
+    return this.dialog.show(UrgentInterventionClosureApproveTaskPopupComponent, {
+      model,
+      action
+    })
   }
 }

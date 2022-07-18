@@ -17,10 +17,10 @@ import {Result} from '@app/models/result';
 import {Stage} from '@app/models/stage';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
-import {DateUtils} from '@helpers/date-utils';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterventionClosureService, UrgentInterventionClosure> {
   caseType: number = CaseTypes.URGENT_INTERVENTION_CLOSURE;
@@ -150,5 +150,13 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
       beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
     };
+  }
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }
