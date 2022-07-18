@@ -51,7 +51,7 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   organizaionOfficerList: OrganizationOfficer[] = [];
   requestTypeInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
-  participatingOrganizaionList: Partial<ParticipantOrganization>[] = [];
+  participatingOrganizaionList: ParticipantOrganization[] = [];
   donation!: number;
   workStartDate!: string | IMyDateModel;
   employeeService!: EmployeeService;

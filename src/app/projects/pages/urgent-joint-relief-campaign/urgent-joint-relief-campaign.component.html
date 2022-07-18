@@ -127,7 +127,7 @@
                              style="flex: 1"
                              (change)="onChangeSelectedOrganization($event)"
                              [readonly]="(readonly)">
-                    <ng-option [value]="option.organizationId"
+                    <ng-option [value]="option.id"
                                *ngFor="let option of organizationUnits">{{option.getName()}}</ng-option>
                   </ng-select>
                   <button class="btn btn-link outline-none" style="padding: 0"

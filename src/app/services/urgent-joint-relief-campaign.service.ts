@@ -31,10 +31,16 @@ import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
 import {OrgUnit} from '@app/models/org-unit';
 import {ValidOrgUnit} from '@app/models/valid-org-unit';
+import {ParticipantOrganization} from '@app/models/participant-organization';
+import {Lookup} from '@app/models/lookup';
 
 @CastResponseContainer({
   $default: {
-    model: () => UrgentJointReliefCampaign
+    model: () => UrgentJointReliefCampaign,
+    shape: {
+      'participatingOrganizaionList.*': () => ParticipantOrganization,
+      'participatingOrganizaionList.*.managerDecisionInfo': () => Lookup
+    }
   }
 })
 @Injectable({
@@ -95,7 +101,7 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
     });
   }
 
-  organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, model?: UrgentJointReliefCampaign, externalUserData?: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}): DialogRef {
+  organizationApproveTask(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, model?: UrgentJointReliefCampaign, externalUserData?: { form: FormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
     const inboxService = FactoryService.getService('InboxService') as InboxService;
     return this.dialog.show(UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent, {
       service: this,
@@ -123,8 +129,7 @@ export class UrgentJointReliefCampaignService extends BaseGenericEService<Urgent
   getToReturnValidOrganizations(caseId: number): Observable<ValidOrgUnit[]> {
     return this.http.get<IDefaultResponse<ValidOrgUnit[]>>(this._getURLSegment() + '/valid/org/' + caseId)
       .pipe(map(response => {
-        let organizations = response.rs.map(x => (new ValidOrgUnit()).clone(x));
-        return organizations;
+        return response.rs.map(x => (new ValidOrgUnit()).clone(x));
       }));
   }
 }
