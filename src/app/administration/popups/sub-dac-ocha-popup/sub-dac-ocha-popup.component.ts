@@ -49,7 +49,7 @@ export class SubDacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   }
 
   initPopup(): void {
-    this.classification = this.lookupService.listByCategory.ServiceWorkField
+    this.classification = this.lookupService.listByCategory.AdminLookupType
       .find(classification => classification.lookupKey === this.dacOchaTypeId)!;
   }
 

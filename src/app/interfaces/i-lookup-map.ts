@@ -2,6 +2,9 @@ import {Lookup} from '../models/lookup';
 
 export interface ILookupMap {
   AdminAuditOperation: Lookup[];
+  AdminLookupType: Lookup[];
+  AffiliationCategory: Lookup[];
+  AffiliationRequestType: Lookup[];
   AidLookupStatus: Lookup[];
   AidType: Lookup[];
   ApprovalDecision: Lookup[];
@@ -18,6 +21,7 @@ export interface ILookupMap {
   BenIdType: Lookup[];
   BenMaritialStatus: Lookup[];
   BenOccuptionStatus: Lookup[];
+  BenRequestorRelationType: Lookup[];
   BenStatusType: Lookup[];
   CollectionClassification: Lookup[];
   CollectionRequestType: Lookup[];
@@ -90,7 +94,6 @@ export interface ILookupMap {
   ServiceRequestType: Lookup[];
   ServiceRequestTypeNoExtend: Lookup[];
   ServiceRequestTypeNoRenew: Lookup[];
-  ServiceWorkField: Lookup[];
   ShipmentCarrier: Lookup[];
   ShipmentSource: Lookup[];
   SubAidPeriodicType: Lookup[];
@@ -109,16 +112,16 @@ export interface ILookupMap {
   TRAINING_LANG: Lookup[];
   TRAINING_STATUS: Lookup[];
   TRAINING_SURVEY_ANSWER: Lookup[];
-  CollectionStatus: Lookup[];
-  CollectorStatus: Lookup[];
-  UrgentInterventionStatus: Lookup[];
   TRAINING_TRAINEE_STATUS: Lookup[];
   TRAINING_TYPE: Lookup[];
+  TransfereeType: Lookup[];
+  TransferMethod: Lookup[];
+  TransferringIndividualLicenseStatus: Lookup[];
+  TransferringIndividualRequestType: Lookup[];
+  TransferType: Lookup[];
   UrgentInterventionAnnouncementRequestType: Lookup[];
   UrgentInterventionFinancialRequestType: Lookup[];
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-  AffiliationCategory: Lookup[];
-  AffiliationRequestType: Lookup[];
 }
