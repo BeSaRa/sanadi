@@ -67,6 +67,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
 import {SharedService} from '@services/shared.service';
+import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
 
 @Component({
   selector: 'app-user-request',
@@ -386,6 +387,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.personalInfoTab?.patchValue(selectedBeneficiary.getPersonalFields());
       this.addressTab?.patchValue(selectedBeneficiary.getAddressFields());
     }
+    this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
     this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
   }
 
@@ -419,6 +421,21 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.toggleIsHandicappedReadonly();
+  }
+
+  handleRequesterRelationTypeChange(value?: number, userInteraction: boolean = false) {
+    if (userInteraction) {
+      this.beneficiaryRequesterNameField?.setValue('');
+    }
+    if (value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER) {
+      this.beneficiaryRequesterNameField?.removeValidators(CustomValidators.required);
+      this.beneficiaryRequesterNameField?.disable();
+    } else {
+      this.beneficiaryRequesterNameField?.addValidators(CustomValidators.required);
+      this.beneficiaryRequesterNameField?.enable();
+    }
+    this.beneficiaryRequesterNameField.updateValueAndValidity();
+    console.log(this.beneficiaryRequesterNameField.value);
   }
 
   isBeneficiaryWorking() {
@@ -768,7 +785,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.currentBeneficiary = (new Beneficiary())
       .clone({
         ...this.currentBeneficiary,
-        ...this.personalInfoTab?.value,
+        ...this.personalInfoTab?.getRawValue(),
         ...this.addressTab?.value,
         ...this.buildingPlate.getValue(),
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
@@ -1205,6 +1222,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get englishNameField(): FormControl {
     return this.personalInfoTab.get('enName') as FormControl;
+  }
+
+  get beneficiaryRequesterNameField(): FormControl {
+    return this.personalInfoTab.get('requestorName') as FormControl;
   }
 
   get employmentStatusField(): FormControl {

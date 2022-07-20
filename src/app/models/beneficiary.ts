@@ -73,6 +73,9 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   isHandicapped: boolean = false;
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
   beneficiaryIncomeSet: BeneficiaryIncome[] = [];
+  employmentStatus!: boolean;
+  benRequestorRelationType!: number;
+  requestorName!: string;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -100,7 +103,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   searchFields: ISearchFieldsMap<Beneficiary> = {
     ...normalSearchFields(['arName', 'enName', 'benDependentsCount', 'benPrimaryIdNumber', 'benSecIdNumber']),
     ...infoSearchFields(['genderInfo', 'benNationalityInfo', 'benPrimaryIdTypeInfo', 'benSecIdTypeInfo'])
-  }
+  };
 
   constructor() {
     super();
@@ -184,7 +187,9 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       occuptionStatus,
       occuption,
       employeerAddress,
-      isHandicapped
+      isHandicapped,
+      benRequestorRelationType,
+      requestorName
     } = this;
 
     return {
@@ -217,7 +222,9 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       occuptionStatus: controls ? [occuptionStatus, CustomValidators.required] : occuptionStatus, //Employment Status
       occuption: controls ? [occuption, [CustomValidators.pattern('ENG_AR_ONLY'), CustomValidators.maxLength(100)]] : occuption, //Occupation
       employeerAddress: controls ? [employeerAddress, CustomValidators.maxLength(512)] : employeerAddress, //Work Place
-      isHandicapped: controls ? [isHandicapped] : isHandicapped
+      isHandicapped: controls ? [isHandicapped] : isHandicapped,
+      benRequestorRelationType: controls ? [benRequestorRelationType, [CustomValidators.required]] : benRequestorRelationType,
+      requestorName: controls ? [requestorName, [CustomValidators.required, CustomValidators.maxLength(100)]] : requestorName,
     };
   }
 
