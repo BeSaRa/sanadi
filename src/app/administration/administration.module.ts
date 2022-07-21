@@ -1,3 +1,4 @@
+import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import {NgModule} from '@angular/core';
 
 import {AdminRoutingModule} from './admin-routing.module';
@@ -69,6 +70,7 @@ import {FollowupConfigurationPopupComponent} from './popups/followup-configurati
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
+import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
 
 @NgModule({
   declarations: [
@@ -130,6 +132,9 @@ import {FieldAssessmentComponent} from './pages/field-assessment/field-assessmen
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
+    OrganizationUnitFieldPopupComponent,
+    OrganizationUnitFieldComponent,
+
   ],
   imports: [
     SharedModule,

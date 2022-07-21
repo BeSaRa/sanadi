@@ -1,3 +1,4 @@
+import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
@@ -128,7 +129,13 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: Permissions.FIELD_ASSESSMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
+  {
+    path: 'organization-unit-field', component: OrganizationUnitFieldComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_JOB_TITLES', configPermissionGroup: null, checkAnyPermission: false}
+  },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
