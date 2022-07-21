@@ -1,20 +1,20 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {ReadinessStatus} from "@app/types/types";
-import {BehaviorSubject, Subject} from "rxjs";
-import {filter, map, take, takeUntil} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {Goal} from "@app/models/goal";
-import {Lookup} from "@app/models/lookup";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {LookupService} from "@app/services/lookup.service";
-import {Domains} from "@app/enums/domains.enum";
-import {DacOchaService} from "@app/services/dac-ocha.service";
-import {AdminResult} from "@app/models/admin-result";
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {Goal} from '@app/models/goal';
+import {Lookup} from '@app/models/lookup';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LookupService} from '@app/services/lookup.service';
+import {Domains} from '@app/enums/domains.enum';
+import {AdminResult} from '@app/models/admin-result';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {DacOchaNewService} from '@services/dac-ocha-new.service';
 
 @Component({
   selector: 'goal',
@@ -27,7 +27,7 @@ export class GoalComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               public lookupService: LookupService,
-              private dacOchaService: DacOchaService,
+              private dacOchaService: DacOchaNewService,
               private fb: FormBuilder) {
   }
 
@@ -46,7 +46,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
   mainDACCategoriesList: AdminResult[] = [];
   mainUNOCHACategoriesList: AdminResult[] = [];
-  displayByDomain: "DAC" | "OCHA" | null = null;
+  displayByDomain: 'DAC' | 'OCHA' | null = null;
   commonStatusEnum = CommonStatusEnum;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -85,7 +85,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.fb.group({
       goals: this.fb.array([])
-    })
+    });
   }
 
   addAllowed(): boolean {
@@ -95,8 +95,8 @@ export class GoalComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.changed$.next(new Goal())
-      })
+        this.changed$.next(new Goal());
+      });
   }
 
   private listenToChange() {
@@ -107,7 +107,7 @@ export class GoalComponent implements OnInit, OnDestroy {
         }
         this.current = goal || undefined;
         this.updateForm(this.current);
-      })
+      });
   }
 
   private updateForm(record: Goal | undefined) {
@@ -245,7 +245,7 @@ export class GoalComponent implements OnInit, OnDestroy {
         if (!value) {
           return;
         }
-      })
+      });
   }
 
   private listenToDomainChange(): void {
@@ -279,26 +279,21 @@ export class GoalComponent implements OnInit, OnDestroy {
   private loadOCHADACClassifications() {
     return this.dacOchaService.load()
       .pipe(
-        map(ouchaDACList => {
-          return ouchaDACList.filter(ouchaDac => {
-            const adminResultInstance = AdminResult.createInstance({
-              id: ouchaDac.id,
-              arName: ouchaDac.arName,
-              enName: ouchaDac.enName,
-              status: ouchaDac.status
-            })
-            if (ouchaDac.type === Domains.HUMAN) {
-              this.mainUNOCHACategoriesList.push(adminResultInstance);
-            } else if (ouchaDac.type === Domains.DEVELOPMENT) {
-              this.mainDACCategoriesList.push(adminResultInstance);
+        map(list => {
+          return list.filter(model => !model.parentId);
+        }),
+        map(result => {
+          return result.filter(record => {
+            if (record.type === Domains.HUMAN) {
+              this.mainUNOCHACategoriesList.push(record.convertToAdminResult());
+            } else if (record.type === Domains.DEVELOPMENT) {
+              this.mainDACCategoriesList.push(record.convertToAdminResult());
             }
-
-            return ouchaDac;
+            return record;
           });
         })).subscribe(result => {
-      })
+      });
   }
-
 
   get goalsFormArray(): FormArray {
     return (this.form.get('goals')) as FormArray;

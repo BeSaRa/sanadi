@@ -30,6 +30,7 @@
   "TRAINING_PROGRAM": "training/training-program",
   "TRAINING_PROGRAM_BUNDLE": "training/training-program/bundle",
   "TRAINER": "training/trainer",
+  "ADMIN_LOOKUP": "admin/admin-lookup",
   "DAC_OCHA": "admin/work-field",
   "SD_GOAL": "admin/sdg",
   "JOB_TITLE": "admin/job-title",

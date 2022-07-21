@@ -1,4 +1,5 @@
 export enum AdminLookupTypeEnum {
+  DAC_OCHA = 1001,
   OCHA = 1,
   DAC = 2,
   RISK_TYPE = 7,
