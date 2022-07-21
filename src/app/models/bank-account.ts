@@ -13,6 +13,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   country!: number;
   category?: number;
   bankInfo!: Bank;
+  isMergeAccount!: boolean;
 
   constructor() {
     super();

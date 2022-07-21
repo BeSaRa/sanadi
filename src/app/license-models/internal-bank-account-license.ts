@@ -37,6 +37,7 @@ export class InternalBankAccountLicense {
   swiftCode!: string;
   licenseStatusInfo!: Lookup;
   requestTypeInfo!: Lookup;
+  isUpdatedNewAccount!: boolean;
 
   convertToItem(): InternalBankAccountApproval{
     const internalBankAccountApproval = new InternalBankAccountApproval();
@@ -50,6 +51,7 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.iBan = this.iBan;
     internalBankAccountApproval.accountNumber = this.accountNumber;
     internalBankAccountApproval.swiftCode = this.swiftCode;
+    internalBankAccountApproval.isUpdatedNewAccount = this.isUpdatedNewAccount;
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
       return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
     });

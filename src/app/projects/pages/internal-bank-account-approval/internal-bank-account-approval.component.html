@@ -37,10 +37,11 @@
                    for="oldLicenseFullSerial">{{lang.map.serial_number}}
             </label>
             <div class="input-group">
-              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial" validationClasses="oldLicenseFullSerial"
+              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial"
+                     validationClasses="oldLicenseFullSerial"
                      formControlName="oldLicenseFullSerial"
                      class="form-control"
-              [readonly]="(readonly)">
+                     [readonly]="(readonly)">
               <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
               <button (click)="searchForLicense()" class="input-group-text" [disabled]="(readonly)">
                 <i class="mdi mdi-magnify text-primary"></i>
@@ -97,7 +98,7 @@
             <label class="form-label" asteriskIfRequired="purpose"
                    for="purpose">{{lang.map.bank_account_purpose}}</label>
             <textarea rows="3" id="purpose" validationClasses="purpose" formControlName="purpose"
-                   class="form-control" [readonly]="(readonly)">
+                      class="form-control" [readonly]="(readonly)">
             </textarea>
             <app-field-error-message controlName="purpose"></app-field-error-message>
           </div>
@@ -107,89 +108,95 @@
             <label class="form-label" asteriskIfRequired="accountNumber"
                    for="accountNumber">{{lang.map.account_number}}</label>
             <input id="accountNumber" validationClasses="accountNumber" formControlName="accountNumber"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
             <app-field-error-message controlName="accountNumber"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="iBan"
                    for="iBan">{{lang.map.iban}}</label>
             <input id="iBan" validationClasses="iBan" formControlName="iBan"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
             <app-field-error-message controlName="iBan"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="swiftCode"
                    for="swiftCode">{{lang.map.swift_code}}</label>
             <input id="swiftCode" validationClasses="swiftCode" formControlName="swiftCode"
-                   class="form-control" [readonly]="(readonly)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
             <app-field-error-message controlName="swiftCode"></app-field-error-message>
           </div>
         </div>
         <div class="row mt-3" *ngIf="isNewMerge || isUpdateMerge">
           <div class="col-12 mb-4 position-relative">
             <div class="merge-accounts-container">
-            <div class="row" *ngIf="!isUpdateMerge && isExternalUser">
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <label class="form-label" asteriskIfRequired="selectedBankAccountToMerge"
-                       for="selectedBankAccountToMerge">{{lang.map.bank_accounts}}</label>
-                <ng-select validationClasses="selectedBankAccountToMerge" appendTo="body" [clearable]="true"
-                           id="selectedBankAccountToMerge"
-                           formControlName="selectedBankAccountToMerge" [readonly]="(readonly)">
-                  <ng-option [value]="option.id"
-                             *ngFor="let option of currentBankAccounts">{{option.accountNumber}}</ng-option>
-                </ng-select>
+              <div class="row" *ngIf="!isUpdateMerge && isExternalUser">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                  <label class="form-label" asteriskIfRequired="selectedBankAccountToMerge"
+                         for="selectedBankAccountToMerge">{{lang.map.bank_accounts}}</label>
+                  <ng-select validationClasses="selectedBankAccountToMerge" appendTo="body" [clearable]="true"
+                             id="selectedBankAccountToMerge"
+                             formControlName="selectedBankAccountToMerge" [readonly]="(readonly)">
+                    <ng-option [value]="option.id"
+                               *ngFor="let option of currentBankAccounts">{{option.accountNumber}}</ng-option>
+                  </ng-select>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                  <button [disabled]="!selectedBankAccountToMerge.value" style="margin-top: 32px;"
+                          (click)="addToSelectedBankAccounts()" class="btn btn-primary"
+                          [tooltip]="lang.map.btn_add">
+                    {{lang.map.btn_add}}
+                  </button>
+                </div>
               </div>
-              <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                <button [disabled]="!selectedBankAccountToMerge.value" style="margin-top: 32px;" (click)="addToSelectedBankAccounts()" class="btn btn-primary"
-                        [tooltip]="lang.map.btn_add">
-                  {{lang.map.btn_add}}
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-12 position-relative">
-                <h1 class="h6 text-primary">{{lang.map.selected_bank_accounts}}</h1>
-                <div class="table-responsive">
-                  <app-table #table [useSearchToFilter]="true"
-                             [selectable]="true" [data]="selectedBankAccounts" [columns]="selectedAccountsDisplayedColumns"
-                             sortableTable>
-                    <table cdk-table [dataSource]="table.dataSource"
-                           class="table table-striped table-bordered caption-top">
-                      <ng-container cdkColumnDef="accountNumber">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.account_number}}</th>
-                        <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
-                      </ng-container>
-                      <ng-container cdkColumnDef="bankName">
-                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
-                        <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
-                      </ng-container>
-                      <!--                      <ng-container cdkColumnDef="name">-->
-                      <!--                        <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>-->
-                      <!--                        <td cdk-cell *cdkCellDef="let row"> {{row.bankAccountInfo.getName()}} </td>-->
-                      <!--                      </ng-container>-->
-                      <ng-container cdkColumnDef="actions">
-                        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-                        <td cdk-cell *cdkCellDef="let row" class="table-actions">
-                          <div class="d-flex flex-row">
-                            <button (click)="removeBankAccount(row, $event)" tooltip="{{lang.map.btn_remove}}"
-                               class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly)">
-                              <i class="mdi mdi-close-box"></i>
-                            </button>
-                          </div>
-                        </td>
-                      </ng-container>
-                      <tr cdk-header-row *cdkHeaderRowDef="selectedAccountsDisplayedColumns"></tr>
-                      <tr cdk-row *cdkRowDef="let row; columns: selectedAccountsDisplayedColumns;"></tr>
-                      <!--suppress HtmlUnknownBooleanAttribute -->
-                      <tr *cdkNoDataRow>
-                        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-                      </tr>
-                    </table>
-                  </app-table>
+              <div class="row">
+                <div class="col-12 position-relative">
+                  <h1 class="h6 text-primary">{{lang.map.selected_bank_accounts}}</h1>
+                  <div class="table-responsive">
+                    <app-table #table [useSearchToFilter]="true"
+                               [selectable]="true" [data]="selectedBankAccounts"
+                               [columns]="selectedAccountsDisplayedColumns"
+                               sortableTable>
+                      <table cdk-table [dataSource]="table.dataSource"
+                             class="table table-striped table-bordered caption-top">
+                        <ng-container cdkColumnDef="accountNumber">
+                          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.account_number}}</th>
+                          <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="bankName">
+                          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
+                          <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="toBeMergedIn">
+                          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.merge_to_account}}</th>
+                          <td cdk-cell *cdkCellDef="let row">
+                            <input formControlName="ownerOfMergedBankAccounts" class="form-check-input" [id]="row.id"
+                                   name="ownerOfMergedBankAccounts" type="radio"
+                                   [value]="row.id" [disabled]="true">
+                          </td>
+                        </ng-container>
+                        <ng-container cdkColumnDef="actions">
+                          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+                          <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                            <div class="d-flex flex-row">
+                              <button (click)="removeBankAccount(row, $event)" tooltip="{{lang.map.btn_remove}}"
+                                      class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly)">
+                                <i class="mdi mdi-close-box"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </ng-container>
+                        <tr cdk-header-row *cdkHeaderRowDef="selectedAccountsDisplayedColumns"></tr>
+                        <tr cdk-row *cdkRowDef="let row; columns: selectedAccountsDisplayedColumns;"></tr>
+                        <!--suppress HtmlUnknownBooleanAttribute -->
+                        <tr *cdkNoDataRow>
+                          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+                        </tr>
+                      </table>
+                    </app-table>
+                  </div>
                 </div>
               </div>
             </div>
-              </div>
           </div>
         </div>
         <div class="row" *ngIf="isUpdateMerge || isUpdateNewAccount">
@@ -197,21 +204,22 @@
             <div class="merge-accounts-container">
               <div class="row" *ngIf="isExternalUser">
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
-<!--                  <label class="form-label" asteriskIfRequired="selectedResponsiblePerson"-->
-<!--                         for="selectedResponsiblePerson">{{lang.map.authorized_signatories}}</label>-->
-<!--                  <ng-select validationClasses="selectedResponsiblePerson" appendTo="body" [clearable]="true"-->
-<!--                             id="selectedResponsiblePerson"-->
-<!--                             formControlName="selectedResponsiblePerson" [readonly]="(readonly)">-->
-<!--                    <ng-option [value]="option.id"-->
-<!--                               *ngFor="let option of npoEmployees">{{option.getName()}}</ng-option>-->
-<!--                  </ng-select>-->
+                  <!--                  <label class="form-label" asteriskIfRequired="selectedResponsiblePerson"-->
+                  <!--                         for="selectedResponsiblePerson">{{lang.map.authorized_signatories}}</label>-->
+                  <!--                  <ng-select validationClasses="selectedResponsiblePerson" appendTo="body" [clearable]="true"-->
+                  <!--                             id="selectedResponsiblePerson"-->
+                  <!--                             formControlName="selectedResponsiblePerson" [readonly]="(readonly)">-->
+                  <!--                    <ng-option [value]="option.id"-->
+                  <!--                               *ngFor="let option of npoEmployees">{{option.getName()}}</ng-option>-->
+                  <!--                  </ng-select>-->
 
                   <label class="form-label" asteriskIfRequired=""
                          [control]="selectedResponsiblePersonControl"
                          for="selectedResponsiblePerson">{{lang.map.authorized_signatories}}
                   </label>
                   <div class="input-group">
-                    <input (keydown.enter)="searchForNPOEmployee()" id="selectedResponsiblePerson" validationClasses="selectedResponsiblePerson"
+                    <input (keydown.enter)="searchForNPOEmployee()" id="selectedResponsiblePerson"
+                           validationClasses="selectedResponsiblePerson"
                            [control]="selectedResponsiblePersonControl"
                            formControlName="selectedResponsiblePerson"
                            class="form-control"
@@ -222,19 +230,20 @@
                     </button>
                   </div>
                 </div>
-<!--                <div class="col-md-4 col-sm-12 mb-4 position-relative">-->
-<!--                  <button [disabled]="!selectedResponsiblePerson.value" style="margin-top: 32px;" (click)="addToSelectedResponsiblePersons()" class="btn btn-primary"-->
-<!--                          [tooltip]="lang.map.btn_add">-->
-<!--                    {{lang.map.btn_add}}-->
-<!--                  </button>-->
-<!--                </div>-->
+                <!--                <div class="col-md-4 col-sm-12 mb-4 position-relative">-->
+                <!--                  <button [disabled]="!selectedResponsiblePerson.value" style="margin-top: 32px;" (click)="addToSelectedResponsiblePersons()" class="btn btn-primary"-->
+                <!--                          [tooltip]="lang.map.btn_add">-->
+                <!--                    {{lang.map.btn_add}}-->
+                <!--                  </button>-->
+                <!--                </div>-->
               </div>
               <div class="row">
                 <div class="col-12 position-relative">
                   <h1 class="h6 text-primary">{{lang.map.selected_authorized_signatories}}</h1>
                   <div class="table-responsive">
                     <app-table #table [useSearchToFilter]="true"
-                               [selectable]="true" [data]="selectedNPOEmployees" [columns]="selectedPersonsDisplayedColumns"
+                               [selectable]="true" [data]="selectedNPOEmployees"
+                               [columns]="selectedPersonsDisplayedColumns"
                                sortableTable>
                       <table cdk-table [dataSource]="table.dataSource"
                              class="table table-striped table-bordered caption-top">
@@ -263,7 +272,7 @@
                           <td cdk-cell *cdkCellDef="let row" class="table-actions">
                             <div class="d-flex flex-row">
                               <button (click)="removeResponsiblePersons(row, $event)" tooltip="{{lang.map.btn_remove}}"
-                                 class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly)">
+                                      class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly)">
                                 <i class="mdi mdi-close-box"></i>
                               </button>
                             </div>

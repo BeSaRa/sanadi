@@ -49,7 +49,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: FormControl = new FormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
-  selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'actions'];
+  selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'toBeMergedIn', 'actions'];
   selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
@@ -124,6 +124,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     return (this.form.get('basicInfo.selectedBankAccountToMerge')) as FormControl;
   }
 
+  get ownerOfMergedBankAccounts(): FormControl {
+    return (this.form.get('basicInfo.ownerOfMergedBankAccounts')) as FormControl;
+  }
+
   get selectedResponsiblePerson(): FormControl {
     return (this.form.get('basicInfo.selectedResponsiblePerson')) as FormControl;
   }
@@ -193,6 +197,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       ...this.specialExplanation.getRawValue()
     });
     model.organizationId = this.employeeService.getOrgUnit()?.id!;
+
+    // set owner of merged accounts
+    this.selectedBankAccounts.forEach(x => {
+      x.isMergeAccount = x.id === this.ownerOfMergedBankAccounts.value;
+    });
     model!.internalBankAccountDTOs = this.selectedBankAccounts;
     model!.bankAccountExecutiveManagementDTOs = this.selectedNPOEmployees;
     return model;
@@ -234,6 +243,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
     this.requestTypeOrOperationTypeChanged();
     this.toggleAccountCategoryControl(this.bankAccountCategory.value);
+
+    // set radio button of selectedBankAccounts
+    if(this.operationType.value == BankAccountOperationTypes.MERGE) {
+      // this.ownerOfMergedBankAccounts.patchValue(this.selectedBankAccounts.find(x => x.isMergeAccount)!.id);
+    }
     this.selectedBankAccounts = this.model.internalBankAccountDTOs?.map(ba => {
       ba.bankInfo = (new Bank()).clone(ba.bankInfo);
       return ba;
@@ -246,7 +260,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.form.reset();
     this.operation = OperationTypes.CREATE;
     this.selectedNPOEmployees = [];
-
+    this.selectedBankAccounts = [];
   }
 
   loadBanks() {
@@ -319,7 +333,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.enableCancelAccountFields();
     this.enableNewNewAccountFields();
     this.disableNewNewAccountFields();
-    this.hideUpdateAccountFields();
+    this.hideUpdateBankAccountFields();
     this.hideUpdateMergeFields();
     this.isUpdateMerge = false;
     this.isUpdateNewAccount = false;
@@ -363,7 +377,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.dontRequirePurposeField();
     this.enableCancelAccountFields();
     this.disableCancelAccountFields();
-    this.hideUpdateAccountFields();
+    this.hideUpdateBankAccountFields();
     this.hideUpdateMergeFields();
   }
 
@@ -371,14 +385,16 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.dontRequirePurposeField();
     this.oldLicenseFullSerialField.patchValue(null);
     this.oldLicenseFullSerialField.disable();
-    this.hideUpdateAccountFields();
+    this.hideUpdateBankAccountFields();
     this.hideUpdateMergeFields();
   }
 
   showUpdateBankAccountFields() {
-    this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
-    this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
-    this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    if(!this.model?.isUpdatedNewAccount) {
+      this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+      this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+      this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+    }
 
     this.setOldLicenseFullSerialRequired();
 
@@ -394,7 +410,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     // this.oldLicenseFullSerialControl.updateValueAndValidity();
   }
 
-  hideUpdateAccountFields() {
+  hideUpdateBankAccountFields() {
     this.accountNumber.setValidators([]);
     this.accountNumber.patchValue(null);
     this.iban.setValidators([]);
@@ -654,6 +670,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   addToSelectedBankAccounts() {
     const selectedAccount = this.currentBankAccounts.find(b => b.id == this.selectedBankAccountToMerge.value)!;
     if (!this.selectedBankAccounts.includes(selectedAccount)) {
+      if(this.selectedBankAccounts.length === 0) {
+        this.ownerOfMergedBankAccounts.patchValue(selectedAccount.id);
+      }
+
       this.selectedBankAccounts = this.selectedBankAccounts.concat(selectedAccount);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
@@ -714,4 +734,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       }
     }
   }
+
+  // selectOwnerOfMergeAccounts(bankAccount: BankAccount) {
+  //   console.log('bank', bankAccount);
+  //   console.log('bankAccounts', this.selectedBankAccounts);
+  //   if(this.ownerOfMergedBankAccounts.value != bankAccount.id) {
+  //     this.selectedBankAccounts.find(x => x.id == bankAccount.id)!.isMergeAccount = true;
+  //   }
+  // }
 }

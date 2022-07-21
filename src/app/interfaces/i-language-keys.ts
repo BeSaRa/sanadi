@@ -1,5 +1,6 @@
 export interface ILanguageKeys {
   forget_password: string;
+  merge_to_account: string;
   select_organization: string;
   send_to_department: string;
   can_be_11_digits: string;
