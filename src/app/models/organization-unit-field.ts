@@ -42,19 +42,6 @@ export class OrganizationUnitField extends BaseModel<
     return this[(this.langService.map.lang + "Name") as keyof INames];
   }
 
-  isRetired(): boolean {
-    return Number(this.status) === CommonStatusEnum.RETIRED;
-  }
-
-  isInactive(): boolean {
-    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
-  }
-
-  isActive(): boolean {
-    return Number(this.status) === CommonStatusEnum.ACTIVATED;
-  }
-
-  
   buildForm(controls?: boolean): any {
     const { arName, enName, status } = this;
     return {

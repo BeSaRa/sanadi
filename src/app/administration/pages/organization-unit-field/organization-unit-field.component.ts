@@ -1,5 +1,5 @@
 import { OrganizationUnitField } from "./../../../models/organization-unit-field";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { AdminGenericComponent } from "@app/generics/admin-generic-component";
 import { OrganizationUnitFieldService } from "@app/services/organization-unit-field.service";
 import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
@@ -58,28 +58,6 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
-    },
-    {
-      icon: 'mdi-list-status',
-      langKey: 'lbl_status',
-      children: [
-        {
-          langKey: 'btn_activate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: OrganizationUnitField[]) => {
-            return true;
-          }
-        },
-        {
-          langKey: 'btn_deactivate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: OrganizationUnitField[]) => {
-            return true;
-          }
-        }
-      ],
     }
   ];
   get selectedRecords(): OrganizationUnitField[] {
