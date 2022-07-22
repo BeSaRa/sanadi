@@ -1,3 +1,4 @@
+import { EmployeeService } from '@app/services/employee.service';
 import { Employment } from '@app/models/employment';
 import { EmploymentService } from '@app/services/employment.service';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
@@ -109,6 +110,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: DialogService,
     private lookupService: LookupService,
+    private employeeService: EmployeeService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: EmploymentService;
@@ -146,16 +148,16 @@ export class EmployeeFormPopupComponent implements OnInit {
       gender: [null, CustomValidators.required],
       nationality: [null, CustomValidators.required],
       phone: ["", [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-      department: ["", CustomValidators.required],
+      department: ["", [CustomValidators.required, CustomValidators.maxLength(300)]],
       contractLocation: ["", CustomValidators.required],
       contractLocationType: [null, CustomValidators.required],
-      officeName: [""],
+      officeName: ["", CustomValidators.maxLength(300)],
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
       contractExpiryDate: [new Date()],
       workStartDate: [new Date(), CustomValidators.required],
-      workEndDate: [new Date(), CustomValidators.required],
+      workEndDate: [new Date()],
     });
     this.data.employees.forEach((ei, i) => {
       if (!this.data.employees[i].id) {
@@ -240,7 +242,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   handleOfficeNameValidationsByContractLocationType(): void {
     // set validators as empty
     this.officeName?.setValidators([]);
-    if (!this.isExternal()) {
+    if (this.isExternal()) {
       this.officeName.setValidators([Validators.required]);
     }
     this.officeName.updateValueAndValidity();
@@ -248,7 +250,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   handleContractExpireDateValidationsByContractType(): void {
     // set validators as empty
     this.contractExpiryDate?.setValidators([]);
-    if (!this.isInterim()) {
+    if (this.isInterim()) {
       this.contractExpiryDate.setValidators([Validators.required]);
     }
     this.contractExpiryDate.updateValueAndValidity();
@@ -266,10 +268,10 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.identificationNumber?.setValidators([]);
     this.passportNumber?.setValidators([]);
     if (this.identificationType.value == IdentificationType.Identification) {
-      this.identificationNumber.setValidators([Validators.required]);
+      this.identificationNumber.setValidators([Validators.required, ...CustomValidators.commonValidations.qId]);
       this.passportNumber.setValue('');
     } else {
-      this.passportNumber.setValidators([Validators.required]);
+      this.passportNumber.setValidators([Validators.required, ...CustomValidators.commonValidations.passport]);
       this.identificationNumber.setValue('');
     }
     this.identificationNumber.updateValueAndValidity();
@@ -293,7 +295,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     return this.identificationType.value == IdentificationType.Passport
   }
   isInterim() {
-    return this.contractLocationType.value == ContractTypes.Interim;
+    return this.contractType.value == ContractTypes.Interim;
   }
   isExternal() {
     return this.contractLocationType.value == ContractLocationTypes.External;
@@ -308,19 +310,19 @@ export class EmployeeFormPopupComponent implements OnInit {
     return this.requestType.value == EmploymentRequestType.NEW
   }
   cancelRequestType() {
-    return this.requestType.value != EmploymentRequestType.CANCEL;
+    return this.requestType.value == EmploymentRequestType.CANCEL;
   }
-  // TODO: complete it
-  get isAttachmentsAdded() {
-    return true;
-  }
+
   get isEditRequestTypeAllowed(): boolean {
     return (
       !this.data.model?.id ||
-      (!!this.data.model?.id && this.data.model.canCommit())
-    ) && this.cancelRequestType()
+      (!!this.data.model?.id && this.data.model.canCommit()) || this.employeeService.isCharityManager()
+    ) && !this.cancelRequestType()
   }
 
+  get contractType() {
+    return this.form.controls.contractType as FormControl
+  }
   get workStartDate() {
     return this.form.controls.workStartDate as FormControl
   }

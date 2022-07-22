@@ -41,9 +41,9 @@ export class EmploymentService extends BaseGenericEService<Employment> {
   searchColumns: string[] = [
     "fullSerial",
     "caseStatus",
+    "subject",
     "creatorInfo",
-    "createdOn",
-    "subject"
+    "createdOn"
   ];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
   jsonSearchFile: string = "employment_search-form.json";

@@ -75,11 +75,11 @@ EmploymentService
       langKey: "employee_data",
       validStatus: () => this.employees.length,
     },
-    attachments: {
-      name: 'attachmentsTab',
-      langKey: 'attachments',
-      validStatus: () => true
-    },
+    // attachments: {
+    //   name: 'attachmentsTab',
+    //   langKey: 'attachments',
+    //   validStatus: () => true
+    // },
   };
   constructor(
     public service: EmploymentService,
@@ -125,10 +125,11 @@ EmploymentService
       .pipe(tap((valid) => !valid && this.invalidFormMessage()))
       .pipe(filter((valid) => valid))
       .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
+      .pipe(tap(
+        (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
+      ))
+      .pipe(filter((valid) => valid))
       .pipe(
-        tap(
-          (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
-        ),
         switchMap(() => {
           if (this.isNewRequestType())
             return this.service.bulkValidate(this.employees)
