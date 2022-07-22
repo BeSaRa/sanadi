@@ -45,7 +45,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   currentBankAccounts: BankAccount[] = [];
   selectedBankAccounts: BankAccount[] = [];
   selectedLicenses: InternalBankAccountApproval[] = [];
-  npoEmployees: NpoEmployee[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
   // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: FormControl = new FormControl();
@@ -156,12 +155,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.listenToOperationTypeChanges();
     this.loadBanks();
     this.loadBankAccounts();
-    this.loadNPOEmployees();
     this.handleReadonly();
-    // this.selectedBankAccounts = this.model?.internalBankAccountDTO!;
-    // this.listenToRequestTypeAndOperationTypeChanges();
-    // this.toggleRequestType(this.requestType.value);
-    // this.toggleOperationType(this.operationType.value);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -274,12 +268,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   loadBankAccounts() {
     this.service.loadBankAccounts().subscribe(list => {
       this.currentBankAccounts = list;
-    });
-  }
-
-  loadNPOEmployees() {
-    this.service.loadOrgNPOEmployees().subscribe(list => {
-      this.npoEmployees = list;
     });
   }
 
@@ -690,10 +678,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   addToSelectedResponsiblePersons(employee: NpoEmployee) {
-    const selectedPerson = this.npoEmployees.find(b => b.id == employee.id)!;
-    if (!this.selectedNPOEmployees.includes(selectedPerson)) {
-      selectedPerson.identificationNumber = selectedPerson.qId;
-      this.selectedNPOEmployees = this.selectedNPOEmployees.concat(selectedPerson);
+    if (!this.selectedNPOEmployees.includes(employee)) {
+      employee.identificationNumber = employee.qId;
+      this.selectedNPOEmployees = this.selectedNPOEmployees.concat(employee);
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
     }

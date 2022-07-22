@@ -241,15 +241,6 @@
             <div class="merge-accounts-container">
               <div class="row" *ngIf="isExternalUser">
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                  <!--                  <label class="form-label" asteriskIfRequired="selectedResponsiblePerson"-->
-                  <!--                         for="selectedResponsiblePerson">{{lang.map.authorized_signatories}}</label>-->
-                  <!--                  <ng-select validationClasses="selectedResponsiblePerson" appendTo="body" [clearable]="true"-->
-                  <!--                             id="selectedResponsiblePerson"-->
-                  <!--                             formControlName="selectedResponsiblePerson" [readonly]="(readonly)">-->
-                  <!--                    <ng-option [value]="option.id"-->
-                  <!--                               *ngFor="let option of npoEmployees">{{option.getName()}}</ng-option>-->
-                  <!--                  </ng-select>-->
-
                   <label class="form-label" asteriskIfRequired=""
                          [control]="selectedResponsiblePersonControl"
                          for="selectedResponsiblePerson">{{lang.map.authorized_signatories}}
@@ -267,12 +258,6 @@
                     </button>
                   </div>
                 </div>
-                <!--                <div class="col-md-4 col-sm-12 mb-4 position-relative">-->
-                <!--                  <button [disabled]="!selectedResponsiblePerson.value" style="margin-top: 32px;" (click)="addToSelectedResponsiblePersons()" class="btn btn-primary"-->
-                <!--                          [tooltip]="lang.map.btn_add">-->
-                <!--                    {{lang.map.btn_add}}-->
-                <!--                  </button>-->
-                <!--                </div>-->
               </div>
               <div class="row">
                 <div class="col-12 position-relative">
