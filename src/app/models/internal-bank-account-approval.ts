@@ -44,6 +44,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   bankCategoryInfo!: AdminResult;
   mainAccountInfo!: AdminResult;
   currencyInfo!: AdminResult;
+  bankInfo!: AdminResult;
   followUpDate!: string;
   isUpdatedNewAccount!: boolean;
   ownerOfMergedBankAccounts!: number;

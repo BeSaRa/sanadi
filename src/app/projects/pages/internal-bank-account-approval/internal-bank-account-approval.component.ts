@@ -44,6 +44,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
   currentBankAccounts: BankAccount[] = [];
   selectedBankAccounts: BankAccount[] = [];
+  selectedLicenses: InternalBankAccountApproval[] = [];
   npoEmployees: NpoEmployee[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
   // oldLicenseFullSerialControl: FormControl = new FormControl();
@@ -51,6 +52,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'toBeMergedIn', 'actions'];
   selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
+  selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
   updateNewAccountFieldsVisible = false;
   isNewMerge: boolean = false;
   isUpdateMerge = false;
@@ -475,7 +477,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   enableUpdateMergeAccountsFields() {
     this.enableOperationType();
-    this.enableSearchField();
     this.enablePurpose();
     this.enableBankId();
     this.enableCurrency();
@@ -485,11 +486,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.enableOperationType();
     this.disableBankAccountCategory();
     this.disableMainAccount();
+    this.disableSearchField();
   }
 
   enableCancelAccountFields() {
     this.enableOperationType();
-    this.enableSearchField();
     this.enableBankAccountCategory();
     this.enablePurpose();
     this.enableBankId();
@@ -503,12 +504,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.disableBankId();
     this.disableCurrency();
     this.disableMainAccount();
+    this.disableSearchField();
   }
 
   enableOperationType() {
     this.operationType.enable({emitEvent: false});
     this.operationType.setValidators([CustomValidators.required]);
-    // this.operationType.updateValueAndValidity();
   }
 
   requirePurposeField() {
@@ -520,8 +521,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   disableOperationType() {
-    this.operationType.patchValue(null, {emitEvent: false});
     this.operationType.disable({emitEvent: false});
+    this.operationType.setValidators([]);
+    this.operationType.patchValue(null, {emitEvent: false});
   }
 
   enableSearchField() {
@@ -640,7 +642,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
         filter<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>, SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>>
         ((info): info is SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense> => !!info))
       .subscribe((_info) => {
-        this._updateForm(_info.details.convertToItem());
+        const item = _info.details.convertToItem();
+        this.selectedLicenses = [item];
+        this._updateForm(item);
       });
   }
 

@@ -22,6 +22,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     delete model.bankCategoryInfo;
     delete model.mainAccountInfo;
     delete model.currencyInfo;
+    delete model.bankInfo;
     delete model.employeeService;
     delete model.service;
     delete model.searchFields;
@@ -40,6 +41,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo) : AdminResult.createInstance({});
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo): AdminResult.createInstance({});
+    model.bankInfo = isValidAdminResult(model.bankInfo) ? AdminResult.createInstance(model.bankInfo): AdminResult.createInstance({});
     model.internalBankAccountDTOs = model.internalBankAccountDTOs || [];
     model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs.map(x => {
       x.jobTitleInfo = (new Lookup()).clone(x.jobTitleInfo);

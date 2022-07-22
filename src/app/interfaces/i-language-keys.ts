@@ -1,5 +1,6 @@
 export interface ILanguageKeys {
   forget_password: string;
+  selected_license_info: string;
   merge_to_account: string;
   select_organization: string;
   send_to_department: string;

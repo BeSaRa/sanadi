@@ -13,6 +13,7 @@ export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<
     model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo) : AdminResult.createInstance({});
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo) : AdminResult.createInstance({});
+    model.bankInfo = isValidAdminResult(model.bankInfo) ? AdminResult.createInstance(model.bankInfo) : AdminResult.createInstance({});
     model.licenseStatusInfo = (model.licenseStatusInfo) ? (new Lookup()).clone(model.licenseStatusInfo) : new Lookup();
     model.requestTypeInfo = (model.requestTypeInfo) ? (new Lookup()).clone(model.requestTypeInfo) : new Lookup();
     return model;

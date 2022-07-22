@@ -52,6 +52,10 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.accountNumber = this.accountNumber;
     internalBankAccountApproval.swiftCode = this.swiftCode;
     internalBankAccountApproval.isUpdatedNewAccount = this.isUpdatedNewAccount;
+    internalBankAccountApproval.bankCategoryInfo = this.bankCategoryInfo;
+    internalBankAccountApproval.currencyInfo = this.currencyInfo;
+    internalBankAccountApproval.mainAccountInfo = this.mainAccountInfo;
+    internalBankAccountApproval.bankInfo = this.bankInfo;
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
       return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
     });
