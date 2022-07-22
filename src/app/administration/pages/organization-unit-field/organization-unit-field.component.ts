@@ -108,17 +108,6 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
       });
     }
   }
-
-  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
-    // const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
-    //   .subscribe((response) => {
-    //     this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
-    //       .subscribe(() => {
-    //         this.reload$.next(null);
-    //         sub.unsubscribe();
-    //       });
-    //   });
-  }
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
