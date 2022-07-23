@@ -847,5 +847,18 @@
     "group": "administration",
     "itemOrder": 12,
     "svg": null
+  },
+  {
+    "id": 65,
+    "langKey": "menu_transferring_individual_funds_abroad",
+    "path": "/home/projects/transferring_individual_funds_abroad",
+    "icon": "mdi-wallet-membership",
+    "isSvg": false,
+    "permission": "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 6,
+    "svg": null
   }
 ]
