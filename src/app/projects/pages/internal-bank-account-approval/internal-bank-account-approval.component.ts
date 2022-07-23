@@ -241,7 +241,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.toggleAccountCategoryControl(this.bankAccountCategory.value);
 
     // set radio button of selectedBankAccounts
-    if(this.operationType.value == BankAccountOperationTypes.MERGE) {
+    if (this.operationType.value == BankAccountOperationTypes.MERGE) {
       // this.ownerOfMergedBankAccounts.patchValue(this.selectedBankAccounts.find(x => x.isMergeAccount)!.id);
     }
     this.selectedBankAccounts = this.model.internalBankAccountDTOs?.map(ba => {
@@ -380,7 +380,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   showUpdateBankAccountFields() {
-    if(!this.model?.isUpdatedNewAccount) {
+    if (!this.model?.isUpdatedNewAccount) {
       this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
       this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
       this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
@@ -616,10 +616,14 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   searchForLicense() {
+    let criteriaObject: any = {fullSerial: this.oldLicenseFullSerialField.value};
+    if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.NEW_ACCOUNT) {
+      criteriaObject.requestType = BankAccountRequestTypes.NEW;
+      criteriaObject.operationType = BankAccountOperationTypes.NEW_ACCOUNT;
+    }
+
     this.licenseService
-      .internalBankAccountSearch<InternalBankAccountApproval>({
-        fullSerial: this.oldLicenseFullSerialField.value
-      })
+      .internalBankAccountSearch<InternalBankAccountApproval>(criteriaObject)
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
@@ -648,7 +652,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
         .pipe(tap(employees => !employees.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
         .pipe(filter(employees => !!employees.length))
         .pipe(exhaustMap((employees) => {
-          return employees.length === 1 ? of(employees[0]) : this.openSelectEmployee(employees)
+          return employees.length === 1 ? of(employees[0]) : this.openSelectEmployee(employees);
         }))
         .pipe(filter(emp => emp != null))
         .subscribe((employee) => {
@@ -662,7 +666,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   addToSelectedBankAccounts() {
     const selectedAccount = this.currentBankAccounts.find(b => b.id == this.selectedBankAccountToMerge.value)!;
     if (!this.selectedBankAccounts.includes(selectedAccount)) {
-      if(this.selectedBankAccounts.length === 0) {
+      if (this.selectedBankAccounts.length === 0) {
         this.ownerOfMergedBankAccounts.patchValue(selectedAccount.id);
       }
 
