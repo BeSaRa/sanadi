@@ -60,7 +60,7 @@
             <app-field-error-message controlName="category"></app-field-error-message>
           </div>
         </div>
-        <div class="row" *ngIf="isUpdateNewAccount">
+        <div class="row" *ngIf="isUpdateNewAccount && hasSearchedForLicense">
           <div class="col-12 position-relative">
             <h1 class="h6 text-primary">{{lang.map.selected_license_info}}</h1>
             <div class="table-responsive">

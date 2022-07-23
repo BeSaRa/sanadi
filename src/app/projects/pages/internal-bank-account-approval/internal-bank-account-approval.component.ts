@@ -57,6 +57,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   isUpdateMerge = false;
   isUpdateNewAccount = false;
   isExternalUser!: boolean;
+  hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -257,6 +258,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.operation = OperationTypes.CREATE;
     this.selectedNPOEmployees = [];
     this.selectedBankAccounts = [];
+    this.selectedLicenses = [];
+    this.isNewMerge = false;
+    this.isUpdateMerge = false;
+    this.isUpdateNewAccount = false;
+    this.hasSearchedForLicense = false;
   }
 
   loadBanks() {
@@ -634,6 +640,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
         filter<null | SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>, SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense>>
         ((info): info is SelectedLicenseInfo<InternalBankAccountLicense, InternalBankAccountLicense> => !!info))
       .subscribe((_info) => {
+        this.hasSearchedForLicense = true;
         const item = _info.details.convertToItem();
         this.selectedLicenses = [item];
         this._updateForm(item);
