@@ -14,6 +14,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   category?: number;
   bankInfo!: Bank;
   isMergeAccount!: boolean;
+  subAccounts: BankAccount[] = [];
 
   constructor() {
     super();

@@ -6,12 +6,18 @@ import {BankAccount} from '@app/models/bank-account';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {NpoEmployee} from '@app/models/npo-employee';
 import {Lookup} from '@app/models/lookup';
+import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
+import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {
   send(model: Partial<InternalBankAccountApproval>): Partial<InternalBankAccountApproval> {
     model.internalBankAccountDTOs = model.internalBankAccountDTOs?.map(ba => ({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount}) as unknown as BankAccount);
     model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs
       ?.map(npo => ({id: npo.id, arabicName: npo.arabicName, englishName: npo.englishName, jobTitleId: npo.jobTitleId, identificationNumber: npo.qId || npo.identificationNumber}) as unknown as NpoEmployee);
+
+    if(model.requestType === BankAccountRequestTypes.CANCEL) {
+      model.operationType = BankAccountOperationTypes.INACTIVE;
+    }
 
     delete model.taskDetails;
     delete model.requestTypeInfo;
@@ -47,6 +53,10 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
       x.jobTitleInfo = (new Lookup()).clone(x.jobTitleInfo);
       return x;
     }) : model.bankAccountExecutiveManagementDTOs = [];
+
+    if(model.requestType === BankAccountRequestTypes.CANCEL) {
+      model.operationType = undefined;
+    }
 
     return model;
   }

@@ -1,5 +1,12 @@
 export interface ILanguageKeys {
   forget_password: string;
+  you_have_to_select_at_least_one_bank_account: string;
+  will_be_canceled_also: string;
+  will_be_canceled_also_single: string;
+  will_be_merged_also_single: string;
+  will_be_merged_also: string;
+  these_sub_accounts_of_the_selected_account: string;
+  this_sub_account_of_the_selected_account: string;
   selected_license_info: string;
   merge_to_account: string;
   select_organization: string;

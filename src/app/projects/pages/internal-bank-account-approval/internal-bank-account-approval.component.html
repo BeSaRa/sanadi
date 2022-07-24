@@ -163,26 +163,24 @@
             <app-field-error-message controlName="swiftCode"></app-field-error-message>
           </div>
         </div>
-        <div class="row mt-3" *ngIf="isNewMerge || isUpdateMerge">
+        <div class="row mt-3" *ngIf="isNewMerge || isUpdateMerge || isCancel">
           <div class="col-12 mb-4 position-relative">
             <div class="merge-accounts-container">
               <div class="row" *ngIf="!isUpdateMerge && isExternalUser">
                 <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                  <label class="form-label" asteriskIfRequired="selectedBankAccountToMerge"
-                         for="selectedBankAccountToMerge">{{lang.map.bank_accounts}}</label>
-                  <ng-select validationClasses="selectedBankAccountToMerge" appendTo="body" [clearable]="true"
-                             id="selectedBankAccountToMerge"
-                             formControlName="selectedBankAccountToMerge" [readonly]="(readonly)">
-                    <ng-option [value]="option.id"
-                               *ngFor="let option of currentBankAccounts">{{option.accountNumber}}</ng-option>
-                  </ng-select>
-                </div>
-                <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                  <button [disabled]="!selectedBankAccountToMerge.value" style="margin-top: 32px;"
-                          (click)="addToSelectedBankAccounts()" class="btn btn-primary"
-                          [tooltip]="lang.map.btn_add">
-                    {{lang.map.btn_add}}
-                  </button>
+                  <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
+                         for="oldLicenseFullSerial">{{lang.map.account_number}}
+                  </label>
+                  <div class="input-group">
+                    <input (keydown.enter)="searchForBankAccount()" id="bankAccountSearchCriteria"
+                           validationClasses="bankAccountSearchCriteria"
+                           formControlName="bankAccountSearchCriteria"
+                           class="form-control"
+                           [readonly]="(readonly)">
+                    <button (click)="searchForBankAccount()" class="input-group-text" [disabled]="(readonly)">
+                      <i class="mdi mdi-magnify text-primary"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -203,7 +201,7 @@
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
                           <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
                         </ng-container>
-                        <ng-container cdkColumnDef="toBeMergedIn">
+                        <ng-container cdkColumnDef="toBeMergedIn" *ngIf="isNewMerge || isUpdateMerge">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.merge_to_account}}</th>
                           <td cdk-cell *cdkCellDef="let row">
                             <input formControlName="ownerOfMergedBankAccounts" class="form-check-input" [id]="row.id"

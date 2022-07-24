@@ -17,7 +17,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   caseType: number = CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL;
   serviceSteps!: string[];
   organizationId!: number;
-  operationType!: number;
+  operationType?: number;
   purpose!: string;
   bankId!: number;
   category!: number;
@@ -48,6 +48,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   followUpDate!: string;
   isUpdatedNewAccount!: boolean;
   ownerOfMergedBankAccounts!: number;
+  bankAccountSearchCriteria!: string;
 
   service!: InternalBankAccountApprovalService;
 
@@ -58,7 +59,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
 
   buildBasicInfo(controls: boolean = false): any {
     const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
-      currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge, ownerOfMergedBankAccounts, selectedResponsiblePerson} = this;
+      currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge,
+      ownerOfMergedBankAccounts, selectedResponsiblePerson, bankAccountSearchCriteria} = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -73,7 +75,8 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       swiftCode: controls ? [swiftCode] : swiftCode,
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
       ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
-      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson
+      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson,
+      bankAccountSearchCriteria: controls ? [bankAccountSearchCriteria] : bankAccountSearchCriteria
     }
   }
 

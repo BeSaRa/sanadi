@@ -25,6 +25,7 @@ import {
 import {BankService} from '@services/bank.service';
 import {SelectEmployeePopupComponent} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
 import {Lookup} from '@app/models/lookup';
+import {CastResponse} from '@decorators/cast-response';
 
 @Injectable({
   providedIn: 'root'
@@ -124,6 +125,18 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
         result.push((new BankAccount()).clone(r));
       });
       return result;
+    }));
+  }
+
+  @CastResponse(() => BankAccount, {unwrap: 'rs', fallback: ''})
+  private _searchForBankAccount(accountNumber: number): Observable<BankAccount> {
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/account-number?accountNumber=' + accountNumber);
+  }
+
+  searchForBankAccount(accountNumber: number) {
+    return this._searchForBankAccount(accountNumber).pipe(map(response => {
+      response.bankInfo = (new Bank()).clone(response.bankInfo);
+      return response;
     }));
   }
 
