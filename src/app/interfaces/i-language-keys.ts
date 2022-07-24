@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  forget_password: string;
   select_organization: string;
   send_to_department: string;
   can_be_11_digits: string;
