@@ -1127,6 +1127,9 @@ export interface ILanguageKeys {
   lbl_edit_field_assessment: string;
   type: string;
   currency_usd: string;
+  org_unit_field:string;
+  lbl_add_org_unit_field: string;
+  lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
 }

@@ -185,7 +185,7 @@
     "id": 15,
     "langKey": "menu_user_inbox",
     "path": "/home/user-inbox",
-    "icon": "mdi-inbox",
+    "icon": "account-outline",
     "isSvg": false,
     "permission": null,
     "permissionGroup": null,
@@ -833,6 +833,19 @@
     "parent": 13,
     "group": "general-services",
     "itemOrder": 5,
+    "svg": null
+  },
+  {
+    "id": 64,
+    "langKey": "org_unit_field",
+    "path": "/home/administration/organization-unit-field",
+    "icon": "mdi-focus-field",
+    "isSvg": false,
+    "permission": "MANAGE_JOB_TITLES",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 12,
     "svg": null
   }
 ]
