@@ -12,6 +12,8 @@ import {ProjectModelService} from '@app/services/project-model.service';
 import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
+import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
+import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -95,7 +97,11 @@ export class CaseInfoComponent {
   }
 
   isLicenseCase(): boolean {
-    return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    if(this.model.caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
+      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model as InternalBankAccountApproval).requestType !== BankAccountRequestTypes.CANCEL;
+    } else {
+      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    }
   }
 
   isDocumentCase(): boolean {
