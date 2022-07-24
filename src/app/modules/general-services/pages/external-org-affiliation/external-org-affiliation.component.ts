@@ -132,21 +132,16 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     return failedList;
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.selectedLicense) {
-      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialog.error(listHtml.outerHTML);
       return false;
     } else {
-      if (saveType === SaveTypes.DRAFT) {
-        return true;
-      }
-      const invalidTabs = this._getInvalidTabs();
-      if (invalidTabs.length > 0) {
-        const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
-        this.dialog.error(listHtml.outerHTML);
-        return false;
-      } else {
-        return true;
-      }
+      return true;
     }
   }
   _afterSave(model: ExternalOrgAffiliation, saveType: SaveTypes, operation: OperationTypes): void {
@@ -161,7 +156,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     }
   }
   _saveFail(error: any): void {
-    throw new Error('Method not implemented.');
+    console.log('problem on save');
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
@@ -171,7 +166,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _launchFail(error: any): void {
-    throw new Error('Method not implemented.');
+    console.log('problem on lunch');
   }
   _destroyComponent(): void { }
   _updateForm(model: ExternalOrgAffiliation | undefined): void {
