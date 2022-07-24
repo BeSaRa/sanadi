@@ -1,18 +1,18 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {Observable, of} from 'rxjs';
-import {CastResponse} from '@decorators/cast-response';
-import {Common} from '@app/models/common';
-import {catchError, map, tap} from 'rxjs/operators';
-import {AdminResult} from '@app/models/admin-result';
-import {IDefaultResponse} from '@contracts/idefault-response';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { Observable, of } from 'rxjs';
+import { CastResponse } from '@decorators/cast-response';
+import { Common } from '@app/models/common';
+import { catchError, map, tap } from 'rxjs/operators';
+import { AdminResult } from '@app/models/admin-result';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
   counters?: Common['counters'];
+  flags?: Common['flags']
 
   constructor(private http: HttpClient,
               private urlService: UrlService) {
@@ -31,7 +31,10 @@ export class CommonService {
   }
 
   loadCounters(): Observable<Common> {
-    return this._loadCounters().pipe(tap(counters => this.counters = counters.counters));
+    return this._loadCounters().pipe(tap(counters => {
+      this.counters = counters.counters;
+      this.flags = counters.flags;
+    }));
   }
 
   hasCounter(key: keyof Common['counters']): boolean {
@@ -50,9 +53,9 @@ export class CommonService {
     queryParams = queryParams.append('type', agencyType);
     queryParams = queryParams.append('country', executionCountry);
 
-    return this.http.get(this._getURLSegment() + '/agency', {params: queryParams})
+    return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
       .pipe(
-        catchError((err: any) => of([])),
+        catchError((_err: any) => of([])),
         map((result: any) => result.rs.map((x: AdminResult) => AdminResult.createInstance(x)))
       );
   }
