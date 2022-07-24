@@ -53,7 +53,7 @@
                          formControlName="trainingType"
                          id="trainingType">
                 <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
-                           [disabled]="trainingType.isRetiredCommonStatus()">{{trainingType.getName()}}</ng-option>
+                           [disabled]="!trainingType.status">{{trainingType.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="trainingType"></app-field-error-message>
             </div>
@@ -261,7 +261,7 @@
                          formControlName="attendenceMethod"
                          id="attendenceMethod">
                 <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
-                           [disabled]="attendanceMethod.isRetiredCommonStatus()">{{attendanceMethod.getName()}}</ng-option>
+                           [disabled]="!attendanceMethod.status">{{attendanceMethod.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="attendenceMethod"></app-field-error-message>
             </div>
@@ -277,7 +277,7 @@
                          id="targetAudienceListIds"
                          [multiple]="true">
                 <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
-                           [disabled]="targetAudience.isRetiredCommonStatus()">{{targetAudience.getName()}}</ng-option>
+                           [disabled]="!targetAudience.status">{{targetAudience.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="targetAudienceListIds"></app-field-error-message>
             </div>
@@ -352,7 +352,7 @@
                   id="organizationTypeId"
                   appendTo="body"
                   (change)="onOrganizationTypeChange()">
-                  <ng-option [value]="organizationType.lookupKey"
+                  <ng-option [value]="organizationType.lookupKey" [disabled]="!organizationType.status"
                              *ngFor="let organizationType of organizationTypes">{{organizationType.getName()}}</ng-option>
                 </ng-select>
               </div>
@@ -368,7 +368,7 @@
                   id="organizationId"
                   appendTo="body">
                   <ng-option [value]="-1">{{lang.map.select_all}}</ng-option>
-                  <ng-option [value]="organization.id"
+                  <ng-option [value]="organization.id" [disabled]="!organization.isActive()"
                              *ngFor="let organization of organizations">{{organization.getName()}}</ng-option>
                 </ng-select>
               </div>
