@@ -73,7 +73,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     });
   }
 
-  private static _getAllLookupCategoryKeys(lookupMap: any, sorted: boolean = false, asLookupInterface: boolean = false) {
+  private static _getAllLookupCategoryKeys(lookupMap: ILookupMap, sorted: boolean = false, asLookupInterface: boolean = false) {
     let keys = Object.keys(lookupMap);
     if (sorted) {
       keys = keys.sort((a: string, b: string) => {
@@ -89,7 +89,7 @@ export class LookupService extends BackendGenericService<Lookup> {
       });
     }
     if (asLookupInterface) {
-      console.log('{\n' + keys.join(': Lookup[];\n') + '\n}');
+      console.log('{\n' + keys.join(': Lookup[];\n') + ': Lookup[];' + '\n}');
       return;
     }
     console.log('{\n' + keys.join(',\n') + '\n}');

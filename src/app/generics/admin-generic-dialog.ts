@@ -1,16 +1,17 @@
-import {Directive, OnDestroy, OnInit} from "@angular/core";
-import {isObservable, Observable, of, Subject} from "rxjs";
-import {IAdminGenericInterface} from "@app/interfaces/iadmin-generic-interface";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {catchError, exhaustMap, filter, switchMap} from "rxjs/operators";
-import {BaseModel} from "@app/models/base-model";
+import {Directive, OnDestroy, OnInit} from '@angular/core';
+import {isObservable, Observable, of, Subject} from 'rxjs';
+import {IAdminGenericInterface} from '@app/interfaces/iadmin-generic-interface';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {catchError, exhaustMap, filter, switchMap} from 'rxjs/operators';
+import {BaseModel} from '@app/models/base-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {BaseModelAdminLookup} from '@app/models/base-model-admin-lookup';
 
 @Directive()
-export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implements OnInit, OnDestroy, IAdminGenericInterface<M> {
+export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseModelAdminLookup<any, any>> implements OnInit, OnDestroy, IAdminGenericInterface<M> {
   // to be injected from main component
   abstract fb: FormBuilder;
   abstract model: M;
@@ -24,6 +25,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   commonStatusEnum = CommonStatusEnum;
+  adminLookupTypeId?: number;
 
   ngOnInit(): void {
     this.buildForm();
@@ -84,7 +86,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
       // call before Save callback
       .pipe(switchMap(() => {
         const result = this.beforeSave(this.model, this.form);
-        return isObservable(result) ? result : of(result)
+        return isObservable(result) ? result : of(result);
       }))
       // filter the return value from saveBeforeCallback and allow only the true
       .pipe(filter(value => value))
@@ -93,18 +95,19 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
         return isObservable(result) ? result : of(result);
       }))
       .pipe(exhaustMap((model: M) => {
-        return model.save().pipe(catchError(error => {
+        let save$ = this.adminLookupTypeId ? (model as BaseModelAdminLookup<any, any>).save(this.adminLookupTypeId) : (model as BaseModel<any, any>).save();
+        return save$.pipe(catchError(error => {
           this.saveFail(error);
           return of({
             error: error,
             model
-          })
-        }))
+          });
+        }));
       }))
       .pipe(filter((value) => !value.hasOwnProperty('error')))
       .subscribe((model: M) => {
         this.afterSave(model, this.dialogRef);
-      })
+      });
   }
 
   /**
@@ -126,7 +129,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any>> implemen
     element instanceof HTMLElement && (ele = element);
     typeof element === 'string' && (ele = document.getElementById(element) as HTMLElement);
     if (ele) {
-      ele.scrollTo({top: 0, behavior: "smooth"});
+      ele.scrollTo({top: 0, behavior: 'smooth'});
     }
   }
 

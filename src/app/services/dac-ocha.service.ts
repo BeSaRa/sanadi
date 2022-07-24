@@ -17,7 +17,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SubDacOchaPopupComponent} from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {DacOchaTypeEnum} from '@app/enums/dac-ocha-type-enum';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -72,11 +72,11 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
   }
 
   loadOCHAs(): Observable<DacOcha[]> {
-    return this._loadByType(DacOchaTypeEnum.ocha);
+    return this._loadByType(AdminLookupTypeEnum.OCHA);
   }
 
   loadDACs(): Observable<DacOcha[]> {
-    return this._loadByType(DacOchaTypeEnum.dac);
+    return this._loadByType(AdminLookupTypeEnum.DAC);
   }
 
   openCreateDacOchaDialog(dacOchaTypeId: number): DialogRef {

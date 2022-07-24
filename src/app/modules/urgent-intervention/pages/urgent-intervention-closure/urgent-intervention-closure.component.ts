@@ -77,7 +77,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
-      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      langKey: 'lbl_basic_info',
       index: 0,
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
@@ -302,7 +302,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.requestTypeField.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+    if (!this.selectedLicense) {
       this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {

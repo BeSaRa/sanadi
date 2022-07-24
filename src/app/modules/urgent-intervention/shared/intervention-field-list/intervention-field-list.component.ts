@@ -1,22 +1,22 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ReadinessStatus} from '@app/types/types';
 import {InterventionField} from '@app/models/intervention-field';
-import {Observable, of, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ImplementingAgency} from '@app/models/implementing-agency';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {LookupService} from '@services/lookup.service';
-import {DacOcha} from '@app/models/dac-ocha';
-import {DacOchaService} from '@services/dac-ocha.service';
 import {AdminResult} from '@app/models/admin-result';
+import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {AdminLookup} from '@app/models/admin-lookup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -30,7 +30,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private dacOchaService: DacOchaService,
+              private dacOchaService: DacOchaNewService,
               private fb: FormBuilder) {
   }
 
@@ -58,8 +58,8 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   showForm: boolean = false;
   filterControl: FormControl = new FormControl('');
 
-  mainOchaCategories: DacOcha[] = [];
-  subOchaCategories: DacOcha[] = [];
+  mainOchaCategories: AdminLookup[] = [];
+  subOchaCategories: AdminLookup[] = [];
 
   form!: FormGroup;
   actions: IMenuItem<InterventionField>[] = [
@@ -121,10 +121,10 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   }
 
   private loadMainOchaList(): void {
-    this.dacOchaService.loadOCHAs()
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA)
       .pipe(
         takeUntil(this.destroy$),
-        map((result: DacOcha[]) => {
+        map((result: AdminLookup[]) => {
           return result.filter(x => !x.parentId);
         })
       ).subscribe((list) => {
@@ -144,8 +144,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       this.subOchaCategories = [];
       return;
     }
-    this.dacOchaService
-      .loadSubDacOchas(mainOchaId)
+    this.dacOchaService.loadByParentId(mainOchaId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.subOchaCategories = list;

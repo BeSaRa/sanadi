@@ -12,9 +12,7 @@ import {AidLookupPopupComponent} from './popups/aid-lookup-popup/aid-lookup-popu
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
 import {OrganizationUnitComponent} from './pages/organization-unit/organization-unit.component';
 import {OrganizationUnitPopupComponent} from './popups/organization-unit-popup/organization-unit-popup.component';
-import {
-  OrganizationBranchPopupComponent,
-} from './popups/organization-branch-popup/organization-branch-popup.component';
+import {OrganizationBranchPopupComponent,} from './popups/organization-branch-popup/organization-branch-popup.component';
 import {OrganizationBranchComponent} from './pages/organization-branch/organization-branch.component';
 import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
 import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
@@ -28,18 +26,14 @@ import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
 import {CountryComponent} from './pages/country/country.component';
 import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
-import {
-  ChangeCountryParentPopupComponent,
-} from './popups/change-country-parent-popup/change-country-parent-popup.component';
+import {ChangeCountryParentPopupComponent,} from './popups/change-country-parent-popup/change-country-parent-popup.component';
 import {
   AttachmentTypeServiceDataPopupComponent,
 } from './popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
 import {InternalUserComponent} from './pages/internal-user/internal-user.component';
 import {InternalUserPopupComponent} from './popups/internal-user-popup/internal-user-popup.component';
 import {InternalDepartmentComponent} from './pages/internal-department/internal-department.component';
-import {
-  InternalDepartmentPopupComponent,
-} from './popups/internal-department-popup/internal-department-popup.component';
+import {InternalDepartmentPopupComponent,} from './popups/internal-department-popup/internal-department-popup.component';
 import {JobTitleComponent} from './pages/job-title/job-title.component';
 import {JobTitlePopupComponent} from './popups/job-title-popup/job-title-popup.component';
 import {DacOchaComponent} from './pages/dac-ocha/dac-ocha.component';
@@ -71,6 +65,9 @@ import {UserFollowupPermissionComponent} from './shared/user-followup-permission
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
 import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
+import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
+import {DacOchaNewComponent} from './pages/dac-ocha-new/dac-ocha-new.component';
+import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 
 @NgModule({
   declarations: [
@@ -134,7 +131,9 @@ import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/
     FieldAssessmentComponent,
     OrganizationUnitFieldPopupComponent,
     OrganizationUnitFieldComponent,
-
+    AdminLookupPopupComponent,
+    DacOchaNewComponent,
+    DacOchaNewPopupComponent,
   ],
   imports: [
     SharedModule,

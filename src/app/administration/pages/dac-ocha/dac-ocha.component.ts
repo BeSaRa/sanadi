@@ -14,7 +14,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {BehaviorSubject, of} from 'rxjs';
 import {IGridAction} from '@app/interfaces/i-grid-action';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {DacOchaTypeEnum} from '@app/enums/dac-ocha-type-enum';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Lookup} from '@app/models/lookup';
@@ -29,8 +29,8 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./dac-ocha.component.scss']
 })
 export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaService> implements OnInit {
-  selectDacOchaType$: BehaviorSubject<number> = new BehaviorSubject<number>(DacOchaTypeEnum.ocha);
-  selectedDacOchaTypeId: number = DacOchaTypeEnum.ocha;
+  selectDacOchaType$: BehaviorSubject<number> = new BehaviorSubject<number>(AdminLookupTypeEnum.OCHA);
+  selectedDacOchaTypeId: number = AdminLookupTypeEnum.OCHA;
   selectedPopupTabName: string = 'basic';
   searchText = '';
   classifications!: Lookup[];
@@ -246,11 +246,11 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
 
   tabChanged(tab: TabComponent) {
     if (tab.name.toLowerCase() === 'ocha') {
-      this.selectDacOchaType$.next(DacOchaTypeEnum.ocha);
+      this.selectDacOchaType$.next(AdminLookupTypeEnum.OCHA);
     }
 
     if (tab.name.toLowerCase() === 'dac') {
-      this.selectDacOchaType$.next(DacOchaTypeEnum.dac);
+      this.selectDacOchaType$.next(AdminLookupTypeEnum.DAC);
     }
   }
 
@@ -301,19 +301,19 @@ export class DacOchaComponent extends AdminGenericComponent<DacOcha, DacOchaServ
   }
 
   getClassificationsLookup() {
-    this.classifications = this.lookupService.listByCategory.ServiceWorkField;
+    this.classifications = this.lookupService.listByCategory.AdminLookupType || [];
   }
 
   get dacTabLabel(): string {
-    return this.classifications.find(classification => classification.lookupKey === 2)!.getName();
+    return this.classifications.find(classification => classification.lookupKey === 2)?.getName() || '';
   }
 
   get ochaTabLabel(): string {
-    return this.classifications.find(classification => classification.lookupKey === 1)!.getName();
+    return this.classifications.find(classification => classification.lookupKey === 1)?.getName() || '';
   }
 
   get tabLabel(): string {
-    return this.selectedDacOchaTypeId === DacOchaTypeEnum.ocha ? this.ochaTabLabel : this.dacTabLabel;
+    return this.selectedDacOchaTypeId === AdminLookupTypeEnum.OCHA ? this.ochaTabLabel : this.dacTabLabel;
   }
 
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {

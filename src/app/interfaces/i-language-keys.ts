@@ -1130,4 +1130,6 @@ export interface ILanguageKeys {
   org_unit_field:string;
   lbl_add_org_unit_field: string;
   lbl_edit_org_unit_field: string;
+  requester_relation: string;
+  requester_name: string;
 }
