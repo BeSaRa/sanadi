@@ -1,5 +1,3 @@
-import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
-import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
@@ -28,12 +26,11 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {UrgentInterventionReportComponent} from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
-import {
-  UrgentInterventionClosureComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import { ExternalOrgAffiliationComponent } from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
-
+import { UrgentInterventionClosureComponent } from './../modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
+import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -68,7 +65,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
-      DynamicComponentService.registerComponent('UrgentInterventionFinancialNotification', UrgentInterventionFinancialNotification);
+      DynamicComponentService.registerComponent('UrgentInterventionFinancialNotificationComponent', UrgentInterventionFinancialNotificationComponent);
 
     });// just to make sure that service constructed and register all dynamic components
 

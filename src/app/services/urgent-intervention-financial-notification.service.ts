@@ -47,6 +47,6 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
     throw new Error('Method not implemented.');
   }
   getCaseComponentName(): string {
-    return 'UrgentInterventionFinancialNotification';
+    return 'UrgentInterventionFinancialNotificationComponent';
   }
 }
