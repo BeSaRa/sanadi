@@ -43,6 +43,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     new Lookup().clone({arName: 'فرعي', enName: 'Sub', lookupKey: 2})];
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
   currentBankAccounts: BankAccount[] = [];
+  bankAccountsBasedOnCurrencyAndBank: BankAccount[] = [];
   selectedBankAccounts: BankAccount[] = [];
   selectedLicenses: InternalBankAccountApproval[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
@@ -152,6 +153,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   _afterBuildForm(): void {
     this.listenToBankCategoryChange();
+    this.listenToBankIdChange();
+    this.listenToCurrencyChange();
     this.listenToRequestTypeChanges();
     this.listenToOperationTypeChanges();
     this.loadBanks();
@@ -233,6 +236,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       return;
     }
     this.model = (new InternalBankAccountApproval()).clone({...this.model, ...model});
+    this.loadBankAccountsBasedOnCurrencyAndBank(this.model.category, this.model.bankId, this.model.currency);
     this.form.patchValue({
       basicInfo: this.model?.buildBasicInfo(),
       explanation: this.model?.buildExplanation()
@@ -279,8 +283,32 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   listenToBankCategoryChange() {
     this.bankAccountCategory.valueChanges.subscribe(val => {
+      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
       this.toggleAccountCategoryControl(val);
     });
+  }
+
+  listenToBankIdChange() {
+    this.bankId.valueChanges.subscribe(val => {
+      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
+    });
+  }
+
+  listenToCurrencyChange() {
+    this.currency.valueChanges.subscribe(val => {
+      this.loadBankAccountsBasedOnCurrencyAndBank(this.bankAccountCategory.value, this.bankId.value, this.currency.value);
+    });
+  }
+
+  loadBankAccountsBasedOnCurrencyAndBank(bankCategory: number, bankId: number, currencyId: number) {
+    if(bankCategory === BankCategory.SUB && bankId && currencyId) {
+      this.service.loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).subscribe(list => {
+        this.bankAccountsBasedOnCurrencyAndBank = list;
+      });
+    } else {
+      this.mainAccount.patchValue(null);
+      this.bankAccountsBasedOnCurrencyAndBank = [];
+    }
   }
 
   private listenToRequestTypeChanges() {

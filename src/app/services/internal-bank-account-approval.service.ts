@@ -107,7 +107,22 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
         r.bankInfo = (new Bank()).clone(r.bankInfo);
         result.push((new BankAccount()).clone(r));
       });
-      console.log('bankAccounts', result);
+      return result;
+    }));
+  }
+
+  @Generator(BankAccount, true, {property: 'rs'})
+  private _loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number): Observable<BankAccount[]> {
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria?bank-id=' + bankId + '&currency=' + currencyId);
+  }
+
+  loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number) {
+    return this._loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).pipe(map(response => {
+      let result: BankAccount[] = [];
+      response.forEach((r: BankAccount) => {
+        r.bankInfo = (new Bank()).clone(r.bankInfo);
+        result.push((new BankAccount()).clone(r));
+      });
       return result;
     }));
   }

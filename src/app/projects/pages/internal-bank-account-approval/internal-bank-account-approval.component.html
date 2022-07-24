@@ -110,7 +110,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="currency"
                    for="currency">{{lang.map.currency}}</label>
-            <ng-select validationClasses="currency" appendTo="body" [clearable]="true"
+            <ng-select validationClasses="currency" appendTo="body" [clearable]="false"
                        id="currency"
                        formControlName="currency" [readonly]="(readonly)">
               <ng-option [value]="option.lookupKey"
@@ -125,7 +125,7 @@
                        id="mainAccount"
                        formControlName="mainAccount" [readonly]="(readonly)">
               <ng-option [value]="option.id"
-                         *ngFor="let option of currentBankAccounts">{{option.accountNumber}}</ng-option>
+                         *ngFor="let option of bankAccountsBasedOnCurrencyAndBank">{{option.accountNumber}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="mainAccount"></app-field-error-message>
           </div>
