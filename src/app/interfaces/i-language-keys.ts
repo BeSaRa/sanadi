@@ -1132,4 +1132,5 @@ export interface ILanguageKeys {
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
+  menu_urgent_intervention_financial_notification: string;
 }

@@ -1,3 +1,4 @@
+import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
 import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
@@ -67,6 +68,8 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionFinancialNotification', UrgentInterventionFinancialNotification);
+
     });// just to make sure that service constructed and register all dynamic components
 
 

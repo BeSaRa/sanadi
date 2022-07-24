@@ -1,3 +1,4 @@
+import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResultInterceptor } from './../model-interceptors/external-org-affiliation-result-interceptor';
 import { ExternalOrgAffiliationInterceptor } from './../model-interceptors/external-org-affiliation-interceptor';
@@ -148,6 +149,9 @@ export class LicenseService {
       case CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST:
         url = this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST;
         break;
+      case CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION:
+        url = this.urlService.URLS.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION;
+        break;
     }
     return url;
   }
@@ -205,6 +209,19 @@ export class LicenseService {
   externalOrgAffiliationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
     return this._externalOrgAffiliationSearchCriteria(criteria);
   }
+
+  // @Generator(ExternalOrgAffiliationResult, true, {
+  //   property: 'rs',
+  //   interceptReceive: (new UrgentInterventionFinancialNotificationInterceptor()).receive
+  // })
+  // private _urgentInterventionFinancialNotificationSearchCriteria(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
+  //   const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
+  //   return this.http.post<ExternalOrgAffiliationResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) + '/license/search', {...criteria, ...orgId})
+  // }
+  // urgentInterventionFinancialNotificationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
+  //   return this._urgentInterventionFinancialNotificationSearchCriteria(criteria);
+  // }
+
   @Generator(InternalProjectLicenseResult, true, {
     property: 'rs',
     interceptReceive: (new InternalProjectLicenseResultInterceptor()).receive
@@ -481,6 +498,17 @@ export class LicenseService {
     });
   }
 
+  @Generator(UrgentInterventionClosure, false, {
+    property: 'rs',
+    interceptReceive: (new UrgentInterventionFinancialNotificationInterceptor()).receive
+  })
+  _validateUrgentInterventionFinancialNotificationByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @Generator(CollectionLicense, false, {
     property: 'rs',
     interceptReceive: (new CollectionLicenseInterceptor()).receive
@@ -519,6 +547,8 @@ export class LicenseService {
       return this._validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
       return this._validateUrgentInterventionClosureByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) {
+      return this._validateUrgentInterventionFinancialNotificationByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }

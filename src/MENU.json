@@ -847,5 +847,18 @@
     "group": "administration",
     "itemOrder": 12,
     "svg": null
+  },
+  {
+    "id": 65,
+    "langKey": "menu_urgent_intervention_financial_notification",
+    "path": "/home/urgent-intervention/urgent-intervention-financial-notification",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_FINANCIAL_NOTIFICATION",
+    "permissionGroup": null,
+    "parent": 60,
+    "group": "urgent-intervention",
+    "itemOrder": 4,
+    "svg": null
   }
 ]

@@ -96,6 +96,7 @@ export interface IAppUrls {
   EXTERNAL_PROJECT_IMPLEMENTATION: string;
   EXTERNAL_ORG_AFFILIATION_REQUEST: string;
   FIELD_ASSESSMENT: string;
+  URGENT_INTERVENTION_FINANCIAL_NOTIFICATION: string;
 
   [index: string]: string;
 }

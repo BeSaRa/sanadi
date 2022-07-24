@@ -1,3 +1,4 @@
+import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
 
 
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
@@ -80,6 +81,7 @@ export class InboxService {
               private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
               private urgentInterventionReportingService: UrgentInterventionReportingService,
               private urgentInterventionClosureService: UrgentInterventionClosureService,
+              private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
               private urlService: UrlService,
               private employmentService: EmploymentService,
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
@@ -105,6 +107,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
