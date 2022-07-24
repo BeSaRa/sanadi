@@ -145,21 +145,21 @@
             <label class="form-label" asteriskIfRequired="accountNumber"
                    for="accountNumber">{{lang.map.account_number}}</label>
             <input id="accountNumber" validationClasses="accountNumber" formControlName="accountNumber"
-                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount || isUpdateMerge)">
             <app-field-error-message controlName="accountNumber"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="iBan"
                    for="iBan">{{lang.map.iban}}</label>
             <input id="iBan" validationClasses="iBan" formControlName="iBan"
-                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount || isUpdateMerge)">
             <app-field-error-message controlName="iBan"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="swiftCode"
                    for="swiftCode">{{lang.map.swift_code}}</label>
             <input id="swiftCode" validationClasses="swiftCode" formControlName="swiftCode"
-                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount)">
+                   class="form-control" [readonly]="(readonly || model?.isUpdatedNewAccount || isUpdateMerge)">
             <app-field-error-message controlName="swiftCode"></app-field-error-message>
           </div>
         </div>
@@ -201,12 +201,18 @@
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
                           <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
                         </ng-container>
+                        <ng-container cdkColumnDef="bankCategory">
+                          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.bank_category}}</th>
+                          <td cdk-cell *cdkCellDef="let row"> {{row.bankCategoryInfo.getName()}} </td>
+                        </ng-container>
                         <ng-container cdkColumnDef="toBeMergedIn" *ngIf="isNewMerge || isUpdateMerge">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.merge_to_account}}</th>
                           <td cdk-cell *cdkCellDef="let row">
+                            <fieldset [disabled]=readonly>
                             <input formControlName="ownerOfMergedBankAccounts" class="form-check-input" [id]="row.id"
                                    name="ownerOfMergedBankAccounts" type="radio"
-                                   [value]="row.id" [disabled]="true">
+                                   [value]="row.id">
+                            </fieldset>
                           </td>
                         </ng-container>
                         <ng-container cdkColumnDef="actions">

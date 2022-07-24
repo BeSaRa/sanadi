@@ -2,6 +2,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {Bank} from '@app/models/bank';
+import {Lookup} from '@app/models/lookup';
 
 export class BankAccount extends SearchableCloneable<BankAccount> {
   id!: number;
@@ -15,6 +16,8 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   bankInfo!: Bank;
   isMergeAccount!: boolean;
   subAccounts: BankAccount[] = [];
+  bankCategoryInfo!: Lookup;
+  type!: number;
 
   constructor() {
     super();

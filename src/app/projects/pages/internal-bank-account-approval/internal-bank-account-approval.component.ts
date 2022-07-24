@@ -51,9 +51,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: FormControl = new FormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
-  selectedAccountsDisplayedColumns: string[] = ['accountNumber', 'bankName', 'toBeMergedIn', 'actions'];
-  selectedAccountsDisplayedColumnsForMerge: string[] = ['accountNumber', 'bankName', 'toBeMergedIn', 'actions'];
-  selectedAccountsDisplayedColumnsForCancel: string[] = ['accountNumber', 'bankName', 'actions'];
+  selectedAccountsDisplayedColumns: string[] = [];
+  selectedAccountsDisplayedColumnsForMerge: string[] = ['accountNumber', 'bankName', 'bankCategory', 'toBeMergedIn', 'actions'];
+  selectedAccountsDisplayedColumnsForCancel: string[] = ['accountNumber', 'bankName', 'bankCategory', 'actions'];
   selectedPersonsDisplayedColumns: string[] = ['qId', 'arName', 'enName', 'jobTitleInfo', 'actions'];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
   updateNewAccountFieldsVisible = false;
@@ -218,6 +218,8 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       this.selectedBankAccounts.forEach(x => {
         x.isMergeAccount = x.id === this.ownerOfMergedBankAccounts.value;
       });
+
+      model.category = this.selectedBankAccounts.find(x => x.isMergeAccount)!.type;
     }
     model!.internalBankAccountDTOs = this.selectedBankAccounts;
     model!.bankAccountExecutiveManagementDTOs = this.selectedNPOEmployees;
@@ -262,14 +264,16 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.requestTypeOrOperationTypeChanged();
     this.toggleAccountCategoryControl(this.bankAccountCategory.value);
 
-    // set radio button of selectedBankAccounts
-    if (this.operationType.value == BankAccountOperationTypes.MERGE) {
-      // this.ownerOfMergedBankAccounts.patchValue(this.selectedBankAccounts.find(x => x.isMergeAccount)!.id);
-    }
     this.selectedBankAccounts = this.model.internalBankAccountDTOs?.map(ba => {
       ba.bankInfo = (new Bank()).clone(ba.bankInfo);
+      ba.bankCategoryInfo = ba.bankCategoryInfo ? (new Lookup()).clone(ba.bankCategoryInfo) : new Lookup();
       return ba;
     });
+
+    // set radio button of selectedBankAccounts
+    if (this.operationType.value == BankAccountOperationTypes.MERGE) {
+      this.ownerOfMergedBankAccounts.patchValue(this.selectedBankAccounts.find(x => x.isMergeAccount)!.id);
+    }
 
     this.selectedNPOEmployees = this.model.bankAccountExecutiveManagementDTOs;
   }
@@ -535,7 +539,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.enableOperationType();
     this.disableBankAccountCategory();
     this.disableMainAccount();
-    this.disableSearchField();
+    // this.disableSearchField();
   }
 
   enableCancelAccountFields() {
@@ -681,6 +685,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.NEW_ACCOUNT) {
       criteriaObject.requestType = BankAccountRequestTypes.NEW;
       criteriaObject.operationType = BankAccountOperationTypes.NEW_ACCOUNT;
+    }
+
+    if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.MERGE) {
+      criteriaObject.requestType = BankAccountRequestTypes.NEW;
+      criteriaObject.operationType = BankAccountOperationTypes.MERGE;
     }
 
     this.licenseService

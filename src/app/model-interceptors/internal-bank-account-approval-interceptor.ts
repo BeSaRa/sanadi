@@ -33,6 +33,10 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     delete model.service;
     delete model.searchFields;
     delete model.encrypt;
+    delete model.selectedBankAccountToMerge;
+    delete model.ownerOfMergedBankAccounts;
+    delete model.selectedResponsiblePerson;
+    delete model.bankAccountSearchCriteria;
 
     return model;
   }
@@ -48,6 +52,7 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.mainAccountInfo = isValidAdminResult(model.mainAccountInfo) ? AdminResult.createInstance(model.mainAccountInfo) : AdminResult.createInstance({});
     model.currencyInfo = isValidAdminResult(model.currencyInfo) ? AdminResult.createInstance(model.currencyInfo): AdminResult.createInstance({});
     model.bankInfo = isValidAdminResult(model.bankInfo) ? AdminResult.createInstance(model.bankInfo): AdminResult.createInstance({});
+    model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo): AdminResult.createInstance({});
     model.internalBankAccountDTOs = model.internalBankAccountDTOs || [];
     model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs.map(x => {
       x.jobTitleInfo = (new Lookup()).clone(x.jobTitleInfo);

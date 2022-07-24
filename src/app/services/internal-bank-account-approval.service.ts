@@ -136,6 +136,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
   searchForBankAccount(accountNumber: number) {
     return this._searchForBankAccount(accountNumber).pipe(map(response => {
       response.bankInfo = (new Bank()).clone(response.bankInfo);
+      response.bankCategoryInfo = (new Lookup()).clone(response.bankCategoryInfo);
       return response;
     }));
   }
