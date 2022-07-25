@@ -683,12 +683,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   searchForLicense() {
     let criteriaObject: any = {fullSerial: this.oldLicenseFullSerialField.value};
     if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.NEW_ACCOUNT) {
-      criteriaObject.requestType = BankAccountRequestTypes.NEW;
       criteriaObject.operationType = BankAccountOperationTypes.NEW_ACCOUNT;
     }
 
     if (this.requestType.value === BankAccountRequestTypes.UPDATE && this.operationType.value === BankAccountOperationTypes.MERGE) {
-      criteriaObject.requestType = BankAccountRequestTypes.NEW;
       criteriaObject.operationType = BankAccountOperationTypes.MERGE;
     }
 
@@ -698,6 +696,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
+        // if(licenses.length === 1) {
+        //   return this.validateSingleLicense(licenses[0]);
+        // } else {
+        //   return this.openSelectLicense(licenses);
+        // }
         return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
       }))
       .pipe(
