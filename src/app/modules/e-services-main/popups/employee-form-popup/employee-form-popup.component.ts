@@ -277,6 +277,12 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
   }
+  handleJobTitleChange() {
+    if (this.isExternalManagerJobTitle) {
+      this.identificationType.setValue(2);
+      this.handleIdentityNumberValidationsByIdentificationType()
+    }
+  }
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
     DateUtils.setRelatedMinMaxDate({
       fromFieldName,
@@ -320,6 +326,10 @@ export class EmployeeFormPopupComponent implements OnInit {
     ) && !this.cancelRequestType()
   }
 
+  get isExternalManagerJobTitle() {
+    return this.jobTitleId.value == this.JobTitleList.find(jt => jt.enName.toLowerCase().includes("external"))?.id
+  }
+
   get contractType() {
     return this.form.controls.contractType as FormControl
   }
@@ -355,6 +365,9 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   get passportNumber() {
     return this.form.controls.passportNumber as FormControl;
+  }
+  get jobTitleId() {
+    return this.form.controls.jobTitleId as FormControl;
   }
   get id() {
     return this.form.controls.id.value;

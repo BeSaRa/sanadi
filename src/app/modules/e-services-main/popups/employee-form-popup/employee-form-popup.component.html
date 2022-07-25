@@ -116,6 +116,7 @@
           id="jobTitleId"
           validationClasses="jobTitleId"
           formControlName="jobTitleId"
+          (change)="handleJobTitleChange()"
         >
           <ng-option *ngFor="let option of JobTitleList" [value]="option.id">{{
             option.getName()
@@ -125,10 +126,9 @@
           controlName="jobTitleId"
         ></app-field-error-message>
       </div>
-      <div
-        class="col-sm-6 col-md-4 mb-4 position-relative"
-        *ngIf="!isApproval()"
-      >
+
+
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label
           asteriskIfRequired="identificationType"
           for="identificationType"
@@ -142,7 +142,7 @@
           placeholder="{{ lang.map.select }}"
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
-          [readonly]="!isEditRequestTypeAllowed"
+          [readonly]="!isEditRequestTypeAllowed || isExternalManagerJobTitle"
           id="identificationType"
           formControlName="identificationType"
           validationClasses="identificationType"
@@ -158,10 +158,10 @@
           controlName="identificationType"
         ></app-field-error-message>
       </div>
+
       <div
-        class="col-sm-6 mb-4 position-relative"
-        [ngClass]="{ 'col-md-4': !isApproval() }"
-        *ngIf="isIdentificationNumberType() || isApproval()"
+        class="col-sm-6 col-md-4 mb-4 position-relative"
+        *ngIf="isIdentificationNumberType()"
       >
         <label
           asteriskIfRequired="identificationNumber"
@@ -182,9 +182,10 @@
           controlName="identificationNumber"
         ></app-field-error-message>
       </div>
+
       <div
         class="col-sm-6 col-md-4 mb-4 position-relative"
-        *ngIf="isPassportNumberNumberType() && !isApproval()"
+        *ngIf="isPassportNumberNumberType()"
       >
         <label
           asteriskIfRequired="passportNumber"
@@ -203,9 +204,10 @@
           controlName="passportNumber"
         ></app-field-error-message>
       </div>
+
+
       <div
-        class="col-sm-6 mb-4 position-relative"
-        [ngClass]="{ 'col-md-4': !isApproval() }"
+        class="col-sm-6 col-md-4 mb-4 position-relative"
       >
         <label
           asteriskIfRequired="gender"
