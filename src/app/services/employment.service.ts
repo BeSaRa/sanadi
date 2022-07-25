@@ -22,9 +22,15 @@ import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { UrlService } from "./url.service";
-import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
+import {
+  EmployeeFormPopupComponent
+} from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
+import {
+  EmploymentApproveComponent
+} from "@app/modules/general-services/popups/employment-approve/employment-approve.component";
 
 const Empinterceptor = new EmployeeInterceptor();
+
 @CastResponseContainer({
   $employee: { model: () => Employee },
   $default: {
@@ -94,6 +100,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
       '&is-manger=' + criteria.isManager
     )
   }
+
   @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',
@@ -112,16 +119,24 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     })
     return this.http.post<any>(this.urlService.URLS.NPO_EMPLOYEE + '/bulk/validate', employeesList)
   }
+
   _getURLSegment(): string {
     return this.urlService.URLS.EMPLOYMENT;
   }
+
   _getModel() {
     return Employment;
   }
+
   getSearchCriteriaModel<S extends Employment>(): Employment {
     return new EmploymentSearchCriteria();
   }
+
   _getUrlService(): UrlService {
     return this.urlService;
+  }
+
+  approve(model: Employment): DialogRef {
+    return this.dialog.show(EmploymentApproveComponent, model);
   }
 }

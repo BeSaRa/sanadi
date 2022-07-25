@@ -2,7 +2,7 @@ import { JobTitle } from './job-title';
 import { AdminResult } from './admin-result';
 import { Cloneable } from "@app/models/cloneable";
 import { IMyDateModel } from "angular-mydatepicker";
-import { IEmployeeDto } from "./../interfaces/i-employee-dto";
+import { IEmployeeDto } from "@contracts/i-employee-dto";
 export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   id!: number | null;
   arabicName!: string;
