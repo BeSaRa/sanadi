@@ -55,8 +55,8 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     model.bankCategoryInfo = isValidAdminResult(model.bankCategoryInfo) ? AdminResult.createInstance(model.bankCategoryInfo): AdminResult.createInstance({});
     model.internalBankAccountDTOs = model.internalBankAccountDTOs || [];
     model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs.map(x => {
-      x.jobTitleInfo = (new Lookup()).clone(x.jobTitleInfo);
-      return x;
+      let y = new NpoEmployee().clone(x);
+      y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);
     }) : model.bankAccountExecutiveManagementDTOs = [];
 
     if(model.requestType === BankAccountRequestTypes.CANCEL) {

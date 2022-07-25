@@ -816,7 +816,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   addToSelectedResponsiblePersons(employee: NpoEmployee) {
-    if (!this.selectedNPOEmployees.includes(employee)) {
+    if (!this.selectedNPOEmployees.map(x => x.id).includes(employee.id)) {
       employee.identificationNumber = employee.qId;
       this.selectedNPOEmployees = this.selectedNPOEmployees.concat(employee);
     } else {

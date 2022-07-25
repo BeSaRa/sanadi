@@ -3,6 +3,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {BankAccount} from '@app/models/bank-account';
 import {Bank} from '@app/models/bank';
+import {NpoEmployee} from '@app/models/npo-employee';
 
 export class InternalBankAccountLicense {
   accountNumber!: string;
@@ -61,8 +62,9 @@ export class InternalBankAccountLicense {
       return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount, bankInfo: (new Bank()).clone(ba.bankInfo)})
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
-      x.jobTitleInfo = (new Lookup()).clone(x);
-      return x;
+      let y = new NpoEmployee().clone(x);
+      y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);
+      return y;
     });
 
     return internalBankAccountApproval;

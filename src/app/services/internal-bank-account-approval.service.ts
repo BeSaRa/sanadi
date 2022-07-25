@@ -145,7 +145,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.NPO_EMPLOYEE;
   }
 
-  @Generator(NpoEmployee, true, {property: 'rs'})
+  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
   private _loadOrgNPOEmployees(): Observable<NpoEmployee[]> {
     return this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/composite');
   }
@@ -163,7 +163,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     }));
   }
 
-  @Generator(NpoEmployee, true, {property: 'rs'})
+  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
   private _searchNPOEmployees(qId: string): Observable<NpoEmployee[]> {
     return qId ? this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria?q-id=' + qId) : this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria');
   }
