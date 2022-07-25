@@ -142,7 +142,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]],
       jobTitleId: [null, CustomValidators.required],
-      identificationType: [1, CustomValidators.required],
+      identificationType: [null, CustomValidators.required],
       identificationNumber: ["", [CustomValidators.required, CustomValidators.maxLength(50)]],
       passportNumber: [""],
       gender: [null, CustomValidators.required],
@@ -289,7 +289,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     });
   }
   isIdentificationNumberType() {
-    return this.identificationType.value == IdentificationType.Identification
+    return this.identificationType.value == null || this.identificationType.value == IdentificationType.Identification
   }
   isPassportNumberNumberType() {
     return this.identificationType.value == IdentificationType.Passport
