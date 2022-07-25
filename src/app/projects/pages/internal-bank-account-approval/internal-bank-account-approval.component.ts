@@ -748,18 +748,22 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   addToSelectedBankAccounts(bankAccount: BankAccount) {
     if (!this.selectedBankAccounts.find(x => x.id === bankAccount.id)) {
-      if (bankAccount.subAccounts && bankAccount.subAccounts.length && bankAccount.subAccounts.length > 0) {
-        let message = this.isCancel ? this.generateConfirmCancelMessage(bankAccount)! : this.generateConfirmMergeMessage(bankAccount)!;
-
-        this.dialog.confirm(message).onAfterClose$.subscribe((userClickOn: UserClickOn) => {
-          if (userClickOn === UserClickOn.YES) {
-            this.pushBankAccountToList(bankAccount);
-          } else {
-            return;
-          }
-        });
+      if (this.isNewMerge && bankAccount.bankCategoryInfo.lookupKey === BankCategory.SUB) {
+        this.dialog.error(this.lang.map.selected_bank_account_is_sub_account);
       } else {
-        this.pushBankAccountToList(bankAccount);
+        if (bankAccount.subAccounts && bankAccount.subAccounts.length && bankAccount.subAccounts.length > 0) {
+          let message = this.isCancel ? this.generateConfirmCancelMessage(bankAccount)! : this.generateConfirmMergeMessage(bankAccount)!;
+
+          this.dialog.confirm(message).onAfterClose$.subscribe((userClickOn: UserClickOn) => {
+            if (userClickOn === UserClickOn.YES) {
+              this.pushBankAccountToList(bankAccount);
+            } else {
+              return;
+            }
+          });
+        } else {
+          this.pushBankAccountToList(bankAccount);
+        }
       }
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);

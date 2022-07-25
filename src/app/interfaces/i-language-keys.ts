@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  selected_bank_account_is_sub_account: string;
   forget_password: string;
   you_have_to_select_at_least_one_bank_account: string;
   will_be_canceled_also: string;
