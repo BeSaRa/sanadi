@@ -401,6 +401,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectUpdateRequestType() {
+    this.enableSearchField();
     this.enableCancelAccountFields();
     this.isCancel = false;
     if (this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT) {
@@ -537,8 +538,11 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   disableUpdateMergeAccountsFields() {
     this.enableOperationType();
-    this.disableBankAccountCategory();
-    this.disableMainAccount();
+    this.disableBankAccountCategoryWithoutData();
+    this.disableMainAccountWithoutData();
+    this.disableBankIdWithoutData();
+    this.disableCurrencyWithoutData();
+    this.disablePurposeWithoutData();
     // this.disableSearchField();
   }
 
@@ -604,6 +608,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.bankAccountCategory.updateValueAndValidity();
   }
 
+  disableBankAccountCategoryWithoutData() {
+    this.bankAccountCategory.disable();
+    this.bankAccountCategory.setValidators([]);
+    this.bankAccountCategory.updateValueAndValidity();
+  }
+
   enablePurpose() {
     this.purpose.enable();
     this.purpose.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]);
@@ -612,6 +622,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   disablePurpose() {
     this.purpose.patchValue(null);
+    this.purpose.disable();
+    this.purpose.setValidators([]);
+    this.purpose.updateValueAndValidity();
+  }
+
+  disablePurposeWithoutData() {
     this.purpose.disable();
     this.purpose.setValidators([]);
     this.purpose.updateValueAndValidity();
@@ -630,6 +646,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.bankId.updateValueAndValidity();
   }
 
+  disableBankIdWithoutData() {
+    this.bankId.disable();
+    this.bankId.setValidators([]);
+    this.bankId.updateValueAndValidity();
+  }
+
   enableCurrency() {
     this.currency.enable();
     this.currency.setValidators([CustomValidators.required]);
@@ -643,6 +665,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.currency.updateValueAndValidity();
   }
 
+  disableCurrencyWithoutData() {
+    this.currency.disable();
+    this.currency.setValidators([]);
+    this.currency.updateValueAndValidity();
+  }
+
   enableMainAccount() {
     this.mainAccount.enable();
     this.mainAccount.setValidators([CustomValidators.required]);
@@ -651,6 +679,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   disableMainAccount() {
     this.mainAccount.patchValue(null);
+    this.mainAccount.disable();
+    this.mainAccount.setValidators([]);
+    this.mainAccount.updateValueAndValidity();
+  }
+
+  disableMainAccountWithoutData() {
     this.mainAccount.disable();
     this.mainAccount.setValidators([]);
     this.mainAccount.updateValueAndValidity();

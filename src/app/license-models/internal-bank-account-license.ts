@@ -59,7 +59,7 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.bankInfo = this.bankInfo;
     internalBankAccountApproval.bankCategoryInfo = this.bankCategoryInfo;
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
-      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount, bankInfo: (new Bank()).clone(ba.bankInfo)})
+      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount, bankInfo: (new Bank()).clone(ba.bankInfo), bankCategoryInfo: (new Lookup()).clone(ba.bankCategoryInfo)})
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
       let y = new NpoEmployee().clone(x);

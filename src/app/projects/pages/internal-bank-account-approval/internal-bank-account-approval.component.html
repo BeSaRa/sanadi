@@ -208,7 +208,7 @@
                         <ng-container cdkColumnDef="toBeMergedIn" *ngIf="isNewMerge || isUpdateMerge">
                           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.merge_to_account}}</th>
                           <td cdk-cell *cdkCellDef="let row">
-                            <fieldset [disabled]=readonly>
+                            <fieldset [disabled]="(readonly || isUpdateMerge)">
                             <input formControlName="ownerOfMergedBankAccounts" class="form-check-input" [id]="row.id"
                                    name="ownerOfMergedBankAccounts" type="radio"
                                    [value]="row.id">
@@ -220,7 +220,7 @@
                           <td cdk-cell *cdkCellDef="let row" class="table-actions">
                             <div class="d-flex flex-row">
                               <button (click)="removeBankAccount(row, $event)" tooltip="{{lang.map.btn_remove}}"
-                                      class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly)">
+                                      class="btn icon-btn text-primary grid-action-btn" [disabled]="(readonly || isUpdateMerge)">
                                 <i class="mdi mdi-close-box"></i>
                               </button>
                             </div>
