@@ -135,6 +135,9 @@ export class LicenseService {
       case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
         url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
         break;
+      case CaseTypes.EMPLOYMENT:
+        url = this.urlService.URLS.EMPLOYMENT;
+        break;
     }
     return url;
   }

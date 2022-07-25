@@ -27,6 +27,7 @@ export class Employment
   category!: number;
   description: string = "";
   employeeInfoDTOs: Partial<Employee>[] = [];
+  exportedLicenseId!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
