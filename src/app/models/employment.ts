@@ -1,15 +1,17 @@
 import { Employee } from './employee';
-import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';
+import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
 import { Validators } from "@angular/forms";
-import { FactoryService } from "./../services/factory.service";
+import { FactoryService } from "@services/factory.service";
 import { InterceptModel } from "@decorators/intercept-model";
 import { EmploymentInterceptor } from "./../model-interceptors/employment-interceptor";
-import { EmploymentService } from "./../services/employment.service";
+import { EmploymentService } from "@services/employment.service";
 import { CaseModel } from "@app/models/case-model";
 import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { CaseModelContract } from "@contracts/case-model-contract";
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new EmploymentInterceptor();
@@ -20,7 +22,7 @@ const interceptor = new EmploymentInterceptor();
 })
 export class Employment
   extends _RequestType<EmploymentService, Employment>
-  implements HasRequestType, HasLicenseDurationType {
+  implements HasRequestType, HasLicenseDurationType, CaseModelContract<EmploymentService, Employment> {
   service!: EmploymentService;
   caseType: number = CaseTypes.EMPLOYMENT;
   requestType!: number;
@@ -30,6 +32,7 @@ export class Employment
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
+
   constructor() {
     super();
     this.service = FactoryService.getService("EmploymentService");
@@ -43,11 +46,12 @@ export class Employment
       description: controls ? [description] : description
     };
   }
+
   setLicense({
-    oldLicenseId,
-    oldLicenseSerial,
-    oldLicenseFullSerial
-  }: {
+               oldLicenseId,
+               oldLicenseSerial,
+               oldLicenseFullSerial
+             }: {
     oldLicenseId: string,
     oldLicenseSerial: number,
     oldLicenseFullSerial: string
@@ -55,5 +59,9 @@ export class Employment
     this.oldLicenseId = oldLicenseId
     this.oldLicenseSerial = oldLicenseSerial
     this.oldLicenseFullSerial = oldLicenseFullSerial
+  }
+
+  approve(): DialogRef {
+    return this.service.approve(this)
   }
 }
