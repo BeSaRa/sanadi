@@ -854,7 +854,7 @@
     "path": "/home/general-services/foreign-countries-projects",
     "icon": "mdi-earth",
     "isSvg": true,
-    "permission": "EXTERNAL_ORG_AFFILIATION_REQUEST",
+    "permission": "FOREIGN_COUNTRIES_PROJECTS",
     "permissionGroup": null,
     "parent": 13,
     "group": "general-services",
