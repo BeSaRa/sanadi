@@ -1,10 +1,11 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { HasExternalCooperationAuthority } from '@app/interfaces/has-external-cooperation-authority';
 import { HasRequestType } from '@app/interfaces/has-request-type';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
-import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
+import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 import { FactoryService } from '@app/services/factory.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -13,6 +14,12 @@ import { CaseModel } from './case-model';
 
 // tslint:disable-next-line: variable-name
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
+const interceptor = new ForeignCountriesProjectsInterceptor();
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 
 export class ForeignCountriesProjects
   extends _RequestType<

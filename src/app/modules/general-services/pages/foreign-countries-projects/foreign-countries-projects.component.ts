@@ -23,12 +23,14 @@ import { ForeignCountriesProjectsService } from '@app/services/foreign-countries
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
 import { LookupService } from '@app/services/lookup.service';
+import { ReadinessStatus } from '@app/types/types';
 import { Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   exhaustMap,
   filter,
   map,
+  share,
   switchMap,
   takeUntil,
   tap,
@@ -56,11 +58,13 @@ export class ForeignCountriesProjectsComponent
   licenseSearch$: Subject<string> = new Subject<string>();
   countries$: Observable<Country[]> = this.countryService
     .loadCountries()
-    .pipe(takeUntil(this.destroy$));
+    .pipe(takeUntil(this.destroy$), share());
   selectedLicense?: ForeignCountriesProjects;
+  projectNeedsTabStatus: ReadinessStatus = 'READY';
 
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
+
   constructor(
     public lang: LangService,
     public fb: FormBuilder,
@@ -261,25 +265,17 @@ export class ForeignCountriesProjectsComponent
   }
   _afterBuildForm(): void { }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.selectedLicense) {
-      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
-      return false;
-    } else {
-      if (saveType === SaveTypes.DRAFT) {
-        return true;
-      }
-      const invalidTabs = this._getInvalidTabs();
-      if (invalidTabs.length > 0) {
-        const listHtml = CommonUtils.generateHtmlList(
-          this.lang.map.msg_following_tabs_valid,
-          invalidTabs
-        );
-        this.dialog.error(listHtml.outerHTML);
-        return false;
-      } else {
-        return true;
-      }
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
     }
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialog.error(listHtml.outerHTML);
+      return false;
+    }
+    return true;
+
   }
   private _getInvalidTabs(): any {
     const failedList: string[] = [];
@@ -299,7 +295,12 @@ export class ForeignCountriesProjectsComponent
   _prepareModel():
     | ForeignCountriesProjects
     | Observable<ForeignCountriesProjects> {
-    throw new Error('Method not implemented.');
+    const value = (new ForeignCountriesProjects()).clone({
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue()
+    })
+    return value;
   }
   _afterSave(
     model: ForeignCountriesProjects,
@@ -309,7 +310,7 @@ export class ForeignCountriesProjectsComponent
     throw new Error('Method not implemented.');
   }
   _saveFail(error: any): void {
-    throw new Error('Method not implemented.');
+
   }
   _launchFail(error: any): void {
     throw new Error('Method not implemented.');
